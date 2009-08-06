@@ -11,11 +11,11 @@
 		-->
 		<mapping package="fi.hut.soberit.agilefant.model" />
 
-    <mapping class="fi.hut.soberit.agilefant.model.Assignment" />		
+		<mapping class="fi.hut.soberit.agilefant.model.Assignment" />
 		<mapping class="fi.hut.soberit.agilefant.model.Backlog" />
 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHourEntry" />
-    <mapping class="fi.hut.soberit.agilefant.model.ExactEstimate" />		
+		<mapping class="fi.hut.soberit.agilefant.model.ExactEstimate" />
 		<mapping class="fi.hut.soberit.agilefant.model.Iteration" />
 		<mapping class="fi.hut.soberit.agilefant.model.IterationHistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Product" />
@@ -30,11 +30,13 @@
 		<mapping class="fi.hut.soberit.agilefant.model.User" />
 		<mapping class="fi.hut.soberit.agilefant.model.Holiday" />
 		<mapping class="fi.hut.soberit.agilefant.model.HolidayAnomaly" />
-		
-		<!-- 
-		<mapping class="fi.hut.soberit.agilefant.model.BusinessTheme" />
-		<mapping class="fi.hut.soberit.agilefant.model.BacklogThemeBinding" />
-		 -->
+		<mapping class="fi.hut.soberit.agilefant.model.AgilefantRevisionEntity" />
+
+		<!--
+			<mapping class="fi.hut.soberit.agilefant.model.BusinessTheme" />
+			<mapping class="fi.hut.soberit.agilefant.model.BacklogThemeBinding"
+			/>
+		-->
 
 
 		<!--
@@ -48,6 +50,29 @@
 		<event type="pre-insert">
 			<listener
 				class="org.hibernate.validator.event.ValidatePreInsertEventListener" />
+		</event>
+
+		<!-- 
+			Envers version listeners
+		 -->
+
+		<event type="post-insert">
+			<listener class="org.hibernate.envers.event.AuditEventListener" />
+		</event>
+		<event type="post-update">
+			<listener class="org.hibernate.envers.event.AuditEventListener" />
+		</event>
+		<event type="post-delete">
+			<listener class="org.hibernate.envers.event.AuditEventListener" />
+		</event>
+		<event type="pre-collection-update">
+			<listener class="org.hibernate.envers.event.AuditEventListener" />
+		</event>
+		<event type="pre-collection-remove">
+			<listener class="org.hibernate.envers.event.AuditEventListener" />
+		</event>
+		<event type="post-collection-recreate">
+			<listener class="org.hibernate.envers.event.AuditEventListener" />
 		</event>
 
 	</session-factory>

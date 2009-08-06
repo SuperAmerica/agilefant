@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,18 +17,20 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import flexjson.JSON;
 
 @Entity
 @Table(name = "stories")
+@Audited
 public class Story implements TimesheetLoggable, NamedObject {
 
     private int id;
@@ -76,6 +77,7 @@ public class Story implements TimesheetLoggable, NamedObject {
     }
 
     @ManyToOne(optional = false)
+    @NotAudited
     public Backlog getBacklog() {
         return backlog;
     }
@@ -99,6 +101,7 @@ public class Story implements TimesheetLoggable, NamedObject {
      */
     @ManyToOne
     @JSON(include = true)
+    @NotAudited
     public User getCreator() {
         return creator;
     }
@@ -133,6 +136,7 @@ public class Story implements TimesheetLoggable, NamedObject {
             mappedBy = "story"
     )
     @Cascade(CascadeType.DELETE_ORPHAN)
+    @NotAudited
     public Collection<Task> getTasks() {
         return tasks;
     }
@@ -149,6 +153,7 @@ public class Story implements TimesheetLoggable, NamedObject {
         this.priority = priority;
     }
     
+    @NotAudited
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -168,6 +173,7 @@ public class Story implements TimesheetLoggable, NamedObject {
 
     @OneToMany(mappedBy = "story",
             targetEntity = fi.hut.soberit.agilefant.model.StoryHourEntry.class )
+    @NotAudited
     public Collection<StoryHourEntry> getHourEntries() {
         return hourEntries;
     }

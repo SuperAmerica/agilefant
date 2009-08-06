@@ -23,6 +23,8 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import fi.hut.soberit.agilefant.db.hibernate.Email;
 import flexjson.JSON;
@@ -37,6 +39,7 @@ import flexjson.JSON;
 @BatchSize(size = 20)
 @Entity
 @Table(name = "users")
+@Audited
 public class User {
 
     private int id;
@@ -54,7 +57,7 @@ public class User {
     private boolean enabled = true;
 
     private Collection<Team> teams = new HashSet<Team>();
-    
+
     private Collection<Assignment> assignments = new HashSet<Assignment>();
     
     private Collection<Story> stories = new HashSet<Story>();
@@ -118,6 +121,7 @@ public class User {
     /** Get password. */
     @Type(type = "truncated_varchar")
     @JSON(include = false)
+    @NotAudited
     public String getPassword() {
         return password;
     }
@@ -182,6 +186,7 @@ public class User {
     @ManyToMany(targetEntity = Team.class)
     @JoinTable(name = "team_user", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = { @JoinColumn(name = "Team_id") })
     @JSON(include = false)
+    @NotAudited
     public Collection<Team> getTeams() {
         return teams;
     }
@@ -220,6 +225,7 @@ public class User {
      */
     @OneToMany(mappedBy = "user")
     @JSON(include = false)
+    @NotAudited
     public Collection<Assignment> getAssignments() {
         return assignments;
     }
@@ -236,6 +242,7 @@ public class User {
     @ManyToMany(mappedBy = "responsibles",
             targetEntity = fi.hut.soberit.agilefant.model.Story.class,
             fetch = FetchType.LAZY)
+    @NotAudited
     public Collection<Story> getStories() {
         return stories;
     }
@@ -248,6 +255,7 @@ public class User {
     @ManyToMany(mappedBy = "responsibles",
             targetEntity = fi.hut.soberit.agilefant.model.Task.class,
             fetch = FetchType.LAZY)
+    @NotAudited
     public Collection<Task> getTasks() {
         return tasks;
     }
@@ -264,6 +272,7 @@ public class User {
 
     @Cascade(CascadeType.DELETE_ORPHAN)
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @NotAudited
     public Collection<Holiday> getHolidays() {
         return holidays;
     }
@@ -274,6 +283,7 @@ public class User {
 
     @Cascade(CascadeType.DELETE_ORPHAN)
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @NotAudited
     public Collection<HolidayAnomaly> getHolidayAnomalies() {
         return holidayAnomalies;
     }

@@ -438,3 +438,16 @@ DROP PROCEDURE DropAllForeignKeys;
 DROP TABLE he_temp;
 DROP TABLE he_temp_copy;
 DROP TABLE items_with_todos;
+
+/*** REVISIONING ***/
+create table agilefant_revisions (id integer not null auto_increment, timestamp bigint not null, userName varchar(255), primary key (id)) ENGINE=InnoDB;
+create table stories_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), priority integer, state integer, storyPoints integer, primary key (id, REV)) ENGINE=InnoDB;
+create table story_user_AUD (REV integer not null, Story_id integer not null, User_id integer not null, REVTYPE tinyint, primary key (REV, Story_id, User_id)) ENGINE=InnoDB;
+create table task_user_AUD (REV integer not null, tasks_id integer not null, responsibles_id integer not null, REVTYPE tinyint, primary key (REV, tasks_id, responsibles_id)) ENGINE=InnoDB;
+create table tasks_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, effortleft bigint, name varchar(255), originalestimate bigint, priority integer, state integer, primary key (id, REV)) ENGINE=InnoDB;
+create table users_AUD (id integer not null, REV integer not null, REVTYPE tinyint, email varchar(255), enabled bit, fullName varchar(255), initials varchar(255), loginName varchar(255), weekEffort bigint, primary key (id, REV)) ENGINE=InnoDB;
+alter table stories_AUD add index FK853E2CA420258526 (REV), add constraint FK853E2CA420258526 foreign key (REV) references agilefant_revisions (id);
+alter table story_user_AUD add index FK9A1CB82620258526 (REV), add constraint FK9A1CB82620258526 foreign key (REV) references agilefant_revisions (id);
+alter table task_user_AUD add index FKF0A49D9620258526 (REV), add constraint FKF0A49D9620258526 foreign key (REV) references agilefant_revisions (id);
+alter table tasks_AUD add index FKBD8325F20258526 (REV), add constraint FKBD8325F20258526 foreign key (REV) references agilefant_revisions (id);
+alter table users_AUD add index FK154C77D920258526 (REV), add constraint FK154C77D920258526 foreign key (REV) references agilefant_revisions (id);

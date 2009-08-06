@@ -23,6 +23,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import flexjson.JSON;
 
@@ -35,6 +37,7 @@ import flexjson.JSON;
 
 @Entity
 @Table(name = "tasks")
+@Audited
 public class Task implements TimesheetLoggable, NamedObject {
 
     private int id;
@@ -85,6 +88,7 @@ public class Task implements TimesheetLoggable, NamedObject {
 
     @ManyToOne
     @JSON(include = false)
+    @NotAudited
     public Iteration getIteration() {
         return iteration;
     }
@@ -95,6 +99,7 @@ public class Task implements TimesheetLoggable, NamedObject {
 
     @ManyToOne
     @JSON(include = false)
+    @NotAudited
     public Story getStory() {
         return story;
     }
@@ -163,6 +168,7 @@ public class Task implements TimesheetLoggable, NamedObject {
         this.priority = priority;
     }
 
+    @NotAudited
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -173,6 +179,7 @@ public class Task implements TimesheetLoggable, NamedObject {
 
     @ManyToOne
     @JSON(include = true)
+    @NotAudited
     public User getCreator() {
         return creator;
     }

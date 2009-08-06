@@ -47,7 +47,7 @@
 			<path location="${build.classes}" />
 		</path>
 
-		<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.HibernateToolTask" classpathref="hibernatetoolslib" />
+		<taskdef name="hibernatetool" classname="org.hibernate.tool.ant.EnversHibernateToolTask" classpathref="hibernatetoolslib" />
 
 		<path id="instr.classpath">
 			<pathelement location="${build.classes}" />

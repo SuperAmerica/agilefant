@@ -18,6 +18,7 @@
 	<classpathentry kind="lib" path="lib/slf4j-log4j12-1.5.8.jar"/>
 	<classpathentry kind="lib" path="lib/struts2jsonresult.jar"/>
 	<classpathentry kind="lib" path="lib/build/jsdoctoolkit-ant-task-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/envers-1.2.1.ga-hibernate-3.3.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar">
 		<attributes>

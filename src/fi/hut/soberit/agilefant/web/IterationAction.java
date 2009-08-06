@@ -61,11 +61,14 @@ public class IterationAction implements
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
-    
+    /*
     @Validations(
-            requiredFields = {@RequiredFieldValidator(type=ValidatorType.SIMPLE, fieldName="iteration.name", key="iteration.missingName")},
+            requiredFields = {@RequiredFieldValidator(type=ValidatorType.SIMPLE, fieldName="iteration.name", key="iteration.missingName"),
+                    @RequiredFieldValidator(type=ValidatorType.SIMPLE, fieldName="iteration.startDate", key="iteration.missingStartDate"),
+                    @RequiredFieldValidator(type=ValidatorType.SIMPLE, fieldName="iteration.endDate", key="iteration.missingEndDate")},
             expressions = {@ExpressionValidator(expression = "iteration.startDate < iteration.endDate", key="iteration.startBeforeEnd")}
     )
+    */
     public String store() {
         iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
         return Action.SUCCESS;

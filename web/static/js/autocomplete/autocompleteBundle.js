@@ -42,7 +42,8 @@ var Autocomplete = function(element, options) {
   this.selectedBox = new AutocompleteSelected(this);
   this.searchBox = new AutocompleteSearch(this.selectedBox);
   this.options = {
-      dataType: ""
+      dataType: "",
+      preSelected: []
   };
   jQuery.extend(this.options, options);
   this.dataProvider = null;
@@ -71,6 +72,9 @@ Autocomplete.prototype.initialize = function() {
   
   this.searchBox.initialize(this.searchBoxContainer);
   this.selectedBox.initialize(this.selectedBoxContainer);
+  for(var i = 0; i < this.options.preSelected.length; i++) { 
+    this.selectedBox.addItem(this.options.preSelected[i]);
+  }
 };
 
 Autocomplete.prototype.getData = function() {

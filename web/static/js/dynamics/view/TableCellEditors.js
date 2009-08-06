@@ -316,12 +316,21 @@ TableEditors.User = function(row, cell, options) {
     dataType: 'usersAndTeams',
     callback: function(ids) { me.save(ids); },
     cancel: function() { me.close(); },
-    title: 'Select users'
+    title: 'Select users',
+    selected: this._currentUsers()
   });
   this.value = [];
 };
 TableEditors.User.prototype = new TableEditors.CommonEditor();
 
+TableEditors.User.prototype._currentUsers = function() {
+  var users = this.options.get.call(this.model);
+  var userIds = [];
+  for(var i = 0; i < users.length; i++) {
+    userIds.push({id: users[i].getId(), name: users[i].getFullName()});
+  }
+  return userIds;
+};
 TableEditors.User.prototype.save = function(ids) {
   this.options.set.call(this.model, ids);
   this.cell.getElement().trigger("editorClosing");

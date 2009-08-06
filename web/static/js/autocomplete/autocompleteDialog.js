@@ -8,7 +8,8 @@
 			this.element.data(this.widgetName,elData);
 			var me = this;
 			var autocomplete = new Autocomplete(this.element, {
-				dataType: this.options.dataType
+				dataType: this.options.dataType,
+				preSelected: this.options.selected
 			});
 			autocomplete.initialize();
 			this.setValue(this.options.selected);

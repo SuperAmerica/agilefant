@@ -24,7 +24,7 @@ CommonModel.prototype.initialize = function() {
  * Reloads the object's and all its children's data from the server.
  */
 CommonModel.prototype.reload = function() {
-  throw "Abstract method called: reload";
+  throw new Error("Abstract method called: reload");
 };
 
 /**
@@ -39,7 +39,7 @@ CommonModel.prototype.setData = function(newData) {
 };
 
 CommonModel.prototype._setData = function(newData) {
-  throw "Abstract method called";
+  throw new Error("Abstract method called");
 };
 
 CommonModel.prototype._copyFields = function(newData) {
@@ -214,7 +214,7 @@ CommonModel.prototype._commitIfNotInTransaction = function() {
  * @see #commit
  */
 CommonModel.prototype._saveData = function(id, changedData) {
-  throw "Abstract method called: _saveData";
+  throw new Error("Abstract method called: _saveData");
 };
 
 

@@ -11,7 +11,9 @@ var StoryModel = function() {
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
   this.relations = {
     backlog: {},
-    task: []
+    task: [],
+    hourEntry: [],
+    user: []
   };
   this.copiedFields = {
     "name": "name",
@@ -35,6 +37,10 @@ StoryModel.prototype._setData = function(newData) {
   // Set the tasks
   if (newData.tasks) {
     this._updateRelations(ModelFactory.types.task, newData.tasks);
+  }
+  
+  if(newData.responsibles) {
+    this._updateRelations(ModelFactory.types.user, newData.responsibles);
   }
 };
 
@@ -137,6 +143,10 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
 
 StoryModel.prototype.getTasks = function() {
   return this.relations.task;
+};
+
+StoryModel.prototype.getResponsibles = function() {
+  return this.relations.user;
 };
 
 

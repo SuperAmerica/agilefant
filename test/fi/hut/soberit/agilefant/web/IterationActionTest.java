@@ -79,4 +79,18 @@ public class IterationActionTest {
         
         verifyAll(); 
     }
+    
+    @Test
+    public void testStore() {
+        Iteration iter = new Iteration();
+        Iteration iter2 = new Iteration();
+        expect(iterationBusiness.store(1, 2, iter)).andReturn(iter2);
+        replayAll();
+        iterationAction.setIteration(iter);
+        iterationAction.setIterationId(1);
+        iterationAction.setParentBacklogId(2);
+        iterationAction.store();
+        assertEquals(iter2, iterationAction.getIteration());
+        verifyAll();
+    }
 }

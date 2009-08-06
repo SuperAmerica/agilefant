@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
@@ -54,5 +55,7 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
     public Collection<Backlog> getChildBacklogs(Backlog backlog);
 
     int calculateStoryPointSum(int backlogId);
+    
+    public void addAssignees(int backlogId, Set<Integer> userIds);
     
 }

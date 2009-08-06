@@ -225,6 +225,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     title : "Responsibles",
     headerTooltip : 'Task responsibles',
     get : TaskModel.prototype.getResponsibles,
+    decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
       editor : "User",

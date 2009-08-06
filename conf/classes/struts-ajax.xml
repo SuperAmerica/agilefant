@@ -112,6 +112,14 @@
         <param name="target">backlogs</param>
       </result>
     </action>
+    
+    <action name="addAssignees" method="addAssignees" class="backlogAction">
+      <result name="success" type="json">
+        <param name="target">backlog</param>
+        <param name="patterns">+assignments, +assignments.user.id</param>
+      </result>
+    </action>
+    
     <!-- /Backlog actions -->
     
     
@@ -191,7 +199,7 @@
     <action name="iterationData" class="iterationAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">+stories, +stories.tasks, +assignments, +hourEntries</param>
+        <param name="patterns">+stories, +stories.tasks, +assignments, +hourEntries, +*.user, +*.responsibles</param>
       </result>
     </action>
     

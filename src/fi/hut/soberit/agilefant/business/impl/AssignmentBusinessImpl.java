@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 
 @Service("assignmentBusiness")
@@ -40,16 +44,34 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
         return persisted;
     }
 
+    public Set<Integer> getAssignedUserIds(Backlog backlog) {
+        Set<Integer> userIds = new HashSet<Integer>();
+        Collection<Assignment> assignments = Collections.emptyList();
+        if(backlog instanceof Iteration) {
+            assignments = ((Iteration)backlog).getAssignments();
+        } else if(backlog instanceof Project) {
+            assignments = ((Project)backlog).getAssignments();
+        }
+        for(Assignment assignment : assignments) {
+            userIds.add(assignment.getUser().getId());
+        }
+        return userIds;
+    }
+    
     public Collection<Assignment> addMultiple(Backlog backlog,
             Set<Integer> userIds, ExactEstimate personalLoad, short availability) {
         Collection<Assignment> assignments = new ArrayList<Assignment>();
+        Set<Integer> assignedUserIds = this.getAssignedUserIds(backlog);
         for (int userId : userIds) {
-            User user = userBusiness.retrieve(userId);
-            Assignment assignment = new Assignment(user, backlog);
-            assignment.setAvailability(availability);
-            assignment.setPersonalLoad(personalLoad);
-            int assignmentId = (Integer) this.assignmentDAO.create(assignment);
-            assignments.add(this.assignmentDAO.get(assignmentId));
+            //only one assignment per user per backlog
+            if(!assignedUserIds.contains(userId)) {
+                User user = userBusiness.retrieve(userId);
+                Assignment assignment = new Assignment(user, backlog);
+                assignment.setAvailability(availability);
+                assignment.setPersonalLoad(personalLoad);
+                int assignmentId = (Integer) this.assignmentDAO.create(assignment);
+                assignments.add(this.assignmentDAO.get(assignmentId));
+            }
         }
         return assignments;
     }

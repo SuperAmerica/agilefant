@@ -48,6 +48,12 @@ public class BacklogAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
+    public String addAssignees() {
+        this.backlogBusiness.addAssignees(backlogId, userIds);
+        this.backlog = this.backlogBusiness.retrieve(backlogId);
+        return Action.SUCCESS;
+    }
+    
     /**
      * Gets all sub backlogs or all products if backlog not found.
      * @return

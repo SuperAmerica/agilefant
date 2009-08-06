@@ -176,6 +176,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     title : "Responsibles",
     headerTooltip : 'Story responsibles',
     get : StoryModel.prototype.getResponsibles,
+    decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
       editor : "User",

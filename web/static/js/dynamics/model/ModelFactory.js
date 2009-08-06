@@ -13,7 +13,9 @@ ModelFactory = function() {
     task: {},
     
     assignment: {},
-    hourEntry: {}
+    hourEntry: {},
+    
+    user: {}
   };
 };
 
@@ -258,6 +260,9 @@ ModelFactory.prototype._createObject = function(type) {
     break;
   case ModelFactory.types.hourEntry:
     returnedModel = new HourEntryModel();
+    break;
+  case ModelFactory.types.user:
+    returnedModel = new UserModel();
     break;
   }
   

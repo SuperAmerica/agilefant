@@ -14,6 +14,10 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 /**
  * Interceptor, which initializes object data before setting the data from ajax
  * request.
+ * 
+ * Note: this interceptor must be placed before the parameters interceptor in the 
+ * interceptor stack or the parameter values will be overwritten by the pre-fetch data!
+ * 
  * <p>
  * Used for single field editing.
  * 

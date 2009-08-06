@@ -4,11 +4,12 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -21,6 +22,8 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 
 public class AssignmentBusinessTest {
@@ -53,6 +56,37 @@ public class AssignmentBusinessTest {
     }
 
     @Test
+    public void testGetAssignedUserIds() {
+        Iteration iter = new Iteration();
+        User user = new User();
+        user.setId(1);
+        Assignment as1 = new Assignment(user, iter);
+        iter.getAssignments().add(as1);
+        Set<Integer> actual = testable.getAssignedUserIds(iter);
+        assertEquals(1, actual.size());
+        assertTrue(actual.contains(1));
+    }
+    
+    @Test
+    public void testGetAssignedUserIds_Project() {
+        Project iter = new Project();
+        User user = new User();
+        user.setId(1);
+        Assignment as1 = new Assignment(user, iter);
+        iter.getAssignments().add(as1);
+        Set<Integer> actual = testable.getAssignedUserIds(iter);
+        assertEquals(1, actual.size());
+        assertTrue(actual.contains(1));
+    }
+    
+    @Test
+    public void testGetAssignedUserIds_Product() {
+        Product iter = new Product();
+        Set<Integer> actual = testable.getAssignedUserIds(iter);
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
     public void testStore() {
         ExactEstimate personalLoad = new ExactEstimate(100L);
         expect(assignmentDAO.get(10)).andReturn(assignment);
@@ -76,8 +110,14 @@ public class AssignmentBusinessTest {
     @Test
     public void testAddMultiple() {
         User user1 = new User();
+        user1.setId(1);
         User user2 = new User();
+        user2.setId(2);
+        User user3 = new User();
+        user3.setId(3);
         Iteration iter = new Iteration();
+        Assignment existingAssignment = new Assignment(user3, iter);
+        iter.getAssignments().add(existingAssignment);
         ExactEstimate personalLoad = new ExactEstimate(100L);
 
         Capture<Assignment> capt1 = new Capture<Assignment>();

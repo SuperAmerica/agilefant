@@ -33,8 +33,8 @@
   file="./inc/iterationMetrics.jsp"%></div>
 </div>
 </div>
-<div class="details" id="backlogAssignees">bbbbb</div>
-<div class="details" id="backlogSpentEffort">ccccc</div>
+<div class="details" id="backlogAssignees"></div>
+<div class="details" id="backlogSpentEffort"></div>
 </div>
 
 <script type="text/javascript">

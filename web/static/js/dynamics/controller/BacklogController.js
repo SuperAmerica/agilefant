@@ -41,21 +41,22 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
     cssClass : "create",
     callback : BacklogController.prototype.addAssignees
   });
-  /*
+  
   config.addColumnConfiguration(0, {
     minWidth : 200,
     autoScale : true,
     title : "User",
-    get : AssignmentModel.prototype.getUser
+    get : AssignmentModel.prototype.getUser,
+    decorator: DynamicsDecorators.userNameDecorator
   });
-  */
-  config.addColumnConfiguration(0, {
+  
+  config.addColumnConfiguration(1, {
     minWidth : 200,
     autoScale : true,
     title : "Baseline load",
     get : AssignmentModel.prototype.getBaselineLoad
   });
-  config.addColumnConfiguration(1, {
+  config.addColumnConfiguration(2, {
     minWidth : 200,
     autoScale : true,
     title : "Availability",

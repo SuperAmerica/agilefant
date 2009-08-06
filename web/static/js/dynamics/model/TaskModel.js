@@ -16,7 +16,9 @@ var TaskModel = function() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Task";
   this.relations = {
-    story: {}  
+    story: {} ,
+    user: [],
+    hourEntry: []
   };
   this.copiedFields = {
     "name": "name",
@@ -31,6 +33,10 @@ TaskModel.prototype = new CommonModel();
 
 TaskModel.prototype._setData = function(newData) {
   this.id = newData.id;
+  
+  if(newData.responsibles) {
+    this._updateRelations(ModelFactory.types.user, newData.responsibles);
+  }
 };
 
 /* GETTERS AND SETTERS IN ALPHABETICAL ORDER */
@@ -52,6 +58,10 @@ TaskModel.prototype.getOriginalEstimate = function() {
 
 TaskModel.prototype.getState = function() {
   return this.currentData.state;
+};
+
+TaskModel.prototype.getResponsibles = function() {
+  return this.relations.user;
 };
 
 

@@ -33,5 +33,18 @@ var DynamicsDecorators = {
     var date = new Date();
     date.setTime(value);
     return date.asString();
+  },
+  userNameDecorator: function(user) {
+    return user.getFullName();
+  },
+  userInitialsListDecorator: function(userList) {
+    if(!userList || !userList.length) {
+      return;
+    }
+    var initials = [];
+    for(var i = 0; i < userList.length; i++) {
+      initials.push(userList[i].getInitials());
+    }
+    return initials.join(", ");
   }
 };

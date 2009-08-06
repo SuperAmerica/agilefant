@@ -22,6 +22,7 @@ AssignmentModel.prototype = new CommonModel();
 AssignmentModel.prototype._setData = function(newData) {
   this.id = newData.id;
   this._copyFields(newData);
+  this._updateRelations(ModelFactory.types.user, [newData.user]);
 };
 AssignmentModel.prototype.getBaselineLoad = function() {
   return this.currentData.baselineLoad;
@@ -29,4 +30,8 @@ AssignmentModel.prototype.getBaselineLoad = function() {
 
 AssignmentModel.prototype.getAvailability = function() {
   return this.currentData.availability;
+};
+
+AssignmentModel.prototype.getUser = function() {
+  return this.relations.user;
 };

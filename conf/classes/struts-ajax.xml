@@ -185,6 +185,7 @@
     </action>
     
     <action name="storeIteration" method="store" class="iterationAction">
+      <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">
         <param name="target">iteration</param>
       </result>

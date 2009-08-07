@@ -267,7 +267,8 @@ IterationController.prototype.initIterationInfoConfig = function() {
     editable : true,
     edit : {
       editor : "Text",
-      required: true
+      required: true,
+      set: IterationModel.prototype.setName
     }
   });
   config.addColumnConfiguration(1, {
@@ -278,7 +279,9 @@ IterationController.prototype.initIterationInfoConfig = function() {
     edit : {
       editor : "Date",
       decorator: DynamicsDecorators.dateDecorator,
-      required: true
+      required: true,
+      withTime: true,
+      set: IterationModel.prototype.setStartDate
     }
   });  
   config.addColumnConfiguration(2, {
@@ -289,7 +292,9 @@ IterationController.prototype.initIterationInfoConfig = function() {
     edit : {
       editor : "Date",
       decorator: DynamicsDecorators.dateDecorator,
-      required: true
+      required: true,
+      withTime: true,
+      set: IterationModel.prototype.setEndDate
     }
   });
   config.addColumnConfiguration(3, {
@@ -301,7 +306,8 @@ IterationController.prototype.initIterationInfoConfig = function() {
     get : IterationModel.prototype.getDescription,
     editable : true,
     edit : {
-      editor : "Wysiwyg"
+      editor : "Wysiwyg",
+      set: IterationModel.prototype.setDescription
     }
   });
   this.iterationDetailConfig = config;

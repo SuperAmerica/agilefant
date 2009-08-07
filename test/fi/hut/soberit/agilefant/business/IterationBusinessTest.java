@@ -336,9 +336,9 @@ public class IterationBusinessTest {
         verifyAll();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = ObjectNotFoundException.class)
     public void testStoreIteration_nullParent() {
-        expect(backlogBusiness.retrieve(11)).andReturn(null);
+        expect(backlogBusiness.retrieve(11)).andThrow(new ObjectNotFoundException());
         replayAll();
         this.iterationBusiness.store(10, 11, this.iteration);
         verifyAll();

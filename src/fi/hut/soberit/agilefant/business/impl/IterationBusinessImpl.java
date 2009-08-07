@@ -197,8 +197,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
     public Iteration store(int iterationId, int parentBacklogId,
             Iteration iterationData) {
-        Backlog parent = this.backlogBusiness.retrieve(parentBacklogId);
-        if (parent == null) {
+        Backlog parent = null;
+        if(parentBacklogId != 0) {
+            parent = this.backlogBusiness.retrieve(parentBacklogId);
+        }
+        if (parent == null && iterationId == 0) {
             throw new IllegalArgumentException("Invalid parent.");
         }
         if (parent instanceof Iteration) {
@@ -219,7 +222,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         iter.setDescription(iterationData.getDescription());
         iter.setName(iterationData.getName());
         this.iterationDAO.store(iter);
-        if (iter.getParent() != parent) {
+        if (parent != null && iter.getParent() != parent) {
             this.moveTo(iter, parent);
         }
         return iter;

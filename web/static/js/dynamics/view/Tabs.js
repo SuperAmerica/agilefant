@@ -6,14 +6,25 @@ var DynamicsTabs = function(parent) {
   this.element.tabs();
 };
 DynamicsTabs.prototype = new ViewPart();
-DynamicsTabs.prototype.add = function(name, cssOpt) {
-  var id = this.id+"_"+this.tabs.length;
-  this.element.tabs('add', '#'+id, name);
-  var tabNum = this.tabs.length;
-  var newTab = this.element.find("ul li:eq("+tabNum+")");
-  
-  newTab.css(cssOpt);
-  var el = this.element.find("#"+id);
-  this.tabs.push(el);
-  return el;
+DynamicsTabs.prototype.add = function(name, cssOpt, options) {
+  var opt = {
+      callback: null
+  };
+  jQuery.extend(opt, options);
+  if(opt.callback) {      
+    var newTab = $('<li />').addClass("dynamictable-captionaction")
+    .appendTo(this.titles).css(cssOpt).text(name);
+    newTab.click(function() {
+      opt.callback();
+    });
+  } else {
+    var id = this.id+"_"+this.tabs.length;
+    this.element.tabs('add', '#'+id, name);
+    var tabNum = this.tabs.length;
+    var newTab = this.element.find("ul li:eq("+tabNum+")");  
+    newTab.css(cssOpt);
+    var el = this.element.find("#"+id);
+    this.tabs.push(el);
+    return el;
+  }
 };

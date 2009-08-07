@@ -92,7 +92,10 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   var tabs = new DynamicsTabs(tasks);
   var taskTab = tabs.add("Tasks");
   var heTab = tabs.add("Spent effort");
-  tabs.add("Create task", {float: 'right'});
+  tabs.add("Create task", {float: 'right'}, {callback: function() {
+    
+  }});
+  var historyTab = tabs.add("History");
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
       taskTab);
   this.taskListView.render();

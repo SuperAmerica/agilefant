@@ -53,18 +53,14 @@ IterationModel.prototype._setData = function(newData) {
   }
   
 };
-
+/*
 IterationModel.prototype._populateStories = function(stories) {
   for (var i = 0; i < stories.length; i++) {
     var story = ModelFactory.updateObject(ModelFactory.types.story, stories[i]);
     this.addStory(story);
   }
 };
-
-IterationModel.prototype.addStory = function(story) {
-  this.relations.story.push(story);
-  story.relations.backlog = this;
-};
+*/
 
 /* GETTERS */
 

@@ -24,8 +24,8 @@
     alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
 </ul>
 <div class="details" id="backlogDetails" style="overflow: auto;">
-<div id="detailContainer" style="width: 70%; float: left; "></div>
-<div style="width: 30%; float: right">
+<div id="detailContainer" style="width: 70%; float: left; padding: 8px;"></div>
+<div style="width: 28%; float: right">
 <div class="smallBurndown"><a href="#bigChart"><img
   id="smallChart"
   src="drawSmallIterationBurndown.action?backlogId=${iteration.id}" /></a></div>

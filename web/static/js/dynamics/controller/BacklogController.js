@@ -18,12 +18,17 @@ BacklogController.prototype.paintSpentEffortList = function() {
 };
 
 BacklogController.prototype.addAssignees = function() {
+  var me = this;
   $(window).autocompleteDialog({
-    dataType: 'usersAndTeams', /*
-    callback: function(ids) { me.save(ids); },
+    dataType: 'usersAndTeams', 
+    callback: function(ids) { me._saveAssignees(ids); }, /*
     cancel: function() { me.close(); },*/
     title: 'Select assignees'
   }); 
+};
+
+BacklogController.prototype._saveAssignees = function(userIds) {
+  this.model.addAssignments(userIds);
 };
 
 BacklogController.prototype.initAssigneeConfiguration = function() {

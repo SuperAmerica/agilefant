@@ -27,8 +27,8 @@ UserModel.prototype._setData = function(newData) {
 
 UserModel.prototype.getFullName = function() {
   return this.currentData.fullName;
-}
+};
 
 UserModel.prototype.getInitials = function() {
   return this.currentData.initials;
-}
+};

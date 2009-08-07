@@ -83,6 +83,9 @@ StoryModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       me.setData(data);
+      if(!id) {
+        me.relations.backlog.addStory(me);
+      }
     },
     error: function(request, status, error) {
       alert("Error saving story");

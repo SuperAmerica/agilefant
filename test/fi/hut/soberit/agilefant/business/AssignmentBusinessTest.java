@@ -135,7 +135,7 @@ public class AssignmentBusinessTest {
         Collection<Assignment> actual = testable.addMultiple(iter, new HashSet<Integer>(Arrays.asList(1, 2)),
                 personalLoad, (short) 100);
         
-        assertEquals(2, actual.size());
+        assertEquals(3, actual.size());
         
         assertEquals(iter, capt1.getValue().getBacklog());
         assertEquals(iter, capt2.getValue().getBacklog());

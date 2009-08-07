@@ -137,12 +137,35 @@ DynamicTable.prototype._computeColumns = function() {
   this.totalRowWidth = totalWidthPercentage;
 };
 
-/**
- * Update table layout
- */
 DynamicTable.prototype.layout = function() {
-
+  for(var i = 0; i < this.middleRows.length; i++) {
+    this.middleRows[i].getElement().addClass("dynamicTableDataRow");
+  }
+  if(this.config.isSortable()) {
+    var me = this;
+    this.element.sortable({
+    //  containment: this.container,
+      items: "> .dynamicTableDataRow",
+      stop: function(event, ui) {
+        var newPos = me._stackPositionAfterSort(ui.item);
+        var targetView = ui.item.data("row");
+        var targetModel = targetView.getModel();
+        me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos);
+      }
+    });
+  }
 };
+
+DynamicTable.prototype.getDataRowAt = function(index) {
+  return this.middleRows[index];
+};
+
+DynamicTable.prototype._stackPositionAfterSort = function(rowElement) {
+  var prevDataRows = rowElement.prevAll(".dynamicTableDataRow");
+  var position = prevDataRows.length;
+  return position;
+};
+
 DynamicTable.prototype.show = function() {
   this.container.show();
   this.element.show();

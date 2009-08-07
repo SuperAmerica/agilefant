@@ -10,6 +10,7 @@ import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
 import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
+import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -19,10 +20,11 @@ import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 @Component("iterationAction")
 @Scope("prototype")
 public class IterationAction implements
-        CRUDAction {
+        CRUDAction, Prefetching {
 
     private static final long serialVersionUID = -448825368336871703L;
 
+    @PrefetchId
     private int iterationId;
 
     private Iteration iteration;
@@ -44,7 +46,7 @@ public class IterationAction implements
 
     public String retrieve() {
         iteration = iterationBusiness.retrieve(iterationId);
-        parentBacklog = (Project) iteration.getParent();
+        parentBacklog = iteration.getParent();
         // Load metrics data
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
@@ -73,7 +75,11 @@ public class IterationAction implements
         iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
         return Action.SUCCESS;
     }
-
+    
+    public void initializePrefetchedData(int objectId) {
+        this.iteration = this.iterationBusiness.retrieve(objectId);
+    }
+    
     public int getIterationId() {
         return iterationId;
     }
@@ -109,5 +115,4 @@ public class IterationAction implements
     public Backlog getParentBacklog() {
         return parentBacklog;
     }
-
 }

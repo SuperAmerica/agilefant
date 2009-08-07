@@ -48,12 +48,18 @@ StoryController.prototype.saveStory = function() {
   }
   if(createNewStory) {
     this.view.remove();
+    return;
   }
   this.view.getCell(StoryController.columnIndexes.description).hide();
   this.view.getCell(StoryController.columnIndexes.buttons).hide();
 };
 
 StoryController.prototype.cancelEdit = function() {
+  var createNewStory = !this.model.getId();
+  if(createNewStory) {
+    this.view.remove();
+    return;
+  }
   this.model.setInTransaction(false);
   this.view.closeRowEdit();
   this.view.getCell(StoryController.columnIndexes.description).hide();

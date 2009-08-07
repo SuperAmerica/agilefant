@@ -39,6 +39,8 @@ TaskModel.prototype._setData = function(newData) {
   }
 };
 
+
+
 /* GETTERS AND SETTERS IN ALPHABETICAL ORDER */
 TaskModel.prototype.getDescription = function() {
   return this.currentData.description;

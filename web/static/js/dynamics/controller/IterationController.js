@@ -75,9 +75,23 @@ IterationController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells(true);
+  row.autoCreateCells([StoryController.columnIndexes.priority, StoryController.columnIndexes.actions, StoryController.columnIndexes.tasksData]);
+  row.render();
   controller.editStory();
   row.getCell(StoryController.columnIndexes.tasksData).hide();
+};
+IterationController.prototype.sortStories = function(view, model, stackPosition) {
+  if(stackPosition === 0) {
+    model.setPriority(0);
+    return;
+  }
+  var prevRow = this.storyListView.getDataRowAt(stackPosition - 1);
+  if(prevRow) {
+    var prevPriority = prevRow.getModel().getPriority();
+    model.setPriority(prevPriority + 1);
+  } else {
+    model.setPriority(stackPosition); 
+  }
 };
 
 /**
@@ -88,6 +102,7 @@ IterationController.prototype.initializeStoryConfig = function() {
         rowControllerFactory : IterationController.prototype.storyControllerFactory,
         dataSource : IterationModel.prototype.getStories,
         saveRowCallback: StoryController.prototype.saveStory,
+        sortCallback: IterationController.prototype.sortStories,
         caption : "Stories"
       });
 

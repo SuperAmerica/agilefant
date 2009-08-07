@@ -231,6 +231,7 @@
       <interceptor-ref name="prefetchStack"/>
       <result type="json">
         <param name="target">story</param>
+        <param name="patterns">+responsibles</param>
       </result>
     </action>
     

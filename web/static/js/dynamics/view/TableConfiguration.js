@@ -140,7 +140,8 @@ var DynamicTableConfiguration = function(options) {
 			dataSource: null,
 			caption: "Table",
 			saveRowCallback: function() {},
-			cancelEditRowCallback: function() {}
+			cancelEditRowCallback: function() {},
+			sortCallback: null
 	};
 	jQuery.extend(this.options, options);
 };
@@ -156,6 +157,13 @@ DynamicTableConfiguration.prototype.getRowControllerFactory = function() {
 };
 DynamicTableConfiguration.prototype.getDataSource = function() {
 	return this.options.dataSource;
+};
+DynamicTableConfiguration.prototype.isSortable = function() {
+  return this.options.sortCallback !== null;
+};
+
+DynamicTableConfiguration.prototype.getSortCallback = function() {
+  return this.options.sortCallback;
 };
 DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
 	return this.columns[columnNum];

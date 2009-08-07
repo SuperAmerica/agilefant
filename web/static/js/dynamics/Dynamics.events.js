@@ -72,6 +72,25 @@ DynamicsEvents.DeleteEvent = function(object) {
 DynamicsEvents.DeleteEvent.prototype = new DynamicsEvents.CommonEvent();
 
 /**
+ * Constructor for the relation update event.
+ * 
+ * @param {function} object The events target object
+ * @throws {String "Invalid argument"} if event target is not supplied
+ * @constructor
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.RelationUpdatedEvent = function(object) {
+  if (!object || !(object instanceof CommonModel)) {
+    throw "Invalid argument";
+  }
+  this.initialize();
+  this.type = "relationUpdate";
+  this.object = object;
+};
+DynamicsEvents.RelationUpdatedEvent.prototype = new DynamicsEvents.CommonEvent();
+
+
+/**
  * 
  * @constructor
  * @base DynamicsEvents.CommonEvent

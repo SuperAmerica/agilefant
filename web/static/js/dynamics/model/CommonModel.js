@@ -36,6 +36,14 @@ CommonModel.prototype.setData = function(newData) {
   this._setData(newData);
   this._copyFields(newData);
   this.callListeners(new DynamicsEvents.EditEvent(this));
+  this.relationEvents();
+};
+
+CommonModel.prototype.relationEvents = function() {
+  if(this.relationChanged) {
+    this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this));
+    this.relationChanged = false;
+  }
 };
 
 CommonModel.prototype._setData = function(newData) {
@@ -70,6 +78,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
     var old = this.relations[type][i];
     if (jQuery.inArray(old.getHashCode(), newHashes) === -1) {
       this.removeRelation(old);
+      this.relationChanged = true;
     }
     else {
       currentHashes.push(old.getHashCode());
@@ -82,6 +91,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
     if (jQuery.inArray(newObj.getHashCode(), currentHashes) === -1) {
       this.addRelation(newObj);
       currentHashes.push(newObj.getHashCode());
+      this.relationChanged = true;
     }
   }
 };
@@ -268,4 +278,15 @@ CommonModel.prototype.isInTransaction = function() {
 };
 CommonModel.prototype.setInTransaction = function(val) {
   this.inTransaction = val;
+};
+
+CommonModel.prototype.serializeFields = function(prefix, changedData) {
+  var data = {};
+  for (field in changedData) {
+    if (changedData.hasOwnProperty(field)) {
+      var fieldName = prefix+"." + field;
+      data[fieldName] = changedData[field];
+    }
+  }
+  return data;
 };

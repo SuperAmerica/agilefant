@@ -37,9 +37,10 @@ DynamicView.prototype.init = function(controller, model, parent) {
 	this.listener = function(event) {
 	  if (event instanceof DynamicsEvents.EditEvent) {
 	    me.onEdit(event);
-	  }
-	  else if (event instanceof DynamicsEvents.DeleteEvent) {
+	  } else if (event instanceof DynamicsEvents.DeleteEvent) {
 	    me.onDelete(event);
+	  } else if(event instanceof DynamicsEvents.RelationUpdatedEvent) {
+	    me.onRelationUpdate(event);
 	  }
 	};
 	this.model.addListener(this.listener);
@@ -81,5 +82,5 @@ DynamicView.prototype.onDelete = function(event) {
 };
 
 DynamicView.prototype.onRelationUpdate = function(event) {
-  throw new Error("Abstract method.");
+  //throw new Error("Abstract method.");
 };

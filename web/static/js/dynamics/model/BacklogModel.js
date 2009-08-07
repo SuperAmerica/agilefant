@@ -21,3 +21,20 @@ BacklogModel.prototype.getAssignments = function() {
 BacklogModel.prototype.getHourEntries = function() {
   return this.relations.hourEntry;
 };
+
+BacklogModel.prototype.addAssignments = function(userIds) {
+  if(!(userIds instanceof Array)) {
+    return;
+  }
+  var me = this;
+  jQuery.post("ajax/addAssignees.action", {backlogId: this.getId(), userIds: userIds}, function(data, state) {
+    me.setData(data);
+  }, "json");
+};
+
+BacklogModel.prototype.addStory = function(story) {
+  this.relations.story.push(story);
+  story.relations.backlog = this;
+  this.relationChanged = true;
+  this.relationEvents();
+};

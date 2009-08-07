@@ -269,7 +269,7 @@ TableEditors.ExactEstimate.prototype.isValid = function() {
 TableEditors.Wysiwyg = function(row, cell, options) {
   var me = this;
   this.actualElement = $('<textarea></textarea>').appendTo(cell.getElement());
-  this.actualElement.width("98%").height("240px");
+  this.actualElement.width("96%").height("240px");
   setUpWysiwyg(this.actualElement);
   this.element = $(this.actualElement.wysiwyg("getDocument"));
   this.init(row, cell, options);

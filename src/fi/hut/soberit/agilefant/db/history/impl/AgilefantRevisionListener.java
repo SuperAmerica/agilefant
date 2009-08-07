@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.db.hibernate;
+package fi.hut.soberit.agilefant.db.history.impl;
 
 import org.hibernate.envers.RevisionListener;
 
@@ -13,6 +13,7 @@ public class AgilefantRevisionListener implements RevisionListener {
         User user = SecurityUtil.getLoggedUser();
         if(user != null) {
             entity.setUserName(user.getFullName());
+            entity.setUserId(user.getId());
         }
     }
 }

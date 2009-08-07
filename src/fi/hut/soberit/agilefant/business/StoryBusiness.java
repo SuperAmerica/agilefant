@@ -10,6 +10,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
@@ -59,4 +60,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     public void attachStoryToBacklog(int storyId, int backlogId, boolean moveTasks);
 
     public int getStoryPointSumByBacklog(Backlog backlog);
+    
+    public List<HistoryRowTO> retrieveStoryHistory(int id);
 }

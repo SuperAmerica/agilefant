@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
@@ -55,6 +57,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private StoryMetrics metrics;
     
     private boolean moveTasks;
+    
+    private List<HistoryRowTO> storyHistory;
 
     @Autowired
     private StoryBusiness storyBusiness;
@@ -85,6 +89,11 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     public String retrieve() {
         story = storyBusiness.retrieve(storyId);
         story = this.toTransferObject(story);
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveHistory() {
+        storyHistory = this.storyBusiness.retrieveStoryHistory(this.storyId);
         return Action.SUCCESS;
     }
 
@@ -238,6 +247,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     public void setUsersChanged(boolean usersChanged) {
         this.usersChanged = usersChanged;
+    }
+
+    public List<HistoryRowTO> getStoryHistory() {
+        return storyHistory;
     }
     
 }

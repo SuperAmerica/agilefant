@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -27,6 +28,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
@@ -50,6 +52,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     @Autowired
     private ProjectBusiness projectBusiness;
+    @Autowired
+    private StoryHistoryDAO storyHistoryDAO;
 
     @Autowired
     public void setStoryDAO(StoryDAO storyDAO) {
@@ -194,76 +198,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     };
     
     
-//    public Story store(int storyId, int backlogId, Story dataItem,
-//            Set<Integer> responsibles, int priority)
-//            throws ObjectNotFoundException {
-//        Story item = null;
-//        if (storyId > 0) {
-//            item = storyDAO.get(storyId);
-//            if (item == null) {
-//                item = new Story();
-//                item.setPriority(-1);
-//            }
-//        }
-//
-//        return this.store(item, backlog, dataItem, responsibleUsers, priority);
-//    }
-//    
-//    public Story store(Story storable, Backlog backlog, Story dataItem,
-//            Set<User> responsibles, Integer priority) {
-//
-//        boolean historyUpdated = false;
-
-//        if (storable == null) {
-//            storable = new Story();
-//            storable.setCreatedDate(Calendar.getInstance().getTime());
-//            try {
-//                storable.setCreator(SecurityUtil.getLoggedUser()); // may fail
-//                // if request
-//                // is
-//                // multithreaded
-//            } catch (Exception e) {
-//            } // however, saving item should not fail.
-//        }
-//        storable.setDescription(dataItem.getDescription());
-//        storable.setName(dataItem.getName());
-//
-//        // storable.setPriority(dataItem.getPriority());
-//        storable.setState(dataItem.getState());
-//        storable.setStoryPoints(dataItem.getStoryPoints());
-//
-//
-//        if (storable.getBacklog() != null && storable.getBacklog() != backlog) {
-//            this.moveStoryToBacklog(storable, backlog);
-//            historyUpdated = true;
-//        } else if (storable.getBacklog() == null) {
-//            storable.setBacklog(backlog);
-//        }
-//
-//
-//        Story persisted;
-//
-//        if (storable.getId() == 0) {
-//            storable.setPriority(-1);
-//            backlog.getStories().add(storable);
-//            int persistedId = (Integer) storyDAO.create(storable);
-//            persisted = storyDAO.get(persistedId);
-//        } else {
-//            storyDAO.store(storable);
-//            persisted = storable;
-//        }
-//        backlogHistoryEntryBusiness.updateHistory(persisted.getBacklog().getId());
-//        if (persisted.getBacklog() instanceof Iteration) {
-//            updateStoryPriority(persisted, priority);
-//            if (!historyUpdated) {
-//                iterationHistoryEntryBusiness.updateIterationHistory(backlog
-//                        .getId());
-//            }
-//        } else if (persisted.getBacklog() instanceof Project) {
-//            updateStoryPriority(persisted, priority);
-//        }
-//        return persisted;
-//    }
 
     public void moveStoryToBacklog(Story story, Backlog backlog) {
 
@@ -280,20 +214,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             iterationHistoryEntryBusiness.updateIterationHistory(backlog
                     .getId());
         }
-
-        // if(!backlogBusiness.isUnderSameProduct(oldBacklog, backlog)) {
-        // //remove only product themes
-        // Collection<BusinessTheme> removeThese = new
-        // ArrayList<BusinessTheme>();;
-        // for(BusinessTheme theme : story.getBusinessThemes()) {
-        // if(!theme.isGlobal()) {
-        // removeThese.add(theme);
-        // }
-        // }
-        // for(BusinessTheme theme : removeThese) {
-        // story.getBusinessThemes().remove(theme);
-        // }
-        // }
     }
 
 
@@ -385,6 +305,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return metrics;
     }
 
+    @Transactional(readOnly=true)
+    public List<HistoryRowTO> retrieveStoryHistory(int id) {
+        return storyHistoryDAO.retrieveLatestChanges(id, null);
+    }
+    
     public void attachStoryToBacklog(Story story, int backlogId)
             throws ObjectNotFoundException {
         this.attachStoryToBacklog(story, backlogId, false);

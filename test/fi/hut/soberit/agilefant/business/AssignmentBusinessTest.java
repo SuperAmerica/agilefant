@@ -140,8 +140,8 @@ public class AssignmentBusinessTest {
         assertEquals(iter, capt1.getValue().getBacklog());
         assertEquals(iter, capt2.getValue().getBacklog());
         
-        assertEquals(user1, capt1.getValue().getUser());
-        assertEquals(user2, capt2.getValue().getUser());
+        assertEquals(user1.getId(), capt1.getValue().getUser().getId());
+        assertEquals(user2.getId(), capt2.getValue().getUser().getId());
         
         assertEquals((short)100, capt1.getValue().getAvailability());
         assertEquals((short)100, capt2.getValue().getAvailability());

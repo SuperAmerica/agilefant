@@ -58,13 +58,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
     delete changedData.userIds;
     delete changedData.usersChanged;
   }
-  for (field in changedData) {
-    if (changedData.hasOwnProperty(field)) {
-      var fieldName = "story." + field;
-      data[fieldName] = changedData[field];
-    }
-  }
-  
+  jQuery.extend(data, this.serializeFields("story", changedData));
   // Add the id
   if (id) {
     jQuery.extend(data, {storyId: id});    

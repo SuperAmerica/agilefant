@@ -271,12 +271,14 @@
       <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">
         <param name="target">task</param>
+        <param name="patterns">+responsibles</param>
       </result>
     </action>
     
     <action name="createTask" method="store" class="taskAction" >
       <result name="success" type="json">
         <param name="target">task</param>
+        <param name="patterns">+responsibles</param>
       </result>
     </action>
     

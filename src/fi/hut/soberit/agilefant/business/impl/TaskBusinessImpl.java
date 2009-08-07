@@ -68,7 +68,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             throw new IllegalArgumentException("Task should be given");
         }
         
-        assignParentForTask(task, iterationId, storyId);
+        //allow storing existing task without relations
+        if(task.getId() == 0 || iterationId != null || storyId != null) {
+            assignParentForTask(task, iterationId, storyId);
+        }
         
         setTaskCreator(task);
         

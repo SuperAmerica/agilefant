@@ -314,7 +314,7 @@ TableEditors.User = function(row, cell, options) {
   var me = this;
   this.autocomplete = $(window).autocompleteDialog({
     dataType: 'usersAndTeams',
-    callback: function(ids) { me.save(ids); },
+    callback: function(ids, items) { me.save(ids, items); },
     cancel: function() { me.close(); },
     title: 'Select users',
     selected: this._currentUsers()
@@ -327,11 +327,11 @@ TableEditors.User.prototype._currentUsers = function() {
   var users = this.options.get.call(this.model);
   var userIds = [];
   for(var i = 0; i < users.length; i++) {
-    userIds.push({id: users[i].getId(), name: users[i].getFullName()});
+    userIds.push(users[i].getId());
   }
   return userIds;
 };
-TableEditors.User.prototype.save = function(ids) {
+TableEditors.User.prototype.save = function(ids, data) {
   this.options.set.call(this.model, ids);
   this.cell.getElement().trigger("editorClosing");
 };

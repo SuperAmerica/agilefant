@@ -73,7 +73,7 @@ Autocomplete.prototype.initialize = function() {
   this.searchBox.initialize(this.searchBoxContainer);
   this.selectedBox.initialize(this.selectedBoxContainer);
   for(var i = 0; i < this.options.preSelected.length; i++) { 
-    this.selectedBox.addItem(this.options.preSelected[i]);
+    this.selectedBox.addItemById(this.options.preSelected[i]);
   }
 };
 
@@ -91,5 +91,9 @@ Autocomplete.prototype.remove = function() {
 
 Autocomplete.prototype.getSelectedIds = function() {
   return this.selectedBox.getSelectedIds();
+};
+
+Autocomplete.prototype.getSelectedItems = function() {
+  return this.selectedBox.getSelectedItems();
 };
 

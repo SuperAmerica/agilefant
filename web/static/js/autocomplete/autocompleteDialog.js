@@ -37,12 +37,13 @@
 		  this.destroy();
 		},
 		select: function() {
-			this.options.callback.apply(this, [this.value()]);
+			this.options.callback.apply(this, this.value());
 			this.destroy();
 		},
 		value: function() {
 			var ids = this.element.data("autocomplete").getSelectedIds();
-			return ids;
+			var items = this.element.data("autocomplete").getSelectedItems();
+			return [ids, items];
 		},
 		setValue: function() {
 			

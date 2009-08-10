@@ -30,6 +30,16 @@ AutocompleteSelected.prototype.getSelectedIds = function() {
   return this.selectedIds;
 };
 
+AutocompleteSelected.prototype.getSelectedItems = function() {
+  var selected = [];
+  for(var i = 0; i < this.items.length; i++) {
+    if(jQuery.inArray(this.items[i].id, this.selectedIds) !== -1) {
+      selected.push(this.items[i].originalObject);
+    }
+  }
+  return selected;
+};
+
 /**
  * Initialize the selection element.
  */
@@ -73,6 +83,14 @@ AutocompleteSelected.prototype.checkValidityForAddition = function(item) {
    return false; 
   }
   return true;
+};
+
+AutocompleteSelected.prototype.addItemById = function(id) {
+  for (var i = 0; i < this.items.length; i++) {
+    if (this.items[i].id === id) {
+      this.addItem(this.items[i]);
+    }
+  }
 };
 
 AutocompleteSelected.prototype.addItem = function(item) {

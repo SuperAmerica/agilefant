@@ -155,6 +155,24 @@ $(document).ready(function() {
     same(itemSelectedCount, 2, "Item selection should be called twice");
   });
   
+  test("Adding an item by id", function () {
+    this.as.selectedIds = [];
+    
+    var itemSelectedCount = 0;
+    this.as.selectItem = function() {
+      itemSelectedCount++;
+    };
+    
+    this.as.setItems([{
+        id: 313,
+        name: "Tauno"
+    }]);
+    
+    this.as.addItemById(313);
+    
+    same(itemSelectedCount, 1, "Item selection should be called twice");
+  });
+  
   
   test("Adding a multiple id item", function() {
     this.as.selectedIds = [888];

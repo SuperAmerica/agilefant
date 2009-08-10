@@ -10,6 +10,7 @@ public class AutocompleteDataNode {
     private Set<Integer> idList = null;
     private String baseClassName;
     private boolean enabled = true;
+    private Object originalObject;
     
     public AutocompleteDataNode(Class<?> baseClass, Integer id, String name) {
         this.baseClassName = baseClass.getCanonicalName(); 
@@ -55,5 +56,13 @@ public class AutocompleteDataNode {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public Object getOriginalObject() {
+        return originalObject;
+    }
+
+    public void setOriginalObject(Object originalObject) {
+        this.originalObject = originalObject;
     }
 }

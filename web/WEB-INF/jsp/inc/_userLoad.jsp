@@ -45,9 +45,11 @@ $(document).ready(function() {
 <link rel="stylesheet" href="static/css/timeline/ether.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/event.css" type="text/css"/>
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
+<script type="text/javascript" src="static/js/simile/extensions/LoadPlot.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeline.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/init-load.js"></script>
+<script type="text/javascript" src="static/js/simile/extensions/load-plot.js"></script>
 <div id="dailyWorkTabs">
 	<ul id="dwTabs" style="display: none; height: 1px; width: 785px;">
 		<li><a href="#smallLoadTable"><span>Load</span></a></li>

@@ -12,39 +12,21 @@ function init_user_load(timelineTrack, timeplotTrack, userId) {
 		gridColor: "#000000"
 	});
 	
+	var stepValues = [["rgba(204, 204, 204, 0.7)", 0, 20],
+	                  ["rgba(9, 144, 14, 0.7)", 20, 40],
+	                  ["rgba(245, 221, 57, 0.7)", 40, 50],
+	                  ["rgba(224, 17, 2, 0.7)", 50, 9313122321231232]
+	                  ];
 	var plotInfo = [
-	                Timeplot.createPlotInfo({
+	                Timeplot.createLoadInfo({
 	                	id: "plot1",
 	                	dataSource: new Timeplot.ColumnSource(eventSource,3),
 	                	timeGeometry: timeGeometry,
 	                	valueGeometry: valueGeometry,
 	                	lineColor: "#ff0000",
 	                	fillColor: "#cc8080",
-	                	showValues: true
-	                }),
-	                Timeplot.createPlotInfo({
-	                	id: "plot2",
-	                	dataSource: new Timeplot.ColumnSource(eventSource,2),
-	                	timeGeometry: timeGeometry,
-	                	valueGeometry: valueGeometry,
-	                	lineColor: "#D0A825",
-	                	showValues: true
-	                }),
-	                Timeplot.createPlotInfo({
-	                	id: "plot3",
-	                	dataSource: new Timeplot.ColumnSource(eventSource,1),
-	                	timeGeometry: timeGeometry,
-	                	valueGeometry: valueGeometry,
-	                	lineColor: "#00A825",
-	                	showValues: true
-	                }),
-	                Timeplot.createPlotInfo({
-	                	id: "plot4",
-	                	dataSource: new Timeplot.ColumnSource(eventSource,4),
-	                	timeGeometry: timeGeometry,
-	                	valueGeometry: valueGeometry,
-	                	lineColor: "001125",
-	                	showValues: true
+	                	showValues: true,
+	                	AgilefantPlot: stepValues
 	                })
 	                ];
 	

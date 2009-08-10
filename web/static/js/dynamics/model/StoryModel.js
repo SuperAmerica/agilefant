@@ -112,6 +112,13 @@ StoryModel.prototype.setName = function(name) {
   this._commitIfNotInTransaction();
 };
 
+StoryModel.prototype.getPriority = function() {
+  return this.currentData.priority;
+};
+StoryModel.prototype.setPriority = function(newPriority) {
+  this.currentData.priority = newPriority;
+  this._commitIfNotInTransaction();
+};
 
 StoryModel.prototype.setResponsibles = function(userIds) {
   this.currentData.userIds = userIds;

@@ -60,7 +60,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
     if(this.relations.backlog instanceof BacklogModel) {
       data.backlogId = this.relations.backlog.getId();
     }
-    if(this.relations.story instanceof StoryMode) {
+    if(this.relations.story instanceof StoryModel) {
       data.storyId = this.relations.story.getId();
     }
   }
@@ -82,6 +82,14 @@ TaskModel.prototype._saveData = function(id, changedData) {
       alert("Error saving story");
     }
   });
+};
+
+TaskModel.prototype.setStory = function(story) {
+  this.addRelation(story);
+};
+
+TaskModel.prototype.setIteration = function(iteration) {
+  this.addRelation(iteration);
 };
 
 /* GETTERS AND SETTERS IN ALPHABETICAL ORDER */

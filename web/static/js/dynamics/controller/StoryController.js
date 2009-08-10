@@ -142,6 +142,18 @@ StoryController.prototype.taskControllerFactory = function(view, model) {
   return taskController;
 };
 
+StoryController.prototype.createTask = function() {
+  var mockModel = ModelFactory.createObject(ModelFactory.types.task);
+  mockModel.setStory(this.model);
+  var controller = new TaskController(mockModel, null, this);
+  var row = this.taskListView.createRow(controller, mockModel, "top");
+  controller.view = row;
+  row.autoCreateCells([TaskController.columnIndexes.actions, TaskController.columnIndexes.data]);
+  row.render();
+  controller.editTask();
+  row.getCell(TaskController.columnIndexes.data).hide();
+};
+
 /**
  * 
  */
@@ -187,6 +199,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
     dataSource : StoryModel.prototype.getTasks,
+    saveRowCallback: TaskController.prototype.saveTask,
     caption: ""
   });
   config.addCaptionItem( {

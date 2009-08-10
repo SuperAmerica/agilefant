@@ -29,7 +29,7 @@ public class Assignment implements Serializable {
     private Backlog backlog;
     private User user;
     private ExactEstimate personalLoad;
-    private short availability = 100;
+    private int availability = 100;
 
     /**
      * Deviation from project's default overhead.
@@ -82,11 +82,11 @@ public class Assignment implements Serializable {
         this.id = id;
     }
 
-    public short getAvailability() {
+    public int getAvailability() {
         return availability;
     }
 
-    public void setAvailability(short availability) {
+    public void setAvailability(int availability) {
         this.availability = availability;
     }
 

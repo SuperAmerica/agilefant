@@ -161,8 +161,8 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
                 newContainer.setIteration(row.iteration);
                 iterationEffortData.put(row.iterationId, newContainer);
             }
-            double availabilityFactor = (double) row.availability
-                    / (double) row.availabilitySum;
+            double availabilityFactor = ((double) row.availability)
+                    / ((double) row.availabilitySum);
 
             double effortFraction = availabilityFactor
                     * row.effortLeft.doubleValue();

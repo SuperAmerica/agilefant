@@ -183,6 +183,12 @@
     <action name="createIteration" method="create" class="iterationAction">
       <result type="dispatcher">/WEB-INF/jsp/forms/createIteration.jsp</result>
     </action>
+
+    <action name="storeNewIteration" method="storeNew" class="iterationAction">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+      </result>
+    </action>
     
     <action name="storeIteration" method="store" class="iterationAction">
       <interceptor-ref name="prefetchStack"/>

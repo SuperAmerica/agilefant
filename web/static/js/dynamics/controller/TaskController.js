@@ -18,6 +18,42 @@ TaskController.columnIndexes = {
 };
 
 TaskController.prototype = new CommonController();
+
+StoryController.prototype.removeStory = function() {
+  this.parentController.removeChildController("story", this);
+  this.model.remove();
+};
+
+/**
+ * 
+ */
+TaskController.prototype.editTask = function() {
+  this.model.setInTransaction(true);
+  this.view.editRow();
+};
+
+TaskController.prototype.saveTask = function() {
+  var createNewTask = !this.model.getId();
+  if(this.view.saveRowEdit()) {
+    this.model.commit();
+  }
+  if(createNewTask) {
+    this.view.remove();
+    return;
+  }
+};
+
+TaskController.prototype.cancelEdit = function() {
+  var createNewTask = !this.model.getId();
+  if(createNewTask) {
+    this.view.remove();
+    return;
+  }
+  this.model.setInTransaction(false);
+  this.view.closeRowEdit();
+  this.model.rollback();
+};
+
 TaskController.prototype.toggleFactory = function(view, model) {
   var options = {
       collapse : TaskController.prototype.hideDetails,

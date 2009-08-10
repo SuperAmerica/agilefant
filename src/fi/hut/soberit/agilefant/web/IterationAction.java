@@ -76,6 +76,11 @@ public class IterationAction implements
         return Action.SUCCESS;
     }
     
+    public String storeNew() {
+        iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
+        return Action.SUCCESS;
+    }
+    
     public void initializePrefetchedData(int objectId) {
         this.iteration = this.iterationBusiness.retrieve(objectId);
     }

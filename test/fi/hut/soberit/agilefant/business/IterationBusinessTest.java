@@ -381,7 +381,7 @@ public class IterationBusinessTest {
         expect(iterationDAO.get(16)).andReturn(iteration);
         expect(assignmentBusiness.addMultiple(EasyMock.eq(iteration), 
                 EasyMock.capture(userIdCapture), EasyMock.eq(ExactEstimate.ZERO), 
-                EasyMock.eq((short)100))).andReturn(Arrays.asList(projectAssignment));
+                EasyMock.eq(100))).andReturn(Arrays.asList(projectAssignment));
         replayAll();
         
         this.iterationBusiness.store(0, 11, iter);

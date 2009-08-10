@@ -458,4 +458,5 @@ div.loadingStories {
 ul.storyTabs {
    top: 2em;
    position: relative;
+   width: 400px;
 }

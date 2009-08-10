@@ -9,8 +9,8 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 
 public interface AssignmentBusiness extends GenericBusiness<Assignment> {
     public Assignment store(int assignmentId, ExactEstimate personalLoad,
-            short availability);
+            int availability);
 
     public Collection<Assignment> addMultiple(Backlog backlog,
-            Set<Integer> userIds, ExactEstimate personalLoad, short availability);
+            Set<Integer> userIds, ExactEstimate personalLoad, int availability);
 }

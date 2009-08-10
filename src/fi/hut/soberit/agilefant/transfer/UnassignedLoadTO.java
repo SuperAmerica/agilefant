@@ -8,9 +8,9 @@ public class UnassignedLoadTO {
     public int iterationId;
     public Iteration iteration;
     public int availabilitySum;
-    public short availability;
+    public int availability;
     
-    public UnassignedLoadTO(ExactEstimate effortLeft, int iterationId, short userAvailability) {
+    public UnassignedLoadTO(ExactEstimate effortLeft, int iterationId, int userAvailability) {
         this.availability = userAvailability;
         this.effortLeft = effortLeft;
         this.iterationId = iterationId;

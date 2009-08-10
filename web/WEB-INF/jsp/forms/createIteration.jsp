@@ -8,7 +8,7 @@
         format="%{getText('struts.shortDateTime.format')}" />
 
 <div id="editIterationForm" class="validateWrapper validateNewIteration">
-<form method="post" action="ajax/storeIteration.action">
+<form method="post" action="ajax/storeNewIteration.action">
 	<ww:hidden name="iterationId" value="%{iteration.id}" />
 	
 

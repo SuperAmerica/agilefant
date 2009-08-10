@@ -35,7 +35,7 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
     }
     
     public Assignment store(int assignmentId, ExactEstimate personalLoad,
-            short availability) {
+            int availability) {
         Assignment persisted = this.retrieve(assignmentId);
         persisted.setPersonalLoad(personalLoad);
         persisted.setAvailability(availability);
@@ -62,7 +62,7 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
     }
     
     public Collection<Assignment> addMultiple(Backlog backlog,
-            Set<Integer> userIds, ExactEstimate personalLoad, short availability) {
+            Set<Integer> userIds, ExactEstimate personalLoad, int availability) {
         Collection<Assignment> assignments = this.getAssignemntsFromBacklog(backlog);
         Set<Integer> assignedUserIds = this.getAssignedUserIds(backlog);
         for (int userId : userIds) {

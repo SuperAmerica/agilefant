@@ -132,7 +132,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         List<Object[]> data = asList(iteration);
         List<UnassignedLoadTO> result = new ArrayList<UnassignedLoadTO>();
         for(Object[] rowData : data) {
-            UnassignedLoadTO row = new UnassignedLoadTO((ExactEstimate)rowData[0],(Integer)rowData[1], (Short)rowData[2]);
+            UnassignedLoadTO row = new UnassignedLoadTO((ExactEstimate)rowData[0],(Integer)rowData[1], (Integer)rowData[2]);
             result.add(row);
         }
         
@@ -160,7 +160,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         List<Object[]> data = asList(iteration);
         List<UnassignedLoadTO> result = new ArrayList<UnassignedLoadTO>();
         for(Object[] rowData : data) {
-            UnassignedLoadTO row = new UnassignedLoadTO((ExactEstimate)rowData[0],(Integer)rowData[1], (Short)rowData[2]);
+            UnassignedLoadTO row = new UnassignedLoadTO((ExactEstimate)rowData[0],(Integer)rowData[1], (Integer)rowData[2]);
             result.add(row);
         }
         

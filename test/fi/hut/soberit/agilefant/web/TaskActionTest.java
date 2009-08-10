@@ -7,6 +7,10 @@ import static org.easymock.EasyMock.verify;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -93,6 +97,7 @@ public class TaskActionTest {
     public void testAjaxStoreTask_newTask() {
         taskAction.setStoryId(null);
         taskAction.setIterationId(2);
+        taskAction.setUsersChanged(true);
         expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
             .andReturn(task);
         expectPopulateJsonData();
@@ -106,6 +111,7 @@ public class TaskActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testAjaxStoreTask_error() {
         taskAction.setIterationId(2);
+        taskAction.setUsersChanged(true);
         
         expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
@@ -113,6 +119,39 @@ public class TaskActionTest {
         
         taskAction.store();
         
+        verifyAll();
+    }
+    
+    @Test
+    public void testStoreTask_dontUpdateUsers() {
+        taskAction.setUsersChanged(false);
+        taskAction.setIterationId(2);
+        taskAction.setUserIds(new HashSet<Integer>(Arrays.asList(1,2,3)));
+        
+        expect(taskBusiness.storeTask(task, 2, null, null))
+            .andReturn(task);
+        
+        expectPopulateJsonData();
+        
+        replayAll();
+        taskAction.store();
+        verifyAll();
+    }
+    
+    @Test
+    public void testStoreTask_updateUsers() {
+        taskAction.setUsersChanged(true);
+        taskAction.setIterationId(2);
+        Set<Integer> userIds = new HashSet<Integer>(Arrays.asList(1,2,3));
+        taskAction.setUserIds(userIds);
+        
+        expect(taskBusiness.storeTask(task, 2, null, userIds))
+            .andReturn(task);
+        
+        expectPopulateJsonData();
+        
+        replayAll();
+        taskAction.store();
         verifyAll();
     }
     

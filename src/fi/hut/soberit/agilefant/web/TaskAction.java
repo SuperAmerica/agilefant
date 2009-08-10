@@ -35,7 +35,8 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private Integer iterationId;
     private Integer storyId;
 
-    private Set<Integer> userIds = new HashSet<Integer>();   
+    private Set<Integer> userIds = new HashSet<Integer>();
+    private boolean usersChanged = false;
 
     // CRUD
     
@@ -45,7 +46,11 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     public String store() {
-        task = taskBusiness.storeTask(task, iterationId, storyId, userIds);
+        Set<Integer> users = null;
+        if (usersChanged) {
+            users = userIds;
+        }
+        task = taskBusiness.storeTask(task, iterationId, storyId, users);
         populateJsonData();
         return Action.SUCCESS;
     }
@@ -125,5 +130,13 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
 
     public void setStoryId(Integer storyId) {
         this.storyId = storyId;
+    }
+
+    public boolean isUsersChanged() {
+        return usersChanged;
+    }
+
+    public void setUsersChanged(boolean usersChanged) {
+        this.usersChanged = usersChanged;
     }
 }

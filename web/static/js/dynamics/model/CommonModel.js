@@ -74,16 +74,20 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   }
   
   // 2. Remove old relations that are not in the new ones
-  for (i = 0; i < this.relations[type].length; i++) {
-    var old = this.relations[type][i];
+  var me = this;
+  var removeRelations = [];
+  $.each(this.relations[type], function(k, old) {
     if (jQuery.inArray(old.getHashCode(), newHashes) === -1) {
-      this.removeRelation(old);
-      this.relationChanged = true;
+      removeRelations.push(old);
+      me.relationChanged = true;
     }
     else {
       currentHashes.push(old.getHashCode());
-    }
-  }
+    }    
+  });
+  $.each(removeRelations, function(k, item) {
+    me.removeRelation(item);
+  });
   
   // 3. Update the new relations
   for (i = 0; i < newObjects.length; i++) {
@@ -94,6 +98,23 @@ CommonModel.prototype._updateRelations = function(type, newData) {
       this.relationChanged = true;
     }
   }
+};
+
+/**
+ * Remove the object and delete all relations.
+ * <p>
+ * Will call the internal method <code>_remove</code>, which should be
+ * overwritten by any subclass. 
+ */
+CommonModel.prototype.remove = function() {
+  
+};
+
+/**
+ * Internal abstact method to handle the delete ajax request.
+ */
+CommonModel.prototype._remove = function() {
+  throw new Error("Abstract method called: _remove");
 };
 
 /**

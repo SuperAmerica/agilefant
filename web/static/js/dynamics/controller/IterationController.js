@@ -135,8 +135,10 @@ IterationController.prototype.initializeStoryConfig = function() {
     minWidth : 24,
     autoScale : true,
     cssClass : 'story-row',
-    title : "Prio",
+    title : "#",
     headerTooltip : 'Priority',
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getPriority),
+    defaultSortColumn: true,
     subViewFactory : StoryController.prototype.taskToggleFactory
   });
   config.addColumnConfiguration(StoryController.columnIndexes.name, {
@@ -149,6 +151,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
     defaultSortColumn: true,
     editable : true,
+    dragHandle: true,
     edit : {
       editor : "Text",
       set : StoryModel.prototype.setName,

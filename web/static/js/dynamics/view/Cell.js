@@ -32,15 +32,11 @@ DynamicTableCell.prototype.initialize = function() {
 	if (this.config.getCssClass()) {
 		this.element.addClass(this.config.getCssClass());
 	}
-	if (this.config.getSubViewFactory()) {
-	  var factory = this.config.getSubViewFactory();
-		this.subView = factory.call(this.row
-				.getController(), this, this.row.getModel());
-		this.subView.render();
-	
-	}
 	if(!this.config.isVisible()) {
 	  this.element.hide();
+	}
+	if(this.config.isDragHandle()) {
+	  this.element.addClass(DynamicTable.cssClasses.dragHandle);
 	}
 	if(this.config.isEditable()) {
 	  this.element.attr("title", "Double click to edit");
@@ -85,6 +81,12 @@ DynamicTableCell.prototype.render = function() {
 	var getter = this.config.getGetter();
 	var decorator = this.config.getDecorator();
 	var value = "";
+	var subViewFactory = this.config.getSubViewFactory();
+  if (subViewFactory && !this.subView) {
+    this.subView = subViewFactory.call(this.row
+        .getController(), this, model);
+    this.subView.render(); 
+  }
 	if (getter) {
 		value = getter.call(model);
 	} else {

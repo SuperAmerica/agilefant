@@ -454,3 +454,8 @@ div.loadingStories {
 	padding:30px 0 0 10px;
 	width:100%;
 }
+
+ul.storyTabs {
+   top: 2em;
+   position: relative;
+}

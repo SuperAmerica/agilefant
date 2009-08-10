@@ -451,3 +451,4 @@ alter table story_user_AUD add index FK9A1CB82620258526 (REV), add constraint FK
 alter table task_user_AUD add index FKF0A49D9620258526 (REV), add constraint FKF0A49D9620258526 foreign key (REV) references agilefant_revisions (id);
 alter table tasks_AUD add index FKBD8325F20258526 (REV), add constraint FKBD8325F20258526 foreign key (REV) references agilefant_revisions (id);
 alter table users_AUD add index FK154C77D920258526 (REV), add constraint FK154C77D920258526 foreign key (REV) references agilefant_revisions (id);
+alter table agilefant_revisions add column userId integer;

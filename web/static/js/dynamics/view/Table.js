@@ -38,7 +38,8 @@ DynamicTable.cssClasses = {
   sortImgDown : "dynamictable-sortimg-down",
   fieldError : "invalidValue",
   validationError : "validationError",
-  validationErrorContainer : "cellError"
+  validationErrorContainer : "cellError",
+  dragHandle: "dynamictable-dragHandle"
 };
 
 DynamicTable.prototype = new DynamicView();
@@ -146,6 +147,7 @@ DynamicTable.prototype.layout = function() {
     this.element.sortable({
     //  containment: this.container,
       items: "> .dynamicTableDataRow",
+      handle: "." + DynamicTable.cssClasses.dragHandle,
       stop: function(event, ui) {
         var newPos = me._stackPositionAfterSort(ui.item);
         var targetView = ui.item.data("row");

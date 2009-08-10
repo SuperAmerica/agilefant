@@ -89,12 +89,9 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   });
   var infoContents = new DynamicVerticalTable(this, this.model, config, info);
   var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
-  var tabs = new DynamicsTabs(tasks);
+  var tabs = new DynamicsTabs(tasks, {tabClass: "storyTabs"});
   var taskTab = tabs.add("Tasks");
   var heTab = tabs.add("Spent effort");
-  tabs.add("Create task", {float: 'right'}, {callback: function() {
-    
-  }});
   var historyTab = tabs.add("History");
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
       taskTab);
@@ -189,7 +186,15 @@ StoryController.prototype.storyActionFactory = function(view, model) {
 StoryController.prototype.initTaskListConfiguration = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
-    dataSource : StoryModel.prototype.getTasks
+    dataSource : StoryModel.prototype.getTasks,
+    caption: ""
+  });
+  config.addCaptionItem( {
+    name : "createTask",
+    text : "Create task",
+    cssClass : "creteTask",
+    visible: true,
+    callback : StoryController.prototype.createTask
   });
   config.addColumnConfiguration(TaskController.columnIndexes.prio, {
     minWidth : 24,

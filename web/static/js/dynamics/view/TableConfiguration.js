@@ -19,6 +19,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			editable: false,
 			subViewFactory: null,
 			visible: true,
+			dragHandle: false,
 			edit: {
 				decorator: null,
 				items: null,
@@ -61,6 +62,9 @@ DynamicTableColumnConfiguration.prototype.getDecorator = function() {
 };
 DynamicTableColumnConfiguration.prototype.isFullWidth = function() {
 	return this.options.fullWidth;
+};
+DynamicTableColumnConfiguration.prototype.isDragHandle = function() {
+  return this.options.dragHandle;
 };
 DynamicTableColumnConfiguration.prototype.getCssClass = function() {
 	return this.options.cssClass;

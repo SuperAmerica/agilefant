@@ -1,8 +1,12 @@
-var DynamicsTabs = function(parent) {
-  this.id = "dtab_" + (new Date()).getTime() + "_" + Math.floor(Math.random()*1000000);
+var DynamicsTabs = function(parent, options) {
+  this.id = "dtab_" + new Date().getTime() + "_" + Math.floor(Math.random()*1000000);
   this.tabs = [];
+  this.options = options;
   this.element = $('<div />').appendTo(parent);
   this.titles = $('<ul />').appendTo(this.element);
+  if(this.options.tabClass) {
+     this.titles.addClass(this.options.tabClass);
+  }
   this.element.tabs();
 };
 DynamicsTabs.prototype = new ViewPart();
@@ -11,20 +15,14 @@ DynamicsTabs.prototype.add = function(name, cssOpt, options) {
       callback: null
   };
   jQuery.extend(opt, options);
-  if(opt.callback) {      
-    var newTab = $('<li />').addClass("dynamictable-captionaction")
-    .appendTo(this.titles).css(cssOpt).text(name);
-    newTab.click(function() {
-      opt.callback();
-    });
-  } else {
-    var id = this.id+"_"+this.tabs.length;
-    this.element.tabs('add', '#'+id, name);
-    var tabNum = this.tabs.length;
-    var newTab = this.element.find("ul li:eq("+tabNum+")");  
-    newTab.css(cssOpt);
-    var el = this.element.find("#"+id);
-    this.tabs.push(el);
-    return el;
-  }
+
+  var id = this.id+"_"+this.tabs.length;
+  var newTab = $('<div id="'+id+'"/>').appendTo(this.element);
+  var tel = $('#'+id);
+  this.element.tabs('add', '#'+id, name);
+  var tabNum = this.tabs.length;
+  newTab.css(cssOpt);
+  var el = this.element.find("#"+id);
+  this.tabs.push(el);
+  return el;
 };

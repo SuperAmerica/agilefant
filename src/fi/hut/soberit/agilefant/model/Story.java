@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
@@ -174,6 +175,7 @@ public class Story implements TimesheetLoggable, NamedObject {
     @OneToMany(mappedBy = "story",
             targetEntity = fi.hut.soberit.agilefant.model.StoryHourEntry.class )
     @NotAudited
+    @OrderBy("date desc")
     public Collection<StoryHourEntry> getHourEntries() {
         return hourEntries;
     }

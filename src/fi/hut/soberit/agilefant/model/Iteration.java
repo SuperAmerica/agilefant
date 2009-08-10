@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import flexjson.JSON;
 
@@ -38,6 +40,7 @@ import flexjson.JSON;
  */
 @Entity
 @BatchSize(size = 20)
+@Audited
 public class Iteration extends Backlog implements Schedulable {
  
     private Date startDate;
@@ -87,6 +90,7 @@ public class Iteration extends Backlog implements Schedulable {
     
     @OneToMany(mappedBy = "iteration")
     @JSON(include = false)
+    @NotAudited
     public Collection<Task> getTasks() {
         return tasks;
     }
@@ -105,6 +109,7 @@ public class Iteration extends Backlog implements Schedulable {
     @OneToMany(mappedBy = "iteration")
     @JSON(include = false)
     @Cascade(CascadeType.DELETE)
+    @NotAudited
     public Collection<IterationHistoryEntry> getHistoryEntries() {
         return historyEntries;
     }

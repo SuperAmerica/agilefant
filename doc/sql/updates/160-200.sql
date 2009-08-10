@@ -452,3 +452,8 @@ alter table task_user_AUD add index FKF0A49D9620258526 (REV), add constraint FKF
 alter table tasks_AUD add index FKBD8325F20258526 (REV), add constraint FKBD8325F20258526 foreign key (REV) references agilefant_revisions (id);
 alter table users_AUD add index FK154C77D920258526 (REV), add constraint FK154C77D920258526 foreign key (REV) references agilefant_revisions (id);
 alter table agilefant_revisions add column userId integer;
+
+create table assignment_AUD (id integer not null, REV integer not null, REVTYPE tinyint, availability smallint, delta_personal_load bigint, backlog_id integer, user_id integer, primary key (id, REV)) ENGINE=InnoDB;
+create table backlogs_AUD (backlogtype varchar(31) not null, id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), backlogSize integer, baselineLoad bigint, endDate datetime, rank integer, startDate datetime, status integer, primary key (id, REV)) ENGINE=InnoDB;
+alter table assignment_AUD add index FK1B6D861E20258526 (REV), add constraint FK1B6D861E20258526 foreign key (REV) references agilefant_revisions (id);
+alter table backlogs_AUD add index FK46C0B1E720258526 (REV), add constraint FK46C0B1E720258526 foreign key (REV) references agilefant_revisions (id);

@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.model;
 import javax.persistence.Entity;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.envers.Audited;
 
 /**
  * Hibernate entity bean representing a product.
@@ -24,6 +25,7 @@ import org.hibernate.annotations.BatchSize;
  */
 @Entity
 @BatchSize(size = 20)
+@Audited
 public class Product extends Backlog {
 
 }

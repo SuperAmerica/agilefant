@@ -72,25 +72,10 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return iterationStories;
     }
     
-    @Transactional(readOnly = true)
-    private Collection<HourEntryTO> constructHourEntries(Task task) {
-        Collection<TaskHourEntry> hourEntries = taskHourEntryDAO.retrieveByTask(task);
-        if(hourEntries == null) {
-            return null;
-        }
-        Collection<HourEntryTO> toEntries = new ArrayList<HourEntryTO>();
-
-        for(TaskHourEntry t : hourEntries) {
-            toEntries.add(new HourEntryTO(t));
-        }
-        
-        return toEntries;
-    }
-    
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task, Collection<User> assignedUsers) {
-        TaskTO taskTO = new TaskTO(task, constructHourEntries(task));
+        TaskTO taskTO = new TaskTO(task);
         taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
         
         for (User responsible : taskTO.getResponsibles()) {

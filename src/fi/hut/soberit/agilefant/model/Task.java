@@ -18,9 +18,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.NamedQuery;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -52,6 +54,7 @@ public class Task implements TimesheetLoggable, NamedObject {
     private ExactEstimate effortLeft = new ExactEstimate();
     private ExactEstimate originalEstimate = new ExactEstimate();
     private Collection<User> responsibles = new ArrayList<User>();
+    private Collection<TaskHourEntry> hourEntries = new ArrayList<TaskHourEntry>();
     
     private Date createdDate;
     private User creator;
@@ -186,5 +189,16 @@ public class Task implements TimesheetLoggable, NamedObject {
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+    @OneToMany(mappedBy="task")
+    @OrderBy("date desc")
+    @NotAudited
+    public Collection<TaskHourEntry> getHourEntries() {
+        return hourEntries;
+    }
+    
+    public void setHourEntries(Collection<TaskHourEntry> hourEntries) {
+        this.hourEntries = hourEntries;
     }
 }

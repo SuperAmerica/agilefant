@@ -94,6 +94,7 @@ public class TransferObjectBusinessTest {
     @Test
     public void testContructBacklogDataWithUserData() {
         story1.getTasks().add(task);
+        task.setHourEntries(null);
         iteration.setStories(Arrays.asList(story1, story2));
 
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
@@ -129,6 +130,7 @@ public class TransferObjectBusinessTest {
     public void testConstructTaskTO_delegate() {
         task.setStory(null);
         task.setIteration(iteration);
+        task.setHourEntries(null);
         
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
@@ -149,7 +151,8 @@ public class TransferObjectBusinessTest {
     public void testConstructTaskTO_delegateForStory() {
         task.setStory(story1);
         task.setIteration(null);
-        
+        task.setHourEntries(null);
+
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
 
@@ -169,6 +172,7 @@ public class TransferObjectBusinessTest {
     public void testConstructTaskTO() {
         task.setIteration(iteration);
         task.setResponsibles(Arrays.asList(assignedUser, notAssignedUser));
+        task.setHourEntries(null);
 
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();

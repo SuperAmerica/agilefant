@@ -13,10 +13,13 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import flexjson.JSON;
 
@@ -49,6 +52,7 @@ import flexjson.JSON;
 // subclass types discriminated using string column
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "backlogs")
+@Audited
 public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     private int id;
@@ -114,6 +118,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @JSON(include = false)
     @ManyToOne
+    @NotAudited
     public Backlog getParent() {
         return parent;
     }
@@ -139,11 +144,13 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      * @return
      */
     @OneToMany(mappedBy = "parent")
+    @NotAudited
     public Collection<Backlog> getChildren() {
         return children;
     }
    
     @OneToMany(mappedBy = "backlog")
+    @NotAudited
     public Collection<Story> getStories() {
         return stories;
     }
@@ -153,6 +160,8 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     }
 
     @OneToMany(mappedBy="backlog")
+    @OrderBy("date desc")
+    @NotAudited
     public Collection<BacklogHourEntry> getHourEntries() {
         return hourEntries;
     }

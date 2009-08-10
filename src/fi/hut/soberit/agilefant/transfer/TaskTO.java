@@ -12,7 +12,6 @@ public class TaskTO extends Task {
     // Helper fields
     
     private Collection<ResponsibleContainer> userData = new ArrayList<ResponsibleContainer>();
-    private Collection<HourEntryTO> hourEntries = new ArrayList<HourEntryTO>();
     private long effortSpent;    
 
     public TaskTO(Task task) {
@@ -28,11 +27,7 @@ public class TaskTO extends Task {
         this.setResponsibles(task.getResponsibles());
         this.setCreatedDate(task.getCreatedDate());
         this.setCreator(task.getCreator());
-    }
-    
-    public TaskTO(Task task, Collection<HourEntryTO> hourEntries) {
-        this(task);
-        this.setHourEntries(hourEntries);
+        this.setHourEntries(task.getHourEntries());
     }
     
     public void setUserData(Collection<ResponsibleContainer> userData) {
@@ -44,14 +39,6 @@ public class TaskTO extends Task {
         return userData;
     }
 
-    public void setHourEntries(Collection<HourEntryTO> hourEntries) {
-        this.hourEntries = hourEntries;
-    }
-
-    @JSON(include = true)
-    public Collection<HourEntryTO> getHourEntries() {
-        return hourEntries;
-    }
 
     public long getEffortSpent() {
         return effortSpent;

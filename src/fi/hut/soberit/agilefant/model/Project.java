@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import flexjson.JSON;
 
@@ -46,6 +48,7 @@ import flexjson.JSON;
  */
 @Entity
 @BatchSize(size = 20)
+@Audited
 public class Project extends Backlog implements Schedulable {
 
     private ProjectType projectType;
@@ -84,6 +87,7 @@ public class Project extends Backlog implements Schedulable {
 
     @ManyToOne
     @JSON(include = false)
+    @NotAudited
     public ProjectType getProjectType() {
         return projectType;
     }
@@ -120,6 +124,7 @@ public class Project extends Backlog implements Schedulable {
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
                 mappedBy = "backlog")
     @JSON(include = false)
+    @NotAudited
     public Collection<Assignment> getAssignments() {
         return assignments;
     }

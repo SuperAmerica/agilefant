@@ -3,7 +3,7 @@ Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", 
 function init_user_load(timelineTrack, timeplotTrack, userId) {
 	var eventSource = new AgilefantTimeplot.DefaultEventSource();
 	
-	var timeGeometry = new Timeplot.DefaultTimeGeometry({
+	var timeGeometry = new Timeplot.WeekTimeGeometry({
 		gridColor: new Timeplot.Color("#000000"),
 		axisLabelsPlacement: "bottom"
 	});

@@ -63,3 +63,37 @@ Timeplot.createLoadInfo = function(params) {
   base.AgilefantPlot = params.AgilefantPlot;
   return base;
 };
+
+Timeplot.DefaultTimeGeometryExtender = function() {};
+Timeplot.DefaultTimeGeometryExtender.prototype = Timeplot.DefaultTimeGeometry.prototype;
+Timeplot.WeekTimeGeometry = function(params) {
+  Timeplot.DefaultTimeGeometry.call(this, params);
+};
+Timeplot.WeekTimeGeometry.prototype = new Timeplot.DefaultTimeGeometryExtender();
+Timeplot.WeekTimeGeometry.prototype._calculateGrid = function() {
+  var grid = [];
+  
+  var time = SimileAjax.DateTime;
+  var u = this._unit;
+  var p = this._period;
+  
+  if (p == 0) return grid;
+  
+  var unit = time.WEEK;
+
+  var t = u.cloneValue(this._earliestDate);
+
+  do {
+      time.roundDownToInterval(t, unit, this._timeZone, 1, 0);
+      var x = this.toScreen(u.toNumber(t));
+      var l = t.toLocaleDateString();
+
+      if (x > 0) { 
+          grid.push({ x: x, label: l });
+      }
+      time.incrementByInterval(t, unit, this._timeZone);
+  } while (t.getTime() < this._latestDate.getTime());
+  
+  return grid;
+
+};

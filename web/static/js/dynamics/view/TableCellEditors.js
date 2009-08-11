@@ -37,6 +37,7 @@ TableEditors.CommonEditor.prototype.save = function() {
 };
 TableEditors.CommonEditor.prototype.close = function() {
   this.element.trigger("editorClosing");
+  this.hideError();
   this.element.remove();
   //this.element = null;
 };
@@ -97,11 +98,20 @@ TableEditors.CommonEditor.prototype.saveRow = function() {
 };
 TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
   if(event.keyCode === 27 && !this.options.editRow) {
+    event.stopPropagation();
+    event.preventDefault();
     this.close();
+    return false;
   } else if(event.keyCode === 13 && !this.options.editRow) {
+    event.stopPropagation();
+    event.preventDefault();
     this.save();
+    return false;
   } else if(event.keyCode === 13 && this.options.editRow) {
+    event.stopPropagation();
+    event.preventDefault();
     this.saveRow();
+    return false;
   }
 };
 TableEditors.CommonEditor.prototype.setEditorValue = function(value) {

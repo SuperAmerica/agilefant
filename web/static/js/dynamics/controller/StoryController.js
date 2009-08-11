@@ -47,10 +47,12 @@ StoryController.prototype.saveStory = function() {
     this.model.commit();
   }
   else {
+    $('<div />').text("no goes").appendTo(document.body);
     return;
   }
   if(createNewStory) {
-    this.view.remove();
+    //this.view.remove();
+    $('<div />').text("remove shits").appendTo(document.body);
     return;
   }
   this.view.getCell(StoryController.columnIndexes.description).hide();
@@ -171,8 +173,8 @@ StoryController.prototype.taskToggleFactory = function(view, model) {
 };
 
 StoryController.prototype.storyButtonFactory = function(view, model) {
-  return new DynamicsButtons(this,[{text: 'Cancel', callback: StoryController.prototype.cancelEdit},
-                                   {text: 'Save', callback: StoryController.prototype.saveStory}
+  return new DynamicsButtons(this,[{text: 'Save', callback: StoryController.prototype.saveStory},
+                                   {text: 'Cancel', callback: StoryController.prototype.cancelEdit}
                                    ] ,view);
 };
 

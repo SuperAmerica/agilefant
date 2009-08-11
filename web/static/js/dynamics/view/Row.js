@@ -25,11 +25,9 @@ DynamicTableRow.prototype.registerEventHandlers = function(config) {
   var me = this;
   this.element.bind("storeRequested", function() {
     config.getSaveRowCallback().call(me.getController());
-    return false;
   });
   this.element.bind("cancelEdit", function() {
     config.getCancelEditRowCallback().call(me.getController());
-    return false;
   });
 };
 

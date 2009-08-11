@@ -70,9 +70,9 @@ TaskController.prototype.toggleFactory = function(view, model) {
     return this.toggleView;
 };
 TaskController.prototype.taskButtonFactory = function(view, model) {
-  return new DynamicsButtons(this,[{text: 'Cancel', callback: TaskController.prototype.cancelEdit},
-                                   {text: 'Save', callback: TaskController.prototype.saveTask}
-                                   ] ,view);
+  return new DynamicsButtons(this,[{text: 'Save', callback: TaskController.prototype.saveTask},
+                                   {text: 'Cancel', callback: TaskController.prototype.cancelEdit}
+                                    ] ,view);
 };
 
 TaskController.prototype.showDetails = function() {

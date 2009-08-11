@@ -37,7 +37,7 @@ $(document).ready(function() {
 			}
 		}
 		});
-		init_user_load($("#iterations"),$("#loadPlot"),${userId});
+		init_user_load($("#loadPlot"),${userId});
 });
 </script>
 <link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
@@ -63,8 +63,7 @@ $(document).ready(function() {
 		<div id="Spent_Effort"></div>
 		<div id="detailedLoadTable" class="ui-tabs-hide"></div>
 		<div id="smallLoadTable">
-			<div style="height: 100px; width: 96%; margin-left: 2%; margin-right: 2%;" id="iterations"></div>
-			<div style="height: 200px; margin-top: 10px;" id="loadPlot"></div>
+			<div style="height: 250px; margin-top: 10px;" id="loadPlot"></div>
 		</div>
 	</div>
 </div>

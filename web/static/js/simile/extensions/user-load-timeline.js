@@ -5,8 +5,12 @@ Timeline.DefaultEventSource.prototype.loadBacklogs = function(data) {
             var event = data[i];
             var start = new Date();
             var end = new Date();
+            if(event.startDate < this.minDate.getTime()) {
+              event.startDate = this.minDate.getTime();
+            }
             start.setTime(event.startDate);
             end.setTime(event.endDate);
+            
 
             var evt = new Timeline.DefaultEventSource.Event({
                           id: ""+event.id,

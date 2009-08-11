@@ -256,7 +256,8 @@ CommonModel.prototype._saveData = function(id, changedData) {
  * back to persisted data.
  */
 CommonModel.prototype.rollback = function() {
-  this.currentData = this.persistedData;
+  this.currentData = {};
+  jQuery.extend(this.currentData, this.persistedData);
   this.callListeners(new DynamicsEvents.EditEvent(this));
 };
 

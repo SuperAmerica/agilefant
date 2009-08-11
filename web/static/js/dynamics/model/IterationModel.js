@@ -73,6 +73,7 @@ IterationModel.prototype._saveData = function(id, changedData) {
     },
     error: function(request, status, error) {
       alert("Error saving story");
+      me.rollback();
     }
   });
 };

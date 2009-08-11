@@ -328,6 +328,9 @@ $(document).ready(function() {
     same(listenerCallCount, 1, "Listeners are called once");
     same(this.commonModel.persistedData, persistedData, "Persisted data matches");
     same(this.commonModel.currentData, persistedData, "Current data matches");
+    
+    this.commonModel.persistedData.fooKey = "fooValue";
+    ok(!this.commonModel.currentData.fooKey, "Foo key is not in current data");
   });
   
 });

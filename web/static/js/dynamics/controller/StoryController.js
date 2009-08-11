@@ -319,7 +319,13 @@ StoryController.prototype.initTaskListConfiguration = function() {
       set : TaskModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.tasksData, {
+  config.addColumnConfiguration(TaskController.columnIndexes.buttons, {
+    fullWidth : true,
+    visible : false,
+    cssClass : 'task-row',
+    subViewFactory : TaskController.prototype.taskButtonFactory
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.data, {
     fullWidth : true,
     visible : false,
     cssClass : 'task-data',

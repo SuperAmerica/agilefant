@@ -14,7 +14,8 @@ TaskController.columnIndexes = {
     es: 6,
     actions: 7,
     description: 8,
-    data: 9
+    buttons: 9,
+    data: 10
 };
 
 TaskController.prototype = new CommonController();
@@ -29,6 +30,7 @@ StoryController.prototype.removeStory = function() {
  */
 TaskController.prototype.editTask = function() {
   this.model.setInTransaction(true);
+  this.view.getCell(TaskController.columnIndexes.buttons).show();
   this.view.editRow();
 };
 
@@ -41,6 +43,7 @@ TaskController.prototype.saveTask = function() {
     this.view.remove();
     return;
   }
+  this.view.getCell(TaskController.columnIndexes.buttons).hide();
 };
 
 TaskController.prototype.cancelEdit = function() {
@@ -63,6 +66,12 @@ TaskController.prototype.toggleFactory = function(view, model) {
     this.toggleView = new DynamicTableToggleView(options, this, view);
     return this.toggleView;
 };
+TaskController.prototype.taskButtonFactory = function(view, model) {
+  return new DynamicsButtons(this,[{text: 'Cancel', callback: TaskController.prototype.cancelEdit},
+                                   {text: 'Save', callback: TaskController.prototype.saveTask}
+                                   ] ,view);
+};
+
 TaskController.prototype.showDetails = function() {
   var cell = this.view.getCell(TaskController.columnIndexes.description);
   if (cell) {
@@ -80,13 +89,13 @@ TaskController.prototype.hideDetails = function() {
 TaskController.prototype.actionColumnFactory = function(view, model) {
   var actionItems = [ {
     text : "Edit",
-    callback : TaskController.prototype.editStory
+    callback : TaskController.prototype.editTask
   }, {
     text : "Move",
-    callback : TaskController.prototype.moveStory
+    callback : TaskController.prototype.moveTask
   }, {
     text : "Delete",
-    callback : TaskController.prototype.removeStory
+    callback : TaskController.prototype.removeTask
   } ];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);

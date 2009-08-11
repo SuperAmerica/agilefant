@@ -32,14 +32,39 @@ $(document).ready(function() {
   test("handle events", function() {
     var testObj = this.mockControl.createMock(TableEditors.CommonEditor);
     testObj.options = {};
+    //mocking dom event
+    var mockEventClass = function() {};
+    mockEventClass.prototype = {
+      stopPropagation: function() {},
+      preventDefault: function() {}
+    };
+    var mockEvent = this.mockControl.createMock(mockEventClass);
+    mockEvent.expects().stopPropagation();
+    mockEvent.expects().preventDefault();
     testObj.expects().close();
+    
+    mockEvent.expects().stopPropagation();
+    mockEvent.expects().preventDefault();
     testObj.expects().save();
+    
+    mockEvent.expects().stopPropagation();
+    mockEvent.expects().preventDefault();
     testObj.expects().saveRow();
-    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, {keyCode: 27});
-    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, {keyCode: 13});
+    
+    //single field esc, close edit
+    mockEvent.keyCode = 27;
+    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, mockEvent);
+    //single field enter, save field
+    mockEvent.keyCode = 13;
+    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, mockEvent);
+    
+    //whole row esc, nothing should happen
     testObj.options = {editRow: true};
-    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, {keyCode: 27});
-    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, {keyCode: 13});
+    mockEvent.keyCode = 27;
+    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, mockEvent);
+    //whole row enter, should save row
+    mockEvent.keyCode = 13;
+    TableEditors.CommonEditor.prototype._handleKeyEvent.call(testObj, mockEvent);
     ok(true, "Callbacks called"); //verify only mock calls
  });
   

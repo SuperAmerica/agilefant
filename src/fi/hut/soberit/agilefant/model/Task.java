@@ -50,8 +50,8 @@ public class Task implements TimesheetLoggable, NamedObject {
     private TaskState state;
     private Priority priority;
     
-    private ExactEstimate effortLeft = new ExactEstimate();
-    private ExactEstimate originalEstimate = new ExactEstimate();
+    private ExactEstimate effortLeft;
+    private ExactEstimate originalEstimate;
     private Collection<User> responsibles = new ArrayList<User>();
     private Collection<TaskHourEntry> hourEntries = new ArrayList<TaskHourEntry>();
     

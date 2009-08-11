@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
+import fi.hut.soberit.agilefant.transfer.UserLoadLimits;
 
 @Component("userLoadAction")
 @Scope("prototype")
@@ -30,12 +31,20 @@ public class UserLoadAction extends ActionSupport {
     
     private ComputedLoadData userLoadData;
     
+    private UserLoadLimits loadLimits;
+    
     public String retrieveUserLoad() {
         User user = userBusiness.retrieve(userId);
         userLoadData = personalLoadBusiness.retrieveUserLoad(user, DEFAULT_LOAD_INTERVAL_LENGTH);
         return Action.SUCCESS;
     }
 
+    public String dailyLoadLimits() {
+        User user = userBusiness.retrieve(userId);
+        loadLimits = personalLoadBusiness.getDailyLoadLimitsByUser(user);
+        return Action.SUCCESS;
+    }
+    
     public ComputedLoadData getUserLoadData() {
         return userLoadData;
     }
@@ -54,5 +63,9 @@ public class UserLoadAction extends ActionSupport {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public UserLoadLimits getLoadLimits() {
+        return loadLimits;
     }
 }

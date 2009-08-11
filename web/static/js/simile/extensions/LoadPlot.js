@@ -86,7 +86,7 @@ Timeplot.WeekTimeGeometry.prototype._calculateGrid = function() {
   do {
       time.roundDownToInterval(t, unit, this._timeZone, 1, 0);
       var x = this.toScreen(u.toNumber(t));
-      var l = t.toLocaleDateString();
+      var l = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate();
 
       if (x > 0) { 
           grid.push({ x: x, label: l });

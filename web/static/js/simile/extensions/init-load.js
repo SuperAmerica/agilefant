@@ -11,11 +11,21 @@ function init_user_load(timelineTrack, timeplotTrack, userId) {
 	var valueGeometry = new Timeplot.DefaultValueGeometry({
 		gridColor: "#000000"
 	});
-	
-	var stepValues = [["rgba(204, 204, 204, 0.7)", 0, 20],
-	                  ["rgba(9, 144, 14, 0.7)", 20, 40],
-	                  ["rgba(245, 221, 57, 0.7)", 40, 50],
-	                  ["rgba(224, 17, 2, 0.7)", 50, 9313122321231232]
+	var userLoadLimits;
+	$.ajax({
+	  async: false,
+	  url: "ajax/userLoadLimits.action",
+	  data: {userId: userId},
+	  dataType: 'json',
+	  success: function(data, status) {
+	    userLoadLimits = data;
+	  }
+	});
+	var stepValues = [["rgba(204, 204, 204, 0.7)", userLoadLimits.dailyLoadLow/60, userLoadLimits.dailyLoadMedium/60],
+	                  ["rgba(9, 144, 14, 0.7)", userLoadLimits.dailyLoadMedium/60, userLoadLimits.dailyLoadHigh/60],
+	                  ["rgba(245, 221, 57, 0.7)", userLoadLimits.dailyLoadHigh/60, userLoadLimits.dailyLoadCritical/60],
+	                  ["rgba(224, 17, 2, 0.7)", userLoadLimits.dailyLoadCritical/60, userLoadLimits.dailyLoadMaximum/60],
+	                  ["rgba(150, 8, 8, 0.7)", userLoadLimits.dailyLoadMaximum/60, Number.MAX_VALUE]
 	                  ];
 	var plotInfo = [
 	                Timeplot.createLoadInfo({

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -36,6 +37,7 @@ import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
 import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
+import fi.hut.soberit.agilefant.transfer.UserLoadLimits;
 
 @Service("personalLoadBusiness")
 @Transactional(readOnly=true)
@@ -54,6 +56,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     @Autowired
     private AssignmentDAO assignmentDAO;
+    
+    @Autowired
+    private SettingBusiness settingBusiness;
     
     /**
      * Calculate sum of task effort left portions for given user per iteration
@@ -417,6 +422,27 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         return this.generatePersonalAssignedLoad(user, start, end, len);
     }
 
+    public UserLoadLimits getDailyLoadLimitsByUser(User user) {
+        UserLoadLimits limits = new UserLoadLimits();
+        double userDailyMinutes;
+        if (user.getWeekEffort() == null) {
+            userDailyMinutes = 0.0;
+        } else {
+            userDailyMinutes = user.getWeekEffort().doubleValue() / 5.0;
+        }
+        double lowPercentage = (double) settingBusiness.getRangeLow() / 100.0;
+        limits.setDailyLoadLow(userDailyMinutes * lowPercentage);
+        double mediumPercentage = (double) settingBusiness.getOptimalLow() / 100.0;
+        limits.setDailyLoadMedium(userDailyMinutes * mediumPercentage);
+        double highPercentage = (double) settingBusiness.getOptimalHigh() / 100.0;
+        limits.setDailyLoadHigh(userDailyMinutes * highPercentage);
+        double criticalPercentage = (double) settingBusiness.getCriticalLow() / 100.0;
+        limits.setDailyLoadCritical(userDailyMinutes * criticalPercentage);
+        double maximumPercentage = (double) settingBusiness.getRangeHigh() / 100.0;
+        limits.setDailyLoadMaximum(userDailyMinutes * maximumPercentage);
+        return limits;
+    }
+    
     public TaskDAO getTaskDAO() {
         return taskDAO;
     }
@@ -443,5 +469,9 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
         this.assignmentDAO = assignmentDAO;
+    }
+
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
 }

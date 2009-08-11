@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.business.PersonalLoadBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
+import fi.hut.soberit.agilefant.transfer.UserLoadLimits;
 
 public class UserLoadActionTest {
     private UserLoadAction userLoadAction;
@@ -42,6 +43,19 @@ public class UserLoadActionTest {
         replayAll();
         assertEquals(Action.SUCCESS, userLoadAction.retrieveUserLoad());
         assertNotNull(userLoadAction.getUserLoadData());
+        verifyAll();
+    }
+    
+    @Test
+    public void testDailyLoadLimits() {
+        User user = new User();
+        UserLoadLimits limits = new UserLoadLimits();
+        expect(userBusiness.retrieve(1)).andReturn(user);
+        expect(personalLoadBusiness.getDailyLoadLimitsByUser(user)).andReturn(limits);
+        replayAll();
+        userLoadAction.setUserId(1);
+        userLoadAction.dailyLoadLimits();
+        assertEquals(limits, userLoadAction.getLoadLimits());
         verifyAll();
     }
 }

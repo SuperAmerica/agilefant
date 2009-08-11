@@ -375,6 +375,12 @@
     		<param name="target">userLoadData</param>
     	</result>
     </action>
+    
+    <action name="userLoadLimits" method="dailyLoadLimits" class="userLoadAction">
+      <result name="success" type="json">
+        <param name="target">loadLimits</param>
+      </result>
+    </action>
     <!-- /User load actions -->
 
 	<!-- Utility actions -->

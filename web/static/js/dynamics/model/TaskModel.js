@@ -75,7 +75,12 @@ TaskModel.prototype._saveData = function(id, changedData) {
     success: function(data, status) {
       me.setData(data);
       if(!id) {
-        
+        if (me.relations.story instanceof StoryModel) {
+          me.relations.story.addTask(me);
+        }
+        else if (me.relations.backlog instanceof IterationModel) {
+          me.relations.backlog.addTask(me);
+        }
       }
     },
     error: function(request, status, error) {

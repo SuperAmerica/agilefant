@@ -131,6 +131,7 @@ CommonModel.prototype.addRelation = function(object) {
   if (this.id) {
     object._addOneWayRelation(this);
   }
+  this.relationChanged = true;
 };
 
 CommonModel.prototype._addOneWayRelation = function(object) {

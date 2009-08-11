@@ -33,8 +33,11 @@ BacklogModel.prototype.addAssignments = function(userIds) {
 };
 
 BacklogModel.prototype.addStory = function(story) {
-  this.relations.story.push(story);
-  story.relations.backlog = this;
-  this.relationChanged = true;
+  this.addRelation(story);
+  this.relationEvents();
+};
+
+BacklogModel.prototype.addTask = function(task) {
+  this.addRelation(task);
   this.relationEvents();
 };

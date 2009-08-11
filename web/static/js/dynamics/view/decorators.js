@@ -24,6 +24,9 @@ var DynamicsDecorators = {
     }
   },
   exactEstimateEditDecorator: function(value) {
+    if (!value) {
+      return "";
+    }
     return Math.round(100*value/60)/100+"h";
   },
   dateDecorator: function(value) {

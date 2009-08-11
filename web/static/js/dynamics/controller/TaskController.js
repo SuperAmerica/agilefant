@@ -106,7 +106,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
 };
 
 TaskController.prototype.effortLeftEditable = function() {
-  if (this.model.getState() === "DONE") {
+  if (this.model.getState() === "DONE" || !this.model.getOriginalEstimate()) {
     return false;
   }
   return true;

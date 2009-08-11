@@ -18,17 +18,27 @@ $(document).ready(function() {
       state: "DONE"
     });
     
+    var taskWithNoOE = new TaskModel();
+    taskWithNoOE.setData({
+      state: "BLOCKED",
+      originalEstimate: null
+    });
+    
     var startedTask = new TaskModel();
     startedTask.setData({
-      state: "PENDING"
+      state: "PENDING",
+      originalEstimate: 120
     });
     
     var doneTC = new ExtendedTaskController();
+    var noOETC = new ExtendedTaskController();
     var startedTC = new ExtendedTaskController();
     doneTC.model = doneTask;
     startedTC.model = startedTask;
+    noOETC.model = taskWithNoOE;
     
     ok(!doneTC.effortLeftEditable(), "Done task's effort left is not editable");
+    ok(!noOETC.effortLeftEditable(), "Effort left is not editable for task with no original estimate");
     ok(startedTC.effortLeftEditable(), "Started task's effort left is editable");
   });
   

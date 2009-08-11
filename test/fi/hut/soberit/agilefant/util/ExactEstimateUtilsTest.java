@@ -48,9 +48,9 @@ public class ExactEstimateUtilsTest {
                 "   1.5h   15min        ").getMinorUnits().longValue());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testWithoutUnit() {
-        ExactEstimateUtils.convertFromString("1").getMinorUnits();
+        assertEquals(60L, ExactEstimateUtils.convertFromString("1").getMinorUnits().longValue());
     }
 
     @Test(expected = IllegalArgumentException.class)

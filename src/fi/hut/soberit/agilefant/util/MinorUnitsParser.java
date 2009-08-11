@@ -9,6 +9,7 @@ public class MinorUnitsParser {
     private final String majorUnit;
 
     private final Pattern PARSER_PATTERN;
+    private final Pattern NUMERIC_PATTERN;
 
     private int minorsPerMajor;
 
@@ -19,6 +20,9 @@ public class MinorUnitsParser {
         this.minorsPerMajor = minorsPerMajor;
         this.PARSER_PATTERN = Pattern.compile("\\s*((\\d+)([.,]\\d+)?"
                 + majorUnit + ")?\\s*((\\d+)" + minorUnit + ")?\\s*");
+        
+        this.NUMERIC_PATTERN =
+            Pattern.compile("^\\s*(\\d+)([.,]\\d+)?(" + majorUnit + ")?\\s*$");
     }
 
     public String convertToString(long minorsUnits) {
@@ -42,15 +46,22 @@ public class MinorUnitsParser {
         double parsedMajorsDecimals;
         int parsedMinors;
 
-        Matcher matcher = PARSER_PATTERN.matcher(string);
-
-        try {
-            matcher.matches();
-            parsedMajors = parseIntSafely(matcher.group(2));
-            parsedMajorsDecimals = parseDoubleSafely(matcher.group(3));
-            parsedMinors = parseIntSafely(matcher.group(5));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid input", e);
+        Matcher numericMatcher = NUMERIC_PATTERN.matcher(string);
+        if (numericMatcher.matches()) {
+            parsedMajors = parseIntSafely(numericMatcher.group(1));
+            parsedMajorsDecimals = parseDoubleSafely(numericMatcher.group(2));
+            parsedMinors = 0;
+        }
+        else {
+            Matcher matcher = PARSER_PATTERN.matcher(string);
+            try {
+                matcher.matches();
+                parsedMajors = parseIntSafely(matcher.group(2));
+                parsedMajorsDecimals = parseDoubleSafely(matcher.group(3));
+                parsedMinors = parseIntSafely(matcher.group(5));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Invalid input", e);
+            }
         }
 
         long minors = parsedMinors + parsedMajors * minorsPerMajor;

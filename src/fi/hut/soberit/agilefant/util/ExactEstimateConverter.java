@@ -14,19 +14,7 @@ public class ExactEstimateConverter extends StrutsTypeConverter {
         if (values[0].length() == 0) {
             return null;
         }
-        ExactEstimate result = new ExactEstimate();
-        long value;
-        try {
-            return ExactEstimateUtils.convertFromString(values[0]);
-        } catch (Exception ex) {
-            try {
-                value = Long.parseLong(values[0]);
-            } catch (NumberFormatException e) {
-                return null;
-            }
-        }
-        result.setMinorUnits(value);
-        return result;
+        return ExactEstimateUtils.convertFromString(values[0]);
     }
 
     @SuppressWarnings("unchecked")

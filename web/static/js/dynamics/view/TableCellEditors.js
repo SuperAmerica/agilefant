@@ -342,8 +342,9 @@ TableEditors.User.prototype._currentUsers = function() {
   return userIds;
 };
 TableEditors.User.prototype.save = function(ids, data) {
-  this.options.set.call(this.model, ids);
+  this.options.set.call(this.model, ids, data);
   this.cell.getElement().trigger("editorClosing");
+  this.cell.render();
 };
 TableEditors.User.prototype._registerEvents = function() {
 };

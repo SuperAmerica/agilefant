@@ -143,10 +143,22 @@ TaskModel.prototype.setState = function(state) {
 };
 
 TaskModel.prototype.getResponsibles = function() {
+  if (this.currentData.userIds) {
+    var users = [];
+    $.each(this.currentData.userIds, function(k, id) {
+      users.push(ModelFactory.getObject(ModelFactory.types.user, id));
+    });
+    return users;
+  }
   return this.relations.user;
 };
 
-TaskModel.prototype.setResponsibles = function(userIds) {
+TaskModel.prototype.setResponsibles = function(userIds, userJson) {
+  if (userJson) {
+    $.each(userJson, function(k,v) {
+      ModelFactory.updateObject(ModelFactory.types.user, v);    
+    });
+  }
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
   this._commitIfNotInTransaction();

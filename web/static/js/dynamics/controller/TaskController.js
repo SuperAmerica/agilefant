@@ -104,3 +104,18 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
       view);
   return actionView;
 };
+
+TaskController.prototype.effortLeftEditable = function() {
+  if (this.model.getState() === "DONE") {
+    return false;
+  }
+  return true;
+};
+
+TaskController.prototype.originalEstimateEditable = function() {
+  if (this.model.getState() === "DONE" || this.model.getOriginalEstimate()
+      || this.model.getEffortLeft()) {
+    return false;
+  }
+  return true;
+};

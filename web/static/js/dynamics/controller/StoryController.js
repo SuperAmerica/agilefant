@@ -283,6 +283,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     get : TaskModel.prototype.getEffortLeft,
     decorator: DynamicsDecorators.exactEstimateDecorator,
     editable : true,
+    editableCallback: TaskController.prototype.effortLeftEditable,
     edit : {
       editor : "ExactEstimate",
       decorator: DynamicsDecorators.exactEstimateEditDecorator,
@@ -298,6 +299,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     get : TaskModel.prototype.getOriginalEstimate,
     decorator: DynamicsDecorators.exactEstimateDecorator,
     editable : true,
+    editableCallback: TaskController.prototype.originalEstimateEditable,
     edit : {
       editor : "ExactEstimate",
       decorator: DynamicsDecorators.exactEstimateEditDecorator,

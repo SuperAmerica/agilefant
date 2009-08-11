@@ -198,6 +198,16 @@ StoryController.prototype.storyActionFactory = function(view, model) {
 };
 
 /**
+ * Checks whether the story points field should be editable or not.
+ */
+StoryController.prototype.storyPointsEditable = function() {
+  if (this.model.getState() === "DONE") {
+    return false;
+  }
+  return true;
+};
+
+/**
  * 
  */
 StoryController.prototype.initTaskListConfiguration = function() {

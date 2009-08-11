@@ -167,6 +167,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getStoryPoints,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
     editable : true,
+    editableCallback: StoryController.prototype.storyPointsEditable,
     edit : {
       editor : "Estimate",
       set : StoryModel.prototype.setStoryPoints

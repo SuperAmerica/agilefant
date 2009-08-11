@@ -20,6 +20,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			subViewFactory: null,
 			visible: true,
 			dragHandle: false,
+			editableCallback: function() { return true; },
 			edit: {
 				decorator: null,
 				items: null,
@@ -89,6 +90,9 @@ DynamicTableColumnConfiguration.prototype.isVisible = function() {
 };
 DynamicTableColumnConfiguration.prototype.getEditOptions = function() {
 	return this.options.edit;
+};
+DynamicTableColumnConfiguration.prototype.getEditableCallback = function() {
+  return this.options.editableCallback;
 };
 DynamicTableColumnConfiguration.prototype.getSubViewFactory = function() {
 	return this.options.subViewFactory;

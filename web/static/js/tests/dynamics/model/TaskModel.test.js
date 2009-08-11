@@ -6,15 +6,14 @@ $(document).ready(function() {
   
   module("Dynamics: Task Model", {
     setup: function() {
-      this.originalCommonModel = CommonModel;
     },
     teardown: function() {
-      CommonModel = this.originalCommonModel;
     }
   });
   
   test("Construction", function() {
     var commonModelInitialized = false;
+    var originalInitialize = CommonModel.prototype.initialize;
     CommonModel.prototype.initialize = function() {
       commonModelInitialized = true;
     };
@@ -23,6 +22,8 @@ $(document).ready(function() {
     
     ok(commonModelInitialized, "The common model initialize method is called");
     same(task.getPersistedClass(), "fi.hut.soberit.agilefant.model.Task", "Class name correct" );
+    
+    CommonModel.prototype.initialize = originalInitialize;
   });
   
   

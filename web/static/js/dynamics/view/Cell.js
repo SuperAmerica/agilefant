@@ -124,7 +124,7 @@ DynamicTableCell.prototype.openEditor = function(editRow) {
   }
   
   var editorClass = TableEditors.getEditorClassByName(editorName);
-  if(editorClass) {
+  if(editorClass && this.config.getEditableCallback().call(this.row.getController())) {
     this.editor = new editorClass(this.row, this, editorOptions);
     return true;
   }

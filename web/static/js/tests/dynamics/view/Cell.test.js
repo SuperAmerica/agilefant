@@ -68,6 +68,11 @@ $(document).ready(function() {
 	 test("open editor", function() {
 	   var me = this;
      
+	   var editorOpt = {
+         editor: "foo",
+         
+     };
+	   
 	   this.cellConfig.expects().getWidth().andReturn(null);
      this.cellConfig.expects().getMinWidth().andReturn(null);
      this.cellConfig.expects().isFullWidth().andReturn(true);
@@ -75,7 +80,9 @@ $(document).ready(function() {
      this.cellConfig.expects().isVisible().andReturn(true);
      this.cellConfig.expects().isDragHandle().andReturn(false);
      this.cellConfig.expects().isEditable().andReturn(false);
-
+     this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
+     this.cellConfig.expects().getEditableCallback().andReturn(function() { return true; });
+     this.mockRow.expects().getController().andReturn(window);
      
      var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 
@@ -97,11 +104,6 @@ $(document).ready(function() {
        return TableEditors.foo;
      };
 	   
-     var editorOpt = {
-         editor: "foo"
-     };
-     
-     this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
           
 	   testable.openEditor();
 	   testable.openEditor();

@@ -46,6 +46,9 @@ StoryController.prototype.saveStory = function() {
   if(this.view.saveRowEdit()) {
     this.model.commit();
   }
+  else {
+    return;
+  }
   if(createNewStory) {
     this.view.remove();
     return;

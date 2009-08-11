@@ -39,6 +39,9 @@ TaskController.prototype.saveTask = function() {
   if(this.view.saveRowEdit()) {
     this.model.commit();
   }
+  else {
+    return;
+  }
   if(createNewTask) {
     this.view.remove();
     return;

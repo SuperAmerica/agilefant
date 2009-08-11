@@ -57,6 +57,7 @@ TaskController.prototype.cancelEdit = function() {
   }
   this.model.setInTransaction(false);
   this.view.closeRowEdit();
+  this.view.getCell(TaskController.columnIndexes.buttons).hide();
   this.model.rollback();
 };
 

@@ -42,7 +42,7 @@ var DynamicsDecorators = {
   },
   userInitialsListDecorator: function(userList) {
     if(!userList || !userList.length) {
-      return;
+      return "";
     }
     var initials = [];
     for(var i = 0; i < userList.length; i++) {

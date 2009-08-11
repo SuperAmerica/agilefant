@@ -128,9 +128,21 @@ StoryModel.prototype.setPriority = function(newPriority) {
 
 
 StoryModel.prototype.getResponsibles = function() {
+  if (this.currentData.userIds) {
+    var users = [];
+    $.each(this.currentData.userIds, function(k, id) {
+      users.push(ModelFactory.getObject(ModelFactory.types.user, id));
+    });
+    return users;
+  }
   return this.relations.user;
 };
-StoryModel.prototype.setResponsibles = function(userIds) {
+StoryModel.prototype.setResponsibles = function(userIds, userJson) {
+  if (userJson) {
+    $.each(userJson, function(k,v) {
+      ModelFactory.updateObject(ModelFactory.types.user, v);    
+    });
+  }
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
   this._commitIfNotInTransaction();

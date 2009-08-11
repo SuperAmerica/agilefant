@@ -126,6 +126,10 @@ StoryModel.prototype.setPriority = function(newPriority) {
   this._commitIfNotInTransaction();
 };
 
+
+StoryModel.prototype.getResponsibles = function() {
+  return this.relations.user;
+};
 StoryModel.prototype.setResponsibles = function(userIds) {
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
@@ -153,10 +157,6 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
 
 StoryModel.prototype.getTasks = function() {
   return this.relations.task;
-};
-
-StoryModel.prototype.getResponsibles = function() {
-  return this.relations.user;
 };
 
 

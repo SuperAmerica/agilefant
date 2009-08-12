@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
@@ -24,6 +27,7 @@ public class TaskDAOTest extends AbstractHibernateTests {
 
     @Autowired  
     private TaskDAO taskDAO;
+    
     
     @Test
     public void testGetIterationTasksWithEffortLeft() {
@@ -129,5 +133,60 @@ public class TaskDAOTest extends AbstractHibernateTests {
         assertEquals(970, actual.get(0).effortLeft.intValue());
         assertEquals(100, actual.get(0).availability);
         assertEquals(1, actual.get(0).iterationId);
+    }
+    
+    
+    @Test
+    public void testGetTasksWithRankBetween_iterationTop() {
+        executeClassSql();
+        Iteration iter = new Iteration();
+        iter.setId(1);
+        Collection<Task> actual = taskDAO.getTasksWithRankBetween(iter, 0, 2);
+        assertEquals(3, actual.size());
+    }
+    
+    @Test
+    public void testGetTasksWithRankBetween_iterationBottom() {
+        executeClassSql();
+        Iteration iter = new Iteration();
+        iter.setId(1);
+        Collection<Task> actual = taskDAO.getTasksWithRankBetween(iter, 3, 6);
+        assertEquals(1, actual.size());
+    }
+    
+    @Test
+    public void testGetTasksWithRankBetween_iterationEmptyCollection() {
+        executeClassSql();
+        Iteration iter = new Iteration();
+        iter.setId(1);
+        Collection<Task> actual = taskDAO.getTasksWithRankBetween(iter, 2, 0);
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    public void testGetTasksWithRankBetween_storyTop() {
+        executeClassSql();
+        Story story = new Story();
+        story.setId(1);
+        Collection<Task> actual = taskDAO.getTasksWithRankBetween(story, 0, 0);
+        assertEquals(1, actual.size());
+    }
+    
+    @Test
+    public void testGetTasksWithRankBetween_storyBottom() {
+        executeClassSql();
+        Story story = new Story();
+        story.setId(3);
+        Collection<Task> actual = taskDAO.getTasksWithRankBetween(story, 1, 5);
+        assertEquals(1, actual.size());
+    }
+    
+    @Test
+    public void testGetTasksWithRankBetween_storyEmptyCollection() {
+        executeClassSql();
+        Story story = new Story();
+        story.setId(1);
+        Collection<Task> actual = taskDAO.getTasksWithRankBetween(story, 2, 1);
+        assertEquals(0, actual.size());
     }
 }

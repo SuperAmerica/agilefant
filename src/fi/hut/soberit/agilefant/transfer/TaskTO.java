@@ -21,7 +21,6 @@ public class TaskTO extends Task {
         this.setIteration(task.getIteration());
         this.setStory(task.getStory());
         this.setState(task.getState());
-        this.setPriority(task.getPriority());
         this.setEffortLeft(task.getEffortLeft());
         this.setOriginalEstimate(task.getOriginalEstimate());
         this.setResponsibles(task.getResponsibles());

@@ -22,7 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -48,7 +47,8 @@ public class Task implements TimesheetLoggable, NamedObject {
     private Story story;
     
     private TaskState state;
-    private Priority priority;
+    private int rank = 0;
+//    private Priority priority;
     
     private ExactEstimate effortLeft;
     private ExactEstimate originalEstimate;
@@ -158,18 +158,6 @@ public class Task implements TimesheetLoggable, NamedObject {
         this.responsibles = responsibles;
     }
 
-    @Type(type = "fi.hut.soberit.agilefant.db.hibernate.EnumUserType", parameters = {
-            @Parameter(name = "useOrdinal", value = "true"),
-            @Parameter(name = "enumClassName", value = "fi.hut.soberit.agilefant.model.Priority")
-    })
-    public Priority getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
     @NotAudited
     public Date getCreatedDate() {
         return createdDate;
@@ -200,4 +188,15 @@ public class Task implements TimesheetLoggable, NamedObject {
     public void setHourEntries(Collection<TaskHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
     }
+
+    
+    @Column(nullable = false, columnDefinition = "int default 0")
+    public int getRank() {
+        return rank;
+    }
+    
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
+
 }

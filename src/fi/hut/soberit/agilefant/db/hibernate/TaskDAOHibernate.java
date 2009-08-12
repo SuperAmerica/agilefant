@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
@@ -165,5 +167,22 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         }
         
         return result;
+    }
+    
+    
+    public Collection<Task> getTasksWithRankBetween(Iteration iter, int lower,
+            int upper) {
+        Criteria task = getCurrentSession().createCriteria(Task.class);
+        task.add(Restrictions.eq("iteration.id", iter.getId()));
+        task.add(Restrictions.between("rank", lower, upper));
+        return asList(task);
+    }
+    
+    public Collection<Task> getTasksWithRankBetween(Story story, int lower,
+            int upper) {
+        Criteria task = getCurrentSession().createCriteria(Task.class);
+        task.add(Restrictions.eq("story.id", story.getId()));
+        task.add(Restrictions.between("rank", lower, upper));
+        return asList(task);
     }
 }

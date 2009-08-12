@@ -1,11 +1,14 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.Interval;
 
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
@@ -65,4 +68,26 @@ public interface TaskDAO extends GenericDAO<Task> {
     public List<UnassignedLoadTO> getUnassignedIterationTasksWithEffortLeft(User user,
             Interval interval);
 
+    /**
+     * Get the story's child tasks with rank between and including
+     * lower and upper borders.
+     * @param story
+     * @param lower lower border of the rank (0 if topmost task included)
+     * @param upper upper border of the rank
+     * @return
+     */
+    public Collection<Task> getTasksWithRankBetween(Story story, int lower, int upper);
+    
+    /**
+     * Get the iteration's straight child tasks with rank between and including
+     * lower and upper borders.
+     * <p>
+     * Will not get the iteration's stories' tasks.
+     * 
+     * @param iter 
+     * @param lower lower border of the rank (0 if topmost included)
+     * @param upper upper border of the rank
+     * @return
+     */
+    public Collection<Task> getTasksWithRankBetween(Iteration iter, int lower, int upper);
 }

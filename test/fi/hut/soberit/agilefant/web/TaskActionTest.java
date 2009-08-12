@@ -317,4 +317,35 @@ public class TaskActionTest {
         
         verifyAll();
     }
+    
+    /*
+     * TEST RANKING 
+     */
+    @Test
+    public void testRankUnder() {
+        taskAction.setTaskId(222);
+        taskAction.setRankUnderId(651);
+        
+        expect(taskBusiness.retrieve(222)).andReturn(task);
+        expect(taskBusiness.retrieveIfExists(651)).andReturn(null);
+        taskBusiness.rankUnderTask(task, null);
+        
+        replayAll();
+        
+        assertEquals(Action.SUCCESS, taskAction.rankUnder());
+        
+        verifyAll();
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testRankUnder_objectNotFound() {
+        taskAction.setTaskId(-1);
+        expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        
+        replayAll();
+        
+        taskAction.rankUnder();
+        
+        verifyAll();
+    }
 }

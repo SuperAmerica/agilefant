@@ -36,4 +36,20 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      */
     public void assignParentForTask(Task task, Integer iterationId, Integer storyId)
         throws IllegalArgumentException, ObjectNotFoundException;
+    
+    
+    /* RANKING */
+    
+    /**
+     * Rank the task to be under the given task
+     * <p>
+     * The parameter upperTask should be null if the task should be ranked topmost.
+     * 
+     * @param task the task to rank
+     * @param upperTask the task under which the other task should be ranked. null if topmost.
+     * 
+     * @throws IllegalArgumentException if the upper task is not under same story or iteration
+     * @throws IllegalArgumentException if the given task was null
+     */
+    public void rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException;
 }

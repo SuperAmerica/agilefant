@@ -32,6 +32,9 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private Task task;
     @PrefetchId
     private int taskId;
+    
+    private int rankUnderId;
+    
     private Integer iterationId;
     private Integer storyId;
 
@@ -80,6 +83,15 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         task = taskBusiness.retrieve(taskId);
         task = taskBusiness.resetOriginalEstimate(taskId);
         populateJsonData();
+        return Action.SUCCESS;
+    }
+    
+    public String rankUnder() {
+        task = taskBusiness.retrieve(taskId);
+        Task rankUnder = taskBusiness.retrieveIfExists(rankUnderId);
+        
+        taskBusiness.rankUnderTask(task, rankUnder);
+        
         return Action.SUCCESS;
     }
     
@@ -138,5 +150,9 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
 
     public void setUsersChanged(boolean usersChanged) {
         this.usersChanged = usersChanged;
+    }
+
+    public void setRankUnderId(int rankUnderId) {
+        this.rankUnderId = rankUnderId;
     }
 }

@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import static org.easymock.EasyMock.*;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -604,5 +605,142 @@ public class TaskBusinessTest {
     @Test(expected = IllegalArgumentException.class)
     public void testMove_bothIdsGiven() {
         taskBusiness.move(task, 123, 456);
+    }
+    
+    
+    /*
+     * RANKING 
+     */
+    
+    Story rankParentStory;
+    
+    Task firstTaskInRank;
+    Task secondTaskInRank;
+    Task thirdTaskInRank;
+    Task fourthTaskInRank;
+    
+    @Before
+    public void setUp_ranking() {
+        firstTaskInRank = new Task();
+        secondTaskInRank = new Task();
+        thirdTaskInRank = new Task();
+        fourthTaskInRank = new Task();
+        
+        firstTaskInRank.setId(111);
+        secondTaskInRank.setId(222);
+        thirdTaskInRank.setId(333);
+        fourthTaskInRank.setId(444);
+        
+        firstTaskInRank.setRank(0);
+        secondTaskInRank.setRank(1);
+        thirdTaskInRank.setRank(5);
+        fourthTaskInRank.setRank(6);
+
+        rankParentStory = new Story();
+        rankParentStory.setId(22);
+        
+        firstTaskInRank.setStory(rankParentStory);
+        secondTaskInRank.setStory(rankParentStory);
+        thirdTaskInRank.setStory(rankParentStory);
+        fourthTaskInRank.setStory(rankParentStory);
+    }
+    
+    private void checkRanks(int first, int second, int third, int fourth) {
+        assertEquals("First rank does not match", first, firstTaskInRank.getRank());
+        assertEquals("Second rank does not match", second, secondTaskInRank.getRank());
+        assertEquals("Third rank does not match", third, thirdTaskInRank.getRank());
+        assertEquals("Fourth rank does not match", fourth, fourthTaskInRank.getRank());
+    }
+    
+    @Test
+    public void testRankUnderTask_twoUpwards() {
+        expect(taskDAO.getTasksWithRankBetween(fourthTaskInRank.getStory(), 1, 5))
+            .andReturn(Arrays.asList(secondTaskInRank, thirdTaskInRank));
+        replayAll();
+        taskBusiness.rankUnderTask(fourthTaskInRank, firstTaskInRank);
+        verifyAll();
+        checkRanks(0, 2, 6, 1);
+    }
+    
+    @Test
+    public void testRankUnderTask_twoDownwards() {
+        expect(taskDAO.getTasksWithRankBetween(firstTaskInRank.getStory(), 1, 5))
+            .andReturn(Arrays.asList(secondTaskInRank, thirdTaskInRank));
+        replayAll();
+        taskBusiness.rankUnderTask(firstTaskInRank, thirdTaskInRank);
+        verifyAll();
+        checkRanks(5, 0, 4, 6);
+    }
+    
+    @Test
+    public void testRankUnderTask_toTop() {
+        expect(taskDAO.getTasksWithRankBetween(firstTaskInRank.getStory(), 0, 4))
+            .andReturn(Arrays.asList(firstTaskInRank, secondTaskInRank, thirdTaskInRank));
+        replayAll();
+        taskBusiness.rankUnderTask(thirdTaskInRank, null);
+        verifyAll();
+        checkRanks(1, 2, 0, 6);
+    }
+    
+    @Test
+    public void testRankUnderTask_toBottom() {
+        expect(taskDAO.getTasksWithRankBetween(firstTaskInRank.getStory(), 1, 6))
+            .andReturn(Arrays.asList(secondTaskInRank, thirdTaskInRank, fourthTaskInRank));
+        replayAll();
+        taskBusiness.rankUnderTask(firstTaskInRank, fourthTaskInRank);
+        verifyAll();
+        checkRanks(6, 0, 4, 5);
+    }
+       
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankUnderTask_nullTaskGiven() {
+        replayAll();
+        taskBusiness.rankUnderTask(null, null);
+        verifyAll();
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankUnderTask_rankUnderSelf() {
+        replayAll();
+        taskBusiness.rankUnderTask(firstTaskInRank, firstTaskInRank);
+        verifyAll();
+    }
+    
+    @Test
+    public void testRankUnderTask_checkUnderSameIteration() {
+        Task first = new Task();
+        Task second = new Task();
+        Iteration iter = new Iteration();
+        
+        first.setIteration(iter);
+        second.setIteration(iter);
+        
+        expect(taskDAO.getTasksWithRankBetween(iter, 1, 0)).andReturn(Arrays.asList(new Task()));        
+        replayAll();
+        taskBusiness.rankUnderTask(first, second);
+        verifyAll();
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankUnderTask_noStory_differentIteration() {
+        Task first = new Task();
+        Task second = new Task();
+       
+        first.setIteration(new Iteration());
+        second.setIteration(new Iteration());
+        
+        replayAll();
+        taskBusiness.rankUnderTask(first, second);
+        verifyAll();
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankUnderTask_tasksNotUnderSameStory() {
+        Task newTask = new Task();
+        newTask.setStory(new Story());
+        
+        replayAll();
+        taskBusiness.rankUnderTask(firstTaskInRank, newTask);
+        verifyAll();
     }
 }

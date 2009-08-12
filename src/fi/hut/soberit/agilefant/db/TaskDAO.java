@@ -71,7 +71,7 @@ public interface TaskDAO extends GenericDAO<Task> {
     /**
      * Get the story's child tasks with rank between and including
      * lower and upper borders.
-     * @param story
+     * @param story the parent story
      * @param lower lower border of the rank (0 if topmost task included)
      * @param upper upper border of the rank
      * @return
@@ -84,7 +84,7 @@ public interface TaskDAO extends GenericDAO<Task> {
      * <p>
      * Will not get the iteration's stories' tasks.
      * 
-     * @param iter 
+     * @param iter the parent iteration
      * @param lower lower border of the rank (0 if topmost included)
      * @param upper upper border of the rank
      * @return

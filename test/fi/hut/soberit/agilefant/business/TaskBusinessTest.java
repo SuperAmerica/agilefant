@@ -715,7 +715,7 @@ public class TaskBusinessTest {
         first.setIteration(iter);
         second.setIteration(iter);
         
-        expect(taskDAO.getTasksWithRankBetween(iter, 1, 0)).andReturn(Arrays.asList(new Task()));        
+        expect(taskDAO.getTasksWithRankBetween(iter, 1, -1)).andReturn(Arrays.asList(new Task()));        
         replayAll();
         taskBusiness.rankUnderTask(first, second);
         verifyAll();

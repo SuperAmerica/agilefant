@@ -1,4 +1,4 @@
-﻿/* If this is not set we can only create deterministic functions */
+/* If this is not set we can only create deterministic functions */
 /* SET GLOBAL log_bin_trust_function_creators = 1; */
 
 SET autocommit = 0;
@@ -15,36 +15,36 @@ BEGIN
 END //
 
 CREATE PROCEDURE DropFK(IN table_name VARCHAR(100), IN key_name VARCHAR(100))
-	NOT DETERMINISTIC
-	MODIFIES SQL DATA
-	BEGIN
-		Call ExecDyn(CONCAT('ALTER TABLE ', table_name,' DROP FOREIGN KEY ', key_name));
-		Call ExecDyn(CONCAT('ALTER TABLE ', table_name,' DROP KEY ', key_name));
-	END //
+  NOT DETERMINISTIC
+  MODIFIES SQL DATA
+  BEGIN
+    Call ExecDyn(CONCAT('ALTER TABLE ', table_name,' DROP FOREIGN KEY ', key_name));
+    Call ExecDyn(CONCAT('ALTER TABLE ', table_name,' DROP KEY ', key_name));
+  END //
 
 CREATE PROCEDURE DropAllForeignKeys()
 BEGIN
-	DECLARE done BOOL DEFAULT FALSE;
-	DECLARE table_str VARCHAR(64);
-	DECLARE constraint_str VARCHAR(64);
-	DECLARE cur
-		CURSOR FOR
-		SELECT DISTINCT table_name,constraint_name
-		FROM information_schema.key_column_usage
-		WHERE referenced_table_name IS NOT NULL
-			AND table_schema='agilefant';
+  DECLARE done BOOL DEFAULT FALSE;
+  DECLARE table_str VARCHAR(64);
+  DECLARE constraint_str VARCHAR(64);
+  DECLARE cur
+    CURSOR FOR
+    SELECT DISTINCT table_name,constraint_name
+    FROM information_schema.key_column_usage
+    WHERE referenced_table_name IS NOT NULL
+      AND table_schema='agilefant';
 
-	DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = TRUE;
-	OPEN cur;
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = TRUE;
+  OPEN cur;
 
-	myLoop: LOOP
-		FETCH cur INTO table_str,constraint_str;
-		IF done then
-			CLOSE cur;
-			LEAVE myLoop;
-		END IF;
-		CALL DropFK(table_str,constraint_str);
-	END LOOP;
+  myLoop: LOOP
+    FETCH cur INTO table_str,constraint_str;
+    IF done then
+      CLOSE cur;
+      LEAVE myLoop;
+    END IF;
+    CALL DropFK(table_str,constraint_str);
+  END LOOP;
 END //
 
 SELECT 'Drop All Foreign Keys' AS status //
@@ -57,10 +57,10 @@ SELECT 'Schema changes' AS status;
 /*** ASSIGNMENT ***/
 /*
 ALTER TABLE assignment
-	CHANGE backlog_id project_id INT(11) DEFAULT NULL;
+  CHANGE backlog_id project_id INT(11) DEFAULT NULL;
 */
 ALTER TABLE assignment
-	CHANGE deltaOverhead delta_personal_load BIGINT(20) DEFAULT NULL;
+  CHANGE deltaOverhead delta_personal_load BIGINT(20) DEFAULT NULL;
 ALTER TABLE assignment
     ADD COLUMN availability SMALLINT DEFAULT 100 NOT NULL;
 
@@ -75,25 +75,25 @@ ALTER TABLE backlogs DROP COLUMN assignee_id;
 ALTER TABLE backlogs DROP COLUMN owner_id;
 
 ALTER TABLE backlogs
-	CHANGE project_id parent_id INT(11);
+  CHANGE project_id parent_id INT(11);
 
 ALTER TABLE backlogs
-	CHANGE defaultOverhead baselineLoad BIGINT(20) DEFAULT NULL;
-	
+  CHANGE defaultOverhead baselineLoad BIGINT(20) DEFAULT NULL;
+  
 UPDATE backlogs SET baselineLoad = (baselineLoad/60) WHERE baselineLoad IS NOT NULL;
-	
+  
 UPDATE backlogs
-	SET parent_id=product_id
-	WHERE backlogtype = 'Project';
+  SET parent_id=product_id
+  WHERE backlogtype = 'Project';
 
 ALTER TABLE backlogs
-	MODIFY rank INT(11);
+  MODIFY rank INT(11);
 
 ALTER TABLE backlogs DROP COLUMN product_id;
 
 /*** TODOS ***/
 
-/* task table contains TODOs. 
+/* task table contains TODOs.
    They are moved to descriptions of stories and tasks
    */
 
@@ -103,7 +103,7 @@ DROP TABLE IF EXISTS items_with_todos;
 
 /* find out items with todos */
 CREATE TEMPORARY TABLE items_with_todos (
-	id INT(11)
+  id INT(11)
 )
 SELECT DISTINCT bi.id
 FROM backlogitem AS bi
@@ -116,79 +116,80 @@ SET SESSION group_concat_max_len = 100000;
 /* Insert TODOs as list items into the descriptions */
 UPDATE backlogitem
 SET description=CONCAT(description,'<ul>',
-	( SELECT CONCAT('<li>',
-			GROUP_CONCAT(name ORDER BY priority DESC
-				         SEPARATOR '</li><li>'),
-					'</li>')
-	  FROM task
-	  WHERE task.backlogItem_id = backlogitem.id
-	  GROUP BY backlogItem_id
-	),'</ul>')
+  ( SELECT CONCAT('<li>',
+      GROUP_CONCAT(name ORDER BY priority DESC
+                 SEPARATOR '</li><li>'),
+          '</li>')
+    FROM task
+    WHERE task.backlogItem_id = backlogitem.id
+    GROUP BY backlogItem_id
+  ),'</ul>')
 WHERE id in (SELECT id FROM items_with_todos);
 
 DROP TABLE task;
-   
+
 /*** SPLITTING BACKLOG ITEMS ***/
 
 SELECT 'Split backlog items to new tables' AS status;
 
 CREATE TABLE tasks (
-	id INT(11) AUTO_INCREMENT,
-	createdDate DATETIME,
-	effortLeft BIGINT(20),
-	originalestimate BIGINT(20),
-	name VARCHAR(255),
-	priority INT(11),
-	state INT(11) NOT NULL,
-	description text,
-	iteration_id INT(11),
-	creator_id INT(11),
-	story_id INT(11),
-	PRIMARY KEY(id)
+  id INT(11) AUTO_INCREMENT,
+  createdDate DATETIME,
+  effortLeft BIGINT(20),
+  originalestimate BIGINT(20),
+  name VARCHAR(255),
+  priority INT(11),
+  state INT(11) NOT NULL,
+  rank INT DEFAULT 0,
+  description text,
+  iteration_id INT(11),
+  creator_id INT(11),
+  story_id INT(11),
+  PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO tasks (id,createdDate,effortLeft,originalestimate,name,
                    priority,state,description,iteration_id,creator_id,story_id)
-	SELECT item.id, item.createdDate, item.effortLeft/60, item.originalEstimate/60,
-	       item.name, item.priority, item.state, item.description, item.backlog_id,
-		   item.creator_id, item.iterationGoal_id
-	FROM backlogitem AS item
-	INNER JOIN backlogs bl
-	ON item.backlog_id = bl.id
-	WHERE bl.backlogtype = 'Iteration';
+  SELECT item.id, item.createdDate, item.effortLeft/60, item.originalEstimate/60,
+         item.name, item.priority, item.state, item.description, item.backlog_id,
+       item.creator_id, item.iterationGoal_id
+  FROM backlogitem AS item
+  INNER JOIN backlogs bl
+  ON item.backlog_id = bl.id
+  WHERE bl.backlogtype = 'Iteration';
 
 /* We have stuff coming here from both backlogitem
    and iterationgoal */
 CREATE TABLE stories (
-	id INT(11) AUTO_INCREMENT,
-	createdDate DATETIME,
-	storyPoints INT(11),
-	name VARCHAR(255) NOT NULL,
-	priority INT(11),
-	state INT(11) NOT NULL,
-	description text,
-	creator_id INT(11),
-	backlog_id INT(11) NOT NULL,
-	iterationGoal_id INT(11), /* temporary */
-	PRIMARY KEY(id)
+  id INT(11) AUTO_INCREMENT,
+  createdDate DATETIME,
+  storyPoints INT(11),
+  name VARCHAR(255) NOT NULL,
+  priority INT(11),
+  state INT(11) NOT NULL,
+  description text,
+  creator_id INT(11),
+  backlog_id INT(11) NOT NULL,
+  iterationGoal_id INT(11), /* temporary */
+  PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
 /* Use ids from backlog items */
 INSERT INTO stories (id,createdDate,storyPoints,name,
                    priority,state,description,creator_id,backlog_id)
-	SELECT item.id, item.createdDate, item.originalEstimate/60,
-	       item.name, item.priority, item.state, item.description,
-		   item.creator_id, item.backlog_id
-	FROM backlogitem AS item
-	INNER JOIN backlogs bl
-	ON item.backlog_id = bl.id
-	WHERE bl.backlogtype = 'Product' OR bl.backlogtype = 'Project';
+  SELECT item.id, item.createdDate, item.originalEstimate/60,
+         item.name, item.priority, item.state, item.description,
+       item.creator_id, item.backlog_id
+  FROM backlogitem AS item
+  INNER JOIN backlogs bl
+  ON item.backlog_id = bl.id
+  WHERE bl.backlogtype = 'Product' OR bl.backlogtype = 'Project';
 
 /* Use automatic ids as there's only one refence to iteration goals
    to fix. */
 INSERT INTO stories (name,priority,description,backlog_id,iterationGoal_id,state)
-	SELECT item.name, item.priority,item.description,item.iteration_id,item.id,0
-	FROM iterationgoal AS item;
+  SELECT item.name, item.priority,item.description,item.iteration_id,item.id,0
+  FROM iterationgoal AS item;
 
 /* Fix references from tasks to stories */
 UPDATE tasks
@@ -207,17 +208,17 @@ DROP TABLE backlogitem;
 SELECT 'Pivot tables' AS status;
 
 CREATE TABLE story_user (
-	story_id INT(11) NOT NULL,
-	user_id INT(11) NOT NULL,
-	FOREIGN KEY (story_id) REFERENCES stories(id),
-	FOREIGN KEY (user_id) REFERENCES user(id)
+  story_id INT(11) NOT NULL,
+  user_id INT(11) NOT NULL,
+  FOREIGN KEY (story_id) REFERENCES stories(id),
+  FOREIGN KEY (user_id) REFERENCES user(id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE task_user (
-	tasks_id INT(11) NOT NULL,
-	responsibles_id INT(11) NOT NULL,
-	FOREIGN KEY (tasks_id) REFERENCES tasks(id),
-	FOREIGN KEY (responsibles_id) REFERENCES user(id)
+  tasks_id INT(11) NOT NULL,
+  responsibles_id INT(11) NOT NULL,
+  FOREIGN KEY (tasks_id) REFERENCES tasks(id),
+  FOREIGN KEY (responsibles_id) REFERENCES user(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO story_user
@@ -234,10 +235,10 @@ DROP TABLE backlogitem_user;
 
 /*** BUSINESS THEMES ***/
 CREATE TABLE story_businesstheme (
-	story_id INT(11) NOT NULL,
-	businesstheme_id INT(11) NOT NULL,
-	FOREIGN KEY (story_id) REFERENCES stories(id),
-	FOREIGN KEY (businesstheme_id) REFERENCES businesstheme(id)
+  story_id INT(11) NOT NULL,
+  businesstheme_id INT(11) NOT NULL,
+  FOREIGN KEY (story_id) REFERENCES stories(id),
+  FOREIGN KEY (businesstheme_id) REFERENCES businesstheme(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO story_businesstheme
@@ -250,24 +251,24 @@ DROP TABLE backlogitem_businesstheme;
 /*** History entries ***/
 
 CREATE TABLE history_backlogs (
-	id INTEGER NOT NULL AUTO_INCREMENT, 
-	estimateSum BIGINT NOT NULL, 
-	doneSum BIGINT NOT NULL, 
-	timestamp DATETIME, 
-	backlog_id INTEGER, 
-	PRIMARY KEY (id),
-	FOREIGN KEY (backlog_id) REFERENCES backlogs(id)
+  id INTEGER NOT NULL AUTO_INCREMENT, 
+  estimateSum BIGINT NOT NULL, 
+  doneSum BIGINT NOT NULL, 
+  timestamp DATETIME, 
+  backlog_id INTEGER, 
+  PRIMARY KEY (id),
+  FOREIGN KEY (backlog_id) REFERENCES backlogs(id)
 )ENGINE=InnoDB;
-	
+  
 CREATE TABLE history_iterations (
-	id INT(11) AUTO_INCREMENT,
-	effortLeftSum BIGINT NOT NULL,
-	originalEstimateSum BIGINT NOT NULL,
-	deltaOriginalEstimate BIGINT NOT NULL,
-	timestamp DATE NOT NULL,
-	iteration_id INT(11) NOT NULL,
-	PRIMARY KEY(id),
-	FOREIGN KEY (iteration_id) REFERENCES backlogs(id)
+  id INT(11) AUTO_INCREMENT,
+  effortLeftSum BIGINT NOT NULL,
+  originalEstimateSum BIGINT NOT NULL,
+  deltaOriginalEstimate BIGINT NOT NULL,
+  timestamp DATE NOT NULL,
+  iteration_id INT(11) NOT NULL,
+  PRIMARY KEY(id),
+  FOREIGN KEY (iteration_id) REFERENCES backlogs(id)
 ) ENGINE=InnoDB;
 
 INSERT INTO history_iterations(effortLeftSum,originalEstimateSum,timestamp,iteration_id,
@@ -289,8 +290,8 @@ CREATE TEMPORARY TABLE he_temp SELECT * FROM history_iterations;
 DELETE history_iterations
 FROM history_iterations
 INNER JOIN he_temp newer ON newer.id > history_iterations.id
-	AND newer.iteration_id = history_iterations.iteration_id
-	AND newer.timestamp = history_iterations.timestamp;
+  AND newer.iteration_id = history_iterations.iteration_id
+  AND newer.timestamp = history_iterations.timestamp;
 
 /* Add a constraint so that we can't get the db into a bad state any more */
 ALTER TABLE history_iterations ADD CONSTRAINT UNIQUE (iteration_id, timestamp);
@@ -316,29 +317,29 @@ UPDATE history_iterations SET deltaOriginalEstimate = 0;
 
 UPDATE history_iterations
 SET deltaOriginalEstimate=(
-	SELECT deltaOriginalEstimate FROM he_temp
-	WHERE he_temp.timestamp = history_iterations.timestamp
-	      AND  he_temp.iteration_id = history_iterations.iteration_id
+  SELECT deltaOriginalEstimate FROM he_temp
+  WHERE he_temp.timestamp = history_iterations.timestamp
+        AND  he_temp.iteration_id = history_iterations.iteration_id
 )
 WHERE (
-	SELECT COUNT(*) FROM he_temp_copy t
-	WHERE t.timestamp = history_iterations.timestamp
-	      AND  t.iteration_id = history_iterations.iteration_id
-	) > 0;
+  SELECT COUNT(*) FROM he_temp_copy t
+  WHERE t.timestamp = history_iterations.timestamp
+        AND  t.iteration_id = history_iterations.iteration_id
+  ) > 0;
 
 SELECT 'Delete updated from temporary table' AS status;
 
 DELETE he_temp
 FROM he_temp
 INNER JOIN history_iterations
-	ON he_temp.timestamp = history_iterations.timestamp
-	AND he_temp.iteration_id = history_iterations.iteration_id;
+  ON he_temp.timestamp = history_iterations.timestamp
+  AND he_temp.iteration_id = history_iterations.iteration_id;
 
 SELECT 'Insert rest as new items' AS status;
 
 /* Have to list columns manually because we need a new id */
 INSERT INTO history_iterations (effortLeftSum, originalEstimateSum, deltaOriginalEstimate,
-	timestamp, iteration_id)
+  timestamp, iteration_id)
 SELECT effortLeftSum, originalEstimateSum, deltaOriginalEstimate,timestamp,
     iteration_id FROM he_temp;
 
@@ -398,9 +399,9 @@ ALTER TABLE backlogs ADD FOREIGN KEY (projectType_id) REFERENCES projecttypes(id
 
 SELECT 'Foreign keys for themes' AS status;
 ALTER TABLE backlogthemebinding
-	ADD FOREIGN KEY (businessTheme_id) REFERENCES businesstheme(id);
+  ADD FOREIGN KEY (businessTheme_id) REFERENCES businesstheme(id);
 ALTER TABLE backlogthemebinding
-	ADD FOREIGN KEY (backlog_id) REFERENCES backlogs(id);
+  ADD FOREIGN KEY (backlog_id) REFERENCES backlogs(id);
 
 ALTER TABLE businesstheme ADD FOREIGN KEY (product_id) REFERENCES backlogs(id);
 
@@ -444,7 +445,7 @@ create table agilefant_revisions (id integer not null auto_increment, timestamp 
 create table stories_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), priority integer, state integer, storyPoints integer, primary key (id, REV)) ENGINE=InnoDB;
 create table story_user_AUD (REV integer not null, Story_id integer not null, User_id integer not null, REVTYPE tinyint, primary key (REV, Story_id, User_id)) ENGINE=InnoDB;
 create table task_user_AUD (REV integer not null, tasks_id integer not null, responsibles_id integer not null, REVTYPE tinyint, primary key (REV, tasks_id, responsibles_id)) ENGINE=InnoDB;
-create table tasks_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, effortleft bigint, name varchar(255), originalestimate bigint, priority integer, state integer, primary key (id, REV)) ENGINE=InnoDB;
+create table tasks_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, effortleft bigint, name varchar(255), originalestimate bigint, priority integer, state integer, rank int default 0, primary key (id, REV)) ENGINE=InnoDB;
 create table users_AUD (id integer not null, REV integer not null, REVTYPE tinyint, email varchar(255), enabled bit, fullName varchar(255), initials varchar(255), loginName varchar(255), weekEffort bigint, primary key (id, REV)) ENGINE=InnoDB;
 alter table stories_AUD add index FK853E2CA420258526 (REV), add constraint FK853E2CA420258526 foreign key (REV) references agilefant_revisions (id);
 alter table story_user_AUD add index FK9A1CB82620258526 (REV), add constraint FK9A1CB82620258526 foreign key (REV) references agilefant_revisions (id);
@@ -457,3 +458,137 @@ create table assignment_AUD (id integer not null, REV integer not null, REVTYPE 
 create table backlogs_AUD (backlogtype varchar(31) not null, id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), backlogSize integer, baselineLoad bigint, endDate datetime, rank integer, startDate datetime, status integer, primary key (id, REV)) ENGINE=InnoDB;
 alter table assignment_AUD add index FK1B6D861E20258526 (REV), add constraint FK1B6D861E20258526 foreign key (REV) references agilefant_revisions (id);
 alter table backlogs_AUD add index FK46C0B1E720258526 (REV), add constraint FK46C0B1E720258526 foreign key (REV) references agilefant_revisions (id);
+
+
+-- UPDATE SCRIPT FOR RANKS
+
+delimiter //
+
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForSingleStory //
+CREATE PROCEDURE UpdateTaskRanksForSingleStory(IN sid INT)
+BEGIN
+  DECLARE story_task_loop_done BOOL DEFAULT FALSE;
+  DECLARE counter INT DEFAULT 0;
+  DECLARE task_id INT;
+  DECLARE story_task_cur
+    CURSOR FOR
+    SELECT id FROM tasks WHERE story_id=sid
+    ORDER BY priority DESC;
+
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET story_task_loop_done = TRUE;
+
+  OPEN story_task_cur;
+
+  storyTaskLoop: LOOP
+    FETCH story_task_cur INTO task_id;
+
+    IF story_task_loop_done THEN
+      CLOSE story_task_cur;
+      LEAVE storyTaskLoop;
+    END IF;
+
+    UPDATE tasks SET rank = counter WHERE id=task_id;
+    SET counter = counter + 1;
+
+  END LOOP;
+END //
+
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForSingleIteration //
+CREATE PROCEDURE UpdateTaskRanksForSingleIteration(IN sid INT)
+BEGIN
+  DECLARE iter_task_loop_done BOOL DEFAULT FALSE;
+  DECLARE counter INT DEFAULT 0;
+  DECLARE task_id INT;
+  DECLARE iter_task_cur
+    CURSOR FOR
+    SELECT id FROM tasks WHERE iteration_id=sid
+    ORDER BY priority DESC;
+
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET iter_task_loop_done = TRUE;
+
+  OPEN iter_task_cur;
+
+  iterTaskLoop: LOOP
+    FETCH iter_task_cur INTO task_id;
+
+    IF iter_task_loop_done THEN
+      CLOSE iter_task_cur;
+      LEAVE iterTaskLoop;
+    END IF;
+
+    UPDATE tasks SET rank = counter WHERE id=task_id;
+    SET counter = counter + 1;
+
+  END LOOP;
+END //
+
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForStories //
+CREATE PROCEDURE UpdateTaskRanksForStories()
+BEGIN
+  DECLARE story_loop_done BOOL DEFAULT FALSE;
+  DECLARE story_id INT;
+
+  DECLARE story_cur CURSOR FOR SELECT id FROM stories;
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET story_loop_done = TRUE;
+
+  OPEN story_cur;
+
+  storyLoop: LOOP
+    FETCH story_cur INTO story_id;
+    IF story_loop_done THEN
+      CLOSE story_cur;
+      LEAVE storyLoop;
+    END IF;
+    CALL UpdateTaskRanksForSingleStory(story_id);
+  END LOOP;
+
+END //
+
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForIterations //
+CREATE PROCEDURE UpdateTaskRanksForIterations()
+BEGIN
+  DECLARE iter_loop_done BOOL DEFAULT FALSE;
+  DECLARE iter_id INT;
+    DECLARE iter_cur CURSOR FOR SELECT id FROM backlogs WHERE backlogtype = 'Iteration';
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET iter_loop_done = TRUE;
+
+  OPEN iter_cur;
+
+  iterLoop: LOOP
+    FETCH iter_cur INTO iter_id;
+    IF iter_loop_done THEN
+      CLOSE iter_cur;
+      LEAVE iterLoop;
+    END IF;
+    CALL UpdateTaskRanksForSingleIteration(iter_id);
+  END LOOP;
+
+END //
+
+DROP PROCEDURE IF EXISTS UpdateTaskRanks //
+CREATE PROCEDURE UpdateTaskRanks()
+BEGIN
+  CALL UpdateTaskRanksForStories();
+  CALL UpdateTaskRanksForIterations();
+END //
+
+delimiter ;
+
+
+CALL UpdateTaskRanks();
+
+/* DROP the old priority column */
+
+DROP PROCEDURE IF EXISTS UpdateTaskRanks;
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForStories;
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForIterations;
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForSingleStory;
+DROP PROCEDURE IF EXISTS UpdateTaskRanksForSingleIteration;

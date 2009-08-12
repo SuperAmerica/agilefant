@@ -149,7 +149,11 @@ var DynamicTableConfiguration = function(options) {
 			caption: "Table",
 			saveRowCallback: function() {},
 			cancelEditRowCallback: function() {},
-			sortCallback: null
+			sortCallback: null,
+			sortOptions: {
+			  items: "> .dynamicTableDataRow",
+	      handle: "." + DynamicTable.cssClasses.dragHandle
+			}
 	};
 	jQuery.extend(this.options, options);
 };
@@ -169,7 +173,9 @@ DynamicTableConfiguration.prototype.getDataSource = function() {
 DynamicTableConfiguration.prototype.isSortable = function() {
   return this.options.sortCallback !== null;
 };
-
+DynamicTableConfiguration.prototype.getSortOptions = function() {
+  return this.options.sortOptions;
+};
 DynamicTableConfiguration.prototype.getSortCallback = function() {
   return this.options.sortCallback;
 };

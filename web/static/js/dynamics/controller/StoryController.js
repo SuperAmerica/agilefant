@@ -212,10 +212,16 @@ StoryController.prototype.storyPointsEditable = function() {
  */
 StoryController.prototype.initTaskListConfiguration = function() {
   var config = new DynamicTableConfiguration( {
+    cssClass: "dynamicTable-sortable-tasklist",
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
     dataSource : StoryModel.prototype.getTasks,
     saveRowCallback: TaskController.prototype.saveTask,
-    caption: ""
+    caption: "",
+    sortCallback: TaskController.prototype.sortAndMoveTask,
+    sortOptions: {
+      items: "> .dynamicTableDataRow",
+      handle: "." + DynamicTable.cssClasses.dragHandle
+    }
   });
   config.addCaptionItem( {
     name : "createTask",
@@ -240,6 +246,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     headerTooltip : 'Task name',
     get : TaskModel.prototype.getName,
     editable : true,
+    dragHandle: true,
     edit : {
       editor : "Text",
       set : TaskModel.prototype.setName

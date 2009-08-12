@@ -49,6 +49,21 @@ TaskController.prototype.saveTask = function() {
   this.view.getCell(TaskController.columnIndexes.buttons).hide();
 };
 
+TaskController.prototype.sortAndMoveTask = function(view, model, stackPosition) {
+  var targetNumber = stackPosition - 1;
+  var rankUnderId = -1;
+  if (view.getParentView().getDataRowAt(targetNumber)) {
+    rankUnderId = view.getParentView().getDataRowAt(targetNumber).model.getId();
+  }
+  var me = this;
+  jQuery.post("ajax/rankTaskAndMoveUnder.action",
+    {taskId: model.getId(), rankUnderId: rankUnderId},
+    function() {
+      alert("Sorted under id " + rankUnderId);
+    }
+  );
+};
+
 TaskController.prototype.cancelEdit = function() {
   var createNewTask = !this.model.getId();
   if(createNewTask) {

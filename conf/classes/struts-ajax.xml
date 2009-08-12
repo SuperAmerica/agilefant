@@ -300,6 +300,12 @@
         <param name="target">task</param>
       </result>
     </action>
+   
+    <action name="rankTaskAndMoveUnder" method="rankUnder" class="taskAction">
+      <result name="success" type="json">
+        <param name="target">task</param>
+      </result>
+    </action>
     
     <action name="resetOriginalEstimate" method="resetOriginalEstimate" class="taskAction">
       <result name="success" type="json">

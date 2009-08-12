@@ -286,7 +286,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         if (upperTask == null) {
             return RankDirection.TOP;
         }
-        else if (task.getRank() > upperTask.getRank()) {
+        else if (task.getRank() >= upperTask.getRank()) {
             return RankDirection.UP;
         }
         else {

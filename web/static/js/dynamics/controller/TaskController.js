@@ -58,7 +58,11 @@ TaskController.prototype.sortAndMoveTask = function(view, model, stackPosition) 
   var me = this;
   jQuery.post("ajax/rankTaskAndMoveUnder.action",
     {taskId: model.getId(), rankUnderId: rankUnderId},
-    function(data, status) { model.setData(data); }
+    function(data, status) {
+      model.setData(data);
+      model.getStory().reload();
+    },
+    "json"
   );
 };
 

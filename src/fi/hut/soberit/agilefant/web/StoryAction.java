@@ -88,7 +88,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     public String retrieve() {
         story = storyBusiness.retrieve(storyId);
-        story = this.toTransferObject(story);
+        //story = this.toTransferObject(story);
         return Action.SUCCESS;
     }
     

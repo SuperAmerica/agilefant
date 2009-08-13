@@ -245,6 +245,7 @@
     <action name="retrieveStory" method="retrieve" class="storyAction">
        <result type="json">
         <param name="target">story</param>
+        <param name="patterns">+tasks</param>
        </result>
     </action>
     

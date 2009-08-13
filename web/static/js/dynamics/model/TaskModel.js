@@ -33,7 +33,9 @@ var TaskModel = function() {
 TaskModel.prototype = new CommonModel();
 
 TaskModel.prototype._setData = function(newData) {
-  this.id = newData.id;
+  if (newData.id) {
+    this.id = newData.id;
+  }
   
   if(newData.responsibles) {
     this._updateRelations(ModelFactory.types.user, newData.responsibles);
@@ -145,6 +147,10 @@ TaskModel.prototype.getState = function() {
 TaskModel.prototype.setState = function(state) {
   this.currentData.state = state;
   this._commitIfNotInTransaction();
+};
+
+TaskModel.prototype.getStory = function() {
+  return this.relations.story;
 };
 
 TaskModel.prototype.getResponsibles = function() {

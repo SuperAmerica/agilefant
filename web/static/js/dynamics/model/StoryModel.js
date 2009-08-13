@@ -87,6 +87,16 @@ StoryModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+StoryModel.prototype.reload = function() {
+  var me = this;
+  jQuery.getJSON(
+    "ajax/retrieveStory.action",
+    {storyId: this.getId()},
+    function(data,status) {
+      me.setData(data);
+    }
+  );
+};
 
 StoryModel.prototype.addTask = function(task) {
   this.addRelation(task);

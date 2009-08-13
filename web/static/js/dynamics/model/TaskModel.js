@@ -25,7 +25,8 @@ var TaskModel = function() {
     "state": "state",
     "description": "description",
     "effortLeft": "effortLeft",
-    "originalEstimate": "originalEstimate"
+    "originalEstimate": "originalEstimate",
+    "rank": "rank"
   };
 };
 
@@ -132,6 +133,10 @@ TaskModel.prototype.getOriginalEstimate = function() {
 TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
   this.currentData.originalEstimate = originalEstimate;
   this._commitIfNotInTransaction();
+};
+
+TaskModel.prototype.getRank = function() {
+  return this.currentData.rank;
 };
 
 TaskModel.prototype.getState = function() {

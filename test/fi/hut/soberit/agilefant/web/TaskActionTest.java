@@ -326,13 +326,16 @@ public class TaskActionTest {
         taskAction.setTaskId(222);
         taskAction.setRankUnderId(651);
         
+        Task returned = new Task();
+        
         expect(taskBusiness.retrieve(222)).andReturn(task);
         expect(taskBusiness.retrieveIfExists(651)).andReturn(null);
-        taskBusiness.rankUnderTask(task, null);
+        expect(taskBusiness.rankUnderTask(task, null)).andReturn(returned);
         
         replayAll();
         
         assertEquals(Action.SUCCESS, taskAction.rankUnder());
+        assertSame(taskAction.getTask(), returned);
         
         verifyAll();
     }

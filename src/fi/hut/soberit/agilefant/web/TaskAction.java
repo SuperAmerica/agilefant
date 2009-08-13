@@ -90,7 +90,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         task = taskBusiness.retrieve(taskId);
         Task rankUnder = taskBusiness.retrieveIfExists(rankUnderId);
         
-        taskBusiness.rankUnderTask(task, rankUnder);
+        task = taskBusiness.rankUnderTask(task, rankUnder);
         
         return Action.SUCCESS;
     }

@@ -256,7 +256,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     
     /** {@inheritDoc} */
-    public void rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException {
+    public Task rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException {
         validateRankingArguments(task, upperTask);
         
         RankDirection dir = findOutRankDirection(task, upperTask);
@@ -266,6 +266,8 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         shiftTaskRanks(dir, shiftedTasks);
         
         task.setRank(newRank);
+        
+        return task;
     }
 
 
@@ -280,11 +282,14 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     }
 
 
-    private enum RankDirection { TOP, UP, DOWN }
+    private enum RankDirection { TOP, UP, DOWN, BOTTOM }
     
     private RankDirection findOutRankDirection(Task task, Task upperTask) {
         if (upperTask == null) {
             return RankDirection.TOP;
+        }
+        else if (task.getRank() == -1) {
+            return RankDirection.BOTTOM;
         }
         else if (task.getRank() >= upperTask.getRank()) {
             return RankDirection.UP;

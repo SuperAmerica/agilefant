@@ -657,9 +657,10 @@ public class TaskBusinessTest {
         expect(taskDAO.getTasksWithRankBetween(fourthTaskInRank.getStory(), 1, 5))
             .andReturn(Arrays.asList(secondTaskInRank, thirdTaskInRank));
         replayAll();
-        taskBusiness.rankUnderTask(fourthTaskInRank, firstTaskInRank);
+        Task actual = taskBusiness.rankUnderTask(fourthTaskInRank, firstTaskInRank);
         verifyAll();
         checkRanks(0, 2, 6, 1);
+        assertSame(fourthTaskInRank, actual);
     }
     
     @Test

@@ -99,12 +99,12 @@ IterationController.prototype.sortStories = function(view, model, stackPosition)
  */
 IterationController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
-        rowControllerFactory : IterationController.prototype.storyControllerFactory,
-        dataSource : IterationModel.prototype.getStories,
-        saveRowCallback: StoryController.prototype.saveStory,
-        sortCallback: IterationController.prototype.sortStories,
-        caption : "Stories"
-      });
+    rowControllerFactory : IterationController.prototype.storyControllerFactory,
+    dataSource : IterationModel.prototype.getStories,
+    saveRowCallback: StoryController.prototype.saveStory,
+    sortCallback: IterationController.prototype.sortStories,
+    caption : "Stories"
+  });
 
   config.addCaptionItem( {
     name : "createStory",

@@ -47,9 +47,10 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * 
      * @param task the task to rank
      * @param upperTask the task under which the other task should be ranked. null if topmost.
+     * @return TODO
      * 
      * @throws IllegalArgumentException if the upper task is not under same story or iteration
      * @throws IllegalArgumentException if the given task was null
      */
-    public void rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException;
+    public Task rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException;
 }

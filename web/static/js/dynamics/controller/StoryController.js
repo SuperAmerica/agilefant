@@ -226,7 +226,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
   config.addCaptionItem( {
     name : "createTask",
     text : "Create task",
-    cssClass : "creteTask",
+    cssClass : "createTask",
     visible: true,
     callback : StoryController.prototype.createTask
   });
@@ -236,6 +236,8 @@ StoryController.prototype.initTaskListConfiguration = function() {
     cssClass : 'task-row',
     title : "#",
     headerTooltip : 'Priority',
+    sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
+    defaultSortColumn: true,
     subViewFactory: TaskController.prototype.toggleFactory
   });
   config.addColumnConfiguration(TaskController.columnIndexes.name, {

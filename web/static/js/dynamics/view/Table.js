@@ -56,6 +56,9 @@ DynamicTable.prototype.initialize = function() {
   var me = this;
   this.container = $("<div />").appendTo(this.getParentElement()).addClass(
       DynamicTable.cssClasses.table).width("100%");
+  if (this.config.options.cssClass) {
+    this.container.addClass(this.config.options.cssClass);
+  }
   this.element = $("<div />").appendTo(this.container);
   this._computeColumns();
   this.captionElement = $('<div />').addClass(
@@ -150,7 +153,7 @@ DynamicTable.prototype.layout = function() {
       start: function(event, ui) {
         oldPos = me._stackPosition(ui.item);
       },
-      stop: function(event, ui) {
+      update: function(event, ui) {
         var newPos = me._stackPosition(ui.item);
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();

@@ -92,8 +92,21 @@ TaskModel.prototype._saveData = function(id, changedData) {
   });
 };
 
-TaskModel.prototype.rankUnder = function(rankUnderId) {
+TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   var me = this;
+  
+  var data = {
+    taskId: me.getId(),
+    rankUnderId: rankUnderId
+  };
+  
+  // If the item was moved
+  if (moveUnder && moveUnder !== me.getParent()) {
+    jQuery.extend(data, {
+      moveUnderId: moveUnder.getId()
+    });
+  }
+  
   jQuery.post("ajax/rankTaskAndMoveUnder.action",
     {
       taskId: me.getId(),
@@ -106,6 +119,15 @@ TaskModel.prototype.rankUnder = function(rankUnderId) {
     "json"
   );
 }
+
+TaskModel.prototype.getParent = function() {
+  if (this.relations.story) {
+    return this.relations.story;
+  }
+  else {
+    return this.relations.backlog;
+  }
+};
 
 TaskModel.prototype.setStory = function(story) {
   this.addRelation(story);

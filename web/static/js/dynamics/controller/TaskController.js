@@ -57,9 +57,11 @@ TaskController.prototype.sortAndMoveTask = function(view, model, newPos, oldPos)
   var previousTask = null;
   if (view.getParentView().getDataRowAt(targetNumber)) {
     previousTask = view.getParentView().getDataRowAt(targetNumber).model;
+    model.rankUnder(previousTask.getId(), view.getParentView().getModel());
   }
-  
-  model.rankUnder(previousTask.getId());
+  else {
+    model.rankUnder(-1, view.getParentView().getModel());
+  }
 };
 
 TaskController.prototype.cancelEdit = function() {

@@ -59,3 +59,16 @@ INSERT INTO story_user (story_id, user_id) VALUES(1,1);
 INSERT INTO task_user (tasks_id, responsibles_id) VALUES(8,1);
 INSERT INTO task_user (tasks_id, responsibles_id) VALUES(9,1);
 
+--RANKS
+INSERT INTO backlogs (id,backlogtype,startDate, endDate) VALUES (3,'Iteration','2009-05-20 10:15:00', '2009-07-01 10:15:00');
+
+INSERT INTO stories (id,backlog_id, name, state) VALUES (55,3, 'Story', 1);
+
+INSERT INTO tasks (id,state, effortLeft, iteration_id, rank) VALUES (16,1,10000,3,5);
+INSERT INTO tasks (id,state, effortLeft, iteration_id, rank) VALUES (17,1,10000,3,1500);
+
+INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (20,1,10000,55,0);
+INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (21,1,10000,55,1);
+INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (22,1,10000,55,666);
+
+

@@ -260,6 +260,9 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         validateRankingArguments(task, upperTask);
         
         RankDirection dir = findOutRankDirection(task, upperTask);
+        if (dir == RankDirection.ONE_DOWN) {
+            return swapRanksWithNextInRank(task);
+        }
         int newRank = findOutNewRank(dir, upperTask);
         
         Collection<Task> shiftedTasks = getShiftedTasks(dir, task, upperTask);
@@ -268,6 +271,25 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.setRank(newRank);
         
         return task;
+    }
+    
+    private Task swapRanksWithNextInRank(Task task) {
+        Task next = getNextInRank(task);
+        
+        int oldRank = task.getRank();
+        task.setRank(next.getRank());
+        next.setRank(oldRank);
+        
+        return task;
+    }
+    
+    private Task getNextInRank(Task prev) {
+        if (prev.getStory() != null) {
+            return taskDAO.getNextTaskInRank(prev.getStory(), prev.getRank());
+        }
+        else {
+            return taskDAO.getNextTaskInRank(prev.getIteration(), prev.getRank());
+        }
     }
 
 
@@ -282,11 +304,14 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     }
 
 
-    private enum RankDirection { TOP, UP, DOWN, BOTTOM }
+    private enum RankDirection { TOP, UP, DOWN, ONE_DOWN, BOTTOM }
     
     private RankDirection findOutRankDirection(Task task, Task upperTask) {
         if (upperTask == null) {
             return RankDirection.TOP;
+        }
+        else if (task.equals(upperTask)) {
+            return RankDirection.ONE_DOWN;
         }
         else if (task.getRank() == -1) {
             return RankDirection.BOTTOM;
@@ -348,9 +373,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
                 task.getIteration() != upperTask.getIteration()
                 )) {
             throw new IllegalArgumentException("The tasks' parents should be same");
-        }
-        else if (task.equals(upperTask)) {
-            throw new IllegalArgumentException("Can't rank task under self");
         }
     }
     

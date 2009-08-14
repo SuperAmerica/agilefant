@@ -90,4 +90,20 @@ public interface TaskDAO extends GenericDAO<Task> {
      * @return
      */
     public Collection<Task> getTasksWithRankBetween(Iteration iter, int lower, int upper);
+    
+    /**
+     * Gets the next task with the given parent iteration and rank > parameter,
+     * excluding parameter.
+     * 
+     * @return the next task in rank, null if not found
+     */
+    public Task getNextTaskInRank(Iteration iter, int rank);
+    
+    /**
+     * Gets the next task with the given parent story and rank > parameter,
+     * excluding parameter.
+     * 
+     * @return the next task in rank, null if not found
+     */
+    public Task getNextTaskInRank(Story story, int rank);
 }

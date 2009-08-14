@@ -700,11 +700,19 @@ public class TaskBusinessTest {
         verifyAll();
     }
     
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testRankUnderTask_rankUnderSelf() {
+        Task switchUnder = new Task();
+        switchUnder.setRank(4);
+        expect(taskDAO.getNextTaskInRank(secondTaskInRank.getStory(), secondTaskInRank.getRank()))
+            .andReturn(switchUnder);
+        
         replayAll();
-        taskBusiness.rankUnderTask(firstTaskInRank, firstTaskInRank);
+        Task actual = taskBusiness.rankUnderTask(secondTaskInRank, secondTaskInRank);
         verifyAll();
+        
+        assertEquals(1, switchUnder.getRank());
+        assertEquals(4, actual.getRank());
     }
     
     @Test
@@ -744,4 +752,6 @@ public class TaskBusinessTest {
         taskBusiness.rankUnderTask(firstTaskInRank, newTask);
         verifyAll();
     }
+
+   
 }

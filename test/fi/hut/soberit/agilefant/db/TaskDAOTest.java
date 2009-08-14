@@ -189,4 +189,68 @@ public class TaskDAOTest extends AbstractHibernateTests {
         Collection<Task> actual = taskDAO.getTasksWithRankBetween(story, 2, 1);
         assertEquals(0, actual.size());
     }
+    
+    
+    @Test
+    public void testGetNextTaskInRank_iteration() {
+        executeClassSql();
+        Iteration iter = new Iteration();
+        iter.setId(1);
+        Task actual = taskDAO.getNextTaskInRank(iter, 0);
+        
+        assertEquals(1, actual.getRank());
+    }
+    
+    @Test
+    public void testGetNextTaskInRank_iteration_largeCap() {
+        executeClassSql();
+        Iteration iter = new Iteration();
+        iter.setId(3);
+        
+        Task actual = taskDAO.getNextTaskInRank(iter, 25);
+        
+        assertEquals(17, actual.getId());
+        assertEquals(1500, actual.getRank());
+    }
+    
+    @Test
+    public void testGetNextTaskInRank_iteration_notFound() {
+        executeClassSql();
+        Iteration iter = new Iteration();
+        iter.setId(1);
+        
+        assertNull(taskDAO.getNextTaskInRank(iter, 999));
+    }
+    
+    @Test
+    public void testGetNextTaskInRank_story() {
+        executeClassSql();
+        Story story = new Story();
+        story.setId(55);
+        Task actual = taskDAO.getNextTaskInRank(story, 0);
+        
+        assertEquals(1, actual.getRank());
+        assertEquals(21, actual.getId());
+    }
+    
+    @Test
+    public void testGetNextTaskInRank_story_largeCap() {
+        executeClassSql();
+        Story story = new Story();
+        story.setId(55);
+        
+        Task actual = taskDAO.getNextTaskInRank(story, 25);
+        
+        assertEquals(22, actual.getId());
+        assertEquals(666, actual.getRank());
+    }
+    
+    @Test
+    public void testGetNextTaskInRank_story_notFound() {
+        executeClassSql();
+        Story story = new Story();
+        story.setId(55);
+        
+        assertNull(taskDAO.getNextTaskInRank(story, 999));
+    }
 }

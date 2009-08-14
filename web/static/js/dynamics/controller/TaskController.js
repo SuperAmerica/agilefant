@@ -49,21 +49,17 @@ TaskController.prototype.saveTask = function() {
   this.view.getCell(TaskController.columnIndexes.buttons).hide();
 };
 
-TaskController.prototype.sortAndMoveTask = function(view, model, stackPosition) {
-  var targetNumber = stackPosition - 1;
-  var rankUnderId = -1;
-  if (view.getParentView().getDataRowAt(targetNumber)) {
-    rankUnderId = view.getParentView().getDataRowAt(targetNumber).model.getId();
+TaskController.prototype.sortAndMoveTask = function(view, model, newPos, oldPos) {
+  var targetNumber = newPos - 1;
+  if (newPos >= oldPos) {
+    targetNumber = newPos;
   }
-  var me = this;
-  jQuery.post("ajax/rankTaskAndMoveUnder.action",
-    {taskId: model.getId(), rankUnderId: rankUnderId},
-    function(data, status) {
-      model.setData(data);
-      model.getStory().reload();
-    },
-    "json"
-  );
+  var previousTask = null;
+  if (view.getParentView().getDataRowAt(targetNumber)) {
+    previousTask = view.getParentView().getDataRowAt(targetNumber).model;
+  }
+  
+  model.rankUnder(previousTask.getId());
 };
 
 TaskController.prototype.cancelEdit = function() {

@@ -92,6 +92,21 @@ TaskModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+TaskModel.prototype.rankUnder = function(rankUnderId) {
+  var me = this;
+  jQuery.post("ajax/rankTaskAndMoveUnder.action",
+    {
+      taskId: me.getId(),
+      rankUnderId: rankUnderId
+    },
+    function(data, status) {
+      me.setData(data);
+      me.getStory().reload();
+    },
+    "json"
+  );
+}
+
 TaskModel.prototype.setStory = function(story) {
   this.addRelation(story);
 };

@@ -12,6 +12,7 @@ import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -184,5 +185,24 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         task.add(Restrictions.eq("story.id", story.getId()));
         task.add(Restrictions.between("rank", lower, upper));
         return asList(task);
+    }
+    
+    
+    public Task getNextTaskInRank(Iteration iter, int rank) {
+        Criteria task = getCurrentSession().createCriteria(Task.class);
+        task.add(Restrictions.eq("iteration.id", iter.getId()));
+        task.add(Restrictions.gt("rank", rank));
+        task.addOrder(Order.asc("rank"));
+        task.setMaxResults(1);
+        return uniqueResult(task);
+    }
+    
+    public Task getNextTaskInRank(Story story, int rank) {
+        Criteria task = getCurrentSession().createCriteria(Task.class);
+        task.add(Restrictions.eq("story.id", story.getId()));
+        task.add(Restrictions.gt("rank", rank));
+        task.addOrder(Order.asc("rank"));
+        task.setMaxResults(1);
+        return uniqueResult(task);
     }
 }

@@ -94,6 +94,7 @@ StoryModel.prototype.reload = function() {
     {storyId: this.getId()},
     function(data,status) {
       me.setData(data);
+      me.callListeners(new DynamicsEvents.EditEvent(me));
     }
   );
 };

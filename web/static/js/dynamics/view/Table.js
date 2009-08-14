@@ -145,12 +145,16 @@ DynamicTable.prototype.layout = function() {
   if(this.config.isSortable()) {
     var me = this;
     var opts = this.config.getSortOptions();
+    var oldPos = null;
     jQuery.extend(opts, {
+      start: function(event, ui) {
+        oldPos = me._stackPosition(ui.item);
+      },
       stop: function(event, ui) {
-        var newPos = me._stackPositionAfterSort(ui.item);
+        var newPos = me._stackPosition(ui.item);
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();
-        me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos);
+        me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos, oldPos);
       }
     });
     this.element.sortable(opts);
@@ -161,7 +165,7 @@ DynamicTable.prototype.getDataRowAt = function(index) {
   return this.middleRows[index];
 };
 
-DynamicTable.prototype._stackPositionAfterSort = function(rowElement) {
+DynamicTable.prototype._stackPosition = function(rowElement) {
   var prevDataRows = rowElement.prevAll(".dynamicTableDataRow");
   var position = prevDataRows.length;
   return position;

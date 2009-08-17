@@ -306,7 +306,7 @@ public class IterationBusinessTest {
         iter.setEndDate(end.toDate());
         iter.setParent(project);
         iteration.setParent(project);
-        iter.setBacklogSize(10);
+        iter.setBacklogSize(new ExactEstimate(120L));
         iter.setName("foo");
         iter.setDescription("quu");
         iter.setBaselineLoad(new ExactEstimate(100L));
@@ -366,7 +366,7 @@ public class IterationBusinessTest {
         iter.setEndDate(end.toDate());
         iter.setParent(project);
         iteration.setParent(project);
-        iter.setBacklogSize(10);
+        iter.setBacklogSize(new ExactEstimate(120L));
         iter.setName("foo");
         iter.setDescription("quu");
         iter.setBaselineLoad(new ExactEstimate(100L));

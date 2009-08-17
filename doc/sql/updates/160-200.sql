@@ -79,8 +79,12 @@ ALTER TABLE backlogs
 
 ALTER TABLE backlogs
   CHANGE defaultOverhead baselineLoad BIGINT(20) DEFAULT NULL;
+
+ALTER TABLE backlogs
+  CHANGE backlogSize backlogSize BIGINT(20) DEFAULT NULL;
   
 UPDATE backlogs SET baselineLoad = (baselineLoad/60) WHERE baselineLoad IS NOT NULL;
+UPDATE backlogs SET backlogSize = (backlogSize*60) WHERE backlogSize IS NOT NULL;
   
 UPDATE backlogs
   SET parent_id=product_id

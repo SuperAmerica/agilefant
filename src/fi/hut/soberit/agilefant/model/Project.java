@@ -62,10 +62,10 @@ public class Project extends Backlog implements Schedulable {
     private Status status = Status.GREEN;
     
     private Collection<Assignment> assignments = new HashSet<Assignment>();
-    
-    private Integer backlogSize;
-    
+        
     private ExactEstimate baselineLoad = new ExactEstimate(0);
+    
+    private ExactEstimate backlogSize = new ExactEstimate(0);
 
     @JSON
     public Date getStartDate() {
@@ -134,11 +134,13 @@ public class Project extends Backlog implements Schedulable {
     }
 
     @JSON
-    public Integer getBacklogSize() {
+    @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "backlogSize")))
+    public ExactEstimate getBacklogSize() {
         return backlogSize;
     }
 
-    public void setBacklogSize(Integer backlogSize) {
+    public void setBacklogSize(ExactEstimate backlogSize) {
         this.backlogSize = backlogSize;
     }
 

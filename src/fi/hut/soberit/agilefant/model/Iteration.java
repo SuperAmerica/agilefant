@@ -47,7 +47,7 @@ public class Iteration extends Backlog implements Schedulable {
 
     private Date endDate;
     
-    private Integer backlogSize;
+    private ExactEstimate backlogSize = new ExactEstimate(0);
     
     private Collection<Assignment> assignments = new ArrayList<Assignment>();
     
@@ -76,11 +76,13 @@ public class Iteration extends Backlog implements Schedulable {
     }
 
     @JSON
-    public Integer getBacklogSize() {
+    @Embedded
+    @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "backlogSize")))
+    public ExactEstimate getBacklogSize() {
         return backlogSize;
     }
 
-    public void setBacklogSize(Integer backlogSize) {
+    public void setBacklogSize(ExactEstimate backlogSize) {
         this.backlogSize = backlogSize;
     }
 

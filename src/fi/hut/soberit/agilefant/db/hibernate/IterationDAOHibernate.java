@@ -144,7 +144,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
                 Restrictions.eq("id", assignee.getId()));
         
         //must have planned size set
-        crit.add(Restrictions.gt("backlogSize", 0));
+        crit.add(Restrictions.isNotNull("backlogSize"));
         
         //must be empty
         crit.add(Restrictions.isEmpty("stories"));

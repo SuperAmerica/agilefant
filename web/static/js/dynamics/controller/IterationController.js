@@ -108,7 +108,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
     dataSource: IterationModel.prototype.getTasks,
     caption: "Tasks without story",
-    cssClass: "dynamictable-sortable-tasklist",
+    cssClass: "dynamicTable-sortable-tasklist",
     sortCallback: TaskController.prototype.sortAndMoveTask,
     sortOptions: {
       items: "> .dynamicTableDataRow",

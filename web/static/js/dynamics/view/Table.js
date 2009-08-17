@@ -109,6 +109,12 @@ DynamicTable.prototype._bindEvents = function() {
     });
     event.stopPropagation();
     targetRow.setParentView(me);
+    me.rowHashes.push(targetRow.getModel().getHashCode());
+  });
+  
+  this.element.bind("sortremove", function(event, ui) {
+    var targetRow = ui.item.data("row");
+    me.removeRow(targetRow);
   });
 };
 DynamicTable.prototype._computeColumns = function() {

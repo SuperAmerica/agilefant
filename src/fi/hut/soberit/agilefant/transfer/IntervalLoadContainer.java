@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.transfer;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.joda.time.Interval;
 
@@ -9,6 +11,7 @@ import flexjson.JSON;
 
 public class IntervalLoadContainer {
     private Interval interval;
+    private List<BacklogLoadContainer> detailedLoad = new ArrayList<BacklogLoadContainer>();
     private long assignedLoad = 0L;
     private long baselineLoad = 0L;
     private long unassignedLoad = 0L;
@@ -61,5 +64,12 @@ public class IntervalLoadContainer {
     }
     public void setFutureLoad(long futureLoad) {
         this.futureLoad = futureLoad;
+    }
+    @JSON
+    public List<BacklogLoadContainer> getDetailedLoad() {
+        return detailedLoad;
+    }
+    public void setDetailedLoad(List<BacklogLoadContainer> detailedLoad) {
+        this.detailedLoad = detailedLoad;
     }
 }

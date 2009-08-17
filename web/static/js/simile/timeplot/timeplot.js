@@ -489,7 +489,13 @@ Timeplot._Impl.prototype = {
             this._plots = [];
             if (this._plotInfos) {
                 for (var i = 0; i < this._plotInfos.length; i++) {
-                    var plot = new Timeplot.Plot(this, this._plotInfos[i]);
+                    //modified for agilefant
+                    var plot;
+                    if(this._plotInfos[i].plot) {
+                      plot = new this._plotInfos[i].plot(this, this._plotInfos[i]);
+                    } else {
+                      plot = new Timeplot.Plot(this, this._plotInfos[i]);
+                    }
                     var dataSource = plot.getDataSource();
                     if (dataSource) {
                         dataSource.addListener(painter);

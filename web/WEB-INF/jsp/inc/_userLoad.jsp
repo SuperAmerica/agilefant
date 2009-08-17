@@ -4,6 +4,8 @@
 $(document).ready(function() {
 	$("#dwTabs").show();
 
+  init_user_load($("#loadPlot"),${userId}, $("#detailedLoadPlot"), $("#detailedLoadLegend"));
+	
 	$("#dailyWorkTabs").tabs({
 		select: function(event, ui) {
 			if(ui.index == 2) {
@@ -34,16 +36,34 @@ $(document).ready(function() {
 					});
 				};
 			 	panel.load("weeklySpentEffort.action",{userId: ${userId}}, function(data) { clickRegister(); });
-			}
+			} 
+		},
+		show: function(event, ui) {
+		  var plot = $(".timeplot", ui.panel);
+      if(plot.length > 0) {
+       plot.data("timeplot").repaint();
+      }
 		}
 		});
-		init_user_load($("#loadPlot"),${userId});
+	
+});
+$(window).resize(function() {
+  $(".timeplot").each(function() {
+    $(this).data("timeplot").repaint();
+  });
 });
 </script>
 <link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/timeline.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/ether.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/event.css" type="text/css"/>
+<style type="text/css">
+.ui-tabs .ui-tabs-hide {
+    position: absolute !important;
+    left: -10000px !important;
+    display: block !important;
+}
+</style>
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/LoadPlot.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
@@ -51,7 +71,7 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/simile/extensions/init-load.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/load-plot.js"></script>
 <div id="dailyWorkTabs">
-	<ul id="dwTabs" style="display: none; height: 1px; width: 785px;">
+	<ul id="dwTabs" style="display: none; height: 1px; width: 90%">
 		<li><a href="#smallLoadTable"><span>Load</span></a></li>
 		<li><a href="#detailedLoadTable"><span>Detailed</span></a></li>
 		<c:if test="${settings.hourReportingEnabled}">
@@ -59,11 +79,16 @@ $(document).ready(function() {
 			effort</span></a></li>
 		</c:if>
 	</ul>
-	<div class="subItems">
+	<div class="subItems" style="width: 90%;">
 		<div id="Spent_Effort"></div>
-		<div id="detailedLoadTable" class="ui-tabs-hide"></div>
+		<div id="detailedLoadTable">
+		  <div style="position: relative">
+		  <div style="width: 90%; height: 250px; margin-top: 10px; position: relative;" id="detailedLoadPlot"></div>
+		  </div>
+		  <div style="margin-top: 10px;" id="detailedLoadLegend"></div>
+		</div>
 		<div id="smallLoadTable">
-			<div style="height: 250px; margin-top: 10px;" id="loadPlot"></div>
+			<div style="position: relative;"><div style="width: 90%; height: 250px; margin-top: 10px; position: relative;" id="loadPlot"></div></div>
 		</div>
 	</div>
 </div>

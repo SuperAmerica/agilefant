@@ -1,8 +1,8 @@
 window.Timeline.DateTime = window.SimileAjax.DateTime;
 Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
-function init_user_load(timeplotTrack, userId) {
+function init_user_load(timeplotTrack, userId, detailed, detailedLegends) {
 	var eventSource = new AgilefantTimeplot.DefaultEventSource();
-	
+	var source2 = new AgilefantTimeplot.DefaultEventSource();
 	var timeGeometry = new Timeplot.WeekTimeGeometry({
 		gridColor: new Timeplot.Color("#000000"),
 		axisLabelsPlacement: "bottom"
@@ -36,13 +36,37 @@ function init_user_load(timeplotTrack, userId) {
 	                	lineColor: "#ff0000",
 	                	fillColor: "#cc8080",
 	                	showValues: true,
-	                	AgilefantPlot: stepValues
+	                	AgilefantPlot: stepValues,
+	                	plot: Timeplot.AgilefantSummaryPlot
 	                })
 	                ];
+	 var plotInfoDetail = [
+	                  Timeplot.createLoadInfo({
+	                    id: "plot1",
+	                    dataSource: new Timeplot.DevSource(eventSource,3,5),
+	                    timeGeometry: timeGeometry,
+	                    valueGeometry: valueGeometry,
+	                    lineColor: "#ff0000",
+	                    fillColor: "#cc8080",
+	                    showValues: true,
+	                    AgilefantPlot: stepValues,
+	                    plot: Timeplot.AgilefantBacklogPlot,
+	                    legends: detailedLegends
+	                  })
+	                  ];
 
 	
-	$.getJSON("ajax/defaultUserLoad.action",{userId: userId}, function(data) {
-		timeplot = Timeplot.create($(timeplotTrack).get(0), plotInfo);
-		eventSource.userLoadData(data.loadContainers);
-	});
+	$.ajax({
+	    url: "ajax/defaultUserLoad.action",
+	    data: {userId: userId}, 
+	    async: true,
+	    dataType: "json",
+	    type: "post",
+	    success: function(data) {
+		timeplot = Timeplot.create(timeplotTrack.get(0), plotInfo);
+		timeplotTrack.data("timeplot", timeplot).addClass("timeplot");
+		timeplot2 = Timeplot.create(detailed.get(0), plotInfoDetail);
+		detailed.data("timeplot", timeplot2).addClass("timeplot");
+    eventSource.userLoadData(data.loadContainers);
+	    }});
 }

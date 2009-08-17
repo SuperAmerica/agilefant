@@ -13,8 +13,6 @@ import flexjson.JSON;
 
 public class ComputedLoadData {
     private List<IntervalLoadContainer> loadContainers = new ArrayList<IntervalLoadContainer>();
-    private Set<Iteration> iterations = new HashSet<Iteration>();
-    private Set<Project> projects = new HashSet<Project>(); 
     private List<Holiday> holidays = new ArrayList<Holiday>();
     private Date startDate;
     private Date endDate;
@@ -26,20 +24,6 @@ public class ComputedLoadData {
     }
     public void setLoadContainers(List<IntervalLoadContainer> loadContainers) {
         this.loadContainers = loadContainers;
-    }
-    @JSON
-    public Set<Iteration> getIterations() {
-        return iterations;
-    }
-    public void setIterations(Set<Iteration> iterations) {
-        this.iterations = iterations;
-    }
-    @JSON
-    public Set<Project> getProjects() {
-        return projects;
-    }
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
     }
     @JSON
     public List<Holiday> getHolidays() {

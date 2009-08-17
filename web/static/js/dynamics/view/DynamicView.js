@@ -70,6 +70,7 @@ DynamicView.prototype.removeSubView = function(name) {
 };
 DynamicView.prototype.setParentView = function(parentView) {
 	this.parentView = parentView;
+	this.parentElement = parentView.getElement();
 };
 
 

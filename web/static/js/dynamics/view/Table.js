@@ -88,15 +88,29 @@ DynamicTable.prototype.initialize = function() {
     this.captionElement.hide();
   }
   this._renderHeader();
-  this.element.bind("sortbeforeStop", function(event) {
+  this._bindEvents();
+};
+
+DynamicTable.prototype._bindEvents = function() {
+  var me = this;
+  this.element.bind("sortbeforeStop", function(event, ui) {
     me.middleRows = [];
     me.element.find("> .dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
       me.middleRows.push($(row).data("row"));
     });
     event.stopPropagation();
   });
+  
+  this.element.bind("sortreceive", function(event, ui) {
+    var targetRow = ui.item.data("row");
+    me.middleRows = [];
+    me.element.find("> .dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
+      me.middleRows.push($(row).data("row"));
+    });
+    event.stopPropagation();
+    targetRow.setParentView(me);
+  });
 };
-
 DynamicTable.prototype._computeColumns = function() {
   var columnConfigs = this.config.getColumns();
   var numberOfColumns = 0;

@@ -220,7 +220,8 @@ StoryController.prototype.initTaskListConfiguration = function() {
     sortCallback: TaskController.prototype.sortAndMoveTask,
     sortOptions: {
       items: "> .dynamicTableDataRow",
-      handle: "." + DynamicTable.cssClasses.dragHandle
+      handle: "." + DynamicTable.cssClasses.dragHandle,
+      connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     }
   });
   config.addCaptionItem( {

@@ -39,6 +39,16 @@ public interface TaskBusiness extends GenericBusiness<Task> {
     
     
     /* RANKING */
+    /**
+     * Moves the task under the given parent and ranks it one rank below the upper task.
+     * <p>
+     * Note: upperTask should be left null if topmost rank is wanted.
+     * @param parentStoryId TODO
+     * @param parentIterationId TODO
+     * 
+     * @throws IllegalArgumentException if upperTask's parent is not same as given parent.
+     */
+    public Task rankAndMove(Task task, Task upperTask, Integer parentStoryId, Integer parentIterationId) throws IllegalArgumentException;
     
     /**
      * Rank the task to be under the given task
@@ -53,4 +63,13 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * @throws IllegalArgumentException if the given task was null
      */
     public Task rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException;
+    
+    /**
+     * Ranks the task to bottom most item under given parent.
+     * <p>
+     * Only one parent id should be given, other left null.
+     * 
+     * @throws IllegalArgumentException if both parents were given 
+     */
+    public Task rankToBottom(Task task, Integer parentStoryId, Integer parentIterationId) throws IllegalArgumentException;
 }

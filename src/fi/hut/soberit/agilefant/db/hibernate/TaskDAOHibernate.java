@@ -22,7 +22,6 @@ import org.springframework.stereotype.Repository;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
@@ -170,39 +169,43 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         return result;
     }
     
-    
-    public Collection<Task> getTasksWithRankBetween(Iteration iter, int lower,
-            int upper) {
+    /** {@inheritDoc} */
+    public Collection<Task> getTasksWithRankBetween(int lower, int upper,
+            Integer iterationId, Integer storyId) {
         Criteria task = getCurrentSession().createCriteria(Task.class);
-        task.add(Restrictions.eq("iteration.id", iter.getId()));
+        addParentRestriction(task, iterationId, storyId);
         task.add(Restrictions.between("rank", lower, upper));
         return asList(task);
     }
     
-    public Collection<Task> getTasksWithRankBetween(Story story, int lower,
-            int upper) {
+    /** {@inheritDoc} */
+    public Task getNextTaskInRank(int rank, Integer iterationId, Integer storyId) {
         Criteria task = getCurrentSession().createCriteria(Task.class);
-        task.add(Restrictions.eq("story.id", story.getId()));
-        task.add(Restrictions.between("rank", lower, upper));
-        return asList(task);
-    }
-    
-    
-    public Task getNextTaskInRank(Iteration iter, int rank) {
-        Criteria task = getCurrentSession().createCriteria(Task.class);
-        task.add(Restrictions.eq("iteration.id", iter.getId()));
+        addParentRestriction(task, iterationId, storyId);
         task.add(Restrictions.gt("rank", rank));
         task.addOrder(Order.asc("rank"));
         task.setMaxResults(1);
         return uniqueResult(task);
     }
     
-    public Task getNextTaskInRank(Story story, int rank) {
+    
+    /** {@inheritDoc} */
+    public Task getLastTaskInRank(Integer storyId, Integer iterationId) {
         Criteria task = getCurrentSession().createCriteria(Task.class);
-        task.add(Restrictions.eq("story.id", story.getId()));
-        task.add(Restrictions.gt("rank", rank));
-        task.addOrder(Order.asc("rank"));
+        
+        addParentRestriction(task, iterationId, storyId);
+        
+        task.addOrder(Order.desc("rank"));
         task.setMaxResults(1);
         return uniqueResult(task);
+    }
+    
+    private void addParentRestriction(Criteria crit, Integer iterationId, Integer storyId) {
+        if (iterationId != null) {
+            crit.add(Restrictions.eq("iteration.id", iterationId));
+        }
+        else if (storyId != null) {
+            crit.add(Restrictions.eq("story.id", storyId));
+        }
     }
 }

@@ -7,8 +7,6 @@ import java.util.Set;
 
 import org.joda.time.Interval;
 
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
@@ -69,41 +67,34 @@ public interface TaskDAO extends GenericDAO<Task> {
             Interval interval);
 
     /**
-     * Get the story's child tasks with rank between and including
-     * lower and upper borders.
-     * @param story the parent story
-     * @param lower lower border of the rank (0 if topmost task included)
-     * @param upper upper border of the rank
-     * @return
-     */
-    public Collection<Task> getTasksWithRankBetween(Story story, int lower, int upper);
-    
-    /**
      * Get the iteration's straight child tasks with rank between and including
      * lower and upper borders.
      * <p>
      * Will not get the iteration's stories' tasks.
-     * 
-     * @param iter the parent iteration
      * @param lower lower border of the rank (0 if topmost included)
      * @param upper upper border of the rank
+     * @param iterationId the parent iteration
+     * @param storyId TODO
+     * 
      * @return
      */
-    public Collection<Task> getTasksWithRankBetween(Iteration iter, int lower, int upper);
+    public Collection<Task> getTasksWithRankBetween(int lower, int upper, Integer iterationId, Integer storyId);
     
     /**
-     * Gets the next task with the given parent iteration and rank > parameter,
+     * Gets the next task with the given parent and rank > parameter,
      * excluding parameter.
-     * 
+     * <p>
+     * Supply only one of the parameters iterationId and storyId.
+     *  
      * @return the next task in rank, null if not found
      */
-    public Task getNextTaskInRank(Iteration iter, int rank);
+    public Task getNextTaskInRank(int rank, Integer iterationId, Integer storyId);
+
     
     /**
-     * Gets the next task with the given parent story and rank > parameter,
-     * excluding parameter.
-     * 
-     * @return the next task in rank, null if not found
+     * Gets the last ranked task for given parent.
+     * <p>
+     * Only one id should be supplied, otherwise will return <code>null</code>.
      */
-    public Task getNextTaskInRank(Story story, int rank);
+    public Task getLastTaskInRank(Integer storyId, Integer iterationId);
 }

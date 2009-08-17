@@ -136,7 +136,7 @@ CommonModel.prototype.addRelation = function(object) {
 
 CommonModel.prototype._addOneWayRelation = function(object) {
   var type = ModelFactory.classNameToType[object.getPersistedClass()];
-  if (this.relations[type].constructor === Array) {
+  if (this.relations[type] && this.relations[type].constructor === Array) {
     // Do not add duplicates
     if (jQuery.inArray(object, this.relations[type]) === -1) { 
       this.relations[type].push(object);
@@ -157,6 +157,7 @@ CommonModel.prototype._addOneWayRelation = function(object) {
 CommonModel.prototype.removeRelation = function(object) {
   this._removeOneWayRelation(object);
   object._removeOneWayRelation(this);
+  this.relationChanged = true;
 };
 
 CommonModel.prototype._removeOneWayRelation = function(object) {

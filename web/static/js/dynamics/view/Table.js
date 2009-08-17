@@ -176,11 +176,12 @@ DynamicTable.prototype.layout = function() {
     var me = this;
     var opts = this.config.getSortOptions();
     jQuery.extend(opts, {
-      update: function(event, ui) {
+      stop: function(event, ui) {
         var newPos = me._stackPosition(ui.item);
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();
         me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos);
+        return false;
       }
     });
     this.element.sortable(opts);

@@ -103,22 +103,30 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   // If the item was moved
   if (moveUnder && moveUnder !== me.getParent()) {
     if (moveUnder instanceof IterationModel) {
-      jQuery.extend(data, {
-        iterationId: moveUnder.getId()
-      });  
+      data.iterationId = moveUnder.getId();  
     }
     else if (moveUnder instanceof StoryModel) {
-      jQuery.extend(data, {
-        storyId: moveUnder.getId()
-      });
+      data.storyId = moveUnder.getId();
+    }
+  }
+  else {
+    if (me.getParent() instanceof IterationModel) {
+      data.iterationId = me.getParent().getId();  
+    }
+    else if (me.getParent() instanceof StoryModel) {
+      data.storyId = me.getParent().getId();
     }
   }
   
   jQuery.post("ajax/rankTaskAndMoveUnder.action",
     data,
     function(data, status) {
+      var oldParent = me.getParent();
       me.setData(data);
-      me.getStory().reload();
+      oldParent.reload();
+      if (oldParent !== moveUnder) {
+        moveUnder.reload();
+      }
     },
     "json"
   );

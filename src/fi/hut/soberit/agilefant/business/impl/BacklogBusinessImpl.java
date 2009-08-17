@@ -117,7 +117,7 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     public void addAssignees(int backlogId, Set<Integer> userIds) {
         Backlog backlog = this.retrieve(backlogId);
         this.assignmentBusiness.addMultiple(backlog, userIds,
-                ExactEstimate.ZERO, (short) 100);
+                ExactEstimate.ZERO, 100);
     }
 
 }

@@ -55,7 +55,7 @@ Timeplot.AgilefantBacklogPlot = function(timeplot, plotInfo) {
   Timeplot.OriginalPlot.call(this, timeplot, plotInfo);
   this.colors = {};
   this.iterationColor = new Timeplot.Color("rgb(184,237,254)");
-  this.projectColor = new Timeplot.Color("rgb(68,26,78)");
+  this.projectColor = new Timeplot.Color("rgb(251,193,253)");
   this.iIter = 0;
   this.iProj = 0;
 };
@@ -72,7 +72,7 @@ Timeplot.AgilefantBacklogPlot.prototype._boxColor = function(backlog) {
     base.darken(16);
     color = base;
     this.colors[oid] = color.toString();
-    $("<div />").css("background-color", color.toString()).text(backlog.name).appendTo(this._plotInfo.legends);
+    $("<span />").css("background-color", color.toString()).text(backlog.name).appendTo(this._plotInfo.legends);
     
   }
   return this.colors[oid];

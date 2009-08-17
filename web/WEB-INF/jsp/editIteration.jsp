@@ -53,7 +53,7 @@ $(document).ready(function() {
       burndownElement: null,
       assigmentListElement: $("#backlogAssignees"),
       hourEntryListElement: null,
-      taskListElement: null
+      taskListElement: $("#tasksWithoutStory")
   });
 });
 </script>
@@ -91,6 +91,7 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/dynamics/controller/IterationController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/StoryController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TaskController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/TasksWithoutStoryController.js"></script>
 
 
 <script type="text/javascript" src="static/js/dynamics/Dynamics.events.js"></script>
@@ -106,6 +107,8 @@ $(document).ready(function() {
 
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+
+<form onsubmit="return false;"><div id="tasksWithoutStory" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 
 
 

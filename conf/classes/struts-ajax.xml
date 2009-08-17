@@ -206,7 +206,7 @@
     <action name="iterationData" class="iterationAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">+stories, +stories.tasks, +assignments, +hourEntries, +*.user, +*.responsibles</param>
+        <param name="patterns">+stories, +stories.tasks, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles</param>
       </result>
     </action>
     

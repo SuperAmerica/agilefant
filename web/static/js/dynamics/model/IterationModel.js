@@ -43,6 +43,11 @@ IterationModel.prototype._setData = function(newData) {
   if (newData.stories) {
     this._updateRelations(ModelFactory.types.story, newData.stories);
   }
+  // Set tasks
+  if (newData.tasks) {
+    this._updateRelations(ModelFactory.types.task, newData.tasks);
+  }
+  
   //assignments
   if(newData.assignments) {
     this._updateRelations(ModelFactory.types.assignment, newData.assignments);

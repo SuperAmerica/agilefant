@@ -11,11 +11,13 @@ var IterationController = function(options) {
   this.parentView = options.storyListElement;
   this.iterationInfoElement = options.backlogDetailElement;
   this.assigmentListElement = options.assigmentListElement;
+  this.taskListElement = options.taskListElement;
   this.init();
   this.initAssigneeConfiguration();
   this.initSpentEffortConfiguration();
   this.initializeStoryConfig();
   this.initIterationInfoConfig();
+  this.initializeTaskListConfig();
   this.paint();
 };
 IterationController.prototype = new BacklogController();
@@ -37,6 +39,12 @@ IterationController.prototype.paintStoryList = function() {
       this.parentView);
   this.storyListView.render();
 };
+
+IterationController.prototype.paintTaskList = function() {
+  this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
+      this.taskListElement);
+  this.taskListView.render();
+};
 /**
  * Initialize and render the story list.
  */
@@ -49,6 +57,7 @@ IterationController.prototype.paint = function() {
         me.paintStoryList();
         me.paintSpentEffortList();
         me.paintAssigneeList();
+        me.paintTaskList();
       });
 };
 
@@ -92,6 +101,178 @@ IterationController.prototype.sortStories = function(view, model, stackPosition)
   } else {
     model.setPriority(stackPosition); 
   }
+};
+
+IterationController.prototype.initializeTaskListConfig = function() {
+  var config = new DynamicTableConfiguration({
+    rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
+    dataSource: IterationModel.prototype.getTasks,
+    caption: "Tasks without story"
+  });
+  
+  config.addCaptionItem({
+    name : "createTask",
+    text : "Create task",
+    cssClass : "create",
+    callback : IterationController.prototype.createTask
+  });
+  /*
+  config.addColumnConfiguration(TaskController.columnIndexes.prio, {
+    minWidth : 24,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "#",
+    headerTooltip : 'Rank',
+    sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
+    defaultSortColumn: true
+  });
+  
+  config.addColumnConfiguration(TaskController.columnIndexes.name, {
+    minWidth : 280,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "Name",
+    headerTooltip : 'Task name',
+    get : TaskModel.prototype.getName,
+    sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getName),
+    defaultSortColumn: true,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      set : TaskModel.prototype.setName,
+      required: true
+    }
+  });*/
+  
+  config.addColumnConfiguration(TaskController.columnIndexes.prio, {
+    minWidth : 24,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "#",
+    headerTooltip : 'Priority',
+    sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
+    defaultSortColumn: true,
+    subViewFactory: TaskController.prototype.toggleFactory
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.name, {
+    minWidth : 200,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "Name",
+    headerTooltip : 'Task name',
+    get : TaskModel.prototype.getName,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      set : TaskModel.prototype.setName
+    }
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.state, {
+    minWidth : 60,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "State",
+    headerTooltip : 'Task state',
+    get : TaskModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator,
+    editable : true,
+    edit : {
+      editor : "SingleSelection",
+      set : TaskModel.prototype.setState,
+      items : DynamicsDecorators.stateOptions
+    }
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.responsibles, {
+    minWidth : 60,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "Responsibles",
+    headerTooltip : 'Task responsibles',
+    get : TaskModel.prototype.getResponsibles,
+    decorator: DynamicsDecorators.userInitialsListDecorator,
+    editable : true,
+    edit : {
+      editor : "User",
+      set : TaskModel.prototype.setResponsibles
+    }
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.el, {
+    minWidth : 30,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "EL",
+    headerTooltip : 'Effort left',
+    get : TaskModel.prototype.getEffortLeft,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable : true,
+    editableCallback: TaskController.prototype.effortLeftEditable,
+    edit : {
+      editor : "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : TaskModel.prototype.setEffortLeft
+    }
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.oe, {
+    minWidth : 30,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "OE",
+    headerTooltip : 'Original estimate',
+    get : TaskModel.prototype.getOriginalEstimate,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable : true,
+    editableCallback: TaskController.prototype.originalEstimateEditable,
+    edit : {
+      editor : "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : TaskModel.prototype.setOriginalEstimate
+    }
+  });
+  if (Configuration.isTimesheetsEnabled()) {
+    config.addColumnConfiguration(TaskController.columnIndexes.es, {
+      minWidth : 30,
+      autoScale : true,
+      cssClass : 'task-row',
+      title : "ES",
+      headerTooltip : 'Effort spent',
+      get : TaskModel.prototype.getEffortSpent,
+      decorator: DynamicsDecorators.exactEstimateDecorator
+    });
+  }
+  config.addColumnConfiguration(TaskController.columnIndexes.actions, {
+    minWidth : 35,
+    autoScale : true,
+    cssClass : 'task-row',
+    title : "Edit",
+    subViewFactory: TaskController.prototype.actionColumnFactory
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.description, {
+    fullWidth : true,
+    get : TaskModel.prototype.getDescription,
+    cssClass : 'task-data',
+    visible : false,
+    editable : true,
+    edit : {
+      editor : "Wysiwyg",
+      set : TaskModel.prototype.setDescription
+    }
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.buttons, {
+    fullWidth : true,
+    visible : false,
+    cssClass : 'task-row',
+    subViewFactory : TaskController.prototype.taskButtonFactory
+  });
+  config.addColumnConfiguration(TaskController.columnIndexes.data, {
+    fullWidth : true,
+    visible : false,
+    cssClass : 'task-data',
+    visible : false
+  });
+  
+  this.taskListConfig = config;
 };
 
 /**

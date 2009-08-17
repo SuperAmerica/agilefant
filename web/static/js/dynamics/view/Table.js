@@ -88,6 +88,13 @@ DynamicTable.prototype.initialize = function() {
     this.captionElement.hide();
   }
   this._renderHeader();
+  this.element.bind("sortbeforeStop", function(event) {
+    me.middleRows = [];
+    me.element.find("> .dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
+      me.middleRows.push($(row).data("row"));
+    });
+    event.stopPropagation();
+  });
 };
 
 DynamicTable.prototype._computeColumns = function() {
@@ -148,16 +155,12 @@ DynamicTable.prototype.layout = function() {
   if(this.config.isSortable()) {
     var me = this;
     var opts = this.config.getSortOptions();
-    var oldPos = null;
     jQuery.extend(opts, {
-      start: function(event, ui) {
-        oldPos = me._stackPosition(ui.item);
-      },
       update: function(event, ui) {
         var newPos = me._stackPosition(ui.item);
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();
-        me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos, oldPos);
+        me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos);
       }
     });
     this.element.sortable(opts);

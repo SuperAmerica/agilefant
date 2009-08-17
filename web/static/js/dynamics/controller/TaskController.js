@@ -49,18 +49,15 @@ TaskController.prototype.saveTask = function() {
   this.view.getCell(TaskController.columnIndexes.buttons).hide();
 };
 
-TaskController.prototype.sortAndMoveTask = function(view, model, newPos, oldPos) {
-  var targetNumber = newPos - 1;
-  if (newPos >= oldPos) {
-    targetNumber = newPos;
-  }
-  var previousTask = null;
-  if (view.getParentView().getDataRowAt(targetNumber)) {
-    previousTask = view.getParentView().getDataRowAt(targetNumber).model;
-    model.rankUnder(previousTask.getId(), view.getParentView().getModel());
+TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
+  var previousRow = newPos - 1;
+  var targetModel = view.getParentView().getModel();
+  if (view.getParentView().getDataRowAt(previousRow)) {
+    previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
+    model.rankUnder(previousTask.getId(), targetModel);
   }
   else {
-    model.rankUnder(-1, view.getParentView().getModel());
+    model.rankUnder(-1, targetModel);
   }
 };
 

@@ -90,7 +90,8 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         task = taskBusiness.retrieve(taskId);
         Task rankUnder = taskBusiness.retrieveIfExists(rankUnderId);
         
-        task = taskBusiness.rankUnderTask(task, rankUnder);
+        task = taskBusiness.rankAndMove(task, rankUnder, storyId, iterationId);
+//        task = taskBusiness.rankUnderTask(task, rankUnder);
         
         return Action.SUCCESS;
     }
@@ -98,7 +99,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private void populateJsonData() {
         task = transferObjectBusiness.constructTaskTO(task);
     }
-    
+        
     // Prefetching
     
     public void initializePrefetchedData(int objectId) {

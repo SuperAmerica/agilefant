@@ -395,7 +395,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         return task;
     }
 
-
     private void checkRankAndMoveArguments(Task task, Integer parentStoryId,
             Integer parentIterationId) {
         if (task == null) {

@@ -322,22 +322,31 @@ public class TaskActionTest {
      * TEST RANKING 
      */
     @Test
-    public void testRankUnder() {
+    public void testRankUnder_noParentChange() {
         taskAction.setTaskId(222);
         taskAction.setRankUnderId(651);
+        taskAction.setIterationId(null);
+        taskAction.setStoryId(null);
         
         Task returned = new Task();
         
         expect(taskBusiness.retrieve(222)).andReturn(task);
         expect(taskBusiness.retrieveIfExists(651)).andReturn(null);
-        expect(taskBusiness.rankUnderTask(task, null)).andReturn(returned);
+        expect(taskBusiness.rankAndMove(task, null, null, null))
+            .andReturn(returned);
+        //expect(taskBusiness.rankUnderTask(task, null)).andReturn(returned);
         
         replayAll();
         
         assertEquals(Action.SUCCESS, taskAction.rankUnder());
-        assertSame(taskAction.getTask(), returned);
+        assertSame(returned, taskAction.getTask());
         
         verifyAll();
+    }
+    
+    @Test
+    public void testRankUnder_iteration() {
+        
     }
     
     @Test(expected = ObjectNotFoundException.class)

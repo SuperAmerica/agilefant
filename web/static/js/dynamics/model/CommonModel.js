@@ -63,6 +63,10 @@ CommonModel.prototype._copyFields = function(newData) {
 };
 
 CommonModel.prototype._updateRelations = function(type, newData) {
+  if (!this.relations[type] || this.relations[type].constructor !== Array) {
+    this._updateSingleRelation(type, newData);
+    return;
+  }
   var newHashes = [];
   var currentHashes = [];
   var newObjects = [];
@@ -97,6 +101,23 @@ CommonModel.prototype._updateRelations = function(type, newData) {
       currentHashes.push(newObj.getHashCode());
       this.relationChanged = true;
     }
+  }
+};
+
+CommonModel.prototype._updateSingleRelation = function(type, newData) {
+  var old = this.relations[type];
+  var newObj = ModelFactory.updateObject(type, newData);
+  
+  if (old !== newObj) {
+    // Remove old relation
+    if (old) {
+      this.removeRelation(old);
+    }
+    
+    // Create new relation
+    this.addRelation(newObj);
+    
+    this.relationChanged = true;
   }
 };
 

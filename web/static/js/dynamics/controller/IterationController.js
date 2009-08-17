@@ -107,7 +107,14 @@ IterationController.prototype.initializeTaskListConfig = function() {
   var config = new DynamicTableConfiguration({
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
     dataSource: IterationModel.prototype.getTasks,
-    caption: "Tasks without story"
+    caption: "Tasks without story",
+    cssClass: "dynamictable-sortable-tasklist",
+    sortCallback: TaskController.prototype.sortAndMoveTask,
+    sortOptions: {
+      items: "> .dynamicTableDataRow",
+      handle: "." + DynamicTable.cssClasses.dragHandle,
+      connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
+    }
   });
   
   config.addCaptionItem({
@@ -116,34 +123,6 @@ IterationController.prototype.initializeTaskListConfig = function() {
     cssClass : "create",
     callback : IterationController.prototype.createTask
   });
-  /*
-  config.addColumnConfiguration(TaskController.columnIndexes.prio, {
-    minWidth : 24,
-    autoScale : true,
-    cssClass : 'task-row',
-    title : "#",
-    headerTooltip : 'Rank',
-    sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
-    defaultSortColumn: true
-  });
-  
-  config.addColumnConfiguration(TaskController.columnIndexes.name, {
-    minWidth : 280,
-    autoScale : true,
-    cssClass : 'task-row',
-    title : "Name",
-    headerTooltip : 'Task name',
-    get : TaskModel.prototype.getName,
-    sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getName),
-    defaultSortColumn: true,
-    editable : true,
-    dragHandle: true,
-    edit : {
-      editor : "Text",
-      set : TaskModel.prototype.setName,
-      required: true
-    }
-  });*/
   
   config.addColumnConfiguration(TaskController.columnIndexes.prio, {
     minWidth : 24,

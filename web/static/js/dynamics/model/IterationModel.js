@@ -83,6 +83,18 @@ IterationModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+IterationModel.prototype.reload = function() {
+  var me = this;
+  jQuery.getJSON(
+    "ajax/iterationData.action",
+    {iterationId: this.getId()},
+    function(data,status) {
+      me.setData(data);
+      me.callListeners(new DynamicsEvents.EditEvent(me));
+    }
+  );
+};
+
 /* GETTERS */
 
 IterationModel.prototype.getStories = function() {

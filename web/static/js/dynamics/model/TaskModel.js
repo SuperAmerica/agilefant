@@ -16,7 +16,8 @@ var TaskModel = function() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Task";
   this.relations = {
-    story: {} ,
+    backlog: null,
+    story: null,
     user: [],
     hourEntry: []
   };

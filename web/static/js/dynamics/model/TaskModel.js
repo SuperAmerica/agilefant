@@ -102,16 +102,20 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   
   // If the item was moved
   if (moveUnder && moveUnder !== me.getParent()) {
-    jQuery.extend(data, {
-      moveUnderId: moveUnder.getId()
-    });
+    if (moveUnder instanceof IterationModel) {
+      jQuery.extend(data, {
+        iterationId: moveUnder.getId()
+      });  
+    }
+    else if (moveUnder instanceof StoryModel) {
+      jQuery.extend(data, {
+        storyId: moveUnder.getId()
+      });
+    }
   }
   
   jQuery.post("ajax/rankTaskAndMoveUnder.action",
-    {
-      taskId: me.getId(),
-      rankUnderId: rankUnderId
-    },
+    data,
     function(data, status) {
       me.setData(data);
       me.getStory().reload();

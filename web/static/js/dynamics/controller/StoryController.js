@@ -336,7 +336,6 @@ StoryController.prototype.initTaskListConfiguration = function() {
   });
   config.addColumnConfiguration(TaskController.columnIndexes.description, {
     fullWidth : true,
-    visible : true,
     get : TaskModel.prototype.getDescription,
     cssClass : 'task-data',
     visible : false,

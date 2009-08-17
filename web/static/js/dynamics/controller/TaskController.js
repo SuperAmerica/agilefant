@@ -98,7 +98,7 @@ TaskController.prototype.showDetails = function() {
 TaskController.prototype.hideDetails = function() {
   var cell = this.view.getCell(TaskController.columnIndexes.description);
   if (cell) {
-    cell.show();
+    cell.hide();
   }
 };
 

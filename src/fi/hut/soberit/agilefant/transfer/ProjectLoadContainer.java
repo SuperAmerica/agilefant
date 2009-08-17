@@ -20,4 +20,10 @@ public class ProjectLoadContainer extends BacklogLoadContainer {
     public Backlog getBacklog() {
         return this.project;
     }
+
+    @Override
+    public long getTotalLoad() {
+        return this.getTotalBaselineLoad() + this.getTotalFutureLoad();
+    }
+    
 }

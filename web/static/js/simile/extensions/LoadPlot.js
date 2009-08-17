@@ -99,7 +99,7 @@ Timeplot.AgilefantBacklogPlot.prototype.paint = function() {
           var cy = 0;
           for(var j = 0; j < values[t].length; j++) {
             var o = values[t][j];
-            var height = this._valueGeometry.toScreen((o.totalUnassignedLoad + o.totalAssignedLoad)/60);
+            var height = this._valueGeometry.toScreen(o.totalLoad/60);
             if(!height) {
               continue;
             }

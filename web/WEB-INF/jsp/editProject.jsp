@@ -14,47 +14,6 @@
 var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 </script>
 
-<script type="text/javascript">
-<!--
-$(document).ready(function() {
-  <%--
-
-	var iterationThemes = [<c:forEach items="${iterationThemes}" var="bind">${bind.businessTheme.id},</c:forEach>-1];
-	var getThemeData = function() {
-		var ret = {};
-		var data = jsonDataCache.get('themesByProduct',{data: {productId: ${project.product.id}, includeGlobalThemes: true}},${project.product.id});
-		jQuery.each(data,function() {
-			if(this.active === true && jQuery.inArray(this.id,iterationThemes) == -1) {
-				ret[this.id] = this.name;
-			}
-		});
-		return ret;
-	};
-	$('#businessThemeTable').inlineTableEdit({add: '#addProjectBusinessTheme', 
-											  submit: '#backlogThemeSave',
-											  submitParam: 'bindingId',
-											  deleteaction: 'removeThemeFromBacklog.action',
-											  fields: {
-											  	businessThemeIds: {cell: 0,type: 'select', data: getThemeData},
-											  	plannedSpendings: {cell: 1, type: 'text'},											  											  	
-											  	reset: {cell: 2, type: 'reset'}
-											  }
-											 });
-                       --%>
-                       /*
-    $('#userChooserLink-editProject').userChooser({
-        backlogIdField: '#editProject-projectId',
-        userListContainer: '#userListContainer-editProject',
-        renderFor: 'project',
-        validation: {
-            selectAtLeast: 0,
-            aftime: true
-        },
-        storyId: 0
-    });*/
-});
-//-->
-</script>
 
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('struts.shortDateTime.format')}" />
@@ -590,31 +549,6 @@ $(document).ready(function() {
 				</td>
 			</tr>
 		</table>
-
-
-
-<script type="text/javascript" src="static/js/dynamics/utils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/model.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamicTable.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/dynamics.tabs.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/commonView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-
-
-<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
-<script type="text/javascript">
-$(document).ready(function() {
-  new ProjectController(${projectId}, $("#stories"));
-  $(document.body).bind("metricsUpdated", function() {
-/*    var bigChart = $("#bigChart");
-    bigChart.attr("src",bigChart.attr("src")+"#");
-    var smallChart = $("#smallChart");
-    smallChart.attr("src",smallChart.attr("src")+"#");*/
-    $("#projectMetrics").load("ajax/projectMetrics.action",{projectId: ${projectId}});
-  });
-  $("#projectMetrics").load("ajax/projectMetrics.action",{projectId: ${projectId}});
-});
-</script>
 
 
 <p><img src="drawProjectBurnup.action?backlogId=${project.id}"

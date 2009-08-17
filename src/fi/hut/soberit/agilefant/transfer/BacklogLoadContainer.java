@@ -28,5 +28,8 @@ public abstract class BacklogLoadContainer {
     
     @JSON
     public abstract Backlog getBacklog();
+    
+    @JSON
+    public abstract long getTotalLoad();
 
 }

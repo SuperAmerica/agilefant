@@ -1,30 +1,6 @@
 <%@ include file="./_taglibs.jsp"%>
 <%-- Usage information: Remember to set the myAction variable before including this. --%>
 <%-- Hour reporting, here be dragons --%>
-<script type="text/javascript">
-$(document).ready(function() {
-	var allUsers = function() {
-		var users = jsonDataCache.get("allUsers");
-		var ret = {};
-		jQuery.each(users,function() {if(this.enabled) {ret[this.id] = this.fullName; } });
-		return ret;
-	};
-	$('#spentEffort-${myAction}').inlineTableEdit({
-				  submit: '#saveSpentEffort-${myAction}',
-				  useId: true,
-				  deleteaction: 'deleteHourEntry.action',
-                  submitParam: 'hourEntryId',
-				  fields: {
-				  	efforts: {cell: 2, type: 'text'},
-				  	dates: {cell: 0, type: 'date'},
-				  	userIdss: {cell: 1, type: 'select', data: allUsers},
-				  	descriptions: {cell: 3, type: 'text'},
-				  	reset: {cell: 4, type: 'reset'}
-				  	}
-	});
-
-});
-</script>
 <aef:hourEntries target="${backlog}" id="hourEntries" />
 
 <div class="subItems" style="margin-left: 3px;" id="subItems_hourEntryListItems">

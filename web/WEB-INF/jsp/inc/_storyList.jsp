@@ -5,7 +5,6 @@
 
 <c:set var="dialogContext" value="story" scope="session" />
 
-<aef:currentUser />
 <script language="javascript" type="text/javascript">
 
 function validateDeletion() {
@@ -17,25 +16,6 @@ function selectAllStories(val) {
   for(var x in elems)
     elems[x].checked = val;
 }
-
-function disableThemeSelect(value) {
-  var boxes = document.getElementById('themeSelectDiv').getElementsByTagName('input');
-  for(var x in boxes)
-    boxes[x].disabled = value;
-}
-
-$(document).ready(function() {
-    $('#themeChooserLink-multipleSelect').themeChooser({
-        backlogId: 'select[name=targetBacklog]',
-        themeListContainer: '#themeListContainer-multipleSelect'
-    });
-    $('#userChooserLink-multipleSelect').userChooser({
-        backlogIdField: 'select[name=targetBacklog]',
-        userListContainer: '#userListContainer-multipleSelect',
-        storyId: 0,
-        legacyMode: false
-    });
-});
 
 </script>
 <ww:form action="doActionOnMultipleStories">

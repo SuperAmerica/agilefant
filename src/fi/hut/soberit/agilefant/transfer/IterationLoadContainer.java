@@ -38,4 +38,8 @@ public class IterationLoadContainer extends BacklogLoadContainer {
     public Backlog getBacklog() {
         return this.iteration;
     }
+    @Override
+    public long getTotalLoad() {
+        return this.totalAssignedLoad + this.totalUnassignedLoad + this.getTotalBaselineLoad() + this.getTotalFutureLoad();
+    }
 }

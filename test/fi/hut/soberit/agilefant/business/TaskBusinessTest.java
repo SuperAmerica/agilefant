@@ -1,14 +1,22 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.joda.time.DateTime;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
@@ -20,7 +28,6 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
-import static org.junit.Assert.*;
 
 public class TaskBusinessTest {
     
@@ -111,9 +118,13 @@ public class TaskBusinessTest {
         task.setCreatedDate(null);
         task.setCreator(null);
         
+        Task lastTask = new Task();
+        lastTask.setRank(22);
+        
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
         expect(taskDAO.create(task)).andReturn(1351);
         expect(taskDAO.get(1351)).andReturn(task);
+        expect(taskDAO.getLastTaskInRank(null, iteration.getId())).andReturn(lastTask);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
         replayAll();
@@ -122,7 +133,8 @@ public class TaskBusinessTest {
         
         assertNotNull(actualTask.getCreatedDate());
         assertEquals(loggedInUser, actualTask.getCreator());
-        assertEquals(actualTask.getIteration(), iteration);
+        assertEquals(iteration, actualTask.getIteration());
+        assertEquals(23, actualTask.getRank());
         
         verifyAll();
     }
@@ -133,11 +145,16 @@ public class TaskBusinessTest {
         task.setCreatedDate(null);
         task.setCreator(null);
         
+        Task lastTask = new Task();
+        lastTask.setStory(story);
+        lastTask.setRank(222);
+        
         story.setBacklog(iteration);
         
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         expect(taskDAO.create(task)).andReturn(1351);
         expect(taskDAO.get(1351)).andReturn(task);
+        expect(taskDAO.getLastTaskInRank(story.getId(), null)).andReturn(lastTask);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
         replayAll();
@@ -146,7 +163,8 @@ public class TaskBusinessTest {
         
         assertNotNull(actualTask.getCreatedDate());
         assertEquals(loggedInUser, actualTask.getCreator());
-        assertEquals(actualTask.getStory(), story);
+        assertEquals(story, actualTask.getStory());
+        assertEquals(223, actualTask.getRank());
         
         verifyAll();
     }

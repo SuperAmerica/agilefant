@@ -27,6 +27,7 @@ public class TaskTO extends Task {
         this.setCreatedDate(task.getCreatedDate());
         this.setCreator(task.getCreator());
         this.setHourEntries(task.getHourEntries());
+        this.setRank(task.getRank());
     }
     
     public void setUserData(Collection<ResponsibleContainer> userData) {

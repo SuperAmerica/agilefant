@@ -52,6 +52,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
 
     public Collection<ResponsibleContainer> getTaskResponsibles(Task task) {
+   
         Collection<ResponsibleContainer> responsibleContainers = new ArrayList<ResponsibleContainer>();
         Collection<User> storyResponsibles = task.getResponsibles();
         for (User user : storyResponsibles) {
@@ -82,6 +83,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         if (task.getId() == 0) {
             int newTaskId = this.create(task);
             storedTask = this.retrieve(newTaskId);
+            this.rankToBottom(storedTask, storyId, iterationId);
         }
         else {
             this.store(task);

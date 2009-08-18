@@ -20,11 +20,6 @@ TaskController.columnIndexes = {
 
 TaskController.prototype = new CommonController();
 
-StoryController.prototype.removeStory = function() {
-  this.parentController.removeChildController("story", this);
-  this.model.remove();
-};
-
 /**
  * 
  */
@@ -82,6 +77,12 @@ TaskController.prototype.toggleFactory = function(view, model) {
     this.toggleView = new DynamicTableToggleView(options, this, view);
     return this.toggleView;
 };
+
+TaskController.prototype.removeTask = function() {
+  this.parentController.removeChildController("task", this);
+  this.model.remove();
+};
+
 TaskController.prototype.taskButtonFactory = function(view, model) {
   return new DynamicsButtons(this,[{text: 'Save', callback: TaskController.prototype.saveTask},
                                    {text: 'Cancel', callback: TaskController.prototype.cancelEdit}

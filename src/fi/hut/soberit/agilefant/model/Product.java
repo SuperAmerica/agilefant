@@ -1,9 +1,16 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Filter;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Hibernate entity bean representing a product.
@@ -27,5 +34,33 @@ import org.hibernate.envers.Audited;
 @BatchSize(size = 20)
 @Audited
 public class Product extends Backlog {
+    
+    private Collection<Project> projects = new ArrayList<Project>();
+    
+    private Collection<Iteration> iterations = new ArrayList<Iteration>();
+    
+    @OneToMany(mappedBy="parent", targetEntity=Backlog.class)
+    @Filter(name="project", condition="class=Project")
+    @Transactional(readOnly=true)
+    @NotAudited
+    public Collection<Project> getProjects() {
+        return this.projects;
+    }
+    
+    public void setProjects(Collection<Project> projects) {
+        this.projects = projects;
+    }
+
+    @OneToMany(mappedBy="parent", targetEntity=Backlog.class)
+    @Filter(name="iteration", condition="class=Iteration")
+    @Transactional(readOnly=true)
+    @NotAudited
+    public Collection<Iteration> getIterations() {
+        return iterations;
+    }
+
+    public void setIterations(Collection<Iteration> iterations) {
+        this.iterations = iterations;
+    }
 
 }

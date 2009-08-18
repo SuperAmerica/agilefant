@@ -190,9 +190,9 @@ SimileAjax.Platform = new Object();*/
 				</table>
 				</div>
 
-				<c:if test="${!empty product.children}">
+				<c:if test="${!empty product.projects}">
 				<div class="subItemContent">
-				<display:table class="listTable" name="product.children"
+				<display:table class="listTable" name="product.projects"
 					id="row" requestURI="editProduct.action">
 							
 					<display:column sortable="false" title="St." class="statusColumn">

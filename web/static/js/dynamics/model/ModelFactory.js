@@ -266,7 +266,7 @@ ModelFactory.prototype._createObject = function(type) {
     break;
   }
   
-  returnedModel.addListener(this.listener);
+  returnedModel.addListener(ModelFactory.listener);
   return returnedModel;
 };
 
@@ -305,6 +305,15 @@ ModelFactory.prototype._constructIteration = function(id, data) {
 };
 
 /**
+ * Internal function to remove items.
+ */
+ModelFactory.prototype._removeObject = function(type, id) {
+  if (this.data[type][id]) {
+    delete this.data[type][id];
+  }
+};
+
+/**
  * Listener function to be added to every model object.
  * <p>
  * Listens to <code>DynamicsEvents</code>.
@@ -312,7 +321,11 @@ ModelFactory.prototype._constructIteration = function(id, data) {
  * @see DynamicsEvents.EditEvent
  * @see DynamicsEvents.DeleteEvent
  */
-ModelFactory.prototype.listener = function(event) {
-  
+ModelFactory.listener = function(event) {
+  if (event instanceof DynamicsEvents.DeleteEvent) {
+    ModelFactory.getInstance()._removeObject(
+        ModelFactory.classNameToType[event.getObject().getPersistedClass()],
+        event.getObject().getId());
+  }
 };
 

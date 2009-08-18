@@ -333,4 +333,55 @@ $(document).ready(function() {
     ok(!this.commonModel.currentData.fooKey, "Foo key is not in current data");
   });
   
+  
+  test("Remove all relations", function() {
+    // Create models
+    var testModel = new StoryModel();
+    testModel.setId(123);
+    var tasks = [new TaskModel(), new TaskModel()];
+    tasks[0].setId(666);
+    tasks[1].setId(888);
+    var user = new UserModel();
+    user.setId(51);
+    var blog = new IterationModel();
+    blog.setId(912);
+    
+    // Construct relations
+    testModel.addRelation(tasks[0]);
+    testModel.addRelation(tasks[1]);
+    testModel.addRelation(user);
+    testModel.addRelation(blog);
+    
+    same(testModel.relations.task.length, 2, "Before remove: Tasks relations length is 2");
+    same(testModel.relations.user.length, 1, "Before remove: User relations length is 1");
+    ok(testModel.relations.backlog, "Before remove: Backlog relation is set");
+    
+    testModel._removeAllRelations();
+    
+    same(testModel.relations["task"].length, 0, "After remove: Tasks relations length is 0");
+    same(testModel.relations["user"].length, 0, "After remove: User relations length is 0");
+    ok(!testModel.relations["backlog"], "After remove: Backlog relation is not set");
+  });
+  
+  test("Remove", function() {
+    var testModel = new StoryModel();
+    testModel.setId(222);
+    
+    var listenerCallCount = 0;
+    testModel.callListeners = function(event) {
+      listenerCallCount++;
+      ok(event instanceof DynamicsEvents.DeleteEvent, "Event is a delete event");
+    };
+    
+    var iter = new IterationModel();
+    iter.setId(123);
+    testModel.addRelation(iter);
+    
+    same(iter.relations.story.length, 1, "Iteration contains the common model");
+    
+    testModel.remove();
+    
+    same(iter.relations.story.length, 0, "Iteration doesn't contain the common model");
+    same(listenerCallCount, 1, "Listeners called once");
+  });
 });

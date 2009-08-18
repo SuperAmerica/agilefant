@@ -315,7 +315,7 @@ $(document).ready(function() {
     var items = [actualIteration, actualStory, actualTask];
     
     for (var i = 0; i < items.length; i++) {
-      ok(jQuery.inArray(this.instance.listener, items[i].listeners) !== -1,
+      ok(jQuery.inArray(ModelFactory.listener, items[i].listeners) !== -1,
           "ModelFactory listener set");
     }
   });
@@ -414,29 +414,51 @@ $(document).ready(function() {
   });
 
   
-//  test("Construct iteration", function() {
-//    var mockControl = new MockControl();
-//    var iter = mockControl.createMock(IterationModel);
-//    var id = 123;
-//    var data = {};
-//    
-//    
-//    this.instance._createObject = function() {
-//      return iter;
-//    };
-//    var addObjectCallCount = 0;
-//    this.instance._addObject = function(obj) {
-//      addObjectCallCount++;
-//    };
-//    
-//    iter.expects().setId(id);
-//    iter.expects().setData(data);
-//    
-//    this.instance._constructIteration(id, data);
-//    
-//    same(addObjectCallCount, 1, "Object added to ModelFactory singletons");
-//    mockControl.verify();
-//  });
+  test("Internal remove object", function() {
+    this.instance.data = {
+      backlog: {
+        222: new IterationModel()
+      },
+      story: {
+        666: new StoryModel(),
+        123: new StoryModel()
+      },
+      task: {
+        1234: new TaskModel()
+      },
+      assignment: {},
+      hourEntry: {},
+      user: {}
+    };
+    
+    ok(this.instance.data.backlog[222], "The backlog with id 222 exists");
+    ok(this.instance.data.story[666], "The story with id 666 exists");
+    ok(this.instance.data.story[123], "The story with id 123 exists");
+    
+    this.instance._removeObject(ModelFactory.types.backlog, 222);
+    this.instance._removeObject(ModelFactory.types.story, 666);
+    
+    ok(!this.instance.data.backlog[222], "The backlog with id 222 does not exist");
+    ok(!this.instance.data.story[666], "The story with id 666 does not exist");
+    ok(this.instance.data.story[123], "The story with id 123 exists");
+    
+    ok(!ModelFactory.getObjectIfExists(ModelFactory.types.story, 666), "Get object returns null");
+  });
+  
+  
+  test("Listener remove test", function() {
+    var iterData = {
+        id: 123
+    };
+    var iter = ModelFactory.updateObject(ModelFactory.types.iteration, iterData);
+    
+    ok(this.instance.data.backlog[123], "The backlog exists in the data");
+    
+    // Call delete listeners
+    iter.callListeners(new DynamicsEvents.DeleteEvent(iter));
+    
+    ok(!this.instance.data.backlog[123], "The backlog does not exist in the data");
+  });
   
 });
 

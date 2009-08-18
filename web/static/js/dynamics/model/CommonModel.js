@@ -121,6 +121,27 @@ CommonModel.prototype._updateSingleRelation = function(type, newData) {
   }
 };
 
+CommonModel.prototype._removeAllRelations = function() {
+  var me = this;
+  var removeThese = [];
+  for (field in this.relations) {
+    if(this.relations.hasOwnProperty(field) && this.relations[field]) {
+      var rels = this.relations[field];
+      if (rels.constructor == Array) {
+        $.each(rels, function(k,v) {
+          removeThese.push(v)
+        });
+      }
+      else {
+        removeThese.push(rels);
+      }
+    }
+  }
+  $.each(removeThese, function(k,v) {
+    me.removeRelation(v);
+  });
+};
+
 /**
  * Remove the object and delete all relations.
  * <p>
@@ -128,7 +149,8 @@ CommonModel.prototype._updateSingleRelation = function(type, newData) {
  * overwritten by any subclass. 
  */
 CommonModel.prototype.remove = function() {
-  
+  this._removeAllRelations();
+  this.callListeners(new DynamicsEvents.DeleteEvent(this));
 };
 
 /**
@@ -238,8 +260,6 @@ CommonModel.prototype.commit = function() {
     if(this.currentData.hasOwnProperty(field)) {
       var currentValue = this.currentData[field];
 	    var persistedValue = this.persistedData[field];
-	    
-	    var a = field;
 	    
 	    if (currentValue !== persistedValue) {
 	      changedData[field] = currentValue;

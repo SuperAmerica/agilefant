@@ -161,10 +161,10 @@
       </result>
     </action>
     
-    <action name="projectData" class="projectAction" method="projectContents">
+    <action name="projectData" class="projectAction" method="retrieve">
       <result name="success" type="json">
-        <param name="target">projectContents</param>
-        <param name="patterns">+stories.userData, +stories.tasks, +stories.tasks.userData</param>
+        <param name="target">project</param>
+        <param name="patterns">+stories, +stories.responsibles</param>
       </result>
     </action>
     

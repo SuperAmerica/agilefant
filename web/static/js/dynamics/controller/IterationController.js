@@ -265,13 +265,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     dataSource : IterationModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: IterationController.prototype.sortStories,
-    caption : "Stories",
-    droppableCallback: function() {
-      alert("Dropped");
-    },
-    droppableOptions: {
-      accept: ".task-row"
-    }
+    caption : "Stories"
   });
 
   config.addCaptionItem( {

@@ -84,7 +84,8 @@ ModelFactory.types = {
  * @see ModelFactory.initializeFor
  */
 ModelFactory.initializeForTypes = {
-    iteration:  "iteration"
+    iteration:  "iteration",
+    project:    "project"
 };
 
 
@@ -280,6 +281,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       url: "ajax/iterationData.action",
       params: { iterationId: id },
       callback: me._constructIteration
+    },
+    "project": {
+      url: "ajax/projectData.action",
+      params: { projectId: id },
+      callback: me._constructProject
     }
   };
   
@@ -298,10 +304,17 @@ ModelFactory.prototype._getData = function(type, id, callback) {
 };
 
 /**
- * Internal function to construct for iteration
+ * Internal function to construct an iteration
  */
 ModelFactory.prototype._constructIteration = function(id, data) {
   return ModelFactory.updateObject(ModelFactory.types.iteration, data);
+};
+
+/**
+ * Internal function to construct a project
+ */
+ModelFactory.prototype._constructProject = function(id, data) {
+  return ModelFactory.updateObject(ModelFactory.types.project, data);
 };
 
 /**

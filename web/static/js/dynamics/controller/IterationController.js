@@ -106,6 +106,7 @@ IterationController.prototype.sortStories = function(view, model, stackPosition)
 IterationController.prototype.initializeTaskListConfig = function() {
   var config = new DynamicTableConfiguration({
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
+    saveRowCallback: TaskController.prototype.saveTask,
     dataSource: IterationModel.prototype.getTasks,
     caption: "Tasks without story",
     cssClass: "dynamicTable-sortable-tasklist",
@@ -145,7 +146,8 @@ IterationController.prototype.initializeTaskListConfig = function() {
     dragHandle: true,
     edit : {
       editor : "Text",
-      set : TaskModel.prototype.setName
+      set : TaskModel.prototype.setName,
+      required: true
     }
   });
   config.addColumnConfiguration(TaskController.columnIndexes.state, {
@@ -263,7 +265,13 @@ IterationController.prototype.initializeStoryConfig = function() {
     dataSource : IterationModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: IterationController.prototype.sortStories,
-    caption : "Stories"
+    caption : "Stories",
+    droppableCallback: function() {
+      alert("Dropped");
+    },
+    droppableOptions: {
+      accept: ".task-row"
+    }
   });
 
   config.addCaptionItem( {

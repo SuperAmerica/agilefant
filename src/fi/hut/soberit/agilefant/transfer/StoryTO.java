@@ -21,8 +21,6 @@ public class StoryTO extends Story {
         this.setBacklog(story.getBacklog());
         this.setState(story.getState());
         this.setPriority(story.getPriority());
-        this.setCreator(story.getCreator());
-        this.setCreatedDate(story.getCreatedDate());
         this.setResponsibles(story.getResponsibles());
         this.setStoryPoints(story.getStoryPoints());
     }

@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;

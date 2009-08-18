@@ -6,7 +6,6 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
@@ -14,7 +13,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,8 +46,6 @@ public class TaskBusinessTest {
     private Story story;
     private Task task;
     private User loggedInUser;
-    private User creatorUser;
-    private DateTime createdDate;
    
     @Before
     public void setUp_dependencies() {
@@ -88,14 +84,6 @@ public class TaskBusinessTest {
         
         loggedInUser = new User();
         loggedInUser.setId(666);
-        
-        creatorUser = new User();
-        creatorUser.setId(567);
-        
-        createdDate = new DateTime().minusDays(1233);
-        
-        task.setCreator(creatorUser);
-        task.setCreatedDate(createdDate.toDate());
     }
     
     
@@ -115,9 +103,6 @@ public class TaskBusinessTest {
     
     @Test
     public void testStoreTask_newTaskToIteration() {
-        task.setCreatedDate(null);
-        task.setCreator(null);
-        
         Task lastTask = new Task();
         lastTask.setRank(22);
         
@@ -131,8 +116,6 @@ public class TaskBusinessTest {
         
         Task actualTask = taskBusiness.storeTask(task, iteration.getId(), null, null);
         
-        assertNotNull(actualTask.getCreatedDate());
-        assertEquals(loggedInUser, actualTask.getCreator());
         assertEquals(iteration, actualTask.getIteration());
         assertEquals(23, actualTask.getRank());
         
@@ -140,11 +123,7 @@ public class TaskBusinessTest {
     }
     
     @Test
-    public void testStoreTask_newTaskToStory() {
-
-        task.setCreatedDate(null);
-        task.setCreator(null);
-        
+    public void testStoreTask_newTaskToStory() {        
         Task lastTask = new Task();
         lastTask.setStory(story);
         lastTask.setRank(222);
@@ -160,9 +139,7 @@ public class TaskBusinessTest {
         replayAll();
         
         Task actualTask = taskBusiness.storeTask(task, null, story.getId(), null);
-        
-        assertNotNull(actualTask.getCreatedDate());
-        assertEquals(loggedInUser, actualTask.getCreator());
+
         assertEquals(story, actualTask.getStory());
         assertEquals(223, actualTask.getRank());
         
@@ -182,8 +159,6 @@ public class TaskBusinessTest {
             taskBusiness.storeTask(task, iteration.getId(), null, null);
         
         assertEquals(task.getId(), actualTask.getId());
-        assertEquals(createdDate.toDate(), actualTask.getCreatedDate());
-        assertEquals(creatorUser, actualTask.getCreator());
         
         verifyAll();
     }
@@ -203,9 +178,7 @@ public class TaskBusinessTest {
         
         assertEquals(new ExactEstimate(120).getMinorUnits(), actualTask.getOriginalEstimate().getMinorUnits());
         assertEquals(new ExactEstimate(120).getMinorUnits(), actualTask.getEffortLeft().getMinorUnits());
-        assertEquals(createdDate.toDate(), actualTask.getCreatedDate());
-        assertEquals(creatorUser, actualTask.getCreator());
-        
+
         verifyAll();
     }
     
@@ -224,9 +197,7 @@ public class TaskBusinessTest {
         
         assertEquals(new ExactEstimate(90).getMinorUnits(), actualTask.getOriginalEstimate().getMinorUnits());
         assertEquals(new ExactEstimate(90).getMinorUnits(), actualTask.getEffortLeft().getMinorUnits());
-        assertEquals(createdDate.toDate(), actualTask.getCreatedDate());
-        assertEquals(creatorUser, actualTask.getCreator());
-        
+
         verifyAll();
     }
     

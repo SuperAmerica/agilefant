@@ -5,16 +5,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.validator.annotations.ExpressionValidator;
-import com.opensymphony.xwork2.validator.annotations.RequiredFieldValidator;
-import com.opensymphony.xwork2.validator.annotations.Validations;
-import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 
 @Component("iterationAction")

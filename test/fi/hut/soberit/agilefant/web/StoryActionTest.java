@@ -17,20 +17,15 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
-import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.transfer.StoryTO;
-
 
 public class StoryActionTest {
 
     StoryAction storyAction = new StoryAction();
     StoryBusiness storyBusiness;
-    TransferObjectBusiness transferObjectBusiness;
     
     Story story;
     Iteration iter;
@@ -39,24 +34,15 @@ public class StoryActionTest {
     public void setUp_dependencies() {
         storyBusiness = createStrictMock(StoryBusiness.class);
         storyAction.setStoryBusiness(storyBusiness);
-        
-        transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
-        storyAction.setTransferObjectBusiness(transferObjectBusiness);
     }
     
     private void replayAll() {
-        replay(storyBusiness, transferObjectBusiness);
+        replay(storyBusiness);
     }
     
     private void verifyAll() {
-        verify(storyBusiness, transferObjectBusiness);
+        verify(storyBusiness);
     }
-    
-    private void expectStoryToTransferObject(Collection<User> responsibles) {
-        expect(storyBusiness.getStorysProjectResponsibles(story)).andReturn(responsibles);
-        expect(transferObjectBusiness.constructStoryTO(story, responsibles)).andReturn(new StoryTO(story));
-    }
-
     
     @Before
     public void setUp() {
@@ -72,15 +58,11 @@ public class StoryActionTest {
     
     @Test
     public void testRetrieve() {
-        Collection<User> responsibles = Arrays.asList(new User());
-
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
-        //expectStoryToTransferObject(responsibles);
-        
+       
         replayAll();
         
         assertEquals(Action.SUCCESS, storyAction.retrieve());
-        //assertTrue(storyAction.getStory() instanceof StoryTO);
         assertEquals(1234, storyAction.getStory().getId());
         
         verifyAll();

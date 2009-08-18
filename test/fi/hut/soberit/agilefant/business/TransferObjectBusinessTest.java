@@ -5,7 +5,10 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isNull;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.TransferObjectBusinessImpl;
-import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
@@ -35,7 +37,6 @@ public class TransferObjectBusinessTest {
     private TransferObjectBusinessImpl transferObjectBusiness = new TransferObjectBusinessImpl();
     private ProjectBusiness projectBusiness;
     private HourEntryBusiness hourEntryBusiness;
-    private TaskHourEntryDAO taskHourEntryDAO;
     private StoryBusiness storyBusiness;
     private UserBusiness userBusiness;
     private TeamBusiness teamBusiness;
@@ -52,9 +53,6 @@ public class TransferObjectBusinessTest {
     public void setUp_dependencies() {
         projectBusiness = createMock(ProjectBusiness.class);
         transferObjectBusiness.setProjectBusiness(projectBusiness);
-        
-        taskHourEntryDAO = createMock(TaskHourEntryDAO.class);
-        transferObjectBusiness.setTaskHourEntryDAO(taskHourEntryDAO);
         
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         transferObjectBusiness.setHourEntryBusiness(hourEntryBusiness);

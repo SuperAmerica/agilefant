@@ -2,13 +2,9 @@ package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Holiday;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Project;
 import flexjson.JSON;
 
 public class ComputedLoadData {

@@ -16,16 +16,13 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
-import fi.hut.soberit.agilefant.transfer.HourEntryTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -39,9 +36,6 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     
     @Autowired
     private StoryBusiness storyBusiness;
-    
-    @Autowired
-    private TaskHourEntryDAO taskHourEntryDAO;
     
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
@@ -145,10 +139,6 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
-    }
-
-    public void setTaskHourEntryDAO(TaskHourEntryDAO taskHourEntryDAO) {
-        this.taskHourEntryDAO = taskHourEntryDAO;
     }
 
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {

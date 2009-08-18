@@ -12,15 +12,15 @@ INSERT INTO backlogs (id, parent_id, backlogtype, name) VALUES (6, 3, 'Iteration
 INSERT INTO users (id, enabled) VALUES (1, true);
 INSERT INTO users (id, enabled) VALUES (2, true);
 
-INSERT INTO stories (id, backlog_id, name, creator_id, state) VALUES (1, 5, 'Story 1', 1, 0);
-INSERT INTO stories (id, backlog_id, name, creator_id, state) VALUES (2, 5, 'Story 2', 1, 0);
-INSERT INTO stories (id, backlog_id, name, creator_id, state) VALUES (3, 5, 'Story 3', 1, 0);
+INSERT INTO stories (id, backlog_id, name, state) VALUES (1, 5, 'Story 1', 0);
+INSERT INTO stories (id, backlog_id, name, state) VALUES (2, 5, 'Story 2', 0);
+INSERT INTO stories (id, backlog_id, name, state) VALUES (3, 5, 'Story 3', 0);
 
-INSERT INTO stories (id, backlog_id, name, creator_id, state) VALUES (4, 1, 'Story 4', 1, 0);
-INSERT INTO stories (id, backlog_id, name, creator_id, state) VALUES (5, 1, 'Story 5', 1, 0);
+INSERT INTO stories (id, backlog_id, name, state) VALUES (4, 1, 'Story 4', 0);
+INSERT INTO stories (id, backlog_id, name, state) VALUES (5, 1, 'Story 5', 0);
 
-INSERT INTO stories (id, backlog_id, name, creator_id, state) VALUES (6, 3, 'Story 6', 1, 0);
-INSERT INTO stories (id, backlog_id, name, creator_id, state) VALUES (7, 3, 'Story 7', 1, 0);
+INSERT INTO stories (id, backlog_id, name, state) VALUES (6, 3, 'Story 6', 0);
+INSERT INTO stories (id, backlog_id, name, state) VALUES (7, 3, 'Story 7', 0);
 
 
 INSERT INTO tasks (id, story_id, state) VALUES (1, 1, 0);

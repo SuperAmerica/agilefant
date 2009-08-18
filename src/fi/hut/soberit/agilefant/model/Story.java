@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,8 +39,6 @@ public class Story implements TimesheetLoggable, NamedObject {
     private Backlog backlog;
     private StoryState state = StoryState.NOT_STARTED;
     private Integer priority = new Integer(0);
-    private User creator;
-    private Date createdDate;
     
     private Set<User> responsibles = new HashSet<User>();
     private Collection<Task> tasks = new ArrayList<Task>();
@@ -96,21 +93,6 @@ public class Story implements TimesheetLoggable, NamedObject {
         this.state = state;
     }
 
-    /**
-     * Can't be nullable = false because there's legacy data
-     * that doesn't have a creator.
-     */
-    @ManyToOne
-    @JSON(include = true)
-    @NotAudited
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
-
     public void setResponsibles(Set<User> responsibles) {
         this.responsibles = responsibles;
     }
@@ -152,15 +134,6 @@ public class Story implements TimesheetLoggable, NamedObject {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
-    }
-    
-    @NotAudited
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
     }
 
     @JSON

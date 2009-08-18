@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,9 +72,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         if(task.getId() == 0 || iterationId != null || storyId != null) {
             assignParentForTask(task, iterationId, storyId);
         }
-        
-        setTaskCreator(task);
-        
+               
         updateEffortLeftAndOriginalEstimate(task);
         
         populateUserData(task, userIds);
@@ -111,14 +108,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         
         if (task.getState() == TaskState.DONE) {
             task.setEffortLeft(new ExactEstimate(0));
-        }
-    }
-
-    /** If the task is new, set the creator */
-    private void setTaskCreator(Task task) {
-        if (task.getId() == 0) {
-            task.setCreator(getLoggedInUser());
-            task.setCreatedDate(new DateTime().toDate());
         }
     }
 

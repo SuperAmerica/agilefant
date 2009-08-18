@@ -138,7 +138,6 @@ SELECT 'Split backlog items to new tables' AS status;
 
 CREATE TABLE tasks (
   id INT(11) AUTO_INCREMENT,
-  createdDate DATETIME,
   effortLeft BIGINT(20),
   originalestimate BIGINT(20),
   name VARCHAR(255),
@@ -147,16 +146,15 @@ CREATE TABLE tasks (
   rank INT DEFAULT 0,
   description text,
   iteration_id INT(11),
-  creator_id INT(11),
   story_id INT(11),
   PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
-INSERT INTO tasks (id,createdDate,effortLeft,originalestimate,name,
-                   priority,state,description,iteration_id,creator_id,story_id)
-  SELECT item.id, item.createdDate, item.effortLeft/60, item.originalEstimate/60,
+INSERT INTO tasks (id,effortLeft,originalestimate,name,
+                   priority,state,description,iteration_id,story_id)
+  SELECT item.id, item.effortLeft/60, item.originalEstimate/60,
          item.name, item.priority, item.state, item.description, item.backlog_id,
-       item.creator_id, item.iterationGoal_id
+       item.iterationGoal_id
   FROM backlogitem AS item
   INNER JOIN backlogs bl
   ON item.backlog_id = bl.id
@@ -166,24 +164,21 @@ INSERT INTO tasks (id,createdDate,effortLeft,originalestimate,name,
    and iterationgoal */
 CREATE TABLE stories (
   id INT(11) AUTO_INCREMENT,
-  createdDate DATETIME,
   storyPoints INT(11),
   name VARCHAR(255) NOT NULL,
   priority INT(11),
   state INT(11) NOT NULL,
   description text,
-  creator_id INT(11),
   backlog_id INT(11) NOT NULL,
   iterationGoal_id INT(11), /* temporary */
   PRIMARY KEY(id)
 ) ENGINE=InnoDB;
 
 /* Use ids from backlog items */
-INSERT INTO stories (id,createdDate,storyPoints,name,
-                   priority,state,description,creator_id,backlog_id)
-  SELECT item.id, item.createdDate, item.originalEstimate/60,
-         item.name, item.priority, item.state, item.description,
-       item.creator_id, item.backlog_id
+INSERT INTO stories (id,storyPoints,name,
+                   priority,state,description,backlog_id)
+  SELECT item.id, item.originalEstimate/60,
+         item.name, item.priority, item.state, item.description, item.backlog_id
   FROM backlogitem AS item
   INNER JOIN backlogs bl
   ON item.backlog_id = bl.id
@@ -416,12 +411,10 @@ ALTER TABLE hourentries ADD FOREIGN KEY (story_id) REFERENCES stories(id);
 ALTER TABLE hourentries ADD FOREIGN KEY (task_id) REFERENCES tasks(id);
 
 SELECT 'Foreign keys for stories' AS status;
-ALTER TABLE stories ADD FOREIGN KEY (creator_id) REFERENCES users(id);
 ALTER TABLE stories ADD FOREIGN KEY (backlog_id) REFERENCES backlogs(id);
 
 SELECT 'Foreign keys for tasks' AS status;
 ALTER TABLE tasks ADD FOREIGN KEY (iteration_id) REFERENCES backlogs(id);
-ALTER TABLE tasks ADD FOREIGN KEY (creator_id) REFERENCES users(id);
 ALTER TABLE tasks ADD FOREIGN KEY (story_id) REFERENCES stories(id);
 
 SELECT 'Foreign keys for team user pivot' AS status;

@@ -4,9 +4,9 @@ INSERT INTO backlogs (id, backlogtype, name, startDate, endDate) VALUES (3, 'Ite
 INSERT INTO backlogs (id, backlogtype, name, backlogSize, startDate, endDate) VALUES (4, 'Iteration', 'Iteration 4', 400, '2009-05-20 10:15:00', '2009-07-01 10:15:00');
 
 INSERT INTO users (id, enabled) VALUES (1, true);
-INSERT INTO stories (id, backlog_id, name, creator_id, storypoints, state) VALUES (1, 1, 'Story 1', 1, 10, 0);
-INSERT INTO stories (id, backlog_id, name, creator_id, storypoints, state) VALUES (2, 1, 'Story 2', 1, 5,  5);
-INSERT INTO stories (id, backlog_id, name, creator_id, storypoints, state) VALUES (3, 2, 'Story 3', 1, 5,  0);
+INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (1, 1, 'Story 1', 10, 0);
+INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (2, 1, 'Story 2', 5,  5);
+INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (3, 2, 'Story 3', 5,  0);
 
 INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (1, 1, NULL, 1);
 INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (2, 5, NULL, 1);

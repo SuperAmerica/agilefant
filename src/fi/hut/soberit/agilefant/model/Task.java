@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -54,9 +53,6 @@ public class Task implements TimesheetLoggable, NamedObject {
     private ExactEstimate originalEstimate;
     private Collection<User> responsibles = new ArrayList<User>();
     private Collection<TaskHourEntry> hourEntries = new ArrayList<TaskHourEntry>();
-    
-    private Date createdDate;
-    private User creator;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -156,26 +152,6 @@ public class Task implements TimesheetLoggable, NamedObject {
     
     public void setResponsibles(Collection<User> responsibles) {
         this.responsibles = responsibles;
-    }
-
-    @NotAudited
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    @ManyToOne
-    @JSON(include = true)
-    @NotAudited
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
     }
 
     @OneToMany(mappedBy="task")

@@ -15,14 +15,11 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
-import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
-import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 @Component("storyAction")
@@ -62,9 +59,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     @Autowired
     private StoryBusiness storyBusiness;
-    
-    @Autowired
-    private TransferObjectBusiness transferObjectBusiness;
 
 
     @Override
@@ -127,11 +121,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
             metrics = storyBusiness.calculateMetricsWithoutStory(iterationId);
         }
         return Action.SUCCESS;
-    }
-
-    private StoryTO toTransferObject(Story story) {
-        Collection<User> responsibles = storyBusiness.getStorysProjectResponsibles(story);
-        return transferObjectBusiness.constructStoryTO(story, responsibles);
     }
 
     // PREFETCHING
@@ -230,11 +219,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
-    }
-    
-    public void setTransferObjectBusiness(
-            TransferObjectBusiness transferObjectBusiness) {
-        this.transferObjectBusiness = transferObjectBusiness;
     }
 
     public Collection<Task> getStoryContents() {

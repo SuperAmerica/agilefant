@@ -47,12 +47,10 @@ StoryController.prototype.saveStory = function() {
     this.model.commit();
   }
   else {
-    $('<div />').text("no goes").appendTo(document.body);
     return;
   }
   if(createNewStory) {
-    //this.view.remove();
-    $('<div />').text("remove shits").appendTo(document.body);
+    this.view.remove();
     return;
   }
   this.view.getCell(StoryController.columnIndexes.description).hide();

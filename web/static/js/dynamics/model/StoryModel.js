@@ -91,11 +91,20 @@ StoryModel.prototype.reload = function() {
   var me = this;
   jQuery.getJSON(
     "ajax/retrieveStory.action",
-    {storyId: this.getId()},
+    {storyId: me.getId()},
     function(data,status) {
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }
+  );
+};
+
+StoryModel.prototype._remove = function() {
+  var me = this;
+  jQuery.post(
+      "ajax/deleteStory.action",
+      {storyId: me.getId()},
+      function(data, status) { return; }
   );
 };
 

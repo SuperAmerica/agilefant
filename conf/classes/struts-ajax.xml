@@ -249,7 +249,11 @@
        </result>
     </action>
     
-    <action name="deleteStory" method="delete" class="storyAction" />
+    <action name="deleteStory" method="delete" class="storyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
     
     <action name="moveStory" method="moveStory" class="storyAction" />
     
@@ -273,7 +277,11 @@
 
 
     <!-- Task actions -->
-    <action name="deleteTask" method="delete" class="taskAction" />
+    <action name="deleteTask" method="delete" class="taskAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
     
     <action name="storeTask" method="store" class="taskAction" >
       <interceptor-ref name="prefetchStack" />

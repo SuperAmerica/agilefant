@@ -150,6 +150,7 @@ CommonModel.prototype._removeAllRelations = function() {
  */
 CommonModel.prototype.remove = function() {
   this._removeAllRelations();
+  this._remove();
   this.callListeners(new DynamicsEvents.DeleteEvent(this));
 };
 

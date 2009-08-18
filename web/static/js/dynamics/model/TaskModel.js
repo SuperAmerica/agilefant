@@ -93,6 +93,15 @@ TaskModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+TaskModel.prototype._remove = function() {
+  var me = this;
+  jQuery.post(
+      "ajax/deleteTask.action",
+      {taskId: me.getId()},
+      function(data, status) { return; }
+  );
+};
+
 TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   var me = this;
   

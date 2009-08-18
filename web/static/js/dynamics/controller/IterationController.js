@@ -121,7 +121,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     name : "createTask",
     text : "Create task",
     cssClass : "create",
-    callback : IterationController.prototype.createTask
+    callback : TasksWithoutStoryController.prototype.createTask
   });
   
   config.addColumnConfiguration(TaskController.columnIndexes.prio, {

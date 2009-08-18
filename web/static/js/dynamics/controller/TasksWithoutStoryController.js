@@ -14,4 +14,14 @@ TasksWithoutStoryController.prototype.taskControllerFactory = function(view, mod
   return taskController;
 };
 
-
+TasksWithoutStoryController.prototype.createTask = function() {
+  var mockModel = ModelFactory.createObject(ModelFactory.types.task);
+  mockModel.setIteration(this.model);
+  var controller = new TaskController(mockModel, null, this);
+  var row = this.taskListView.createRow(controller, mockModel, "top");
+  controller.view = row;
+  row.autoCreateCells([TaskController.columnIndexes.actions, TaskController.columnIndexes.data]);
+  row.render();
+  controller.editTask();
+  row.getCell(TaskController.columnIndexes.data).hide();
+};

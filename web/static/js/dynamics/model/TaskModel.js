@@ -62,7 +62,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
   else {
     url = "ajax/createTask.action";
     if(this.relations.backlog instanceof BacklogModel) {
-      data.backlogId = this.relations.backlog.getId();
+      data.iterationId = this.relations.backlog.getId();
     }
     if(this.relations.story instanceof StoryModel) {
       data.storyId = this.relations.story.getId();

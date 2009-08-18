@@ -250,7 +250,8 @@ StoryController.prototype.initTaskListConfiguration = function() {
     dragHandle: true,
     edit : {
       editor : "Text",
-      set : TaskModel.prototype.setName
+      set : TaskModel.prototype.setName,
+      required: true
     }
   });
   config.addColumnConfiguration(TaskController.columnIndexes.state, {

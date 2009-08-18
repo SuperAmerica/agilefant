@@ -53,7 +53,9 @@ DynamicView.prototype.initWithoutEvents = function(controller, model, parent) {
 DynamicView.instanceCounter = 0;
 
 DynamicView.prototype.destroy = function() {
-  this.model.removeListener(this.listener);
+  if(this.listener) {
+    this.model.removeListener(this.listener);
+  }
 };
 DynamicView.prototype.getModel = function() {
 	return this.model;

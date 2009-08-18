@@ -36,4 +36,19 @@ $(document).ready(function() {
 		row.remove();
 		equals(row.element.parent().length, 0, "Element removed");
 	});
+	
+   test("remove with listeners", function() {
+      var row = new DynamicTableRow(null);
+      var mockModel = this.mockControl.createMock(CommonModel);
+      mockModel.expects().addListener(TypeOf.isA(Function));
+      this.tableMock.expects().removeRow(row);
+      mockModel.expects().removeListener(TypeOf.isA(Function));
+     
+      row.init(null, mockModel, null);
+      row.getElement().appendTo(this.tmpParent);
+      row.parentView = this.tableMock;
+      
+      row.remove();
+      equals(row.element.parent().length, 0, "Element removed");
+    });
 });

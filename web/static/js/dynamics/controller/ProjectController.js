@@ -9,7 +9,12 @@
 var ProjectController = function(options) {
   this.id = options.id;
   this.parentView = options.storyListElement;
+  this.projectDetailsElement = options.projectDetailsElement;
+  this.assigmentListElement = options.assigmentListElement;
+  this.iterationList = options.iterationListElement;
   this.init();
+  this.initializeProjectDetailsConfig();
+  this.initAssigneeConfiguration();
   this.initializeStoryConfig();
   this.paint();
 };
@@ -30,6 +35,12 @@ ProjectController.prototype.paintStoryList = function() {
   this.storyListView.render();
 };
 
+ProjectController.prototype.paintProjectDetails = function() {
+  this.projectDetailsView = new DynamicVerticalTable(this, this.model, this.projectDetailConfig,
+      this.projectDetailsElement);
+  this.projectDetailsView.render();
+};
+
 /**
  * Initialize and render the story list.
  */
@@ -38,6 +49,8 @@ ProjectController.prototype.paint = function() {
   ModelFactory.initializeFor(ModelFactory.initializeForTypes.project,
       this.id, function(model) {
         me.model = model;
+        me.paintProjectDetails();
+        me.paintAssigneeList();
         me.paintStoryList();
       });
 };
@@ -69,6 +82,7 @@ ProjectController.prototype.createStory = function() {
   row.render();
   controller.editStory();
 };
+
 ProjectController.prototype.sortStories = function(view, model, stackPosition) {
   if(stackPosition === 0) {
     model.setPriority(0);
@@ -84,12 +98,73 @@ ProjectController.prototype.sortStories = function(view, model, stackPosition) {
 };
 
 /**
+ * Initialize project details configuration.
+ */
+ProjectController.prototype.initializeProjectDetailsConfig = function() {
+  var config = new DynamicTableConfiguration( {
+    leftWidth: '20%',
+    rightWidth: '79%'
+  });
+  config.addColumnConfiguration(0, {
+    title : "Name",
+    get : ProjectModel.prototype.getName,
+    editable : true,
+    edit : {
+      editor : "Text",
+      required: true,
+      set: ProjectModel.prototype.setName
+    }
+  });
+  config.addColumnConfiguration(1, {
+    title : "Start Date",
+    get : ProjectModel.prototype.getStartDate,
+    decorator: DynamicsDecorators.dateDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateDecorator,
+      required: true,
+      withTime: true,
+      set: ProjectModel.prototype.setStartDate
+    }
+  });  
+  config.addColumnConfiguration(2, {
+    title : "End Date",
+    get : ProjectModel.prototype.getEndDate,
+    decorator: DynamicsDecorators.dateDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateDecorator,
+      required: true,
+      withTime: true,
+      set: ProjectModel.prototype.setEndDate
+    }
+  });
+  config.addColumnConfiguration(3, {
+    title : "Planned Size",
+    get : ProjectModel.prototype.getBacklogSize
+  });
+  config.addColumnConfiguration(4, {
+    title : "Description",
+    get : ProjectModel.prototype.getDescription,
+    editable : true,
+    edit : {
+      editor : "Wysiwyg",
+      set: ProjectModel.prototype.setDescription
+    }
+  });
+  this.projectDetailConfig = config;
+};
+
+
+/**
  * Initialize configuration for story lists.
  */
 ProjectController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
-    dataSource : IterationModel.prototype.getStories,
+    dataSource : ProjectModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: ProjectController.prototype.sortStories,
     caption : "Stories"
@@ -102,24 +177,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     callback : ProjectController.prototype.createStory
   });
 
-//  config.addCaptionItem( {
-//    name : "showTasks",
-//    text : "Show tasks",
-//    connectWith : "hideTasks",
-//    cssClass : "hide",
-//    visible: false,
-//    callback : ProjectController.prototype.showTasks
-//
-//  });
-//  config.addCaptionItem( {
-//    name : "hideTasks",
-//    text : "Hide tasks",
-//    visible : true,
-//    connectWith : "showTasks",
-//    cssClass : "show",
-//    callback : ProjectController.prototype.hideTasks
-//  });
-
   config.addColumnConfiguration(StoryController.columnIndexes.priority, {
     minWidth : 24,
     autoScale : true,
@@ -128,7 +185,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Priority',
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getPriority),
     defaultSortColumn: true
-    // , subViewFactory : StoryController.prototype.taskToggleFactory
   });
   config.addColumnConfiguration(StoryController.columnIndexes.name, {
     minWidth : 280,

@@ -14,7 +14,7 @@
 var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 </script>
 
-
+<%--
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('struts.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
@@ -137,7 +137,7 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 								    				</td>							
 												</tr>
 											     </c:if>
-                           --%>		
+                           
                            		
 										         <tr>
 													<th class="info1">Planned project size</th>
@@ -186,7 +186,7 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 	                                        				</c:otherwise>
 	                                    				</c:choose>
 	                                    			</td>
-                                            --%>
+                                            
 												</tr>
 												<tr>
 								    				<td colspan="2" class="description">
@@ -248,7 +248,7 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 														</c:choose>
 														</td>																																																																																										
 													</tr>
-                          --%>
+                          
 													<tr>
 														<td>Status</td>
 														<td></td>
@@ -266,7 +266,7 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 														<td></td>
 														<td colspan="2"><ww:textfield size="10" name="project.defaultOverhead" /> / person / week</td>
 													</tr>
-                          --%>
+                          
 						                			<tr>
 														<td>Planned project size</td>
 														<td></td>
@@ -316,7 +316,7 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 									                        </a>
 									                    </div>
 														</td>
-                            --%>
+                            
 													</tr>
 	                								<tr>
 	                    								<td>Description</td>
@@ -351,119 +351,9 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 						</tr>
 					</tbody>
 				</table>
-        <%--
-		<table>
-			<tr>
-				<td>
-
-								<c:if test="${projectId != 0}">
-									<div class="subItems" id="subItems_editProjectThemesList">
-										<div class="subItemHeader">
-										    <table cellspacing="0" cellpadding="0">
-					            			    <tr>
-					            			    	<td class="header">Themes</td>
-												<td class="icons">
-							                        <table cellspacing="0" cellpadding="0">
-							                            <tr>
-							                            <td>
-							                          <a href="#" title="Attach theme" onclick="return false;" class="attachLink" id="addProjectBusinessTheme" />
-							                            </td>
-							                            </tr>
-							                            </table>      
-							                        </td>
-												</tr>
-												
-											</table>
-										</div>
-										<div class="subItemContent">
-										<div class="validateWrapper validateEmpty">
-										<ww:form action="storeBacklogThemebinding" method="post">
-										<ww:hidden name="backlogId" value="${project.id}"/>
-										<input type="hidden" name="contextViewName" value="project" />
-										
-										<c:choose>
-										<c:when test="${!empty project.businessThemeBindings}">
-										<div class="businessThemeTableWrapper">
-										<display:table htmlId="businessThemeTable" class="businessThemeTable listTable" name="project.businessThemeBindings" id="row" requestURI="editIteration.action">
-
-											<display:column sortable="true" title="Name" sortProperty="businessTheme.name"
-											     class="businessThemeNameColumn">
-												<span style="display: none;">${row.businessTheme.id}</span>
-												<a style="cursor: pointer; color: #0055AA;" class="table_edit_edit">
-													<c:out value="${row.businessTheme.name}"/>
-												</a>												
-											</display:column>
-											
-											<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
-												<c:choose>
-													<c:when test="${row.relativeBinding == true}">
-														<span style="display:none;">${row.percentage}%</span>
-														<c:out value="${row.boundEffort}"/>
-														(<c:out value="${row.percentage}"/>%)
-													</c:when>
-													<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
-												</c:choose>
-											</display:column>
-											<display:column sortable="false" title="Actions">
-												<span class="uniqueId" style="display: none;">${row.id}</span>
-												<img style="cursor: pointer;" class="table_edit_edit" src="static/img/edit.png" title="Edit" />
-												<img style="cursor: pointer;" class="table_edit_delete" src="static/img/delete_18.png" title="Remove from project" />
-											</display:column>
-										</display:table>
-										</div>
-											</c:when>
-											<c:otherwise>
-												<table id="businessThemeTable" style="display:none;" class="listTable">
-													<tr><th class="sortable" class="businessThemeNameColumn">Name</th><th class="sortable">Planned spending</th><th>Actions</th></tr>
-												</table>
-											</c:otherwise>
-											</c:choose>
-											<div id="backlogThemeSave" style="display: none;">
-											<ww:label id="themeLabel" value="Planned spending may be entered as time (e.g. 2h 30min) or a percentage
-                                                (e.g. 40%)." cssStyle="margin: 3px; padding: 3px; display: block; border: 1px solid #ccc;"/>
-											<input id="backlogThemeSave" style="margin-left: 2px;" type="submit" value="Save" />
-											
-											</div>
-											</ww:form>	
-											</div>			
-											</div>
-											<c:if test="${!empty iterationThemes}">
-											<div class="businessThemeTableWrapper">
-											<h4>Iteration themes</h4>
-												<display:table htmlId="businessThemeTableIterations" class="businessThemeTable listTable" name="iterationThemes" id="row" requestURI="editProject.action">
-						
-													<display:column sortable="true" title="Name" sortProperty="businessTheme.name"
-													       class="businessThemeNameColumn">														
-														<c:out value="${row.businessTheme.name}"/>														
-													</display:column>
-													
-													<display:column sortable="true" sortProperty="boundEffort" title="Planned spending">
-														<c:choose>
-															<c:when test="${row.relativeBinding == true}">
-																<c:out value="${row.boundEffort}"/>
-																(<c:out value="${row.percentage}"/>%)
-															</c:when>
-															<c:otherwise><c:out value="${row.fixedSize}"/></c:otherwise>
-														</c:choose>
-													</display:column>
-													<display:column sortable="true" title="Iteration" sortProperty="backlog.name">
-														<ww:url id="editLink" action="editIteration" includeParams="none">
-															<ww:param name="iterationId" value="${row.backlog.id}" />
-														</ww:url>
-														<ww:a href="%{editLink}&contextViewName=editProduct&contextObjectId=${project.id}">						
-															<c:out value="${row.backlog.name}"/>
-														</ww:a>
-													</display:column>
-												</display:table>
-										    </div>
-											</c:if>
-											</div>
-								</c:if>
-								
-				</td>
-				</tr>
         --%>
         
+        <%--
 				<tr>
 				<td>
 						<div class="subItems" id="subItems_editProjectIterations">
@@ -534,12 +424,37 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 				</td>
 			</tr>
 		</table>
+--%>
+
+<div class="backlogInfo" id="backlogInfo">
+<ul class="backlogTabs">
+  <li class=""><a href="#backlogDetails"><span><img
+    alt="Edit" src="static/img/info.png" /> Info</span></a></li>
+  <li class=""><a href="#backlogAssignees"><span><img
+    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
+  <c:if test="${settings.hourReportingEnabled}">
+  <li class=""><a href="#backlogSpentEffort"><span><img
+    alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
+  </c:if>
+  <li class=""><a href="#backlogSpentEffort"><span><img
+    alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
+</ul>
+</ul>
+
+<div class="details" id="backlogDetails" style="overflow: auto;"></div>
+<div class="details" id="backlogAssignees"></div>
+<div class="details" id="backlogSpentEffort"></div>
+
+</div>
 
 
 <script type="text/javascript">
 $(document).ready(function() {
+  $("#backlogInfo").tabs();
   var controller = new ProjectController({
-    id: ${project.id}, 
+    id: ${project.id},
+    projectDetailsElement: $("#backlogDetails"),
+    assigmentListElement: $("#backlogAssignees"),
     storyListElement: $('#stories')
   });
 });
@@ -564,6 +479,7 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/dynamics/model/CommonModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/BacklogModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/IterationModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/ProjectModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/StoryModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/TaskModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/UserModel.js"></script>

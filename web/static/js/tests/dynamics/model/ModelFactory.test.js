@@ -205,7 +205,7 @@ $(document).ready(function() {
   
   
   test("Static create object", function() {
-    var expectedType = "task";
+    var expectedType = "fi.hut.soberit.agilefant.model.Task";
     var newObject = {};
     
     var internalCreateObjectCallCount = 0;
@@ -302,10 +302,10 @@ $(document).ready(function() {
   
   
   test("Internal create object", function() {
-    var actualTask = this.instance._createObject(ModelFactory.types.task);
-    var actualStory = this.instance._createObject(ModelFactory.types.story);
+    var actualTask = this.instance._createObject(ModelFactory.typeToClassName.task);
+    var actualStory = this.instance._createObject(ModelFactory.typeToClassName.story);
     
-    var actualIteration = this.instance._createObject(ModelFactory.types.iteration);
+    var actualIteration = this.instance._createObject(ModelFactory.typeToClassName.iteration);
     
     ok(actualTask instanceof TaskModel, "Task created correctly");
     ok(actualStory instanceof StoryModel, "Story created correctly");
@@ -337,7 +337,8 @@ $(document).ready(function() {
   test("Static update object - new object", function() {
     var newIteration = {
         id: 123,
-        name: "Test iteration"
+        name: "Test iteration",
+        "class": "fi.hut.soberit.agilefant.model.Iteration"
     };
     
     var setDataCalled = false;
@@ -346,7 +347,7 @@ $(document).ready(function() {
       same(data, newIteration, "The data is correct");
     };
     
-    var actual = ModelFactory.updateObject(ModelFactory.types.iteration, newIteration);
+    var actual = ModelFactory.updateObject(newIteration);
     
     ok(actual instanceof IterationModel, "The returned object is an iteration");
     ok(setDataCalled, "Model's setData is called");
@@ -363,7 +364,8 @@ $(document).ready(function() {
     this.instance.data.story[666] = story;
     
     var newData = {
-      id: 666
+      id: 666,
+      "class": "fi.hut.soberit.agilefant.model.Story"
     };
     
     var setDataCalled = false;
@@ -372,7 +374,7 @@ $(document).ready(function() {
       same(data, newData, "The data is correct");
     };
     
-    var actual = ModelFactory.updateObject(ModelFactory.types.story, newData);
+    var actual = ModelFactory.updateObject(newData);
     
     same(actual, story, "The story object is correct");
     ok(setDataCalled, "Model's setData is called");
@@ -389,18 +391,17 @@ $(document).ready(function() {
        [],  // Undefined
        [null, null], // all nulls
        [null, {}], //type null
-       [ModelFactory.types.iteration, {id:null}], // id null
-       [ModelFactory.types.iteration, null], // data null
-       [ModelFactory.types.iteration, "Invalid string"], // invalid data
-       [ModelFactory.types.iteration, {id:"Jeejee"}], // invalid id
-       [ModelFactory.types.iteration, {id:123}] // all ok
+       [{id:null}], // id null
+       [null], // data null
+       ["Invalid string"], // invalid data
+       [{id:"Jeejee"}], // invalid id
+       [{id:123, "class": "fi.hut.soberit.agilefant.model.Iteration"}] // all ok
        ];
     
     for (var i = 0; i < params.length; i++) {
       try {
-        var type = params[i][0];
-        var data = params[i][1];
-        ModelFactory.updateObject(type, data);
+        var data = params[i][0];
+        ModelFactory.updateObject(data);
       }
       catch (e) {
         if (e instanceof Error &&
@@ -448,9 +449,10 @@ $(document).ready(function() {
   
   test("Listener remove test", function() {
     var iterData = {
-        id: 123
+        id: 123,
+        "class": "fi.hut.soberit.agilefant.model.Iteration"
     };
-    var iter = ModelFactory.updateObject(ModelFactory.types.iteration, iterData);
+    var iter = ModelFactory.updateObject(iterData);
     
     ok(this.instance.data.backlog[123], "The backlog exists in the data");
     

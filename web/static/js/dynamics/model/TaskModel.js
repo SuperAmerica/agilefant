@@ -226,7 +226,7 @@ TaskModel.prototype.getResponsibles = function() {
 TaskModel.prototype.setResponsibles = function(userIds, userJson) {
   if (userJson) {
     $.each(userJson, function(k,v) {
-      ModelFactory.updateObject(ModelFactory.types.user, v);    
+      ModelFactory.updateObject(v);    
     });
   }
   this.currentData.userIds = userIds;

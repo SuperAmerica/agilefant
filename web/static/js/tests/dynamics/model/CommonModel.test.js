@@ -104,10 +104,12 @@ $(document).ready(function() {
     var newData =
       [
        {
-         id: 555
+         id: 555,
+         "class": "fi.hut.soberit.agilefant.model.Story"
        },
        {
-         id: 667
+         id: 667,
+         "class": "fi.hut.soberit.agilefant.model.Story"
        }
        ];
     

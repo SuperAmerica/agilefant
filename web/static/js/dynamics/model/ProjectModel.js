@@ -1,6 +1,6 @@
 
 /**
- * Model class for iterations
+ * Model class for projects.
  * @constructor
  * @base BacklogModel
  * @see BacklogModel#initializeBacklogModel
@@ -55,27 +55,27 @@ ProjectModel.prototype._setData = function(newData) {
 };
 
 ProjectModel.prototype._saveData = function(id, changedData) {
-//  var me = this;
-//  
-//  var url = "ajax/storeProject.action";
-//  var data = this.serializeFields("project", changedData);
-//  data.projectId = id;
-// 
-//  jQuery.ajax({
-//    type: "POST",
-//    url: url,
-//    async: true,
-//    cache: false,
-//    data: data,
-//    dataType: "json",
-//    success: function(data, status) {
-//      me.setData(data);
-//    },
-//    error: function(request, status, error) {
-//      alert("Error saving story");
-//      me.rollback();
-//    }
-//  });
+  var me = this;
+  
+  var url = "ajax/storeProject.action";
+  var data = this.serializeFields("project", changedData);
+  data.projectId = id;
+ 
+  jQuery.ajax({
+    type: "POST",
+    url: url,
+    async: true,
+    cache: false,
+    data: data,
+    dataType: "json",
+    success: function(data, status) {
+      me.setData(data);
+    },
+    error: function(request, status, error) {
+      alert("Error saving project");
+      me.rollback();
+    }
+  });
 };
 
 ProjectModel.prototype.reload = function() {

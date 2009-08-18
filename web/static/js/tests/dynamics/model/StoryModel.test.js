@@ -63,10 +63,9 @@ $(document).ready(function() {
     var tasks = [task1, task2, task3];
     
     var updateCallCount = 0;
-    ModelFactory.updateObject = function(type, data) {
+    ModelFactory.updateObject = function(data) {
       var task = tasks[updateCallCount];
       updateCallCount++;
-      same(type, ModelFactory.types.task, "Type is correct");
       return task;
     };
     
@@ -75,15 +74,18 @@ $(document).ready(function() {
         [
          {
            id: 123,
-           name: "Goo"
+           name: "Goo",
+           "class": "fi.hut.soberit.agilefant.model.Task"
          },
          {
            id: 1234,
-           name: "Foo"
+           name: "Foo",
+           "class": "fi.hut.soberit.agilefant.model.Task"
          },
          {
            id: 12345,
-           name: "Boo"
+           name: "Boo",
+           "class": "fi.hut.soberit.agilefant.model.Task"
          }
          ]  
     };

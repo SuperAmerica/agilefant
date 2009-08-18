@@ -77,7 +77,7 @@ IterationModel.prototype._saveData = function(id, changedData) {
       me.setData(data);
     },
     error: function(request, status, error) {
-      alert("Error saving story");
+      alert("Error saving iteration");
       me.rollback();
     }
   });

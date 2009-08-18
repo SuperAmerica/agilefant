@@ -72,7 +72,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   var newObjects = [];
   // 1. New hash codes to list
   for (var i = 0; i < newData.length; i++) {
-    var object = ModelFactory.updateObject(type, newData[i]);
+    var object = ModelFactory.updateObject(newData[i]);
     newObjects.push(object);
     newHashes.push(object.getHashCode());
   }
@@ -106,7 +106,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
 
 CommonModel.prototype._updateSingleRelation = function(type, newData) {
   var old = this.relations[type];
-  var newObj = ModelFactory.updateObject(type, newData);
+  var newObj = ModelFactory.updateObject(newData);
   
   if (old !== newObj) {
     // Remove old relation

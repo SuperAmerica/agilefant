@@ -56,11 +56,13 @@ $(document).ready(function() {
           [
            {
              id: 715,
-             name: "Foo story"
+             name: "Foo story",
+             "class": "fi.hut.soberit.agilefant.model.Story"
            },
            {
              id: 888,
-             name: "Bar story"
+             name: "Bar story",
+             "class": "fi.hut.soberit.agilefant.model.Story"
            }
            ]
     };
@@ -81,10 +83,9 @@ $(document).ready(function() {
     var story2 = new StoryModel();
     story2.setId(888);
     var stories = [story1, story2];
-    ModelFactory.updateObject = function(type, data) {
+    ModelFactory.updateObject = function(data) {
       var story = stories[updateCallCount];
       updateCallCount++;
-      same(type, ModelFactory.types.story, "Type is correct");
       return story;
     };
     

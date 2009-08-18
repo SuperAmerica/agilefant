@@ -48,7 +48,45 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.BackogHourEntry": "hourEntry",
   "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
   "fi.hut.soberit.agilefant.model.TaskHourEntry": "hourEntry"
+};
+
+/**
+ * Convert persisted class names to Javascript classes
+ * 
+ * @member ModelFactory
+ */
+ModelFactory.classNameToJsClass = {
+    "fi.hut.soberit.agilefant.model.Iteration":       IterationModel,
+    "fi.hut.soberit.agilefant.model.Project":         ProjectModel,
     
+    "fi.hut.soberit.agilefant.model.Story":           StoryModel,
+    "fi.hut.soberit.agilefant.model.StoryTO":         StoryModel,
+    "fi.hut.soberit.agilefant.model.Task":            TaskModel,
+    "fi.hut.soberit.agilefant.model.TaskTO":          TaskModel,
+      
+    "fi.hut.soberit.agilefant.model.User":            UserModel,
+      
+    "fi.hut.soberit.agilefant.model.Assignment":      AssignmentModel,
+    
+    "fi.hut.soberit.agilefant.model.HourEntry":       HourEntryModel,
+    "fi.hut.soberit.agilefant.model.BackogHourEntry": HourEntryModel,
+    "fi.hut.soberit.agilefant.model.StoryHourEntry":  HourEntryModel,
+    "fi.hut.soberit.agilefant.model.TaskHourEntry":   HourEntryModel
+};
+
+ModelFactory.typeToClassName = {
+    iteration:  "fi.hut.soberit.agilefant.model.Iteration",
+    product:    "fi.hut.soberit.agilefant.model.Product",
+    project:    "fi.hut.soberit.agilefant.model.Project",
+    
+    story:      "fi.hut.soberit.agilefant.model.Story",
+    task:       "fi.hut.soberit.agilefant.model.Task",
+      
+    user:       "fi.hut.soberit.agilefant.model.User",
+      
+    assignment: "fi.hut.soberit.agilefant.model.Assignment",
+    
+    hourEntry:  "fi.hut.soberit.agilefant.model.HourEntry",
 };
 
 /**
@@ -180,11 +218,14 @@ ModelFactory.getObjectIfExists = function(type, id) {
  * @return a new instance of the given object type
  * @throws {TypeError} if type is invalid
  */
-ModelFactory.createObject = function(type) {
-  if (!(type in ModelFactory.types)) {
+ModelFactory.createObject = function(clazz) {
+  if (!(clazz in ModelFactory.classNameToJsClass) && !(clazz in ModelFactory.types)) {
     throw new TypeError("Invalid type");
   }
-  return ModelFactory.getInstance()._createObject(type);
+  else if (clazz in ModelFactory.types) {
+    return ModelFactory.getInstance()._createObject(ModelFactory.typeToClassName[clazz]);  
+  }
+  return ModelFactory.getInstance()._createObject(clazz);
 };
 
 
@@ -204,16 +245,16 @@ ModelFactory.createObject = function(type) {
  * @see ModelFactory.types
  * @see CommonModel
  */
-ModelFactory.updateObject = function(type, data) {
-  if (!type ||
-      !data    || typeof data !== "object" ||
-      !data.id || typeof data.id !== "number") {
+ModelFactory.updateObject = function(data) {
+  if (!data    || typeof data !== "object" ||
+      !data.id || typeof data.id !== "number" ||
+      !data["class"]) {
     throw new Error("Illegal argument for ModelFactory.updateObject");
   }
   var instance = ModelFactory.getInstance();
-  var object = instance._getObject(type, data.id);
+  var object = instance._getObject(ModelFactory.classNameToType[data["class"]], data.id);
   if (!object) {
-    object = ModelFactory.createObject(type);
+    object = ModelFactory.createObject(data["class"]);
     object.setId(data.id);
     instance._addObject(object);
   }
@@ -243,30 +284,8 @@ ModelFactory.prototype._getObject = function(type, id) {
 /**
  * Internal function for creating a new object.
  */
-ModelFactory.prototype._createObject = function(type) {
-  var returnedModel = null;
-
-  switch(type) {
-  case ModelFactory.types.task:
-    returnedModel = new TaskModel();
-    break;
-  case ModelFactory.types.story:
-    returnedModel = new StoryModel();
-    break;
-  case ModelFactory.types.iteration:
-    returnedModel = new IterationModel();
-    break;
-  case ModelFactory.types.assignment:
-    returnedModel = new AssignmentModel();
-    break;
-  case ModelFactory.types.hourEntry:
-    returnedModel = new HourEntryModel();
-    break;
-  case ModelFactory.types.user:
-    returnedModel = new UserModel();
-    break;
-  }
-  
+ModelFactory.prototype._createObject = function(className) {
+  var returnedModel = new ModelFactory.classNameToJsClass[className];
   returnedModel.addListener(ModelFactory.listener);
   return returnedModel;
 };
@@ -307,14 +326,14 @@ ModelFactory.prototype._getData = function(type, id, callback) {
  * Internal function to construct an iteration
  */
 ModelFactory.prototype._constructIteration = function(id, data) {
-  return ModelFactory.updateObject(ModelFactory.types.iteration, data);
+  return ModelFactory.updateObject(data);
 };
 
 /**
  * Internal function to construct a project
  */
 ModelFactory.prototype._constructProject = function(id, data) {
-  return ModelFactory.updateObject(ModelFactory.types.project, data);
+  return ModelFactory.updateObject(data);
 };
 
 /**

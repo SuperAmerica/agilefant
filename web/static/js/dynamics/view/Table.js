@@ -417,6 +417,7 @@ DynamicTable.prototype.removeRow = function(row) {
  */
 DynamicTable.prototype.remove = function() {
   this.container.remove();
+  this.destroy();
 };
 
 DynamicTable.prototype.onRelationUpdate = function(event) {
@@ -449,7 +450,7 @@ DynamicVerticalTable.prototype.initialize = function() {
   for ( var i = 0; i < columnConfigs.length; i++) {
     var columnConfig = columnConfigs[i];
     var row = new DynamicTableRow(null);
-    row.init(this.getController(), this.getModel(), this);
+    row.initWithoutEvents(this.getController(), this.getModel(), this);
     row.getElement().appendTo(this.element);
     columnConfig.options.width = this.config.options.rightWidth;
     var title = row.createCell(titleColumnConfig);

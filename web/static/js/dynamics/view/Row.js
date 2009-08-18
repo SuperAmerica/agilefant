@@ -100,6 +100,7 @@ DynamicTableRow.prototype.getCell = function(index) {
 DynamicTableRow.prototype.remove = function() {
   this.getParentView().removeRow(this);
   this.element.remove();
+  this.destroy();
 };
 
 DynamicTableRow.prototype.onEdit = function() {

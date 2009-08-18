@@ -20,20 +20,8 @@ DynamicView.prototype = new ViewPart();
  * @param parent Either jQuery object or instance of DynamicView
  */
 DynamicView.prototype.init = function(controller, model, parent) {
-	this.controller = controller;
-	this.model = model;
-	this.parentView = null;
-	this.parentElement = null;
-	//this.element = null;
-	this.viewId = DynamicView.instanceCounter++;
-	if(parent instanceof ViewPart) {
-		this.parentView = parent;
-		//this.parentView.addSubView(this.viewId, this);
-		this.parentElement = parent.getElement();
-	} else {
-		this.parentElement = parent;
-	}
-	var me = this;
+  this.initWithoutEvents(controller, model, parent);
+  var me = this;
 	this.listener = function(event) {
 	  if (event instanceof DynamicsEvents.EditEvent) {
 	    me.onEdit(event);
@@ -47,8 +35,26 @@ DynamicView.prototype.init = function(controller, model, parent) {
 	this.subViews = {};
 };
 
+DynamicView.prototype.initWithoutEvents = function(controller, model, parent) {
+  this.controller = controller;
+  this.model = model;
+  this.parentView = null;
+  this.parentElement = null;
+  //this.element = null;
+  this.viewId = DynamicView.instanceCounter++;
+  if(parent instanceof ViewPart) {
+    this.parentView = parent;
+    //this.parentView.addSubView(this.viewId, this);
+    this.parentElement = parent.getElement();
+  } else {
+    this.parentElement = parent;
+  }
+};
 DynamicView.instanceCounter = 0;
 
+DynamicView.prototype.destroy = function() {
+  this.model.removeListener(this.listener);
+};
 DynamicView.prototype.getModel = function() {
 	return this.model;
 };

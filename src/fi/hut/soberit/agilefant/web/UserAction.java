@@ -17,6 +17,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.hibernate.EmailValidator;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -49,7 +50,7 @@ public class UserAction extends ActionSupport implements CRUDAction {
 
     private String email;
     
-//    private AFTime weekHours;
+    private ExactEstimate weekEffort;
     
     private Collection<User> users;
     
@@ -236,6 +237,8 @@ public class UserAction extends ActionSupport implements CRUDAction {
         }
         storable.setEmail(this.user.getEmail());
 
+        storable.setWeekEffort(weekEffort);
+        
         Collection<Team> listOfTeams = new ArrayList<Team>();
         for (int teamId : teamIds.keySet()) {
             listOfTeams.add(teamBusiness.retrieve(teamId));
@@ -310,13 +313,13 @@ public class UserAction extends ActionSupport implements CRUDAction {
         this.email = email;
     }
 
-//    public AFTime getWeekHours() {
-//        return weekHours;
-//    }
-//    
-//    public void setWeekHours(AFTime hours) {
-//        this.weekHours = hours;
-//    }
+    public ExactEstimate getWeekEffort() {
+        return weekEffort;
+    }
+    
+    public void setWeekEffort(ExactEstimate weekEffort) {
+        this.weekEffort = weekEffort;
+    }
     
     public List<Team> getTeamList() {
         return teamList;

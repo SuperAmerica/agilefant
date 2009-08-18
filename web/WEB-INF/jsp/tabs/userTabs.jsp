@@ -59,7 +59,7 @@
 			        <tr>
 			            <td>Weekly hours</td>
 			            <td>*</td>
-			            <td colspan="2"><ww:textfield name="user.weekEffort" value="%{aef:minutesToString(user.weekEffort.minorUnits)}" /></td>
+			            <td colspan="2"><input type="text" name="weekEffort" value="${aef:minutesToString(user.weekEffort.minorUnits)}" /></td>
 			        </tr> 		
 					<tr>
 						<td>Password</td>

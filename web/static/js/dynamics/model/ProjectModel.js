@@ -69,10 +69,11 @@ ProjectModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
+      new MessageDisplay.OkMessage("Project saved successfully");
       me.setData(data);
     },
     error: function(request, status, error) {
-      alert("Error saving project");
+      new MessageDisplay.ErrorMessage("Error saving project");
       me.rollback();
     }
   });
@@ -84,6 +85,7 @@ ProjectModel.prototype.reload = function() {
     "ajax/projectData.action",
     {projectId: me.getId()},
     function(data,status) {
+      new MessageDisplay.OkMessage("Project reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }

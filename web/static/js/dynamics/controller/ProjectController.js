@@ -143,7 +143,15 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
   });
   config.addColumnConfiguration(3, {
     title : "Planned Size",
-    get : ProjectModel.prototype.getBacklogSize
+    title : "Planned Size",
+    get : ProjectModel.prototype.getBacklogSize,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : ProjectModel.prototype.setBacklogSize
+    }
   });
   config.addColumnConfiguration(4, {
     title : "Description",

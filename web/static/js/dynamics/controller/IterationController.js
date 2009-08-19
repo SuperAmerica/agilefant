@@ -465,7 +465,14 @@ IterationController.prototype.initIterationInfoConfig = function() {
   });
   config.addColumnConfiguration(3, {
     title : "Planned Size",
-    get : IterationModel.prototype.getBacklogSize
+    get : IterationModel.prototype.getBacklogSize,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : IterationModel.prototype.setBacklogSize
+    }
   });
   config.addColumnConfiguration(4, {
     title : "Description",

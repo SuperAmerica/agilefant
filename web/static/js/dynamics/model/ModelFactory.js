@@ -58,6 +58,7 @@ ModelFactory.classNameToType = {
 ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.model.Iteration":       IterationModel,
     "fi.hut.soberit.agilefant.model.Project":         ProjectModel,
+    "fi.hut.soberit.agilefant.model.Product":         ProductModel,
     
     "fi.hut.soberit.agilefant.model.Story":           StoryModel,
     "fi.hut.soberit.agilefant.model.StoryTO":         StoryModel,
@@ -123,7 +124,8 @@ ModelFactory.types = {
  */
 ModelFactory.initializeForTypes = {
     iteration:  "iteration",
-    project:    "project"
+    project:    "project",
+    product:    "product"
 };
 
 
@@ -327,6 +329,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       url: "ajax/projectData.action",
       params: { projectId: id },
       callback: me._constructProject
+    },
+    "product": {
+      url: "ajax/retrieveProduct.action",
+      params: { productId: id },
+      callback: me._constructProduct
     }
   };
   
@@ -355,6 +362,13 @@ ModelFactory.prototype._constructIteration = function(id, data) {
  * Internal function to construct a project
  */
 ModelFactory.prototype._constructProject = function(id, data) {
+  return ModelFactory.updateObject(data);
+};
+
+/**
+ * Internal function to construct a project
+ */
+ModelFactory.prototype._constructProduct = function(id, data) {
   return ModelFactory.updateObject(data);
 };
 

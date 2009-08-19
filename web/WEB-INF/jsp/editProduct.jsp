@@ -9,298 +9,93 @@
 <ww:actionerror />
 <ww:actionmessage />
 
+
+<div class="backlogInfo" id="backlogInfo">
+<ul class="backlogTabs">
+  <li class=""><a href="#backlogDetails"><span><img
+    alt="Edit" src="static/img/info.png" /> Info</span></a></li>
+  <li class=""><a href="#backlogAssignees"><span><img
+    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
+  <c:if test="${settings.hourReportingEnabled}">
+  <li class=""><a href="#backlogSpentEffort"><span><img
+    alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
+  </c:if>
+  <li class=""><a href="#backlogSpentEffort"><span><img
+    alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
+</ul>
+</ul>
+
+<div class="details" id="backlogDetails" style="overflow: auto;"></div>
+<div class="details" id="backlogAssignees"></div>
+<div class="details" id="backlogSpentEffort"></div>
+
+</div>
+
+
 <script type="text/javascript">
-
-var productId = ${product.id};
-
-function editProduct() {
-    toggleDiv('editProductForm'); toggleDiv('descriptionDiv'); showWysiwyg('productDescription'); return false;
-}
-
-/* Initialize the SimileAjax object */
-/*
-var SimileAjax = {
-    loaded:                 false,
-    loadingScriptsCount:    0,
-    error:                  null,
-    params:                 { bundle:"true" }
-};
-SimileAjax.Platform = new Object();*/
+$(document).ready(function() {
+  $("#backlogInfo").tabs();
+  var controller = new ProductController({
+    id: ${product.id},
+    productDetailsElement: $("#backlogDetails"),
+    storyListElement: $('#stories')
+  });
+});
 </script>
-<%--<script type="text/javascript" src="static/js/timeline/simile-ajax-bundle.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
-<!-- Include timeline -->
-<script type="text/javascript" src="static/js/timeline/timeline-load.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-bundle.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/timeline/timeline-custom.js?<ww:text name="struts.agilefantReleaseId" />"></script>
---%>
-<h2><c:out value="${product.name}" /></h2>
-<table>
-	<tbody>
-		<tr>
-			<td>
-			<div class="subItems" style="margin-top: 0" id="subItems_editProductDetails">
-			<div class="subItemHeader">
-			<table cellspacing="0" cellpadding="0">
-				<tr>
-				    <td class="iconsbefore">
-                    </td>
-					<td class="header">Details</td>
-					<td class="icons">
-					<table cellspacing="0" cellpadding="0">
-                            <tr>
-                            <td>
-					   <a href="#" onclick="editProduct(); return false;"
-					       class="editLink" title="Edit product details" />
-					   </td>
-					   </tr>
-					   </table>
-                    </td>
-				</tr>
-			</table>
-			</div>
-			<div class="subItemContent">
-			<div id="descriptionDiv" class="descriptionDiv"
-				style="display: block;">
-			<table class="infoTable" cellpadding="0" cellspacing="0">
-				<tr>
-					<td class="info1"><ww:text name="general.uniqueId"/></td>
-					<td class="info3"><aef:quickReference item="${product}" /></td>
-					<td class="info4" rowspan="2">&nbsp;</td>
-				</tr>
-				<tr>
-					<td colspan="2" class="description"><div class="backlogDescription">${product.description}</div></td>
-					<td></td>
-				</tr>
-			</table>
-			</div>
-
-			<div id="editProductForm" style="display: none;">
-			<div class="validateWrapper validateExistingProduct">
-			<form id="productEditForm" action="ajax/storeProduct.action" method="post">
-				<ww:hidden name="productId" value="%{product.id}" />
-
-				<table class="formTable">
-					<tr>
-						<td>Name</td>
-						<td>*</td>
-						<td colspan="2"><ww:textfield size="60" name="product.name" /></td>
-					</tr>
-					<tr>
-						<td>Description</td>
-						<td></td>
-						<td colspan="2"><ww:textarea name="product.description"
-							id="productDescription" cols="70" rows="10">${aef:nl2br(product.description)}</ww:textarea></td>
-					</tr>
-					<tr>
-						<td></td>
-						<td></td>
-						<c:choose>
-							<c:when test="${productId == 0}">
-								<td><ww:submit value="Create"
-								 disabled="disabled" cssClass="undisableMe" /></td>
-							</c:when>
-							<c:otherwise>
-								<td><ww:submit value="Save" />
-								<td class="deleteButton"><ww:submit
-									action="deleteProduct"
-									disabled="disabled" cssClass="undisableMe"
-									value="Delete" /></td>
-							</c:otherwise>
-						</c:choose>
-					</tr>
-				</table>
-			</form></div></div>
-			</div>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-<table>
-<%--
-    <!-- The timeline -->
-    <tr>
-    <td>
-    <div class="subItems" id="subItems_editProductRoadmap">
-    <div class="subItemHeader">
-    <table cellspacing="0" cellpadding="0">
-                            <tr>
-                                <td class="header">Product roadmap</td>
-                                <td style="width: 100px;">
-                                	<select id="productTimelinePeriod" onchange="updateTimelinePeriod(this);">
-                                		<option value="1">display quartal</option>
-                                		<option value="2">display 6 months</option>
-                                		<option value="3" selected="selected">display one year</option>
-                                		<option value="4">display three years</option>
-                                	</select>
-                                </td>
-                            </tr>
-                        </table>
-    </div>
-    
-       
-    <div id="productTimeline"></div>
-    
-    <div id="timelineLegend" style="width:100%; text-align:center; margin-bottom: 10px;">
-    <table style="margin: auto; border: 1px solid #ccc;" cellpadding="2" cellspacing="2">
-        <tr>
-            <td><div class="timeline-band-project-green" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
-            <div class="timeline-band-project-yellow" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
-            <div class="timeline-band-project-red" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
-            <div class="timeline-band-project-grey" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div>
-            <div class="timeline-band-project-black" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
-            <td>Project</td>
-            <td><div class="timeline-band-iteration" style="display:block;width:50px;height:5px;margin:2px;">&nbsp;</div></td>
-            <td>Iteration</td>
-            <td><div class="timeline-band-theme" style="display:block;width:50px;height:5px !important;margin:2px;">&nbsp;</div></td>
-            <td>Theme</td>  
-        </tr>
-    </table>
-    </div>
-    
-    </div>
-    </td>
-    </tr>
---%>
-	<tr>
-		<td>
-			<div class="subItems" id="subItems_editProductProjectList">
-				<div class="subItemHeader">
-				<table cellspacing="0" cellpadding="0">
-	                <tr>
-	                    <td class="header">
-	                    Projects
-	                    </td>
-	                    <td class="icons">
-	                    <table cellpadding="0" cellspacing="0">
-	                    <tr>
-	                    <td>
-	                    <ww:url id="createLink" namespace="ajax" action="createProject" includeParams="none">
-          						  <ww:param name="productId" value="product.id" />
-					           	</ww:url>
-						<ww:a href="%{createLink}" title="Create a new project"
-						  cssClass="openCreateDialog openProjectDialog" onclick="return false;">
-						</ww:a>
-						</td>
-						</tr>
-						</table>
-					</td>
-					</tr>
-				</table>
-				</div>
-
-				<c:if test="${!empty product.projects}">
-				<div class="subItemContent">
-				<display:table class="listTable" name="product.projects"
-					id="row" requestURI="editProduct.action">
-							
-					<display:column sortable="false" title="St." class="statusColumn">
-						<%@ include file="./inc/_projectStatusIcon.jsp"%>
-						<div id="projectTabContainer-${row.id}" class="tabContainer" style="overflow:visible; white-space: nowrap; width: 15px;"></div>
-					</display:column>		
-														
-					<display:column sortable="true" sortProperty="name" title="Name">					
-						<ww:url id="editLink" action="editProject" includeParams="none">
-							<ww:param name="projectId" value="#attr.row.id" />
-						</ww:url>
-						<ww:a
-							href="%{editLink}">
-							${aef:html(row.name)}
-						</ww:a>
-					</display:column>					
-					
-					<display:column sortable="true" sortProperty="projectType.name"
-						title="Project type">
-						<div>
-						<c:choose>
-						<c:when test="${(!empty row.projectType)}">
-							${aef:html(row.projectType.name)}
-						</c:when>
-						<c:otherwise>
-							undefined
-						</c:otherwise>
-						</c:choose>
-						</div>
-					</display:column>
-          
-          <%--
-					<display:column sortable="false" title="Iter. info">
-						<c:out value="${row.metrics.numberOfOngoingIterations}" /> / 
-						<c:out value="${row.metrics.numberOfAllIterations}" />
-					</display:column>
-          
-					
-					<display:column sortable="false" title="Assignees">
-						<c:out value="${row.metrics.assignees}" />
-					</display:column>
-          --%>					
-															
-					<display:column sortable="true" title="Start date">
-						<ww:date name="#attr.row.startDate" />
-					</display:column>
-
-					<display:column sortable="true" title="End date">
-						<ww:date name="#attr.row.endDate" />
-					</display:column>
-												
-					<display:column sortable="false" title="Actions">
-						<img src="static/img/edit.png" alt="Edit" title="Edit project" style="cursor: pointer;" onclick="handleTabEvent('projectTabContainer-${row.id}','project',${row.id},0); return false;" />						
-						<ww:url id="deleteLink" action="deleteProject" includeParams="none">
-							<ww:param name="productId" value="product.id" />
-							<ww:param name="projectId">${row.id}</ww:param>
-              <%--
-              <ww:param name="contextName">product</ww:param>
-              <ww:param name="contextObjectId">${product.id}</ww:param>
-              --%>
-						</ww:url>
-						<ww:a href="%{deleteLink}" onclick="return confirmDelete();">
-							<img src="static/img/delete_18.png" alt="Delete project" title="Delete project" style="cursor: pointer;"/>
-						</ww:a>
-					</display:column>
-				</display:table>
-				</div>
-				</c:if>
-			</div>
-		</td>
-	</tr>
-</table>
+<script type="text/javascript" src="static/js/dynamics/view/ViewPart.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/MessageDisplay.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/DynamicView.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Table.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Row.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Cell.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/RowActions.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/TableConfiguration.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Toggle.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/TableCaption.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/TableCellEditors.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/decorators.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/SplitPanel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Tabs.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/Buttons.js"></script>
 
 
-<ww:url id="createStoryLink" action="createStoryForm" namespace="ajax" includeParams="none">
-  <ww:param name="backlogId">${product.id}</ww:param>
-</ww:url>
+<script type="text/javascript" src="static/js/dynamics/model/CommonModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/BacklogModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/IterationModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/ProjectModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/ProductModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/StoryModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/TaskModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/UserModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/comparators.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/AssignmentModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/HourEntryModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/ModelFactory.js"></script>
 
-<table>
-  <tr>
-    <td>
-      <div class="subItems" id="subItems_editProductStoryList">
-        <div class="subItemHeader">
-          <table cellspacing="0" cellpadding="0">
-            <tr>
-              <td class="header">Stories</td>
-              <td class="icons">
-                <table cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td><ww:a cssClass="openCreateDialog openStoryDialog"
-                          href="%{createStoryLink}" onclick="return false;"
-                          title="Create a new story">
-                        </ww:a></td>
-                  </tr>
-                </table>     
-              </td>
-            </tr>
-          </table>
-        </div>
-        <c:if test="${!empty stories}">
-          <div class="subItemContent">
-            <%@ include file="./inc/_storyList.jsp"%>
-          </div>
-        </c:if>
-      </div>
-    </td>
-  </tr>
-</table>
+<script type="text/javascript" src="static/js/dynamics/controller/CommonController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/BacklogController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/IterationController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/ProjectController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/ProductController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/StoryController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/TaskController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/TasksWithoutStoryController.js"></script>
+
+<script type="text/javascript" src="static/js/dynamics/Dynamics.events.js"></script>
+
+<script type="text/javascript" src="static/js/utils/ArrayUtils.js"></script>
+<script type="text/javascript" src="static/js/utils/Configuration.js"></script>
+
+<script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteSelectedBox.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteBundle.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteDataProvider.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteDialog.js"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteSingleDialog.js"></script>
+
+<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+
 
 
 

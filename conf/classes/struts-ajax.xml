@@ -132,6 +132,7 @@
     <action name="retrieveProduct" method="retrieve" class="productAction">
       <result name="success" type="json">
         <param name="target">product</param>
+        <param name="patterns">+stories</param>
       </result>
     </action>
     

@@ -156,6 +156,13 @@
     </action>
     
     <action name="storeProject" method="store" class="projectAction">    
+      <interceptor-ref name="prefetchStack"/>
+      <result name="success" type="json">
+        <param name="target">project</param>
+      </result>
+    </action>
+    
+   <action name="storeNewProject" method="store" class="projectAction">    
       <result name="success" type="json">
         <param name="target">project</param>
       </result>
@@ -164,7 +171,7 @@
     <action name="projectData" class="projectAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">project</param>
-        <param name="patterns">+stories, +stories.responsibles</param>
+        <param name="patterns">+stories, +stories.responsibles, +assignments, +assignments.user</param>
       </result>
     </action>
     

@@ -22,7 +22,7 @@ public class ProjectAction implements CRUDAction, Prefetching {
     @PrefetchId
     private int projectId;
     
-    private int productId;
+    private Integer productId = null;
 
     private Project project;
     

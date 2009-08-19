@@ -461,6 +461,7 @@ $(document).ready(function() {
 </script>
 
 <script type="text/javascript" src="static/js/dynamics/view/ViewPart.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/MessageDisplay.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/DynamicView.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Table.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Row.js"></script>

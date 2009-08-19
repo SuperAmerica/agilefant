@@ -12,7 +12,7 @@ var AssignmentModel = function() {
     user: null
   };
   this.copiedFields = {
-    "baselineLoad": "baselineLoad",
+    "personalLoad": "personalLoad",
     "availability": "availability"
   };
 };
@@ -22,14 +22,54 @@ AssignmentModel.prototype = new CommonModel();
 AssignmentModel.prototype._setData = function(newData) {
   this.id = newData.id;
   this._copyFields(newData);
-  this._updateRelations(ModelFactory.types.user, newData.user);
+  if(newData.user) {
+    this._updateRelations(ModelFactory.types.user, newData.user);
+  }
 };
-AssignmentModel.prototype.getBaselineLoad = function() {
-  return this.currentData.baselineLoad;
+
+AssignmentModel.prototype._saveData = function(id, changedData) {
+  var me = this;
+  
+  var url = "ajax/modifyAssigment.action";
+  var data = {};
+  
+  jQuery.extend(data, this.serializeFields("assignment", changedData));
+
+  data.assignmentId = id;    
+  
+  jQuery.ajax({
+    type: "POST",
+    url: url,
+    async: true,
+    cache: false,
+    data: data,
+    dataType: "json",
+    success: function(data, status) {
+      new MessageDisplay.OkMessage("Assignment saved successfully");
+      me.setData(data);
+    },
+    error: function(request, status, error) {
+      new MessageDisplay.ErrorMessage("Error saving assignment");
+    }
+  });
+};
+
+AssignmentModel.prototype.getPersonalLoad = function() {
+  return this.currentData.personalLoad;
 };
 
 AssignmentModel.prototype.getAvailability = function() {
   return this.currentData.availability;
+};
+
+AssignmentModel.prototype.setPersonalLoad = function(personalLoad) {
+  this.currentData.personalLoad = personalLoad;
+  this._commitIfNotInTransaction();
+};
+
+AssignmentModel.prototype.setAvailability = function(availability) {
+  this.currentData.availability = availability;
+  this._commitIfNotInTransaction();
 };
 
 AssignmentModel.prototype.getUser = function() {

@@ -4,11 +4,12 @@ import static org.easymock.EasyMock.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.AssignmentBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
-import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 
 public class AssignmentActionTest {
 
@@ -29,7 +30,7 @@ public class AssignmentActionTest {
 
     @Test
     public void testModifyAssignment() {
-        assignment.setPersonalLoad(new ExactEstimate(3400));
+        assignment.setPersonalLoad(new SignedExactEstimate(3400));
         assignment.setAvailability((short) 400);
         expect(
                 assignmentBusiness.store(313, assignment.getPersonalLoad(),
@@ -67,5 +68,14 @@ public class AssignmentActionTest {
         testable.setAssignmentId(313);
         testable.delete();
         verify(assignmentBusiness);
+    }
+    
+    @Test
+    public void testInitializePrefetchedData() {
+        expect(assignmentBusiness.retrieve(123)).andReturn(assignment);
+        replay(assignmentBusiness);
+        testable.initializePrefetchedData(123);
+        verify(assignmentBusiness);
+        assertEquals(assignment, testable.getAssignment());
     }
 }

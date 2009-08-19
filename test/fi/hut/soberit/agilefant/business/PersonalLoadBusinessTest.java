@@ -27,6 +27,7 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -408,10 +409,10 @@ public class PersonalLoadBusinessTest {
         initDataset();
         Assignment iterationAssignment = new Assignment(user, iter);
         iterationAssignment.setId(1);
-        iterationAssignment.setPersonalLoad(new ExactEstimate(50));// 10 per day
+        iterationAssignment.setPersonalLoad(new SignedExactEstimate(50));// 10 per day
         Assignment projectAssignmnet = new Assignment(user, proj);
         projectAssignmnet.setId(2);
-        projectAssignmnet.setPersonalLoad(new ExactEstimate(500));// 100 per day
+        projectAssignmnet.setPersonalLoad(new SignedExactEstimate(500));// 100 per day
 
         DateTime iterStart = new DateTime(2009, 6, 1, 0, 0, 0, 0);
         DateTime iterEnd = new DateTime(2009, 6, 7, 0, 0, 0, 0);

@@ -28,6 +28,7 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
@@ -242,7 +243,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             }
             if(userIds.size() > 0) {
                 iterationData.setAssignments(this.assignmentBusiness.addMultiple(
-                        iter, userIds, ExactEstimate.ZERO,
+                        iter, userIds, SignedExactEstimate.ZERO,
                         100));
                 }
         }

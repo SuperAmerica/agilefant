@@ -381,6 +381,7 @@
     <!-- Assigment actions -->
     
     <action name="modifyAssigment" method="modify" class="assignmentAction">
+        <interceptor-ref name="prefetchStack" />
     	<result name="success" type="json">
     		<param name="target">assignment</param>
     	</result>

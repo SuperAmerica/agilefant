@@ -20,10 +20,10 @@ import fi.hut.soberit.agilefant.business.impl.AssignmentBusinessImpl;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
-import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.User;
 
 public class AssignmentBusinessTest {
@@ -88,22 +88,22 @@ public class AssignmentBusinessTest {
     
     @Test
     public void testStore() {
-        ExactEstimate personalLoad = new ExactEstimate(100L);
+        SignedExactEstimate personalLoad = new SignedExactEstimate(100L);
         expect(assignmentDAO.get(10)).andReturn(assignment);
         assignmentDAO.store(assignment);
         replayAll();
-        testable.store(10, personalLoad, (short) 100);
-        assertEquals((short) 100, assignment.getAvailability());
+        testable.store(10, personalLoad, 100);
+        assertEquals(100, assignment.getAvailability());
         assertEquals(personalLoad, assignment.getPersonalLoad());
         verifyAll();
     }
 
     @Test(expected = ObjectNotFoundException.class)
     public void testStore_notFound() {
-        ExactEstimate personalLoad = new ExactEstimate(100L);
+        SignedExactEstimate personalLoad = new SignedExactEstimate(100L);
         expect(assignmentDAO.get(10)).andThrow(new ObjectNotFoundException());
         replayAll();
-        testable.store(10, personalLoad, (short) 100);
+        testable.store(10, personalLoad, 100);
         verifyAll();
     }
 
@@ -118,7 +118,7 @@ public class AssignmentBusinessTest {
         Iteration iter = new Iteration();
         Assignment existingAssignment = new Assignment(user3, iter);
         iter.getAssignments().add(existingAssignment);
-        ExactEstimate personalLoad = new ExactEstimate(100L);
+        SignedExactEstimate personalLoad = new SignedExactEstimate(100L);
 
         Capture<Assignment> capt1 = new Capture<Assignment>();
         Capture<Assignment> capt2 = new Capture<Assignment>();
@@ -133,7 +133,7 @@ public class AssignmentBusinessTest {
         replayAll();
         
         Collection<Assignment> actual = testable.addMultiple(iter, new HashSet<Integer>(Arrays.asList(1, 2)),
-                personalLoad, (short) 100);
+                personalLoad, 100);
         
         assertEquals(3, actual.size());
         

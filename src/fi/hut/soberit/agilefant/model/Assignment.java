@@ -28,19 +28,19 @@ public class Assignment implements Serializable {
     private int id;
     private Backlog backlog;
     private User user;
-    private ExactEstimate personalLoad;
+    private SignedExactEstimate personalLoad;
     private int availability = 100;
 
     /**
      * Deviation from project's default overhead.
      */
-    public void setPersonalLoad(ExactEstimate personalLoad) {
+    public void setPersonalLoad(SignedExactEstimate personalLoad) {
         this.personalLoad = personalLoad;
     }
 
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "delta_personal_load")))
-    public ExactEstimate getPersonalLoad() {
+    public SignedExactEstimate getPersonalLoad() {
         return personalLoad;
     }
     

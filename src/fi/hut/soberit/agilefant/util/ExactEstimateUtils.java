@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.util;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 
 public class ExactEstimateUtils {
 
@@ -10,10 +11,20 @@ public class ExactEstimateUtils {
         if (estimate == null) return "";
         return parser.convertToString(estimate.getMinorUnits());
     }
+    
+    public static String convertToString(SignedExactEstimate estimate) {
+        if (estimate == null) return "";
+        return parser.convertToString(estimate.getMinorUnits());
+    }
 
     public static ExactEstimate convertFromString(String string) {
         if (string == null) return new ExactEstimate();
         return new ExactEstimate(parser.convertFromString(string));
+    }
+    
+    public static ExactEstimate convertSignedFromString(String string) {
+        if (string == null) return new ExactEstimate();
+        return new ExactEstimate(parser.convertSignedFromString(string));
     }
     
     public static double extractMajorUnits(ExactEstimate estimate) {

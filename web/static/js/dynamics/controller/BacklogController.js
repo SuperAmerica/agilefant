@@ -58,14 +58,29 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
   config.addColumnConfiguration(1, {
     minWidth : 200,
     autoScale : true,
-    title : "Baseline load",
-    get : AssignmentModel.prototype.getBaselineLoad
+    title : "Personal baseline load adjustment",
+    get : AssignmentModel.prototype.getPersonalLoad,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      acceptNegative: true,
+      set: AssignmentModel.prototype.setPersonalLoad,
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+    }
   });
   config.addColumnConfiguration(2, {
     minWidth : 200,
     autoScale : true,
     title : "Availability",
-    get : AssignmentModel.prototype.getAvailability
+    get : AssignmentModel.prototype.getAvailability,
+    editable: true,
+    edit: {
+      editor: "Number",
+      minVal: 0,
+      maxVal: 100,
+      set: AssignmentModel.prototype.setAvailability
+    }
   });
   this.assigneeListConfiguration = config;
 };

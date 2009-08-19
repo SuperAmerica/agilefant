@@ -29,6 +29,7 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -380,7 +381,7 @@ public class IterationBusinessTest {
         expect(iterationDAO.create(EasyMock.isA(Iteration.class))).andReturn(new Integer(16));
         expect(iterationDAO.get(16)).andReturn(iteration);
         expect(assignmentBusiness.addMultiple(EasyMock.eq(iteration), 
-                EasyMock.capture(userIdCapture), EasyMock.eq(ExactEstimate.ZERO), 
+                EasyMock.capture(userIdCapture), EasyMock.eq(SignedExactEstimate.ZERO), 
                 EasyMock.eq(100))).andReturn(Arrays.asList(projectAssignment));
         replayAll();
         

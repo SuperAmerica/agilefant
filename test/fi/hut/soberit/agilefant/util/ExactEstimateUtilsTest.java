@@ -6,50 +6,61 @@ import static org.junit.Assert.assertEquals;
 
 public class ExactEstimateUtilsTest {
 
+    private void testConvertFromString(long expected, String input) {
+        assertEquals(expected, ExactEstimateUtils.convertFromString(input)
+                .getMinorUnits().longValue());
+    }
+    
+    private void testConvertSignedFromString(long expected, String input) {
+        assertEquals(expected, ExactEstimateUtils.convertSignedFromString(input)
+                .getMinorUnits().longValue());
+    }
     @Test
     public void testValidHours() {
-        assertEquals((long)60, ExactEstimateUtils.convertFromString("1h")
-                .getMinorUnits().longValue());
+        testConvertFromString(60L, "1h");
+        testConvertSignedFromString(-60L, "-1h");
     }
 
     @Test
     public void testValidHoursWithWhitespace() {
-        assertEquals((long)60, ExactEstimateUtils.convertFromString("  1h   ")
-                .getMinorUnits().longValue());
+        testConvertFromString(60L, "  1h   ");
+        testConvertSignedFromString(-60L, "  -1h   ");
     }
 
     @Test
     public void testValidHoursWithDecimalsAsComma() {
-        assertEquals((long)90, ExactEstimateUtils.convertFromString("1,5h")
-                .getMinorUnits().longValue());
+        testConvertFromString(90L, "1,5h");
+        testConvertSignedFromString(-90L, "-1,5h");
     }
 
     @Test
     public void testValidHoursWithDecimalsAsPeriod() {
-        assertEquals((long)90, ExactEstimateUtils.convertFromString("1.5h")
-                .getMinorUnits().longValue());
+        testConvertFromString(90L, "1.5h");
+        testConvertSignedFromString(-90L, "-1.5h");
     }
 
     @Test
     public void testValidMinutes() {
-        assertEquals((long)15, ExactEstimateUtils.convertFromString("15min")
-                .getMinorUnits().longValue());
+        testConvertFromString(15L, "15min");
+        testConvertSignedFromString(-15L, "-15min");
     }
 
     @Test
     public void testValidHoursAndMinutes() {
-        assertEquals((long)105, ExactEstimateUtils.convertFromString("1.5h15min")
-                .getMinorUnits().longValue());
+        testConvertFromString(105L, "1.5h15min");
+        testConvertSignedFromString(-105L, "-1.5h15min");
     }
 
     @Test
     public void testValidHoursAndMinutesWithWhitespace() {
-        assertEquals((long)105, ExactEstimateUtils.convertFromString(
-                "   1.5h   15min        ").getMinorUnits().longValue());
+        testConvertFromString(105L, "   1.5h   15min        ");
+        testConvertSignedFromString(-105L, "   -1.5h   15min        ");
     }
 
     @Test
     public void testWithoutUnit() {
+        testConvertFromString(60L, "1");
+        testConvertSignedFromString(-60L, "-1");
         assertEquals(60L, ExactEstimateUtils.convertFromString("1").getMinorUnits().longValue());
     }
 
@@ -57,5 +68,9 @@ public class ExactEstimateUtilsTest {
     public void testWithoutMinuteUnit() {
         ExactEstimateUtils.convertFromString("1h 15").getMinorUnits();
     }
-
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testWithoutSignedMinuteUnit() {
+        ExactEstimateUtils.convertSignedFromString("-1h 15").getMinorUnits();
+    }
 }

@@ -203,6 +203,12 @@ $(document).ready(function() {
     mockElement.expects().val().andReturn("10min 1h");
     mockElement.expects().val().andReturn("10x 15min");
     
+    mockElement.expects().val().andReturn("-15min");
+    mockElement.expects().val().andReturn("-1h");
+    mockElement.expects().val().andReturn("-1h 15min");
+    mockElement.expects().val().andReturn("-1.5h");
+    mockElement.expects().val().andReturn("-1.5");
+    
     context.options = {required: false};
     ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "Not required and empty");
     context.options = {required: true};
@@ -217,6 +223,15 @@ $(document).ready(function() {
     ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "1.2h 10min");
     ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "10mn 1h");
     ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "10x 15min");
+    
+    context.options.acceptNegative = true;
+    
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-15min");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1h");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1h 15min");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1.5h");
+    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1.5");
+    
 
   });
 });

@@ -18,11 +18,11 @@ public class MinorUnitsParser {
         this.minorUnit = minorUnit;
         this.majorUnit = majorUnit;
         this.minorsPerMajor = minorsPerMajor;
-        this.PARSER_PATTERN = Pattern.compile("\\s*((\\d+)([.,]\\d+)?"
-                + majorUnit + ")?\\s*((\\d+)" + minorUnit + ")?\\s*");
+        this.PARSER_PATTERN = Pattern.compile("\\s*((-?\\d+)([.,]\\d+)?"
+                + majorUnit + ")?\\s*((-?\\d+)" + minorUnit + ")?\\s*");
         
         this.NUMERIC_PATTERN =
-            Pattern.compile("^\\s*(\\d+)([.,]\\d+)?(" + majorUnit + ")?\\s*$");
+            Pattern.compile("^\\s*(-?\\d+)([.,]\\d+)?(" + majorUnit + ")?\\s*$");
     }
 
     public String convertToString(long minorsUnits) {
@@ -42,10 +42,22 @@ public class MinorUnitsParser {
     }
 
     public long convertFromString(String string) {
+        long minors = this.convert(string);
+        if(minors < 0L) {
+            throw new IllegalArgumentException("Value can not be negative.");
+        }
+        return minors;
+    }
+    
+    public long convertSignedFromString(String string) {
+        return this.convert(string);
+    }
+    private long convert(String string) {
         int parsedMajors;
         double parsedMajorsDecimals;
         int parsedMinors;
-
+        boolean isNegative = false;
+        
         Matcher numericMatcher = NUMERIC_PATTERN.matcher(string);
         if (numericMatcher.matches()) {
             parsedMajors = parseIntSafely(numericMatcher.group(1));
@@ -64,9 +76,18 @@ public class MinorUnitsParser {
             }
         }
 
+        if(parsedMinors < 0 || parsedMajors < 0 || parsedMajorsDecimals < 0) {
+            isNegative = true;
+            parsedMajors = Math.abs(parsedMajors);
+            parsedMajorsDecimals = Math.abs(parsedMajorsDecimals);
+            parsedMinors = Math.abs(parsedMinors);
+        }
+        
         long minors = parsedMinors + parsedMajors * minorsPerMajor;
         minors = minors + (long) (parsedMajorsDecimals * minorsPerMajor);
-
+        if(isNegative) {
+            minors *= -1L;
+        }
         return minors;
     }
 

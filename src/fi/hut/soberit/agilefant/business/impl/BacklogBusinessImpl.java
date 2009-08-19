@@ -17,7 +17,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -117,7 +117,7 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     public void addAssignees(int backlogId, Set<Integer> userIds) {
         Backlog backlog = this.retrieve(backlogId);
         this.assignmentBusiness.addMultiple(backlog, userIds,
-                ExactEstimate.ZERO, 100);
+                SignedExactEstimate.ZERO, 100);
     }
 
 }

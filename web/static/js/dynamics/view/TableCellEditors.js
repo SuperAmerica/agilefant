@@ -158,6 +158,40 @@ TableEditors.Text.prototype.isValid = function() {
  * @constructor
  * @base TableEditors.CommonEditor
  */
+TableEditors.Number = function(row, cell, options) {
+  this.element = $('<input type="text"/>').width("98%").appendTo(
+      cell.getElement());
+  this.init(row, cell, options);
+};
+
+TableEditors.Number.prototype = new TableEditors.CommonEditor();
+TableEditors.Number.prototype.isValid = function() {
+  var value = this.element.val();
+  if(this.options.required && value !== 0 && !value) {
+    this.showError("Required field.");
+    return false;
+  }
+  var intVal = parseInt(value, 10);
+  if(value !== 0 && !value) {
+    this.showError("Value must be an integer.");
+    return false;
+  }
+  if((this.options.minVal || this.options.minVal === 0) && this.options.minVal > intVal) {
+    this.showError("Value must be greater than " + this.options.minVal);
+    return false;
+  } 
+  if((this.options.maxVal || this.options.maxVal === 0) && this.options.maxVal < intVal) {
+    this.showError("Value must be smaller than " + this.options.maxVal);
+    return false;
+  }
+  return true;
+};
+
+/**
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
 TableEditors.SingleSelection = function(row, cell, options) {
   this.element = $('<select />').width("98%").appendTo(cell.getElement());
   this.init(row, cell, options);
@@ -259,6 +293,12 @@ TableEditors.ExactEstimate.prototype.isValid = function() {
     return false;
   } else if(!this.options.required && !value) {
     return true;
+  }
+  if(this.options.acceptNegative) {
+    var minusTest = /^[ ]*\-/;
+    if(value.match(minusTest)) {
+      value = value.replace(minusTest,"");
+    }
   }
   var majorOnly = /^[0-9]+h?$/; //10h
   var minorOnly = /^([1-9]|[1-5]\d)min$/; //10min

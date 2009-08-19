@@ -14,9 +14,9 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.User;
 
 @Service("assignmentBusiness")
@@ -24,17 +24,10 @@ import fi.hut.soberit.agilefant.model.User;
 public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
         implements AssignmentBusiness {
 
-    @Autowired
     private AssignmentDAO assignmentDAO;
-
-    @Autowired
     private UserBusiness userBusiness;
-
-    public AssignmentBusinessImpl() {
-        this.genericDAO = assignmentDAO;
-    }
     
-    public Assignment store(int assignmentId, ExactEstimate personalLoad,
+    public Assignment store(int assignmentId, SignedExactEstimate personalLoad,
             int availability) {
         Assignment persisted = this.retrieve(assignmentId);
         persisted.setPersonalLoad(personalLoad);
@@ -62,7 +55,7 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
     }
     
     public Collection<Assignment> addMultiple(Backlog backlog,
-            Set<Integer> userIds, ExactEstimate personalLoad, int availability) {
+            Set<Integer> userIds, SignedExactEstimate personalLoad, int availability) {
         Collection<Assignment> assignments = this.getAssignemntsFromBacklog(backlog);
         Set<Integer> assignedUserIds = this.getAssignedUserIds(backlog);
         for (int userId : userIds) {
@@ -79,11 +72,13 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
         return assignments;
     }
 
+    @Autowired
     public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
         this.assignmentDAO = assignmentDAO;
         this.genericDAO = assignmentDAO;
     }
 
+    @Autowired
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }

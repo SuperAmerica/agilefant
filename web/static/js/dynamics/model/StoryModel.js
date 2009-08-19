@@ -76,13 +76,14 @@ StoryModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
+      new MessageDisplay.OkMessage("Story saved successfully");  
       me.setData(data);
       if(!id) {
         me.relations.backlog.addStory(me);
       }
     },
     error: function(request, status, error) {
-      alert("Error saving story");
+      new MessageDisplay.ErrorMessage("Error saving story");
     }
   });
 };
@@ -93,6 +94,7 @@ StoryModel.prototype.reload = function() {
     "ajax/retrieveStory.action",
     {storyId: me.getId()},
     function(data,status) {
+      new MessageDisplay.OkMessage("Story data reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }
@@ -104,7 +106,10 @@ StoryModel.prototype._remove = function() {
   jQuery.post(
       "ajax/deleteStory.action",
       {storyId: me.getId()},
-      function(data, status) { return; }
+      function(data, status) {
+        new MessageDisplay.OkMessage("Story removed");
+        return;
+      }
   );
 };
 

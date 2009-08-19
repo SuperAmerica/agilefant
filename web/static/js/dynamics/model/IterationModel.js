@@ -74,10 +74,11 @@ IterationModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
+      new MessageDisplay.OkMessage("Iteration data saved successfully");
       me.setData(data);
     },
     error: function(request, status, error) {
-      alert("Error saving iteration");
+      new MessageDisplay.ErrorMessage("Error saving iteration");
       me.rollback();
     }
   });
@@ -89,6 +90,7 @@ IterationModel.prototype.reload = function() {
     "ajax/iterationData.action",
     {iterationId: this.getId()},
     function(data,status) {
+      new MessageDisplay.OkMessage("Iteration data reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }

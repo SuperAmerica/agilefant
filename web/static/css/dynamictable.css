@@ -109,25 +109,28 @@
   cursor: pointer;
 }  
 
+div.genericMessage {
+  font-weight: bold;
+  position: fixed;
+  top: 200px;
+  right: 100px;
+  padding: 3px;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  z-index: 3699;
+}
+
 div.okMessage {
-	background-color:#3f0;
-	border:1px solid #CCCCCC;
-	font-weight:bold;
-	padding:3px 5px;
-	position:fixed;
-	right:100px;
-	top:82px;
-	z-index:3699;
+	background-color: #cfc;
+	border-color: #55CC55;
+	color: #3a3;
 }
 div.errorMessage {
-	background-color:#f33;
-	border:1px solid #CCCCCC;
-	font-weight:bold;
-	padding:3px 5px;
-	position:fixed;
-	right:100px;
-	top:82px;
-	z-index:3699;
+	background-color: #fcc;
+	border-color: #c55;
+	color: #a33;
 }
 
 div.gear {

@@ -77,6 +77,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
+      new MessageDisplay.OkMessage("Task saved successfully");
       me.setData(data);
       if(!id) {
         if (me.relations.story instanceof StoryModel) {
@@ -88,7 +89,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
       }
     },
     error: function(request, status, error) {
-      alert("Error saving story");
+      new MessageDisplay.ErrorMessage("Error saving task");
     }
   });
 };
@@ -98,7 +99,10 @@ TaskModel.prototype._remove = function() {
   jQuery.post(
       "ajax/deleteTask.action",
       {taskId: me.getId()},
-      function(data, status) { return; }
+      function(data, status) {
+        new MessageDisplay.OkMessage("Task removed");
+        return;
+      }
   );
 };
 

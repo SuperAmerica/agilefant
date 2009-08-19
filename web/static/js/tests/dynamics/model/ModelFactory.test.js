@@ -32,18 +32,20 @@ $(document).ready(function() {
     var expectedType = "iteration";
     var internalInitializeCallCount = 0;
     
-    var cb = function(data) {};
+    var cbCalled = false;
+    var cb = function(data) { cbCalled = true; };
     
     this.instance._getData = function(type, id, callback) {
       same(type, expectedType, "Type was correct");
       same(id, expectedId, "Id was correct");
-      same(callback, cb, "Callback is correct");
+      callback();
       internalInitializeCallCount++;
     };
     
     
     var actual = ModelFactory.initializeFor("iteration", 222, cb);
-    
+    ok(cbCalled, "Callback is called");
+    ok(ModelFactory.currentTimer, "Timer set");
     same(internalInitializeCallCount, 1, "Internal initialize called");
    });
   

@@ -155,9 +155,31 @@ ModelFactory.initializeFor = function(type, id, callback) {
   if (!type || !id || !(type in ModelFactory.initializeForTypes)) {
     throw new TypeError("Type not recognized");
   }
-  ModelFactory.getInstance()._getData(type, id, callback);
+  var cb = function(obj) {
+    ModelFactory.reloadEvery(obj, 30000);
+    callback(obj);
+  };
+  ModelFactory.getInstance()._getData(type, id, cb);
 };
 
+/**
+ * The current timer of reloadEvery.
+ * @member ModelFactory
+ */
+ModelFactory.currentTimer = null;
+
+/**
+ * Set the object to reload every <code>time</code> milliseconds.
+ * <p>
+ * Can only be set to one object at a time.
+ */
+ModelFactory.reloadEvery = function(object, time) {
+  var timeoutFunction = function() {
+    object.reload();
+    ModelFactory.currentTimer = setTimeout(timeoutFunction, time);
+  };
+  ModelFactory.currentTimer = setTimeout(timeoutFunction, time);
+};
 
 /**
  * Adds an object to the <code>ModelFactory</code>'s data.

@@ -391,6 +391,22 @@ public class IterationBusinessTest {
     }
 
     @Test
+    public void testCreateIteration_noProjectAssigments() {
+        DateTime start = new DateTime();
+        DateTime end = start.plusDays(3);
+        Iteration iter = new Iteration();
+        iter.setStartDate(start.toDate());
+        iter.setEndDate(end.toDate());
+        iter.setParent(project);
+        iteration.setParent(project);        
+        expect(backlogBusiness.retrieve(11)).andReturn(project);
+        expect(iterationDAO.create(EasyMock.isA(Iteration.class))).andReturn(new Integer(16));
+        expect(iterationDAO.get(16)).andReturn(iteration);
+        replayAll();
+        this.iterationBusiness.store(0, 11, iter);
+        verifyAll();
+    }
+    @Test
     public void testMoveTo() {
         Project newParent = new Project();
         newParent.setId(911);

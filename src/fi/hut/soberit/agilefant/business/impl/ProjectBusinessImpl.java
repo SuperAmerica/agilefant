@@ -74,9 +74,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         persistable.setProjectType(project.getProjectType());
         persistable.setDescription(project.getDescription());
         persistable.setStatus(project.getStatus());
-        persistable.setBacklogSize(project.getBacklogSize());
-        persistable.setParent(project.getParent());
-        
+        persistable.setBacklogSize(project.getBacklogSize());        
         Project stored = persistProject(persistable);
         
         return stored;

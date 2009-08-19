@@ -96,10 +96,9 @@ public class ProjectActionTest {
 
     @Test
     public void testInitializePrefetchData() {
-        projectAction.setProjectId(123);
         expect(projectBusiness.retrieve(123)).andReturn(project);
         replay(projectBusiness);
-        projectAction.retrieve();
+        projectAction.initializePrefetchedData(123);
         assertEquals(project, projectAction.getProject());
         verify(projectBusiness);
     }

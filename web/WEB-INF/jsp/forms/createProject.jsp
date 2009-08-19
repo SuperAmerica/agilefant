@@ -3,24 +3,13 @@
 <aef:productList />
 <%--<aef:projectTypeList id="projectTypes"/>--%>
 
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#userChooserLink-createProject').userChooser({
-        backlogIdField: '#createProject_backlogId',
-        userListContainer: '#userListContainer-createProject',
-        renderFor: 'project',
-        storyId: 0
-    });
-});
-</script>
-
 <ww:date name="%{new java.util.Date()}" id="start"
 	format="%{getText('struts.shortDateTime.format')}" />
 <ww:date name="%{new java.util.Date()}" id="end"
 	format="%{getText('struts.shortDateTime.format')}" />
 
 <div class="validateWrapper validateNewProject">
-<form action="ajax/storeProject.action" method="post">
+<form action="ajax/storeNewProject.action" method="post">
 	<div id="editProjectForm">
 			<ww:hidden name="projectId" id="createProject_backlogId" value="0" />
 			<table class="formTable">
@@ -49,6 +38,7 @@ $(document).ready(function() {
 						</c:forEach>
 					</select></td>
 				</tr>
+        <%--
 				<tr>
 					<td>Project type</td>
 					<td></td>
@@ -59,6 +49,7 @@ $(document).ready(function() {
 							value="%{project.projectType.id}" />
 					</td>
 				</tr>
+        --%>
 				<tr>
 					<td>Status</td>
 					<td></td>
@@ -72,7 +63,7 @@ $(document).ready(function() {
 					<td>Baseline load</td>
 					<td></td>
 					<td colspan="2"><ww:textfield size="10" id="default_overhead"
-						name="project.defaultOverhead" />/ person / week
+						name="project.baselineLoad" />/ person / week
 						<span class="errorMessage"></span>	
 						</td>
 				</tr>
@@ -87,7 +78,7 @@ $(document).ready(function() {
 					<td>Start date</td>
 					<td>*</td>
 					<td colspan="2"><aef:datepicker
-						id="start_date_${project.id}" name="startDate"
+						id="start_date_${project.id}" name="project.startDate"
 						format="%{getText('struts.shortDateTime.format')}"
 						value="${start}" /><label for="start_date">&nbsp;</label></td>
 				</tr>
@@ -95,22 +86,11 @@ $(document).ready(function() {
 					<td>End date</td>
 					<td>*</td>
 					<td colspan="2"><aef:datepicker
-						id="end_date_${project.id}" name="endDate"
+						id="end_date_${project.id}" name="project.endDate"
 						format="%{getText('struts.shortDateTime.format')}"
 						value="${end}" /><label for="end_date">&nbsp;</label></td>
-				</tr>
-				<tr>
-					<td>Assigned Users</td>
-					<td></td>
-					<td colspan="2">
-					<div>
-		                <a id="userChooserLink-createProject" href="#" class="assigneeLink">
-		                    <img src="static/img/users.png"/>
-		                    <span id="userListContainer-createProject">
-		                    (none)
-		                    </span>
-		                </a>
-		            </div>
+	
+		        </tr>
 				<tr>
 					<td>Description</td>
 					<td></td>

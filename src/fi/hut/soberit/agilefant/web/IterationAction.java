@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,8 @@ public class IterationAction implements
     public String create() {
         iterationId = 0;
         iteration = new Iteration();
+        iteration.setStartDate(new Date());
+        iteration.setEndDate(new Date());
         return Action.SUCCESS;
     }
 
@@ -67,11 +71,6 @@ public class IterationAction implements
     )
     */
     public String store() {
-        iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
-        return Action.SUCCESS;
-    }
-    
-    public String storeNew() {
         iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
         return Action.SUCCESS;
     }

@@ -240,9 +240,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
                     .getAssignments()) {
                 userIds.add(assignment.getUser().getId());
             }
-            iterationData.setAssignments(this.assignmentBusiness.addMultiple(
-                    iter, userIds, ExactEstimate.ZERO,
-                    (short) 100));
+            if(userIds.size() > 0) {
+                iterationData.setAssignments(this.assignmentBusiness.addMultiple(
+                        iter, userIds, ExactEstimate.ZERO,
+                        100));
+                }
         }
         return iter;
     }

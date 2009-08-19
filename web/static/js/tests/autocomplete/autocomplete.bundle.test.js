@@ -59,7 +59,7 @@ $(document).ready(function() {
   });
   
   
-  test("Initialization", function() {
+  test("MultiSelect Initialization", function() {
     var returnedData = [
       {
         id: 1,

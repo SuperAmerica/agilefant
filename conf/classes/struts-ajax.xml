@@ -262,7 +262,11 @@
       </result>
     </action>
     
-    <action name="moveStory" method="moveStory" class="storyAction" />
+    <action name="moveStory" method="moveStory" class="storyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
     
     <action name="storyTabs" method="retrieve"  class="storyAction">
       <result type="dispatcher">/WEB-INF/jsp/tabs/storyTabs.jsp</result>
@@ -407,12 +411,18 @@
     <!-- /User load actions -->
 
 	<!-- Utility actions -->
-	<action name="userChooserData" class="userTeamAutocomplete">
+	<action name="userChooserData" class="autocompleteAction" method="userTeamData">
 		<result name="success" type="json">
-			<param name="target">userTeamData</param>
+			<param name="target">autocompleteData</param>
 			<param name="patterns">-class</param>
 		</result>
 	</action>
+	<action name="backlogChooserData" class="autocompleteAction" method="backlogData">
+    <result name="success" type="json">
+      <param name="target">autocompleteData</param>
+      <param name="patterns">-class</param>
+    </result>
+  </action>
 	<!-- /Utility actions -->
   </package>
   

@@ -10,7 +10,8 @@ AutocompleteDataProvider = function() {};
 
 AutocompleteDataProvider.vars = {
   urls: {
-    "usersAndTeams": "ajax/userChooserData.action"
+    "usersAndTeams": "ajax/userChooserData.action",
+    "backlogs": "ajax/backlogChooserData.action"
   }
 };
 
@@ -62,7 +63,7 @@ AutocompleteDataProvider.prototype._fetchData = function(url,params) {
       returnedData = data;
     },
     error: function(request, status, error) {
-      commonView.showError("Unable to load data for autocompletion");
+      new MessageDisplay.ErrorMessage("Unable to load data for autocompletion");
     }
   });
   return returnedData;

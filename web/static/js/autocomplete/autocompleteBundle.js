@@ -5,6 +5,8 @@
 
 var AutocompleteVars = {
     cssClasses: {
+      autocompleteDialog: 'autocomplete-dialog',
+  
       autocompleteElement: 'autocomplete',
       searchParent: 'autocomplete-searchBoxContainer',
       selectedParent: 'autocomplete-selectedBoxContainer',
@@ -16,7 +18,8 @@ var AutocompleteVars = {
       
       suggestionIcon: 'autocomplete-suggestionIcon',
       suggestionUserIcon: 'autocomplete-userIcon',
-      suggestionTeamIcon: 'autocomplete-teamIcon'
+      suggestionTeamIcon: 'autocomplete-teamIcon',
+      suggestionBacklogIcon: 'autocomplete-backlogIcon'
     },
     keyCodes: {
       enter: 13,
@@ -40,8 +43,9 @@ var Autocomplete = function(element, options) {
   this.searchBoxContainer = $('<div/>');
   this.selectedBoxContainer = $('<div/>');
   this.selectedBox = new AutocompleteSelected(this);
-  this.searchBox = new AutocompleteSearch(this.selectedBox);
+  this.searchBox = new AutocompleteSearch(this);
   this.options = {
+      multiSelect: true,
       dataType: "",
       preSelected: []
   };
@@ -55,14 +59,27 @@ jQuery.fn.autocomplete = function(options) {
   autocomplete.initialize();
 };
 
-
+/**
+ * Initialize the <code>Autocomplete</code> selector.
+ * <p>
+ * Will check whether single or multi select should be used.
+ */
 Autocomplete.prototype.initialize = function() {
   this.element = $('<div/>').addClass(AutocompleteVars.cssClasses.autocompleteElement)
     .appendTo(this.parent);
-  
   this.dataProvider = AutocompleteDataProvider.getInstance();
   
   this.searchBoxContainer.appendTo(this.element);
+  
+  if (this.options.multiSelect) {
+    this._initializeMultiSelect();
+  }
+  else {
+    this._initializeSingleSelect();
+  }
+};
+
+Autocomplete.prototype._initializeMultiSelect = function() {
   this.selectedBoxContainer.appendTo(this.element);
   
   this.getData();
@@ -74,6 +91,22 @@ Autocomplete.prototype.initialize = function() {
   this.selectedBox.initialize(this.selectedBoxContainer);
   for(var i = 0; i < this.options.preSelected.length; i++) { 
     this.selectedBox.addItemById(this.options.preSelected[i]);
+  }
+};
+
+Autocomplete.prototype._initializeSingleSelect = function() {
+  this.getData();
+  this.searchBox.setItems(this.items);
+  this.searchBox.initialize(this.searchBoxContainer);
+};
+
+
+Autocomplete.prototype.selectItem = function(item) {
+  if (this.options.multiSelect) {
+    this.selectedBox.addItem(item);
+  }
+  else {
+    this.options.singleSelectCallback(item);
   }
 };
 
@@ -91,6 +124,10 @@ Autocomplete.prototype.remove = function() {
 
 Autocomplete.prototype.getSelectedIds = function() {
   return this.selectedBox.getSelectedIds();
+};
+
+Autocomplete.prototype.isItemSelected = function(id) {
+  return this.selectedBox.isItemSelected(id);
 };
 
 Autocomplete.prototype.getSelectedItems = function() {

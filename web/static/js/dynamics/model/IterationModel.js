@@ -90,7 +90,6 @@ IterationModel.prototype.reload = function() {
     "ajax/iterationData.action",
     {iterationId: this.getId()},
     function(data,status) {
-      new MessageDisplay.OkMessage("Iteration data reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }

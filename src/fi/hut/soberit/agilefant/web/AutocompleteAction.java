@@ -15,26 +15,30 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 
-@Component("userTeamAutocomplete")
+@Component("autocompleteAction")
 @Scope("prototype")
-public class UserTeamAutcompleteAction extends ActionSupport {
+public class AutocompleteAction extends ActionSupport {
 
     private static final long serialVersionUID = 7282682342820966296L;
     
-    private List<AutocompleteDataNode> userTeamData = null;
+    private List<AutocompleteDataNode> autocompleteData = null;
     
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
     
     @SuppressWarnings("unchecked")
-    @Override
-    public String execute() {
-        userTeamData = new ArrayList<AutocompleteDataNode>();
-        userTeamData.addAll(transferObjectBusiness.constructUserAutocompleteData());
-        userTeamData.addAll(transferObjectBusiness.constructTeamAutocompleteData());
+    public String userTeamData() {
+        autocompleteData = new ArrayList<AutocompleteDataNode>();
+        autocompleteData.addAll(transferObjectBusiness.constructUserAutocompleteData());
+        autocompleteData.addAll(transferObjectBusiness.constructTeamAutocompleteData());
         
-        Collections.sort(userTeamData, new PropertyComparator("name", true, true));
+        Collections.sort(autocompleteData, new PropertyComparator("name", true, true));
         
+        return Action.SUCCESS;
+    }
+    
+    public String backlogData() {
+        autocompleteData = transferObjectBusiness.constructBacklogAutocompleteData();
         return Action.SUCCESS;
     }
 
@@ -43,8 +47,8 @@ public class UserTeamAutcompleteAction extends ActionSupport {
         this.transferObjectBusiness = transferObjectBusiness;
     }
 
-    public List<AutocompleteDataNode> getUserTeamData() {
-        return userTeamData;
+    public List<AutocompleteDataNode> getAutocompleteData() {
+        return autocompleteData;
     }
 
 }

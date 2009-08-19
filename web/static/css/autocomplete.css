@@ -3,6 +3,10 @@
   width: 400px;
 }
 
+.autocomplete-dialog {
+  overflow: visible !important;  
+}
+
 .autocomplete-searchBoxContainer {
   width: 100%;
   border-bottom: 1px solid #ccc;
@@ -31,6 +35,7 @@
   border-top-width: 0;
   left: 5px;
   top: -2px;
+  z-index: 1000;
 }
 
 .autocomplete-suggestionList li {
@@ -87,6 +92,10 @@
 
 .autocomplete-teamIcon {
   background-image: url('../img/team.png');
+}
+
+.autocomplete-backlogIcon {
+  background-image: url('../img/backlog.png');
 }
 
 .autocomplete-selectedItemsList li .autocomplete-selectedName {

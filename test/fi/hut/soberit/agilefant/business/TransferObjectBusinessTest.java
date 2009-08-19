@@ -5,10 +5,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isNull;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,8 +17,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.TransferObjectBusinessImpl;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
@@ -40,6 +39,7 @@ public class TransferObjectBusinessTest {
     private StoryBusiness storyBusiness;
     private UserBusiness userBusiness;
     private TeamBusiness teamBusiness;
+    private BacklogBusiness backlogBusiness;
     
     Project project;
     Iteration iteration;
@@ -65,7 +65,19 @@ public class TransferObjectBusinessTest {
         
         teamBusiness = createMock(TeamBusiness.class);
         transferObjectBusiness.setTeamBusiness(teamBusiness);
+        
+        backlogBusiness = createMock(BacklogBusiness.class);
+        transferObjectBusiness.setBacklogBusiness(backlogBusiness);
     }
+    
+    private void verifyAll() {
+        verify(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness);
+    }
+
+    private void replayAll() {
+        replay(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness);
+    }
+    
     
     @Before
     public void setUp() {
@@ -98,14 +110,14 @@ public class TransferObjectBusinessTest {
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
 
-        replay(projectBusiness, hourEntryBusiness);
+        replayAll();
 
         Collection<Story> actualStories = new ArrayList<Story>();
         actualStories.addAll(transferObjectBusiness
                 .constructBacklogDataWithUserData(iteration, Arrays
                         .asList(assignedUser)));
 
-        verify(projectBusiness, hourEntryBusiness);
+        verifyAll();
 
         assertTrue("List does not contain correct story transfer object",
                 containsStoryWithId(story1.getId(), actualStories));
@@ -114,6 +126,10 @@ public class TransferObjectBusinessTest {
         assertTrue("Story 1 transfer object does not contain correct task transfer object",
                 containsTaskWithId(task.getId(), story1.getId(), actualStories));
     }
+
+
+
+
 
     @Test
     public void testContructBacklogDataWithUserData_emptyIteration() {
@@ -136,12 +152,12 @@ public class TransferObjectBusinessTest {
         expect(projectBusiness.getAssignedUsers((Project) task.getIteration()
                         .getParent())).andReturn(Arrays.asList(assignedUser));
 
-        replay(projectBusiness, hourEntryBusiness);
+        replayAll();
 
         assertEquals(task.getId(), transferObjectBusiness.constructTaskTO(task)
                 .getId());
 
-        verify(projectBusiness, hourEntryBusiness);
+        verifyAll();
     }
     
     @SuppressWarnings("unchecked")
@@ -157,12 +173,12 @@ public class TransferObjectBusinessTest {
         expect(storyBusiness.getStorysProjectResponsibles(story1))
             .andReturn(Arrays.asList(assignedUser));
 
-        replay(projectBusiness, hourEntryBusiness);
+        replayAll();
 
         assertEquals(task.getId(), transferObjectBusiness.constructTaskTO(task)
                 .getId());
 
-        verify(projectBusiness, hourEntryBusiness);
+        verifyAll();
     }
 
     @SuppressWarnings("unchecked")
@@ -175,10 +191,10 @@ public class TransferObjectBusinessTest {
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
 
-        replay(projectBusiness, hourEntryBusiness);
+        replayAll();
         TaskTO actualTO = transferObjectBusiness.constructTaskTO(task, Arrays
                 .asList(assignedUser));
-        verify(projectBusiness, hourEntryBusiness);
+        verifyAll();
 
         assertEquals("Task and transfer object id's not equal", task.getId(),
                 actualTO.getId());
@@ -208,10 +224,10 @@ public class TransferObjectBusinessTest {
         story1.setBacklog(iteration);
         story1.setResponsibles(new HashSet<User>(Arrays.asList(assignedUser, notAssignedUser)));
 
-        replay(projectBusiness);
+        replayAll();
         StoryTO actualTO = transferObjectBusiness.constructStoryTO(story1,
                 Arrays.asList(assignedUser));
-        verify(projectBusiness);
+        verifyAll();
 
         assertEquals("Task and transfer object id's not equal", story1.getId(),
                 actualTO.getId());
@@ -244,14 +260,14 @@ public class TransferObjectBusinessTest {
         
         expect(userBusiness.retrieveAll()).andReturn(Arrays.asList(user));
         
-        replay(userBusiness);
+        replayAll();
         List<AutocompleteDataNode> actual = this.transferObjectBusiness.constructUserAutocompleteData();
         assertEquals(1, actual.size());
         assertEquals(1, (int)actual.get(0).getId());
         assertEquals("daadaa", actual.get(0).getName());
         assertEquals("fi.hut.soberit.agilefant.model.User", actual.get(0).getBaseClassName());
         assertNull(actual.get(0).getIdList());
-        verify(userBusiness);
+        verifyAll();
     }
     
     @Test
@@ -267,14 +283,14 @@ public class TransferObjectBusinessTest {
         
         expect(teamBusiness.retrieveAll()).andReturn(Arrays.asList(team));
         
-        replay(teamBusiness);
+        replayAll();
         List<AutocompleteDataNode> actual = this.transferObjectBusiness.constructTeamAutocompleteData();
         assertEquals(1, actual.size());
         assertEquals(1, (int)actual.get(0).getId());
         assertEquals("daa", actual.get(0).getName());
         assertEquals("fi.hut.soberit.agilefant.model.Team", actual.get(0).getBaseClassName());
         assertEquals(2, actual.get(0).getIdList().size());
-        verify(teamBusiness);
+        verifyAll();
     }
 
     /**
@@ -317,4 +333,65 @@ public class TransferObjectBusinessTest {
         return idFound;
     }
 
+    /*
+     * BACKLOG AUTOCOMPLETE DATA
+     */
+    @Test
+    public void testGetBacklogAutocompleteData() {
+        Backlog product = new Product();
+        product.setId(1);
+        product.setName("Product");
+        
+        Backlog project = new Project();
+        project.setId(7);
+        project.setParent(product);
+        project.setName("Project");
+        
+        Backlog iterationUnderProject = new Iteration();
+        iterationUnderProject.setId(333);
+        iterationUnderProject.setParent(project);
+        iterationUnderProject.setName("Iter 1");
+        
+        Backlog iterationUnderProduct = new Iteration();
+        iterationUnderProduct.setId(615);
+        iterationUnderProduct.setParent(product);
+        iterationUnderProduct.setName("Iter 2");
+        
+        expect(backlogBusiness.retrieveAll())
+            .andReturn(Arrays.asList(product, project, iterationUnderProject, iterationUnderProduct));
+        
+        replayAll();
+        
+        List<AutocompleteDataNode> nodes = transferObjectBusiness
+                .constructBacklogAutocompleteData();
+        
+        verifyAll();
+        
+        assertEquals(4, nodes.size());
+        
+        AutocompleteDataNode node = getDataNodeById(1, nodes);
+        assertEquals(Backlog.class.getCanonicalName(), node.getBaseClassName());
+        assertEquals("Product", node.getName());
+        
+        node = getDataNodeById(7, nodes);
+        assertEquals("Product > Project", node.getName());
+        
+        node = getDataNodeById(333, nodes);
+        assertEquals("Product > Project > Iter 1", node.getName());
+        
+        node = getDataNodeById(615, nodes);
+        assertEquals("Product > Iter 2", node.getName());
+    }
+    
+    /**
+     * Helper method to get a <code>AutocompleteDataNode</code> with specified id.
+     */
+    private AutocompleteDataNode getDataNodeById(int id, Collection<AutocompleteDataNode> nodes) {
+        for (AutocompleteDataNode adn : nodes) {
+            if (adn.getId() == id) {
+                return adn;
+            }
+        }
+        return null;
+    }
 }

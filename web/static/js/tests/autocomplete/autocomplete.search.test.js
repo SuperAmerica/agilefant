@@ -7,10 +7,10 @@ $(document).ready(function() {
   module("Autocomplete: search box",{
     setup: function() {
       this.mockControl = new MockControl();
-      this.selBox = this.mockControl.createMock(AutocompleteSelected);
+      this.bundle = this.mockControl.createMock(Autocomplete);
 
       this.asParent = $('<div/>').appendTo(document.body);
-      this.as = new AutocompleteSearch(this.selBox);
+      this.as = new AutocompleteSearch(this.bundle);
       
       this.as.initialize(this.asParent);
       
@@ -315,7 +315,7 @@ $(document).ready(function() {
         name: 'Taavi'
     };
     
-    this.selBox.expects().addItem(item);
+    this.bundle.expects().selectItem(item);
     
     this.as.selectItem(item);
     ok(selectionCancelled, "Suggestion list should be hidden");
@@ -333,10 +333,10 @@ $(document).ready(function() {
     
     var me = this;
     
-    this.selBox.expects().isItemSelected(1).andReturn(false);
-    this.selBox.expects().isItemSelected(4).andReturn(false);
-    this.selBox.expects().isItemSelected(5).andReturn(true);
-    this.selBox.expects().isItemSelected(7).andReturn(false);
+    this.bundle.expects().isItemSelected(1).andReturn(false);
+    this.bundle.expects().isItemSelected(4).andReturn(false);
+    this.bundle.expects().isItemSelected(5).andReturn(true);
+    this.bundle.expects().isItemSelected(7).andReturn(false);
     
     var getLength = function(text) {      
       return me.as.filterSuggestions(me.testDataSet, text).length;

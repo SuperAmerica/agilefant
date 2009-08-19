@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
@@ -31,6 +33,9 @@ import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 @Transactional
 public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
+    @Autowired
+    private BacklogBusiness backlogBusiness;
+    
     @Autowired
     private ProjectBusiness projectBusiness;
     
@@ -125,6 +130,29 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    public List<AutocompleteDataNode> constructBacklogAutocompleteData() {
+        Collection<Backlog> allBacklogs = this.backlogBusiness.retrieveAll();
+        List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
+        for (Backlog blog : allBacklogs) {
+            String name = recurseBacklogNameWithParents(blog);
+            AutocompleteDataNode node = new AutocompleteDataNode(Backlog.class,
+                    blog.getId(), name);
+            autocompleteData.add(node);
+        }
+        return autocompleteData; 
+    }
+    
+    private String recurseBacklogNameWithParents(Backlog blog) {
+        Backlog parent = blog.getParent();
+        String name = blog.getName();
+        while (parent != null) {
+            name = parent.getName() + " > " + name;
+            parent = parent.getParent();
+        }
+        return name;
+    }
+    
+    /** {@inheritDoc} */
     public TaskTO constructTaskTO(Task task) {
         Collection<User> assignedUsers;
         if (task.getStory() != null) {
@@ -155,6 +183,10 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setTeamBusiness(TeamBusiness teamBusiness) {
         this.teamBusiness = teamBusiness;
+    }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
     
 }

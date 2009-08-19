@@ -51,4 +51,9 @@ public interface TransferObjectBusiness {
      * Get all teams in AutoCompleteData containers.
      */
     public List<AutocompleteDataNode> constructTeamAutocompleteData();
+    
+    /**
+     * Get all backlogs in AutoCompleteData containers.
+     */
+    public List<AutocompleteDataNode> constructBacklogAutocompleteData();
 }

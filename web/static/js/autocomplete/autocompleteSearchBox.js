@@ -8,11 +8,11 @@
  * @see Autocomplete
  * @constructor
  */
-var AutocompleteSearch = function(selectedItemsBox) {
+var AutocompleteSearch = function(bundle) {
   // Elements
   this.element = null;
   this.searchInput = null;
-  this.selectedItemsBox = selectedItemsBox;
+  this.bundle = bundle;
   this.suggestionList = null;
   
   // Data
@@ -100,7 +100,8 @@ AutocompleteSearch.prototype.selectCurrentItem = function() {
 };
 
 AutocompleteSearch.prototype.selectItem = function(item) {
-  this.selectedItemsBox.addItem(item);
+  this.bundle.selectItem(item);
+  //this.selectedItemsBox.addItem(item);
   this.cancelSelection();
 };
 
@@ -132,7 +133,7 @@ AutocompleteSearch.prototype.filterSuggestions = function(list, match) {
   var me = this;
   var returnedList = list.filter(function(element, index, array) {
     return (element.enabled && me.matchSearchString(element.name, match) &&
-        !me.selectedItemsBox.isItemSelected(element.id));
+        !me.bundle.isItemSelected(element.id));
   });
   return returnedList;
 };
@@ -181,7 +182,8 @@ AutocompleteSearch.prototype.renderSuggestionList = function() {
 AutocompleteSearch.prototype.addSuggestionListItemIcon = function(element, baseClass) {
   var classNamesToIconClasses = {
       "fi.hut.soberit.agilefant.model.User": AutocompleteVars.cssClasses.suggestionUserIcon,
-      "fi.hut.soberit.agilefant.model.Team": AutocompleteVars.cssClasses.suggestionTeamIcon
+      "fi.hut.soberit.agilefant.model.Team": AutocompleteVars.cssClasses.suggestionTeamIcon,
+      "fi.hut.soberit.agilefant.model.Backlog": AutocompleteVars.cssClasses.suggestionBacklogIcon
   };
   
   element.addClass(AutocompleteVars.cssClasses.suggestionIcon);

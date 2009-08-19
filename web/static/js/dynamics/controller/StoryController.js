@@ -73,7 +73,13 @@ StoryController.prototype.cancelEdit = function() {
  * 
  */
 StoryController.prototype.moveStory = function() {
-
+  var me = this;
+  $(window).autocompleteSingleDialog({
+    dataType: "backlogs",
+    cancel: function() { return; },
+    callback: function(id) { me.model.moveStory(id); },
+    title: "Select backlog to move to"
+  });
 };
 
 /**

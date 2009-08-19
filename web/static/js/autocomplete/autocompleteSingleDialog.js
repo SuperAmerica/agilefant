@@ -1,6 +1,6 @@
 /** @ignore */
 (function($){
-	$.widget("ui.autocompleteDialog", {
+	$.widget("ui.autocompleteSingleDialog", {
 		_init: function() {
 			var elData = this.element.data(this.widgetName);
 			this.element.removeData(this.widgetName);
@@ -10,22 +10,20 @@
 			var autocomplete = new Autocomplete(this.element, {
 				dataType: this.options.dataType,
 				preSelected: this.options.selected,
-				multiSelect: true
+				multiSelect: false,
+				singleSelectCallback: function(val) { me.select(val); }
 			});
 			autocomplete.initialize();
 			this.setValue(this.options.selected);
 			var dialog = this.element.dialog({
 				buttons: {
-					"Select": function() {
-						me.select();
-					},
 					"Cancel": function() {
 						me._cancel();
 					}
 				},
 				width: 500,
-				minHeight: 400,
-				position: 'top',
+				minHeight: 150,
+				position: 'center',
 				title: this.options.title,
 				close: function() {
 				  me._cancel();
@@ -38,17 +36,12 @@
 		  this.options.cancel.call(this);
 		  this.destroy();
 		},
-		select: function() {
-			this.options.callback.apply(this, this.value());
+		select: function(item) {
+			this.options.callback.apply(this, [item.id]);
 			this.destroy();
 		},
-		value: function() {
-			var ids = this.element.data("autocomplete").getSelectedIds();
-			var items = this.element.data("autocomplete").getSelectedItems();
-			return [ids, items];
-		},
 		setValue: function() {
-			
+		  
 		},
 		destroy: function() {
 			this.element.remove();

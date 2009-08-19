@@ -94,10 +94,27 @@ StoryModel.prototype.reload = function() {
     "ajax/retrieveStory.action",
     {storyId: me.getId()},
     function(data,status) {
-      new MessageDisplay.OkMessage("Story data reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }
+  );
+};
+
+StoryModel.prototype.moveStory = function(backlogId) {
+  var me = this;
+  jQuery.post(
+      "ajax/moveStory.action",
+      {storyId: me.getId(), backlogId: backlogId, moveTasks: "true"},
+      function(data,status) {
+        if (status === "success") {
+          new MessageDisplay.OkMessage("Story moved");
+          me.getParent().reload();
+          me.callListeners(new DynamicsEvents.EditEvent(me));  
+        }
+        else {
+          new MessageDisplay.ErrorMessage("An error occurred moving the story");
+        }
+      }
   );
 };
 
@@ -142,6 +159,11 @@ StoryModel.prototype.setName = function(name) {
   this.currentData.name = name;
   this._commitIfNotInTransaction();
 };
+
+StoryModel.prototype.getParent = function() {
+  return this.getBacklog();
+};
+
 
 StoryModel.prototype.getPriority = function() {
   return this.currentData.priority;

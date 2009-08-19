@@ -5,9 +5,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,91 +13,32 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 public class ProjectActionTest {
-    
+
     ProjectAction projectAction;
     ProjectBusiness projectBusiness;
-    
+
     Project project;
     ProjectDataContainer projectDataContainer;
-    
-    
+
     @Before
     public void setUp_dependencies() {
         projectAction = new ProjectAction();
-        
+
         projectBusiness = createMock(ProjectBusiness.class);
         projectAction.setProjectBusiness(projectBusiness);
     }
-    
+
     @Before
     public void setUp_data() {
         project = new Project();
         project.setId(123);
     }
-    
-    @Before
-    public void setUp_projectDataContainer() {
-        projectDataContainer = new ProjectDataContainer();
-        
-        Story story1 = new Story();
-        story1.setName("Story 1");
-        Story story2 = new Story();
-        story2.setName("Story 2");
-        
-        projectDataContainer.setStories(Arrays.asList(story1, story2));
-    }
-    
-    @Test
-    public void testProjectContents() {
-        projectAction.setProjectId(project.getId());
-        
-        expect(projectBusiness.getProjectContents(project.getId()))
-            .andReturn(projectDataContainer);
-        replay(projectBusiness);
-        
-        assertEquals(Action.SUCCESS, projectAction.projectContents());
-        assertEquals(2, projectAction.getProjectContents().getStories().size());
-        
-        verify(projectBusiness);
-    }
-    
-    @Test
-    public void testProjectContents_secondInput() {
-        projectAction.setProjectId(project.getId());
-        
-        Story anotherStory = new Story();
-        projectDataContainer.setStories(Arrays.asList(anotherStory));
-        
-        expect(projectBusiness.getProjectContents(project.getId()))
-            .andReturn(projectDataContainer);
-        replay(projectBusiness);
-        
-        assertEquals(Action.SUCCESS, projectAction.projectContents());
-        assertTrue(projectAction.getProjectContents().getStories().contains(anotherStory));
-        
-        verify(projectBusiness);
-    }
-    
-    @Test(expected = ObjectNotFoundException.class)
-    public void testProjectContents_nonExistentProject() {
-        projectAction.setProjectId(-1);
-        
-        expect(projectBusiness.getProjectContents(-1))
-            .andThrow(new ObjectNotFoundException());
-        replay(projectBusiness);
-        
-        projectAction.projectContents();
-        
-        verify(projectBusiness);
-    }
-    
+
     @Test
     public void testProjectMetrics() {
         ProjectMetrics metrics = new ProjectMetrics();
@@ -107,10 +46,62 @@ public class ProjectActionTest {
         expect(projectBusiness.retrieve(project.getId())).andReturn(project);
         expect(projectBusiness.getProjectMetrics(project)).andReturn(metrics);
         replay(projectBusiness);
-        
+
         assertEquals(Action.SUCCESS, projectAction.projectMetrics());
         assertEquals(metrics, projectAction.getProjectMetrics());
-        
+
         verify(projectBusiness);
     }
+
+    @Test
+    public void testCreate() {
+        projectAction.setProject(null);
+        projectAction.create();
+        assertNotNull(projectAction.getProject());
+        assertNotNull(projectAction.getProject().getStartDate());
+        assertNotNull(projectAction.getProject().getEndDate());
+    }
+
+    @Test
+    public void testRetrieve() {
+        projectAction.setProjectId(123);
+        expect(projectBusiness.retrieve(123)).andReturn(project);
+        replay(projectBusiness);
+        projectAction.retrieve();
+        assertEquals(project, projectAction.getProject());
+        verify(projectBusiness);
+    }
+
+    @Test
+    public void testStore() {
+        Project dummy = new Project();
+        projectAction.setProductId(313);
+        projectAction.setProjectId(123);
+        projectAction.setProject(project);
+        expect(projectBusiness.store(123, 313, project)).andReturn(dummy);
+        replay(projectBusiness);
+        projectAction.store();
+        assertEquals(dummy, projectAction.getProject());
+        verify(projectBusiness);
+    }
+
+    @Test
+    public void testDelete() {
+        projectAction.setProjectId(123);
+        projectBusiness.delete(123);
+        replay(projectBusiness);
+        projectAction.delete();
+        verify(projectBusiness);
+    }
+
+    @Test
+    public void testInitializePrefetchData() {
+        projectAction.setProjectId(123);
+        expect(projectBusiness.retrieve(123)).andReturn(project);
+        replay(projectBusiness);
+        projectAction.retrieve();
+        assertEquals(project, projectAction.getProject());
+        verify(projectBusiness);
+    }
+
 }

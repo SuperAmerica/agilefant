@@ -1,25 +1,20 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
-import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Assignment;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
-import fi.hut.soberit.agilefant.util.ListUtils;
 
 @Service("projectBusiness")
 @Transactional
@@ -28,9 +23,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
 
     private ProjectDAO projectDAO;
     private BacklogDAO backlogDAO;
-    private UserBusiness userBusiness;
-    private AssignmentDAO assignmentDAO;
-    private TransferObjectBusiness transferObjectBusiness;
+    private ProductBusiness productBusiness;
 
     @Autowired
     public void setProjectDAO(ProjectDAO projectDAO) {
@@ -41,37 +34,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Autowired
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
-    }
-
-    @Autowired
-    public void setUserBusiness(UserBusiness userBusiness) {
-        this.userBusiness = userBusiness;
-    }
+    }    
     
     @Autowired
-    public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
-        this.assignmentDAO = assignmentDAO;
-    }
-    
-    @Autowired
-    public void setTransferObjectBusiness(
-            TransferObjectBusiness transferObjectBusiness) {
-        this.transferObjectBusiness = transferObjectBusiness;
-    }
-    
-    
-    /** {@inheritDoc} */
-    @Transactional(readOnly = true)
-    public ProjectDataContainer getProjectContents(int projectId) {
-        ProjectDataContainer data = new ProjectDataContainer();
-        
-        Project project = retrieve(projectId);
-        
-        Collection<User> assignedUsers = projectDAO.getAssignedUsers(project);
-        
-        data.getStories().addAll(transferObjectBusiness.constructBacklogDataWithUserData(project, assignedUsers));
-        
-        return data;
+    public void setProductBusiness(ProductBusiness productBusiness) {
+        this.productBusiness = productBusiness;
     }
     
     /** {@inheritDoc} */
@@ -87,35 +54,32 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     }
     
     /** {@inheritDoc} */
-    public Project storeProject(Project project,
-            Collection<Assignment> assignments) throws ObjectNotFoundException,
+    public Project store(int projectId,
+            Integer productId, Project project) throws ObjectNotFoundException,
             IllegalArgumentException {
-        // Store the project
-        Project persistable = getPersistable(project);
+
+        Project persistable = new Project();
+        if (projectId > 0) {
+            persistable = this.retrieve(projectId);       
+        } 
+        validateProjectData(project, projectId, productId);
+        if(productId != null ){
+            Product product = this.productBusiness.retrieve(productId);
+            persistable.setParent(product);
+        }
+        
+        persistable.setName(project.getName());
+        persistable.setStartDate(project.getStartDate());
+        persistable.setEndDate(project.getEndDate());
+        persistable.setProjectType(project.getProjectType());
+        persistable.setDescription(project.getDescription());
+        persistable.setStatus(project.getStatus());
+        persistable.setBacklogSize(project.getBacklogSize());
+        persistable.setParent(project.getParent());
+        
         Project stored = persistProject(persistable);
         
-        // Set the assignments
-        setProjectAssignments(stored, assignments);
-        
         return stored;
-    }
-    
-    /** {@inheritDoc} */
-    public void setProjectAssignments(Project project,
-            Collection<Assignment> assignments) {
-        // Clear all previous assignments
-        for (Assignment previousAssignment : project.getAssignments()) {
-            assignmentDAO.remove(previousAssignment);
-        }
-        if (assignments == null) {
-            return;
-        }
-        // Set the new assignments
-        for (Assignment newAssignment : assignments) {
-            newAssignment.setBacklog(project);
-            project.getAssignments().add(newAssignment);
-            assignmentDAO.store(newAssignment);
-        }
     }
     
     /**
@@ -135,58 +99,21 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         }
     }
     
-    /** Populates the persistent items fields with new data. 
-     * @throws ObjectNotFoundException if a project with the given id was not found (id > 0)
-     * @throws IllegalArgumentException TODO
-     */
-    private Project getPersistable(Project project)
-            throws ObjectNotFoundException, IllegalArgumentException {
-        Project storable;
-
-        if (project.getId() > 0) {
-            storable = this.retrieve(project.getId());
-
-            // Validates the data
-            validateProjectData(project);
-            
-            // Populate data
-            storable.setName(project.getName());
-            storable.setStartDate(project.getStartDate());
-            storable.setEndDate(project.getEndDate());
-            storable.setProjectType(project.getProjectType());
-            storable.setDescription(project.getDescription());
-            storable.setStatus(project.getStatus());
-            storable.setBacklogSize(project.getBacklogSize());
-            storable.setParent(project.getParent());
-            
-        } else {
-            validateProjectData(project);
-            storable = project;
-        }
-        return storable;
-    }
-    
     /**
      * Validates the given project's data.
      * <p>
      * Currently checks start and end date. 
      */
-    private static void validateProjectData(Project project)
+    private static void validateProjectData(Project project, int projectId, Integer productId)
         throws IllegalArgumentException {
         if (project.getStartDate().after(project.getEndDate())) {
             throw new IllegalArgumentException("Project start date after end date.");
         }
+        if(projectId == 0 && productId == null) {
+            throw new IllegalArgumentException("New project must have a parent product");
+        }
     }
 
-    /** {@inheritDoc} */
-    @Transactional(readOnly = true)
-    public Collection<User> getUsersAssignableToProject(Project project) {
-        Collection<User> assignableUsers = new ArrayList<User>();
-        assignableUsers.addAll(userBusiness.getEnabledUsers());
-        assignableUsers.addAll(this.getAssignedUsers(project));
-        assignableUsers = ListUtils.removeDuplicates(assignableUsers);
-        return assignableUsers;
-    }
 
     /** {@inheritDoc} */
     @Transactional(readOnly = true)

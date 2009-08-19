@@ -19,7 +19,8 @@ var IterationModel = function() {
     "description": "description",
     "startDate": "startDate",
     "endDate": "endDate",
-    "backlogSize": "backlogSize"
+    "backlogSize": "backlogSize",
+    "baselineLoad": "baselineLoad"
   };
 };
 
@@ -148,5 +149,14 @@ IterationModel.prototype.getBacklogSize = function() {
 
 IterationModel.prototype.setBacklogSize = function(backlogSize) {
   this.currentData.backlogSize = backlogSize;
+  this._commitIfNotInTransaction();
+};
+
+IterationModel.prototype.getBaselineLoad = function() {
+  return this.currentData.baselineLoad;
+};
+
+IterationModel.prototype.setBaselineLoad = function(baselineLoad) {
+  this.currentData.baselineLoad = baselineLoad;
   this._commitIfNotInTransaction();
 };

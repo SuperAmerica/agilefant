@@ -49,5 +49,12 @@ var DynamicsDecorators = {
       initials.push(userList[i].getInitials());
     }
     return initials.join(", ");
+  },
+  totalPersonalLoadDecorator: function(value) {
+    var baseline = this.getBacklog().getBaselineLoad();
+    var strBaseline = DynamicsDecorators.exactEstimateDecorator(baseline);
+    var strValue = DynamicsDecorators.exactEstimateDecorator(value);
+    var strTotal = DynamicsDecorators.exactEstimateDecorator(value + baseline);
+    return strBaseline + " + " + strValue + " = " + strTotal;
   }
 };

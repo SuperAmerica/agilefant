@@ -75,3 +75,7 @@ AssignmentModel.prototype.setAvailability = function(availability) {
 AssignmentModel.prototype.getUser = function() {
   return this.relations.user;
 };
+
+AssignmentModel.prototype.getBacklog = function() {
+  return this.relations.backlog;
+};

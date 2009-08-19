@@ -58,7 +58,15 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
   config.addColumnConfiguration(1, {
     minWidth : 200,
     autoScale : true,
-    title : "Personal baseline load adjustment",
+    title : "Personal load",
+    get : AssignmentModel.prototype.getPersonalLoad,
+    decorator: DynamicsDecorators.totalPersonalLoadDecorator
+  });
+  
+  config.addColumnConfiguration(2, {
+    minWidth : 200,
+    autoScale : true,
+    title : "Personal load adjustment",
     get : AssignmentModel.prototype.getPersonalLoad,
     decorator: DynamicsDecorators.exactEstimateDecorator,
     editable: true,
@@ -69,7 +77,7 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
       decorator: DynamicsDecorators.exactEstimateEditDecorator,
     }
   });
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(3, {
     minWidth : 200,
     autoScale : true,
     title : "Availability",

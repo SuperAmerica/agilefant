@@ -36,7 +36,6 @@ public class AssignmentAction extends ActionSupport implements Prefetching {
 
     public void initializePrefetchedData(int objectId) {
         assignment = this.assignmentBusiness.retrieve(objectId);
-
     }
 
     public Assignment getAssignment() {

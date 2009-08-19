@@ -22,9 +22,9 @@ public class ExactEstimateUtils {
         return new ExactEstimate(parser.convertFromString(string));
     }
     
-    public static ExactEstimate convertSignedFromString(String string) {
-        if (string == null) return new ExactEstimate();
-        return new ExactEstimate(parser.convertSignedFromString(string));
+    public static SignedExactEstimate convertSignedFromString(String string) {
+        if (string == null) return new SignedExactEstimate();
+        return new SignedExactEstimate(parser.convertSignedFromString(string));
     }
     
     public static double extractMajorUnits(ExactEstimate estimate) {

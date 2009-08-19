@@ -93,7 +93,7 @@ DynamicTableCell.prototype.render = function() {
 	  return;
 	}
 	if (decorator) {
-		value = decorator(value);
+		value = decorator.call(model,value);
 	}
 	this.setValue(value);
 };

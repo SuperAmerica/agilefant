@@ -154,6 +154,17 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
     }
   });
   config.addColumnConfiguration(4, {
+    title : "Baseline load",
+    get : ProjectModel.prototype.getBaselineLoad,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : ProjectModel.prototype.setBaselineLoad
+    }
+  });
+  config.addColumnConfiguration(5, {
     title : "Description",
     get : ProjectModel.prototype.getDescription,
     editable : true,

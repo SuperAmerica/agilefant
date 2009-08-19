@@ -14,7 +14,8 @@
     <mapping class="fi.hut.soberit.agilefant.model.Assignment" />		
 		<mapping class="fi.hut.soberit.agilefant.model.Backlog" />
 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHourEntry" />
-    <mapping class="fi.hut.soberit.agilefant.model.ExactEstimate" />		
+        <mapping class="fi.hut.soberit.agilefant.model.ExactEstimate" />
+        <mapping class="fi.hut.soberit.agilefant.model.SignedExactEstimate" />		
 		<mapping class="fi.hut.soberit.agilefant.model.Iteration" />
 		<mapping class="fi.hut.soberit.agilefant.model.IterationHistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Product" />

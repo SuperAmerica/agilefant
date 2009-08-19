@@ -475,6 +475,17 @@ IterationController.prototype.initIterationInfoConfig = function() {
     }
   });
   config.addColumnConfiguration(4, {
+    title : "Baseline load",
+    get : IterationModel.prototype.getBaselineLoad,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : IterationModel.prototype.setBaselineLoad
+    }
+  });
+  config.addColumnConfiguration(5, {
     title : "Description",
     get : IterationModel.prototype.getDescription,
     editable : true,

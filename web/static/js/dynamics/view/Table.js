@@ -116,6 +116,15 @@ DynamicTable.prototype._bindEvents = function() {
     var targetRow = ui.item.data("row");
     me.removeRow(targetRow);
   });
+  
+  this.element.bind("sortover", function(event, ui) {
+    ui.item.data("sortactive", true);
+  });
+  
+  this.element.bind("sortout", function(event, ui) {
+    ui.item.data("sortactive", false);
+  });
+  
 };
 DynamicTable.prototype._computeColumns = function() {
   var columnConfigs = this.config.getColumns();
@@ -185,6 +194,21 @@ DynamicTable.prototype.layout = function() {
       }
     });
     this.element.sortable(opts);
+    if(this.config.getDropOptions) {
+      var dropOptions = this.config.getDropOptions();
+      var opt = { 
+          drop: function(event, ui) {
+            if(ui.draggable.data("oversortable")) {
+                var rowObj = $(this).data("row");
+                var model = rowObj.getModel();
+                var controller = rowObj.getController();
+                dropOptions.callback.call(controller, model);
+            }
+        }
+      };
+      jQuery.extend(opt, dropOptions);
+      this.element.find(".dynamicTableDataRow").droppable(opt);
+    }
   }
 };
 

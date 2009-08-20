@@ -146,6 +146,7 @@ var DynamicTableConfiguration = function(options) {
 	this.options = {
 			rowControllerFactory: function() {},
 			dataSource: null,
+			dropOptions: null,
 			caption: "Table",
 			saveRowCallback: function() {},
 			cancelEditRowCallback: function() {},
@@ -202,4 +203,7 @@ DynamicTableConfiguration.prototype.addColumnConfiguration = function(columnNum,
 };
 DynamicTableConfiguration.prototype.setColumnConfiguration = function(columnNum, config) {
 	this.columns[columnNum] = config;
+};
+DynamicTableConfiguration.prototype.getDropOptions = function() {
+  return this.options.dropOptions;
 };

@@ -21,7 +21,8 @@ var ProjectModel = function() {
     "startDate": "startDate",
     "endDate": "endDate",
     "backlogSize": "backlogSize",
-    "baselineLoad": "baselineLoad"
+    "baselineLoad": "baselineLoad",
+    "status": "status"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "product",
@@ -160,6 +161,14 @@ ProjectModel.prototype.getStartDate = function() {
 };
 ProjectModel.prototype.setStartDate = function(startDate) {
   this.currentData.startDate = startDate;
+  this._commitIfNotInTransaction();
+};
+
+ProjectModel.prototype.getStatus = function() {
+  return this.currentData.status;
+};
+ProjectModel.prototype.setStatus = function(status) {
+  this.currentData.status = status;
   this._commitIfNotInTransaction();
 };
 

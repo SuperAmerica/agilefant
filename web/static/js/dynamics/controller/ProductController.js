@@ -290,7 +290,23 @@ ProductController.prototype.initializeProjectListConfig = function() {
     callback : function() {return;}
   });
 
-  config.addColumnConfiguration(0, {
+  config.addColumnConfiguration(ProjectController.columnIndices.status, {
+    minWidth : 25,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Status",
+    headerTooltip : 'Project status',
+    get : ProjectModel.prototype.getStatus,
+    decorator: DynamicsDecorators.projectStatusDecorator,
+    defaultSortColumn: false,
+    editable : true,
+    edit : {
+      editor : "SingleSelection",
+      set : ProjectModel.prototype.setStatus,
+      items : DynamicsDecorators.projectStates
+    }
+  });
+  config.addColumnConfiguration(ProjectController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
     cssClass : 'story-row',
@@ -307,7 +323,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(1, {
+  config.addColumnConfiguration(ProjectController.columnIndices.startDate, {
     minWidth : 80,
     autoScale : true,
     cssClass : 'story-row',
@@ -318,7 +334,6 @@ ProductController.prototype.initializeProjectListConfig = function() {
     decorator: DynamicsDecorators.dateDecorator,
     defaultSortColumn: true,
     editable : true,
-    dragHandle: true,
     edit : {
       editor : "Text",
       decorator: DynamicsDecorators.dateDecorator,
@@ -326,7 +341,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(ProjectController.columnIndices.endDate, {
     minWidth : 80,
     autoScale : true,
     cssClass : 'story-row',
@@ -337,7 +352,6 @@ ProductController.prototype.initializeProjectListConfig = function() {
     decorator: DynamicsDecorators.dateDecorator,
     defaultSortColumn: true,
     editable : true,
-    dragHandle: true,
     edit : {
       editor : "Text",
       decorator: DynamicsDecorators.dateDecorator,
@@ -345,14 +359,14 @@ ProductController.prototype.initializeProjectListConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(ProjectController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
     cssClass : 'story-row',
     title : "Edit",
     subViewFactory : ProjectController.prototype.projectActionFactory
   });
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(ProjectController.columnIndices.description, {
     fullWidth : true,
     visible : false,
     get : ProjectModel.prototype.getDescription,
@@ -363,7 +377,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
       set : ProjectModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(ProjectController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
     cssClass : 'story-row',

@@ -24,6 +24,20 @@ var ProjectController = function(options) {
 ProjectController.prototype = new BacklogController();
 
 /**
+ * Indices for column configuration
+ * @member ProjectController
+ */
+ProjectController.columnIndices = {
+    status: 0,
+    name: 1,
+    startDate: 2,
+    endDate: 3,
+    actions: 4,
+    description: 5,
+    buttons: 6
+};
+
+/**
  * Creates a new story controller.
  */
 ProjectController.prototype.storyControllerFactory = function(view, model) {

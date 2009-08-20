@@ -56,5 +56,24 @@ var DynamicsDecorators = {
     var strValue = DynamicsDecorators.exactEstimateDecorator(value);
     var strTotal = DynamicsDecorators.exactEstimateDecorator(value + baseline);
     return strBaseline + " + " + strValue + " = " + strTotal;
+  },
+  projectStates: {
+    "GREEN": "Green",
+    "YELLOW": "Yellow",
+    "RED": "Red",
+    "GREY": "Grey",
+    "BLACK": "Black"
+  },
+  projectStatusToImg: {
+    "GREEN": "static/img/status-green.png",
+    "YELLOW": "static/img/status-yellow.png",
+    "RED": "static/img/status-red.png",
+    "BLACK": "static/img/status-black.png",
+    "GREY": "static/img/status-grey.png"
+  },
+  projectStatusDecorator: function(val) {
+    var src = DynamicsDecorators.projectStatusToImg[val];
+    var img = "<img src=\"" + src +"\" alt=\"Status\"/>";
+    return img;
   }
 };

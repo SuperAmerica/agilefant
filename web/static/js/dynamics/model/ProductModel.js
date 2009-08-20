@@ -95,25 +95,30 @@ ProductModel.prototype.reload = function() {
 
 /* GETTERS */
 
-ProductModel.prototype.getStories = function() {
-  return this.relations.story;
-};
-
-ProductModel.prototype.getName = function() {
-  return this.currentData.name;
-};
-
-ProductModel.prototype.setName = function(name) {
-  this.currentData.name = name;
-  this._commitIfNotInTransaction();
-};
-
 ProductModel.prototype.getDescription = function() {
   return this.currentData.description;
 };
-
 ProductModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
   this._commitIfNotInTransaction();
 };
 
+ProductModel.prototype.getIterations = function() {
+  return this.relations.iteration;
+};
+
+ProductModel.prototype.getName = function() {
+  return this.currentData.name;
+};
+ProductModel.prototype.setName = function(name) {
+  this.currentData.name = name;
+  this._commitIfNotInTransaction();
+};
+
+ProductModel.prototype.getProjects = function() {
+  return this.relations.project;
+};
+
+ProductModel.prototype.getStories = function() {
+  return this.relations.story;
+};

@@ -10,9 +10,12 @@ var ProductController = function(options) {
   this.id = options.id;
   this.parentView = options.storyListElement;
   this.productDetailsElement = options.productDetailsElement;
+  this.projectListElement = options.projectListElement;
+  this.iterationListElement = options.iterationListElement;
   this.assigmentListElement = options.assigmentListElement;
   this.init();
   this.initializeProductDetailsConfig();
+  this.initializeProjectListConfig();
   this.initAssigneeConfiguration();
   this.initializeStoryConfig();
   this.paint();
@@ -40,6 +43,18 @@ ProductController.prototype.paintProductDetails = function() {
   this.productDetailsView.render();
 };
 
+ProductController.prototype.paintIterationList = function() {
+//  this.productDetailsView = new DynamicVerticalTable(this, this.model, this.productDetailConfig,
+//      this.productDetailsElement);
+//  this.productDetailsView.render();
+};
+
+ProductController.prototype.paintProjectList = function() {
+  this.projectListView = new DynamicTable(this, this.model, this.projectListConfig,
+      this.projectListElement);
+  this.projectListView.render();
+};
+
 /**
  * Initialize and render the story list.
  */
@@ -49,6 +64,7 @@ ProductController.prototype.paint = function() {
       this.id, function(model) {
         me.model = model;
         me.paintProductDetails();
+        me.paintProjectList();
         me.paintStoryList();
       });
 };
@@ -253,4 +269,106 @@ ProductController.prototype.initializeStoryConfig = function() {
   });
 
   this.storyListConfig = config;
+};
+
+/**
+ * Initialize project list
+ */
+ProductController.prototype.initializeProjectListConfig = function() {
+  var config = new DynamicTableConfiguration( {
+//    rowControllerFactory : ProductController.prototype.storyControllerFactory,
+    dataSource : ProductModel.prototype.getProjects,
+    saveRowCallback: ProjectController.prototype.saveProject,
+//    sortCallback: ProductController.prototype.sortStories,
+    caption : "Projects"
+  });
+
+  config.addCaptionItem( {
+    name : "createProject",
+    text : "Create project",
+    cssClass : "create",
+    callback : function() {return;}
+  });
+
+  config.addColumnConfiguration(0, {
+    minWidth : 280,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Name",
+    headerTooltip : 'Project name',
+    get : ProjectModel.prototype.getName,
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getName),
+    defaultSortColumn: true,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      set : ProjectModel.prototype.setName,
+      required: true
+    }
+  });
+  config.addColumnConfiguration(1, {
+    minWidth : 80,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Start date",
+    headerTooltip : 'Start date',
+    get : ProjectModel.prototype.getStartDate,
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getStartDate),
+    decorator: DynamicsDecorators.dateDecorator,
+    defaultSortColumn: true,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      decorator: DynamicsDecorators.dateDecorator,
+      set : ProjectModel.prototype.setStartDate,
+      required: true
+    }
+  });
+  config.addColumnConfiguration(2, {
+    minWidth : 80,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "End date",
+    headerTooltip : 'End date',
+    get : ProjectModel.prototype.getEndDate,
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getEndDate),
+    decorator: DynamicsDecorators.dateDecorator,
+    defaultSortColumn: true,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      decorator: DynamicsDecorators.dateDecorator,
+      set : ProjectModel.prototype.setEndDate,
+      required: true
+    }
+  });
+  config.addColumnConfiguration(3, {
+    minWidth : 26,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Edit",
+    subViewFactory : ProjectController.prototype.projectActionFactory
+  });
+  config.addColumnConfiguration(4, {
+    fullWidth : true,
+    visible : false,
+    get : ProjectModel.prototype.getDescription,
+    cssClass : 'story-row',
+    editable : true,
+    edit : {
+      editor : "Wysiwyg",
+      set : ProjectModel.prototype.setDescription
+    }
+  });
+  config.addColumnConfiguration(5, {
+    fullWidth : true,
+    visible : false,
+    cssClass : 'story-row',
+    subViewFactory : StoryController.prototype.storyButtonFactory
+  });
+
+  this.projectListConfig = config;
 };

@@ -96,6 +96,7 @@ $(document).ready(function() {
     
     
     this.commonModel.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
+    this.commonModel.classNameToRelation["fi.hut.soberit.agilefant.model.Story"] = "story";
     this.commonModel.relations = {
         story: [storyThatStays, storyThatIsRemoved]
     };

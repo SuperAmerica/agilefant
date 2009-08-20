@@ -83,6 +83,25 @@ ProjectController.prototype.createStory = function() {
   controller.editStory();
 };
 
+/**
+ * Construct edit buttons.
+ */
+ProjectController.prototype.projectActionFactory = function(view, model) {
+  var actionItems = [ {
+    text : "Edit",
+    callback : ProjectController.prototype.editProject
+  }, {
+    text : "Move",
+    callback : ProjectController.prototype.moveProject
+  }, {
+    text : "Delete",
+    callback : ProjectController.prototype.removeProject
+  } ];
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+      view);
+  return actionView;
+};
+
 ProjectController.prototype.sortStories = function(view, model, stackPosition) {
   if(stackPosition === 0) {
     model.setPriority(0);

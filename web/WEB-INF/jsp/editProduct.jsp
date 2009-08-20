@@ -38,6 +38,7 @@ $(document).ready(function() {
   var controller = new ProductController({
     id: ${product.id},
     productDetailsElement: $("#backlogDetails"),
+    projectListElement: $("#projects"),
     storyListElement: $('#stories')
   });
 });
@@ -93,6 +94,8 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/autocomplete/autocompleteDataProvider.js"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteDialog.js"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSingleDialog.js"></script>
+
+<form onsubmit="return false;"><div id="projects" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 

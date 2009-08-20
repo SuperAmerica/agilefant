@@ -16,7 +16,12 @@ var UserModel = function() {
   this.copiedFields = {
       "fullName": "fullName",
       "initials": "initials"
-    };
+  };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.Task":          "task",
+      "fi.hut.soberit.agilefant.model.Assignment":    "assignment"
+  };
 };
 
 UserModel.prototype = new CommonModel();

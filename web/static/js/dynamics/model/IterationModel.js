@@ -9,6 +9,7 @@ var IterationModel = function() {
   this.initializeBacklogModel();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
   this.relations = {
+    parent: null,
     story: [],
     task: [],
     assignment: [],
@@ -21,6 +22,14 @@ var IterationModel = function() {
     "endDate": "endDate",
     "backlogSize": "backlogSize",
     "baselineLoad": "baselineLoad"
+  };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Product":       "parent",
+      "fi.hut.soberit.agilefant.model.Project":       "parent",
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.Task":          "task",
+      "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
+      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
   };
 };
 

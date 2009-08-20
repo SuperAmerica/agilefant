@@ -69,6 +69,7 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/dynamics/model/BacklogModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/IterationModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/ProjectModel.js"></script>
+<script type="text/javascript" src="static/js/dynamics/model/ProductModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/StoryModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/TaskModel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/model/UserModel.js"></script>

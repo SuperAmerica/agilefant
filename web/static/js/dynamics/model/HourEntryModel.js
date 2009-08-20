@@ -6,7 +6,7 @@
  */
 var HourEntryModel = function() {
   this.initialize();
-  this.persistedClassName = "fi.hut.soberit.agilefant.model.Assignment";
+  this.persistedClassName = "fi.hut.soberit.agilefant.model.HourEntry";
   this.relations = {
     backlog: {},
     story: {},

@@ -9,6 +9,8 @@ var ProjectModel = function() {
   this.initializeBacklogModel();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Project";
   this.relations = {
+    product: null,
+    iteration: [],
     story: [],
     assignment: [],
     hourEntry: []
@@ -20,6 +22,13 @@ var ProjectModel = function() {
     "endDate": "endDate",
     "backlogSize": "backlogSize",
     "baselineLoad": "baselineLoad"
+  };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Product":       "product",
+      "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
+      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
   };
 };
 

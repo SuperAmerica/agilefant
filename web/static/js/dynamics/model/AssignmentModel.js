@@ -15,6 +15,11 @@ var AssignmentModel = function() {
     "personalLoad": "personalLoad",
     "availability": "availability"
   };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Project":       "backlog",
+      "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
+      "fi.hut.soberit.agilefant.model.User":          "user"
+  };
 };
 
 AssignmentModel.prototype = new CommonModel();

@@ -9,11 +9,18 @@ var ProductModel = function() {
   this.initializeBacklogModel();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Product";
   this.relations = {
+    project: [],
+    iteration: [],
     story: []
   };
   this.copiedFields = {
     "name":   "name",
     "description": "description"
+  };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Project":       "project",
+      "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
+      "fi.hut.soberit.agilefant.model.Story":         "story"
   };
 };
 
@@ -37,6 +44,14 @@ ProductModel.prototype._setData = function(newData) {
   if (newData.stories) {
     this._updateRelations(ModelFactory.types.story, newData.stories);
   }
+  
+  if (newData.projects) {
+    this._updateRelations("project", newData.projects);
+  }
+//  
+//  if (newData.iterations) {
+//    this._updateRelations("iteration", newData.iterations);
+//  }
   
 };
 
@@ -71,7 +86,7 @@ ProductModel.prototype.reload = function() {
     "ajax/retrieveProduct.action",
     {productId: me.getId()},
     function(data,status) {
-      new MessageDisplay.OkMessage("Product reloaded successfully");
+      var a = me;
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }

@@ -16,6 +16,7 @@ CommonModel.prototype.initialize = function() {
   this.relations = {};
   this.currentData = {};
   this.persistedData = {};
+  this.classNameToRelation = {};
   this.inTransaction = false;
 };
 
@@ -170,8 +171,9 @@ CommonModel.prototype._remove = function() {
  * @param {CommonModel} object the object to add the relation to
  */
 CommonModel.prototype.addRelation = function(object) {
-  var objectType = ModelFactory.classNameToType[object.getPersistedClass()];
-  this._addOneWayRelation(object);
+  if (object.id) {
+    this._addOneWayRelation(object);
+  }
   if (this.id) {
     object._addOneWayRelation(this);
   }
@@ -179,7 +181,7 @@ CommonModel.prototype.addRelation = function(object) {
 };
 
 CommonModel.prototype._addOneWayRelation = function(object) {
-  var type = ModelFactory.classNameToType[object.getPersistedClass()];
+  var type = this.classNameToRelation[object.getPersistedClass()];
   if (this.relations[type] && this.relations[type].constructor === Array) {
     // Do not add duplicates
     if (jQuery.inArray(object, this.relations[type]) === -1) { 

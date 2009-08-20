@@ -29,6 +29,12 @@ var TaskModel = function() {
     "originalEstimate": "originalEstimate",
     "rank": "rank"
   };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
+      "fi.hut.soberit.agilefant.model.User":          "user",
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
+  };
 };
 
 TaskModel.prototype = new CommonModel();

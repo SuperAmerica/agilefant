@@ -22,6 +22,14 @@ var StoryModel = function() {
     "priority": "priority",
     "storyPoints": "storyPoints"
   };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Product":       "backlog",
+      "fi.hut.soberit.agilefant.model.Project":       "backlog",
+      "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
+      "fi.hut.soberit.agilefant.model.User":          "user",
+      "fi.hut.soberit.agilefant.model.Task":          "task",
+      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
+  };
 };
 
 StoryModel.prototype = new CommonModel();

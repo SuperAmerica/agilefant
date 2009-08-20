@@ -201,6 +201,13 @@ StoryController.prototype.storyActionFactory = function(view, model) {
   return actionView;
 };
 
+StoryController.prototype.acceptsDraggable = function(model) {
+  if (model instanceof TaskModel) {
+    return true;
+  }
+  return false;
+};
+
 /**
  * Checks whether the story points field should be editable or not.
  */

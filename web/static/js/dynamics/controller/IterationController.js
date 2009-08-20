@@ -134,6 +134,11 @@ IterationController.prototype.initializeTaskListConfig = function() {
       items: "> .dynamicTableDataRow",
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
+    },
+    dropOptions: {
+      accepts: function(a,b,c,d,e) {
+        var abva = "foo";
+      }
     }
   });
   
@@ -275,6 +280,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
   this.taskListConfig = config;
 };
 
+
 /**
  * Initialize configuration for story lists.
  */
@@ -284,7 +290,12 @@ IterationController.prototype.initializeStoryConfig = function() {
     dataSource : IterationModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: IterationController.prototype.sortStories,
-    caption : "Stories"
+    caption : "Stories",
+    rowDroppable: true,
+    dropOptions: {
+      callback: TaskController.prototype.moveTask,
+      accepts: StoryController.prototype.acceptsDraggable
+    }
   });
 
   config.addCaptionItem( {

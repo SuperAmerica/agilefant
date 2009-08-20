@@ -92,6 +92,7 @@ DynamicTable.prototype.initialize = function() {
   if(this.config.isTableDroppable()) {
     this._registerDropFor(this.element);
   }
+  this.element.data("table", this);
 };
 
 DynamicTable.prototype._bindEvents = function() {
@@ -205,22 +206,38 @@ DynamicTable.prototype.layout = function() {
 
 DynamicTable.prototype._registerDropFor = function(target) {
   var dropOptions = this.config.getDropOptions();
-  var controller = this.getController();
   var opt = { 
       drop: function(event, ui) {
-        if(ui.draggable.data("oversortable")) {
-            var rowObj = $(this).data("row");
-            var model = rowObj.getModel();
-            dropOptions.callback.call(controller, model);
+        if (ui.draggable.data("sortactive")) {
+          return false; 
         }
+        var rowObj;
+        var me = $(this);
+        if(me.data("row")) {
+          rowObj = me.data("row");
+        } else {
+          rowObj = me.data("table");
+        }
+        var targetController = ui.draggable.data("row").getController();
+        var targetModel = rowObj.getModel();
+        dropOptions.callback.call(targetController, targetModel);
     },
     accept: function(draggable) {
-       var rowObj = draggable.data("row");
-       if(!rowObj) {
-         return false;
+       if (draggable.data("sortactive")) {
+         return false; 
        }
+       var dropTarget;
+       var me = $(this);
+       if(me.data("row")) {
+         dropTarget = me.data("row");
+       } else {
+         dropTarget = me.data("table");
+       }
+       
+       var rowObj = draggable.data("row");
        var model = rowObj.getModel();
-       return dropOptions.call(controller, model);
+       
+       return dropOptions.accepts.call(dropTarget.getController(), model);
     }
   };
   target.droppable(opt);

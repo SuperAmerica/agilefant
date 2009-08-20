@@ -56,6 +56,10 @@ TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
   }
 };
 
+TaskController.prototype.moveTask = function(targetModel) {
+  this.model.rankUnder(-1, targetModel);
+};
+
 TaskController.prototype.cancelEdit = function() {
   var createNewTask = !this.model.getId();
   if(createNewTask) {

@@ -147,6 +147,8 @@ var DynamicTableConfiguration = function(options) {
 			rowControllerFactory: function() {},
 			dataSource: null,
 			dropOptions: null,
+			tableDroppable: false,
+			rowDroppable: false,
 			caption: "Table",
 			saveRowCallback: function() {},
 			cancelEditRowCallback: function() {},
@@ -206,4 +208,10 @@ DynamicTableConfiguration.prototype.setColumnConfiguration = function(columnNum,
 };
 DynamicTableConfiguration.prototype.getDropOptions = function() {
   return this.options.dropOptions;
+};
+DynamicTableConfiguration.prototype.isTableDroppable = function() {
+  return this.options.tableDroppable;
+};
+DynamicTableConfiguration.prototype.isRowDroppable = function() {
+  return this.options.rowDroppable;
 };

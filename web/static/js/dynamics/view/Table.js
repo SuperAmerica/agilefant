@@ -89,6 +89,9 @@ DynamicTable.prototype.initialize = function() {
   }
   this._renderHeader();
   this._bindEvents();
+  if(this.config.isTableDroppable()) {
+    this._registerDropFor(this.element);
+  }
 };
 
 DynamicTable.prototype._bindEvents = function() {
@@ -194,24 +197,34 @@ DynamicTable.prototype.layout = function() {
       }
     });
     this.element.sortable(opts);
-    if(this.config.getDropOptions) {
-      var dropOptions = this.config.getDropOptions();
-      var opt = { 
-          drop: function(event, ui) {
-            if(ui.draggable.data("oversortable")) {
-                var rowObj = $(this).data("row");
-                var model = rowObj.getModel();
-                var controller = rowObj.getController();
-                dropOptions.callback.call(controller, model);
-            }
-        }
-      };
-      jQuery.extend(opt, dropOptions);
-      this.element.find(".dynamicTableDataRow").droppable(opt);
-    }
+  }
+  if(this.config.isRowDroppable()) {
+    this._registerDropFor(this.element.find(".dynamicTableDataRow"));
   }
 };
 
+DynamicTable.prototype._registerDropFor = function(target) {
+  var dropOptions = this.config.getDropOptions();
+  var controller = this.getController();
+  var opt = { 
+      drop: function(event, ui) {
+        if(ui.draggable.data("oversortable")) {
+            var rowObj = $(this).data("row");
+            var model = rowObj.getModel();
+            dropOptions.callback.call(controller, model);
+        }
+    },
+    accept: function(draggable) {
+       var rowObj = draggable.data("row");
+       if(!rowObj) {
+         return false;
+       }
+       var model = rowObj.getModel();
+       return dropOptions.call(controller, model);
+    }
+  };
+  target.droppable(opt);
+};
 DynamicTable.prototype.getDataRowAt = function(index) {
   return this.middleRows[index];
 };

@@ -88,6 +88,7 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/dynamics/controller/StoryController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TaskController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TasksWithoutStoryController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/AssignmentController.js"></script>
 
 <script type="text/javascript" src="static/js/dynamics/Dynamics.events.js"></script>
 

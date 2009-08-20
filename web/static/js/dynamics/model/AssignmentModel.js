@@ -59,6 +59,18 @@ AssignmentModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+AssignmentModel.prototype._remove = function() {
+  var me = this;
+  jQuery.post(
+      "ajax/deleteAssignment.action",
+      {assignmentId: me.getId()},
+      function(data, status) {
+        new MessageDisplay.OkMessage("Assignment removed");
+        return;
+      }
+  );
+};
+
 AssignmentModel.prototype.getPersonalLoad = function() {
   return this.currentData.personalLoad;
 };

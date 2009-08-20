@@ -34,7 +34,7 @@ BacklogController.prototype._saveAssignees = function(userIds) {
 BacklogController.prototype.initAssigneeConfiguration = function() {
   var config = new DynamicTableConfiguration(
       {
-        rowControllerFactory : BacklogController.prototype.assigmentControllerFactory,
+        rowControllerFactory : BacklogController.prototype.assignmentControllerFactory,
         dataSource : BacklogModel.prototype.getAssignments,
         saveRowCallback : BacklogController.prototype.saveAssigment,
         caption : "Assignees"
@@ -78,7 +78,7 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
     }
   });
   config.addColumnConfiguration(3, {
-    minWidth : 200,
+    minWidth : 80,
     autoScale : true,
     title : "Availability",
     get : AssignmentModel.prototype.getAvailability,
@@ -90,8 +90,21 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
       set: AssignmentModel.prototype.setAvailability
     }
   });
+  config.addColumnConfiguration(4, {
+    minWidth : 80,
+    autoScale : true,
+    subViewFactory: BacklogController.prototype.deleteAssignmentButtonFactory
+  });
   this.assigneeListConfiguration = config;
 };
 BacklogController.prototype.initSpentEffortConfiguration = function() {
 
+};
+
+BacklogController.prototype.deleteAssignmentButtonFactory = function(view, model) {
+  return new DynamicsButtons(this,[{text: 'Delete', callback: AssignmentController.prototype.remove}
+                                   ] ,view);
+};
+BacklogController.prototype.assignmentControllerFactory = function(view, model) {
+  return new AssignmentController(model, view, this);
 };

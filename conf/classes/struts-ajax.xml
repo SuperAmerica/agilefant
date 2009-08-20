@@ -393,6 +393,9 @@
     </action>
     
     <action name="deleteAssignment" method="delete" class="assignmentAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
     </action>
     
     <!-- /Assigment actions -->

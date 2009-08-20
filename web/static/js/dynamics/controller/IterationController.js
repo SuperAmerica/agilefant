@@ -62,6 +62,25 @@ IterationController.prototype.paint = function() {
 };
 
 /**
+ * 
+ */
+IterationController.prototype.iterationActionFactory = function(view, model) {
+  var actionItems = [ {
+    text : "Edit",
+    callback : IterationController.prototype.editIteration
+  }, {
+    text : "Move",
+    callback : IterationController.prototype.moveIteration
+  }, {
+    text : "Delete",
+    callback : IterationController.prototype.removeIteration
+  } ];
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+      view);
+  return actionView;
+};
+
+/**
  * Show all tasks lists.
  */
 IterationController.prototype.showTasks = function() {

@@ -43,6 +43,9 @@ $(document).ready(function() {
     id: ${project.id},
     projectDetailsElement: $("#backlogDetails"),
     assigmentListElement: $("#backlogAssignees"),
+    ongoingIterationListElement: $("#ongoingIterations"),
+    pastIterationListElement: $("#pastIterations"),
+    futureIterationListElement: $("#futureIterations"),
     storyListElement: $('#stories')
   });
 });
@@ -99,6 +102,14 @@ $(document).ready(function() {
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSingleDialog.js"></script>
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+
+<form onsubmit="return false;"><div id="ongoingIterations" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+
+<form onsubmit="return false;"><div id="futureIterations" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+
+<form onsubmit="return false;"><div id="pastIterations" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+
+
 
 
 <p><img src="drawProjectBurnup.action?backlogId=${project.id}"

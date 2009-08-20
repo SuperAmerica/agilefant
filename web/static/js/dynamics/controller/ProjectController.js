@@ -11,10 +11,13 @@ var ProjectController = function(options) {
   this.parentView = options.storyListElement;
   this.projectDetailsElement = options.projectDetailsElement;
   this.assigmentListElement = options.assigmentListElement;
-  this.iterationList = options.iterationListElement;
+  this.ongoingIterationListElement = options.ongoingIterationListElement;
+  this.pastIterationListElement = options.pastIterationListElement;
+  this.futureIterationListElement = options.futureIterationListElement;
   this.init();
   this.initializeProjectDetailsConfig();
   this.initAssigneeConfiguration();
+  this.initializeIterationListConfig();
   this.initializeStoryConfig();
   this.paint();
 };
@@ -41,6 +44,24 @@ ProjectController.prototype.paintProjectDetails = function() {
   this.projectDetailsView.render();
 };
 
+ProjectController.prototype.paintOngoingIterationList = function() {
+  this.ongoingIterationsView = new DynamicTable(this, this.model, this.ongoingIterationListConfig,
+      this.ongoingIterationListElement);
+  this.ongoingIterationsView.render();
+};
+
+ProjectController.prototype.paintPastIterationList = function() {
+  this.pastIterationsView = new DynamicTable(this, this.model, this.pastIterationListConfig,
+      this.pastIterationListElement);
+  this.pastIterationsView.render();
+};
+
+ProjectController.prototype.paintFutureIterationList = function() {
+  this.futureIterationsView = new DynamicTable(this, this.model, this.futureIterationListConfig,
+      this.futureIterationListElement);
+  this.futureIterationsView.render();
+};
+
 /**
  * Initialize and render the story list.
  */
@@ -52,6 +73,7 @@ ProjectController.prototype.paint = function() {
         me.paintProjectDetails();
         me.paintAssigneeList();
         me.paintStoryList();
+        me.paintOngoingIterationList();
       });
 };
 
@@ -194,6 +216,131 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
   });
   this.projectDetailConfig = config;
 };
+
+/**
+ * Initialize configuration for iteration lists.
+ */
+ProjectController.prototype.initializeIterationListConfig = function() {
+  var ongoingConfig = new DynamicTableConfiguration( {
+//    rowControllerFactory : ProjectController.prototype.storyControllerFactory,
+    dataSource : ProjectModel.prototype.getIterations,
+//    saveRowCallback: StoryController.prototype.saveStory,
+//    sortCallback: ProjectController.prototype.sortStories,
+    caption : "Iterations"
+  });
+  this._iterationListColumnConfig(ongoingConfig);
+  this.ongoingIterationListConfig = ongoingConfig;
+  
+  var pastConfig = new DynamicTableConfiguration( {
+  //  rowControllerFactory : ProjectController.prototype.storyControllerFactory,
+    dataSource : ProjectModel.prototype.getPastIterations,
+  //  saveRowCallback: StoryController.prototype.saveStory,
+  //  sortCallback: ProjectController.prototype.sortStories,
+    caption : "Past Iterations"
+  });
+  this._iterationListColumnConfig(pastConfig);
+  this.pastIterationListConfig = pastConfig;
+  
+  var futureConfig = new DynamicTableConfiguration( {
+  //  rowControllerFactory : ProjectController.prototype.storyControllerFactory,
+    dataSource : ProjectModel.prototype.getFutureIterations,
+  //  saveRowCallback: StoryController.prototype.saveStory,
+  //  sortCallback: ProjectController.prototype.sortStories,
+    caption : "Future Iterations"
+  });
+  this._iterationListColumnConfig(futureConfig);
+  this.futureIterationListConfig = futureConfig;
+};
+
+ProjectController.prototype._iterationListColumnConfig = function(config) {
+  config.addCaptionItem( {
+    name : "createIteration",
+    text : "Create iteration",
+    cssClass : "create",
+    callback : ProjectController.prototype.createIteration
+  });
+
+  config.addColumnConfiguration(0, {
+    minWidth : 280,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Name",
+    headerTooltip : 'Iteration name',
+    get : IterationModel.prototype.getName,
+    sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getName),
+    defaultSortColumn: true,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      set : IterationModel.prototype.setName,
+      required: true
+    }
+  });
+  config.addColumnConfiguration(1, {
+    minWidth : 80,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Start date",
+    headerTooltip : 'Start date',
+    get : IterationModel.prototype.getStartDate,
+    sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getStartDate),
+    decorator: DynamicsDecorators.dateDecorator,
+    defaultSortColumn: true,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      decorator: DynamicsDecorators.dateDecorator,
+      set : IterationModel.prototype.setStartDate,
+      required: true
+    }
+  });
+  config.addColumnConfiguration(2, {
+    minWidth : 80,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "End date",
+    headerTooltip : 'End date',
+    get : IterationModel.prototype.getEndDate,
+    sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getEndDate),
+    decorator: DynamicsDecorators.dateDecorator,
+    defaultSortColumn: true,
+    editable : true,
+    dragHandle: true,
+    edit : {
+      editor : "Text",
+      decorator: DynamicsDecorators.dateDecorator,
+      set : IterationModel.prototype.setEndDate,
+      required: true
+    }
+  });
+  config.addColumnConfiguration(3, {
+    minWidth : 26,
+    autoScale : true,
+    cssClass : 'story-row',
+    title : "Edit",
+    subViewFactory : IterationController.prototype.iterationActionFactory
+  });
+  config.addColumnConfiguration(4, {
+    fullWidth : true,
+    visible : false,
+    get : IterationModel.prototype.getDescription,
+    cssClass : 'story-row',
+    editable : true,
+    edit : {
+      editor : "Wysiwyg",
+      set : IterationModel.prototype.setDescription
+    }
+  });
+  config.addColumnConfiguration(5, {
+    fullWidth : true,
+    visible : false,
+    cssClass : 'story-row',
+    subViewFactory : ProjectController.prototype.iterationButtonFactory
+  });
+};
+
 
 
 /**

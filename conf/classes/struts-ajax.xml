@@ -172,7 +172,7 @@
     <action name="projectData" class="projectAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">project</param>
-        <param name="patterns">+stories, +stories.responsibles, +assignments, +assignments.user</param>
+        <param name="patterns">+children, +stories, +stories.responsibles, +assignments, +assignments.user</param>
       </result>
     </action>
     

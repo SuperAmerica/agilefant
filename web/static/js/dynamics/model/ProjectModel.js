@@ -53,6 +53,11 @@ ProjectModel.prototype._setData = function(newData) {
     this._updateRelations(ModelFactory.types.story, newData.stories);
   }
   
+  // Set iterations
+  if (newData.children) {
+    this._updateRelations("iteration", newData.children);
+  }
+  
   //assignments
   if(newData.assignments) {
     this._updateRelations(ModelFactory.types.assignment, newData.assignments);
@@ -102,38 +107,32 @@ ProjectModel.prototype.reload = function() {
   );
 };
 
+
 /* GETTERS */
-
-ProjectModel.prototype.getStories = function() {
-  return this.relations.story;
+ProjectModel.prototype.getBacklogSize = function() {
+  return this.currentData.backlogSize;
+};
+ProjectModel.prototype.setBacklogSize = function(backlogSize) {
+  this.currentData.backlogSize = backlogSize;
+  this._commitIfNotInTransaction();
 };
 
-ProjectModel.prototype.getName = function() {
-  return this.currentData.name;
+ProjectModel.prototype.getBaselineLoad = function() {
+  return this.currentData.baselineLoad;
 };
-
-ProjectModel.prototype.setName = function(name) {
-  this.currentData.name = name;
+ProjectModel.prototype.setBaselineLoad = function(baselineLoad) {
+  this.currentData.baselineLoad = baselineLoad;
   this._commitIfNotInTransaction();
 };
 
 ProjectModel.prototype.getDescription = function() {
   return this.currentData.description;
 };
-
 ProjectModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
   this._commitIfNotInTransaction();
 };
 
-ProjectModel.prototype.getStartDate = function() {
-  return this.currentData.startDate;
-};
-
-ProjectModel.prototype.setStartDate = function(startDate) {
-  this.currentData.startDate = startDate;
-  this._commitIfNotInTransaction();
-};
 
 ProjectModel.prototype.getEndDate = function() {
   return this.currentData.endDate;
@@ -144,20 +143,26 @@ ProjectModel.prototype.setEndDate = function(endDate) {
   this._commitIfNotInTransaction();
 };
 
-ProjectModel.prototype.getBacklogSize = function() {
-  return this.currentData.backlogSize;
+ProjectModel.prototype.getIterations = function() {
+  return this.relations.iteration;
 };
 
-ProjectModel.prototype.setBacklogSize = function(backlogSize) {
-  this.currentData.backlogSize = backlogSize;
+ProjectModel.prototype.getName = function() {
+  return this.currentData.name;
+};
+ProjectModel.prototype.setName = function(name) {
+  this.currentData.name = name;
   this._commitIfNotInTransaction();
 };
 
-ProjectModel.prototype.getBaselineLoad = function() {
-  return this.currentData.baselineLoad;
+ProjectModel.prototype.getStartDate = function() {
+  return this.currentData.startDate;
+};
+ProjectModel.prototype.setStartDate = function(startDate) {
+  this.currentData.startDate = startDate;
+  this._commitIfNotInTransaction();
 };
 
-ProjectModel.prototype.setBaselineLoad = function(baselineLoad) {
-  this.currentData.baselineLoad = baselineLoad;
-  this._commitIfNotInTransaction();
+ProjectModel.prototype.getStories = function() {
+  return this.relations.story;
 };

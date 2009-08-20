@@ -84,7 +84,7 @@ IterationModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Iteration data saved successfully");
+      new MessageDisplay.OkMessage("Iteration saved successfully");
       me.setData(data);
     },
     error: function(request, status, error) {
@@ -94,6 +94,9 @@ IterationModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+/**
+ * Reload's the iteration's data.
+ */
 IterationModel.prototype.reload = function() {
   var me = this;
   jQuery.getJSON(

@@ -249,9 +249,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         validateRankingArguments(task, upperTask);
         
         RankDirection dir = findOutRankDirection(task, upperTask);
-        if (dir == RankDirection.ONE_DOWN) {
-            return swapRanksWithNextInRank(task);
-        }
         int newRank = findOutNewRank(dir, upperTask);
         
         Collection<Task> shiftedTasks = getShiftedTasks(dir, task, upperTask);
@@ -269,26 +266,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.setRank(lastInRank.getRank() + 1);
         return task;
     }
-    
-    private Task swapRanksWithNextInRank(Task task) {
-        Integer iterId = null;
-        Integer storyId = null;
-        
-        if (task.getIteration() != null) {
-            iterId = task.getIteration().getId();
-        }
-        if (task.getStory() != null) {
-            storyId = task.getStory().getId();
-        }
-        
-        Task next = taskDAO.getNextTaskInRank(task.getRank(), iterId, storyId);
-        
-        int oldRank = task.getRank();
-        task.setRank(next.getRank());
-        next.setRank(oldRank);
-        
-        return task;
-    }
 
     private int findOutNewRank(RankDirection dir, Task upperTask) {
         if (dir == RankDirection.UP) {
@@ -301,14 +278,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     }
 
 
-    private enum RankDirection { TOP, UP, DOWN, ONE_DOWN, BOTTOM }
+    private enum RankDirection { TOP, UP, DOWN, BOTTOM }
     
     private RankDirection findOutRankDirection(Task task, Task upperTask) {
         if (upperTask == null) {
             return RankDirection.TOP;
-        }
-        else if (task.equals(upperTask)) {
-            return RankDirection.ONE_DOWN;
         }
         else if (task.getRank() == -1) {
             return RankDirection.BOTTOM;

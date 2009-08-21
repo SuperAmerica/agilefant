@@ -691,21 +691,6 @@ public class TaskBusinessTest {
     }
     
     @Test
-    public void testRankUnderTask_rankUnderSelf() {
-        Task switchUnder = new Task();
-        switchUnder.setRank(4);
-        expect(taskDAO.getNextTaskInRank(secondTaskInRank.getRank(), null, rankParentStory.getId()))
-            .andReturn(switchUnder);
-        
-        replayAll();
-        Task actual = taskBusiness.rankUnderTask(secondTaskInRank, secondTaskInRank);
-        verifyAll();
-        
-        assertEquals(1, switchUnder.getRank());
-        assertEquals(4, actual.getRank());
-    }
-    
-    @Test
     public void testRankUnderTask_checkUnderSameIteration() {
         Task first = new Task();
         Task second = new Task();

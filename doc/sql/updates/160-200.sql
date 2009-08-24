@@ -552,7 +552,7 @@ CREATE PROCEDURE UpdateTaskRanksForIterations()
 BEGIN
   DECLARE iter_loop_done BOOL DEFAULT FALSE;
   DECLARE iter_id INT;
-    DECLARE iter_cur CURSOR FOR SELECT id FROM backlogs WHERE backlogtype = 'Iteration';
+  DECLARE iter_cur CURSOR FOR SELECT id FROM backlogs WHERE backlogtype = 'Iteration';
 
   DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
     SET iter_loop_done = TRUE;
@@ -577,15 +577,73 @@ BEGIN
   CALL UpdateTaskRanksForIterations();
 END //
 
+DROP PROCEDURE IF EXISTS UpdateStoryRanks //
+CREATE PROCEDURE UpdateStoryRanks()
+BEGIN
+	DECLARE backlogId INT;
+  DECLARE story_loop_done BOOL DEFAULT FALSE;
+  DECLARE sl_cursor CURSOR FOR SELECT id FROM backlogs;
+  
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET story_loop_done = TRUE;
+    
+  OPEN sl_cursor;
+  
+  storyLoop: LOOP
+    FETCH sl_cursor INTO backlogId;
+    IF story_loop_done THEN
+      CLOSE sl_cursor;
+      LEAVE storyLoop;
+    END IF;
+    CALL UpdateStoryRanksForBacklog(backlogId);
+  END LOOP;
+END //
+
+DROP PROCEDURE IF EXISTS UpdateStoryRanksForBacklog //
+CREATE PROCEDURE UpdateStoryRanksForBacklog(IN bid INT)
+BEGIN
+  DECLARE story_rank_loop_done BOOL DEFAULT FALSE;
+  DECLARE counter INT DEFAULT 0;
+  DECLARE story_id INT;
+  DECLARE story_rank_cur
+    CURSOR FOR
+    SELECT id FROM stories WHERE backlog_id=bid
+    ORDER BY priority ASC;
+
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET story_rank_loop_done = TRUE;
+
+  OPEN story_rank_cur;
+
+  storyRankLoop: LOOP
+    FETCH story_rank_cur INTO story_id;
+
+    IF story_rank_loop_done THEN
+      CLOSE story_rank_cur;
+      LEAVE storyRankLoop;
+    END IF;
+
+    UPDATE stories SET priority = counter WHERE id=story_id;
+    SET counter = counter + 1;
+
+  END LOOP;
+END //
+
 delimiter ;
 
 
 CALL UpdateTaskRanks();
+CALL UpdateStoryRanks();
 
 /* DROP the old priority column */
+ALTER TABLE tasks DROP COLUMN priority;
 
 DROP PROCEDURE IF EXISTS UpdateTaskRanks;
 DROP PROCEDURE IF EXISTS UpdateTaskRanksForStories;
 DROP PROCEDURE IF EXISTS UpdateTaskRanksForIterations;
 DROP PROCEDURE IF EXISTS UpdateTaskRanksForSingleStory;
 DROP PROCEDURE IF EXISTS UpdateTaskRanksForSingleIteration;
+
+DROP PROCEDURE IF EXISTS UpdateStoryRanksForBacklog;
+DROP PROCEDURE IF EXISTS UpdateStoryRanks;

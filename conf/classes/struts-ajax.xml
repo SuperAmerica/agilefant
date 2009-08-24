@@ -143,6 +143,13 @@
     </action>
     
     <action name="storeProduct" method="store" class="productAction">
+      <interceptor-ref name="prefetchStack"/>
+      <result name="success" type="json">
+        <param name="target">product</param>
+      </result>
+    </action>
+    
+    <action name="storeNewProduct" method="store" class="productAction">
       <result name="success" type="json">
         <param name="target">product</param>
       </result>

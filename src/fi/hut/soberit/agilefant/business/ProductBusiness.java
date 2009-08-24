@@ -6,6 +6,8 @@ import fi.hut.soberit.agilefant.model.Product;
 
 public interface ProductBusiness extends GenericBusiness<Product> {
 
-    Collection<Product> retrieveAllOrderByName();
+    public Collection<Product> retrieveAllOrderByName();
+    
+    public Product store(int productId, Product productData);
 
 }

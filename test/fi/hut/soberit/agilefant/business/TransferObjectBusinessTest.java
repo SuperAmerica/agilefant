@@ -185,15 +185,15 @@ public class TransferObjectBusinessTest {
     @Test
     public void testConstructTaskTO() {
         task.setIteration(iteration);
-        task.setResponsibles(Arrays.asList(assignedUser, notAssignedUser));
+        task.setResponsibles(new ArrayList<User>(Arrays.asList(assignedUser, notAssignedUser)));
         task.setHourEntries(null);
 
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
 
         replayAll();
-        TaskTO actualTO = transferObjectBusiness.constructTaskTO(task, Arrays
-                .asList(assignedUser));
+        TaskTO actualTO = transferObjectBusiness.constructTaskTO(task,
+                new ArrayList<User>(Arrays.asList(assignedUser)));
         verifyAll();
 
         assertEquals("Task and transfer object id's not equal", task.getId(),

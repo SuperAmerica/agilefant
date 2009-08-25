@@ -110,6 +110,7 @@ IterationModel.prototype.reload = function() {
   );
 };
 
+
 /* GETTERS */
 
 IterationModel.prototype.getStories = function() {
@@ -136,6 +137,10 @@ IterationModel.prototype.getDescription = function() {
 IterationModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
   this._commitIfNotInTransaction();
+};
+
+IterationModel.prototype.setParent = function(newParent) {
+  this.relations.parent = newParent;
 };
 
 IterationModel.prototype.getScheduleStatus = function() {

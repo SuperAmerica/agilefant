@@ -71,7 +71,7 @@ $(window).resize(function() {
 <script type="text/javascript" src="static/js/simile/extensions/init-load.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/load-plot.js"></script>
 <div id="dailyWorkTabs">
-	<ul id="dwTabs" style="display: none; height: 21px;">
+	<ul id="dwTabs" style="display: none; height: 1px; width: 90%">
 		<li><a href="#smallLoadTable"><span>Load</span></a></li>
 		<li><a href="#detailedLoadTable"><span>Detailed</span></a></li>
 		<c:if test="${settings.hourReportingEnabled}">
@@ -79,7 +79,7 @@ $(window).resize(function() {
 			effort</span></a></li>
 		</c:if>
 	</ul>
-	<div class="subItems" style="width: 100%; margin-top: 0;">
+	<div class="subItems" style="width: 100%;">
 		<div id="Spent_Effort"></div>
 		<div id="detailedLoadTable">
 		  <div style="position: relative">
@@ -92,11 +92,11 @@ $(window).resize(function() {
               <div style="float: left; width: 76%; height: 250px; margin-top: 10px; position: relative;" id="loadPlot"></div>
             </div>
             <div style="margin-top: 10px; float: right; width: 14%; margin-right: 2%; margin-left: 2%;">
-              <div class="legend-box" style="background-color: rgba(150, 8, 8, 0.7);">Maximum</div>
-              <div class="legend-box" style="background-color: rgba(224, 17, 2, 0.7);">Critical</div>
-              <div class="legend-box" style="background-color: rgba(245, 221, 57, 0.7);">Optimal high</div>
-              <div class="legend-box" style="background-color: rgba(9, 144, 14, 0.7);">Optimal low</div>
-              <div class="legend-box" style="background-color: rgba(204, 204, 204, 0.7);">Low</div>
+              <div style="background-color: rgba(150, 8, 8, 0.7);">Maximum</div>
+              <div style="background-color: rgba(224, 17, 2, 0.7);">Critical</div>
+              <div style="background-color: rgba(245, 221, 57, 0.7);">Optimal high</div>
+              <div style="background-color: rgba(9, 144, 14, 0.7);">Optimal low</div>
+              <div style="background-color: rgba(204, 204, 204, 0.7);">Low</div>
             </div>
 		</div>
 	</div>

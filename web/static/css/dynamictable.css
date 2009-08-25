@@ -334,8 +334,10 @@ li.dynamictable-captionaction {
 	width: 80px;
 	padding: 1px;
 	text-align: center;
-	-moz-border-radius: 2px;
-  	border-radius: 2px;
+	-moz-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.3);
 }
 .taskStateNOT_STARTED {
 	background-color: #dddddd;
@@ -459,7 +461,5 @@ div.loadingStories {
 }
 
 ul.storyTabs {
-   top: 2em;
-   position: relative;
-   width: 400px;
+   height: 21px;
 }

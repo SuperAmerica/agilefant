@@ -1,9 +1,7 @@
 /* Main stylesheet file for Agilefant*/
+@import "jquery-ui.css";
+
 @import "jquery.treeview.css";
-
-@import "jquery.tabs.css";
-
-@import "jquery.dialog.css";
 
 @import "jquery.wysiwyg.css";
 
@@ -1282,6 +1280,6 @@ ul#dwTabs .ui-state-active a {
 }
 .backlogInfo div.details {
 	border: 1px solid black;
-	width: 100%;
+	/*width: 100%;*/
 	min-height: 200px;
 }

@@ -224,6 +224,9 @@ TableEditors.SingleSelection.prototype._renderOptions = function() {
 TableEditors.Date = function(row, cell, options) {
   this.element = $('<input type="text"/>').width("98%").appendTo(
       cell.getElement());
+  this.element.datepicker({
+    dateFormat: 'yy-mm-dd'
+  });
   this.init(row, cell, options);
 };
 TableEditors.Date.prototype = new TableEditors.CommonEditor();

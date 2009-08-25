@@ -100,17 +100,17 @@ ProjectController.prototype.paint = function() {
 };
 
 /**
- * Show all tasks lists.
+ * Populate a new, editable iteration row to the iterations table.
  */
-ProjectController.prototype.showTasks = function() {
-  this.callChildcontrollers("story", StoryController.prototype.showTasks);
-};
-
-/**
- * Hide all task lists.
- */
-ProjectController.prototype.hideTasks = function() {
-  this.callChildcontrollers("story", StoryController.prototype.hideTasks);
+ProjectController.prototype.createIteration = function() {
+  var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName["iteration"]);
+  mockModel.setParent(this.model);
+  var controller = new IterationRowController(mockModel, null, this);
+  var row = this.ongoingIterationsView.createRow(controller, mockModel, "top");
+  controller.view = row;
+  row.autoCreateCells([IterationRowController.columnIndices.actions]);
+  row.render();
+  controller.editIteration();
 };
 
 /**
@@ -309,7 +309,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     editable : true,
     dragHandle: true,
     edit : {
-      editor : "Text",
+      editor : "Date",
       decorator: DynamicsDecorators.dateDecorator,
       set : IterationModel.prototype.setStartDate,
       required: true
@@ -328,7 +328,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     editable : true,
     dragHandle: true,
     edit : {
-      editor : "Text",
+      editor : "Date",
       decorator: DynamicsDecorators.dateDecorator,
       set : IterationModel.prototype.setEndDate,
       required: true

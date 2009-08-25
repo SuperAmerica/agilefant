@@ -312,7 +312,8 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
       editor : "Date",
       decorator: DynamicsDecorators.dateDecorator,
       set : IterationModel.prototype.setStartDate,
-      required: true
+      required: true,
+      withTime: true
     }
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.endDate, {
@@ -331,7 +332,8 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
       editor : "Date",
       decorator: DynamicsDecorators.dateDecorator,
       set : IterationModel.prototype.setEndDate,
-      required: true
+      required: true,
+      withTime: true
     }
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.actions, {

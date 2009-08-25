@@ -222,14 +222,46 @@ TableEditors.SingleSelection.prototype._renderOptions = function() {
  * @base TableEditors.CommonEditor
  */
 TableEditors.Date = function(row, cell, options) {
-  this.element = $('<input type="text"/>').width("98%").appendTo(
+  this.element = $('<input type="text"/>').css('max-width','10em').width("98%").appendTo(
       cell.getElement());
-  this.element.datepicker({
-    dateFormat: 'yy-mm-dd'
-  });
+  this.element.data("preventblur", false);
+  
   this.init(row, cell, options);
+  
+  var me = this;
+
+  this.element.datepicker({
+    dateFormat: 'yy-mm-dd',
+    numberOfMonths: 3,
+    showButtonPanel: true,
+    beforeShow: function() {
+      me.element.data("preventblur", true);
+    },
+    onSelect: function() {
+      me.element.val(me.element.val() + " 12:00");
+      me.element.focus();
+    },
+    buttonImage: 'static/img/calendar.gif',
+    buttonImageOnly: true,
+    showOn: 'button',
+    constrainInput: false
+  });
+  
 };
 TableEditors.Date.prototype = new TableEditors.CommonEditor();
+TableEditors.Date.prototype._handleBlurEvent = function(event) {
+  if (this.element.data("preventblur")) {
+    this.element.data("preventblur", false);
+    return;    
+  }
+  this.save();
+};
+TableEditors.CommonEditor.prototype.close = function() {
+  this.element.trigger("editorClosing");
+  this.hideError();
+  this.element.datepicker('destroy');
+  this.element.remove();
+};
 TableEditors.Date.prototype.isValid = function() {
   var pattern;
   var errorMessage = "";

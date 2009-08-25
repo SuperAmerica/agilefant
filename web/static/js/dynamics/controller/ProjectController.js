@@ -46,6 +46,12 @@ ProjectController.prototype.storyControllerFactory = function(view, model) {
   return storyController;
 };
 
+ProjectController.prototype.iterationRowControllerFactory = function(view, model) {
+  var iterationController = new IterationRowController(model, view, this);
+  this.addChildController("iteration", iterationController);
+  return iterationController;
+};
+
 ProjectController.prototype.paintStoryList = function() {
   this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
       this.parentView);
@@ -238,30 +244,27 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
  */
 ProjectController.prototype.initializeIterationListConfig = function() {
   var ongoingConfig = new DynamicTableConfiguration( {
-//    rowControllerFactory : ProjectController.prototype.storyControllerFactory,
+    rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getOngoingIterations,
-//    saveRowCallback: StoryController.prototype.saveStory,
-//    sortCallback: ProjectController.prototype.sortStories,
+    saveRowCallback: function() { alert("yey"); },
     caption : "Ongoing Iterations"
   });
   this._iterationListColumnConfig(ongoingConfig);
   this.ongoingIterationListConfig = ongoingConfig;
   
   var pastConfig = new DynamicTableConfiguration( {
-  //  rowControllerFactory : ProjectController.prototype.storyControllerFactory,
+    rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getPastIterations,
-  //  saveRowCallback: StoryController.prototype.saveStory,
-  //  sortCallback: ProjectController.prototype.sortStories,
+    saveRowCallback: function() { alert("yey"); },
     caption : "Past Iterations"
   });
   this._iterationListColumnConfig(pastConfig);
   this.pastIterationListConfig = pastConfig;
   
   var futureConfig = new DynamicTableConfiguration( {
-  //  rowControllerFactory : ProjectController.prototype.storyControllerFactory,
+    rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getFutureIterations,
-  //  saveRowCallback: StoryController.prototype.saveStory,
-  //  sortCallback: ProjectController.prototype.sortStories,
+    saveRowCallback: function() { alert("yey"); },
     caption : "Future Iterations"
   });
   this._iterationListColumnConfig(futureConfig);
@@ -276,7 +279,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     callback : ProjectController.prototype.createIteration
   });
 
-  config.addColumnConfiguration(0, {
+  config.addColumnConfiguration(IterationRowController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
     cssClass : 'story-row',
@@ -293,7 +296,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
       required: true
     }
   });
-  config.addColumnConfiguration(1, {
+  config.addColumnConfiguration(IterationRowController.columnIndices.startDate, {
     minWidth : 80,
     autoScale : true,
     cssClass : 'story-row',
@@ -312,7 +315,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
       required: true
     }
   });
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(IterationRowController.columnIndices.endDate, {
     minWidth : 80,
     autoScale : true,
     cssClass : 'story-row',
@@ -331,14 +334,14 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
       required: true
     }
   });
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(IterationRowController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
     cssClass : 'story-row',
     title : "Edit",
-    subViewFactory : IterationController.prototype.iterationActionFactory
+    subViewFactory : IterationRowController.prototype.iterationActionFactory
   });
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(IterationRowController.columnIndices.description, {
     fullWidth : true,
     visible : false,
     get : IterationModel.prototype.getDescription,
@@ -349,11 +352,11 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
       set : IterationModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(IterationRowController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
     cssClass : 'story-row',
-    subViewFactory : ProjectController.prototype.iterationButtonFactory
+    subViewFactory : IterationRowController.prototype.iterationButtonFactory
   });
 };
 

@@ -412,7 +412,7 @@
 	<function>
 	  <name>isBeforeThisDay</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isBeforeThisDay(java.util.Date)</function-signature>
+	  <function-signature>boolean isBeforeThisDay(org.joda.time.DateTime)</function-signature>
 	</function>
 	
 	<function>

@@ -247,13 +247,15 @@
             </c:when>
             <%-- Check, if is past or upcoming --%>
             <c:otherwise>
+                
                 <c:if test="${aef:isBeforeThisDay(item.endDate)}">
                     "classes": "past",
                 </c:if>
                 <c:if test="${!aef:isBeforeThisDay(item.startDate)}">
                     "classes": "upcoming",
                 </c:if>
-            </c:otherwise>
+                
+             </c:otherwise>
             </c:choose>
         </c:when>
         <c:when test="${aef:isIteration(item)}">

@@ -107,8 +107,8 @@ public class AEFFunctions {
         AEFFunctions.maxStrLength = maxStrLength;
     }
 
-    public static boolean isBeforeThisDay(Date date) {
-        return date.before(GregorianCalendar.getInstance().getTime());
+    public static boolean isBeforeThisDay(DateTime date) {
+        return date.isBeforeNow();
     }
 
     public static boolean listContains(Collection<Object> coll, Object object) {

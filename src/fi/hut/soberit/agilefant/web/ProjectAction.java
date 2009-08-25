@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.Date;
-
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -38,10 +37,15 @@ public class ProjectAction implements CRUDAction, Prefetching {
         return Action.SUCCESS;
     }
     
+    public String projectData() {
+        project = projectBusiness.getProjectData(projectId);
+        return Action.SUCCESS;
+    }
+    
     public String create() {
         project = new Project();
-        project.setStartDate(new Date());
-        project.setEndDate(new Date());
+        project.setStartDate(new DateTime());
+        project.setEndDate(new DateTime());
         return Action.SUCCESS;
     }
 

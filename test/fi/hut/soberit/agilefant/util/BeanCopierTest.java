@@ -29,7 +29,6 @@ public class BeanCopierTest {
         assertEquals("Hello", dest.getFoo());
         assertEquals("Bar", source.getFoo());
         assertEquals(200L, dest.getEe().getMinorUnits().longValue());
-        assertEquals(3, dest.getColl().size());
     }
     
     @Test

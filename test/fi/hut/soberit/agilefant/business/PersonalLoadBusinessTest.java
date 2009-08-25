@@ -169,8 +169,8 @@ public class PersonalLoadBusinessTest {
 
         // 3.6 - 10.6
         Iteration iter = new Iteration();
-        iter.setStartDate(iterationStart.toDate());
-        iter.setEndDate(iterationEnd.toDate());
+        iter.setStartDate(iterationStart);
+        iter.setEndDate(iterationEnd);
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
 
@@ -213,8 +213,8 @@ public class PersonalLoadBusinessTest {
 
         // 1.6 - 9.6
         Iteration iter = new Iteration();
-        iter.setStartDate(iterationStart.toDate());
-        iter.setEndDate(iterationEnd.toDate());
+        iter.setStartDate(iterationStart);
+        iter.setEndDate(iterationEnd);
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
 
@@ -256,8 +256,8 @@ public class PersonalLoadBusinessTest {
 
         // 2.6 - 4.6
         Iteration iter = new Iteration();
-        iter.setStartDate(iterationStart.toDate());
-        iter.setEndDate(iterationEnd.toDate());
+        iter.setStartDate(iterationStart);
+        iter.setEndDate(iterationEnd);
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
 
@@ -299,8 +299,8 @@ public class PersonalLoadBusinessTest {
 
         // 1.6 - 4.6
         Iteration iter = new Iteration();
-        iter.setStartDate(iterationStart.toDate());
-        iter.setEndDate(iterationEnd.toDate());
+        iter.setStartDate(iterationStart);
+        iter.setEndDate(iterationEnd);
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
         loadContainer.setTotalAssignedLoad(500L);
@@ -420,10 +420,10 @@ public class PersonalLoadBusinessTest {
         DateTime projStart = new DateTime(2009, 6, 3, 0, 0, 0, 0);
         DateTime projEnd = new DateTime(2009, 6, 10, 0, 0, 0, 0);
         Interval projInterval = new Interval(projStart, projEnd);
-        iter.setStartDate(iterStart.toDate());
-        iter.setEndDate(iterEnd.toDate());// 5 days for interval 1, zero for 2
-        proj.setStartDate(projStart.toDate());
-        proj.setEndDate(projEnd.toDate());// 3 for interval 1, 3 for 2
+        iter.setStartDate(iterStart);
+        iter.setEndDate(iterEnd);// 5 days for interval 1, zero for 2
+        proj.setStartDate(projStart);
+        proj.setEndDate(projEnd);// 3 for interval 1, 3 for 2
 
         // set up two intervals
         ComputedLoadData preComputed = new ComputedLoadData();

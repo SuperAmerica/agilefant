@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
@@ -37,8 +37,8 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
     private void addIterationIntervalLimit(Criteria crit, Interval interval) {
         //search only from iterations
         crit.add(Restrictions.eq("class", "Iteration"));
-        Date startDate = interval.getStart().toDate();
-        Date endDate = interval.getEnd().toDate();
+        DateTime startDate = interval.getStart();
+        DateTime endDate = interval.getEnd();
         //iteration may start during the interval
         Criterion startDateLimit = Restrictions.between("startDate", startDate,
                 endDate);

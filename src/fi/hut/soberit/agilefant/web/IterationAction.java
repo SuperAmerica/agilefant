@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.Date;
-
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -38,8 +37,8 @@ public class IterationAction implements
     public String create() {
         iterationId = 0;
         iteration = new Iteration();
-        iteration.setStartDate(new Date());
-        iteration.setEndDate(new Date());
+        iteration.setStartDate(new DateTime());
+        iteration.setEndDate(new DateTime());
         return Action.SUCCESS;
     }
 

@@ -6,6 +6,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 public interface ProjectBusiness extends GenericBusiness<Project> {
 
@@ -19,4 +20,6 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
             IllegalArgumentException;
 
     public ProjectMetrics getProjectMetrics(Project project);
+    
+    public ProjectTO getProjectData(int projectId);
 }

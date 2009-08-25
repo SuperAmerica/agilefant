@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -124,7 +124,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
     }
 
     public List<Iteration> retrieveEmptyIterationsWithPlannedSize(
-            Date startDate, Date endDate, User assignee) {
+            DateTime startDate, DateTime endDate, User assignee) {
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
 
         // interval limitations

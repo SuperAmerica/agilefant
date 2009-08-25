@@ -1,11 +1,11 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
@@ -26,8 +26,8 @@ public class AssignmentDAOHibernate extends GenericDAOHibernate<Assignment> impl
         Criteria crit = getCurrentSession().createCriteria(Assignment.class);
         Criteria backlog = crit.createCriteria("backlog");
         crit.createCriteria("user").add(Restrictions.idEq(user.getId()));
-        Date startDate = interval.getStart().toDate();
-        Date endDate = interval.getEnd().toDate();
+        DateTime startDate = interval.getStart();
+        DateTime endDate = interval.getEnd();
         //iteration may start during the interval
         Criterion startDateLimit = Restrictions.between("startDate", startDate,
                 endDate);

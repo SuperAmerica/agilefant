@@ -44,8 +44,8 @@ public class IterationDAOTest extends AbstractHibernateTests {
         User user = new User();
         user.setId(1);
         List<Iteration> actual = iterationDAO
-                .retrieveEmptyIterationsWithPlannedSize(startDate.toDate(),
-                        endDate.toDate(), user);
+                .retrieveEmptyIterationsWithPlannedSize(startDate,
+                        endDate, user);
         assertEquals(1, actual.size());
         assertEquals(4, actual.get(0).getId());
     }

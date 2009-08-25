@@ -44,10 +44,10 @@ public class BeanCopier {
             }
             else if (Collection.class.isAssignableFrom(sourceType)) {
                 Collection coll = (Collection)value;
-                Class clazz = value.getClass();
-                Collection newColl = (Collection)clazz.newInstance();
-                newColl.addAll(coll);
-                writer.getWriteMethod().invoke(dest, newColl);
+//                Class clazz = value.getClass();
+//                Collection newColl = (Collection)clazz.newInstance();
+//                newColl.addAll(coll);
+                writer.getWriteMethod().invoke(dest, value);
             }
             else if (sourceType.getName().equals(destType.getName())) {
                 writer.getWriteMethod().invoke(dest, value);

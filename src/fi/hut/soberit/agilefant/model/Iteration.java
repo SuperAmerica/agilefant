@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -14,8 +13,10 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.joda.time.DateTime;
 
 import flexjson.JSON;
 
@@ -43,9 +44,9 @@ import flexjson.JSON;
 @Audited
 public class Iteration extends Backlog implements Schedulable {
  
-    private Date startDate;
+    private DateTime startDate;
 
-    private Date endDate;
+    private DateTime endDate;
     
     private ExactEstimate backlogSize = new ExactEstimate(0);
     
@@ -57,23 +58,27 @@ public class Iteration extends Backlog implements Schedulable {
     
     private ExactEstimate baselineLoad = new ExactEstimate(0);
     
-    @JSON
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
+    
+    public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 
     @JSON
-    public Date getStartDate() {
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    public DateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setStartDate(DateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    @JSON
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    public DateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
 
     @JSON
     @Embedded

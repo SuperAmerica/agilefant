@@ -1,10 +1,11 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.joda.time.DateTime;
 
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Task;
@@ -32,5 +33,5 @@ public interface IterationDAO extends GenericDAO<Iteration> {
     public Map<Integer, Integer> getTotalAvailability(Set<Integer> iterationIds);
 
     public List<Iteration> retrieveEmptyIterationsWithPlannedSize(
-            Date startDate, Date endDate, User assignee);
+            DateTime startDate, DateTime endDate, User assignee);
 }

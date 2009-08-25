@@ -209,7 +209,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             throw new IllegalArgumentException(
                     "Nested iterations are not allowed.");
         }
-        if (iterationData.getEndDate().before(iterationData.getStartDate())) {
+        if (iterationData.getEndDate().isBefore(iterationData.getStartDate())) {
             throw new IllegalArgumentException("End date before start date");
         }
         if (iterationId == 0) {

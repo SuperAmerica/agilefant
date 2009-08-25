@@ -13,9 +13,11 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 public class ProjectActionTest {
 
@@ -39,20 +41,49 @@ public class ProjectActionTest {
         project.setId(123);
     }
 
+    private void verifyAll() {
+        verify(projectBusiness);
+    }
+
+    private void replayAll() {
+        replay(projectBusiness);
+    }
+
     @Test
     public void testProjectMetrics() {
         ProjectMetrics metrics = new ProjectMetrics();
         projectAction.setProjectId(project.getId());
         expect(projectBusiness.retrieve(project.getId())).andReturn(project);
         expect(projectBusiness.getProjectMetrics(project)).andReturn(metrics);
-        replay(projectBusiness);
+        replayAll();
 
         assertEquals(Action.SUCCESS, projectAction.projectMetrics());
         assertEquals(metrics, projectAction.getProjectMetrics());
 
-        verify(projectBusiness);
+        verifyAll();
     }
 
+
+    @Test
+    public void testProjectData() {
+        ProjectTO projTO = new ProjectTO(project);
+        projectAction.setProjectId(project.getId());
+        expect(projectBusiness.getProjectData(project.getId())).andReturn(projTO);
+        replayAll();
+        assertEquals(Action.SUCCESS, projectAction.projectData());
+        assertEquals(projTO, projectAction.getProject());
+        verifyAll();
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testProjectData_notFound() {
+        projectAction.setProjectId(-1);
+        expect(projectBusiness.getProjectData(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        projectAction.projectData();
+        verifyAll();
+    }
+    
     @Test
     public void testCreate() {
         projectAction.setProject(null);
@@ -66,10 +97,10 @@ public class ProjectActionTest {
     public void testRetrieve() {
         projectAction.setProjectId(123);
         expect(projectBusiness.retrieve(123)).andReturn(project);
-        replay(projectBusiness);
+        replayAll();
         projectAction.retrieve();
         assertEquals(project, projectAction.getProject());
-        verify(projectBusiness);
+        verifyAll();
     }
 
     @Test
@@ -79,28 +110,28 @@ public class ProjectActionTest {
         projectAction.setProjectId(123);
         projectAction.setProject(project);
         expect(projectBusiness.store(123, 313, project)).andReturn(dummy);
-        replay(projectBusiness);
+        replayAll();
         projectAction.store();
         assertEquals(dummy, projectAction.getProject());
-        verify(projectBusiness);
+        verifyAll();
     }
 
     @Test
     public void testDelete() {
         projectAction.setProjectId(123);
         projectBusiness.delete(123);
-        replay(projectBusiness);
+        replayAll();
         projectAction.delete();
-        verify(projectBusiness);
+        verifyAll();
     }
 
     @Test
     public void testInitializePrefetchData() {
         expect(projectBusiness.retrieve(123)).andReturn(project);
-        replay(projectBusiness);
+        replayAll();
         projectAction.initializePrefetchedData(123);
         assertEquals(project, projectAction.getProject());
-        verify(projectBusiness);
+        verifyAll();
     }
 
 }

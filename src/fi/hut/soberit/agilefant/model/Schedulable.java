@@ -1,8 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public interface Schedulable {
-    public Date getStartDate();
-    public Date getEndDate();
+    public DateTime getStartDate();
+    public DateTime getEndDate();
 }

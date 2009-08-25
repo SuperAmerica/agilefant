@@ -127,10 +127,6 @@ public class TransferObjectBusinessTest {
                 containsTaskWithId(task.getId(), story1.getId(), actualStories));
     }
 
-
-
-
-
     @Test
     public void testContructBacklogDataWithUserData_emptyIteration() {
         iteration.getStories().clear();

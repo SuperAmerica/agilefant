@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 
 import javax.persistence.AttributeOverride;
@@ -15,8 +14,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
+import org.joda.time.DateTime;
 
 import flexjson.JSON;
 
@@ -53,9 +54,9 @@ public class Project extends Backlog implements Schedulable {
 
     private ProjectType projectType;
 
-    private Date endDate;
+    private DateTime endDate;
 
-    private Date startDate;
+    private DateTime startDate;
 
     private int rank = 0;
 
@@ -67,22 +68,26 @@ public class Project extends Backlog implements Schedulable {
     
     private ExactEstimate backlogSize = new ExactEstimate(0);
 
-    @JSON
-    public Date getStartDate() {
-        return startDate;
+
+
+    public void setEndDate(DateTime endDate) {
+        this.endDate = endDate;
     }
 
-    public void setStartDate(Date startDate) {
+    @JSON
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    public DateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
 
     @JSON
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    public DateTime getStartDate() {
+        return startDate;
     }
 
     @ManyToOne

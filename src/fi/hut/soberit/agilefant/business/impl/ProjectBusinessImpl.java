@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.Collection;
 
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,10 +12,13 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @Service("projectBusiness")
 @Transactional
@@ -104,7 +108,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
      */
     private static void validateProjectData(Project project, int projectId, Integer productId)
         throws IllegalArgumentException {
-        if (project.getStartDate().after(project.getEndDate())) {
+        if (project.getStartDate().isAfter(project.getEndDate())) {
             throw new IllegalArgumentException("Project start date after end date.");
         }
         if(projectId == 0 && productId == null) {
@@ -120,5 +124,23 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     }
 
 
-
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public ProjectTO getProjectData(int projectId) {
+        ProjectTO project = new ProjectTO(this.retrieve(projectId));
+        for (Backlog backlog : project.getChildren()) {
+            Iteration iter = (Iteration)backlog;
+            Interval interval = new Interval(iter.getStartDate(), iter.getEndDate());
+            if (interval.isBeforeNow()) {
+                project.getPastIterations().add(iter);
+            }
+            else if (interval.isAfterNow()) {
+                project.getFutureIterations().add(iter);
+            }
+            else {
+                project.getOngoingIterations().add(iter);
+            }
+        }
+        return project;
+    }
 }

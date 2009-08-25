@@ -303,8 +303,8 @@ public class IterationBusinessTest {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(3);
         Iteration iter = new Iteration();
-        iter.setStartDate(start.toDate());
-        iter.setEndDate(end.toDate());
+        iter.setStartDate(start);
+        iter.setEndDate(end);
         iter.setParent(project);
         iteration.setParent(project);
         iter.setBacklogSize(new ExactEstimate(120L));
@@ -349,8 +349,8 @@ public class IterationBusinessTest {
     public void testStoreIteration_invalidInterval() {
         DateTime start = new DateTime();
         DateTime end = start.minusDays(3);
-        iteration.setStartDate(start.toDate());
-        iteration.setEndDate(end.toDate());
+        iteration.setStartDate(start);
+        iteration.setEndDate(end);
 
         expect(backlogBusiness.retrieve(12)).andReturn(project);
         replayAll();
@@ -363,8 +363,8 @@ public class IterationBusinessTest {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(3);
         Iteration iter = new Iteration();
-        iter.setStartDate(start.toDate());
-        iter.setEndDate(end.toDate());
+        iter.setStartDate(start);
+        iter.setEndDate(end);
         iter.setParent(project);
         iteration.setParent(project);
         iter.setBacklogSize(new ExactEstimate(120L));
@@ -396,8 +396,8 @@ public class IterationBusinessTest {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(3);
         Iteration iter = new Iteration();
-        iter.setStartDate(start.toDate());
-        iter.setEndDate(end.toDate());
+        iter.setStartDate(start);
+        iter.setEndDate(end);
         iter.setParent(project);
         iteration.setParent(project);        
         expect(backlogBusiness.retrieve(11)).andReturn(project);

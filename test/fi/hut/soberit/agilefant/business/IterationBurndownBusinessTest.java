@@ -80,8 +80,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         endDate = new DateTime(2009,1,10,0,0,0,0);
         iteration = new Iteration();
         iteration.setId(123);
-        iteration.setStartDate(startDate.toDate());
-        iteration.setEndDate(endDate.toDate());
+        iteration.setStartDate(startDate);
+        iteration.setEndDate(endDate);
         originalEstimateSum = new ExactEstimate(100 * 60);
         
         chart = ChartFactory.createTimeSeriesChart(BURNDOWN_SERIES_NAME,

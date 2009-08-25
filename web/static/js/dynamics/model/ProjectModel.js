@@ -22,6 +22,7 @@ var ProjectModel = function() {
     "endDate": "endDate",
     "backlogSize": "backlogSize",
     "baselineLoad": "baselineLoad",
+    "scheduleStatus": "scheduleStatus",
     "status": "status"
   };
   this.classNameToRelation = {
@@ -109,6 +110,29 @@ ProjectModel.prototype.reload = function() {
 };
 
 
+ProjectModel.prototype.getPastIterations = function() {
+  return this._getChildrenByScheduleStatus("PAST");
+};
+
+ProjectModel.prototype.getOngoingIterations = function() {
+  return this._getChildrenByScheduleStatus("ONGOING");
+};
+
+ProjectModel.prototype.getFutureIterations = function() {
+  return this._getChildrenByScheduleStatus("FUTURE");
+};
+
+ProjectModel.prototype._getChildrenByScheduleStatus = function(status) {
+  var returnedIterations = [];
+  var children = this.getChildren();
+  for (var i = 0; i < children.length; i++) {
+    if (children[i].getScheduleStatus() === status) {
+      returnedIterations.push(children[i]);
+    }
+  }
+  return returnedIterations;
+};
+
 /* GETTERS */
 ProjectModel.prototype.getBacklogSize = function() {
   return this.currentData.backlogSize;
@@ -125,6 +149,11 @@ ProjectModel.prototype.setBaselineLoad = function(baselineLoad) {
   this.currentData.baselineLoad = baselineLoad;
   this._commitIfNotInTransaction();
 };
+
+ProjectModel.prototype.getChildren = function() {
+  return this.relations.iteration;
+};
+
 
 ProjectModel.prototype.getDescription = function() {
   return this.currentData.description;
@@ -154,6 +183,10 @@ ProjectModel.prototype.getName = function() {
 ProjectModel.prototype.setName = function(name) {
   this.currentData.name = name;
   this._commitIfNotInTransaction();
+};
+
+ProjectModel.prototype.getScheduleStatus = function() {
+  return this.currentData.scheduleStatus;
 };
 
 ProjectModel.prototype.getStartDate = function() {

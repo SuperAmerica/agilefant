@@ -6,6 +6,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,14 +20,17 @@ import fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 
 public class ProjectBusinessTest {
 
@@ -222,9 +226,25 @@ public class ProjectBusinessTest {
         assertEquals(111, actual.getId());
         assertEquals("Foo faa", actual.getName());
         
-        assertEquals(1, actual.getFutureIterations().size());
-        assertEquals(1, actual.getOngoingIterations().size());
-        assertEquals(1, actual.getPastIterations().size());
+        assertEquals(3, actual.getChildren().size());
+        
+        Collection<IterationTO> transferObjects = new ArrayList<IterationTO>();
+        for (Backlog blog : actual.getChildren()) {
+            transferObjects.add((IterationTO)blog);
+        }
+        
+        assertTrue(checkChildByIdAndStatus(123, ScheduleStatus.PAST, transferObjects));
+        assertTrue(checkChildByIdAndStatus(333, ScheduleStatus.ONGOING, transferObjects));
+        assertTrue(checkChildByIdAndStatus(444, ScheduleStatus.FUTURE, transferObjects));
+    }
+    
+    private boolean checkChildByIdAndStatus(int id, ScheduleStatus status, Collection<IterationTO> children) {
+        for (IterationTO child : children) {
+            if (child.getId() == id && child.getScheduleStatus() == status) {
+                return true;
+            }
+        }
+        return false;
     }
     
     @Test(expected = ObjectNotFoundException.class)

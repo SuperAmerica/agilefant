@@ -1,16 +1,16 @@
 package fi.hut.soberit.agilefant.transfer;
 
-import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 
-public class ProjectTO extends Project {
+public class IterationTO extends Iteration {
 
     private ScheduleStatus scheduleStatus;
     
-    public ProjectTO(Project project) {
-        BeanCopier.copy(project, this);
+    public IterationTO(Iteration iter) {
+        BeanCopier.copy(iter, this);
     }
-    
+
     public void setScheduleStatus(ScheduleStatus scheduleStatus) {
         this.scheduleStatus = scheduleStatus;
     }
@@ -18,5 +18,4 @@ public class ProjectTO extends Project {
     public ScheduleStatus getScheduleStatus() {
         return scheduleStatus;
     }
-
 }

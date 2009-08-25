@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.joda.time.Interval;
@@ -17,8 +18,10 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 
 @Service("projectBusiness")
 @Transactional
@@ -127,19 +130,22 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public ProjectTO getProjectData(int projectId) {
-        ProjectTO project = new ProjectTO(this.retrieve(projectId));
-        for (Backlog backlog : project.getChildren()) {
-            Iteration iter = (Iteration)backlog;
+        Project original = this.retrieve(projectId);
+        ProjectTO project = new ProjectTO(original);
+        project.setChildren(new ArrayList<Backlog>());
+        for (Backlog backlog : original.getChildren()) {
+            IterationTO iter = new IterationTO((Iteration)backlog);
             Interval interval = new Interval(iter.getStartDate(), iter.getEndDate());
             if (interval.isBeforeNow()) {
-                project.getPastIterations().add(iter);
+                iter.setScheduleStatus(ScheduleStatus.PAST);
             }
             else if (interval.isAfterNow()) {
-                project.getFutureIterations().add(iter);
+                iter.setScheduleStatus(ScheduleStatus.FUTURE);
             }
             else {
-                project.getOngoingIterations().add(iter);
+                iter.setScheduleStatus(ScheduleStatus.ONGOING);
             }
+            project.getChildren().add(iter);
         }
         return project;
     }

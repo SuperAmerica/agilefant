@@ -4,7 +4,6 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.util.Collection;
 
 public class BeanCopier {
 
@@ -23,7 +22,6 @@ public class BeanCopier {
         }
     }
     
-    @SuppressWarnings("unchecked")
     private static <T extends Object> void copyAttribute(T source, T dest, String name) {
         PropertyDescriptor reader;
         PropertyDescriptor writer;
@@ -41,13 +39,6 @@ public class BeanCopier {
             Class<?> destType = writer.getPropertyType();
             if (value == null) {
                 writer.getWriteMethod().invoke(dest, new Object[] { null });
-            }
-            else if (Collection.class.isAssignableFrom(sourceType)) {
-                Collection coll = (Collection)value;
-//                Class clazz = value.getClass();
-//                Collection newColl = (Collection)clazz.newInstance();
-//                newColl.addAll(coll);
-                writer.getWriteMethod().invoke(dest, value);
             }
             else if (sourceType.getName().equals(destType.getName())) {
                 writer.getWriteMethod().invoke(dest, value);

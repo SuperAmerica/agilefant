@@ -88,6 +88,8 @@ ProjectController.prototype.paint = function() {
         me.paintAssigneeList();
         me.paintStoryList();
         me.paintOngoingIterationList();
+        me.paintPastIterationList();
+        me.paintFutureIterationList();
       });
 };
 
@@ -237,10 +239,10 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
 ProjectController.prototype.initializeIterationListConfig = function() {
   var ongoingConfig = new DynamicTableConfiguration( {
 //    rowControllerFactory : ProjectController.prototype.storyControllerFactory,
-    dataSource : ProjectModel.prototype.getIterations,
+    dataSource : ProjectModel.prototype.getOngoingIterations,
 //    saveRowCallback: StoryController.prototype.saveStory,
 //    sortCallback: ProjectController.prototype.sortStories,
-    caption : "Iterations"
+    caption : "Ongoing Iterations"
   });
   this._iterationListColumnConfig(ongoingConfig);
   this.ongoingIterationListConfig = ongoingConfig;

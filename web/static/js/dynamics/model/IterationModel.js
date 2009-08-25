@@ -21,7 +21,8 @@ var IterationModel = function() {
     "startDate": "startDate",
     "endDate": "endDate",
     "backlogSize": "backlogSize",
-    "baselineLoad": "baselineLoad"
+    "baselineLoad": "baselineLoad",
+    "scheduleStatus": "scheduleStatus"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "parent",
@@ -135,6 +136,10 @@ IterationModel.prototype.getDescription = function() {
 IterationModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
   this._commitIfNotInTransaction();
+};
+
+IterationModel.prototype.getScheduleStatus = function() {
+  return this.currentData.scheduleStatus;
 };
 
 IterationModel.prototype.getStartDate = function() {

@@ -35,10 +35,14 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.Product":   "backlog",
   "fi.hut.soberit.agilefant.model.Project":   "backlog",
   
+  "fi.hut.soberit.agilefant.transfer.ProjectTO": "backlog",
+  "fi.hut.soberit.agilefant.transfer.ProductTO": "backlog",
+  "fi.hut.soberit.agilefant.transfer.IterationTO": "backlog",
+  
   "fi.hut.soberit.agilefant.model.Story":     "story",
-  "fi.hut.soberit.agilefant.model.StoryTO":   "story",
+  "fi.hut.soberit.agilefant.transfer.StoryTO":   "story",
   "fi.hut.soberit.agilefant.model.Task":      "task",
-  "fi.hut.soberit.agilefant.model.TaskTO":    "task",
+  "fi.hut.soberit.agilefant.transfer.TaskTO":    "task",
     
   "fi.hut.soberit.agilefant.model.User":    "user",
     
@@ -60,10 +64,14 @@ ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.model.Project":         ProjectModel,
     "fi.hut.soberit.agilefant.model.Product":         ProductModel,
     
+    "fi.hut.soberit.agilefant.transfer.IterationTO":  IterationModel,
+    "fi.hut.soberit.agilefant.transfer.ProjectTO":    ProjectModel,
+    "fi.hut.soberit.agilefant.transfer.ProductTO":    ProductModel,
+    
     "fi.hut.soberit.agilefant.model.Story":           StoryModel,
-    "fi.hut.soberit.agilefant.model.StoryTO":         StoryModel,
+    "fi.hut.soberit.agilefant.transfer.StoryTO":      StoryModel,
     "fi.hut.soberit.agilefant.model.Task":            TaskModel,
-    "fi.hut.soberit.agilefant.model.TaskTO":          TaskModel,
+    "fi.hut.soberit.agilefant.transfer.TaskTO":       TaskModel,
       
     "fi.hut.soberit.agilefant.model.User":            UserModel,
       

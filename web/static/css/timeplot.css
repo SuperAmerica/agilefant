@@ -93,3 +93,13 @@
     border: 1px solid #FFB02D;
     z-index: 998;
 }
+
+.legend-box {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  border:2px solid rgba(0, 0, 0, 0.5);
+  margin-bottom:2px;
+  padding: 3px;
+}
+padding:2px;

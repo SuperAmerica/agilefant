@@ -16,6 +16,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 
 /**
  * Struts test case extends jUnit 3's <code>TestCase</code>.
@@ -90,7 +91,7 @@ public class IterationActionTest {
         iterationAction.setIterationId(1);
         iterationAction.setParentBacklogId(2);
         iterationAction.store();
-        assertEquals(iter2, iterationAction.getIteration());
+        assertEquals(IterationTO.class, iterationAction.getIteration().getClass());
         verifyAll();
     }
 }

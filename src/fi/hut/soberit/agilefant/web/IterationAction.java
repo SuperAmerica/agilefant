@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 
 @Component("iterationAction")
 @Scope("prototype")
@@ -70,7 +71,7 @@ public class IterationAction implements
     )
     */
     public String store() {
-        iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
+        iteration = new IterationTO(this.iterationBusiness.store(iterationId, parentBacklogId, iteration));
         return Action.SUCCESS;
     }
     

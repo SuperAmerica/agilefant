@@ -25,12 +25,12 @@ var IterationModel = function() {
     "scheduleStatus": "scheduleStatus"
   };
   this.classNameToRelation = {
-      "fi.hut.soberit.agilefant.model.Product":       "parent",
-      "fi.hut.soberit.agilefant.model.Project":       "parent",
-      "fi.hut.soberit.agilefant.model.Story":         "story",
-      "fi.hut.soberit.agilefant.model.Task":          "task",
-      "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
-      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
+    "fi.hut.soberit.agilefant.model.Product":       "parent",
+    "fi.hut.soberit.agilefant.model.Project":       "parent",
+    "fi.hut.soberit.agilefant.model.Story":         "story",
+    "fi.hut.soberit.agilefant.model.Task":          "task",
+    "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
+    "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
   };
 };
 

@@ -434,11 +434,11 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
     public ComputedLoadData retrieveUserLoad(User user, int weeksAhead) {
         Period len = new Period();
         len = len.plusDays(1);
-        MutableDateTime currentWeekStart = new MutableDateTime();
-        currentWeekStart.setDayOfWeek(DateTimeConstants.MONDAY);
-        currentWeekStart.setMillisOfDay(0);
+        MutableDateTime startDate = new MutableDateTime();
+        //currentWeekStart.setDayOfWeek(DateTimeConstants.MONDAY);
+        startDate.setMillisOfDay(0);
 
-        DateTime start = currentWeekStart.toDateTime();
+        DateTime start = startDate.toDateTime();
         DateTime end = start.plusWeeks(weeksAhead);
         return this.generatePersonalAssignedLoad(user, start, end, len);
     }

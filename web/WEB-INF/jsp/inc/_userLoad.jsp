@@ -79,16 +79,25 @@ $(window).resize(function() {
 			effort</span></a></li>
 		</c:if>
 	</ul>
-	<div class="subItems" style="width: 90%;">
+	<div class="subItems" style="width: 100%;">
 		<div id="Spent_Effort"></div>
 		<div id="detailedLoadTable">
 		  <div style="position: relative">
-		  <div style="width: 90%; height: 250px; margin-top: 10px; position: relative;" id="detailedLoadPlot"></div>
+		  <div style="float: left; width: 76%; height: 250px; margin-top: 10px; position: relative;" id="detailedLoadPlot"></div>
 		  </div>
-		  <div style="margin-top: 10px;" id="detailedLoadLegend"></div>
+		  <div style="margin-top: 10px; float: right; width: 14%; margin-right: 2%; margin-left: 2%;" id="detailedLoadLegend"></div>
 		</div>
-		<div id="smallLoadTable">
-			<div style="position: relative;"><div style="width: 90%; height: 250px; margin-top: 10px; position: relative;" id="loadPlot"></div></div>
+		<div id="smallLoadTable" >
+			<div style="position: relative;">
+              <div style="float: left; width: 76%; height: 250px; margin-top: 10px; position: relative;" id="loadPlot"></div>
+            </div>
+            <div style="margin-top: 10px; float: right; width: 14%; margin-right: 2%; margin-left: 2%;">
+              <div style="background-color: rgba(150, 8, 8, 0.7);">Maximum</div>
+              <div style="background-color: rgba(224, 17, 2, 0.7);">Critical</div>
+              <div style="background-color: rgba(245, 221, 57, 0.7);">Optimal high</div>
+              <div style="background-color: rgba(9, 144, 14, 0.7);">Optimal low</div>
+              <div style="background-color: rgba(204, 204, 204, 0.7);">Low</div>
+            </div>
 		</div>
 	</div>
 </div>

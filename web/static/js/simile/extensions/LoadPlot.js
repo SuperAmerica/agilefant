@@ -72,7 +72,7 @@ Timeplot.AgilefantBacklogPlot.prototype._boxColor = function(backlog) {
     base.darken(16);
     color = base;
     this.colors[oid] = color.toString();
-    $("<span />").css("background-color", color.toString()).text(backlog.name).appendTo(this._plotInfo.legends);
+    $("<div />").css("background-color", color.toString()).text(backlog.name).appendTo(this._plotInfo.legends);
     
   }
   return this.colors[oid];
@@ -145,7 +145,7 @@ Timeplot.WeekTimeGeometry.prototype._calculateGrid = function() {
   do {
       time.roundDownToInterval(t, unit, this._timeZone, 1, 0);
       var x = this.toScreen(u.toNumber(t));
-      var l = t.getFullYear() + "-" + t.getMonth() + "-" + t.getDate();
+      var l = t.getFullYear() + "-" + (t.getMonth()+1) + "-" + t.getDate();
 
       if (x > 0) { 
           grid.push({ x: x, label: l });

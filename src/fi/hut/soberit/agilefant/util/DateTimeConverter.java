@@ -23,7 +23,7 @@ LocaleProvider {
             this.getClass(), this);
 
     protected DateFormat getDateFormat() {
-        String pattern = textProvider.getText("struts.date.format");
+        String pattern = textProvider.getText("struts.shortDateTime.format");
         return new SimpleDateFormat(pattern);
         // return DateFormat.getDateInstance(DateFormat.SHORT,
         // ActionContext.getContext().getLocale());
@@ -35,7 +35,7 @@ LocaleProvider {
         String value = values[0];
 
         DateFormat df = this.getDateFormat();
-
+        
         try {
             return new DateTime(df.parse(value));
         } catch (ParseException e) {

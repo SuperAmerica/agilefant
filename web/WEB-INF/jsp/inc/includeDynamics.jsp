@@ -31,6 +31,7 @@
 <script type="text/javascript" src="static/js/dynamics/controller/CommonController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/BacklogController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/IterationController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/ProductController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/IterationRowController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/ProjectController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/StoryController.js"></script>

@@ -109,24 +109,30 @@ DynamicTable.prototype._bindEvents = function() {
     var targetRow = ui.item.data("row");
     me.middleRows = [];
     me.element.find("> .dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
-      me.middleRows.push($(row).data("row"));
+      var rowObj = $(row).data("row");
+      me.middleRows.push(rowObj);
     });
     event.stopPropagation();
     targetRow.setParentView(me);
     me.rowHashes.push(targetRow.getModel().getHashCode());
+    $('<div/>').text("receive").appendTo(document.body);
   });
   
   this.element.bind("sortremove", function(event, ui) {
     var targetRow = ui.item.data("row");
     me.removeRow(targetRow);
+    var x = me;
+    $('<div/>').text("remove").appendTo(document.body);
   });
   
   this.element.bind("sortover", function(event, ui) {
     ui.item.data("sortactive", true);
+    $('<div/>').text("over").appendTo(document.body);
   });
   
   this.element.bind("sortout", function(event, ui) {
     ui.item.data("sortactive", false);
+    $('<div/>').text("out").appendTo(document.body);
   });
   
 };
@@ -195,6 +201,20 @@ DynamicTable.prototype.layout = function() {
         var targetModel = targetView.getModel();
         me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos);
         return false;
+      },
+      helper: function(event, target) {
+        target = $(target);
+        var helper = target.clone();
+        var height = target.height();
+        helper.find(".dynamictable-cell").css({
+          margin: 0,
+          padding: 0,
+          height: height
+        });
+        helper.css('border', '1px solid black');
+        helper.height(target.height());
+        helper.width(target.width());
+        return helper;
       }
     });
     this.element.sortable(opts);
@@ -211,6 +231,7 @@ DynamicTable.prototype._registerDropFor = function(target) {
         if (ui.draggable.data("sortactive")) {
           return false; 
         }
+        $('<div/>').text("drop").appendTo(document.body);
         var rowObj;
         var me = $(this);
         if(me.data("row")) {

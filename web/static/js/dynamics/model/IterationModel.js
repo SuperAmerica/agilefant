@@ -94,6 +94,9 @@ IterationModel.prototype._saveData = function(id, changedData) {
     success: function(data, status) {
       new MessageDisplay.OkMessage("Iteration saved successfully");
       me.setData(data);
+      if(!id) {
+        me.getParent().addIteration(me);
+      }
     },
     error: function(request, status, error) {
       new MessageDisplay.ErrorMessage("Error saving iteration");

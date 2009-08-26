@@ -95,6 +95,9 @@ ProjectModel.prototype._saveData = function(id, changedData) {
     success: function(data, status) {
       new MessageDisplay.OkMessage("Project saved successfully");
       me.setData(data);
+      if(!id) {
+        me.getParent().addProject(me);
+      }
     },
     error: function(request, status, error) {
       new MessageDisplay.ErrorMessage("Error saving project");
@@ -114,6 +117,11 @@ ProjectModel.prototype.reload = function() {
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }
   );
+};
+
+ProjectModel.prototype.addIteration = function(iteration) {
+  this.addRelation(iteration);
+  this.relationEvents();
 };
 
 

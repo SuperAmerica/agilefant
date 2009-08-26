@@ -249,7 +249,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var ongoingConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getOngoingIterations,
-    saveRowCallback: function() { alert("yey"); },
+    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Ongoing Iterations"
   });
   this._iterationListColumnConfig(ongoingConfig);
@@ -258,7 +258,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var pastConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getPastIterations,
-    saveRowCallback: function() { alert("yey"); },
+    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Past Iterations"
   });
   this._iterationListColumnConfig(pastConfig);
@@ -267,7 +267,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var futureConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getFutureIterations,
-    saveRowCallback: function() { alert("yey"); },
+    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Future Iterations"
   });
   this._iterationListColumnConfig(futureConfig);

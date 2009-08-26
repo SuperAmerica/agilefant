@@ -378,7 +378,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     editable : true,
     edit : {
       editor : "Date",
-      decorator: DynamicsDecorators.dateDecorator,
+      decorator: DynamicsDecorators.dateTimeDecorator,
       set : ProjectModel.prototype.setEndDate,
       withTime: true,
       required: true

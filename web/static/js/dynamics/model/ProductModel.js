@@ -93,6 +93,16 @@ ProductModel.prototype.reload = function() {
   );
 };
 
+ProductModel.prototype.addIteration = function(iteration) {
+  this.addRelation(iteration);
+  this.relationEvents();
+};
+
+ProductModel.prototype.addProject = function(project) {
+  this.addRelation(project);
+  this.relationEvents();
+};
+
 /* GETTERS */
 
 ProductModel.prototype.getDescription = function() {

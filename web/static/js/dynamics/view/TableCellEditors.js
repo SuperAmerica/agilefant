@@ -224,8 +224,8 @@ TableEditors.SingleSelection.prototype._renderOptions = function() {
 TableEditors.Date = function(row, cell, options) {
   this.element = $('<input type="text"/>').css('max-width','10em').width("98%").appendTo(
       cell.getElement());
-  this.element.data("preventblur", false);
   
+  this.datepickerOpen = false;
   this.init(row, cell, options);
   
   var me = this;
@@ -235,11 +235,21 @@ TableEditors.Date = function(row, cell, options) {
     numberOfMonths: 3,
     showButtonPanel: true,
     beforeShow: function() {
-      me.element.data("preventblur", true);
+      me.datepickerOpen = true;
+      pattern = /(\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
+      var index = me.element.val().search(pattern);
+      me.oldHoursAndMinutes = me.element.val().substr(index, 5);
     },
     onSelect: function() {
-      me.element.val(me.element.val() + " 12:00");
+      var newValue = me.element.val();
+      if (me.options.withTime) {
+        var newValue = me.element.val() + " " + me.oldHoursAndMinutes;
+      }
+      me.element.val(newValue);
       me.element.focus();
+    },
+    onClose: function() {
+      me.datepickerOpen = false;    
     },
     buttonImage: 'static/img/calendar.gif',
     buttonImageOnly: true,
@@ -249,17 +259,32 @@ TableEditors.Date = function(row, cell, options) {
   
 };
 TableEditors.Date.prototype = new TableEditors.CommonEditor();
-TableEditors.Date.prototype._handleBlurEvent = function(event) {
-  if (this.element.data("preventblur")) {
-    this.element.data("preventblur", false);
-    return;    
+TableEditors.Date.prototype._mouseEvent = function(event) {
+  if (this.datepickerOpen ||
+      this.element.get(0) === event.target ||
+      $(event.target).parents('.ui-datepicker').length > 0) {
+    return;
   }
   this.save();
 };
-TableEditors.CommonEditor.prototype.close = function() {
+TableEditors.Date.prototype._registerEvents = function() {
+  var me = this;
+  this.element.keypress(function(event) {
+    me._handleKeyEvent(event);
+    return true;
+  });
+  if(!this.options.editRow) {
+    this._clickCb = function(event) {
+      me._mouseEvent(event);
+    };
+    $(window).click(this._clickCb);
+  }
+};
+TableEditors.Date.prototype.close = function() {
   this.element.trigger("editorClosing");
   this.hideError();
   this.element.datepicker('destroy');
+  $(window).unbind('click', this._clickCb);
   this.element.remove();
 };
 TableEditors.Date.prototype.isValid = function() {

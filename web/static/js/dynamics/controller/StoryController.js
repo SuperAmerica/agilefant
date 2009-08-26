@@ -41,6 +41,12 @@ StoryController.prototype.editStory = function() {
   this.view.editRow();
 };
 
+StoryController.prototype.editDescription = function() {
+  var descriptionCell = this.view.getCell(StoryController.columnIndexes.description);
+  descriptionCell.show();
+  descriptionCell.openEditor();
+};
+
 StoryController.prototype.saveStory = function() {
   var createNewStory = !this.model.getId();
   if(this.view.saveRowEdit()) {
@@ -104,6 +110,8 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   var historyTab = tabs.add("History");
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
       taskTab);
+  this.contentsPanels.addPanel(infoContents);
+  this.contentsPanels.addPanel(tabs);
   this.taskListView.render();
   return this.contentsPanels;
 };

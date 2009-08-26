@@ -7,7 +7,9 @@ var DynamicsTabs = function(parent, options) {
   if(this.options.tabClass) {
      this.titles.addClass(this.options.tabClass);
   }
-  this.element.tabs();
+  this.initialRenderComplete = false;
+  this.topCache = "";
+  //this.element.tabs();
 };
 DynamicsTabs.prototype = new ViewPart();
 DynamicsTabs.prototype.add = function(name, cssOpt, options) {
@@ -19,10 +21,22 @@ DynamicsTabs.prototype.add = function(name, cssOpt, options) {
   var id = this.id+"_"+this.tabs.length;
   var newTab = $('<div id="'+id+'"/>').appendTo(this.element);
   var tel = $('#'+id);
-  this.element.tabs('add', '#'+id, name);
+  if(!this.initialRenderComplete) {
+    this.topCache += '<li><a href="#' + id + '">' + name + '</a></li>';
+  } else {
+    this.element.tabs('add', '#'+id, name);
+  }
   var tabNum = this.tabs.length;
   newTab.css(cssOpt);
   var el = this.element.find("#"+id);
   this.tabs.push(el);
   return el;
+};
+
+DynamicsTabs.prototype.render = function() {
+  if(!this.initialRenderComplete) {
+    this.titles.html(this.topCache);
+    this.element.tabs();
+  }
+  this.initialRenderComplete = true;
 };

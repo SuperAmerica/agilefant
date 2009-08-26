@@ -22,6 +22,7 @@ $(document).ready(function() {
 		this.cellConfig.expects().isVisible().andReturn(true);
 		this.cellConfig.expects().isDragHandle().andReturn(true);
 		this.cellConfig.expects().isEditable().andReturn(false);
+		this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
 		var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 
 		same(testable.getElement().css("width"), "10%", "Width correct");
@@ -38,7 +39,8 @@ $(document).ready(function() {
     this.cellConfig.expects().isVisible().andReturn(true);
     this.cellConfig.expects().isDragHandle().andReturn(false);
     this.cellConfig.expects().isEditable().andReturn(false);
-				
+    this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
+
 		var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 
 		same(testable.getElement().css("width"), "auto", "Width correct");
@@ -55,7 +57,7 @@ $(document).ready(function() {
 	    this.cellConfig.expects().isVisible().andReturn(true);
 	    this.cellConfig.expects().isDragHandle().andReturn(false);
 	    this.cellConfig.expects().isEditable().andReturn(true);
-	        
+
 	    var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 	    var openEditCalled = 0;
 	    testable.openEditor = function() {
@@ -80,6 +82,7 @@ $(document).ready(function() {
      this.cellConfig.expects().isVisible().andReturn(true);
      this.cellConfig.expects().isDragHandle().andReturn(false);
      this.cellConfig.expects().isEditable().andReturn(false);
+     this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
      this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
      this.cellConfig.expects().getEditableCallback().andReturn(function() { return true; });
      this.mockRow.expects().getController().andReturn(window);
@@ -123,6 +126,7 @@ $(document).ready(function() {
      this.cellConfig.expects().isVisible().andReturn(true);
      this.cellConfig.expects().isDragHandle().andReturn(false);
      this.cellConfig.expects().isEditable().andReturn(false);
+     this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
      this.mockRow.expects().getModel().andReturn(null);
      this.cellConfig.expects().getGetter().andReturn(null);
      this.cellConfig.expects().getDecorator().andReturn(null);

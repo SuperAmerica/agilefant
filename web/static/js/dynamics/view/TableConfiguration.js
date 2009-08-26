@@ -20,6 +20,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			subViewFactory: null,
 			visible: true,
 			dragHandle: false,
+			onDoubleClick: null,
 			editableCallback: function() { return true; },
 			edit: {
 				decorator: null,
@@ -96,6 +97,9 @@ DynamicTableColumnConfiguration.prototype.getEditableCallback = function() {
 };
 DynamicTableColumnConfiguration.prototype.getSubViewFactory = function() {
 	return this.options.subViewFactory;
+};
+DynamicTableColumnConfiguration.prototype.getDoubleClickCallback = function() {
+  return this.options.onDoubleClick;
 };
 
 DynamicTableCaptionItemConfiguration = function(options) {

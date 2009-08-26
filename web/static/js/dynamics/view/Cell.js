@@ -9,6 +9,7 @@ var DynamicTableCell = function(row, config) {
 	this.subView = null;
 	this.editor = null;
 	this.initialize();
+	this.cellRenderComplete = false;
 };
 
 DynamicTableCell.prototype = new ViewPart();
@@ -43,7 +44,17 @@ DynamicTableCell.prototype.initialize = function() {
 	  this.element.dblclick(function() {
 	    me.openEditor();
 	  });
+	} else if(this.config.getDoubleClickCallback()) {
+	  this.element.dblclick(function() {
+	    me.config.getDoubleClickCallback().call(me.row.getController(), me.row.getModel(), me);
+	  });
 	}
+	 var subViewFactory = this.config.getSubViewFactory();
+	 var model = this.row.getModel();
+  if (subViewFactory && !this.subView) {
+    this.subView = subViewFactory.call(this.row
+        .getController(), this, model); 
+  }
 	this._registerEventHandlers();
 };
 
@@ -81,12 +92,10 @@ DynamicTableCell.prototype.render = function() {
 	var getter = this.config.getGetter();
 	var decorator = this.config.getDecorator();
 	var value = "";
-	var subViewFactory = this.config.getSubViewFactory();
-  if (subViewFactory && !this.subView) {
-    this.subView = subViewFactory.call(this.row
-        .getController(), this, model);
+  if (this.subView && !this.cellRenderComplete) {
     this.subView.render(); 
   }
+  this.cellRenderComplete = true;
 	if (getter) {
 		value = getter.call(model);
 	} else {

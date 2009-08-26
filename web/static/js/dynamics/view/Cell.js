@@ -49,9 +49,9 @@ DynamicTableCell.prototype.initialize = function() {
 	    me.config.getDoubleClickCallback().call(me.row.getController(), me.row.getModel(), me);
 	  });
 	}
-	 var subViewFactory = this.config.getSubViewFactory();
-	 var model = this.row.getModel();
-  if (subViewFactory && !this.subView) {
+	var subViewFactory = this.config.getSubViewFactory(); 
+  if (subViewFactory) {
+    var model = this.row.getModel();
     this.subView = subViewFactory.call(this.row
         .getController(), this, model); 
   }

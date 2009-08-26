@@ -9,7 +9,6 @@ var DynamicsTabs = function(parent, options) {
   }
   this.initialRenderComplete = false;
   this.topCache = "";
-  //this.element.tabs();
 };
 DynamicsTabs.prototype = new ViewPart();
 DynamicsTabs.prototype.add = function(name, cssOpt, options) {

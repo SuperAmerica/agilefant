@@ -23,6 +23,7 @@ $(document).ready(function() {
 		this.cellConfig.expects().isDragHandle().andReturn(true);
 		this.cellConfig.expects().isEditable().andReturn(false);
 		this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
+		this.cellConfig.expects().getSubViewFactory().andReturn(null);
 		var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 
 		same(testable.getElement().css("width"), "10%", "Width correct");
@@ -40,6 +41,7 @@ $(document).ready(function() {
     this.cellConfig.expects().isDragHandle().andReturn(false);
     this.cellConfig.expects().isEditable().andReturn(false);
     this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
+    this.cellConfig.expects().getSubViewFactory().andReturn(null);
 
 		var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 
@@ -57,6 +59,7 @@ $(document).ready(function() {
 	    this.cellConfig.expects().isVisible().andReturn(true);
 	    this.cellConfig.expects().isDragHandle().andReturn(false);
 	    this.cellConfig.expects().isEditable().andReturn(true);
+	    this.cellConfig.expects().getSubViewFactory().andReturn(null);
 
 	    var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 	    var openEditCalled = 0;
@@ -83,8 +86,10 @@ $(document).ready(function() {
      this.cellConfig.expects().isDragHandle().andReturn(false);
      this.cellConfig.expects().isEditable().andReturn(false);
      this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
+     this.cellConfig.expects().getSubViewFactory().andReturn(null);
      this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
      this.cellConfig.expects().getEditableCallback().andReturn(function() { return true; });
+     
      this.mockRow.expects().getController().andReturn(window);
      
      var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
@@ -127,22 +132,24 @@ $(document).ready(function() {
      this.cellConfig.expects().isDragHandle().andReturn(false);
      this.cellConfig.expects().isEditable().andReturn(false);
      this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
+
+     
+     var mockView = this.mockControl.createMock(ViewPart);
+     
+     this.cellConfig.expects().getSubViewFactory().andReturn(function(view, model){
+       return mockView;
+     });
+     this.mockRow.expects().getModel().andReturn(null);
+     this.mockRow.expects().getController().andReturn(window);
+     
      this.mockRow.expects().getModel().andReturn(null);
      this.cellConfig.expects().getGetter().andReturn(null);
      this.cellConfig.expects().getDecorator().andReturn(null);
-     var renderCalled = 0;
-     var subView = function() {};
-     subView.prototype.render = function() {
-       renderCalled++;
-     };
-     this.cellConfig.expects().getSubViewFactory().andReturn(function(view, model){
-       view.getElement();
-       return new subView;
-     });
-     this.mockRow.expects().getController().andReturn(window);
-  
+     
+     mockView.expects().render();
+     
      var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
      testable.render();
-     equals(renderCalled, 1, "sub view render called once");
+     ok(true, "Mock test");
    });
 });

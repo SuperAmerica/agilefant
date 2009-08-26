@@ -29,13 +29,21 @@ var DynamicsDecorators = {
     }
     return Math.round(100*value/60)/100+"h";
   },
-  dateDecorator: function(value) {
+  dateTimeDecorator: function(value) {
     if(!value) {
-      return "&mdash;";
+      return "";
     }
     var date = new Date();
     date.setTime(value);
     return date.asString();
+  },
+  dateDecorator: function(value) {
+    if(!value) {
+      return "";
+    }
+    var date = new Date();
+    date.setTime(value);
+    return date.asString().substr(0, 10);
   },
   userNameDecorator: function(user) {
     return user.getFullName();

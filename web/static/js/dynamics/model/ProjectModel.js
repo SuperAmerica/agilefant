@@ -76,8 +76,15 @@ ProjectModel.prototype._saveData = function(id, changedData) {
   
   var url = "ajax/storeProject.action";
   var data = this.serializeFields("project", changedData);
-  data.projectId = id;
- 
+  
+  if (id) {
+    data.projectId = id;    
+  }
+  else {
+    url = "ajax/storeNewProject.action";
+    data.productId = this.getParent().getId();
+  }
+  
   jQuery.ajax({
     type: "POST",
     url: url,
@@ -133,6 +140,14 @@ ProjectModel.prototype._getChildrenByScheduleStatus = function(status) {
   return returnedIterations;
 };
 
+ProjectModel.prototype.getParent = function() {
+  return this.relations.product;
+};
+
+ProjectModel.prototype.setParent = function(backlog) {
+  this.relations.product = backlog;
+};
+
 /* GETTERS */
 ProjectModel.prototype.getBacklogSize = function() {
   return this.currentData.backlogSize;
@@ -184,6 +199,9 @@ ProjectModel.prototype.setName = function(name) {
   this.currentData.name = name;
   this._commitIfNotInTransaction();
 };
+
+
+
 
 ProjectModel.prototype.getScheduleStatus = function() {
   return this.currentData.scheduleStatus;

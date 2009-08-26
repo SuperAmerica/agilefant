@@ -75,8 +75,15 @@ IterationModel.prototype._saveData = function(id, changedData) {
   
   var url = "ajax/storeIteration.action";
   var data = this.serializeFields("iteration", changedData);
-  data.iterationId = id;
- 
+   
+  if (id) {
+    data.iterationId = id;    
+  }
+  else {
+    url = "ajax/storeNewIteration.action";
+    data.parentBacklogId = this.getParent().getId();
+  }
+  
   jQuery.ajax({
     type: "POST",
     url: url,
@@ -139,6 +146,9 @@ IterationModel.prototype.setDescription = function(description) {
   this._commitIfNotInTransaction();
 };
 
+IterationModel.prototype.getParent = function() {
+  return this.relations.parent;
+};
 IterationModel.prototype.setParent = function(newParent) {
   this.relations.parent = newParent;
 };

@@ -104,7 +104,10 @@ ProjectController.prototype.paint = function() {
  */
 ProjectController.prototype.createIteration = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName["iteration"]);
+  mockModel.setInTransaction(true);
   mockModel.setParent(this.model);
+  mockModel.setStartDate(new Date().getTime());
+  mockModel.setEndDate(new Date().getTime());
   var controller = new IterationRowController(mockModel, null, this);
   var row = this.ongoingIterationsView.createRow(controller, mockModel, "top");
   controller.view = row;
@@ -181,11 +184,11 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
   config.addColumnConfiguration(1, {
     title : "Start Date",
     get : ProjectModel.prototype.getStartDate,
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     editable : true,
     edit : {
       editor : "Date",
-      decorator: DynamicsDecorators.dateDecorator,
+      decorator: DynamicsDecorators.dateTimeDecorator,
       required: true,
       withTime: true,
       set: ProjectModel.prototype.setStartDate
@@ -194,11 +197,11 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
   config.addColumnConfiguration(2, {
     title : "End Date",
     get : ProjectModel.prototype.getEndDate,
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     editable : true,
     edit : {
       editor : "Date",
-      decorator: DynamicsDecorators.dateDecorator,
+      decorator: DynamicsDecorators.dateTimeDecorator,
       required: true,
       withTime: true,
       set: ProjectModel.prototype.setEndDate
@@ -304,13 +307,13 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     headerTooltip : 'Start date',
     get : IterationModel.prototype.getStartDate,
     sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getStartDate),
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     defaultSortColumn: true,
     editable : true,
     dragHandle: true,
     edit : {
       editor : "Date",
-      decorator: DynamicsDecorators.dateDecorator,
+      decorator: DynamicsDecorators.dateTimeDecorator,
       set : IterationModel.prototype.setStartDate,
       required: true,
       withTime: true
@@ -324,13 +327,13 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     headerTooltip : 'End date',
     get : IterationModel.prototype.getEndDate,
     sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getEndDate),
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     defaultSortColumn: true,
     editable : true,
     dragHandle: true,
     edit : {
       editor : "Date",
-      decorator: DynamicsDecorators.dateDecorator,
+      decorator: DynamicsDecorators.dateTimeDecorator,
       set : IterationModel.prototype.setEndDate,
       required: true,
       withTime: true

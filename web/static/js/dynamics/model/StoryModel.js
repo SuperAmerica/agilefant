@@ -69,7 +69,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
   jQuery.extend(data, this.serializeFields("story", changedData));
   // Add the id
   if (id) {
-    jQuery.extend(data, {storyId: id});    
+    data.storyId = id;    
   }
   else {
     url = "ajax/createStory.action";

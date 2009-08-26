@@ -31,6 +31,12 @@ ProductController.prototype.storyControllerFactory = function(view, model) {
   return storyController;
 };
 
+ProductController.prototype.projectRowControllerFactory = function(view, model) {
+  var projectController = new ProjectRowController(model, view, this);
+  this.addChildController("project", projectController);
+  return projectController;
+};
+
 ProductController.prototype.paintStoryList = function() {
   this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
       this.parentView);
@@ -68,6 +74,24 @@ ProductController.prototype.paint = function() {
         me.paintStoryList();
       });
 };
+
+/**
+ * Populate a new, editable project row to the table. 
+ */
+ProductController.prototype.createProject = function() {
+  var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName["project"]);
+  mockModel.setInTransaction(true);
+  mockModel.setParent(this.model);
+  mockModel.setStartDate(new Date().getTime());
+  mockModel.setEndDate(new Date().getTime());
+  var controller = new ProjectRowController(mockModel, null, this);
+  var row = this.projectListView.createRow(controller, mockModel, "top");
+  controller.view = row;
+  row.autoCreateCells([ProjectRowController.columnIndices.actions]);
+  row.render();
+  controller.editProject();
+};
+
 
 /**
  * Populate a new, editable story row to the story table. 
@@ -276,10 +300,9 @@ ProductController.prototype.initializeStoryConfig = function() {
  */
 ProductController.prototype.initializeProjectListConfig = function() {
   var config = new DynamicTableConfiguration( {
-//    rowControllerFactory : ProductController.prototype.storyControllerFactory,
+    rowControllerFactory : ProductController.prototype.projectRowControllerFactory,
     dataSource : ProductModel.prototype.getProjects,
-    saveRowCallback: ProjectController.prototype.saveProject,
-//    sortCallback: ProductController.prototype.sortStories,
+    saveRowCallback: ProjectRowController.prototype.saveProject,
     caption : "Projects"
   });
 
@@ -287,10 +310,10 @@ ProductController.prototype.initializeProjectListConfig = function() {
     name : "createProject",
     text : "Create project",
     cssClass : "create",
-    callback : function() {return;}
+    callback : ProductController.prototype.createProject
   });
 
-  config.addColumnConfiguration(ProjectController.columnIndices.status, {
+  config.addColumnConfiguration(ProjectRowController.columnIndices.status, {
     minWidth : 25,
     autoScale : true,
     cssClass : 'story-row',
@@ -306,7 +329,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
       items : DynamicsDecorators.projectStates
     }
   });
-  config.addColumnConfiguration(ProjectController.columnIndices.name, {
+  config.addColumnConfiguration(ProjectRowController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
     cssClass : 'story-row',
@@ -323,7 +346,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(ProjectController.columnIndices.startDate, {
+  config.addColumnConfiguration(ProjectRowController.columnIndices.startDate, {
     minWidth : 80,
     autoScale : true,
     cssClass : 'story-row',
@@ -331,17 +354,18 @@ ProductController.prototype.initializeProjectListConfig = function() {
     headerTooltip : 'Start date',
     get : ProjectModel.prototype.getStartDate,
     sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getStartDate),
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     defaultSortColumn: true,
     editable : true,
     edit : {
-      editor : "Text",
-      decorator: DynamicsDecorators.dateDecorator,
+      editor : "Date",
+      decorator: DynamicsDecorators.dateTimeDecorator,
       set : ProjectModel.prototype.setStartDate,
+      withTime: true,
       required: true
     }
   });
-  config.addColumnConfiguration(ProjectController.columnIndices.endDate, {
+  config.addColumnConfiguration(ProjectRowController.columnIndices.endDate, {
     minWidth : 80,
     autoScale : true,
     cssClass : 'story-row',
@@ -349,24 +373,25 @@ ProductController.prototype.initializeProjectListConfig = function() {
     headerTooltip : 'End date',
     get : ProjectModel.prototype.getEndDate,
     sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getEndDate),
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     defaultSortColumn: true,
     editable : true,
     edit : {
-      editor : "Text",
+      editor : "Date",
       decorator: DynamicsDecorators.dateDecorator,
       set : ProjectModel.prototype.setEndDate,
+      withTime: true,
       required: true
     }
   });
-  config.addColumnConfiguration(ProjectController.columnIndices.actions, {
+  config.addColumnConfiguration(ProjectRowController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
     cssClass : 'story-row',
     title : "Edit",
-    subViewFactory : ProjectController.prototype.projectActionFactory
+    subViewFactory : ProjectRowController.prototype.projectActionFactory
   });
-  config.addColumnConfiguration(ProjectController.columnIndices.description, {
+  config.addColumnConfiguration(ProjectRowController.columnIndices.description, {
     fullWidth : true,
     visible : false,
     get : ProjectModel.prototype.getDescription,
@@ -377,11 +402,11 @@ ProductController.prototype.initializeProjectListConfig = function() {
       set : ProjectModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(ProjectController.columnIndices.buttons, {
+  config.addColumnConfiguration(ProjectRowController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
     cssClass : 'story-row',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : ProjectRowController.prototype.projectButtonFactory
   });
 
   this.projectListConfig = config;

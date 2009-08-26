@@ -470,11 +470,11 @@ IterationController.prototype.initIterationInfoConfig = function() {
   config.addColumnConfiguration(1, {
     title : "Start Date",
     get : IterationModel.prototype.getStartDate,
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     editable : true,
     edit : {
       editor : "Date",
-      decorator: DynamicsDecorators.dateDecorator,
+      decorator: DynamicsDecorators.dateTimeDecorator,
       required: true,
       withTime: true,
       set: IterationModel.prototype.setStartDate
@@ -483,11 +483,11 @@ IterationController.prototype.initIterationInfoConfig = function() {
   config.addColumnConfiguration(2, {
     title : "End Date",
     get : IterationModel.prototype.getEndDate,
-    decorator: DynamicsDecorators.dateDecorator,
+    decorator: DynamicsDecorators.dateTimeDecorator,
     editable : true,
     edit : {
       editor : "Date",
-      decorator: DynamicsDecorators.dateDecorator,
+      decorator: DynamicsDecorators.dateTimeDecorator,
       required: true,
       withTime: true,
       set: IterationModel.prototype.setEndDate

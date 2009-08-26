@@ -34,6 +34,7 @@
 <script type="text/javascript" src="static/js/dynamics/controller/ProductController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/IterationRowController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/ProjectController.js"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/ProjectRowController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/StoryController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TaskController.js"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TasksWithoutStoryController.js"></script>

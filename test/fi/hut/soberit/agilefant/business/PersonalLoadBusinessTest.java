@@ -59,7 +59,7 @@ public class PersonalLoadBusinessTest {
     @Before
     public void setUp() {
         personalLoadBusiness = new PersonalLoadBusinessImpl();
-        userBusiness = createMock(UserBusiness.class);
+        userBusiness = createStrictMock(UserBusiness.class);
         taskDAO = createStrictMock(TaskDAO.class);
         storyDAO = createStrictMock(StoryDAO.class);
         iterationDAO = createStrictMock(IterationDAO.class);
@@ -158,6 +158,32 @@ public class PersonalLoadBusinessTest {
         assertEquals(5250L, iterationEffortData.get(1).getTotalAssignedLoad());
         verifyAll();
     }
+    
+
+    @Test
+    public void testCalculateIterationFutureLoad() {
+        Iteration iter1 = new Iteration();
+        iter1.setBacklogSize(new ExactEstimate(400L));
+        iter1.setId(1);
+        Iteration iter2 = new Iteration();
+        iter2.setBacklogSize(new ExactEstimate(500L));
+        iter2.setId(2);
+        
+        Interval interval = new Interval(new DateTime(2009,6,1,0,0,0,0), new DateTime(2009,10,1,0,0,0,0));
+        
+        IterationLoadContainer existing = new IterationLoadContainer();
+        
+        Map<Integer, IterationLoadContainer> iterationEffortData = new HashMap<Integer, IterationLoadContainer>();
+
+        iterationEffortData.put(1, existing);
+        
+        expect(iterationDAO.retrieveEmptyIterationsWithPlannedSize(interval.getStart(), interval.getEnd(), user)).andReturn(Arrays.asList(iter1, iter2));
+        replayAll();
+        personalLoadBusiness.calculateIterationFutureLoad(iterationEffortData, user, interval);
+        verifyAll();
+        assertEquals(400L, iterationEffortData.get(1).getTotalFutureLoad());
+        assertEquals(500L, iterationEffortData.get(2).getTotalFutureLoad());
+    }
 
     @Test
     public void testUpdateUserLoadByInterval_iterationStarts() {
@@ -189,6 +215,8 @@ public class PersonalLoadBusinessTest {
         // days
         // total assigned effort
         loadContainer.setTotalAssignedLoad(500L);
+        loadContainer.setTotalUnassignedLoad(5000L);
+        loadContainer.setTotalFutureLoad(50L);
 
         expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval))
                 .andReturn(worktimeInIteration);
@@ -200,7 +228,9 @@ public class PersonalLoadBusinessTest {
                 user);
         verifyAll();
         assertEquals(300L, container.getAssignedLoad());
-
+        assertEquals(3000L, container.getUnassignedLoad());
+        assertEquals(30L, container.getFutureLoad());
+        assertEquals(3330L, container.getDetailedLoad().get(0).getTotalLoad());
     }
 
     @Test
@@ -233,6 +263,8 @@ public class PersonalLoadBusinessTest {
         // days
         // total assigned effort
         loadContainer.setTotalAssignedLoad(500L);
+        loadContainer.setTotalUnassignedLoad(5000L);
+        loadContainer.setTotalFutureLoad(50L);
 
         expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval))
                 .andReturn(worktimeInIteration);
@@ -244,6 +276,9 @@ public class PersonalLoadBusinessTest {
                 user);
         verifyAll();
         assertEquals(200L, container.getAssignedLoad());
+        assertEquals(2000L, container.getUnassignedLoad());
+        assertEquals(20L, container.getFutureLoad());
+        assertEquals(2220L, container.getDetailedLoad().get(0).getTotalLoad());
     }
 
     @Test
@@ -276,6 +311,8 @@ public class PersonalLoadBusinessTest {
         // days
         // total assigned effort
         loadContainer.setTotalAssignedLoad(500L);
+        loadContainer.setTotalUnassignedLoad(5000L);
+        loadContainer.setTotalFutureLoad(50L);
 
         expect(userBusiness.calculateWorktimePerPeriod(user, iterationInterval))
                 .andReturn(worktimeInIteration);
@@ -287,6 +324,9 @@ public class PersonalLoadBusinessTest {
                 user);
         verifyAll();
         assertEquals(500L, container.getAssignedLoad());
+        assertEquals(5000L, container.getUnassignedLoad());
+        assertEquals(50L, container.getFutureLoad());
+        assertEquals(5550L, container.getDetailedLoad().get(0).getTotalLoad());
     }
 
     @Test
@@ -304,13 +344,15 @@ public class PersonalLoadBusinessTest {
         IterationLoadContainer loadContainer = new IterationLoadContainer();
         loadContainer.setIteration(iter);
         loadContainer.setTotalAssignedLoad(500L);
+        loadContainer.setTotalUnassignedLoad(5000L);
+        loadContainer.setTotalFutureLoad(50L);
         // 8.6 - 16.6
         IntervalLoadContainer container = new IntervalLoadContainer();
         Interval containerInterval = new Interval(intervalStart, intervalEnd);
         container.setInterval(containerInterval);
         personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
                 user);
-        assertEquals(0L, container.getAssignedLoad());
+        assertEquals(0L, container.getTotalLoad());
 
     }
 
@@ -325,7 +367,7 @@ public class PersonalLoadBusinessTest {
     }
 
     @Test
-    public void testLoadIterationDetails() {
+    public void testLoadIterationAvailabilitySums() {
         UnassignedLoadTO transfer1 = new UnassignedLoadTO(null, 1, (short) 1);
         UnassignedLoadTO transfer2 = new UnassignedLoadTO(null, 2, (short) 1);
 
@@ -351,7 +393,7 @@ public class PersonalLoadBusinessTest {
                 availabilitySums);
 
         replayAll();
-        personalLoadBusiness.loadIterationDetails(Arrays.asList(transfer1,
+        personalLoadBusiness.loadIterationAvailabilitySums(Arrays.asList(transfer1,
                 transfer2));
         assertEquals(2, iterationIds.getValue().size());
         assertEquals(2, iterationIdsAvailSum.getValue().size());
@@ -407,61 +449,70 @@ public class PersonalLoadBusinessTest {
     @Test
     public void testAddBaselineLoad() {
         initDataset();
+        
         Assignment iterationAssignment = new Assignment(user, iter);
         iterationAssignment.setId(1);
-        iterationAssignment.setPersonalLoad(new SignedExactEstimate(50));// 10 per day
+        iterationAssignment.setPersonalLoad(new SignedExactEstimate(30));// 10 per day
         Assignment projectAssignmnet = new Assignment(user, proj);
         projectAssignmnet.setId(2);
         projectAssignmnet.setPersonalLoad(new SignedExactEstimate(500));// 100 per day
 
-        DateTime iterStart = new DateTime(2009, 6, 1, 0, 0, 0, 0);
-        DateTime iterEnd = new DateTime(2009, 6, 7, 0, 0, 0, 0);
-        Interval iterInterval = new Interval(iterStart, iterEnd);
-        DateTime projStart = new DateTime(2009, 6, 3, 0, 0, 0, 0);
-        DateTime projEnd = new DateTime(2009, 6, 10, 0, 0, 0, 0);
-        Interval projInterval = new Interval(projStart, projEnd);
-        iter.setStartDate(iterStart);
-        iter.setEndDate(iterEnd);// 5 days for interval 1, zero for 2
-        proj.setStartDate(projStart);
-        proj.setEndDate(projEnd);// 3 for interval 1, 3 for 2
+        iter.setStartDate(new DateTime(2009, 6, 1, 0, 0, 0, 0));
+        iter.setBaselineLoad(new ExactEstimate(20));
+        iter.setEndDate(new DateTime(2009, 6, 7, 0, 0, 0, 0));// 5 days for interval 1 and zero for 2
+        proj.setStartDate(new DateTime(2009, 6, 3, 0, 0, 0, 0));
+        proj.setEndDate(new DateTime(2009, 6, 10, 0, 0, 0, 0));// 3 for interval 1 and 3 for 2
+        
+        Interval iterInterval = new Interval(iter.getStartDate(), iter.getEndDate());
 
         // set up two intervals
+        //first interval "first week"
         ComputedLoadData preComputed = new ComputedLoadData();
-        IntervalLoadContainer interval1 = new IntervalLoadContainer();
-        Interval interv1 = new Interval(new DateTime(2009, 6, 1, 0, 0, 0, 0),
+        IntervalLoadContainer containerForFirstInterval = new IntervalLoadContainer();
+        Interval firstInterval = new Interval(new DateTime(2009, 6, 1, 0, 0, 0, 0),
                 new DateTime(2009, 6, 7, 0, 0, 0, 0));
-        interval1.setInterval(interv1);
-        IntervalLoadContainer interval2 = new IntervalLoadContainer();
-        Interval interv2 = new Interval(new DateTime(2009, 6, 8, 0, 0, 0, 0),
+        containerForFirstInterval.setInterval(firstInterval);
+        
+        //second interval "second week"
+        IntervalLoadContainer containerForSecondInterval = new IntervalLoadContainer();
+        Interval secondInterval = new Interval(new DateTime(2009, 6, 8, 0, 0, 0, 0),
                 new DateTime(2009, 6, 13, 0, 0, 0, 0));
-        interval2.setInterval(interv2);
-        preComputed.getLoadContainers().add(interval1);
-        preComputed.getLoadContainers().add(interval2);
+        containerForSecondInterval.setInterval(secondInterval);
+        
+        preComputed.getLoadContainers().add(containerForFirstInterval);
+        preComputed.getLoadContainers().add(containerForSecondInterval);
 
         expect(assignmentDAO.assigmentsInBacklogTimeframe(null, user))
                 .andReturn(
                         Arrays.asList(iterationAssignment, projectAssignmnet));
-        // there will be 4 queries for user worktime
-        expect(
-                userBusiness.calculateWorktimePerPeriod(user, interv1
-                        .overlap(iterInterval))).andReturn(
-                new Duration(1000 * 3600 * 24 * 5));
-        expect(
-                userBusiness.calculateWorktimePerPeriod(user, interv1
-                        .overlap(projInterval))).andReturn(
-                new Duration(1000 * 3600 * 24 * 3));
-        expect(
-                userBusiness.calculateWorktimePerPeriod(user, interv2
-                        .overlap(projInterval))).andReturn(
-                new Duration(1000 * 3600 * 24 * 3));
+        Interval projectAssignmentInFirst = new Interval(
+                new DateTime(2009, 6, 3, 0, 0, 0, 0),
+                new DateTime(2009, 6, 7, 0, 0, 0, 0)
+        );
+        Interval projectAssigmentInSecond = new Interval(
+                new DateTime(2009, 6, 8, 0, 0, 0, 0),
+                new DateTime(2009, 6, 10, 0, 0, 0, 0)
+        );
+        
+        // total worktime in the iteration (first week)
+        expect(userBusiness.calculateWorktimePerPeriod(user, iterInterval))
+                .andReturn(new Duration(1000 * 3600 * 24 * 5)).anyTimes();
+
+        // worktime for project assigment (first week)
+        expect(userBusiness.calculateWorktimePerPeriod(user, projectAssignmentInFirst))
+                .andReturn(new Duration(1000 * 3600 * 24 * 3));
+
+        // worktime for project assignemnt (second week)
+        expect(userBusiness.calculateWorktimePerPeriod(user, projectAssigmentInSecond))
+                .andReturn(new Duration(1000 * 3600 * 24 * 3));
 
         replayAll();
         personalLoadBusiness.addBaselineLoad(preComputed, user, null);
-        assertEquals(350L, interval1.getBaselineLoad());
-        assertEquals(300L, interval2.getBaselineLoad());
+        assertEquals(350L, containerForFirstInterval.getBaselineLoad());
+        assertEquals(300L, containerForSecondInterval.getBaselineLoad());
         verifyAll();
     }
-
+    
     @Test
     public void testGetDailyLoadLimitsByUser() {
         user.setWeekEffort(new ExactEstimate(5000L));

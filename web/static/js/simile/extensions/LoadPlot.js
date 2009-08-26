@@ -224,3 +224,85 @@ Timeplot.DevSource.prototype._process = function() {
 Timeplot.DevSource.prototype._getValue = function(event) {
   return parseFloat(event.getValues()[this._column]);
 };
+
+var valueGeometryExtender = function() {};
+valueGeometryExtender.prototype = Timeplot.DefaultValueGeometry.prototype;
+
+Timeplot.HourValueGeometry = function(params) {
+  Timeplot.DefaultValueGeometry.call(this, params);
+};
+Timeplot.HourValueGeometry.prototype = new valueGeometryExtender();
+Timeplot.HourValueGeometry.prototype._calculateGrid = function() {
+  var grid = [];
+  
+  if (!this._canvas || this._valueRange == 0) return grid;
+          
+  var power = 0;
+  if (this._valueRange > 1) {
+      while (Math.pow(10,power) < this._valueRange) {
+          power++;
+      }
+      power--;
+  } else {
+      while (Math.pow(10,power) > this._valueRange) {
+          power--;
+      }
+  }
+
+  var unit = Math.pow(10,power);
+  var inc = unit;
+  while (true) {
+      var dy = this.toScreen(this._minValue + inc);
+
+      while (dy < this._gridSpacing) {
+          inc += unit;
+          dy = this.toScreen(this._minValue + inc);
+      }
+
+      if (dy > 2 * this._gridSpacing) { // grids are too spaced out
+          unit /= 10;
+          inc = unit;
+      } else {
+          break;
+      }
+  }
+  
+  var v = 0;
+  var y = this.toScreen(v);
+  if (this._minValue >= 0) {
+      while (y < this._canvas.height) {
+          if (y > 0) {
+              grid.push({ y: y, label: Math.round(v*10)/10 + " h" });
+          }
+          v += inc;
+          y = this.toScreen(v);
+      }
+  } else if (this._maxValue <= 0) {
+      while (y > 0) {
+          if (y < this._canvas.height) {
+              grid.push({ y: y, label: Math.round(v*10)/10 + " h" });
+          }
+          v -= inc;
+          y = this.toScreen(v);
+      }
+  } else {
+      while (y < this._canvas.height) {
+          if (y > 0) {
+              grid.push({ y: y, label: Math.round(v*10)/10 + " h" });
+          }
+          v += inc;
+          y = this.toScreen(v);
+      }
+      v = -inc;
+      y = this.toScreen(v);
+      while (y > 0) {
+          if (y < this._canvas.height) {
+              grid.push({ y: y, label: Math.round(v*10)/10 + " h" });
+          }
+          v -= inc;
+          y = this.toScreen(v);
+      }
+  }
+  
+  return grid;
+};

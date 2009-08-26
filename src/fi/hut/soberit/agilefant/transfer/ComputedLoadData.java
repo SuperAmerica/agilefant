@@ -1,8 +1,9 @@
 package fi.hut.soberit.agilefant.transfer;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import org.joda.time.DateTime;
 
 import fi.hut.soberit.agilefant.model.Holiday;
 import flexjson.JSON;
@@ -10,8 +11,8 @@ import flexjson.JSON;
 public class ComputedLoadData {
     private List<IntervalLoadContainer> loadContainers = new ArrayList<IntervalLoadContainer>();
     private List<Holiday> holidays = new ArrayList<Holiday>();
-    private Date startDate;
-    private Date endDate;
+    private DateTime startDate;
+    private DateTime endDate;
     
     
     @JSON
@@ -29,17 +30,17 @@ public class ComputedLoadData {
         this.holidays = holidays;
     }
     @JSON
-    public Date getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
-    public void setStartDate(Date startDate) {
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
     @JSON
-    public Date getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
-    public void setEndDate(Date endDate) {
+    public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 }

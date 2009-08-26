@@ -8,7 +8,7 @@ function init_user_load(timeplotTrack, userId, detailed, detailedLegends) {
 		axisLabelsPlacement: "bottom"
 	});
 	
-	var valueGeometry = new Timeplot.DefaultValueGeometry({
+	var valueGeometry = new Timeplot.HourValueGeometry({
 		gridColor: "#000000"
 	});
 	var userLoadLimits;

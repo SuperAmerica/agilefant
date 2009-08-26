@@ -46,6 +46,7 @@ public class MenuBusinessImpl implements MenuBusiness {
             }
         }
         
+        /*
         if (backlog != null) {
             if (backlog instanceof Product) {
                 Collections.sort(data.getMenuItems(), new Comparator<Backlog>() {
@@ -89,6 +90,7 @@ public class MenuBusinessImpl implements MenuBusiness {
                 });
             }
         }
+        */
         
         // Update the hasChildren and objectType properties
         for (Backlog item : data.getMenuItems()) {

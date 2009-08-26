@@ -43,8 +43,16 @@ StoryController.prototype.editStory = function() {
 
 StoryController.prototype.editDescription = function() {
   var descriptionCell = this.view.getCell(StoryController.columnIndexes.description);
+  var data = this.view.getCell(StoryController.columnIndexes.tasksData);
+  var taskDataVisible = data.isVisible();
+  data.hide();
   descriptionCell.show();
-  descriptionCell.openEditor();
+  descriptionCell.openEditor(false, function() {
+    descriptionCell.hide();
+    if(taskDataVisible) {
+      data.show();
+    }
+  });
 };
 
 StoryController.prototype.saveStory = function() {
@@ -100,6 +108,7 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   });
   config.addColumnConfiguration(0, {
     get : StoryModel.prototype.getDescription,
+    onDoubleClick: StoryController.prototype.editDescription,
     cssClass : 'task-data'
   });
   var infoContents = new DynamicVerticalTable(this, this.model, config, info);

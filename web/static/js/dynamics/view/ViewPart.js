@@ -13,3 +13,7 @@ ViewPart.prototype.hide = function() {
 ViewPart.prototype.show = function() {
   this.element.show();
 };
+
+ViewPart.prototype.isVisible = function() {
+  return this.element.is(":visible");
+};

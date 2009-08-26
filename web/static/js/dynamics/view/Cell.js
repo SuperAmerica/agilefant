@@ -117,7 +117,7 @@ DynamicTableCell.prototype.setValue = function(value) {
  * 
  * @return boolean
  */
-DynamicTableCell.prototype.openEditor = function(editRow) {
+DynamicTableCell.prototype.openEditor = function(editRow, onClose) {
   if(this.editor) {
    return true; 
   }
@@ -135,6 +135,7 @@ DynamicTableCell.prototype.openEditor = function(editRow) {
   var editorClass = TableEditors.getEditorClassByName(editorName);
   if(editorClass && this.config.getEditableCallback().call(this.row.getController())) {
     this.editor = new editorClass(this.row, this, editorOptions);
+    this.closeEditorCb = onClose;
     return true;
   }
   return false;
@@ -174,6 +175,10 @@ DynamicTableCell.prototype.isEditorValueValid = function() {
 DynamicTableCell.prototype.editorClosing = function() {
   this.cellContents.show();
   this.editor = null;
+  if(this.closeEditorCb) {
+    this.closeEditorCb.call(this.row.getController());
+    this.closeEditorCb = null;
+  }
 };
 DynamicTableCell.prototype.editorOpening = function() {
   this.cellContents.hide();

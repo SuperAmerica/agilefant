@@ -452,6 +452,10 @@ IterationController.prototype.initializeStoryConfig = function() {
   });
   this.storyListConfig = config;
 };
+
+
+
+
 IterationController.prototype.initIterationInfoConfig = function() {
   var config = new DynamicTableConfiguration( {
     leftWidth: '20%',

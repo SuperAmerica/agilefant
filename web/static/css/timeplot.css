@@ -93,8 +93,15 @@
     border: 1px solid #FFB02D;
     z-index: 998;
 }
+.load-legends {
+	margin-top: 10px;
+	float: right;
+	width: 14%;
+	margin-right: 2%;
+	margin-left: 2%;
+}
 
-.legend-box {
+.load-legends div {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;

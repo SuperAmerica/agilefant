@@ -85,13 +85,13 @@ $(window).resize(function() {
 		  <div style="position: relative">
 		  <div style="float: left; width: 76%; height: 250px; margin-top: 10px; position: relative;" id="detailedLoadPlot"></div>
 		  </div>
-		  <div style="margin-top: 10px; float: right; width: 14%; margin-right: 2%; margin-left: 2%;" id="detailedLoadLegend"></div>
+		  <div class="load-legends" id="detailedLoadLegend"></div>
 		</div>
 		<div id="smallLoadTable" >
 			<div style="position: relative;">
               <div style="float: left; width: 76%; height: 250px; margin-top: 10px; position: relative;" id="loadPlot"></div>
             </div>
-            <div style="margin-top: 10px; float: right; width: 14%; margin-right: 2%; margin-left: 2%;">
+            <div class="load-legends">
               <div class="legend-box" style="background-color: rgba(150, 8, 8, 0.7);">Maximum</div>
               <div class="legend-box" style="background-color: rgba(224, 17, 2, 0.7);">Critical</div>
               <div class="legend-box" style="background-color: rgba(245, 221, 57, 0.7);">Optimal high</div>

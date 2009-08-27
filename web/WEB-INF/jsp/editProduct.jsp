@@ -14,8 +14,6 @@
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
-  <li class=""><a href="#backlogAssignees"><span><img
-    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
   <c:if test="${settings.hourReportingEnabled}">
   <li class=""><a href="#backlogSpentEffort"><span><img
     alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
@@ -23,10 +21,8 @@
   <li class=""><a href="#backlogSpentEffort"><span><img
     alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
 </ul>
-</ul>
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
-<div class="details" id="backlogAssignees"></div>
 <div class="details" id="backlogSpentEffort"></div>
 
 </div>

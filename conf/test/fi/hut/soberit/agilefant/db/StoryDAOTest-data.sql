@@ -2,7 +2,8 @@
 INSERT INTO backlogs (id, backlogtype, name) VALUES (1, 'Product', 'Test product');
 INSERT INTO backlogs (id, backlogtype, name) VALUES (2, 'Project', 'Test project');
 INSERT INTO backlogs (id, backlogtype, name) VALUES (3, 'Iteration', 'Test iteration');
-
+INSERT INTO backlogs (id, backlogtype, name) VALUES (4, 'Iteration', 'Ranking parent iteration');
+INSERT INTO backlogs (id, backlogtype, name) VALUES (5, 'Project', 'Ranking parent project with no stories');
 
 -- DONE items - total story points 25
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (1, 5, 12, 1, 'Story 1');
@@ -16,6 +17,13 @@ INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (6, 2,    
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (7, 3,     6, 3, 'Story 7');
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (8, 4,     5, 1, 'Story 8');
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (9, 4,  null, 1, 'Story 9');
+
+-- Ranking items
+INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (21, 0, 4, 0, 'First in rank');
+INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (22, 2, 4, 0, 'Second in rank');
+INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (23, 7, 4, 0, 'Third in rank');
+INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (24, 3412, 4, 0, 'Last in rank');
+
 
 -- Create user --
 INSERT INTO users (id, enabled) VALUES (1, true);
@@ -32,3 +40,4 @@ INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (1, '
 
 -- Hour entries for story 2 --
 INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (13, 'StoryHourEntry', 20, 1, 2);
+

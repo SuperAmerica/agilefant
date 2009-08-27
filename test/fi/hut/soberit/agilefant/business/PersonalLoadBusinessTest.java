@@ -408,9 +408,10 @@ public class PersonalLoadBusinessTest {
     public void testCalculateUnassignedTaskLoad() {
         Interval interval = new Interval(500, 600);
         UnassignedLoadTO transfer1 = new UnassignedLoadTO(new ExactEstimate(
-                1000), 1, (short) 1);
+                1000), 1, 1);
         UnassignedLoadTO transfer2 = new UnassignedLoadTO(new ExactEstimate(
-                8000), 2, (short) 1);
+                8000), 2, 1);
+        UnassignedLoadTO transfer3 = new UnassignedLoadTO(null, 2, 0);
 
         Iteration iter1 = new Iteration();
         iter1.setId(1);
@@ -429,7 +430,7 @@ public class PersonalLoadBusinessTest {
                 taskDAO.getUnassignedIterationTasksWithEffortLeft(user,
                         interval)).andReturn(Arrays.asList(transfer1));
         expect(taskDAO.getUnassignedStoryTasksWithEffortLeft(user, interval))
-                .andReturn(Arrays.asList(transfer2));
+                .andReturn(Arrays.asList(transfer2, transfer3));
 
         expect(iterationDAO.retrieveIterationsByIds(iterationIds)).andReturn(
                 Arrays.asList(iter1, iter2));

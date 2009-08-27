@@ -171,8 +171,11 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
             double availabilityFactor = ((double) row.availability)
                     / ((double) row.availabilitySum);
 
-            double effortFraction = availabilityFactor
-                    * row.effortLeft.doubleValue();
+            double effortFraction = 0.0;
+            if (row.effortLeft != null) {
+                effortFraction = availabilityFactor
+                        * row.effortLeft.doubleValue();
+            }
             IterationLoadContainer currentIter = iterationEffortData
                     .get(row.iterationId);
             currentIter.setTotalUnassignedLoad(currentIter
@@ -276,7 +279,7 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         perUserIterationLoad.setTotalAssignedLoad((long) assignedEffortPortion);
         perUserIterationLoad
                 .setTotalUnassignedLoad((long) unassignedEffortPortion);
-        perUserIterationLoad.setTotalFutureLoad((long)futureLoad);
+        perUserIterationLoad.setTotalFutureLoad((long) futureLoad);
         container.getDetailedLoad().add(perUserIterationLoad);
     }
 

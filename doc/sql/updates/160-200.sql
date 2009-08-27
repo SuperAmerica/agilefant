@@ -169,6 +169,7 @@ CREATE TABLE stories (
   priority INT(11),
   state INT(11) NOT NULL,
   description text,
+  rank INTEGER DEFAULT 0,
   backlog_id INT(11) NOT NULL,
   iterationGoal_id INT(11), /* temporary */
   PRIMARY KEY(id)
@@ -439,10 +440,10 @@ DROP TABLE items_with_todos;
 
 /*** REVISIONING ***/
 create table agilefant_revisions (id integer not null auto_increment, timestamp bigint not null, userName varchar(255), primary key (id)) ENGINE=InnoDB;
-create table stories_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), priority integer, state integer, storyPoints integer, primary key (id, REV)) ENGINE=InnoDB;
+create table stories_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), rank integer not null, state integer, storyPoints integer, primary key (id, REV)) ENGINE=InnoDB;
 create table story_user_AUD (REV integer not null, Story_id integer not null, User_id integer not null, REVTYPE tinyint, primary key (REV, Story_id, User_id)) ENGINE=InnoDB;
 create table task_user_AUD (REV integer not null, tasks_id integer not null, responsibles_id integer not null, REVTYPE tinyint, primary key (REV, tasks_id, responsibles_id)) ENGINE=InnoDB;
-create table tasks_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, effortleft bigint, name varchar(255), originalestimate bigint, priority integer, state integer, rank int default 0, primary key (id, REV)) ENGINE=InnoDB;
+create table tasks_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, effortleft bigint, name varchar(255), originalestimate bigint, state integer, rank int default 0, primary key (id, REV)) ENGINE=InnoDB;
 create table users_AUD (id integer not null, REV integer not null, REVTYPE tinyint, email varchar(255), enabled bit, fullName varchar(255), initials varchar(255), loginName varchar(255), weekEffort bigint, primary key (id, REV)) ENGINE=InnoDB;
 alter table stories_AUD add index FK853E2CA420258526 (REV), add constraint FK853E2CA420258526 foreign key (REV) references agilefant_revisions (id);
 alter table story_user_AUD add index FK9A1CB82620258526 (REV), add constraint FK9A1CB82620258526 foreign key (REV) references agilefant_revisions (id);
@@ -624,7 +625,7 @@ BEGIN
       LEAVE storyRankLoop;
     END IF;
 
-    UPDATE stories SET priority = counter WHERE id=story_id;
+    UPDATE stories SET rank = counter WHERE id=story_id;
     SET counter = counter + 1;
 
   END LOOP;
@@ -632,12 +633,12 @@ END //
 
 delimiter ;
 
-
 CALL UpdateTaskRanks();
 CALL UpdateStoryRanks();
 
-/* DROP the old priority column */
+/* DROP the old columns */
 ALTER TABLE tasks DROP COLUMN priority;
+ALTER TABLE stories DROP COLUMN priority;
 
 DROP PROCEDURE IF EXISTS UpdateTaskRanks;
 DROP PROCEDURE IF EXISTS UpdateTaskRanksForStories;

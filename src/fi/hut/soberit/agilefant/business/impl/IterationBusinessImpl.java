@@ -63,6 +63,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     @Autowired
     private AssignmentBusiness assignmentBusiness;
 
+    public IterationBusinessImpl() {
+        super(Iteration.class);
+    }
+    
     @Autowired
     public void setIterationDAO(IterationDAO iterationDAO) {
         this.genericDAO = iterationDAO;

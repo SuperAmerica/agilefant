@@ -30,6 +30,10 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private BacklogDAO backlogDAO;
     private ProductBusiness productBusiness;
 
+    public ProjectBusinessImpl() {
+        super(Project.class);
+    }
+    
     @Autowired
     public void setProjectDAO(ProjectDAO projectDAO) {
         this.genericDAO = projectDAO;

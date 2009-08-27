@@ -12,6 +12,12 @@ public abstract class GenericBusinessImpl<T> implements GenericBusiness<T> {
 
     protected GenericDAO<T> genericDAO;
 
+    protected Class<T> modelType;
+    
+    public GenericBusinessImpl(Class<T> modelType) {
+        this.modelType = modelType;
+    }
+    
     @Transactional(readOnly = true)
     public int countAll() {
         return genericDAO.count();
@@ -41,7 +47,7 @@ public abstract class GenericBusinessImpl<T> implements GenericBusiness<T> {
     public T retrieve(int id) {
         T object = genericDAO.get(id);
         if (object == null) {
-            throw new ObjectNotFoundException(this.getClass().getName());
+           throw new ObjectNotFoundException("Object with id " + id +" was not found", this.modelType);
         }
         return object;
     }

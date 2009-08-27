@@ -29,6 +29,10 @@ public class IterationHistoryEntryBusinessImpl extends
     @Autowired
     private IterationDAO iterationDAO;    
     
+    public IterationHistoryEntryBusinessImpl() {
+        super(IterationHistoryEntry.class);
+    }
+    
     @Autowired
     public void setIterationHistoryEntryDAO(
             IterationHistoryEntryDAO iterationHistoryEntryDAO) {

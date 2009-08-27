@@ -54,6 +54,10 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     @Autowired
     private UserDAO userDAO;
 
+    public HourEntryBusinessImpl() {
+        super(HourEntry.class);
+    }
+    
     @Autowired
     private TaskHourEntryDAO taskHourEntryDAO;
 

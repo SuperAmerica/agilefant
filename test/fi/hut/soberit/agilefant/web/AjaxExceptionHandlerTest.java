@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.User;
 
 public class AjaxExceptionHandlerTest {
     
@@ -34,12 +35,12 @@ public class AjaxExceptionHandlerTest {
     
     @Test
     public void handle_objectNotFound() {
-        ajaxExceptionHandler.setException(new ObjectNotFoundException("Not found!"));
+        ajaxExceptionHandler.setException(new ObjectNotFoundException("Not found!", User.class));
         
         assertEquals(AjaxExceptionHandler.objectNotFoundResult,
                 ajaxExceptionHandler.handle());
         
-        assertEquals("Not found!", ajaxExceptionHandler.getErrorMessage());
+        assertEquals("msg_user.notFound", ajaxExceptionHandler.getErrorMessage());
     }
     
     @Test
@@ -60,7 +61,7 @@ public class AjaxExceptionHandlerTest {
         
         assertEquals(AjaxExceptionHandler.objectNotFoundResult, 
                 ajaxExceptionHandler.handleObjectNotFoundException(onfe));
-        assertEquals("Text not found", ajaxExceptionHandler.getErrorMessage());
+        assertEquals("msg_unknown.notFound", ajaxExceptionHandler.getErrorMessage());
     }
     
 }

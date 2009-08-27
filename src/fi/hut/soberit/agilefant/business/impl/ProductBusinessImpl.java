@@ -17,6 +17,10 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
 
     private ProductDAO productDAO;
 
+    public ProductBusinessImpl() {
+        super(Product.class);
+    }
+    
     @Autowired
     public void setProductDAO(ProductDAO productDAO) {
         this.genericDAO = productDAO;

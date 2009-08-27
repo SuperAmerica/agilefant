@@ -5,7 +5,7 @@ package fi.hut.soberit.agilefant.exception;
  * @author rjokelai
  *
  */
-public class OperationNotPermittedException extends Exception {
+public class OperationNotPermittedException extends RuntimeException {
 
     private static final long serialVersionUID = 2583489006574217797L;
 

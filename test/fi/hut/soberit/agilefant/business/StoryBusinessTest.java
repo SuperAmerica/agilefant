@@ -28,11 +28,13 @@ import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -452,8 +454,19 @@ public class StoryBusinessTest {
         this.storyBusiness.create(new Story(), 222, new HashSet<Integer>());
     }
     
+    @Test(expected = OperationNotPermittedException.class)
+    public void testDelete_withTasks() {
+        Task task = new Task();
+        story1.getTasks().add(task);
+        storyBusiness.delete(story1);
+    }
     
-    
+    @Test(expected = OperationNotPermittedException.class)
+    public void testDelete_withHourEntries() {
+        StoryHourEntry he = new StoryHourEntry();
+        story1.getHourEntries().add(he);
+        storyBusiness.delete(story1);
+    }
 
     /*
      * RANK TO BOTTOM

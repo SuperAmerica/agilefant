@@ -27,6 +27,10 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
     private AssignmentDAO assignmentDAO;
     private UserBusiness userBusiness;
     
+    public AssignmentBusinessImpl() {
+        super(Assignment.class);
+    }
+    
     public Assignment store(int assignmentId, SignedExactEstimate personalLoad,
             int availability) {
         Assignment persisted = this.retrieve(assignmentId);

@@ -22,12 +22,14 @@ import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 
 public class TaskBusinessTest {
@@ -346,6 +348,14 @@ public class TaskBusinessTest {
         taskBusiness.delete(task);
         
         verifyAll();
+    }
+    
+    @Test(expected=OperationNotPermittedException.class)
+    public void testDelete_containsHourEntries() {
+        TaskHourEntry he = new TaskHourEntry();
+        Task task = new Task();
+        task.getHourEntries().add(he);
+        taskBusiness.delete(task);
     }
     
     @Test

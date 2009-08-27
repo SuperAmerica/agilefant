@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
@@ -60,6 +61,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     @Autowired
     private RankingBusiness rankingBusiness;
 
+    public StoryBusinessImpl() {
+        super(Story.class);
+    }
+    
     @Autowired
     public void setStoryDAO(StoryDAO storyDAO) {
         this.genericDAO = storyDAO;
@@ -120,14 +125,24 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     @Transactional
     public void delete(int storyId) throws ObjectNotFoundException {
         Story story = this.retrieve(storyId);
+        this.delete(story);
+    }
+
+    @Override
+    public void delete(Story story) {
+        if(story.getHourEntries().size() != 0) {
+            throw new OperationNotPermittedException("Story contains spent effort entries.");
+        }
+        if(story.getTasks().size() != 0) {
+            throw new OperationNotPermittedException("Story contains tasks.");
+        }
         Backlog backlog = story.getBacklog();
         if (backlog != null) {
             backlog.getStories().remove(story);
         }
-        storyDAO.remove(storyId);
+        super.delete(story);
         backlogHistoryEntryBusiness.updateHistory(backlog.getId());
     }
-
     /** {@inheritDoc} */
     @Transactional
     public Story store(Integer storyId, Story dataItem, Integer backlogId, Set<Integer> responsibleIds)

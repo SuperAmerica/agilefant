@@ -22,10 +22,14 @@ public class BacklogHistoryEntryBusinessImpl extends
         BacklogHistoryEntryBusiness {
 
     private BacklogHistoryEntryDAO backlogHistoryEntryDAO;
-    
+      
     @Autowired
     private BacklogDAO backlogDAO;
 
+    public BacklogHistoryEntryBusinessImpl() {
+        super(BacklogHistoryEntry.class);
+    }
+    
     @Autowired
     public void setBacklogHistoryEntryDAO(
             BacklogHistoryEntryDAO backlogHistoryEntryDAO) {

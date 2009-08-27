@@ -30,6 +30,10 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     private StoryDAO storyDAO;
     private UserDAO userDAO;
 
+    public UserBusinessImpl() {
+        super(User.class);
+    }
+    
     @Transactional(readOnly = true)
     public User retrieveByLoginName(String loginName) {
         return userDAO.getByLoginName(loginName);

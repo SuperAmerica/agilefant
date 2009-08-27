@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl.RankDirection;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Rankable;
@@ -49,6 +50,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     private RankingBusiness rankingBusiness;
     
     private TaskDAO taskDAO;
+    
+    public TaskBusinessImpl() {
+        super(Task.class);
+    }
     
     @Autowired
     public void setTaskDAO(TaskDAO taskDAO) {
@@ -236,11 +241,14 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     @Override
     public void delete(int id) {        
-        delete(taskDAO.get(id));
+        delete(retrieve(id));
     }
     
     @Override
     public void delete(Task task) {
+        if(task.getHourEntries().size() != 0) {
+            throw new OperationNotPermittedException("Task contains spent effort entries.");
+        }
         taskDAO.remove(task.getId());
         if (task.getIteration() != null) {
             iterationHistoryEntryBusiness.updateIterationHistory(task.getIteration().getId());  

@@ -13,6 +13,10 @@ import fi.hut.soberit.agilefant.model.ProjectType;
 public class ProjectTypeBusinessImpl extends GenericBusinessImpl<ProjectType>
         implements ProjectTypeBusiness {
     
+    public ProjectTypeBusinessImpl() {
+        super(ProjectType.class);
+    }
+    
     @Autowired
     public void setProjectTypeDAO(ProjectTypeDAO projectTypeDAO) {
         this.genericDAO = projectTypeDAO;

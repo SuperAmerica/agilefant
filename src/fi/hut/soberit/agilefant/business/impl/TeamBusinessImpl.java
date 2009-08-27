@@ -18,6 +18,10 @@ public class TeamBusinessImpl extends GenericBusinessImpl<Team> implements
 
     private TeamDAO teamDAO;
 
+    public TeamBusinessImpl() {
+        super(Team.class);
+    }
+    
     @Autowired
     public void setTeamDAO(TeamDAO teamDAO) {
         this.genericDAO = teamDAO;

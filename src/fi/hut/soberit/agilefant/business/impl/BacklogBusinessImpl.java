@@ -37,6 +37,10 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     private ProductDAO productDAO;
     private AssignmentBusiness assignmentBusiness;
 
+    public BacklogBusinessImpl() {
+        super(Backlog.class);
+    }
+    
     @Autowired
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.genericDAO = backlogDAO;

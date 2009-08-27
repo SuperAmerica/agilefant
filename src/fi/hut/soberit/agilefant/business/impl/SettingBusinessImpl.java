@@ -36,7 +36,9 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     public static final String SETTING_NAME_OPTIMAL_HIGH = "OptimalHigh";
     public static final String SETTING_NAME_CRITICAL_LOW = "CriticalLow";
 
-    
+    public SettingBusinessImpl() {
+        super(Setting.class);
+    }
 
     @Autowired
     private SettingDAO settingDAO;

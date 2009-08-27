@@ -370,11 +370,6 @@ $(document).ready(function() {
     var testModel = new StoryModel();
     testModel.setId(222);
     
-    var listenerCallCount = 0;
-    testModel.callListeners = function(event) {
-      listenerCallCount++;
-      ok(event instanceof DynamicsEvents.DeleteEvent, "Event is a delete event");
-    };
     var internalCallCount = 0;
     testModel._remove = function() {
       internalCallCount++;
@@ -389,7 +384,6 @@ $(document).ready(function() {
     testModel.remove();
     
     same(iter.relations.story.length, 0, "Iteration doesn't contain the common model");
-    same(listenerCallCount, 1, "Listeners called once");
     same(internalCallCount, 1, "Internal remove called once");
   });
 });

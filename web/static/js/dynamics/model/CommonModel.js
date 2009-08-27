@@ -150,15 +150,15 @@ CommonModel.prototype._removeAllRelations = function() {
  * overwritten by any subclass. 
  */
 CommonModel.prototype.remove = function() {
+  var me = this;
   this._removeAllRelations();
-  this._remove();
-  this.callListeners(new DynamicsEvents.DeleteEvent(this));
+  this._remove(function() { me.callListeners(new DynamicsEvents.DeleteEvent(me)); });
 };
 
 /**
  * Internal abstact method to handle the delete ajax request.
  */
-CommonModel.prototype._remove = function() {
+CommonModel.prototype._remove = function(successCallback) {
   throw new Error("Abstract method called: _remove");
 };
 

@@ -239,6 +239,12 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     caption : "Ongoing Iterations"
   });
   this._iterationListColumnConfig(ongoingConfig);
+  ongoingConfig.addCaptionItem( {
+    name : "createIteration",
+    text : "Create iteration",
+    cssClass : "create",
+    callback : ProjectController.prototype.createIteration
+  });
   this.ongoingIterationListConfig = ongoingConfig;
   
   var pastConfig = new DynamicTableConfiguration( {
@@ -261,12 +267,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
 };
 
 ProjectController.prototype._iterationListColumnConfig = function(config) {
-  config.addCaptionItem( {
-    name : "createIteration",
-    text : "Create iteration",
-    cssClass : "create",
-    callback : ProjectController.prototype.createIteration
-  });
+
 
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
     minWidth : 280,

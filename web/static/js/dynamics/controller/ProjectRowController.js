@@ -38,10 +38,10 @@ ProjectRowController.prototype.projectActionFactory = function(view, model) {
   }, /*{
     text : "Move",
     callback : ProjectRowController.prototype.moveProject
-  }, */{
+  }, {
     text : "Delete",
     callback : ProjectRowController.prototype.removeProject
-  } ];
+  }*/ ];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;

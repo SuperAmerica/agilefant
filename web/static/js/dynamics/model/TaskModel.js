@@ -100,16 +100,23 @@ TaskModel.prototype._saveData = function(id, changedData) {
   });
 };
 
-TaskModel.prototype._remove = function() {
+TaskModel.prototype._remove = function(successCallback) {
   var me = this;
-  jQuery.post(
-      "ajax/deleteTask.action",
-      {taskId: me.getId()},
-      function(data, status) {
+  jQuery.ajax({
+      type: "POST",
+      url: "ajax/deleteTask.action",
+      async: true,
+      cache: false,
+      dataType: "json",
+      data: {taskId: me.getId()},
+      success: function(data,status) {
         new MessageDisplay.OkMessage("Task removed");
-        return;
+        successCallback();
+      },
+      error: function(data,status) {
+        new MessageDisplay.ErrorMessage("Error deleting task: " + data.responseText);
       }
-  );
+  });
 };
 
 TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {

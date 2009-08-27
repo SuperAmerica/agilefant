@@ -119,7 +119,11 @@ div.genericMessage {
   border-style: solid;
   border-radius: 10px;
   -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
   z-index: 3699;
+  max-height: 400px;
+  max-width: 600px;
+  overflow: auto;
 }
 
 div.okMessage {
@@ -174,6 +178,7 @@ li.dynamictable-captionaction {
   width: 105px;
   font-weight: normal;
   -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
   border-radius: 0.5em;
   text-align: center;
   font-size: 10pt;
@@ -312,6 +317,8 @@ li.dynamictable-captionaction {
 
 .actionColumn .edit {
 	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius: 5px;
 	background-color:#f3f3f3;
 	border:0.5px solid black;
 	font-size:10pt;
@@ -335,8 +342,8 @@ li.dynamictable-captionaction {
 	padding: 1px;
 	text-align: center;
 	-moz-border-radius: 5px;
-  border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
   border: 1px solid rgba(0,0,0,0.3);
 }
 .taskStateNOT_STARTED {
@@ -366,7 +373,8 @@ li.dynamictable-captionaction {
 	font-size: 9pt;
 	text-align: center;
 	-moz-border-radius: 2px;
-  	border-radius: 2px;
+	-webkit-border-radius: 2px;
+  border-radius: 2px;
 }
 .storyStateNOT_STARTED {
 	background-color: #dddddd;

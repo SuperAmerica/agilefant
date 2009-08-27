@@ -61,25 +61,27 @@
       <exception-mapping result="ajaxException"
         exception="fi.hut.soberit.agilefant.exception.ObjectNotFoundException" />
       <exception-mapping result="ajaxException"
-        exception="java.lang.IllegalArgumentException" />         
+        exception="java.lang.IllegalArgumentException" />
+      <exception-mapping result="ajaxException"
+        exception="java.lang.RuntimeException" />         
     </global-exception-mappings>
     
     <action name="ajaxExceptionHandler" class="ajaxExceptionHandler" method="handle">
       <result name="objectNotFound" type="json">
         <param name="out.statusCode">404</param>
-        <param name="target">errorMessage</param>
+        <param name="patterns">+errorMessage, +trace, -*</param>
       </result>
       <result name="conflict" type="json">
         <param name="out.statusCode">409</param>
-        <param name="target">errorMessage</param>
+        <param name="patterns">+errorMessage, +trace, -*</param>
       </result>
       <result name="input" type="json">
         <param name="out.statusCode">500</param>
-        <param name="target">errorMessage</param>
+        <param name="patterns">+errorMessage, +trace, -*</param>
       </result>
       <result name="genericException" type="json">
         <param name="out.statusCode">500</param>
-        <param name="target">errorMessage</param>
+        <param name="patterns">+errorMessage, +trace, -*</param>
       </result>
     </action>
     

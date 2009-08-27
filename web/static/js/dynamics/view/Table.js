@@ -82,13 +82,9 @@ DynamicTable.prototype.initialize = function() {
     }
   }
   this.caption = null;
-  if (this.config.hasCaptionConfiguration()) {
-    this.caption = new DynamicTableCaption(this.captionElement, this.config
+  this.caption = new DynamicTableCaption(this.captionElement, this.config
         .getCaptionConfiguration(), this.config.getCaption(), this
         .getController());
-  } else {
-    this.captionElement.hide();
-  }
   this._renderHeader();
   this._bindEvents();
   if(this.config.isTableDroppable()) {

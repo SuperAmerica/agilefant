@@ -37,10 +37,10 @@ IterationRowController.prototype.iterationActionFactory = function(view, model) 
   }, /*{
     text : "Move",
     callback : IterationRowController.prototype.moveIteration
-  }, */{
+  }, {
     text : "Delete",
     callback : IterationRowController.prototype.removeIteration
-  } ];
+  } */];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;

@@ -146,16 +146,23 @@ StoryModel.prototype.rankUnder = function(rankUnderId) {
 }
 
 
-StoryModel.prototype._remove = function() {
+StoryModel.prototype._remove = function(successCallback) {
   var me = this;
-  jQuery.post(
-      "ajax/deleteStory.action",
-      {storyId: me.getId()},
-      function(data, status) {
+  jQuery.ajax({
+      type: "POST",
+      dataType: "json",
+      url: "ajax/deleteStory.action",
+      data: {storyId: me.getId()},
+      async: true,
+      cache: false,
+      success: function(data, status) {
         new MessageDisplay.OkMessage("Story removed");
-        return;
+        successCallback();
+      },
+      error: function(data, status) {
+        new MessageDisplay.ErrorMessage("Error deleting story: " + data.responseText);
       }
-  );
+  });
 };
 
 StoryModel.prototype.addTask = function(task) {

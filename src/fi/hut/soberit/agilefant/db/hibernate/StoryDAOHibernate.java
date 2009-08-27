@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -132,4 +134,24 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         return result;
     }
 
+    /*
+     * RANKING
+     */
+    /** {@inheritDoc} */
+    public Story getLastStoryInRank(Backlog parent) {
+        Criteria story = getCurrentSession().createCriteria(Story.class);
+        story.add(Restrictions.eq("backlog", parent));
+        story.setMaxResults(1);
+        story.addOrder(Order.desc("rank"));
+        return uniqueResult(story);
+    }
+    
+    /** {@inheritDoc} */
+    public Collection<Story> getStoriesWithRankBetween(Backlog parent,
+            int lower, int upper) {
+        Criteria stories = getCurrentSession().createCriteria(Story.class);
+        stories.add(Restrictions.eq("backlog", parent));
+        stories.add(Restrictions.between("rank", lower, upper));
+        return asCollection(stories);
+    }
 }

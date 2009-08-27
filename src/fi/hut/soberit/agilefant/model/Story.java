@@ -31,14 +31,14 @@ import flexjson.JSON;
 @Entity
 @Table(name = "stories")
 @Audited
-public class Story implements TimesheetLoggable, NamedObject {
+public class Story implements TimesheetLoggable, NamedObject, Rankable {
 
     private int id;
     private String name;
     private String description;
     private Backlog backlog;
     private StoryState state = StoryState.NOT_STARTED;
-    private Integer priority = new Integer(0);
+    private int rank = 0;
     
     private Set<User> responsibles = new HashSet<User>();
     private Collection<Task> tasks = new ArrayList<Task>();
@@ -128,14 +128,6 @@ public class Story implements TimesheetLoggable, NamedObject {
         this.tasks = tasks;
     }
 
-    public Integer getPriority() {
-        return priority;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
     @JSON
     public Integer getStoryPoints() {
         return storyPoints;
@@ -157,5 +149,13 @@ public class Story implements TimesheetLoggable, NamedObject {
         this.hourEntries = hourEntries;
     }
 
-    
+    @JSON
+    @Column(nullable = false, columnDefinition = "int default 0")
+    public int getRank() {
+        return rank;
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+    }
 }

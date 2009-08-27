@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.joda.time.Interval;
 
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
@@ -73,12 +75,12 @@ public interface TaskDAO extends GenericDAO<Task> {
      * Will not get the iteration's stories' tasks.
      * @param lower lower border of the rank (0 if topmost included)
      * @param upper upper border of the rank
-     * @param iterationId the parent iteration
-     * @param storyId TODO
+     * @param parentIteration the parent iteration
+     * @param parentStory TODO
      * 
      * @return
      */
-    public Collection<Task> getTasksWithRankBetween(int lower, int upper, Integer iterationId, Integer storyId);
+    public Collection<Task> getTasksWithRankBetween(int lower, int upper, Iteration parentIteration, Story parentStory);
     
     /**
      * Gets the next task with the given parent and rank > parameter,
@@ -88,7 +90,7 @@ public interface TaskDAO extends GenericDAO<Task> {
      *  
      * @return the next task in rank, null if not found
      */
-    public Task getNextTaskInRank(int rank, Integer iterationId, Integer storyId);
+    public Task getNextTaskInRank(int rank, Iteration iteration, Story story);
 
     
     /**
@@ -96,5 +98,5 @@ public interface TaskDAO extends GenericDAO<Task> {
      * <p>
      * Only one id should be supplied, otherwise will return <code>null</code>.
      */
-    public Task getLastTaskInRank(Integer storyId, Integer iterationId);
+    public Task getLastTaskInRank(Story story, Iteration iteration);
 }

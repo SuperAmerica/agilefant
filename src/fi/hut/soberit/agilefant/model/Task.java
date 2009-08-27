@@ -37,7 +37,7 @@ import flexjson.JSON;
 @Entity
 @Table(name = "tasks")
 @Audited
-public class Task implements TimesheetLoggable, NamedObject {
+public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     private int id;
     private String name;

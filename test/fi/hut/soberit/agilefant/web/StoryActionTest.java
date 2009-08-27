@@ -5,7 +5,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import com.opensymphony.xwork2.Action;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -24,40 +25,46 @@ import fi.hut.soberit.agilefant.model.Task;
 
 public class StoryActionTest {
 
-    StoryAction storyAction = new StoryAction();
+    StoryAction storyAction;
+    
     StoryBusiness storyBusiness;
+    BacklogBusiness backlogBusiness;
     
     Story story;
     Iteration iter;
     
-    @Before
-    public void setUp_dependencies() {
-        storyBusiness = createStrictMock(StoryBusiness.class);
-        storyAction.setStoryBusiness(storyBusiness);
-    }
-    
-    private void replayAll() {
-        replay(storyBusiness);
-    }
-    
-    private void verifyAll() {
-        verify(storyBusiness);
-    }
-    
+
     @Before
     public void setUp() {
         story = new Story();
         story.setId(1234);
         iter = new Iteration();
         iter.setId(6446);
+    }
+
+    
+    @Before
+    public void setUp_dependencies() {
+        storyAction = new StoryAction();
         
-        storyAction.setStory(story);
-        storyAction.setStoryId(story.getId());
+        storyBusiness = createStrictMock(StoryBusiness.class);
+        storyAction.setStoryBusiness(storyBusiness);
+        
+        backlogBusiness = createStrictMock(BacklogBusiness.class);
+        storyAction.setBacklogBusiness(backlogBusiness);
     }
     
+    private void replayAll() {
+        replay(storyBusiness, backlogBusiness);
+    }
+    
+    private void verifyAll() {
+        verify(storyBusiness, backlogBusiness);
+    }
     
     @Test
     public void testRetrieve() {
+        storyAction.setStoryId(story.getId());
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
        
         replayAll();
@@ -95,6 +102,8 @@ public class StoryActionTest {
     
     @Test
     public void testStore() {
+        storyAction.setStory(story);
+        storyAction.setStoryId(story.getId());
         storyAction.setUsersChanged(false);
         
         expect(storyBusiness.store(story.getId(), story, null, null))
@@ -106,6 +115,8 @@ public class StoryActionTest {
     
     @Test
     public void testStore_changeResponsibles() {
+        storyAction.setStory(story);
+        storyAction.setStoryId(story.getId());
         storyAction.setUsersChanged(true);
         
         expect(storyBusiness.store(story.getId(), story, null, storyAction.getUserIds()))
@@ -134,26 +145,27 @@ public class StoryActionTest {
         
         verifyAll();
     }
-    
+        
     @Test
     public void testMoveStory() {
         storyAction.setStoryId(story.getId());
         storyAction.setBacklogId(iter.getId());
-        storyBusiness.attachStoryToBacklog(story.getId(), iter.getId(), false);
         
+        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        expect(backlogBusiness.retrieve(iter.getId())).andReturn(iter);
+        storyBusiness.moveStoryToBacklog(story, iter);
         replayAll();
-        
         assertEquals(Action.SUCCESS, storyAction.moveStory());
-        
         verifyAll();
     }
-    
+
     /*
      * TEST DELETION
      */
     
     @Test
     public void testDelete() {
+       storyAction.setStoryId(story.getId());
        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
        storyBusiness.delete(story.getId());
        replayAll();
@@ -176,6 +188,7 @@ public class StoryActionTest {
     
     @Test(expected = ConstraintViolationException.class)
     public void testDelete_storyHasHourEntries() {
+       storyAction.setStoryId(story.getId());
        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
        storyBusiness.delete(story.getId());
        expectLastCall().andThrow(new ConstraintViolationException("Action not allowed", null, null));
@@ -210,4 +223,36 @@ public class StoryActionTest {
         
         verifyAll();
     }
+    
+    
+    @Test
+    public void testRankStory() {
+        storyAction.setStoryId(123);
+        storyAction.setRankUnderId(666);
+        
+        Story lower = new Story();
+        Story upper = new Story();
+        Story returned = new Story();
+        
+        expect(storyBusiness.retrieve(123)).andReturn(lower);
+        expect(storyBusiness.retrieveIfExists(666)).andReturn(upper);
+        
+        expect(storyBusiness.rankUnderStory(lower, upper)).andReturn(returned);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.rankStory());
+        verifyAll();
+        
+        assertEquals(returned, storyAction.getStory());
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testRankStory_notFound() {
+        storyAction.setStoryId(-1);
+        expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        storyAction.rankStory();
+        verifyAll();
+    }
+    
 }

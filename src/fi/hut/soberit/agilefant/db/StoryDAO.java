@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,4 +23,14 @@ public interface StoryDAO extends GenericDAO<Story> {
     public int getStoryPointSumByBacklog(int backlogId);
 
     public Map<Integer, Integer> getNumOfResponsiblesByStory(Set<Integer> storyIds);
+    
+    /*
+     * RANKING
+     */
+    /**
+     * Get the last story in rank for the given backlog.
+     */
+    public Story getLastStoryInRank(Backlog parent);
+    
+    public Collection<Story> getStoriesWithRankBetween(Backlog parent, int lower, int upper);
 }

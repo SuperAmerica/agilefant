@@ -57,9 +57,26 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * Moves a story to another backlog.
      * @param moveTasks whether the tasks should be moved with the story.
      */
-    public void attachStoryToBacklog(int storyId, int backlogId, boolean moveTasks);
+    public void moveStoryToBacklog(Story story, Backlog backlog);
 
     public int getStoryPointSumByBacklog(Backlog backlog);
     
     public List<HistoryRowTO> retrieveStoryHistory(int id);
+    
+    
+    /* RANKING */   
+    /**
+     * Rank the story to be under the given upperStory.
+     * 
+     * @param upperStory the story under which the other story should be ranked. null if topmost.
+     * 
+     * @throws IllegalArgumentException if the given story was null
+     */
+    public Story rankUnderStory(Story story, Story upperStory) throws IllegalArgumentException;
+    
+    /**
+     * Ranks the story to bottom most item under given parent.
+     * @throws IllegalArgumentException if story was null
+     */
+    public Story rankToBottom(Story story, Integer parentBacklogId) throws IllegalArgumentException;
 }

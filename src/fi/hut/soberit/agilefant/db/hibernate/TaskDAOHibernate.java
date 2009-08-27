@@ -22,6 +22,7 @@ import org.springframework.stereotype.Repository;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
@@ -171,17 +172,17 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
     
     /** {@inheritDoc} */
     public Collection<Task> getTasksWithRankBetween(int lower, int upper,
-            Integer iterationId, Integer storyId) {
+            Iteration parentIteration, Story parentStory) {
         Criteria task = getCurrentSession().createCriteria(Task.class);
-        addParentRestriction(task, iterationId, storyId);
+        addParentRestriction(task, parentIteration, parentStory);
         task.add(Restrictions.between("rank", lower, upper));
         return asList(task);
     }
     
     /** {@inheritDoc} */
-    public Task getNextTaskInRank(int rank, Integer iterationId, Integer storyId) {
+    public Task getNextTaskInRank(int rank, Iteration iteration, Story story) {
         Criteria task = getCurrentSession().createCriteria(Task.class);
-        addParentRestriction(task, iterationId, storyId);
+        addParentRestriction(task, iteration, story);
         task.add(Restrictions.gt("rank", rank));
         task.addOrder(Order.asc("rank"));
         task.setMaxResults(1);
@@ -190,22 +191,22 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
     
     
     /** {@inheritDoc} */
-    public Task getLastTaskInRank(Integer storyId, Integer iterationId) {
+    public Task getLastTaskInRank(Story story, Iteration iteration) {
         Criteria task = getCurrentSession().createCriteria(Task.class);
         
-        addParentRestriction(task, iterationId, storyId);
+        addParentRestriction(task, iteration, story);
         
         task.addOrder(Order.desc("rank"));
         task.setMaxResults(1);
         return uniqueResult(task);
     }
     
-    private void addParentRestriction(Criteria crit, Integer iterationId, Integer storyId) {
-        if (iterationId != null) {
-            crit.add(Restrictions.eq("iteration.id", iterationId));
+    private void addParentRestriction(Criteria crit, Iteration iteration, Story story) {
+        if (iteration != null) {
+            crit.add(Restrictions.eq("iteration.id", iteration.getId()));
         }
-        else if (storyId != null) {
-            crit.add(Restrictions.eq("story.id", storyId));
+        else if (story != null) {
+            crit.add(Restrictions.eq("story.id", story.getId()));
         }
     }
 }

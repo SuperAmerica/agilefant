@@ -14,6 +14,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
@@ -32,6 +33,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     @PrefetchId
     private Integer storyId;
+    
+    private Integer rankUnderId;
 
     private StoryState state;
     
@@ -52,13 +55,14 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private String storyListContext;
     
     private StoryMetrics metrics;
-    
-    private boolean moveTasks;
-    
+        
     private List<HistoryRowTO> storyHistory;
 
     @Autowired
     private StoryBusiness storyBusiness;
+    
+    @Autowired
+    private BacklogBusiness backlogBusiness;
 
 
     @Override
@@ -105,9 +109,19 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     // OTHER FUNCTIONS
     
     public String moveStory() {
-        storyBusiness.attachStoryToBacklog(storyId, backlogId, moveTasks);
+        story = storyBusiness.retrieve(storyId);
+        backlog = backlogBusiness.retrieve(backlogId);
+        storyBusiness.moveStoryToBacklog(story, backlog);
         return Action.SUCCESS;
     }
+    
+    public String rankStory() {
+        story = storyBusiness.retrieve(storyId);
+        Story upper = storyBusiness.retrieveIfExists(rankUnderId);
+        story = storyBusiness.rankUnderStory(story, upper);
+        return Action.SUCCESS;
+    }
+    
     
     public String storyContents() {
         storyContents = storyBusiness.getStoryContents(storyId, iterationId);
@@ -205,10 +219,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         return priority;
     }
     
-    public void setMoveTasks(boolean moveTasks) {
-        this.moveTasks = moveTasks;
-    }
-
     public String getStoryListContext() {
         return storyListContext;
     }
@@ -235,6 +245,14 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     public List<HistoryRowTO> getStoryHistory() {
         return storyHistory;
+    }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
+    }
+
+    public void setRankUnderId(Integer rankUnderId) {
+        this.rankUnderId = rankUnderId;
     }
     
 }

@@ -11,17 +11,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
+import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl.RankDirection;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 @Service("taskBusiness")
@@ -41,6 +45,9 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
     
+    @Autowired
+    private RankingBusiness rankingBusiness;
+    
     private TaskDAO taskDAO;
     
     @Autowired
@@ -49,7 +56,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         this.taskDAO = taskDAO;
     }
     
-
+    @Transactional(readOnly = true)
     public Collection<ResponsibleContainer> getTaskResponsibles(Task task) {
    
         Collection<ResponsibleContainer> responsibleContainers = new ArrayList<ResponsibleContainer>();
@@ -245,113 +252,68 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     /* RANKING */
     /** {@inheritDoc} */
+    @Transactional
     public Task rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException {
-        validateRankingArguments(task, upperTask);
+        if (task == null) {
+            throw new IllegalArgumentException("Task should be given");
+        }
+        else if (upperTask != null) {
+            if (task.getStory() != upperTask.getStory()) {
+                throw new IllegalArgumentException("The tasks' parent's should be the same");    
+            }
+            else if (task.getIteration() != upperTask.getIteration()) {
+                throw new IllegalArgumentException("The tasks' parent's should be the same");
+            }
+        }
         
-        RankDirection dir = findOutRankDirection(task, upperTask);
-        int newRank = findOutNewRank(dir, upperTask);
+        RankDirection dir = rankingBusiness.findOutRankDirection(task, upperTask);
+        int newRank = rankingBusiness.findOutNewRank(task, upperTask, dir);
         
-        Collection<Task> shiftedTasks = getShiftedTasks(dir, task, upperTask);
-        shiftTaskRanks(dir, shiftedTasks);
+        Pair<Integer, Integer> borders = rankingBusiness.getRankBorders(task, upperTask);
+        
+        Collection<Rankable> shiftables = new ArrayList<Rankable>();
+        shiftables.addAll(taskDAO.getTasksWithRankBetween(
+                borders.first, borders.second, task.getIteration(), task.getStory()));
+        
+        rankingBusiness.shiftRanks(dir, shiftables);
+        
+//        Collection<Task> shiftedTasks = getShiftedTasks(dir, task, upperTask);
+//        shiftTaskRanks(dir, shiftedTasks);
         
         task.setRank(newRank);
         
         return task;
     }
     
+
+    
     /** {@inheritDoc} */
-    public Task rankToBottom(Task task, Integer parentStoryId,
-            Integer parentIterationId) throws IllegalArgumentException {
-        Task lastInRank = taskDAO.getLastTaskInRank(parentStoryId, parentIterationId);
+    @Transactional
+    public Task rankToBottom(Task task, Integer parentStoryId, Integer parentIterationId)
+        throws IllegalArgumentException {
+        if (task == null || (parentStoryId == null && parentIterationId == null)) {
+            throw new IllegalArgumentException();
+        }
+        Task lastInRank;
+        
+        if (parentStoryId != null) {
+            lastInRank = taskDAO.getLastTaskInRank(storyBusiness.retrieve(parentStoryId), null);    
+        }
+        else {
+            lastInRank = taskDAO.getLastTaskInRank(null, iterationBusiness.retrieve(parentIterationId));
+        }
+        
         task.setRank(lastInRank.getRank() + 1);
         return task;
     }
-
-    private int findOutNewRank(RankDirection dir, Task upperTask) {
-        if (dir == RankDirection.UP) {
-            return upperTask.getRank() + 1;
-        }
-        else if (dir == RankDirection.DOWN) {
-            return upperTask.getRank();
-        }
-        return 0;
-    }
-
-
-    private enum RankDirection { TOP, UP, DOWN, BOTTOM }
     
-    private RankDirection findOutRankDirection(Task task, Task upperTask) {
-        if (upperTask == null) {
-            return RankDirection.TOP;
-        }
-        else if (task.getRank() == -1) {
-            return RankDirection.BOTTOM;
-        }
-        else if (task.getRank() >= upperTask.getRank()) {
-            return RankDirection.UP;
-        }
-        else {
-            return RankDirection.DOWN;
-        }
-    }
-    
-    private void shiftTaskRanks(RankDirection dir, Collection<Task> tasksToShift) {
-        for (Task t : tasksToShift) {
-            if (dir == RankDirection.DOWN) {
-                t.setRank(t.getRank() - 1);
-            }
-            else {
-                t.setRank(t.getRank() + 1);
-            }
-        }
-    }
-    
-    private Collection<Task> getShiftedTasks(RankDirection dir, Task task, Task upperTask) {
-        Integer iterId = null;
-        Integer storyId = null;
-        if (task.getIteration() != null) {
-            iterId = task.getIteration().getId();
-        }
-        if (task.getStory() != null) {
-            storyId = task.getStory().getId();
-        }
-        if (dir == RankDirection.UP) {
-            // While moving upwards, remove both task and upperTask
-            int lower = upperTask.getRank() + 1;
-            int upper = task.getRank() - 1;
-            return taskDAO.getTasksWithRankBetween(lower, upper, iterId, storyId);
-        }
-        else if (dir == RankDirection.DOWN) {
-            // While moving downwards, remove only self
-            int lower = task.getRank() + 1;
-            int upper = upperTask.getRank();
-            return taskDAO.getTasksWithRankBetween(lower, upper, iterId, storyId);
-        }
-        else if (dir == RankDirection.TOP) {
-            int upper = task.getRank() - 1;
-            return taskDAO.getTasksWithRankBetween(0, upper, iterId, storyId);
-        }
-        return null;
-    }
 
-    private void validateRankingArguments(Task task, Task upperTask) {
-        if (task == null) {
-            throw new IllegalArgumentException("Task should not be null");
-        }
-        else if (upperTask != null && (
-                task.getStory() != upperTask.getStory() ||
-                task.getIteration() != upperTask.getIteration()
-                )) {
-            throw new IllegalArgumentException("The tasks' parents should be same");
-        }
-    }
-    
     
     
     /** {@inheritDoc} */
+    @Transactional
     public Task rankAndMove(Task task, Task upperTask, Integer parentStoryId,
             Integer parentIterationId) throws IllegalArgumentException {
-        checkRankAndMoveArguments(task, parentStoryId, parentIterationId);
         
         assignParentForTask(task, parentIterationId, parentStoryId);
         rankToBottom(task, parentStoryId, parentIterationId);
@@ -360,19 +322,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         return task;
     }
 
-    private void checkRankAndMoveArguments(Task task, Integer parentStoryId,
-            Integer parentIterationId) {
-        if (task == null) {
-            throw new IllegalArgumentException("Task should be given");
-        }
-        else if (parentStoryId == null && parentIterationId == null) {
-            throw new IllegalArgumentException("Parent should be given");
-        }
-        else if (parentStoryId != null && parentIterationId != null) {
-            throw new IllegalArgumentException("Only one parent should be given");
-        }
-    }
-    
     
     
     // AUTOGENERATED
@@ -392,6 +341,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     public void setIterationHistoryEntryBusiness(
             IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
         this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
+    }
+
+    public void setRankingBusiness(RankingBusiness rankingBusiness) {
+        this.rankingBusiness = rankingBusiness;
     }
     
 }

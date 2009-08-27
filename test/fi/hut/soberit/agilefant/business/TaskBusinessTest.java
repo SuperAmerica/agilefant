@@ -9,13 +9,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -41,6 +44,7 @@ public class TaskBusinessTest {
     private StoryBusiness storyBusiness;
     private UserBusiness userBusiness;
     private TaskDAO taskDAO;
+    private RankingBusiness rankingBusiness;
     
     private Iteration iteration;
     private Story story;
@@ -62,7 +66,10 @@ public class TaskBusinessTest {
         taskBusiness.setUserBusiness(userBusiness);
         
         iterationHistoryEntryBusiness = createStrictMock(IterationHistoryEntryBusiness.class);
-        taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);    
+        taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
+        
+        rankingBusiness = new RankinkBusinessImpl();
+        taskBusiness.setRankingBusiness(rankingBusiness);
     }
     
     private void replayAll() {
@@ -106,10 +113,10 @@ public class TaskBusinessTest {
         Task lastTask = new Task();
         lastTask.setRank(22);
         
-        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
+        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration).anyTimes();
         expect(taskDAO.create(task)).andReturn(1351);
         expect(taskDAO.get(1351)).andReturn(task);
-        expect(taskDAO.getLastTaskInRank(null, iteration.getId())).andReturn(lastTask);
+        expect(taskDAO.getLastTaskInRank(null, iteration)).andReturn(lastTask);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
         replayAll();
@@ -130,10 +137,10 @@ public class TaskBusinessTest {
         
         story.setBacklog(iteration);
         
-        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        expect(storyBusiness.retrieve(story.getId())).andReturn(story).anyTimes();
         expect(taskDAO.create(task)).andReturn(1351);
         expect(taskDAO.get(1351)).andReturn(task);
-        expect(taskDAO.getLastTaskInRank(story.getId(), null)).andReturn(lastTask);
+        expect(taskDAO.getLastTaskInRank(story, null)).andReturn(lastTask);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
         replayAll();
@@ -634,99 +641,105 @@ public class TaskBusinessTest {
         thirdTaskInRank.setStory(rankParentStory);
         fourthTaskInRank.setStory(rankParentStory);
     }
-    
+
     private void checkRanks(int first, int second, int third, int fourth) {
         assertEquals("First rank does not match", first, firstTaskInRank.getRank());
         assertEquals("Second rank does not match", second, secondTaskInRank.getRank());
         assertEquals("Third rank does not match", third, thirdTaskInRank.getRank());
         assertEquals("Fourth rank does not match", fourth, fourthTaskInRank.getRank());
     }
-    
+
     @Test
     public void testRankUnderTask_twoUpwards() {
-        expect(taskDAO.getTasksWithRankBetween(1, 5, null, rankParentStory.getId()))
-            .andReturn(Arrays.asList(secondTaskInRank, thirdTaskInRank));
+        Collection<Task> returnedTasksWithRankBetween = 
+            Arrays.asList(secondTaskInRank, thirdTaskInRank);
+        
+        expect(taskDAO.getTasksWithRankBetween(1, 5, null, rankParentStory))
+            .andReturn(returnedTasksWithRankBetween);
+               
         replayAll();
         Task actual = taskBusiness.rankUnderTask(fourthTaskInRank, firstTaskInRank);
         verifyAll();
+        
         checkRanks(0, 2, 6, 1);
         assertSame(fourthTaskInRank, actual);
     }
-    
+
     @Test
     public void testRankUnderTask_twoDownwards() {
-        expect(taskDAO.getTasksWithRankBetween(1, 5, null, rankParentStory.getId()))
+        expect(taskDAO.getTasksWithRankBetween(1, 5, null, rankParentStory))
             .andReturn(Arrays.asList(secondTaskInRank, thirdTaskInRank));
         replayAll();
         taskBusiness.rankUnderTask(firstTaskInRank, thirdTaskInRank);
         verifyAll();
         checkRanks(5, 0, 4, 6);
     }
-    
+
     @Test
     public void testRankUnderTask_toTop() {
-        expect(taskDAO.getTasksWithRankBetween(0, 4, null, rankParentStory.getId()))
+        expect(taskDAO.getTasksWithRankBetween(0, 4, null, rankParentStory))
             .andReturn(Arrays.asList(firstTaskInRank, secondTaskInRank, thirdTaskInRank));
         replayAll();
         taskBusiness.rankUnderTask(thirdTaskInRank, null);
         verifyAll();
         checkRanks(1, 2, 0, 6);
     }
-    
+
     @Test
     public void testRankUnderTask_toBottom() {
-        expect(taskDAO.getTasksWithRankBetween(1, 6, null, rankParentStory.getId()))
+        expect(taskDAO.getTasksWithRankBetween(1, 6, null, rankParentStory))
             .andReturn(Arrays.asList(secondTaskInRank, thirdTaskInRank, fourthTaskInRank));
         replayAll();
         taskBusiness.rankUnderTask(firstTaskInRank, fourthTaskInRank);
         verifyAll();
         checkRanks(6, 0, 4, 5);
     }
-       
+
     @Test(expected = IllegalArgumentException.class)
     public void testRankUnderTask_nullTaskGiven() {
         replayAll();
         taskBusiness.rankUnderTask(null, null);
         verifyAll();
     }
-    
+
     @Test
     public void testRankUnderTask_checkUnderSameIteration() {
         Task first = new Task();
         Task second = new Task();
         Iteration iter = new Iteration();
-        
+
         first.setIteration(iter);
         second.setIteration(iter);
-        
-        expect(taskDAO.getTasksWithRankBetween(1, -1, iter.getId(), null)).andReturn(Arrays.asList(new Task()));        
+
+        expect(taskDAO.getTasksWithRankBetween(1, 0, iter, null)).andReturn(new ArrayList<Task>());        
         replayAll();
         taskBusiness.rankUnderTask(first, second);
         verifyAll();
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testRankUnderTask_noStory_differentIteration() {
         Task first = new Task();
         Task second = new Task();
-       
+
         first.setIteration(new Iteration());
         second.setIteration(new Iteration());
-        
+
         replayAll();
         taskBusiness.rankUnderTask(first, second);
         verifyAll();
     }
-    
+
     @Test(expected = IllegalArgumentException.class)
     public void testRankUnderTask_tasksNotUnderSameStory() {
         Task newTask = new Task();
         newTask.setStory(new Story());
-        
+
         replayAll();
         taskBusiness.rankUnderTask(firstTaskInRank, newTask);
         verifyAll();
     }
+
 
     /*
      * RANK TO BOTTOM
@@ -735,25 +748,41 @@ public class TaskBusinessTest {
     public void testRankToBottom_story() {
         Task last = new Task();
         last.setRank(230);
-        expect(taskDAO.getLastTaskInRank(22, null)).andReturn(last);
+        Story story = new Story();
+        expect(storyBusiness.retrieve(22)).andReturn(story);
+        expect(taskDAO.getLastTaskInRank(story, null)).andReturn(last);
         replayAll();
         Task actual = taskBusiness.rankToBottom(task, 22, null);
         verifyAll();
         assertEquals(task.getId(), actual.getId());
         assertEquals(231, actual.getRank());
     }
-    
+
     @Test
     public void testRankToBottom_iteration() {
         Task last = new Task();
         last.setRank(22);
-        expect(taskDAO.getLastTaskInRank(null, 561)).andReturn(last);
+        Iteration iter = new Iteration();
+        expect(iterationBusiness.retrieve(561)).andReturn(iter);
+        expect(taskDAO.getLastTaskInRank(null, iter)).andReturn(last);
         replayAll();
         Task actual = taskBusiness.rankToBottom(task, null, 561);
         verifyAll();
         assertEquals(task.getId(), actual.getId());
         assertEquals(23, actual.getRank());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankToBottom_noTaskGiven() {
+        taskBusiness.rankToBottom(null, null, 561);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankToBottom_noParentGiven() {
+        taskBusiness.rankToBottom(task, null, null);
+    }
+   
+
     
     /*
      * RANK AND MOVE
@@ -764,9 +793,9 @@ public class TaskBusinessTest {
         Task rankedTask = new Task();
         Story expectedParent = new Story();
         expectedParent.setId(123);
-        expect(storyBusiness.retrieve(123)).andReturn(expectedParent);
-        expect(taskDAO.getLastTaskInRank(123, null)).andReturn(fourthTaskInRank);
-        expect(taskDAO.getTasksWithRankBetween(0, fourthTaskInRank.getRank(), null, 123))
+        expect(storyBusiness.retrieve(123)).andReturn(expectedParent).times(2);
+        expect(taskDAO.getLastTaskInRank(expectedParent, null)).andReturn(fourthTaskInRank);
+        expect(taskDAO.getTasksWithRankBetween(0, fourthTaskInRank.getRank(), null, expectedParent))
             .andReturn(Arrays.asList(firstTaskInRank, secondTaskInRank, thirdTaskInRank, fourthTaskInRank));
         replayAll();
         Task actual = taskBusiness.rankAndMove(rankedTask, null, 123, null);
@@ -785,9 +814,9 @@ public class TaskBusinessTest {
         upperTask.setIteration(expectedParent);
         Task lastTask = new Task();
         lastTask.setRank(12);
-        expect(iterationBusiness.retrieve(222)).andReturn(expectedParent);
-        expect(taskDAO.getLastTaskInRank(null, 222)).andReturn(lastTask);
-        expect(taskDAO.getTasksWithRankBetween(5, 12, 222, null))
+        expect(iterationBusiness.retrieve(222)).andReturn(expectedParent).times(2);
+        expect(taskDAO.getLastTaskInRank(null, expectedParent)).andReturn(lastTask);
+        expect(taskDAO.getTasksWithRankBetween(5, 12, expectedParent, null))
             .andReturn(Arrays.asList(lastTask));
         replayAll();
         Task actual = taskBusiness.rankAndMove(new Task(), upperTask, null, 222);

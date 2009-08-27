@@ -9,11 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
+import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl.RankDirection;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
@@ -22,13 +24,14 @@ import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
+import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
@@ -39,7 +42,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     private StoryDAO storyDAO;
     @Autowired
-    private BacklogDAO backlogDAO;
+    private BacklogBusiness backlogBusiness;
     @Autowired
     private IterationDAO iterationDAO;
     @Autowired
@@ -54,6 +57,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private ProjectBusiness projectBusiness;
     @Autowired
     private StoryHistoryDAO storyHistoryDAO;
+    @Autowired
+    private RankingBusiness rankingBusiness;
 
     @Autowired
     public void setStoryDAO(StoryDAO storyDAO) {
@@ -123,8 +128,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         backlogHistoryEntryBusiness.updateHistory(backlog.getId());
     }
 
-    @Transactional
     /** {@inheritDoc} */
+    @Transactional
     public Story store(Integer storyId, Story dataItem, Integer backlogId, Set<Integer> responsibleIds)
             throws ObjectNotFoundException, IllegalArgumentException {
         if (storyId == null) {
@@ -141,10 +146,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         
         // Set the backlog if backlogId given
         if (backlogId != null) {
-            this.moveStoryToBacklog(persisted, backlogDAO.get(backlogId));
+            this.moveStoryToBacklog(persisted, backlogBusiness.retrieve(backlogId));
         }
         
-        this.updateStoryPriority(persisted, dataItem.getPriority());
         
         return persisted;
     }
@@ -173,7 +177,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if (dataItem == null || backlogId == null) {
             throw new IllegalArgumentException("DataItem and backlogId should not be null");
         }
-        Backlog backlog = this.backlogDAO.get(backlogId);
+        Backlog backlog = this.backlogBusiness.retrieve(backlogId);
         if (backlog == null) {
             throw new ObjectNotFoundException("backlog.notFound");
         }
@@ -198,14 +202,16 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     };
     
     
-
+    @Transactional
     public void moveStoryToBacklog(Story story, Backlog backlog) {
-
         Backlog oldBacklog = story.getBacklog();
         oldBacklog.getStories().remove(story);
         story.setBacklog(backlog);
         backlog.getStories().add(story);
-        backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());            
+        storyDAO.store(story);
+        this.rankToBottom(story, backlog.getId());
+        backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
+        backlogHistoryEntryBusiness.updateHistory(backlog.getId());
         if (oldBacklog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog
                     .getId());
@@ -216,6 +222,47 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
 
+    /*
+     * STORY RANKING
+     */
+    /** {@inheritDoc} */
+    @Transactional
+    public Story rankToBottom(Story story, Integer parentBacklogId)
+            throws IllegalArgumentException {
+        if (parentBacklogId == null) {
+            throw new IllegalArgumentException("Parent should be given");
+        }
+        Backlog parent = backlogBusiness.retrieve(parentBacklogId);
+        Story last = storyDAO.getLastStoryInRank(parent);
+        story.setRank(last.getRank() + 1);
+        return story;
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public Story rankUnderStory(Story story, Story upperStory)
+            throws IllegalArgumentException {
+        if (story == null) {
+            throw new IllegalArgumentException("Story should be given");
+        }
+        else if (upperStory != null && story.getBacklog() != upperStory.getBacklog()) {
+            throw new IllegalArgumentException("Stories' parent's should be the same");
+        }
+        
+        RankDirection dir = rankingBusiness.findOutRankDirection(story, upperStory);
+        int newRank = rankingBusiness.findOutNewRank(story, upperStory, dir);
+        Pair<Integer, Integer> borders = rankingBusiness.getRankBorders(story, upperStory);
+        
+        Collection<Rankable> storiesToShift = new ArrayList<Rankable>();
+        storiesToShift.addAll(storyDAO.getStoriesWithRankBetween(story.getBacklog(), borders.first, borders.second));
+        
+        rankingBusiness.shiftRanks(dir, storiesToShift);
+        
+        story.setRank(newRank);
+        
+        return story;
+    }
+    
 
 
     @Transactional(readOnly = true)
@@ -243,50 +290,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return metrics;
     }
 
-    // 090605 Reko: Copied from update iteration goal priority
-    public void updateStoryPriority(Story story, int insertAtPriority) {
-        if (insertAtPriority == story.getPriority() || (story.getBacklog() instanceof Product)) {
-            return;
-        }
-        if (story.getBacklog() == null) {
-            throw new IllegalArgumentException("backlog.notFound");
-        }
-        Backlog backlog = story.getBacklog();
-        if (backlog.getStories().size() == 0) {
-            throw new IllegalArgumentException("story.notFound");
-        }
-        int oldPriority = story.getPriority();
-
-        for (Story item : backlog.getStories()) {
-            // drop new goal to its place
-            if (oldPriority == -1) {
-                if (item.getPriority() >= insertAtPriority) {
-                    item.setPriority(item.getPriority() + 1);
-                    storyDAO.store(item);
-                }
-            } else {
-                // when prioritizing downwards raise all goals by one which are
-                // between the old and new priorities
-                if (oldPriority < insertAtPriority
-                        && item.getPriority() > oldPriority
-                        && item.getPriority() <= insertAtPriority) {
-                    item.setPriority(item.getPriority() - 1);
-                    storyDAO.store(item);
-                }
-                // vice versa when prioritizing upwards
-                if (oldPriority > insertAtPriority
-                        && item.getPriority() >= insertAtPriority
-                        && item.getPriority() < oldPriority) {
-                    item.setPriority(item.getPriority() + 1);
-                    storyDAO.store(item);
-                }
-            }
-
-        }
-        story.setPriority(insertAtPriority);
-        storyDAO.store(story);
-    }
-
 
 
     @Transactional(readOnly = true)
@@ -310,83 +313,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return storyHistoryDAO.retrieveLatestChanges(id, null);
     }
     
-    public void attachStoryToBacklog(Story story, int backlogId)
-            throws ObjectNotFoundException {
-        this.attachStoryToBacklog(story, backlogId, false);
-    }
-
-    public void attachStoryToBacklog(int storyId, int backlogId,
-            boolean moveTasks) throws ObjectNotFoundException {
-        Story story = this.retrieve(storyId);
-        this.attachStoryToBacklog(story, backlogId, moveTasks);
-    }
-
-    public void attachStoryToBacklog(Story story, int backlogId,
-            boolean moveTasks) throws ObjectNotFoundException {
-        Backlog newBacklog = null;
-        if (backlogId != 0) {
-            newBacklog = backlogDAO.get(backlogId);
-            if (newBacklog == null) {
-                throw new ObjectNotFoundException("backlog.notFound");
-            }
-        }
-        // story has to have a parent
-        if (story.getBacklog() == null && backlogId == 0) {
-            throw new IllegalArgumentException("backlog.notFound");
-        }
-
-        if (backlogId != 0) {
-
-            if (story.getBacklog() != null) {
-                if (story.getBacklog() != newBacklog) {
-                    Backlog oldBacklog = story.getBacklog();
-                    oldBacklog.getStories().remove(story);
-                    story.setBacklog(newBacklog);
-                    story.getBacklog().getStories().add(story);
-                    
-                    
-//                    for (Task task : story.getTasks()) {
-//                        if (moveTasks) {
-//                            task.setIteration((Iteration) newBacklog);
-//                        } else {
-//                            task.setStory(null);
-//                        }
-//                    }
-                                        
-                    if (!moveTasks && oldBacklog instanceof Iteration) {
-                        for (Task task : story.getTasks()) {
-                            task.setIteration((Iteration)story.getBacklog());
-                            task.setStory(null);
-                        }
-                        story.getTasks().clear();
-                    } else if (oldBacklog instanceof Iteration) {
-                        iterationHistoryEntryBusiness
-                                .updateIterationHistory(oldBacklog.getId());
-                    }
-                    
-                    
-                    backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
-                }
-            } else {
-                story.setBacklog(newBacklog);
-                story.getBacklog().getStories().add(story);
-            }
-
-            storyDAO.store(story);
-            backlogHistoryEntryBusiness.updateHistory(backlogId);
-            if (newBacklog instanceof Iteration) {
-                iterationHistoryEntryBusiness.updateIterationHistory(backlogId);
-            }
-        }
-
-        if (story.getBacklog() == null) {
-            throw new IllegalArgumentException("story.noIteration");
-        }
-    }
-    
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
@@ -414,5 +340,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     
     public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {
         this.hourEntryDAO = hourEntryDAO;
+    }
+
+    public void setRankingBusiness(RankingBusiness rankingBusiness) {
+        this.rankingBusiness = rankingBusiness;
+    }
+
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
 }

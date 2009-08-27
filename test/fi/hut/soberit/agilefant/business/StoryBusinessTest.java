@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -21,8 +22,8 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
+import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.StoryBusinessImpl;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -40,13 +41,16 @@ import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 public class StoryBusinessTest {
 
     StoryBusinessImpl storyBusiness;
+    
     StoryDAO storyDAO;
     IterationDAO iterationDAO;
-    BacklogDAO backlogDAO;
     UserDAO userDAO;
+    
+    BacklogBusiness backlogBusiness;
     ProjectBusiness projectBusiness;
     BacklogHistoryEntryBusiness blheBusiness;
     IterationHistoryEntryBusiness iheBusiness;
+    RankingBusiness rankingBusiness;
     
     
     Backlog backlog;
@@ -80,8 +84,8 @@ public class StoryBusinessTest {
     public void setUp_dependencies() {
         storyBusiness = new StoryBusinessImpl();
         
-        backlogDAO = createMock(BacklogDAO.class);
-        storyBusiness.setBacklogDAO(backlogDAO);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        storyBusiness.setBacklogBusiness(backlogBusiness);
         
         storyDAO = createMock(StoryDAO.class);
         storyBusiness.setStoryDAO(storyDAO);
@@ -100,6 +104,9 @@ public class StoryBusinessTest {
         
         iheBusiness = createMock(IterationHistoryEntryBusiness.class);
         storyBusiness.setIterationHistoryEntryBusiness(iheBusiness);
+        
+        rankingBusiness = new RankinkBusinessImpl();
+        storyBusiness.setRankingBusiness(rankingBusiness);
     }
     
     @Before
@@ -127,11 +134,11 @@ public class StoryBusinessTest {
     }
 
     private void replayAll() {
-        replay(backlogDAO, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
+        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
     }
     
     private void verifyAll() {
-        verify(backlogDAO, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
+        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
     }
 
     
@@ -207,104 +214,7 @@ public class StoryBusinessTest {
         assertEquals(0, storyBusiness.getStorysProjectResponsibles(storyInProduct).size());
         verifyAll();
     }
-    
-    public void testUpdateStoryPriority_noUpdate() {
-        Iteration iter = new Iteration();
-        List<Story> stories = createUpdatePrioData(iter);
-        storyBusiness.updateStoryPriority(stories.get(4), 4);
-    }
-    
-    public void testUpdateStoryPriority_oneUp() {
-        Iteration iter = new Iteration();
-        List<Story> stories = createUpdatePrioData(iter);
-        
-        storyDAO.store(stories.get(3));
-        storyDAO.store(stories.get(4));
-        replayAll();
-        storyBusiness.updateStoryPriority(stories.get(4), 3);
-        assertSame(0, stories.get(0).getPriority());
-        assertSame(1, stories.get(1).getPriority());
-        assertSame(2, stories.get(2).getPriority());
-        assertSame(4, stories.get(3).getPriority());
-        assertSame(3, stories.get(4).getPriority());
-        assertSame(5, stories.get(5).getPriority());
-        verifyAll();
-    }
-    
-    public void testUpdateStoryPriority_oneDown() {
-        Iteration iter = new Iteration();
-        List<Story> stories = createUpdatePrioData(iter);
-        
-        storyDAO.store(stories.get(4));
-        storyDAO.store(stories.get(5));
-        replayAll();
-        storyBusiness.updateStoryPriority(stories.get(4), 5);
-        assertSame(0, stories.get(0).getPriority());
-        assertSame(1, stories.get(1).getPriority());
-        assertSame(2, stories.get(2).getPriority());
-        assertSame(3, stories.get(3).getPriority());
-        assertSame(5, stories.get(4).getPriority());
-        assertSame(4, stories.get(5).getPriority());
-        verifyAll();
-    }
-    
-    public void testUpdateStoryPriority_toTop() {
-        Iteration iter = new Iteration();
-        List<Story> stories = createUpdatePrioData(iter);
 
-        storyDAO.store(stories.get(0));
-        storyDAO.store(stories.get(1));
-        storyDAO.store(stories.get(2));
-        storyDAO.store(stories.get(3));
-        storyDAO.store(stories.get(4));
-        storyDAO.store(stories.get(5));
-        replayAll();
-        storyBusiness.updateStoryPriority(stories.get(5), 0);
-        assertSame(1, stories.get(0).getPriority());
-        assertSame(2, stories.get(1).getPriority());
-        assertSame(3, stories.get(2).getPriority());
-        assertSame(4, stories.get(3).getPriority());
-        assertSame(5, stories.get(4).getPriority());
-        assertSame(0, stories.get(5).getPriority());
-        verifyAll();
-    }
-
-
-    
-    public void testUpdateStoryPriority_insertNew() {
-        Iteration iter = new Iteration();
-        List<Story> stories = createUpdatePrioData(iter);
-        Story newStory = new Story();
-        newStory.setBacklog(iter);
-        newStory.setPriority(-1);
-        
-        storyDAO.store(stories.get(3));
-        storyDAO.store(stories.get(4));
-        storyDAO.store(stories.get(5));
-        storyDAO.store(newStory);
-        replayAll();
-        storyBusiness.updateStoryPriority(newStory, 3);
-        assertSame(0, stories.get(0).getPriority());
-        assertSame(1, stories.get(1).getPriority());
-        assertSame(2, stories.get(2).getPriority());
-        assertSame(4, stories.get(3).getPriority());
-        assertSame(5, stories.get(4).getPriority());
-        assertSame(6, stories.get(5).getPriority());
-        assertSame(3, newStory.getPriority());
-        verifyAll();
-    }
-    
-    private List<Story> createUpdatePrioData(Iteration iter) {
-        List<Story> stories = new ArrayList<Story>();
-        for(int i = 0 ; i < 6; i++) {
-            Story tmp = new Story();
-            tmp.setPriority(i);
-            tmp.setBacklog(iter);
-            stories.add(tmp);
-            iter.getStories().add(tmp);
-        }
-        return stories;
-    }
     
     @Test
     public void testGetStoryPointSumByBacklog() {
@@ -317,6 +227,41 @@ public class StoryBusinessTest {
         verifyAll();
     }
     
+    @Test
+    public void testMoveStoryToBacklog() {
+        Backlog oldBacklog = new Iteration();
+        oldBacklog.setId(8482);
+        Backlog newBacklog = new Iteration();
+        newBacklog.setId(1904);
+        Story movable = new Story();
+        
+        oldBacklog.setStories(new ArrayList<Story>(Arrays.asList(movable)));
+        movable.setBacklog(oldBacklog);
+        
+        Story last = new Story();
+        last.setRank(123);
+        
+        storyDAO.store(isA(Story.class));
+        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
+        expect(storyDAO.getLastStoryInRank(newBacklog)).andReturn(last);
+        
+        blheBusiness.updateHistory(oldBacklog.getId());
+        blheBusiness.updateHistory(newBacklog.getId());
+        
+        iheBusiness.updateIterationHistory(oldBacklog.getId());
+        iheBusiness.updateIterationHistory(newBacklog.getId());
+        
+        
+        replayAll();
+        storyBusiness.moveStoryToBacklog(movable, newBacklog);
+        verifyAll();
+        
+        assertTrue(newBacklog.getStories().contains(movable));
+        assertFalse(oldBacklog.getStories().contains(movable));
+        assertEquals(newBacklog, movable.getBacklog());
+        assertEquals(124, movable.getRank());
+    }
+    
     
     
     private void store_createMockStoryBusiness() {       
@@ -326,13 +271,13 @@ public class StoryBusinessTest {
                 storyBacklogUpdated = true;
             }
             
-            @Override
-            public void updateStoryPriority(Story story, int insertAtPriority) {
-                storyPriorityUpdated = true;
-            }
+//            @Override
+//            public void updateStoryPriority(Story story, int insertAtPriority) {
+//                storyPriorityUpdated = true;
+//            }
         };
-        backlogDAO = createMock(BacklogDAO.class);
-        storyBusiness.setBacklogDAO(backlogDAO);
+        backlogBusiness = createMock(BacklogBusiness.class);
+        storyBusiness.setBacklogBusiness(backlogBusiness);
         
         storyDAO = createMock(StoryDAO.class);
         storyBusiness.setStoryDAO(storyDAO);
@@ -360,7 +305,7 @@ public class StoryBusinessTest {
         dataItem.setDescription("Fubar");
         dataItem.setStoryPoints(333);
         dataItem.setState(StoryState.PENDING);
-        dataItem.setPriority(222);
+        dataItem.setRank(222);
         
         replayAll();
         Story actual = storyBusiness.store(storyInIteration.getId(),
@@ -375,7 +320,6 @@ public class StoryBusinessTest {
         assertEquals(dataItem.getStoryPoints(), actual.getStoryPoints());
         assertEquals(dataItem.getState(), actual.getState());
         
-        assertTrue(storyPriorityUpdated);
         assertFalse(storyBacklogUpdated);
     }
     
@@ -406,7 +350,7 @@ public class StoryBusinessTest {
         storyInIteration.setResponsibles(users);
         
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
-        expect(backlogDAO.get(newBacklog.getId())).andReturn(newBacklog);
+        expect(backlogBusiness.retrieve(newBacklog.getId())).andReturn(newBacklog);
         storyDAO.store(EasyMock.isA(Story.class));
         
         replayAll();
@@ -417,7 +361,6 @@ public class StoryBusinessTest {
         assertEquals(0, actual.getResponsibles().size());
         
         assertTrue(storyBacklogUpdated);
-        assertTrue(storyPriorityUpdated);
     }
     
     
@@ -435,7 +378,7 @@ public class StoryBusinessTest {
     @Test
     public void testCreateStory_noResponsibles() {
         Backlog blog = new Iteration();
-        expect(backlogDAO.get(5)).andReturn(blog);
+        expect(backlogBusiness.retrieve(5)).andReturn(blog);
         
         Capture<Story> capturedStory = new Capture<Story>();
         expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
@@ -470,7 +413,7 @@ public class StoryBusinessTest {
         User user2 = new User();
         
         Backlog blog = new Project();
-        expect(backlogDAO.get(5)).andReturn(blog);
+        expect(backlogBusiness.retrieve(5)).andReturn(blog);
         expect(userDAO.get(2)).andReturn(user1);
         expect(userDAO.get(23)).andReturn(user2);
         
@@ -505,8 +448,146 @@ public class StoryBusinessTest {
     
     @Test(expected = ObjectNotFoundException.class)
     public void testCreateStory_backlogNotFound() {
-        expect(backlogDAO.get(5)).andReturn(null);
+        expect(backlogBusiness.retrieve(5)).andThrow(new ObjectNotFoundException());
         this.storyBusiness.create(new Story(), 222, new HashSet<Integer>());
     }
+    
+    
+    
 
+    /*
+     * RANK TO BOTTOM
+     */
+    @Test
+    public void testRankToBottom() {
+        Story last = new Story();
+        last.setRank(117);
+        Backlog product = new Product();
+        product.setId(123);
+        expect(backlogBusiness.retrieve(123)).andReturn(product);
+        expect(storyDAO.getLastStoryInRank(product)).andReturn(last);
+        replayAll();
+        Story actual = storyBusiness.rankToBottom(story1, 123);
+        verifyAll();
+        assertEquals(story1.getId(), actual.getId());
+        assertEquals(118, actual.getRank());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankToBottom_noParentGiven() {
+        storyBusiness.rankToBottom(story1, null);
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testRankToBottom_noParentFound() {
+        expect(backlogBusiness.retrieve(1222)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        storyBusiness.rankToBottom(story1, 1222);
+        verifyAll();
+    }
+
+    
+    /*
+     * RANK UNDER STORY
+     */
+    
+    Story firstInRank;
+    Story secondInRank;
+    Story thirdInRank;
+    Story fourthInRank;
+    
+    private void createRankUnderStoryTestData() {
+       Iteration iter = new Iteration();
+        
+       firstInRank = new Story();
+       secondInRank = new Story();
+       thirdInRank = new Story();
+       fourthInRank = new Story();
+       
+       firstInRank.setId(222);
+       secondInRank.setId(515);
+       thirdInRank.setId(7646);
+       fourthInRank.setId(57);
+       
+       firstInRank.setBacklog(iter);
+       secondInRank.setBacklog(iter);
+       thirdInRank.setBacklog(iter);
+       fourthInRank.setBacklog(iter);
+       
+       firstInRank.setRank(0);
+       secondInRank.setRank(2);
+       thirdInRank.setRank(3);
+       fourthInRank.setRank(13);
+    }
+    
+    private void checkRanks(int first, int second, int third, int fourth) {
+        assertEquals("First item's rank doesn't match", first, firstInRank.getRank());
+        assertEquals("Second item's rank doesn't match", second, secondInRank.getRank());
+        assertEquals("Third item's rank doesn't match", third, thirdInRank.getRank());
+        assertEquals("Fourth item's rank doesn't match", fourth, fourthInRank.getRank());
+    }
+    
+    @Test
+    public void testRankUnderStory_bottomToTop() {
+        createRankUnderStoryTestData();
+        
+        expect(storyDAO.getStoriesWithRankBetween(fourthInRank.getBacklog(), 0, 12))
+            .andReturn(Arrays.asList(firstInRank, secondInRank, thirdInRank));
+        
+        replayAll();
+        Story actual = storyBusiness.rankUnderStory(fourthInRank, null);
+        verifyAll();
+        
+        assertSame(fourthInRank, actual);
+        
+        checkRanks(1, 3, 4, 0);
+    }
+    
+    @Test
+    public void testRankUnderStory_downwards() {
+        createRankUnderStoryTestData();
+        
+        expect(storyDAO.getStoriesWithRankBetween(fourthInRank.getBacklog(), 1, 3))
+            .andReturn(Arrays.asList(secondInRank, thirdInRank));
+        
+        replayAll();
+        Story actual = storyBusiness.rankUnderStory(firstInRank, thirdInRank);
+        verifyAll();
+        
+        assertSame(firstInRank, actual);
+        
+        checkRanks(3, 1, 2, 13);
+    }
+    
+    @Test
+    public void testRankUnderStory_upwards() {
+        createRankUnderStoryTestData();
+        
+        expect(storyDAO.getStoriesWithRankBetween(fourthInRank.getBacklog(), 1, 12))
+            .andReturn(Arrays.asList(secondInRank, thirdInRank));
+        
+        replayAll();
+        Story actual = storyBusiness.rankUnderStory(fourthInRank, firstInRank);
+        verifyAll();
+        
+        assertSame(fourthInRank, actual);
+        
+        checkRanks(0, 3, 4, 1);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankUnderStory_nullStory() {
+        storyBusiness.rankUnderStory(null, new Story());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankUnderStory_differentParent() {
+        Story first = new Story();
+        first.setBacklog(new Product());
+        Story second = new Story();
+        second.setBacklog(new Iteration());
+        
+        storyBusiness.rankUnderStory(first, second);
+
+    }
 }

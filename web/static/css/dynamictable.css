@@ -122,8 +122,8 @@ div.genericMessage {
   -webkit-border-radius: 10px;
   z-index: 3699;
   max-height: 400px;
-  max-width: 600px;
-  overflow: auto;
+  max-width: 700px;
+  overflow: hidden;
 }
 
 div.okMessage {
@@ -135,6 +135,25 @@ div.errorMessage {
 	background-color: #fcc;
 	border-color: #c55;
 	color: #a33;
+}
+
+div.genericMessage .messageArea {
+    float: left;
+    max-height: 400px;
+    max-width: 650px;
+    overflow: auto;    
+}
+
+div.genericMessage .closeButton {
+    cursor: pointer;
+    float: right;
+    font-family: cursive;
+    font-size: 11pt;
+    padding: 0 5px;
+}
+
+div.genericMessage .closeButton:hover {
+    color: rgba(0,0,0,0.2);
 }
 
 div.gear {

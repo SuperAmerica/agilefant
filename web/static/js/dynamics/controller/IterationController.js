@@ -135,10 +135,12 @@ IterationController.prototype.initializeTaskListConfig = function() {
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     },
+    tableDroppable: true,
     dropOptions: {
-      accepts: function(a,b,c,d,e) {
-        var abva = "foo";
-      }
+      accepts: function(model) {
+        return (model instanceof TaskModel);
+      },
+      callback: TaskController.prototype.moveTask
     }
   });
   

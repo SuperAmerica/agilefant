@@ -10,6 +10,7 @@ var DynamicView = function() {
 };
 
 DynamicView.prototype = new ViewPart();
+DynamicView.instanceCounter = 0;
 
 /**
  * Initialization method for views. Sets controller, model
@@ -49,13 +50,21 @@ DynamicView.prototype.initWithoutEvents = function(controller, model, parent) {
   } else {
     this.parentElement = parent;
   }
+  if(this.element) {
+    this._setViewId();
+  }
 };
-DynamicView.instanceCounter = 0;
 
 DynamicView.prototype.destroy = function() {
   if(this.listener) {
     this.model.removeListener(this.listener);
   }
+};
+DynamicView.prototype._setViewId = function() {
+  this.element.attr("id",this.getViewId());
+};
+DynamicView.prototype.getViewId = function() {
+  return "dynamicView_"+this.viewId;
 };
 DynamicView.prototype.getModel = function() {
 	return this.model;

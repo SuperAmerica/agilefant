@@ -276,6 +276,12 @@
       </result>
     </action>
     
+    <action name="rankStory" method="rankStory" class="storyAction">
+      <result name="success" type="json">
+        <param name="target">story</param>
+      </result>
+    </action>
+    
     <action name="storyTabs" method="retrieve"  class="storyAction">
       <result type="dispatcher">/WEB-INF/jsp/tabs/storyTabs.jsp</result>
     </action>

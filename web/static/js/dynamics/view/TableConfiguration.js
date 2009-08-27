@@ -158,8 +158,8 @@ var DynamicTableConfiguration = function(options) {
 			cancelEditRowCallback: function() {},
 			sortCallback: null,
 			sortOptions: {
-			  items: "> .dynamicTableDataRow",
-	      handle: "." + DynamicTable.cssClasses.dragHandle
+			  items: "> div.dynamicTableDataRow",
+	      handle: "div." + DynamicTable.cssClasses.dragHandle
 			}
 	};
 	jQuery.extend(this.options, options);

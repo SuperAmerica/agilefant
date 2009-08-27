@@ -97,10 +97,12 @@ DynamicTable.prototype.initialize = function() {
 
 DynamicTable.prototype._bindEvents = function() {
   var me = this;
+ 
   this.element.bind("sortbeforeStop", function(event, ui) {
     me.middleRows = [];
-    me.element.find("> .dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
-      me.middleRows.push($(row).data("row"));
+    me.element.find("> div.dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
+      var rowObj = $(row).data("row");
+      me.middleRows.push(rowObj);
     });
     event.stopPropagation();
   });
@@ -108,7 +110,7 @@ DynamicTable.prototype._bindEvents = function() {
   this.element.bind("sortreceive", function(event, ui) {
     var targetRow = ui.item.data("row");
     me.middleRows = [];
-    me.element.find("> .dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
+    me.element.find("> div.dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
       var rowObj = $(row).data("row");
       me.middleRows.push(rowObj);
     });
@@ -134,6 +136,7 @@ DynamicTable.prototype._bindEvents = function() {
     ui.item.data("sortactive", false);
     $('<div/>').text("out").appendTo(document.body);
   });
+ 
   
 };
 DynamicTable.prototype._computeColumns = function() {
@@ -196,6 +199,7 @@ DynamicTable.prototype.layout = function() {
     var opts = this.config.getSortOptions();
     jQuery.extend(opts, {
       stop: function(event, ui) {
+      $('<div/>').text("sort stop").appendTo(document.body);
         var newPos = me._stackPosition(ui.item);
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();
@@ -205,11 +209,14 @@ DynamicTable.prototype.layout = function() {
       helper: function(event, target) {
         target = $(target);
         var helper = target.clone();
+        helper.removeClass("dynamicTableDataRow");
         var height = target.height();
         helper.find(".dynamictable-cell").css({
-          margin: 0,
-          padding: 0,
-          height: height
+          "margin-top": 0,
+          "margin-bottom": 0,
+          "padding-top": 0,
+          "padding-bottom": 0,
+          "height": height
         });
         helper.css('border', '1px solid black');
         helper.height(target.height());
@@ -261,7 +268,7 @@ DynamicTable.prototype._registerDropFor = function(target) {
        return dropOptions.accepts.call(dropTarget.getController(), model);
     }
   };
-  target.droppable(opt);
+  //target.droppable(opt);
 };
 DynamicTable.prototype.getDataRowAt = function(index) {
   return this.middleRows[index];

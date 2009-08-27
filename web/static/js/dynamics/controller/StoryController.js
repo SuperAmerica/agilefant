@@ -120,7 +120,7 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   config.addColumnConfiguration(0, {
     get : StoryModel.prototype.getDescription,
     onDoubleClick: StoryController.prototype.editDescription,
-    cssClass : 'task-data'
+    cssClass : 'task-data text-editor'
   });
   var infoContents = new DynamicVerticalTable(this, this.model, config, info);
   var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
@@ -377,7 +377,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
   config.addColumnConfiguration(TaskController.columnIndexes.description, {
     fullWidth : true,
     get : TaskModel.prototype.getDescription,
-    cssClass : 'task-data',
+    cssClass : 'task-data text-editor',
     visible : false,
     editable : true,
     edit : {

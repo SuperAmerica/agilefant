@@ -464,6 +464,9 @@ li.dynamictable-captionaction {
 .dynamictable .dynamictable-row .task-data {
 	background-color: #fff;
 }
+.dynamictable .dynamictable-row .text-editor {
+  cursor: text;  
+}
 .dynamictable-header > .story-row,
 .dynamictable-header > .story-task,
 .dynamictable-header > .story-responsibles,

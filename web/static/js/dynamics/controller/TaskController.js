@@ -25,6 +25,7 @@ TaskController.prototype = new CommonController();
  */
 TaskController.prototype.editTask = function() {
   this.model.setInTransaction(true);
+  this.view.getCell(TaskController.columnIndexes.description).show();
   this.view.getCell(TaskController.columnIndexes.buttons).show();
   this.view.editRow();
 };

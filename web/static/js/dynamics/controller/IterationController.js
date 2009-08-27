@@ -108,19 +108,19 @@ IterationController.prototype.createStory = function() {
   controller.editStory();
   row.getCell(StoryController.columnIndexes.tasksData).hide();
 };
-IterationController.prototype.sortStories = function(view, model, stackPosition) {
-  if(stackPosition === 0) {
-    model.setPriority(0);
-    return;
-  }
-  var prevRow = this.storyListView.getDataRowAt(stackPosition - 1);
-  if(prevRow) {
-    var prevPriority = prevRow.getModel().getPriority();
-    model.setPriority(prevPriority + 1);
-  } else {
-    model.setPriority(stackPosition); 
-  }
-};
+//IterationController.prototype.sortStories = function(view, model, stackPosition) {
+//  if(stackPosition === 0) {
+//    model.setPriority(0);
+//    return;
+//  }
+//  var prevRow = this.storyListView.getDataRowAt(stackPosition - 1);
+//  if(prevRow) {
+//    var prevPriority = prevRow.getModel().getPriority();
+//    model.setPriority(prevPriority + 1);
+//  } else {
+//    model.setPriority(stackPosition); 
+//  }
+//};
 
 IterationController.prototype.initializeTaskListConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -291,7 +291,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     rowControllerFactory : IterationController.prototype.storyControllerFactory,
     dataSource : IterationModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
-    sortCallback: IterationController.prototype.sortStories,
+    sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
     rowDroppable: true,
     dropOptions: {
@@ -331,7 +331,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     cssClass : 'story-row',
     title : "#",
     headerTooltip : 'Priority',
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getPriority),
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
     defaultSortColumn: true,
     subViewFactory : StoryController.prototype.taskToggleFactory
   });

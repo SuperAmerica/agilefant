@@ -96,6 +96,17 @@ StoryController.prototype.moveStory = function() {
   });
 };
 
+StoryController.prototype.rankStory = function(view, model, newPos) {
+  var previousRow = newPos - 1;
+  if (view.getParentView().getDataRowAt(previousRow)) {
+    previousStory = view.getParentView().getDataRowAt(previousRow).getModel();
+    model.rankUnder(previousStory.getId());
+  }
+  else {
+    model.rankUnder(-1);
+  }
+};
+
 /**
  * 
  */

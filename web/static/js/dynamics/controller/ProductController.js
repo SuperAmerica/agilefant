@@ -107,20 +107,6 @@ ProductController.prototype.createStory = function() {
   controller.editStory();
 };
 
-ProductController.prototype.sortStories = function(view, model, stackPosition) {
-  if(stackPosition === 0) {
-    model.setPriority(0);
-    return;
-  }
-  var prevRow = this.storyListView.getDataRowAt(stackPosition - 1);
-  if(prevRow) {
-    var prevPriority = prevRow.getModel().getPriority();
-    model.setPriority(prevPriority + 1);
-  } else {
-    model.setPriority(stackPosition); 
-  }
-};
-
 /**
  * Initialize product details configuration.
  */
@@ -160,7 +146,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     rowControllerFactory : ProductController.prototype.storyControllerFactory,
     dataSource : ProductModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
-    sortCallback: ProductController.prototype.sortStories,
+    sortCallback: StoryController.prototype.rankStory,
     caption : "Stories"
   });
 
@@ -177,7 +163,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     cssClass : 'story-row',
     title : "#",
     headerTooltip : 'Priority',
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getPriority),
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
     defaultSortColumn: true
   });
   config.addColumnConfiguration(StoryController.columnIndexes.name, {

@@ -19,7 +19,7 @@ var StoryModel = function() {
     "name": "name",
     "description": "description",
     "state": "state",
-    "priority": "priority",
+    "rank": "rank",
     "storyPoints": "storyPoints"
   };
   this.classNameToRelation = {
@@ -126,6 +126,26 @@ StoryModel.prototype.moveStory = function(backlogId) {
   );
 };
 
+StoryModel.prototype.rankUnder = function(rankUnderId) {
+  var me = this;
+  
+  var data = {
+    storyId: me.getId(),
+    rankUnderId: rankUnderId
+  };
+  
+  jQuery.post("ajax/rankStory.action",
+    data,
+    function(data, status) {
+      var oldParent = me.getParent();
+      me.setData(data);
+      oldParent.reload();
+    },
+    "json"
+  );
+}
+
+
 StoryModel.prototype._remove = function() {
   var me = this;
   jQuery.post(
@@ -173,11 +193,11 @@ StoryModel.prototype.getParent = function() {
 };
 
 
-StoryModel.prototype.getPriority = function() {
-  return this.currentData.priority;
+StoryModel.prototype.getRank = function() {
+  return this.currentData.rank;
 };
-StoryModel.prototype.setPriority = function(newPriority) {
-  this.currentData.priority = newPriority;
+StoryModel.prototype.setRank = function(newRank) {
+  this.currentData.rank = newRank;
   this._commitIfNotInTransaction();
 };
 

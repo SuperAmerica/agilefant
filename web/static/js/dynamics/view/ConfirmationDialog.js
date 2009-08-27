@@ -18,6 +18,10 @@ DynamicsConfirmationDialog.prototype._show = function() {
     buttons: {
     No: function() { me._cancel(); },  
     Yes: function() { me._ok(); }
+    },
+    open: function() {
+      var dialogMessage  = $(this);
+      dialogMessage.siblings(".ui-dialog-buttonpane button:eq(1)").focus();
     }
   });
 };

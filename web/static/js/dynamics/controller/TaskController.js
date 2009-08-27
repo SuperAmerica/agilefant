@@ -84,8 +84,11 @@ TaskController.prototype.toggleFactory = function(view, model) {
 };
 
 TaskController.prototype.removeTask = function() {
-  this.parentController.removeChildController("task", this);
-  this.model.remove();
+  var me = this;
+  new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this task?", function() {
+    me.parentController.removeChildController("task", this);
+    me.model.remove();
+  });
 };
 
 TaskController.prototype.taskButtonFactory = function(view, model) {

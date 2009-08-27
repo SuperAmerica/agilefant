@@ -90,8 +90,8 @@ StoryModel.prototype._saveData = function(id, changedData) {
         me.relations.backlog.addStory(me);
       }
     },
-    error: function(request, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving story");
+    error: function(xhr, status, error) {
+      new MessageDisplay.ErrorMessage("Error saving story", xhr);
     }
   });
 };
@@ -110,17 +110,20 @@ StoryModel.prototype.reload = function() {
 
 StoryModel.prototype.moveStory = function(backlogId) {
   var me = this;
-  jQuery.post(
-      "ajax/moveStory.action",
-      {storyId: me.getId(), backlogId: backlogId, moveTasks: "true"},
-      function(data,status) {
-        if (status === "success") {
+  jQuery.ajax({
+      url: "ajax/moveStory.action",
+      data: {storyId: me.getId(), backlogId: backlogId, moveTasks: "true"},
+      dataType: 'json',
+      type: 'post',
+      async: true,
+      cache: false,
+      success: function(data,status) {
           new MessageDisplay.OkMessage("Story moved");
           me.getParent().reload();
           me.callListeners(new DynamicsEvents.EditEvent(me));  
-        }
-        else {
-          new MessageDisplay.ErrorMessage("An error occurred moving the story");
+      },
+      error: function(xhr) {
+          new MessageDisplay.ErrorMessage("An error occurred moving the story", xhr);
         }
       }
   );
@@ -160,7 +163,7 @@ StoryModel.prototype._remove = function(successCallback) {
         successCallback();
       },
       error: function(data, status) {
-        new MessageDisplay.ErrorMessage("Error deleting story: " + data.responseText);
+        new MessageDisplay.ErrorMessage("Error deleting story.", data);
       }
   });
 };

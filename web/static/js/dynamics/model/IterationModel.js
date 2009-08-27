@@ -98,8 +98,8 @@ IterationModel.prototype._saveData = function(id, changedData) {
         me.getParent().addIteration(me);
       }
     },
-    error: function(request, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving iteration");
+    error: function(xhr, status, error) {
+      new MessageDisplay.ErrorMessage("Error saving iteration", xhr);
       me.rollback();
     }
   });

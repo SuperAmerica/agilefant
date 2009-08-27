@@ -55,13 +55,18 @@ MessageDisplay.GenericMessage.prototype.fadeOutTimer = function() {
 /*
  * ERROR MESSAGE
  */
-MessageDisplay.ErrorMessage = function(message, opts) {
+MessageDisplay.ErrorMessage = function(message, xhr, opts) {
   this.options = {
       fadeOutTime: 200,
       closeButton: true
   };
-  jQuery.extend(this.options, opts);
   this.message = message;
+  if(xhr) {
+  this.jsonData = jQuery.httpData(xhr, "json", null);
+    jQuery.extend(this.options, opts);
+    this.detailedMessage = this.jsonData.errorMessage;
+    this.trace = this.jsonData.trace;
+  }
   this.init();
   this.element.addClass(MessageDisplay.cssClasses.errorMessage);
 };

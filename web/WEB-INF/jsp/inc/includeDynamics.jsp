@@ -13,6 +13,7 @@
 <script type="text/javascript" src="static/js/dynamics/view/SplitPanel.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Tabs.js"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Buttons.js"></script>
+<script type="text/javascript" src="static/js/dynamics/view/ConfirmationDialog.js"></script>
 
 
 <script type="text/javascript" src="static/js/dynamics/model/CommonModel.js"></script>

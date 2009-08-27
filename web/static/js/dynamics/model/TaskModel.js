@@ -94,8 +94,8 @@ TaskModel.prototype._saveData = function(id, changedData) {
         }
       }
     },
-    error: function(request, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving task");
+    error: function(xhr, status, error) {
+      new MessageDisplay.ErrorMessage("Error saving task", xhr);
     }
   });
 };
@@ -113,8 +113,8 @@ TaskModel.prototype._remove = function(successCallback) {
         new MessageDisplay.OkMessage("Task removed");
         successCallback();
       },
-      error: function(data,status) {
-        new MessageDisplay.ErrorMessage("Error deleting task: " + data.responseText);
+      error: function(xhr,status) {
+        new MessageDisplay.ErrorMessage("Error deleting task.", xhr);
       }
   });
 };

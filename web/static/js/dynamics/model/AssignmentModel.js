@@ -53,8 +53,8 @@ AssignmentModel.prototype._saveData = function(id, changedData) {
       new MessageDisplay.OkMessage("Assignment saved successfully");
       me.setData(data);
     },
-    error: function(request, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving assignment");
+    error: function(xhr, status, error) {
+      new MessageDisplay.ErrorMessage("Error saving assignment", xhr);
     }
   });
 };

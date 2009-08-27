@@ -99,8 +99,8 @@ ProjectModel.prototype._saveData = function(id, changedData) {
         me.getParent().addProject(me);
       }
     },
-    error: function(request, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving project");
+    error: function(xhr, status, error) {
+      new MessageDisplay.ErrorMessage("Error saving project", xhr);
       me.rollback();
     }
   });

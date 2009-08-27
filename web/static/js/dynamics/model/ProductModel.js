@@ -73,8 +73,8 @@ ProductModel.prototype._saveData = function(id, changedData) {
       new MessageDisplay.OkMessage("Product saved successfully");
       me.setData(data);
     },
-    error: function(request, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving product");
+    error: function(xhr, status, error) {
+      new MessageDisplay.ErrorMessage("Error saving product", xhr);
       me.rollback();
     }
   });

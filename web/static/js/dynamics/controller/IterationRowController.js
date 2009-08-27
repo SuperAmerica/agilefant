@@ -19,13 +19,14 @@ IterationRowController.prototype = new BacklogController();
  * @member IterationRowController
  */
 IterationRowController.columnIndices = {
-    name: 0,
-    startDate: 1,
-    endDate: 2,
-    actions: 3,
-    description: 4,
-    buttons: 5,
-    storiesData: 6
+    expand: 0,
+    name: 1,
+    startDate: 2,
+    endDate: 3,
+    actions: 4,
+    description: 5,
+    buttons: 6,
+    storiesData: 7
 };
 
 
@@ -65,6 +66,30 @@ IterationRowController.prototype.iterationButtonFactory = function(view, model) 
                                    {text: 'Cancel', callback: IterationRowController.prototype.cancelEdit}
                                    ] ,view);
 };
+
+IterationRowController.prototype.toggleFactory = function(view, model) {
+  var options = {
+      collapse : IterationRowController.prototype.hideDetails,
+      expand : IterationRowController.prototype.showDetails,
+      expanded: false
+    };
+    this.toggleView = new DynamicTableToggleView(options, this, view);
+    return this.toggleView;
+};
+
+IterationRowController.prototype.showDetails = function() {
+  var cell = this.view.getCell(IterationRowController.columnIndices.storiesData);
+  if (cell) {
+    cell.show();
+  }
+};
+IterationRowController.prototype.hideDetails = function() {
+  var cell = this.view.getCell(IterationRowController.columnIndices.storiesData);
+  if (cell) {
+    cell.hide();
+  }
+};
+
 
 IterationRowController.prototype.editIteration = function() {
   this.model.setInTransaction(true);

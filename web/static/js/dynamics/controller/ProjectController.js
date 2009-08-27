@@ -269,7 +269,15 @@ ProjectController.prototype.initializeIterationListConfig = function() {
 
 
 ProjectController.prototype._iterationListColumnConfig = function(config) {
-
+  config.addColumnConfiguration(IterationRowController.columnIndices.expand, {
+    minWidth : 16,
+    autoScale : true,
+    cssClass : 'projectstory-row',
+    title : "",
+    headerTooltip : 'Expand/collapse',
+    defaultSortColumn: false,
+    subViewFactory: IterationRowController.prototype.toggleFactory
+  });
 
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
     minWidth : 280,
@@ -354,7 +362,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.storiesData, {
     fullWidth : true,
-    visible : true,
+    visible : false,
     cssClass : 'story-data',
     subViewFactory : IterationRowController.prototype.rowContentsFactory
   });
@@ -380,7 +388,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     cssClass : "create",
     callback : ProjectController.prototype.createStory
   });
-
+  
   config.addColumnConfiguration(StoryController.columnIndices.priority, {
     minWidth : 24,
     autoScale : true,

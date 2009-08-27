@@ -125,7 +125,7 @@ ProjectController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([StoryController.columnIndexes.priority, StoryController.columnIndexes.actions, StoryController.columnIndexes.tasksData]);
+  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
   controller.editStory();
 };
@@ -266,13 +266,15 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   this.futureIterationListConfig = futureConfig;
 };
 
+
+
 ProjectController.prototype._iterationListColumnConfig = function(config) {
 
 
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "Name",
     headerTooltip : 'Iteration name',
     get : IterationModel.prototype.getName,
@@ -289,7 +291,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.startDate, {
     minWidth : 80,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "Start date",
     headerTooltip : 'Start date',
     get : IterationModel.prototype.getStartDate,
@@ -309,7 +311,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.endDate, {
     minWidth : 80,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "End date",
     headerTooltip : 'End date',
     get : IterationModel.prototype.getEndDate,
@@ -329,7 +331,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "Edit",
     subViewFactory : IterationRowController.prototype.iterationActionFactory
   });
@@ -337,7 +339,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     fullWidth : true,
     visible : false,
     get : IterationModel.prototype.getDescription,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -347,8 +349,14 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     subViewFactory : IterationRowController.prototype.iterationButtonFactory
+  });
+  config.addColumnConfiguration(IterationRowController.columnIndices.storiesData, {
+    fullWidth : true,
+    visible : true,
+    cssClass : 'story-data',
+    subViewFactory : IterationRowController.prototype.rowContentsFactory
   });
 };
 
@@ -373,19 +381,19 @@ ProjectController.prototype.initializeStoryConfig = function() {
     callback : ProjectController.prototype.createStory
   });
 
-  config.addColumnConfiguration(StoryController.columnIndexes.priority, {
+  config.addColumnConfiguration(StoryController.columnIndices.priority, {
     minWidth : 24,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "#",
     headerTooltip : 'Priority',
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
     defaultSortColumn: true
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.name, {
+  config.addColumnConfiguration(StoryController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "Name",
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
@@ -399,10 +407,10 @@ ProjectController.prototype.initializeStoryConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.points, {
+  config.addColumnConfiguration(StoryController.columnIndices.points, {
     minWidth : 60,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "Points",
     headerTooltip : 'Estimate in story points',
     get : StoryModel.prototype.getStoryPoints,
@@ -414,10 +422,10 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.state, {
+  config.addColumnConfiguration(StoryController.columnIndices.state, {
     minWidth : 60,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "State",
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
@@ -429,10 +437,10 @@ ProjectController.prototype.initializeStoryConfig = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.responsibles, {
+  config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
     minWidth : 60,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "Responsibles",
     headerTooltip : 'Story responsibles',
     get : StoryModel.prototype.getResponsibles,
@@ -443,54 +451,54 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.el, {
+  config.addColumnConfiguration(StoryController.columnIndices.el, {
     minWidth : 30,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "EL",
     headerTooltip : 'Total task effort left',
     get : StoryModel.prototype.getTotalEffortLeft
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.oe, {
+  config.addColumnConfiguration(StoryController.columnIndices.oe, {
     minWidth : 30,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "OE",
     headerTooltip : 'Total task original estimate',
     get : StoryModel.prototype.getTotalOriginalEstimate
   });
   if (Configuration.isTimesheetsEnabled()) {
-    config.addColumnConfiguration(StoryController.columnIndexes.es, {
+    config.addColumnConfiguration(StoryController.columnIndices.es, {
       minWidth : 30,
       autoScale : true,
-      cssClass : 'story-row',
+      cssClass : 'projectstory-row',
       title : "ES",
       headerTooltip : 'Total task effort spent',
       get : StoryModel.prototype.getTotalEffortSpent
     });
   }
-  config.addColumnConfiguration(StoryController.columnIndexes.actions, {
+  config.addColumnConfiguration(StoryController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.description, {
+  config.addColumnConfiguration(StoryController.columnIndices.description, {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     editable : true,
     edit : {
       editor : "Wysiwyg",
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.buttons, {
+  config.addColumnConfiguration(StoryController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
-    cssClass : 'story-row',
+    cssClass : 'projectstory-row',
     subViewFactory : StoryController.prototype.storyButtonFactory
   });
 

@@ -20,8 +20,8 @@ TasksWithoutStoryController.prototype.createTask = function() {
   var controller = new TaskController(mockModel, null, this);
   var row = this.taskListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([TaskController.columnIndexes.actions, TaskController.columnIndexes.data]);
+  row.autoCreateCells([TaskController.columnIndices.actions, TaskController.columnIndices.data]);
   row.render();
   controller.editTask();
-  row.getCell(TaskController.columnIndexes.data).hide();
+  row.getCell(TaskController.columnIndices.data).hide();
 };

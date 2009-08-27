@@ -479,6 +479,11 @@ li.dynamictable-captionaction {
 .dynamictable-tasklist-cell {
   background-color: #eee;  
 }
+.dynamictable-iteration-storylist {
+  width: 95% !important;
+  margin-left: 5%;  
+}
+
 div.loadingStories { 
 	background-color:#EEEEEE;
 	border:1px solid #666666;

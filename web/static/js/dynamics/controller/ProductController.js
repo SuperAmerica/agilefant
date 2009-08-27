@@ -102,7 +102,7 @@ ProductController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([StoryController.columnIndexes.priority, StoryController.columnIndexes.actions, StoryController.columnIndexes.tasksData]);
+  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
   controller.editStory();
 };
@@ -157,7 +157,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     callback : ProductController.prototype.createStory
   });
 
-  config.addColumnConfiguration(StoryController.columnIndexes.priority, {
+  config.addColumnConfiguration(StoryController.columnIndices.priority, {
     minWidth : 24,
     autoScale : true,
     cssClass : 'story-row',
@@ -166,7 +166,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
     defaultSortColumn: true
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.name, {
+  config.addColumnConfiguration(StoryController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
     cssClass : 'story-row',
@@ -183,7 +183,7 @@ ProductController.prototype.initializeStoryConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.points, {
+  config.addColumnConfiguration(StoryController.columnIndices.points, {
     minWidth : 60,
     autoScale : true,
     cssClass : 'story-row',
@@ -198,7 +198,7 @@ ProductController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.state, {
+  config.addColumnConfiguration(StoryController.columnIndices.state, {
     minWidth : 60,
     autoScale : true,
     cssClass : 'story-row',
@@ -213,7 +213,7 @@ ProductController.prototype.initializeStoryConfig = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.responsibles, {
+  config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
     minWidth : 60,
     autoScale : true,
     cssClass : 'story-row',
@@ -227,7 +227,7 @@ ProductController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.el, {
+  config.addColumnConfiguration(StoryController.columnIndices.el, {
     minWidth : 30,
     autoScale : true,
     cssClass : 'story-row',
@@ -235,7 +235,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Total task effort left',
     get : StoryModel.prototype.getTotalEffortLeft
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.oe, {
+  config.addColumnConfiguration(StoryController.columnIndices.oe, {
     minWidth : 30,
     autoScale : true,
     cssClass : 'story-row',
@@ -244,7 +244,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getTotalOriginalEstimate
   });
   if (Configuration.isTimesheetsEnabled()) {
-    config.addColumnConfiguration(StoryController.columnIndexes.es, {
+    config.addColumnConfiguration(StoryController.columnIndices.es, {
       minWidth : 30,
       autoScale : true,
       cssClass : 'story-row',
@@ -253,14 +253,14 @@ ProductController.prototype.initializeStoryConfig = function() {
       get : StoryModel.prototype.getTotalEffortSpent
     });
   }
-  config.addColumnConfiguration(StoryController.columnIndexes.actions, {
+  config.addColumnConfiguration(StoryController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
     cssClass : 'story-row',
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.description, {
+  config.addColumnConfiguration(StoryController.columnIndices.description, {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
@@ -271,7 +271,7 @@ ProductController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndexes.buttons, {
+  config.addColumnConfiguration(StoryController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
     cssClass : 'story-row',

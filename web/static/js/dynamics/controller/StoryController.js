@@ -6,7 +6,7 @@ var StoryController = function(model, view, backlogController) {
   this.initTaskListConfiguration();
 };
 
-StoryController.columnIndexes = {
+StoryController.columnIndices = {
   priority : 0,
   name : 1,
   points: 2,
@@ -36,14 +36,14 @@ StoryController.prototype.removeStory = function() {
  */
 StoryController.prototype.editStory = function() {
   this.model.setInTransaction(true);
-  this.view.getCell(StoryController.columnIndexes.description).show();
-  this.view.getCell(StoryController.columnIndexes.buttons).show();
+  this.view.getCell(StoryController.columnIndices.description).show();
+  this.view.getCell(StoryController.columnIndices.buttons).show();
   this.view.editRow();
 };
 
 StoryController.prototype.editDescription = function() {
-  var descriptionCell = this.view.getCell(StoryController.columnIndexes.description);
-  var data = this.view.getCell(StoryController.columnIndexes.tasksData);
+  var descriptionCell = this.view.getCell(StoryController.columnIndices.description);
+  var data = this.view.getCell(StoryController.columnIndices.tasksData);
   var taskDataVisible = data.isVisible();
   data.hide();
   descriptionCell.show();
@@ -67,8 +67,8 @@ StoryController.prototype.saveStory = function() {
     this.view.remove();
     return;
   }
-  this.view.getCell(StoryController.columnIndexes.description).hide();
-  this.view.getCell(StoryController.columnIndexes.buttons).hide();
+  this.view.getCell(StoryController.columnIndices.description).hide();
+  this.view.getCell(StoryController.columnIndices.buttons).hide();
 };
 
 StoryController.prototype.cancelEdit = function() {
@@ -79,8 +79,8 @@ StoryController.prototype.cancelEdit = function() {
   }
   this.model.setInTransaction(false);
   this.view.closeRowEdit();
-  this.view.getCell(StoryController.columnIndexes.description).hide();
-  this.view.getCell(StoryController.columnIndexes.buttons).hide();
+  this.view.getCell(StoryController.columnIndices.description).hide();
+  this.view.getCell(StoryController.columnIndices.buttons).hide();
   this.model.rollback();
 };
 /**
@@ -140,7 +140,7 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
  * 
  */
 StoryController.prototype.showTaskColumn = function() {
-  var cell = this.view.getCell(StoryController.columnIndexes.tasksData);
+  var cell = this.view.getCell(StoryController.columnIndices.tasksData);
   if (cell) {
     cell.show();
   }
@@ -150,7 +150,7 @@ StoryController.prototype.showTaskColumn = function() {
  * 
  */
 StoryController.prototype.hideTaskColumn = function() {
-  var cell = this.view.getCell(StoryController.columnIndexes.tasksData);
+  var cell = this.view.getCell(StoryController.columnIndices.tasksData);
   if (cell) {
     cell.hide();
   }
@@ -185,10 +185,10 @@ StoryController.prototype.createTask = function() {
   var controller = new TaskController(mockModel, null, this);
   var row = this.taskListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([TaskController.columnIndexes.actions, TaskController.columnIndexes.data]);
+  row.autoCreateCells([TaskController.columnIndices.actions, TaskController.columnIndices.data]);
   row.render();
   controller.editTask();
-  row.getCell(TaskController.columnIndexes.data).hide();
+  row.getCell(TaskController.columnIndices.data).hide();
 };
 
 /**
@@ -270,7 +270,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     visible: true,
     callback : StoryController.prototype.createTask
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.prio, {
+  config.addColumnConfiguration(TaskController.columnIndices.prio, {
     minWidth : 24,
     autoScale : true,
     cssClass : 'task-row',
@@ -280,7 +280,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     defaultSortColumn: true,
     subViewFactory: TaskController.prototype.toggleFactory
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.name, {
+  config.addColumnConfiguration(TaskController.columnIndices.name, {
     minWidth : 200,
     autoScale : true,
     cssClass : 'task-row',
@@ -295,7 +295,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.state, {
+  config.addColumnConfiguration(TaskController.columnIndices.state, {
     minWidth : 60,
     autoScale : true,
     cssClass : 'task-row',
@@ -310,7 +310,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.responsibles, {
+  config.addColumnConfiguration(TaskController.columnIndices.responsibles, {
     minWidth : 60,
     autoScale : true,
     cssClass : 'task-row',
@@ -324,7 +324,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
       set : TaskModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.el, {
+  config.addColumnConfiguration(TaskController.columnIndices.el, {
     minWidth : 30,
     autoScale : true,
     cssClass : 'task-row',
@@ -340,7 +340,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
       set : TaskModel.prototype.setEffortLeft
     }
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.oe, {
+  config.addColumnConfiguration(TaskController.columnIndices.oe, {
     minWidth : 30,
     autoScale : true,
     cssClass : 'task-row',
@@ -357,7 +357,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     }
   });
   if (Configuration.isTimesheetsEnabled()) {
-    config.addColumnConfiguration(TaskController.columnIndexes.es, {
+    config.addColumnConfiguration(TaskController.columnIndices.es, {
       minWidth : 30,
       autoScale : true,
       cssClass : 'task-row',
@@ -367,14 +367,14 @@ StoryController.prototype.initTaskListConfiguration = function() {
       decorator: DynamicsDecorators.exactEstimateDecorator
     });
   }
-  config.addColumnConfiguration(TaskController.columnIndexes.actions, {
+  config.addColumnConfiguration(TaskController.columnIndices.actions, {
     minWidth : 35,
     autoScale : true,
     cssClass : 'task-row',
     title : "Edit",
     subViewFactory: TaskController.prototype.actionColumnFactory
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.description, {
+  config.addColumnConfiguration(TaskController.columnIndices.description, {
     fullWidth : true,
     get : TaskModel.prototype.getDescription,
     cssClass : 'task-data text-editor',
@@ -385,13 +385,13 @@ StoryController.prototype.initTaskListConfiguration = function() {
       set : TaskModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.buttons, {
+  config.addColumnConfiguration(TaskController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
     cssClass : 'task-row',
     subViewFactory : TaskController.prototype.taskButtonFactory
   });
-  config.addColumnConfiguration(TaskController.columnIndexes.data, {
+  config.addColumnConfiguration(TaskController.columnIndices.data, {
     fullWidth : true,
     visible : false,
     cssClass : 'task-data',

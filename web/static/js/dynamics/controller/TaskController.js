@@ -4,7 +4,7 @@ var TaskController = function(model, view, parentController) {
   this.parentController = parentController;
 };
 
-TaskController.columnIndexes = {
+TaskController.columnIndices = {
     prio: 0,
     name: 1,
     state: 2,
@@ -25,8 +25,8 @@ TaskController.prototype = new CommonController();
  */
 TaskController.prototype.editTask = function() {
   this.model.setInTransaction(true);
-  this.view.getCell(TaskController.columnIndexes.description).show();
-  this.view.getCell(TaskController.columnIndexes.buttons).show();
+  this.view.getCell(TaskController.columnIndices.description).show();
+  this.view.getCell(TaskController.columnIndices.buttons).show();
   this.view.editRow();
 };
 
@@ -42,7 +42,7 @@ TaskController.prototype.saveTask = function() {
     this.view.remove();
     return;
   }
-  this.view.getCell(TaskController.columnIndexes.buttons).hide();
+  this.view.getCell(TaskController.columnIndices.buttons).hide();
 };
 
 TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
@@ -69,7 +69,7 @@ TaskController.prototype.cancelEdit = function() {
   }
   this.model.setInTransaction(false);
   this.view.closeRowEdit();
-  this.view.getCell(TaskController.columnIndexes.buttons).hide();
+  this.view.getCell(TaskController.columnIndices.buttons).hide();
   this.model.rollback();
 };
 
@@ -95,14 +95,14 @@ TaskController.prototype.taskButtonFactory = function(view, model) {
 };
 
 TaskController.prototype.showDetails = function() {
-  var cell = this.view.getCell(TaskController.columnIndexes.description);
+  var cell = this.view.getCell(TaskController.columnIndices.description);
   if (cell) {
     cell.show();
   }
 };
 
 TaskController.prototype.hideDetails = function() {
-  var cell = this.view.getCell(TaskController.columnIndexes.description);
+  var cell = this.view.getCell(TaskController.columnIndices.description);
   if (cell) {
     cell.hide();
   }

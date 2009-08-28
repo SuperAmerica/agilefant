@@ -21,7 +21,7 @@ Timeplot.AgilefantSummaryPlot.prototype.paint = function() {
           var cy = this._valueGeometry.toScreen(values[t]);
           //next point
           var nx = this._timeGeometry.toScreen(times[t + 1]);
-          if(nx === undefined) {
+          if(nx === undefined || isNaN(nx)) {
             break;
           }
           //render steps
@@ -93,7 +93,7 @@ Timeplot.AgilefantBacklogPlot.prototype.paint = function() {
           var cx = this._timeGeometry.toScreen(times[t]);
           var nx = this._timeGeometry.toScreen(times[t + 1]);
      
-          if(nx === undefined) {
+          if(nx === undefined || isNaN(nx)) {
             break;
           }
           var cy = 0;

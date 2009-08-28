@@ -603,4 +603,27 @@ public class StoryBusinessTest {
         storyBusiness.rankUnderStory(first, second);
 
     }
+    
+    
+    @Test
+    public void testRankAndMove_toTop() {
+        createRankUnderStoryTestData();
+        Story rankedStory = new Story();
+        rankedStory.setBacklog(new Project());
+        Backlog expectedParent = new Project();
+        expectedParent.setId(123);
+        expect(backlogBusiness.retrieve(123)).andReturn(expectedParent);
+        storyDAO.store(rankedStory);
+        expect(storyDAO.getLastStoryInRank(expectedParent)).andReturn(fourthInRank);
+        blheBusiness.updateHistory(0);
+        blheBusiness.updateHistory(123);
+        expect(storyDAO.getStoriesWithRankBetween(expectedParent, 0, fourthInRank.getRank()))
+            .andReturn(Arrays.asList(firstInRank, secondInRank, thirdInRank, fourthInRank));
+        replayAll();
+        Story actual = storyBusiness.rankAndMove(rankedStory, null, expectedParent);
+        verifyAll();
+        
+        assertEquals(expectedParent, actual.getBacklog());
+        assertEquals(0, actual.getRank());
+    }
 }

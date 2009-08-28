@@ -278,6 +278,16 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return story;
     }
     
+    /** {@inheritDoc} */
+    @Transactional
+    public Story rankAndMove(Story story, Story upperStory, Backlog newParent) {
+        if (newParent != null) {
+            moveStoryToBacklog(story, newParent);
+        }
+        rankUnderStory(story, upperStory);        
+        return story;
+    };
+    
 
 
     @Transactional(readOnly = true)

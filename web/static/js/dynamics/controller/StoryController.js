@@ -98,12 +98,13 @@ StoryController.prototype.moveStory = function() {
 
 StoryController.prototype.rankStory = function(view, model, newPos) {
   var previousRow = newPos - 1;
+  var targetModel = view.getParentView().getModel();
   if (view.getParentView().getDataRowAt(previousRow)) {
     previousStory = view.getParentView().getDataRowAt(previousRow).getModel();
-    model.rankUnder(previousStory.getId());
+    model.rankUnder(previousStory.getId(), targetModel);
   }
   else {
-    model.rankUnder(-1);
+    model.rankUnder(-1, targetModel);
   }
 };
 

@@ -19,7 +19,9 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 
@@ -229,15 +231,18 @@ public class StoryActionTest {
     public void testRankStory() {
         storyAction.setStoryId(123);
         storyAction.setRankUnderId(666);
+        storyAction.setBacklogId(222);
         
         Story lower = new Story();
         Story upper = new Story();
         Story returned = new Story();
+        Backlog parent = new Project();
         
         expect(storyBusiness.retrieve(123)).andReturn(lower);
         expect(storyBusiness.retrieveIfExists(666)).andReturn(upper);
+        expect(backlogBusiness.retrieveIfExists(222)).andReturn(parent);
         
-        expect(storyBusiness.rankUnderStory(lower, upper)).andReturn(returned);
+        expect(storyBusiness.rankAndMove(lower, upper, parent)).andReturn(returned);
         
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.rankStory());

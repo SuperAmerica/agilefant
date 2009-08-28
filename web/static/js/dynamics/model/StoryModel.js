@@ -129,23 +129,37 @@ StoryModel.prototype.moveStory = function(backlogId) {
   );
 };
 
-StoryModel.prototype.rankUnder = function(rankUnderId) {
+StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   var me = this;
-  
-  var data = {
+  var postData = {
     storyId: me.getId(),
     rankUnderId: rankUnderId
   };
   
-  jQuery.post("ajax/rankStory.action",
-    data,
-    function(data, status) {
+  if (moveUnder && moveUnder != this.getParent()) {
+    postData.backlogId = moveUnder.getId();
+  }
+  
+  jQuery.ajax({
+    url: "ajax/rankStory.action",
+    type: "post",
+    dataType: "json",
+    data: postData,
+    async: true,
+    cache: false,
+    success: function(data, status) {
+      new MessageDisplay.OkMessage("Story ranked");
       var oldParent = me.getParent();
       me.setData(data);
       oldParent.reload();
+      if (oldParent !== moveUnder) {
+        moveUnder.reload();
+      }
     },
-    "json"
-  );
+    error: function(xhr) {
+      new MessageDisplay.ErrorMessage("An error occurred while ranking the story", xhr);
+    }
+  });
 }
 
 

@@ -79,4 +79,9 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * @throws IllegalArgumentException if story was null
      */
     public Story rankToBottom(Story story, Integer parentBacklogId) throws IllegalArgumentException;
+    
+    /**
+     * Moves the story to a new backlog and calls rankUnderStory.
+     */
+    public Story rankAndMove(Story story, Story upperStory, Backlog newParent);
 }

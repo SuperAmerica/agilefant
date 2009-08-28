@@ -276,7 +276,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     title : "",
     headerTooltip : 'Expand/collapse',
     defaultSortColumn: false,
-    subViewFactory: IterationRowController.prototype.toggleFactory
+    subViewFactory: IterationRowController.prototype.toggleFactory,    
   });
 
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
@@ -379,7 +379,13 @@ ProjectController.prototype.initializeStoryConfig = function() {
     dataSource : ProjectModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
-    caption : "Stories"
+    sortOptions: {
+      items: "> .dynamicTableDataRow",
+      handle: "." + DynamicTable.cssClasses.dragHandle,
+      connectWith: ".dynamictable-iteration-storylist > .ui-sortable"
+    },
+    caption : "Stories",
+    cssClass: "dynamictable-project-stories"
   });
 
   config.addCaptionItem( {

@@ -145,9 +145,13 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
     }
   }
   
-  jQuery.post("ajax/rankTaskAndMoveUnder.action",
-    data,
-    function(data, status) {
+  jQuery.ajax({
+    url: "ajax/rankTaskAndMoveUnder.action",
+    type: "post",
+    dataType: "json",
+    data: data,
+    success: function(data, status) {
+      new MessageDisplay.OkMessage("Task ranked successfully.");
       var oldParent = me.getParent();
       me.setData(data);
       oldParent.reload();
@@ -155,8 +159,10 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
         moveUnder.reload();
       }
     },
-    "json"
-  );
+    error: function(xhr, status) {
+      new MessageDisplay.ErrorMessage("An error occured while ranking the task.", xhr);
+    }
+  });
 }
 
 TaskModel.prototype.getParent = function() {

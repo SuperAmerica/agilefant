@@ -107,7 +107,7 @@ TaskModel.prototype._remove = function(successCallback) {
       url: "ajax/deleteTask.action",
       async: true,
       cache: false,
-      dataType: "json",
+      dataType: "text",
       data: {taskId: me.getId()},
       success: function(data,status) {
         new MessageDisplay.OkMessage("Task removed");

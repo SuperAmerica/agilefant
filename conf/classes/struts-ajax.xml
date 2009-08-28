@@ -226,9 +226,15 @@
         <param name="patterns">+stories, +stories.tasks, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles</param>
       </result>
     </action>
-    
+        
     <action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
+    </action>
+            
+    <action name="dailyWorkData" class="dailyWorkAction" method="retrieve">
+      <result name="success" type="json">
+      	<param name="patterns">+assignedTasks, +assignedTasks.responsibles, +user, -locale</param>
+      </result>
     </action>
     
     <action name="deleteIteration" method="delete" class="iterationAction" />

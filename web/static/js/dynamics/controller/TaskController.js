@@ -115,10 +115,10 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
   var actionItems = [ {
     text : "Edit",
     callback : TaskController.prototype.editTask
-  }, {
+  }, /*{
     text : "Move",
     callback : TaskController.prototype.moveTask
-  }, {
+  }, */{
     text : "Delete",
     callback : TaskController.prototype.removeTask
   } ];

@@ -12,8 +12,8 @@ INSERT INTO stories (id,backlog_id, name, state) VALUES (2,2, 'Story 2', 1);
 INSERT INTO stories (id,backlog_id, name, state) VALUES (3,1, 'Story 3', 1);
 
 -- 2 tasks directly under iteration 1
--- 1 assignee
-INSERT INTO tasks (id,state, effortLeft, iteration_id, rank) VALUES (1,1,100,1,0);
+-- 1 assignee - done already
+INSERT INTO tasks (id,state, effortLeft, iteration_id, rank) VALUES (1,5,100,1,0);
 -- 2 assignees
 INSERT INTO tasks (id,state, effortLeft, iteration_id, rank)  VALUES (2,1,400,1,1);
 -- 4 tasks attached to story 1
@@ -21,8 +21,8 @@ INSERT INTO tasks (id,state, effortLeft, iteration_id, rank)  VALUES (2,1,400,1,
 INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (3,1,4000,1,0);
 -- 2 assignees
 INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (4,1,1000,1,1);
--- 1 assignee
-INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (5,1,1000,1,2);
+-- 1 assignee - done already
+INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (5,5,1000,1,2);
 -- 1 assignee through story
 INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (6,1,3000,1,3);
 -- no assignees
@@ -30,8 +30,8 @@ INSERT INTO tasks (id,state, effortLeft, iteration_id, rank)  VALUES (7,1,800,1,
 -- 2 tasks for story 2 (project story)
 -- 1 assignee
 INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (8,1,10000,2,3);
--- 1 assignee
-INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (9,1,10000,2,4);
+-- 1 assignee - done already
+INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (9,5,10000,2,4);
 -- one task without a parent
 INSERT INTO tasks (id,state, effortLeft, rank) VALUES (10,1,10000,0);
 -- tasks for story 3

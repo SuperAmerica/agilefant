@@ -24,6 +24,7 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
 
@@ -110,7 +111,40 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }
-    
+
+    public List<Task> getAllIterationAndStoryTasks(User user, Interval interval) {
+        List<Task> tasks = new ArrayList<Task>();
+        
+        Criteria crit = getCurrentSession().createCriteria(Task.class);
+        crit.createCriteria("responsibles")
+            .add(Restrictions.idEq(user.getId()));
+        
+        Criteria iteration = crit.createCriteria("iteration");
+        iteration.setFetchMode("parent", FetchMode.SELECT);
+        this.addIterationIntervalLimit(iteration, interval);
+        crit.add(Restrictions.isNull("story"));
+        crit.add(Restrictions.ne("state", TaskState.DONE));
+        crit.setFetchMode("creator", FetchMode.SELECT);
+
+        List<Task> dummy = asList(crit); 
+        tasks.addAll(dummy);
+        
+        crit = getCurrentSession().createCriteria(Task.class);
+        crit.createCriteria("responsibles")
+            .add(Restrictions.idEq(user.getId()));
+        crit.add(Restrictions.ne("state", TaskState.DONE));
+
+        Criteria storyIteration = crit.createCriteria("story").createCriteria("backlog");
+        storyIteration.setFetchMode("parent",FetchMode.SELECT);
+        this.addIterationIntervalLimit(storyIteration, interval);
+        crit.setFetchMode("creator", FetchMode.SELECT);
+        
+        dummy = asList(crit);
+        tasks.addAll(dummy);
+
+        return tasks;
+    }
+
     public List<UnassignedLoadTO> getUnassignedStoryTasksWithEffortLeft(User user,
             Interval interval) {
         

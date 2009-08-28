@@ -51,6 +51,21 @@ public interface TaskDAO extends GenericDAO<Task> {
     public Map<Integer, Integer> getNumOfResponsiblesByTask(Set<Integer> taskIds);
 
     /**
+     * Lookup tasks that are assigned to the given user and are either directly
+     * attached to an iteration, or whose story is attached to an iteration. 
+     * Selects only tasks from iterations that overlap with the given interval,
+     * or whose story timeframe overlaps with the given interval. Only
+     * returns tasks that are not yet done.
+     * 
+     * @param user
+     *            Assignee or one of the assignees for the searched tasks.
+     * @param interval
+     *            Search interval for the container iteration.
+     */
+    public List<Task> getAllIterationAndStoryTasks(User user, Interval interval);
+
+    
+    /**
      * 
      * @param user
      * @param interval

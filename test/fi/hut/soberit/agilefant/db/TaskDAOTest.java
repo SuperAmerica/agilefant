@@ -261,4 +261,36 @@ public class TaskDAOTest extends AbstractHibernateTests {
         assertEquals(22, actual.getId());
         assertEquals(666, actual.getRank());
     }
+    
+    @Test
+    public void testGetAllIterationAndStoryTasks() {
+        executeClassSql();
+        DateTime start = new DateTime(2009,6,10,1,0,0,0);
+        Interval interval = new Interval(start, start.plusDays(5));
+        User user = new User();
+        user.setId(1);
+        List<Task> actual = this.taskDAO.getAllIterationAndStoryTasks(user, interval);
+       
+        HashSet<Integer> actualIds = new HashSet<Integer>();
+        for (Task t: actual) {
+            actualIds.add(t.getId()); 
+        }
+        
+        HashSet<Integer> expectedIds = new HashSet<Integer>(
+            Arrays.asList(2,3,4)
+        );        
+        assertEquals(expectedIds, actualIds);
+    }
+        
+    @Test
+    public void testGetAllIterationAndStoryTasks_user_hasNoAssigned() {
+        executeClassSql();
+        DateTime start = new DateTime(2009,6,10,1,0,0,0);
+        Interval interval = new Interval(start, start.plusDays(5));
+        User user = new User();
+        user.setId(3);
+       
+        List<Task> actual = this.taskDAO.getAllIterationAndStoryTasks(user, interval);
+        assertEquals(0, actual.size());
+    }
 }

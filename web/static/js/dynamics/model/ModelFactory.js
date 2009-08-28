@@ -35,23 +35,23 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.Product":   "backlog",
   "fi.hut.soberit.agilefant.model.Project":   "backlog",
   
-  "fi.hut.soberit.agilefant.transfer.ProjectTO": "backlog",
-  "fi.hut.soberit.agilefant.transfer.ProductTO": "backlog",
+  "fi.hut.soberit.agilefant.transfer.ProjectTO":   "backlog",
+  "fi.hut.soberit.agilefant.transfer.ProductTO":   "backlog",
   "fi.hut.soberit.agilefant.transfer.IterationTO": "backlog",
   
-  "fi.hut.soberit.agilefant.model.Story":     "story",
+  "fi.hut.soberit.agilefant.model.Story":        "story",
   "fi.hut.soberit.agilefant.transfer.StoryTO":   "story",
-  "fi.hut.soberit.agilefant.model.Task":      "task",
+  "fi.hut.soberit.agilefant.model.Task":         "task",
   "fi.hut.soberit.agilefant.transfer.TaskTO":    "task",
     
-  "fi.hut.soberit.agilefant.model.User":    "user",
+  "fi.hut.soberit.agilefant.model.User":         "user",
     
-  "fi.hut.soberit.agilefant.model.Assignment": "assignment",
+  "fi.hut.soberit.agilefant.model.Assignment":   "assignment",
   
-  "fi.hut.soberit.agilefant.model.HourEntry": "hourEntry",
+  "fi.hut.soberit.agilefant.model.HourEntry":       "hourEntry",
   "fi.hut.soberit.agilefant.model.BackogHourEntry": "hourEntry",
-  "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
-  "fi.hut.soberit.agilefant.model.TaskHourEntry": "hourEntry"
+  "fi.hut.soberit.agilefant.model.StoryHourEntry":  "hourEntry",
+  "fi.hut.soberit.agilefant.model.TaskHourEntry":   "hourEntry"
 };
 
 /**
@@ -133,7 +133,8 @@ ModelFactory.types = {
 ModelFactory.initializeForTypes = {
     iteration:  "iteration",
     project:    "project",
-    product:    "product"
+    product:    "product",
+    dailyWork:  "dailyWork",
 };
 
 
@@ -342,6 +343,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       url: "ajax/retrieveProduct.action",
       params: { productId: id },
       callback: me._constructProduct
+    },
+    "dailyWork": {
+      url: "ajax/dailyWorkData.action",
+      params: { userId: id },
+      callback: me._constructDailyWork
     }
   };
   
@@ -379,6 +385,16 @@ ModelFactory.prototype._constructProject = function(id, data) {
 ModelFactory.prototype._constructProduct = function(id, data) {
   return ModelFactory.updateObject(data);
 };
+
+/**
+ * Internal function to construct a daily work model
+ */
+ModelFactory.prototype._constructDailyWork = function(id, data) {
+    var a = new DailyWorkModel();
+    a.setData(data);
+	return a;
+};
+
 
 /**
  * Internal function to remove items.

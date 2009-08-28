@@ -396,7 +396,8 @@ ProjectController.prototype.initializeStoryConfig = function() {
     title : "#",
     headerTooltip : 'Priority',
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
-    defaultSortColumn: true
+    defaultSortColumn: true,
+    subViewFactory : StoryController.prototype.descriptionToggleFactory
   });
   config.addColumnConfiguration(StoryController.columnIndices.name, {
     minWidth : 280,
@@ -496,7 +497,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    cssClass : 'projectstory-row',
+    cssClass : 'projectstory-data',
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -506,7 +507,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(StoryController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
-    cssClass : 'projectstory-row',
+    cssClass : 'projectstory-data',
     subViewFactory : StoryController.prototype.storyButtonFactory
   });
 

@@ -156,7 +156,7 @@ IterationRowController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Priority',
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
     defaultSortColumn: true,
-    subViewFactory : StoryController.prototype.taskToggleFactory
+    subViewFactory : StoryController.prototype.descriptionToggleFactory
   });
   config.addColumnConfiguration(StoryController.columnIndices.name, {
     minWidth : 280,
@@ -231,7 +231,7 @@ IterationRowController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    cssClass : 'story-row',
+    cssClass : 'story-data',
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -241,7 +241,7 @@ IterationRowController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(StoryController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
-    cssClass : 'story-row',
+    cssClass : 'story-data',
     subViewFactory : StoryController.prototype.storyButtonFactory
   });
   this.storyListConfig = config;

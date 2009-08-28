@@ -159,6 +159,26 @@ StoryController.prototype.hideTaskColumn = function() {
 /**
  * 
  */
+StoryController.prototype.showDescriptionColumn = function() {
+  var cell = this.view.getCell(StoryController.columnIndices.description);
+  if (cell) {
+    cell.show();
+  }
+};
+
+/**
+ * 
+ */
+StoryController.prototype.hideDescriptionColumn = function() {
+  var cell = this.view.getCell(StoryController.columnIndices.description);
+  if (cell) {
+    cell.hide();
+  }
+};
+
+/**
+ * 
+ */
 StoryController.prototype.showTasks = function() {
   this.toggleView.expand();
 };
@@ -199,6 +219,16 @@ StoryController.prototype.taskToggleFactory = function(view, model) {
     collapse : StoryController.prototype.hideTaskColumn,
     expand : StoryController.prototype.showTaskColumn,
     expanded: true
+  };
+  this.toggleView = new DynamicTableToggleView(options, this, view);
+  return this.toggleView;
+};
+
+StoryController.prototype.descriptionToggleFactory = function(view, model) {
+  var options = {
+    collapse: StoryController.prototype.hideDescriptionColumn,
+    expand: StoryController.prototype.showDescriptionColumn,
+    expanded: false
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;

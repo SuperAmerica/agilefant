@@ -395,6 +395,9 @@ li.dynamictable-captionaction {
   background-color: #edf;
   cursor: pointer;
 }
+.dynamictable .dynamictable-row .projectstory-data {
+  background-color: #fff;
+}
 
 .dynamictable .dynamictable-row .story-row {
 	background-color: #e9eeff;

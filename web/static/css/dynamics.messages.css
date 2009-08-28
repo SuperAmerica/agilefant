@@ -1,0 +1,74 @@
+/**
+ * MessageDisplay css.
+ */
+
+ul.dynamicsMessageContainer {
+  overflow: visible;
+  position: fixed;
+  right: 50px;
+  top: 150px;
+  z-index: 500;
+  height: 0;
+  width: 0;
+}
+
+ul.dynamicsMessageContainer li {
+  float: right;
+  list-style-type: none;
+  margin-top: 15px;
+}
+
+li.genericMessage {
+  font-weight: bold;
+  padding: 3px;
+  border-width: 3px;
+  border-style: solid;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  z-index: 3699;
+  max-height: 400px;
+  max-width: 700px;
+  min-width: 100px;
+  overflow: hidden;
+}
+
+li.okMessage {
+  background-color: #cfc;
+  border-color: #55CC55;
+  color: #3a3;
+  text-align: center;
+}
+
+li.errorMessage {
+  background-color: #fcc;
+  border-color: #c55;
+  color: #a33;
+}
+
+li.errorMessage dt {
+  color: #a33 !important;
+}
+li.errorMessage dd {
+  font-weight: normal !important;
+}
+
+li.genericMessage .messageArea {
+    float: left;
+    max-height: 400px;
+    max-width: 650px;
+    overflow: auto;
+    width: 95%;  
+}
+
+li.genericMessage .closeButton {
+    cursor: pointer;
+    float: right;
+    font-family: cursive;
+    font-size: 11pt;
+    padding: 0 5px;
+}
+
+li.genericMessage .closeButton:hover {
+    color: rgba(0,0,0,0.2);
+}

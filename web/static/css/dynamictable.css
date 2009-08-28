@@ -1,3 +1,5 @@
+@IMPORT url("dynamics.messages.css");
+
 .dynamictable {
  /* border: 1px solid #ccc;*/
   width: 100%;
@@ -108,53 +110,6 @@
   background: transparent url(../img/gradient.png) 80% 60% repeat-x;
   cursor: pointer;
 }  
-
-div.genericMessage {
-  font-weight: bold;
-  position: fixed;
-  top: 200px;
-  right: 100px;
-  padding: 3px;
-  border-width: 3px;
-  border-style: solid;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-  z-index: 3699;
-  max-height: 400px;
-  max-width: 700px;
-  overflow: hidden;
-}
-
-div.okMessage {
-	background-color: #cfc;
-	border-color: #55CC55;
-	color: #3a3;
-}
-div.errorMessage {
-	background-color: #fcc;
-	border-color: #c55;
-	color: #a33;
-}
-
-div.genericMessage .messageArea {
-    float: left;
-    max-height: 400px;
-    max-width: 650px;
-    overflow: auto;    
-}
-
-div.genericMessage .closeButton {
-    cursor: pointer;
-    float: right;
-    font-family: cursive;
-    font-size: 11pt;
-    padding: 0 5px;
-}
-
-div.genericMessage .closeButton:hover {
-    color: rgba(0,0,0,0.2);
-}
 
 div.gear {
   width: 16px;

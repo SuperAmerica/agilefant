@@ -108,6 +108,10 @@ StoryController.prototype.rankStory = function(view, model, newPos) {
   }
 };
 
+StoryController.prototype.moveStoryToBacklog = function(targetModel) {
+  this.model.rankUnder(-1, targetModel);
+};
+
 /**
  * 
  */

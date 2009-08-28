@@ -385,7 +385,14 @@ ProjectController.prototype.initializeStoryConfig = function() {
       connectWith: ".dynamictable-iteration-storylist > .ui-sortable"
     },
     caption : "Stories",
-    cssClass: "dynamictable-project-stories"
+    cssClass: "dynamictable-project-stories",
+    tableDroppable: true,
+    dropOptions: {
+      accepts: function(model) {
+        return (model instanceof StoryModel);
+      },
+      callback: StoryController.prototype.moveStoryToBacklog
+    }
   });
 
   config.addCaptionItem( {

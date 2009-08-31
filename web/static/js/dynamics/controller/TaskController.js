@@ -111,6 +111,10 @@ TaskController.prototype.hideDetails = function() {
   }
 };
 
+TaskController.prototype.openDetails = function() {
+  alert("Not implemented.");
+};
+
 TaskController.prototype.actionColumnFactory = function(view, model) {
   var actionItems = [ {
     text: "Details",

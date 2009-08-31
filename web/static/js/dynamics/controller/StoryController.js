@@ -193,6 +193,9 @@ StoryController.prototype.hideTasks = function() {
   this.toggleView.collapse();
 };
 
+StoryController.prototype.openDetails = function() {
+  alert("Not implemented.");
+};
 /**
  * 
  */

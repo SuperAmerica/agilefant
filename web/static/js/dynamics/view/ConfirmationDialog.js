@@ -6,13 +6,14 @@ var DynamicsConfirmationDialog = function(title, message, callback) {
 };
 
 DynamicsConfirmationDialog.prototype._show = function() {
-  this.messageElement = $('<div>' + this.message + '</div>').appendTo(document.body);
+  this.messageElement = $('<div><img src="static/img/question.png" alt="Are you sure?" style="float: left;" /><div style="margin-left: 90px">'  + this.message + '</div></div>').appendTo(document.body);
   var me = this;
   this.messageElement.dialog({
     modal: true,
     title: this.title,
     minHeight: '200px',
     minWidth: '400px',
+    width: '400px',
     position: 'center',
     resizable: false,
     buttons: {

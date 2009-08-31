@@ -27,8 +27,11 @@ StoryController.prototype = new CommonController();
  * Remove story associated with controllers row and the row itself.
  */
 StoryController.prototype.removeStory = function() {
-  this.parentController.removeChildController("story", this);
-  this.model.remove();
+  var me = this;
+  new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this story?", function() {
+    me.parentController.removeChildController("story", me);
+    me.model.remove();
+  });
 };
 
 /**

@@ -6,15 +6,15 @@
 -->
 
 <aef:menu navi="dailyWork" title="Daily Work"/> 
-	<ww:actionerror/>
-	<ww:actionmessage/>
+<ww:actionerror/>
+<ww:actionmessage/>
 
 <c:set var="currentAction" value="dailyWork" scope="session" />
 <c:set var="dailyWorkUserId" value="${userId}" scope="session" />
 
 <%@include file="./inc/includeDynamics.jsp"%>
 
-<ww:form>
+<ww:form method="get">
 <h2>The daily work of <ww:select list="enabledUsers"
     listKey="id" listValue="fullName" name="userId" value="%{user.id}"
     onchange="this.form.submit();" /></h2>
@@ -35,20 +35,20 @@ $(document).ready(function() {
 });
 </script>
 
-
-<ww:url id="backlogsLink" action="contextView" includeParams="none">
-	<ww:param name="contextName" value="%{currentContext}" />
-	<ww:param name="contextObjectId" value="%{currentPageId}" />
-	<ww:param name="resetContextView" value="true" />
-</ww:url>
-
 <div id="daily-work-div"></div>
 
 </c:when>
 <c:otherwise>
 
+<ww:url id="backlogsLink" action="contextView" includeParams="none">
+    <ww:param name="contextName" value="%{currentBacklogContext}" />
+    <ww:param name="contextObjectId" value="%{currentBacklogId}" />
+    <ww:param name="resetContextView" value="true" />
+</ww:url>
+
+<%-- TODO: fix link --%>
 <p>There are no stories or tasks assigned to user <c:out value="${user.fullName}" />.</p> 
-<p>Explore <ww:a href="%{backlogsLink}">backlogs</ww:a> to find some items.</p>
+<p>Explore <a href="contextView.action?contextName=${currentBacklogContext}&contextObjectId=${currentBacklogId}&resetContextView=true">backlogs</a> to find some items.</p>
 
 </c:otherwise>
 </c:choose>

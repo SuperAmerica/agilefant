@@ -306,10 +306,14 @@ li.dynamictable-captionaction {
 	color: #e50;
 }
 
-.dragHandle:hover {
-	background-color: #f91 !important;
-	cursor: move;
+.dynamictable-dragHandle {
+  cursor: move;  
 }
+
+.dynamictable-dragHandle span {
+  cursor: text;  
+}
+
 .taskState {
 	display: block;
 	width: 80px;

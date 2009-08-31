@@ -279,8 +279,8 @@
     </action>
     
     <action name="moveStory" method="moveStory" class="storyAction">
-      <result name="success" type="httpheader">
-        <param name="status">200</param>
+      <result name="success" type="json">
+        <param name="target">story</param>
       </result>
     </action>
     

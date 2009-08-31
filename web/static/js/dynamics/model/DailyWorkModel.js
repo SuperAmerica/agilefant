@@ -12,7 +12,6 @@ var DailyWorkModel = function() {
       user: null,
       task: [   ]
   };
-  this.userId = null;
   this.copiedFields = {
       "userId": "userId"
   };
@@ -54,5 +53,5 @@ DailyWorkModel.prototype.getTasks = function() {
 };
 
 DailyWorkModel.prototype.getUserId = function() {
-    return this.userId;
+    return this.currentData.userId;
 };

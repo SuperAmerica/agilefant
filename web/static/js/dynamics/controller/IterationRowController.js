@@ -142,7 +142,7 @@ IterationRowController.prototype.createStory = function() {
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
   controller.editStory();
-  row.getCell(StoryController.columnIndices.tasksData).hide();
+//  row.getCell(StoryController.columnIndices.tasksData).hide();
 };
 
 /**

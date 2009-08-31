@@ -129,6 +129,10 @@ IterationRowController.prototype.cancelEdit = function() {
   this.model.rollback();
 };
 
+IterationRowController.prototype.acceptsDroppable = function(model) {
+  return (model instanceof StoryModel);
+};
+
 /**
  * Initialize configuration for story lists.
  */
@@ -139,7 +143,13 @@ IterationRowController.prototype.initializeStoryConfig = function() {
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
-    cssClass: "dynamictable-iteration-storylist"
+    cssClass: "dynamictable-iteration-storylist",
+    sortCallback: StoryController.prototype.rankStory,
+    sortOptions: {
+      items: "> div.dynamicTableDataRow",
+      handle: "." + DynamicTable.cssClasses.dragHandle,
+      connectWith: "div.dynamictable-project-stories > div.ui-sortable, div.dynamictable-iteration-storylist > div.ui-sortable"
+    }
   });
 
   config.addCaptionItem( {

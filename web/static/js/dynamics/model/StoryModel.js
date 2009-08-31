@@ -112,13 +112,14 @@ StoryModel.prototype.moveStory = function(backlogId) {
   var me = this;
   jQuery.ajax({
       url: "ajax/moveStory.action",
-      data: {storyId: me.getId(), backlogId: backlogId, moveTasks: "true"},
+      data: {storyId: me.getId(), backlogId: backlogId},
       dataType: 'json',
       type: 'post',
       async: true,
       cache: false,
       success: function(data,status) {
           new MessageDisplay.OkMessage("Story moved");
+          
           me.getParent().reload();
           me.callListeners(new DynamicsEvents.EditEvent(me));  
       },
@@ -151,6 +152,7 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       new MessageDisplay.OkMessage("Story ranked");
       var oldParent = me.getParent();
       me.setData(data);
+      me.callListeners(new DynamicsEvents.DeleteEvent(me));
       oldParent.reload();
       if (oldParent !== moveUnder) {
         moveUnder.reload();

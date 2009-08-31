@@ -236,7 +236,12 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getOngoingIterations,
     saveRowCallback: IterationRowController.prototype.saveIteration,
-    caption : "Ongoing Iterations"
+    caption : "Ongoing Iterations",
+    rowDroppable: true,
+    dropOptions: {
+      accepts: IterationRowController.prototype.acceptsDroppable,
+      callback: StoryController.prototype.moveStoryToBacklog
+    }
   });
   this._iterationListColumnConfig(ongoingConfig);
   ongoingConfig.addCaptionItem( {
@@ -251,7 +256,12 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getPastIterations,
     saveRowCallback: IterationRowController.prototype.saveIteration,
-    caption : "Past Iterations"
+    caption : "Past Iterations",
+    rowDroppable: true,
+    dropOptions: {
+      accepts: IterationRowController.prototype.acceptsDroppable,
+      callback: StoryController.prototype.moveStoryToBacklog
+    }
   });
   this._iterationListColumnConfig(pastConfig);
   this.pastIterationListConfig = pastConfig;
@@ -260,7 +270,12 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getFutureIterations,
     saveRowCallback: IterationRowController.prototype.saveIteration,
-    caption : "Future Iterations"
+    caption : "Future Iterations",
+    rowDroppable: true,
+    dropOptions: {
+      accepts: IterationRowController.prototype.acceptsDroppable,
+      callback: StoryController.prototype.moveStoryToBacklog
+    }
   });
   this._iterationListColumnConfig(futureConfig);
   this.futureIterationListConfig = futureConfig;
@@ -276,7 +291,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     title : "",
     headerTooltip : 'Expand/collapse',
     defaultSortColumn: false,
-    subViewFactory: IterationRowController.prototype.toggleFactory,    
+    subViewFactory: IterationRowController.prototype.toggleFactory
   });
 
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
@@ -381,13 +396,13 @@ ProjectController.prototype.initializeStoryConfig = function() {
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     sortOptions: {
-      items: "> .dynamicTableDataRow",
+      items: "> div.dynamicTableDataRow",
       handle: "." + DynamicTable.cssClasses.dragHandle,
-      connectWith: ".dynamictable-iteration-storylist > .ui-sortable"
+      connectWith: "div.dynamictable-iteration-storylist > div.ui-sortable"
     },
     caption : "Stories",
     cssClass: "dynamictable-project-stories",
-    tableDroppable: true,
+    tableDroppable: false,
     dropOptions: {
       accepts: function(model) {
         return (model instanceof StoryModel);

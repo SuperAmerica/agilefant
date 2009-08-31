@@ -100,9 +100,11 @@ DynamicTable.prototype._bindEvents = function() {
   this.element.bind("sortbeforeStop", function(event, ui) {
     event.stopPropagation();
     me.middleRows = [];
+    me.rowHashes = [];
     me.element.find("> div.dynamicTableDataRow:not(div.ui-sortable-placeholder)").each(function(k,row) {
       var rowObj = $(row).data("row");
       me.middleRows.push(rowObj);
+      me.rowHashes.push(rowObj.getModel().getHashCode());
     });
   });
   

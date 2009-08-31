@@ -403,6 +403,17 @@ li.dynamictable-captionaction {
   background-color: #fff;
 }
 
+.dynamictable .dynamictable-row .productstory-row {
+  background-color: #fec;
+}
+.dynamictable .dynamictable-row .productstory-responsibles {
+  background-color: #fec;
+  cursor: pointer;
+}
+.dynamictable .dynamictable-row .productstory-data {
+  background-color: #fff;
+}
+
 .dynamictable .dynamictable-row .story-row {
 	background-color: #e9eeff;
 }

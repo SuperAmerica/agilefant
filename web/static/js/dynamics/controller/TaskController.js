@@ -113,6 +113,9 @@ TaskController.prototype.hideDetails = function() {
 
 TaskController.prototype.actionColumnFactory = function(view, model) {
   var actionItems = [ {
+    text: "Details",
+    callback : TaskController.prototype.openDetails
+  }, {
     text : "Edit",
     callback : TaskController.prototype.editTask
   }, /*{

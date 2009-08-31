@@ -248,7 +248,10 @@ StoryController.prototype.storyButtonFactory = function(view, model) {
  * 
  */
 StoryController.prototype.storyActionFactory = function(view, model) {
-  var actionItems = [ {
+  var actionItems = [  {
+    text: "Details",
+    callback : StoryController.prototype.openDetails
+  },{
     text : "Edit",
     callback : StoryController.prototype.editStory
   }, {

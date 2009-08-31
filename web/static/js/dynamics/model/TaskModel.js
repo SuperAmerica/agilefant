@@ -165,6 +165,26 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   });
 }
 
+/**
+ * Resets the tasks original estimate and effort left
+ */
+TaskModel.prototype.resetOriginalEstimate = function() {
+  var me = this;
+  jQuery.ajax({
+    url: "ajax/resetOriginalEstimate.action",
+    type: "post",
+    dataType: "json",
+    data: {taskId: me.getId()},
+    success: function(data, status) {
+      new MessageDisplay.OkMessage("Original estimate reset.");
+      me.setData(data);
+    },
+    error: function(xhr) {
+      new MessageDisplay.ErrorMessage("An error occured while ranking reseting the original estimate.", xhr);
+    }
+  });
+};
+
 TaskModel.prototype.getParent = function() {
   if (this.relations.story) {
     return this.relations.story;

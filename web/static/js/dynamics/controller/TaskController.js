@@ -128,10 +128,20 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
   }, */{
     text : "Delete",
     callback : TaskController.prototype.removeTask
-  } ];
+  }, {
+    text : "Reset original estimate",
+    callback : TaskController.prototype.resetOriginalEstimate
+  }];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;
+};
+
+TaskController.prototype.resetOriginalEstimate = function() {
+  var me = this;
+  new DynamicsConfirmationDialog("Reset original estimate?", "Really reset task's original estimate?", function() {
+    me.model.resetOriginalEstimate();  
+  });
 };
 
 TaskController.prototype.effortLeftEditable = function() {

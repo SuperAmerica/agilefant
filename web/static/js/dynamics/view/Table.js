@@ -336,6 +336,8 @@ DynamicTable.prototype.render = function() {
   this._addSectionToTable(this.upperRows);
   this._addSectionToTable(this.middleRows);
   this._addSectionToTable(this.bottomRows);
+  this.element.find("textarea.tableSortListener").trigger("tableSorted");
+  console.log(this.element.find("textarea.tableSortListener").length);
   if (this.rowCount() === 0) {
     this.header.hide();
   } else {
@@ -348,7 +350,6 @@ DynamicTable.prototype._addSectionToTable = function(section) {
   var elements = [];
   for (i = 0; i < section.length; i++) {
     this.element.append(section[i].getElement());
-    //elements.push(section[i].getElement());
     section[i].render();
   }
 };
@@ -443,6 +444,8 @@ DynamicTable.prototype._sortByColumn = function(column) {
   this._updateSortArrow();
   this._sort();
   this._addSectionToTable(this.middleRows);
+  this.element.find("textarea.tableSortListener").trigger("tableSorted");
+  console.log(this.element.find("textarea.tableSortListener").length);
 };
 
 DynamicTable.prototype._updateSortArrow = function() {
@@ -476,7 +479,6 @@ DynamicTable.prototype._sort = function() {
   if (this.currentSortDirection === DynamicTable.constants.desc) {
     this.middleRows.reverse();
   }
-  this.element.find(".tableSortListener").trigger("tableSorted");
 };
 
 /**

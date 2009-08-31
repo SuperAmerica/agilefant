@@ -386,7 +386,7 @@ TableEditors.Wysiwyg = function(row, cell, options) {
   this.actualElement.trigger("editorOpening");
   this.actualElement.addClass("tableSortListener");
   this.actualElement.bind("tableSorted", function() {
-    me.actualElement.wysiwyg("getDocument");
+    me.actualElement.wysiwyg("resetFrame");
   });
 };
 TableEditors.Wysiwyg.prototype = new TableEditors.CommonEditor();

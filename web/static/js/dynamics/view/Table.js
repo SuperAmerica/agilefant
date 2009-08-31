@@ -100,7 +100,7 @@ DynamicTable.prototype._bindEvents = function() {
   this.element.bind("sortbeforeStop", function(event, ui) {
     event.stopPropagation();
     me.middleRows = [];
-    me.element.find("> div.dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
+    me.element.find("> div.dynamicTableDataRow:not(div.ui-sortable-placeholder)").each(function(k,row) {
       var rowObj = $(row).data("row");
       me.middleRows.push(rowObj);
     });
@@ -110,7 +110,7 @@ DynamicTable.prototype._bindEvents = function() {
     event.stopPropagation();
     var targetRow = ui.item.data("row");
     me.middleRows = [];
-    me.element.find("> div.dynamicTableDataRow:not(.ui-sortable-placeholder)").each(function(k,row) {
+    me.element.find("> div.dynamicTableDataRow:not(div.ui-sortable-placeholder)").each(function(k,row) {
       var rowObj = $(row).data("row");
       me.middleRows.push(rowObj);
     });
@@ -221,7 +221,7 @@ DynamicTable.prototype.layout = function() {
     this.element.sortable(opts);
   }
   if(this.config.isRowDroppable()) {
-    this.element.find(".dynamicTableDataRow").each(function(k,v) { me._registerDropFor($(v)) });
+    this.element.find("div.dynamicTableDataRow").each(function(k,v) { me._registerDropFor($(v)) });
   }
 };
 
@@ -270,7 +270,7 @@ DynamicTable.prototype.getDataRowAt = function(index) {
 };
 
 DynamicTable.prototype._stackPosition = function(rowElement) {
-  var prevDataRows = rowElement.prevAll(".dynamicTableDataRow");
+  var prevDataRows = rowElement.prevAll("div.dynamicTableDataRow");
   var position = prevDataRows.length;
   return position;
 };
@@ -343,8 +343,10 @@ DynamicTable.prototype.render = function() {
 };
 
 DynamicTable.prototype._addSectionToTable = function(section) {
+  var elements = [];
   for (i = 0; i < section.length; i++) {
-    section[i].getElement().appendTo(this.element);
+    this.element.append(section[i].getElement());
+    //elements.push(section[i].getElement());
     section[i].render();
   }
 };

@@ -21,6 +21,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			visible: true,
 			dragHandle: false,
 			onDoubleClick: null,
+			delayedRender: false,
 			editableCallback: function() { return true; },
 			edit: {
 				decorator: null,
@@ -34,6 +35,9 @@ var DynamicTableColumnConfiguration = function(options) {
 	};
 	$.extend(this.options,options);
 	this.options.edit.get = this.options.get;
+};
+DynamicTableColumnConfiguration.prototype.hasDelayedRender = function() {
+  return this.options.delayedRender;
 };
 DynamicTableColumnConfiguration.prototype.getWidth = function() {
 	return this.options.width;

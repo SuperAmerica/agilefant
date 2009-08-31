@@ -8,6 +8,7 @@ var DynamicTableCell = function(row, config) {
 	this.row = row;
 	this.subView = null;
 	this.editor = null;
+	this.delayedRender = this.config.hasDelayedRender();
 	this.initialize();
 	this.cellRenderComplete = false;
 };
@@ -88,6 +89,10 @@ DynamicTableCell.prototype.show = function() {
   }
 };
 DynamicTableCell.prototype.render = function() {
+  if(this.delayedRender) {
+    this.delayedRender = false;
+    return;
+  }
 	var model = this.row.getModel();
 	var getter = this.config.getGetter();
 	var decorator = this.config.getDecorator();
@@ -108,7 +113,8 @@ DynamicTableCell.prototype.render = function() {
 };
 
 DynamicTableCell.prototype.setValue = function(value) {
-	this.cellContents.html(value);
+  //2x faster that calling jQuerys html() or replaceWith()
+  this.cellContents.get(0).innerHTML = value;
 };
 
 /**

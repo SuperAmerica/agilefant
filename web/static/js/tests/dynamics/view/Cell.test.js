@@ -12,6 +12,7 @@ $(document).ready(function() {
 	});
 	
 	test("initialize width and class set", function() {
+	  this.cellConfig.expects().hasDelayedRender().andReturn(false);
 		this.cellConfig.expects().getWidth().andReturn("10%");
 		this.cellConfig.expects().getWidth().andReturn("10%");
 		this.cellConfig.expects().getMinWidth().andReturn("150");
@@ -33,6 +34,7 @@ $(document).ready(function() {
     ok(testable.getElement().hasClass(DynamicTable.cssClasses.dragHandle), "Is drag handle");
 	});
 	test("initialize width and class not set", function() {
+	   this.cellConfig.expects().hasDelayedRender().andReturn(false);
 		this.cellConfig.expects().getWidth().andReturn(null);
 		this.cellConfig.expects().getMinWidth().andReturn(null);
 		this.cellConfig.expects().isFullWidth().andReturn(true);
@@ -52,6 +54,7 @@ $(document).ready(function() {
 	});
 	
 	 test("initialize editable cell", function() {
+	    this.cellConfig.expects().hasDelayedRender().andReturn(false);
 	    this.cellConfig.expects().getWidth().andReturn(null);
 	    this.cellConfig.expects().getMinWidth().andReturn(null);
 	    this.cellConfig.expects().isFullWidth().andReturn(true);
@@ -77,7 +80,7 @@ $(document).ready(function() {
          editor: "foo",
          
      };
-	   
+	    this.cellConfig.expects().hasDelayedRender().andReturn(false);
 	   this.cellConfig.expects().getWidth().andReturn(null);
      this.cellConfig.expects().getMinWidth().andReturn(null);
      this.cellConfig.expects().isFullWidth().andReturn(true);
@@ -123,7 +126,7 @@ $(document).ready(function() {
 	 
    test("render with sub view", function() {
      var me = this;
-     
+     this.cellConfig.expects().hasDelayedRender().andReturn(false);
      this.cellConfig.expects().getWidth().andReturn(null);
      this.cellConfig.expects().getMinWidth().andReturn(null);
      this.cellConfig.expects().isFullWidth().andReturn(true);

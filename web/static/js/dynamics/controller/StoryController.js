@@ -129,15 +129,10 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   });
   var infoContents = new DynamicVerticalTable(this, this.model, config, info);
   var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
-  var tabs = new DynamicsTabs(tasks, {tabClass: "storyTabs"});
-  var taskTab = tabs.add("Tasks");
-  var heTab = tabs.add("Spent effort");
-  var historyTab = tabs.add("History");
   this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
-      taskTab);
+      tasks);
   this.contentsPanels.addPanel(infoContents);
-  this.contentsPanels.addPanel(tabs);
-  this.taskListView.render();
+  this.contentsPanels.addPanel(this.taskListView);
   return this.contentsPanels;
 };
 
@@ -223,6 +218,7 @@ StoryController.prototype.taskToggleFactory = function(view, model) {
   var options = {
     collapse : StoryController.prototype.hideTaskColumn,
     expand : StoryController.prototype.showTaskColumn,
+    targetView: this.view.getCell(StoryController.columnIndices.tasksData),
     expanded: true
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
@@ -290,8 +286,9 @@ StoryController.prototype.initTaskListConfiguration = function() {
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
     dataSource : StoryModel.prototype.getTasks,
     saveRowCallback: TaskController.prototype.saveTask,
-    caption: "",
+    caption: "Tasks",
     sortCallback: TaskController.prototype.sortAndMoveTask,
+    cssClass: "corner-border",
     sortOptions: {
       items: "> .dynamicTableDataRow",
       handle: "." + DynamicTable.cssClasses.dragHandle,
@@ -430,7 +427,8 @@ StoryController.prototype.initTaskListConfiguration = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'task-data',
-    visible : false
+    visible : false,
+    delayedRender: true
   });
   this.taskListConfig = config;
 };

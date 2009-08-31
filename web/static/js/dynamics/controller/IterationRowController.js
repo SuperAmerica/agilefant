@@ -71,6 +71,7 @@ IterationRowController.prototype.toggleFactory = function(view, model) {
   var options = {
       collapse : IterationRowController.prototype.hideDetails,
       expand : IterationRowController.prototype.showDetails,
+      targetView: this.view.getCell(IterationRowController.columnIndices.storiesData),
       expanded: false
     };
     this.toggleView = new DynamicTableToggleView(options, this, view);

@@ -44,7 +44,11 @@ DynamicTableToggleView.prototype.showCollapsed = function() {
 };
 DynamicTableToggleView.prototype.collapse = function() {
   this.showCollapsed();
-  this.options.collapse.call(this.controller, this);
+  if(this.options.targetView) {
+    this.options.targetView.hide();
+  } else {
+    this.options.collapse.call(this.controller, this);
+  }
 };
 DynamicTableToggleView.prototype.showExpanded = function() {
   this.button.attr("title", "Collapse").addClass("dynamictable-collapse")
@@ -53,5 +57,10 @@ DynamicTableToggleView.prototype.showExpanded = function() {
 };
 DynamicTableToggleView.prototype.expand = function() {
   this.showExpanded();
-  this.options.expand.call(this.controller, this);
+  if(this.options.targetView) {
+    this.options.targetView.render();
+    this.options.targetView.show();
+  } else {
+    this.options.expand.call(this.controller, this);
+  }
 };

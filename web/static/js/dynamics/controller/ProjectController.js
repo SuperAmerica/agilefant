@@ -379,8 +379,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     fullWidth : true,
     visible : false,
     cssClass : 'story-data',
-    subViewFactory : IterationRowController.prototype.rowContentsFactory,
-    delayedRender: true
+    subViewFactory : IterationRowController.prototype.rowContentsFactory
   });
 };
 
@@ -402,7 +401,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     },
     caption : "Stories",
     cssClass: "dynamictable-project-stories",
-    tableDroppable: false,
+    tableDroppable: true,
     dropOptions: {
       accepts: function(model) {
         return (model instanceof StoryModel);

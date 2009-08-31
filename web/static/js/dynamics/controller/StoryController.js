@@ -215,10 +215,10 @@ StoryController.prototype.createTask = function() {
  * 
  */
 StoryController.prototype.taskToggleFactory = function(view, model) {
+  var me = this;
   var options = {
     collapse : StoryController.prototype.hideTaskColumn,
     expand : StoryController.prototype.showTaskColumn,
-    targetView: this.view.getCell(StoryController.columnIndices.tasksData),
     expanded: true
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
@@ -427,8 +427,7 @@ StoryController.prototype.initTaskListConfiguration = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'task-data',
-    visible : false,
-    delayedRender: true
+    visible : false
   });
   this.taskListConfig = config;
 };

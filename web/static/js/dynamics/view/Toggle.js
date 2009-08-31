@@ -44,8 +44,8 @@ DynamicTableToggleView.prototype.showCollapsed = function() {
 };
 DynamicTableToggleView.prototype.collapse = function() {
   this.showCollapsed();
-  if(this.options.targetView) {
-    this.options.targetView.hide();
+  if(this.options.targetView && this.options.targetView()) {
+    this.options.targetView().hide();
   } else {
     this.options.collapse.call(this.controller, this);
   }
@@ -57,9 +57,9 @@ DynamicTableToggleView.prototype.showExpanded = function() {
 };
 DynamicTableToggleView.prototype.expand = function() {
   this.showExpanded();
-  if(this.options.targetView) {
-    this.options.targetView.render();
-    this.options.targetView.show();
+  if(this.options.targetView && this.options.targetView()) {
+    this.options.targetView().render();
+    this.options.targetView().show();
   } else {
     this.options.expand.call(this.controller, this);
   }

@@ -68,14 +68,14 @@ IterationRowController.prototype.iterationButtonFactory = function(view, model) 
 };
 
 IterationRowController.prototype.toggleFactory = function(view, model) {
+  var me = this;
   var options = {
-      collapse : IterationRowController.prototype.hideDetails,
-      expand : IterationRowController.prototype.showDetails,
-      targetView: this.view.getCell(IterationRowController.columnIndices.storiesData),
-      expanded: false
-    };
-    this.toggleView = new DynamicTableToggleView(options, this, view);
-    return this.toggleView;
+    collapse : IterationRowController.prototype.hideDetails,
+    expand : IterationRowController.prototype.showDetails,
+    expanded: false
+  };
+  this.toggleView = new DynamicTableToggleView(options, this, view);
+  return this.toggleView;
 };
 
 IterationRowController.prototype.showDetails = function() {
@@ -131,6 +131,18 @@ IterationRowController.prototype.cancelEdit = function() {
 
 IterationRowController.prototype.acceptsDroppable = function(model) {
   return (model instanceof StoryModel);
+};
+
+IterationRowController.prototype.createStory = function() {
+  var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+  mockModel.setBacklog(this.model);
+  var controller = new StoryController(mockModel, null, this);
+  var row = this.storyListView.createRow(controller, mockModel, "top");
+  controller.view = row;
+  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
+  row.render();
+  controller.editStory();
+  row.getCell(StoryController.columnIndices.tasksData).hide();
 };
 
 /**

@@ -337,7 +337,6 @@ DynamicTable.prototype.render = function() {
   this._addSectionToTable(this.middleRows);
   this._addSectionToTable(this.bottomRows);
   this.element.find("textarea.tableSortListener").trigger("tableSorted");
-  console.log(this.element.find("textarea.tableSortListener").length);
   if (this.rowCount() === 0) {
     this.header.hide();
   } else {
@@ -445,7 +444,6 @@ DynamicTable.prototype._sortByColumn = function(column) {
   this._sort();
   this._addSectionToTable(this.middleRows);
   this.element.find("textarea.tableSortListener").trigger("tableSorted");
-  console.log(this.element.find("textarea.tableSortListener").length);
 };
 
 DynamicTable.prototype._updateSortArrow = function() {

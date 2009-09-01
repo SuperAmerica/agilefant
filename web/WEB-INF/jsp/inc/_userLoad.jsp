@@ -39,16 +39,15 @@ $(document).ready(function() {
 			} 
 		},
 		show: function(event, ui) {
-		  var plot = $(".timeplot", ui.panel);
-      if(plot.length > 0) {
-       plot.data("timeplot").repaint();
-      }
-		}
+		  var plot = $("div.timeplot", ui.panel);
+          if(plot.length > 0) {
+            plot.data("timeplot").repaint();
+          }
+    	}
 		});
-	
 });
 $(window).resize(function() {
-  $(".timeplot").each(function() {
+  $("div.timeplot").each(function() {
     $(this).data("timeplot").repaint();
   });
 });

@@ -86,7 +86,7 @@ Timeplot.AgilefantBacklogPlot.prototype.paint = function() {
   var data = this._dataSource.getData();
   if (data) {
       var times = data.times;
-      var values = data.values;
+      var values = data.stepValues;
       var T = times.length;
       for (var t = 0; t < T; t++) {
           //current point
@@ -185,6 +185,7 @@ Timeplot.DevSource.prototype._process = function() {
   var count = this._eventSource.getCount();
   var times = new Array(count);
   var values = new Array(count);
+  var stepValues = new Array(count);
   var min = Number.MAX_VALUE;
   var max = Number.MIN_VALUE;
   var i = 0;
@@ -202,14 +203,16 @@ Timeplot.DevSource.prototype._process = function() {
          if (value > max) {
              max = value;
          }    
-          values[i] = event.getValues()[this._dataCol];
+          values[i] = event.getValues()[this._column];
+          stepValues[i] = event.getValues()[this._dataCol];
       }
       i++;
   }
 
   this._data = {
       times: times,
-      values: values
+      values: values,
+      stepValues: stepValues
   };
 
   if (max == Number.MIN_VALUE) max = 1;

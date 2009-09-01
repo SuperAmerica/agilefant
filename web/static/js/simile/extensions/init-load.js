@@ -63,10 +63,13 @@ function init_user_load(timeplotTrack, userId, detailed, detailedLegends) {
 	    dataType: "json",
 	    type: "post",
 	    success: function(data) {
-		timeplot = Timeplot.create(timeplotTrack.get(0), plotInfo);
-		timeplotTrack.data("timeplot", timeplot).addClass("timeplot");
-		timeplot2 = Timeplot.create(detailed.get(0), plotInfoDetail);
-		detailed.data("timeplot", timeplot2).addClass("timeplot");
-    eventSource.userLoadData(data.loadContainers);
+    		timeplot = Timeplot.create(timeplotTrack.get(0), plotInfo);
+    		timeplotTrack.data("timeplot", timeplot).addClass("timeplot");
+    		timeplot2 = Timeplot.create(detailed.get(0), plotInfoDetail);
+    		detailed.data("timeplot", timeplot2).addClass("timeplot");
+        eventSource.userLoadData(data.loadContainers);
+        setTimeout(function() {
+          timeplot.repaint();
+        }, 500);
 	    }});
 }

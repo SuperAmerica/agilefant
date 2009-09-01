@@ -1,19 +1,20 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.MenuBusiness;
-import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.util.MenuData;
+import fi.hut.soberit.agilefant.model.Schedulable;
+import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 
 /**
@@ -25,103 +26,36 @@ import fi.hut.soberit.agilefant.util.MenuData;
 @Transactional
 public class MenuBusinessImpl implements MenuBusiness {
 
-    private ProductDAO productDAO;
-    private BacklogBusiness backlogBusiness;
+    @Autowired
+    private ProductBusiness productBusiness;
     
-    /** {@inheritDoc} */
-    @Transactional(readOnly = true)
-    public MenuData getSubMenuData(Backlog backlog) {
-        MenuData data = new MenuData();
-        data.setMenuItems(new ArrayList<Backlog>());
-        
-        // If the requested pageitem is null, return all product backlogs
-        if (backlog == null) {
-            data.getMenuItems().addAll(productDAO.getAllOrderByName());
+    @SuppressWarnings("unchecked")
+    public List<MenuDataNode> constructBacklogMenuData() {
+        List<MenuDataNode> nodes = new ArrayList<MenuDataNode>();
+        List<Product> products = new ArrayList<Product>(productBusiness.retrieveAll());
+        Collections.sort(products, new PropertyComparator("name", true, true));
+        for (Product prod : products) {
+            nodes.add(constructMenuDataNode(prod));
         }
-        else {
-            if (backlog.getChildren() != null) {
-                data.getMenuItems().addAll(backlog.getChildren());
-            }
-        }
-        
-        /*
-        if (backlog != null) {
-            if (backlog instanceof Product) {
-                Collections.sort(data.getMenuItems(), new Comparator<Backlog>() {
-                    public int compare(Backlog o1, Backlog o2) {
-                        if (o1 == null) {
-                            if (o2 == null) return 0;
-                            else return -1;
-                        } else {
-                            if (o2 == null) return 1;
-                        }
-                        Project p1 = (Project) o1;
-                        Project p2 = (Project) o2;
-                        if (p1.getStartDate() == null) {
-                            if (p2.getStartDate() == null) return 0;
-                            else return -1;
-                        } else {
-                            if (p2.getStartDate() == null) return 1;
-                        }
-                        return p1.getStartDate().compareTo(p2.getStartDate());
-                    }
-                });
-            } else if (backlog instanceof Project) {
-                Collections.sort(data.getMenuItems(), new Comparator<Backlog>() {
-                    public int compare(Backlog o1, Backlog o2) {
-                        if (o1 == null) {
-                            if (o2 == null) return 0;
-                            else return -1;
-                        } else {
-                            if (o2 == null) return 1;
-                        }
-                        Iteration p1 = (Iteration) o1;
-                        Iteration p2 = (Iteration) o2;
-                        if (p1.getStartDate() == null) {
-                            if (p2.getStartDate() == null) return 0;
-                            else return -1;
-                        } else {
-                            if (p2.getStartDate() == null) return 1;
-                        }
-                        return p1.getStartDate().compareTo(p2.getStartDate());
-                    }
-                });
-            }
-        }
-        */
-        
-        // Update the hasChildren and objectType properties
-        for (Backlog item : data.getMenuItems()) {
-            String type = "";
-            // Check the type
-            if (item instanceof Product) {
-                type = "product";
-            }
-            else if (item instanceof Project) {
-                type = "project";
-            }
-            else if (item instanceof Iteration) {
-                type = "iteration";
-            }
-            
-            int num = backlogBusiness.getNumberOfChildren(item);
-            
-            boolean hasChildren = (num > 0);
-            data.getHasChildren().put(item, hasChildren);
-            data.getObjectTypes().put(item, type);
-        }
-        
-        return data;
+        return nodes;
     }
 
-    @Autowired
-    public void setProductDAO(ProductDAO productDAO) {
-        this.productDAO = productDAO;
+    @SuppressWarnings("unchecked")
+    private MenuDataNode constructMenuDataNode(Backlog backlog) {
+        MenuDataNode mdn = new MenuDataNode();
+        mdn.setTitle(backlog.getName());
+        mdn.setId(backlog.getId());
+        for (Backlog child : backlog.getChildren()) {
+            mdn.getChildren().add(constructMenuDataNode(child));
+        }
+        if (mdn.getChildren().size() > 0 && mdn.getChildren().get(0) instanceof Schedulable) {
+            Collections.sort(mdn.getChildren(), new PropertyComparator("startDate", true, true));
+        }
+        return mdn;
     }
 
-    @Autowired
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
+    public void setProductBusiness(ProductBusiness productBusiness) {
+        this.productBusiness = productBusiness;
     }
-    
+
 }

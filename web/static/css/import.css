@@ -9,6 +9,8 @@
 	
 @import "autocomplete.css";
 
+@import "ui.dynatree.css";
+
 html {
 	margin: 0;
 	padding: 0;

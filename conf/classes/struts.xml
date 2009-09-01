@@ -106,6 +106,24 @@
 			</result>
 		</action>
 
+    <!-- Backlog actions -->
+    <action name="editBacklog" method="resolveResult" class="backlogAction">
+      <result name="product" type="redirectAction">
+        <param name="actionName">editProduct</param>
+        <param name="productId">${backlogId}</param>
+      </result>
+      <result name="project" type="redirectAction">
+        <param name="actionName">editProject</param>
+        <param name="projectId">${backlogId}</param>
+      </result>
+      <result name="iteration" type="redirectAction">
+        <param name="actionName">editIteration</param>
+        <param name="iterationId">${backlogId}</param>
+      </result>
+    </action>
+
+    <!-- /Backlog actions -->
+
 		<!-- Product actions -->
 		
 		<action name="editProduct" method="retrieve" class="productAction">

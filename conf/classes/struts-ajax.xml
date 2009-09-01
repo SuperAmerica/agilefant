@@ -90,8 +90,11 @@
     
     
     <!-- Menu actions -->
-    <action name="menuData" method="execute" class="menuAction">
-        <result type="dispatcher">/WEB-INF/jsp/inc/_menuData.jsp</result>
+    <action name="menuData" method="constructBacklogMenuData" class="menuAction">
+        <result type="json">
+          <param name="target">menuData</param>
+          <param name="patterns">-class, -*.class, -*.*.class</param>
+        </result>
     </action>
     <action name="updateOpenMenus" method="updateOpenMenus" class="menuAction">
       <result name="success" type="httpheader">

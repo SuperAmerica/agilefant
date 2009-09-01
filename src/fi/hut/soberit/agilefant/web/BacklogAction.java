@@ -37,11 +37,6 @@ public class BacklogAction extends ActionSupport {
     private BacklogBusiness backlogBusiness;
 
     
-    public String edit() {
-        backlog = backlogBusiness.retrieve(backlogId);
-        return solveResult(backlog);
-    }
-    
     public String retrieveStories() {
         backlog = backlogBusiness.retrieve(backlogId);
         stories = backlog.getStories();
@@ -64,18 +59,18 @@ public class BacklogAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
-    protected String solveResult(Backlog backlog) {
-        if (backlog == null) {
-            super.addActionError(super.getText("backlog.notFound"));
-            return Action.ERROR;
-        } else  if (backlog instanceof Product) {
-            return "editProduct";
-        } else if (backlog instanceof Project) {
-            return "editProject";
-        } else if (backlog instanceof Iteration) {
-            return "editIteration";
+
+    public String resolveResult() {
+        backlog = backlogBusiness.retrieve(backlogId);
+        if (backlog instanceof Product) {
+            return "product";
         }
-        super.addActionError(super.getText("backlog.unknownType"));
+        else if (backlog instanceof Project) {
+            return "project";
+        }
+        else if (backlog instanceof Iteration) {
+            return "iteration";
+        }
         return Action.ERROR;
     }
     

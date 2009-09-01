@@ -27,9 +27,8 @@
 <script type="text/javascript" src="static/js/generic.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/jquery.treeview.async.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery-ui.min.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/jquery.dynatree.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/jquery.validate.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/date.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/datepicker.js?<ww:text name="struts.agilefantReleaseId" />"></script>
@@ -183,31 +182,10 @@ Agilefant
     
     
     <li class="separator"></li>
-<!-- 
-    <li><ww:url id="createLink" action="ajaxCreateProjectType"
-        includeParams="none" />
-        <ww:a href="%{createLink}" onclick="return false;" title="Create a new project type" cssClass="openCreateDialog openProjectTypeDialog">Project type &raquo;</ww:a>
-    </li>
- -->    
     <li><ww:url id="createLink" action="createTeam" namespace="ajax" includeParams="none" />
         <ww:a href="%{createLink}" onclick="return false;" title="Create a new team" cssClass="openCreateDialog openTeamDialog">Team &raquo;</ww:a>
     </li>
-    <!-- 
-    <li>
-    <c:choose>
-        <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="ajaxCreateBusinessTheme"
-                includeParams="none" />
-            <ww:a href="%{createLink}" onclick="return false;" title="Create a new theme" cssClass="openCreateDialog openThemeDialog">Theme &raquo;</ww:a>
-        </c:when>
-        <c:otherwise>
-            <span class="inactive"
-                title="Create a product before creating a theme">
-            Theme &raquo;</span>
-        </c:otherwise>
-    </c:choose>
-    </li>
-    -->
+
     <li><ww:url id="createLink" action="createUser" namespace="ajax" includeParams="none" />
     <ww:a href="%{createLink}" onclick="return false;" title="Create a new user" cssClass="openCreateDialog openUserDialog">User &raquo;</ww:a>
     </li>
@@ -215,45 +193,24 @@ Agilefant
 
 <!-- Tree menu -->
 
-<ul id="treemenu">
-</ul>
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#dynatreeRoot').dynatree({
+    onActivate: function(dtnode) {
+      window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
+    },
+    initAjax: {
+      url: "ajax/menuData.action"
+    },
+    persist: true,
+    debugLevel: 0
+  });
+});
+</script>
+
+<div id="dynatreeRoot"></div>
 
 </div>
-
-<script type="text/javascript">
-	/* Working on a request div */
-	$("#loadingDiv").ajaxStop(function() {
-	    $(this).hide();
-	});
-	
-	$("#loadingDiv").ajaxStart(function() {
-	    $(this).show();
-	});
-    var navi = '${navi}';
-    var subnavi = '${subnavi}';
-    var contextObjectId = '${menuContextId}';
-    
-    $("#treemenu").treeview({
-        url: "ajax/menuData.action?navi=" + navi + "&subnavi=" + subnavi + "&contextObjectId=" + contextObjectId,
-        collapsed: false,
-        unique: false,
-        
-        toggle: function() {
-            var open = $("#treemenu li.collapsable");
-            var openArray = new Array();
-
-            $.each(open, function(i, n) {
-                openArray[i] = n.id; 
-            });
-            
-            var openString = "" + openArray.join(",");
-            
-            $.post("ajax/updateOpenMenus.action",
-                { "openString": openString }
-            );
-        }
-    });
-</script>
 <!-- /#hierarchy -->
 
 

@@ -13,7 +13,6 @@
     var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 </script>
 
-<h2><c:out value="${iteration.name}" /></h2>
 <div class="backlogInfo" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img

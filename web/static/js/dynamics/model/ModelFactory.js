@@ -95,7 +95,7 @@ ModelFactory.typeToClassName = {
       
     assignment: "fi.hut.soberit.agilefant.model.Assignment",
     
-    hourEntry:  "fi.hut.soberit.agilefant.model.HourEntry",
+    hourEntry:  "fi.hut.soberit.agilefant.model.HourEntry"
 };
 
 /**
@@ -134,7 +134,7 @@ ModelFactory.initializeForTypes = {
     iteration:  "iteration",
     project:    "project",
     product:    "product",
-    dailyWork:  "dailyWork",
+    dailyWork:  "dailyWork"
 };
 
 
@@ -318,7 +318,7 @@ ModelFactory.prototype._getObject = function(type, id) {
  * Internal function for creating a new object.
  */
 ModelFactory.prototype._createObject = function(className) {
-  var returnedModel = new ModelFactory.classNameToJsClass[className];
+  var returnedModel = new ModelFactory.classNameToJsClass[className]();
   returnedModel.addListener(ModelFactory.listener);
   return returnedModel;
 };

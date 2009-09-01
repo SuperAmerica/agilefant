@@ -130,7 +130,7 @@ CommonModel.prototype._removeAllRelations = function() {
       var rels = this.relations[field];
       if (rels.constructor == Array) {
         $.each(rels, function(k,v) {
-          removeThese.push(v)
+          removeThese.push(v);
         });
       }
       else {

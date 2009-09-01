@@ -63,7 +63,7 @@ AutocompleteDataProvider.prototype._fetchData = function(url,params) {
       returnedData = data;
     },
     error: function(request, status, error) {
-      new MessageDisplay.ErrorMessage("Unable to load data for autocompletion");
+      var msg = new MessageDisplay.ErrorMessage("Unable to load data for autocompletion");
     }
   });
   return returnedData;

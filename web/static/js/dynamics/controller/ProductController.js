@@ -79,7 +79,7 @@ ProductController.prototype.paint = function() {
  * Populate a new, editable project row to the table. 
  */
 ProductController.prototype.createProject = function() {
-  var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName["project"]);
+  var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.project);
   mockModel.setInTransaction(true);
   mockModel.setParent(this.model);
   mockModel.setStartDate(new Date().getTime());

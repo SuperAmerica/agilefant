@@ -92,14 +92,14 @@ IterationModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Iteration saved successfully");
+      var msg = new MessageDisplay.OkMessage("Iteration saved successfully");
       me.setData(data);
       if(!id) {
         me.getParent().addIteration(me);
       }
     },
     error: function(xhr, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving iteration", xhr);
+      var msg = new MessageDisplay.ErrorMessage("Error saving iteration", xhr);
       me.rollback();
     }
   });

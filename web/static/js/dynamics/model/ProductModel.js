@@ -70,11 +70,11 @@ ProductModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Product saved successfully");
+      var msg = new MessageDisplay.OkMessage("Product saved successfully");
       me.setData(data);
     },
     error: function(xhr, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving product", xhr);
+      var msg = new MessageDisplay.ErrorMessage("Error saving product", xhr);
       me.rollback();
     }
   });
@@ -86,7 +86,6 @@ ProductModel.prototype.reload = function() {
     "ajax/retrieveProduct.action",
     {productId: me.getId()},
     function(data,status) {
-      var a = me;
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }

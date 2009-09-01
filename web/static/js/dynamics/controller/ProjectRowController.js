@@ -35,7 +35,7 @@ ProjectRowController.prototype.projectActionFactory = function(view, model) {
   var actionItems = [ {
     text : "Edit",
     callback : ProjectRowController.prototype.editProject
-  }, /*{
+  }/*, {
     text : "Move",
     callback : ProjectRowController.prototype.moveProject
   }, {

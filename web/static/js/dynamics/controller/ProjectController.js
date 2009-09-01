@@ -103,7 +103,7 @@ ProjectController.prototype.paint = function() {
  * Populate a new, editable iteration row to the iterations table.
  */
 ProjectController.prototype.createIteration = function() {
-  var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName["iteration"]);
+  var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.iteration);
   mockModel.setInTransaction(true);
   mockModel.setParent(this.model);
   mockModel.setStartDate(new Date().getTime());

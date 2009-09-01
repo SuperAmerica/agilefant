@@ -85,7 +85,7 @@ TaskController.prototype.toggleFactory = function(view, model) {
 
 TaskController.prototype.removeTask = function() {
   var me = this;
-  new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this task?", function() {
+  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this task?", function() {
     me.parentController.removeChildController("task", this);
     me.model.remove();
   });
@@ -139,7 +139,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
 
 TaskController.prototype.resetOriginalEstimate = function() {
   var me = this;
-  new DynamicsConfirmationDialog("Reset original estimate?", "Really reset task's original estimate?", function() {
+  var msg = new DynamicsConfirmationDialog("Reset original estimate?", "Really reset task's original estimate?", function() {
     me.model.resetOriginalEstimate();  
   });
 };

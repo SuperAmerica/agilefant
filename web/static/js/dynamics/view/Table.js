@@ -223,7 +223,7 @@ DynamicTable.prototype.layout = function() {
     this.element.sortable(opts);
   }
   if(this.config.isRowDroppable()) {
-    this.element.find("div.dynamicTableDataRow").each(function(k,v) { me._registerDropFor($(v)) });
+    this.element.find("div.dynamicTableDataRow").each(function(k,v) { me._registerDropFor($(v)); });
   }
 };
 

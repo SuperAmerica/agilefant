@@ -243,7 +243,7 @@ TableEditors.Date = function(row, cell, options) {
     onSelect: function() {
       var newValue = me.element.val();
       if (me.options.withTime) {
-        var newValue = me.element.val() + " " + me.oldHoursAndMinutes;
+        newValue = me.element.val() + " " + me.oldHoursAndMinutes;
       }
       me.element.val(newValue);
       me.element.focus();

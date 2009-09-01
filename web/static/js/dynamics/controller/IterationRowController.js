@@ -37,7 +37,7 @@ IterationRowController.prototype.iterationActionFactory = function(view, model) 
   var actionItems = [ {
     text : "Edit",
     callback : IterationRowController.prototype.editIteration
-  }, /*{
+  }/*, {
     text : "Move",
     callback : IterationRowController.prototype.moveIteration
   }, {

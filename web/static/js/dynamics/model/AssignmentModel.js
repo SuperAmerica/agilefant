@@ -50,11 +50,11 @@ AssignmentModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Assignment saved successfully");
+      var msg = new MessageDisplay.OkMessage("Assignment saved successfully");
       me.setData(data);
     },
     error: function(xhr, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving assignment", xhr);
+      var msg = new MessageDisplay.ErrorMessage("Error saving assignment", xhr);
     }
   });
 };
@@ -65,7 +65,7 @@ AssignmentModel.prototype._remove = function() {
       "ajax/deleteAssignment.action",
       {assignmentId: me.getId()},
       function(data, status) {
-        new MessageDisplay.OkMessage("Assignment removed");
+        var msg = new MessageDisplay.OkMessage("Assignment removed");
         return;
       }
   );

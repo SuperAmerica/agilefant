@@ -83,7 +83,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Task saved successfully");
+      var msg = new MessageDisplay.OkMessage("Task saved successfully");
       me.setData(data);
       if(!id) {
         if (me.relations.story instanceof StoryModel) {
@@ -95,7 +95,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
       }
     },
     error: function(xhr, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving task", xhr);
+      var msg = new MessageDisplay.ErrorMessage("Error saving task", xhr);
     }
   });
 };
@@ -110,11 +110,11 @@ TaskModel.prototype._remove = function(successCallback) {
       dataType: "text",
       data: {taskId: me.getId()},
       success: function(data,status) {
-        new MessageDisplay.OkMessage("Task removed");
+        var msg = new MessageDisplay.OkMessage("Task removed");
         successCallback();
       },
       error: function(xhr,status) {
-        new MessageDisplay.ErrorMessage("Error deleting task.", xhr);
+        var msg = new MessageDisplay.ErrorMessage("Error deleting task.", xhr);
       }
   });
 };
@@ -151,7 +151,7 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
     dataType: "json",
     data: data,
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Task ranked successfully.");
+      var msg = new MessageDisplay.OkMessage("Task ranked successfully.");
       var oldParent = me.getParent();
       me.setData(data);
       oldParent.reload();
@@ -160,10 +160,10 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       }
     },
     error: function(xhr, status) {
-      new MessageDisplay.ErrorMessage("An error occured while ranking the task.", xhr);
+      var msg = new MessageDisplay.ErrorMessage("An error occured while ranking the task.", xhr);
     }
   });
-}
+};
 
 /**
  * Resets the tasks original estimate and effort left
@@ -176,11 +176,11 @@ TaskModel.prototype.resetOriginalEstimate = function() {
     dataType: "json",
     data: {taskId: me.getId()},
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Original estimate reset.");
+      var msg = new MessageDisplay.OkMessage("Original estimate reset.");
       me.setData(data);
     },
     error: function(xhr) {
-      new MessageDisplay.ErrorMessage("An error occured while ranking reseting the original estimate.", xhr);
+      var msg = new MessageDisplay.ErrorMessage("An error occured while ranking reseting the original estimate.", xhr);
     }
   });
 };

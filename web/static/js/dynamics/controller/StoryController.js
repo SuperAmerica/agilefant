@@ -28,7 +28,7 @@ StoryController.prototype = new CommonController();
  */
 StoryController.prototype.removeStory = function() {
   var me = this;
-  new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this story?", function() {
+  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this story?", function() {
     me.parentController.removeChildController("story", me);
     me.model.remove();
   });

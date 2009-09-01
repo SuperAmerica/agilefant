@@ -84,14 +84,14 @@ StoryModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Story saved successfully");  
+      var msg = new MessageDisplay.OkMessage("Story saved successfully");  
       me.setData(data);
       if(!id) {
         me.relations.backlog.addStory(me);
       }
     },
     error: function(xhr, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving story", xhr);
+      var msg = new MessageDisplay.ErrorMessage("Error saving story", xhr);
     }
   });
 };
@@ -111,23 +111,21 @@ StoryModel.prototype.reload = function() {
 StoryModel.prototype.moveStory = function(backlogId) {
   var me = this;
   jQuery.ajax({
-      url: "ajax/moveStory.action",
-      data: {storyId: me.getId(), backlogId: backlogId},
-      dataType: 'json',
-      type: 'post',
-      async: true,
-      cache: false,
-      success: function(data,status) {
-          new MessageDisplay.OkMessage("Story moved");
-          
-          me.getParent().reload();
-          me.callListeners(new DynamicsEvents.EditEvent(me));  
-      },
-      error: function(xhr) {
-          new MessageDisplay.ErrorMessage("An error occurred moving the story", xhr);
-        }
-      }
-  );
+    url: "ajax/moveStory.action",
+    data: {storyId: me.getId(), backlogId: backlogId},
+    dataType: 'json',
+    type: 'post',
+    async: true,
+    cache: false,
+    success: function(data,status) {
+      var msg = new MessageDisplay.OkMessage("Story moved");
+      me.getParent().reload();
+      me.callListeners(new DynamicsEvents.EditEvent(me));  
+    },
+    error: function(xhr) {
+      var msg = new MessageDisplay.ErrorMessage("An error occurred moving the story", xhr);
+    }
+  });
 };
 
 StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
@@ -149,7 +147,7 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
     async: true,
     cache: false,
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Story ranked");
+      var msg = new MessageDisplay.OkMessage("Story ranked");
       var oldParent = me.getParent();
       me.setData(data);
       me.callListeners(new DynamicsEvents.DeleteEvent(me));
@@ -159,10 +157,10 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       }
     },
     error: function(xhr) {
-      new MessageDisplay.ErrorMessage("An error occurred while ranking the story", xhr);
+      var msg = new MessageDisplay.ErrorMessage("An error occurred while ranking the story", xhr);
     }
   });
-}
+};
 
 
 StoryModel.prototype._remove = function(successCallback) {
@@ -175,11 +173,11 @@ StoryModel.prototype._remove = function(successCallback) {
       async: true,
       cache: false,
       success: function(data, status) {
-        new MessageDisplay.OkMessage("Story removed");
+        var msg = new MessageDisplay.OkMessage("Story removed");
         successCallback();
       },
       error: function(data, status) {
-        new MessageDisplay.ErrorMessage("Error deleting story.", data);
+        var msg = new MessageDisplay.ErrorMessage("Error deleting story.", data);
       }
   });
 };

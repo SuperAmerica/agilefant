@@ -93,14 +93,14 @@ ProjectModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      new MessageDisplay.OkMessage("Project saved successfully");
+      var msg = new MessageDisplay.OkMessage("Project saved successfully");
       me.setData(data);
       if(!id) {
         me.getParent().addProject(me);
       }
     },
     error: function(xhr, status, error) {
-      new MessageDisplay.ErrorMessage("Error saving project", xhr);
+      var msg = new MessageDisplay.ErrorMessage("Error saving project", xhr);
       me.rollback();
     }
   });
@@ -112,7 +112,7 @@ ProjectModel.prototype.reload = function() {
     "ajax/projectData.action",
     {projectId: me.getId()},
     function(data,status) {
-      new MessageDisplay.OkMessage("Project reloaded successfully");
+      var msg = new MessageDisplay.OkMessage("Project reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }

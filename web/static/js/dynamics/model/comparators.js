@@ -26,6 +26,6 @@ var DynamicsComparators = {
   filteredValueComparatorFactory: function(targetMethod, filterFunc) {
       return function(obj1, obj2) {
           return DynamicsComparators.genericFilteredComparator(obj1, obj2, targetMethod, filterFunc);
-      }
+      };
   }
 };

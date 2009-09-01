@@ -21,8 +21,7 @@ BacklogController.prototype.addAssignees = function() {
   var me = this;
   $(window).autocompleteDialog({
     dataType: 'usersAndTeams', 
-    callback: function(ids) { me._saveAssignees(ids); }, /*
-    cancel: function() { me.close(); },*/
+    callback: function(ids) { me._saveAssignees(ids); },
     title: 'Select assignees'
   }); 
 };
@@ -74,7 +73,7 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
       editor: "ExactEstimate",
       acceptNegative: true,
       set: AssignmentModel.prototype.setPersonalLoad,
-      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      decorator: DynamicsDecorators.exactEstimateEditDecorator
     }
   });
   config.addColumnConfiguration(3, {

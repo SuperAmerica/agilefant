@@ -186,6 +186,53 @@ public class PersonalLoadBusinessTest {
     }
 
     @Test
+    public void testUpdateUserLoadByInterval_iterationStartsBefore() {
+        DateTime baseDate = new DateTime().withMillisOfSecond(0);
+        DateTime intervalStart = baseDate;
+        DateTime intervalEnd = baseDate.plusDays(5);
+        DateTime iterationStart = baseDate.minusDays(10);
+        DateTime iterationEnd = baseDate.plusDays(10);
+
+        // 20 day iteration 
+        Iteration iter = new Iteration();
+        iter.setStartDate(iterationStart);
+        iter.setEndDate(iterationEnd);
+        IterationLoadContainer loadContainer = new IterationLoadContainer();
+        loadContainer.setIteration(iter);
+
+        // 5 day interval
+        IntervalLoadContainer container = new IntervalLoadContainer();
+        Interval containerInterval = new Interval(intervalStart, intervalEnd);
+        container.setInterval(containerInterval);
+        
+        //actual days left in the iteration
+        Interval iterationLeftInterval = new Interval(baseDate, iterationEnd);
+        // iteration and period durations without vacations and weekends
+        Duration worktimeInIteration = new Duration(1000 * 3600 * 24 * 10L); // 10 days
+        // days
+        Duration worktimeInPeriod = new Duration(1000 * 3600 * 24 * 5L); // 5days
+        
+        // total assigned effort
+        loadContainer.setTotalAssignedLoad(10000L);
+        loadContainer.setTotalUnassignedLoad(1000L);
+        loadContainer.setTotalFutureLoad(100L);
+
+        expect(userBusiness.calculateWorktimePerPeriod(user, iterationLeftInterval))
+                .andReturn(worktimeInIteration);
+        expect(userBusiness.calculateWorktimePerPeriod(user, containerInterval))
+                .andReturn(worktimeInPeriod);
+
+        replayAll();
+        personalLoadBusiness.updateUserLoadByInterval(container, loadContainer,
+                user);
+        verifyAll();
+        assertEquals(5000L, container.getAssignedLoad());
+        assertEquals(500L, container.getUnassignedLoad());
+        assertEquals(50L, container.getFutureLoad());
+        assertEquals(5550L, container.getDetailedLoad().get(0).getTotalLoad());
+    }
+    
+    @Test
     public void testUpdateUserLoadByInterval_iterationStarts() {
         DateTime baseDate = new DateTime(2009, 6, 1, 0, 0, 0, 0);
         DateTime intervalStart = baseDate;

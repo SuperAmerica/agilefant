@@ -285,11 +285,16 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     private double calculateIntervalFraction(Interval containerInterval,
             Interval backlogInterval, User user) {
-
+        
+        if(backlogInterval.containsNow()) {
+            backlogInterval = new Interval(new DateTime().withMillisOfSecond(0), backlogInterval.getEnd());
+        }
+        
         // iteration is not ongoing at this time
         if (!backlogInterval.overlaps(containerInterval)) {
             return 0.0;
         }
+        
         Interval periodInterval = containerInterval.overlap(backlogInterval);
 
         // (work days in period / total work days in this iteration) * total

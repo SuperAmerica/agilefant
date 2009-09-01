@@ -325,7 +325,6 @@ ProductController.prototype.initializeProjectListConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getName),
     defaultSortColumn: true,
     editable : true,
-    dragHandle: true,
     edit : {
       editor : "Text",
       set : ProjectModel.prototype.setName,

@@ -204,14 +204,17 @@ Agilefant
 <script type="text/javascript">
 $(document).ready(function() {
   $('#dynatreeRoot').dynatree({
-    onActivate: function(dtnode) {
-      window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
+    onClick: function(dtnode, event) {
+      if ($(event.originalTarget).hasClass("ui-dynatree-title")) {
+        window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
+      }
     },
     initAjax: {
       url: "ajax/menuData.action"
     },
     persist: true,
-    debugLevel: 0
+    debugLevel: 0,
+    cookieId: "agilefant-menu-dynatree"
   });
 });
 </script>

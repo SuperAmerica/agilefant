@@ -192,7 +192,15 @@ Agilefant
 </ul>
 
 <!-- Tree menu -->
-
+<c:choose>
+<c:when test="${navi == \"administration\"}">
+<ul>
+  <li><a href="settings.action">Settings</a></li>
+  <li><a href="listTeams.action">Teams</a></li>
+  <li><a href="listUsers.action">Users</a></li>
+</ul>
+</c:when>
+<c:otherwise>
 <script type="text/javascript">
 $(document).ready(function() {
   $('#dynatreeRoot').dynatree({
@@ -209,6 +217,10 @@ $(document).ready(function() {
 </script>
 
 <div id="dynatreeRoot"></div>
+
+</c:otherwise>
+</c:choose>
+
 
 </div>
 <!-- /#hierarchy -->

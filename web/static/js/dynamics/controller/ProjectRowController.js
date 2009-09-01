@@ -38,10 +38,10 @@ ProjectRowController.prototype.projectActionFactory = function(view, model) {
   }/*, {
     text : "Move",
     callback : ProjectRowController.prototype.moveProject
-  }, {
+  }*/, {
     text : "Delete",
     callback : ProjectRowController.prototype.removeProject
-  }*/ ];
+  } ];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;
@@ -58,6 +58,14 @@ ProjectRowController.prototype.editProject = function() {
   this.view.getCell(ProjectRowController.columnIndices.description).show();
   this.view.getCell(ProjectRowController.columnIndices.buttons).show();
   this.view.editRow();
+};
+
+ProjectRowController.prototype.removeProject = function() {
+  var me = this;
+  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this project?", function() {
+    me.parentController.removeChildController("project", this);
+    me.model.remove();
+  });
 };
 
 ProjectRowController.prototype.saveProject = function() {

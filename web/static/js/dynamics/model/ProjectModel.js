@@ -119,6 +119,27 @@ ProjectModel.prototype.reload = function() {
   );
 };
 
+ProjectModel.prototype._remove = function(successCallback) {
+  var me = this;
+  jQuery.ajax({
+      type: "POST",
+      url: "ajax/deleteProject.action",
+      async: true,
+      cache: false,
+      dataType: "text",
+      data: {projectId: me.getId()},
+      success: function(data,status) {
+        var msg = new MessageDisplay.OkMessage("Project removed");
+        if (successCallback) {
+          successCallback();
+        }
+      },
+      error: function(xhr,status) {
+        var msg = new MessageDisplay.ErrorMessage("Error deleting project.", xhr);
+      }
+  });
+};
+
 ProjectModel.prototype.addIteration = function(iteration) {
   this.addRelation(iteration);
   this.relationEvents();

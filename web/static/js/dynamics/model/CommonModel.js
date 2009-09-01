@@ -207,7 +207,7 @@ CommonModel.prototype.removeRelation = function(object) {
 };
 
 CommonModel.prototype._removeOneWayRelation = function(object) {
-  var type = ModelFactory.classNameToType[object.getPersistedClass()];
+  var type = this.classNameToRelation[object.getPersistedClass()];
   if (this.relations[type].constructor === Array) {
     ArrayUtils.remove(this.relations[type], object);
   }

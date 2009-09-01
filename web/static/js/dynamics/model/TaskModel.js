@@ -111,7 +111,9 @@ TaskModel.prototype._remove = function(successCallback) {
       data: {taskId: me.getId()},
       success: function(data,status) {
         var msg = new MessageDisplay.OkMessage("Task removed");
-        successCallback();
+        if (successCallback) {
+          successCallback();
+        }
       },
       error: function(xhr,status) {
         var msg = new MessageDisplay.ErrorMessage("Error deleting task.", xhr);

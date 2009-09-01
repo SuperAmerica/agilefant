@@ -40,10 +40,10 @@ IterationRowController.prototype.iterationActionFactory = function(view, model) 
   }/*, {
     text : "Move",
     callback : IterationRowController.prototype.moveIteration
-  }, {
+  }*/, {
     text : "Delete",
     callback : IterationRowController.prototype.removeIteration
-  } */];
+  } ];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;
@@ -65,6 +65,17 @@ IterationRowController.prototype.iterationButtonFactory = function(view, model) 
   return new DynamicsButtons(this,[{text: 'Save', callback: IterationRowController.prototype.saveIteration},
                                    {text: 'Cancel', callback: IterationRowController.prototype.cancelEdit}
                                    ] ,view);
+};
+
+/**
+ * Confirm and remove iteration.
+ */
+IterationRowController.prototype.removeIteration = function() {
+  var me = this;
+  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this iteration?", function() {
+    me.parentController.removeChildController("iteration", this);
+    me.model.remove();
+  });
 };
 
 IterationRowController.prototype.toggleFactory = function(view, model) {
@@ -189,7 +200,6 @@ IterationRowController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
-    defaultSortColumn: true,
     editable : true,
     dragHandle: true,
     edit : {

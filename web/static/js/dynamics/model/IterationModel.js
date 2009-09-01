@@ -120,6 +120,26 @@ IterationModel.prototype.reload = function() {
   );
 };
 
+IterationModel.prototype._remove = function(successCallback) {
+  var me = this;
+  jQuery.ajax({
+      type: "POST",
+      url: "ajax/deleteIteration.action",
+      async: true,
+      cache: false,
+      dataType: "text",
+      data: {iterationId: me.getId()},
+      success: function(data,status) {
+        var msg = new MessageDisplay.OkMessage("Iteration removed");
+        if (successCallback) {
+          successCallback();
+        }
+      },
+      error: function(xhr,status) {
+        var msg = new MessageDisplay.ErrorMessage("Error deleting iteration.", xhr);
+      }
+  });
+};
 
 /* GETTERS */
 

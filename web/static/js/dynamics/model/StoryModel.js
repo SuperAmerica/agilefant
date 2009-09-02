@@ -150,7 +150,6 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       var msg = new MessageDisplay.OkMessage("Story ranked");
       var oldParent = me.getParent();
       me.setData(data);
-      me.callListeners(new DynamicsEvents.DeleteEvent(me));
       oldParent.reload();
       if (oldParent !== moveUnder) {
         moveUnder.reload();

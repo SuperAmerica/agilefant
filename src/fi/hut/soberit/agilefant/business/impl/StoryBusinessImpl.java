@@ -250,7 +250,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         Backlog parent = backlogBusiness.retrieve(parentBacklogId);
         Story last = storyDAO.getLastStoryInRank(parent);
-        story.setRank(last.getRank() + 1);
+        if (last != null) { 
+            story.setRank(last.getRank() + 1);
+        }
         return story;
     }
     

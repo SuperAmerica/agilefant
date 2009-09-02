@@ -9,6 +9,8 @@ public class MenuDataNode {
     
     private int id;
     private String title;
+    private ScheduleStatus scheduleStatus = ScheduleStatus.ONGOING;
+    
     
     private boolean icon = false;
     
@@ -49,5 +51,14 @@ public class MenuDataNode {
     @JSON
     public boolean isIcon() {
         return icon;
+    }
+
+    public void setScheduleStatus(ScheduleStatus scheduleStatus) {
+        this.scheduleStatus = scheduleStatus;
+    }
+
+    @JSON
+    public ScheduleStatus getScheduleStatus() {
+        return scheduleStatus;
     }
 }

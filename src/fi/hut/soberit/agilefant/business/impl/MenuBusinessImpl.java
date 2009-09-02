@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.MenuBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Schedulable;
@@ -29,6 +30,9 @@ public class MenuBusinessImpl implements MenuBusiness {
     @Autowired
     private ProductBusiness productBusiness;
     
+    @Autowired
+    private TransferObjectBusiness transferObjectBusiness;
+    
     @SuppressWarnings("unchecked")
     public List<MenuDataNode> constructBacklogMenuData() {
         List<MenuDataNode> nodes = new ArrayList<MenuDataNode>();
@@ -45,6 +49,7 @@ public class MenuBusinessImpl implements MenuBusiness {
         MenuDataNode mdn = new MenuDataNode();
         mdn.setTitle(backlog.getName());
         mdn.setId(backlog.getId());
+        mdn.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
         for (Backlog child : backlog.getChildren()) {
             mdn.getChildren().add(constructMenuDataNode(child));
         }
@@ -53,9 +58,14 @@ public class MenuBusinessImpl implements MenuBusiness {
         }
         return mdn;
     }
+    
 
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
+    }
+
+    public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +19,21 @@ import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
+import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 @Service("transferObjectBusiness")
-@Transactional
+@Transactional(readOnly = true)
 public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     @Autowired
@@ -102,6 +106,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public List<AutocompleteDataNode> constructUserAutocompleteData() {
         Collection<User> allUsers = this.userBusiness.retrieveAll();
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
@@ -114,6 +119,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public List<AutocompleteDataNode> constructTeamAutocompleteData() {
         Collection<Team> allTeams = this.teamBusiness.retrieveAll();
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
@@ -129,6 +135,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public List<AutocompleteDataNode> constructBacklogAutocompleteData() {
         Collection<Backlog> allBacklogs = this.backlogBusiness.retrieveAll();
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
@@ -152,6 +159,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
     
     /** {@inheritDoc} */
+    @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task) {
         Collection<User> assignedUsers;
         if (task.getStory() != null) {
@@ -163,6 +171,23 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             
         return this.constructTaskTO(task, assignedUsers);
     }
+    
+    @Transactional(readOnly = true)
+    public ScheduleStatus getBacklogScheduleStatus(Backlog backlog) {
+        if (backlog instanceof Product) {
+            return ScheduleStatus.ONGOING;
+        }
+        Schedulable blog = (Schedulable)backlog;
+        Interval interval = new Interval(blog.getStartDate(), blog.getEndDate());
+        if (interval.isBeforeNow()) {
+            return ScheduleStatus.PAST;
+        }
+        else if (interval.isAfterNow()) {
+            return ScheduleStatus.FUTURE;
+        }
+        return ScheduleStatus.ONGOING;
+    }
+    
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;

@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
+import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 
@@ -56,4 +57,9 @@ public interface TransferObjectBusiness {
      * Get all backlogs in AutoCompleteData containers.
      */
     public List<AutocompleteDataNode> constructBacklogAutocompleteData();
+    
+    /**    
+     * Checks whether the backlog is ongoing, past or future.
+     */
+    public ScheduleStatus getBacklogScheduleStatus(Backlog backlog);
 }

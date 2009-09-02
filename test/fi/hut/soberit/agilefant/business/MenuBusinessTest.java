@@ -10,10 +10,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.MenuBusinessImpl;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
+import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 
 public class MenuBusinessTest {
 
@@ -21,20 +23,25 @@ public class MenuBusinessTest {
     
     ProductBusiness productBusiness;
     
+    TransferObjectBusiness transferObjectBusiness;
+    
     @Before
     public void setUp_dependencies() {
         menuBusiness = new MenuBusinessImpl();
         
         productBusiness = createStrictMock(ProductBusiness.class);
         menuBusiness.setProductBusiness(productBusiness);
+        
+        transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
+        menuBusiness.setTransferObjectBusiness(transferObjectBusiness);
     }
 
     private void replayAll() {
-        replay(productBusiness);
+        replay(productBusiness, transferObjectBusiness);
     }
 
     private void verifyAll() {
-        verify(productBusiness);
+        verify(productBusiness, transferObjectBusiness);
     }
     
     @Test
@@ -60,6 +67,8 @@ public class MenuBusinessTest {
         expect(productBusiness.retrieveAll()).andReturn(
                 Arrays.asList(firstProduct, secondProduct));
         
+        expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
+            .andReturn(ScheduleStatus.FUTURE).times(4);
         replayAll();
         List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData();
         verifyAll();
@@ -69,16 +78,17 @@ public class MenuBusinessTest {
     }
     
     private void checkReturnedData(List<MenuDataNode> nodes) {
-        checkNodeTitle(nodes, 123, "Foo product");
-        checkNodeTitle(nodes, 444, "Bar product");
+        checkNode(nodes, 123, "Foo product");
+        checkNode(nodes, 444, "Bar product");
         
-        checkNodeTitle(getNodeById(nodes, 123).getChildren(), 23, "Project");
-        checkNodeTitle(getNodeById(nodes, 123).getChildren(), 666, "Iteration");
+        checkNode(getNodeById(nodes, 123).getChildren(), 23, "Project");
+        checkNode(getNodeById(nodes, 123).getChildren(), 666, "Iteration");
     }
     
-    private void checkNodeTitle(List<MenuDataNode> nodes, int nodeId, String name) {
+    private void checkNode(List<MenuDataNode> nodes, int nodeId, String name) {
         MenuDataNode actual = getNodeById(nodes, nodeId);
         assertEquals(name, actual.getTitle());
+        assertEquals(ScheduleStatus.FUTURE, actual.getScheduleStatus());
     }
     
     private MenuDataNode getNodeById(List<MenuDataNode> nodes, int id) {

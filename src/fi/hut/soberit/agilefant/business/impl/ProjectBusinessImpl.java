@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -29,6 +30,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private ProjectDAO projectDAO;
     private BacklogDAO backlogDAO;
     private ProductBusiness productBusiness;
+    private TransferObjectBusiness transferObjectBusiness;
 
     public ProjectBusinessImpl() {
         super(Project.class);
@@ -48,6 +50,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Autowired
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
+    }
+    
+    @Autowired
+    public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
     }
     
     /** {@inheritDoc} */
@@ -137,6 +144,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         project.setChildren(new ArrayList<Backlog>());
         for (Backlog backlog : original.getChildren()) {
             IterationTO iter = new IterationTO((Iteration)backlog);
+            iter.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
             project.getChildren().add(iter);
         }
         return project;

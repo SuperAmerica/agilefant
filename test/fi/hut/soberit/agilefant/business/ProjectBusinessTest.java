@@ -1,9 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -38,6 +35,7 @@ public class ProjectBusinessTest {
     ProjectDAO projectDAO;
     BacklogDAO backlogDAO;
     ProductBusiness productBusiness;
+    TransferObjectBusiness transferObjectBusiness;
 
     Project project;
     Product product;
@@ -56,6 +54,9 @@ public class ProjectBusinessTest {
 
         productBusiness = createStrictMock(ProductBusiness.class);
         projectBusiness.setProductBusiness(productBusiness);
+        
+        transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
+        projectBusiness.setTransferObjectBusiness(transferObjectBusiness);
     }
 
     @Before
@@ -86,11 +87,11 @@ public class ProjectBusinessTest {
     }
 
     private void replayAll() {
-        replay(projectDAO, backlogDAO, productBusiness);
+        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness);
     }
 
     private void verifyAll() {
-        verify(projectDAO, backlogDAO, productBusiness);
+        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness);
     }
 
     @Test
@@ -198,27 +199,21 @@ public class ProjectBusinessTest {
         Project proj = new Project();
         proj.setId(111);
         proj.setName("Foo faa");
-        
-        DateTime currentDate = new DateTime();
-        
+               
         Iteration pastIteration = new Iteration();
-        pastIteration.setId(123);
-        pastIteration.setStartDate(currentDate.minusDays(120));
-        pastIteration.setEndDate(currentDate.minusDays(50));
-        
+        pastIteration.setId(123);       
+
         Iteration currentIteration = new Iteration();
         currentIteration.setId(333);
-        currentIteration.setStartDate(currentDate.minusDays(1));
-        currentIteration.setEndDate(currentDate.plusDays(10));
-        
+
         Iteration futureIteration = new Iteration();
         futureIteration.setId(444);
-        futureIteration.setStartDate(currentDate.plusDays(1));
-        futureIteration.setEndDate(currentDate.plusDays(18));
         
         proj.getChildren().addAll(Arrays.asList(pastIteration, currentIteration, futureIteration));
         
         expect(projectDAO.get(111)).andReturn(proj);
+        expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
+            .andReturn(ScheduleStatus.PAST).times(3);
         replayAll();
         ProjectTO actual = projectBusiness.getProjectData(111);
         verifyAll();
@@ -234,8 +229,8 @@ public class ProjectBusinessTest {
         }
         
         assertTrue(checkChildByIdAndStatus(123, ScheduleStatus.PAST, transferObjects));
-        assertTrue(checkChildByIdAndStatus(333, ScheduleStatus.ONGOING, transferObjects));
-        assertTrue(checkChildByIdAndStatus(444, ScheduleStatus.FUTURE, transferObjects));
+        assertTrue(checkChildByIdAndStatus(333, ScheduleStatus.PAST, transferObjects));
+        assertTrue(checkChildByIdAndStatus(444, ScheduleStatus.PAST, transferObjects));
     }
     
     private boolean checkChildByIdAndStatus(int id, ScheduleStatus status, Collection<IterationTO> children) {

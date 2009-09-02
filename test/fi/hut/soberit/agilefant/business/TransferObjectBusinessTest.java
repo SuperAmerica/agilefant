@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,6 +28,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
+import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
@@ -389,5 +391,35 @@ public class TransferObjectBusinessTest {
             }
         }
         return null;
+    }
+    
+    @Test
+    public void testCalculateBacklogScheduleStatus_forProduct() {
+        Product product = new Product();
+        assertEquals(ScheduleStatus.ONGOING, transferObjectBusiness.getBacklogScheduleStatus(product));
+    }
+    
+    @Test
+    public void testCalculateBacklogScheduleStatus_forPastIteration() {
+        Iteration iter = new Iteration();
+        iter.setStartDate(new DateTime().minusYears(3));
+        iter.setEndDate(new DateTime().minusYears(3).plusMonths(1));
+        assertEquals(ScheduleStatus.PAST, transferObjectBusiness.getBacklogScheduleStatus(iter));
+    }
+    
+    @Test
+    public void testCalculateBacklogScheduleStatus_forCurrentIteration() {
+        Iteration iter = new Iteration();
+        iter.setStartDate(new DateTime());
+        iter.setEndDate(new DateTime().plusMonths(1));
+        assertEquals(ScheduleStatus.ONGOING, transferObjectBusiness.getBacklogScheduleStatus(iter));
+    }
+    
+    @Test
+    public void testCalculateBacklogScheduleStatus_forFutureIteration() {
+        Iteration iter = new Iteration();
+        iter.setStartDate(new DateTime().plusYears(3));
+        iter.setEndDate(new DateTime().plusYears(3).plusMonths(1));
+        assertEquals(ScheduleStatus.FUTURE, transferObjectBusiness.getBacklogScheduleStatus(iter));
     }
 }

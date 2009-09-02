@@ -167,7 +167,7 @@ StoryModel.prototype._remove = function(successCallback) {
   var me = this;
   jQuery.ajax({
       type: "POST",
-      dataType: "json",
+      dataType: "text",
       url: "ajax/deleteStory.action",
       data: {storyId: me.getId()},
       async: true,

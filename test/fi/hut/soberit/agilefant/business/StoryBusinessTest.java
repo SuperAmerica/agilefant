@@ -286,6 +286,9 @@ public class StoryBusinessTest {
         
         userDAO = createMock(UserDAO.class);
         storyBusiness.setUserDAO(userDAO);
+        
+        blheBusiness = createMock(BacklogHistoryEntryBusiness.class);
+        storyBusiness.setBacklogHistoryEntryBusiness(blheBusiness);
     }
     
     @Test
@@ -308,6 +311,8 @@ public class StoryBusinessTest {
         dataItem.setStoryPoints(333);
         dataItem.setState(StoryState.PENDING);
         dataItem.setRank(222);
+        
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         
         replayAll();
         Story actual = storyBusiness.store(storyInIteration.getId(),
@@ -353,7 +358,10 @@ public class StoryBusinessTest {
         
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
         expect(backlogBusiness.retrieve(newBacklog.getId())).andReturn(newBacklog);
+        
         storyDAO.store(EasyMock.isA(Story.class));
+        
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         
         replayAll();
         Story actual = storyBusiness.store(storyInIteration.getId(),

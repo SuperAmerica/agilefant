@@ -164,6 +164,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             this.moveStoryToBacklog(persisted, backlogBusiness.retrieve(backlogId));
         }
         
+        backlogHistoryEntryBusiness.updateHistory(persisted.getBacklog().getId());
         
         return persisted;
     }

@@ -20,6 +20,7 @@ var DynamicTable = function(controller, model, config, parentView) {
   } else {
     this.config = new DynamicTableConfiguration();
   }
+  this.debugLevel = 0;
   this.initialize();
 };
 DynamicTable.cssClasses = {
@@ -88,7 +89,7 @@ DynamicTable.prototype.initialize = function() {
   this._renderHeader();
   this._bindEvents();
   if(this.config.isTableDroppable()) {
-    this._registerDropFor(this.container);
+    me._registerDropFor(this.container);
   }
   this.element.data("table", this);
   this.container.data("table", this);
@@ -106,25 +107,29 @@ DynamicTable.prototype._bindEvents = function() {
       me.middleRows.push(rowObj);
       me.rowHashes.push(rowObj.getModel().getHashCode());
     });
+    me.debug(" before sort stop ");
   });
   
   this.element.bind("sortreceive", function(event, ui) {
     event.stopPropagation();
     var targetRow = ui.item.data("row");
     me.middleRows = [];
+    me.rowHashes = [];
     me.element.find("> div.dynamicTableDataRow:not(div.ui-sortable-placeholder)").each(function(k,row) {
       var rowObj = $(row).data("row");
       me.middleRows.push(rowObj);
+      me.rowHashes.push(rowObj.getModel().getHashCode());
     });
     event.stopPropagation();
     targetRow.setParentView(me);
-    me.rowHashes.push(targetRow.getModel().getHashCode());
+    me.debug(" sort receive + " + targetRow.getViewId());
   });
   
   this.element.bind("sortremove", function(event, ui) {
     event.stopPropagation();
     var targetRow = ui.item.data("row");
     me.removeRow(targetRow);
+    me.debug(" sort remove + " + targetRow.getViewId());
   });
   
   this.element.bind("sortover", function(event, ui) {
@@ -207,7 +212,7 @@ DynamicTable.prototype.layout = function() {
         var newPos = me._stackPosition(ui.item);
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();
-        me.config.getSortCallback().call(me.getController(), targetView, targetModel, newPos);
+        me.config.getSortCallback().call(targetView.getController(), targetView, targetModel, newPos);
         return false;
       },
       helper: function(event, target) {
@@ -229,6 +234,7 @@ DynamicTable.prototype.layout = function() {
 
 DynamicTable.prototype._registerDropFor = function(target) {
   var dropOptions = this.config.getDropOptions();
+  var tableMe = this;
   var opt = { 
       drop: function(event, ui) {
         if (ui.draggable.data("sortactive")) {
@@ -243,6 +249,8 @@ DynamicTable.prototype._registerDropFor = function(target) {
         } else {
           rowObj = me.data("table");
         }
+        var a = me;
+        tableMe.debug("dropping + " + ui.draggable.data("row").getViewId());
         var targetController = ui.draggable.data("row").getController();
         var targetModel = rowObj.getModel();
         dropOptions.callback.call(targetController, targetModel);
@@ -327,6 +335,18 @@ DynamicTable.prototype._renderHeaderColumn = function(index) {
  * Render all table rows
  */
 DynamicTable.prototype.render = function() {
+  //look for rows with invalid configuration
+  var rowConfig = this.config.getColumns();
+  var rowsWithInvalidConfig = [];
+  for(var i = 0; i < this.middleRows.length; i++) {
+    if(this.middleRows[i].config != rowConfig) {
+      rowsWithInvalidConfig.push(this.middleRows[i]);
+    }
+  }
+  //remove invalid ones
+  $.each(rowsWithInvalidConfig, function() {
+    this.remove();
+  });
   if (this.config.getDataSource()) {
     var rowData = this.config.getDataSource().call(this.getModel());
     this._renderFromDataSource(rowData);
@@ -523,9 +543,11 @@ DynamicTable.prototype.remove = function() {
 
 DynamicTable.prototype.onRelationUpdate = function(event) {
   this.render();
+  this.debug("table relation update");
 };
 DynamicTable.prototype.onEdit = function(event) {
   this.render();
+  this.debug("table edit");
 };
 DynamicTable.prototype.onDelete = function(event) {
   this.remove();

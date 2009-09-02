@@ -346,10 +346,30 @@ DynamicTable.prototype.render = function() {
 };
 
 DynamicTable.prototype._addSectionToTable = function(section) {
-  var elements = [];
-  for (i = 0; i < section.length; i++) {
-    this.element.append(section[i].getElement());
-    section[i].render();
+  var rowCount = section.length;
+  var focusAt = -1;
+  //check for focus
+  for(var i = 0; i < rowCount; i++) {
+    if(section[i].isFocused()) {
+      focusAt = i;
+      break;
+    }
+  }
+  if(focusAt > -1) {
+    var focusedElement = section[focusAt].getElement().get(0);
+    for(i = 0; i < focusAt; i++) {
+      section[i].getElement().insertBefore(focusedElement);
+      section[i].render();
+    }
+    for(i = focusAt + 1; i < rowCount; i++) {
+      section[i].getElement().insertAfter(focusedElement);
+      section[i].render();
+    }
+  } else {
+    for (i = 0; i < rowCount; i++) {
+      this.element.append(section[i].getElement());
+      section[i].render();
+    }
   }
 };
 

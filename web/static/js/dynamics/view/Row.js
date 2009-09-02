@@ -8,6 +8,7 @@ var DynamicTableRow = function(config) {
   this.cells = [];
   this.cellIndex = {};
   this.initialize();
+  this.focused = false;
 };
 
 DynamicTableRow.prototype = new DynamicView();
@@ -29,6 +30,10 @@ DynamicTableRow.prototype.registerEventHandlers = function(config) {
   this.element.bind("cancelEdit", function() {
     config.getCancelEditRowCallback().call(me.getController());
   });
+};
+
+DynamicTableRow.prototype.isFocused = function() {
+  return this.focused;
 };
 
 /**

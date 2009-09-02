@@ -8,7 +8,6 @@ var DynamicTableRow = function(config) {
   this.cells = [];
   this.cellIndex = {};
   this.initialize();
-  this.focused = false;
 };
 
 DynamicTableRow.prototype = new DynamicView();
@@ -33,7 +32,12 @@ DynamicTableRow.prototype.registerEventHandlers = function(config) {
 };
 
 DynamicTableRow.prototype.isFocused = function() {
-  return this.focused;
+  for ( var i = 0; i < this.cells.length; i++) {
+    if(this.cells[i].isFocused()) {
+      return true;
+    }
+  }
+  return false;
 };
 
 /**

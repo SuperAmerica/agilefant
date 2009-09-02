@@ -361,7 +361,7 @@ DynamicTable.prototype._addSectionToTable = function(section) {
       section[i].getElement().insertBefore(focusedElement);
       section[i].render();
     }
-    for(i = focusAt + 1; i < rowCount; i++) {
+    for(i = rowCount - 1; i > focusAt; i--) {
       section[i].getElement().insertAfter(focusedElement);
       section[i].render();
     }

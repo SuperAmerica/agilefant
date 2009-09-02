@@ -189,3 +189,9 @@ DynamicTableCell.prototype.editorClosing = function() {
 DynamicTableCell.prototype.editorOpening = function() {
   this.cellContents.hide();
 };
+DynamicTableCell.prototype.isFocused = function() {
+  if(this.editor) {
+    return this.editor.isFocused();
+  }
+  return false;
+};

@@ -167,7 +167,7 @@ ModelFactory.initializeFor = function(type, id, callback) {
     throw new TypeError("Type not recognized");
   }
   var cb = function(obj) {
-    //ModelFactory.reloadEvery(obj, 30000);
+    ModelFactory.reloadEvery(obj, 30000);
     callback(obj);
   };
   ModelFactory.getInstance()._getData(type, id, cb);

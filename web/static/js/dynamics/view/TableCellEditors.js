@@ -16,7 +16,11 @@ TableEditors.isDialog = function(name) {
 TableEditors.CommonEditor = function() {
   
 };
+TableEditors.CommonEditor.prototype.isFocused = function() {
+  return this.hasFocus;
+};
 TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
+  this.hasFocus = false;
   this.options = options;
   this.cell = cell;
   this.row = row;
@@ -25,6 +29,7 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
   this.setEditorValue();
   this.errorMessageVisible = false;
   this.element.trigger("editorOpening");
+  this.focus();
 };
 /**
  * Save editor value if editor content is valid
@@ -39,7 +44,6 @@ TableEditors.CommonEditor.prototype.close = function() {
   this.element.trigger("editorClosing");
   this.hideError();
   this.element.remove();
-  //this.element = null;
 };
 TableEditors.CommonEditor.prototype.showError = function(message) {  
   if(this.errorMessageVisible) {
@@ -89,6 +93,12 @@ TableEditors.CommonEditor.prototype._registerEvents = function() {
       me._handleBlurEvent(event);
     });
   }
+  this.element.focus(function() {
+    me.hasFocus = true;
+  });
+  this.element.blur(function() {
+    me.hasFocus = false;
+  });
 };
 TableEditors.CommonEditor.prototype._handleBlurEvent = function(event) {
   this.save();
@@ -279,6 +289,11 @@ TableEditors.Date.prototype._registerEvents = function() {
     };
     $(window).click(this._clickCb);
   }
+  this.element.focus(function() {
+    this.cus = true;
+  }).blur(function() {
+    this.cus = false;
+  })
 };
 TableEditors.Date.prototype.close = function() {
   this.element.trigger("editorClosing");
@@ -386,7 +401,14 @@ TableEditors.Wysiwyg = function(row, cell, options) {
   this.actualElement.trigger("editorOpening");
   this.actualElement.addClass("tableSortListener");
   this.actualElement.bind("tableSorted", function() {
-    me.actualElement.wysiwyg("resetFrame");
+    if(!me.isFocused()) {
+      me.actualElement.wysiwyg("resetFrame");
+      me.element = $(me.actualElement.wysiwyg("getDocument"));
+      me._registerEvents();   
+    }
+  });
+  this.actualElement.change(function() {
+    console.log("value changed, new value : " + me.actualElement.val());
   });
 };
 TableEditors.Wysiwyg.prototype = new TableEditors.CommonEditor();
@@ -400,6 +422,10 @@ TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
 
 TableEditors.Wysiwyg.prototype.getEditorValue = function() {
   return this.actualElement.val();
+};
+
+TableEditors.Wysiwyg.prototype.focus = function() {
+  $(this.element.body).focus();
 };
 
 TableEditors.Wysiwyg.prototype.close = function() {

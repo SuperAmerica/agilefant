@@ -424,30 +424,7 @@
             this.setContent( this.initialContent );
         },
         reinitFrame: function() {
-          var style = '';
-          if ( this.options.css && this.options.css.constructor == String )
-            style = '<link rel="stylesheet" type="text/css" media="screen" href="' + this.options.css + '" />';
-          this.editorDoc = $(this.editor).document();
-          this.editorDoc_designMode = false;
-
-          try {
-              this.editorDoc.designMode = 'on';
-              this.editorDoc_designMode = true;
-          } catch ( e ) {
-              $(this.editorDoc).focus(function()
-              {
-                  self.designMode();
-              });
-          }
-
-          this.editorDoc.open();
-          this.editorDoc.write(
-              this.options.html
-                  .replace(/INITIAL_CONTENT/, this.initialContent)
-                  .replace(/STYLE_SHEET/, style)
-          );
-          this.editorDoc.close();
-          this.editorDoc.contentEditable = 'true';
+          this.initFrame();
           this.setContent($(this.original).val());
         },
         initFrame : function()
@@ -641,7 +618,6 @@
 
                 if ( this.options.rmUnwantedBr )
                     content = ( content.substr(-4) == '<br>' ) ? content.substr(0, content.length - 4) : content;
-
                 $(this.original).val(content);
             }
         },

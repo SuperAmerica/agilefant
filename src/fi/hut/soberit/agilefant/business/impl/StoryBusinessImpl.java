@@ -202,6 +202,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.setResponsibles(story, responsibleIds);
         this.populateStoryFields(story, dataItem);
         story.setBacklog(backlog);
+        this.rankToBottom(story, backlogId);
         
         int newId = (Integer)storyDAO.create(story);
         

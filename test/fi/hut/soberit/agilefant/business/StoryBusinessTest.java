@@ -380,9 +380,14 @@ public class StoryBusinessTest {
     @Test
     public void testCreateStory_noResponsibles() {
         Backlog blog = new Iteration();
-        expect(backlogBusiness.retrieve(5)).andReturn(blog);
+        expect(backlogBusiness.retrieve(5)).andReturn(blog).times(2);
         
         Capture<Story> capturedStory = new Capture<Story>();
+        
+        Story last = new Story();
+        last.setRank(12);
+        expect(storyDAO.getLastStoryInRank(isA(Backlog.class))).andReturn(last);
+        
         expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
         
         expectHistoryUpdates(blog);
@@ -407,6 +412,7 @@ public class StoryBusinessTest {
         assertEquals(dataItem.getDescription(), capturedStory.getValue().getDescription());
         assertEquals(dataItem.getStoryPoints(), capturedStory.getValue().getStoryPoints());
         assertEquals(dataItem.getState(), capturedStory.getValue().getState());
+        assertEquals(13, capturedStory.getValue().getRank());
     }
     
     @Test
@@ -415,11 +421,16 @@ public class StoryBusinessTest {
         User user2 = new User();
         
         Backlog blog = new Project();
-        expect(backlogBusiness.retrieve(5)).andReturn(blog);
+        expect(backlogBusiness.retrieve(5)).andReturn(blog).times(2);
         expect(userDAO.get(2)).andReturn(user1);
         expect(userDAO.get(23)).andReturn(user2);
         
         Capture<Story> capturedStory = new Capture<Story>();
+        
+        Story last = new Story();
+        last.setRank(286);
+        expect(storyDAO.getLastStoryInRank(isA(Backlog.class))).andReturn(last);
+        
         expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
         
         expectHistoryUpdates(blog);

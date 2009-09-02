@@ -440,7 +440,7 @@ DROP TABLE items_with_todos;
 
 /*** REVISIONING ***/
 create table agilefant_revisions (id integer not null auto_increment, timestamp bigint not null, userName varchar(255), primary key (id)) ENGINE=InnoDB;
-create table stories_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), rank integer not null, state integer, storyPoints integer, primary key (id, REV)) ENGINE=InnoDB;
+create table stories_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, name varchar(255), rank integer, state integer, storyPoints integer, primary key (id, REV)) ENGINE=InnoDB;
 create table story_user_AUD (REV integer not null, Story_id integer not null, User_id integer not null, REVTYPE tinyint, primary key (REV, Story_id, User_id)) ENGINE=InnoDB;
 create table task_user_AUD (REV integer not null, tasks_id integer not null, responsibles_id integer not null, REVTYPE tinyint, primary key (REV, tasks_id, responsibles_id)) ENGINE=InnoDB;
 create table tasks_AUD (id integer not null, REV integer not null, REVTYPE tinyint, description longtext, effortleft bigint, name varchar(255), originalestimate bigint, state integer, rank int default 0, primary key (id, REV)) ENGINE=InnoDB;

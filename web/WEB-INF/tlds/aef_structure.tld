@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+
+  <tlib-version>1.0</tlib-version>
+  <jsp-version>2.0</jsp-version>
+  <short-name>afstruct</short-name>
+  <display-name>AEF struct</display-name>
+  <description>Agilefant html structure tag library</description>
+
+  <tag-file>
+     <name>htmlWrapper</name>
+     <path>/WEB-INF/tags/structure/structure.tag</path>
+  </tag-file>
+
+  <tag-file>
+     <name>createNewMenu</name>
+     <path>/WEB-INF/tags/structure/createNewMenu.tag</path>
+  </tag-file>
+
+  <tag-file>
+     <name>backlogMenu</name>
+     <path>/WEB-INF/tags/structure/backlogmenu.tag</path>
+  </tag-file>
+  
+  <tag-file>
+     <name>header</name>
+     <path>/WEB-INF/tags/structure/defaultHeader.tag</path>
+  </tag-file>
+
+  <tag-file>
+     <name>footer</name>
+     <path>/WEB-INF/tags/structure/defaultFooter.tag</path>
+  </tag-file>
+
+</taglib>

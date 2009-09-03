@@ -1,14 +1,11 @@
 <%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
+
+<struct:htmlWrapper>
+<jsp:body>
+
 
 <aef:currentBacklog backlogId="${iteration.id}"/>
 
-<c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" title="${iteration.name}" menuContextId="${iteration.id}"/>
-<aef:productList />
-
-<ww:actionerror />
-<ww:actionmessage />
 <script type="text/javascript">
     var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 </script>
@@ -69,4 +66,5 @@ $(document).ready(function() {
 <p><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>
 
-	<%@ include file="./inc/_footer.jsp"%>
+  </jsp:body>
+</struct:htmlWrapper>

@@ -1,0 +1,123 @@
+/**
+ * AGILEFANT Style sheet
+ *
+ * This file is intended for the main structure of Agilefant.
+ * Don't misuse. 
+ *
+ * Author:    Reko Jokelainen
+ * Date:      09/2009
+ */
+ 
+@import "structure.text.css";
+@import "structure.ui.css";
+
+@import "dynamictable.css";  
+@import "autocomplete.css";
+
+@import "jquery-ui.css";
+@import "jquery.wysiwyg.css";
+@import "ui.dynatree.css";
+
+html {
+  margin: 0;
+  padding: 0;
+  background-color: white;  
+}
+
+body, div, img {
+  margin: 0;
+  padding: 0;
+  border: none;  
+}
+
+
+/* HEADER STYLES */
+
+div#headerWrapper {
+  height: 7em;
+  width: auto;
+  padding: 10px;
+  margin: 0;
+}
+
+div#headerWrapper img {
+  float: left;  
+}
+
+div#headerWrapper h1 {
+  padding: 0.5em 0 0 2em;
+}
+
+
+div#controlWrapper {
+  height: 1.5em;
+  border-bottom: 1px solid #ccc;  
+}
+
+/* MENU STYLES */
+
+div#menuWrapper {
+  float: left;
+  width: 200px;
+  overflow: hidden;
+}
+
+.menu-hidden {
+  width: 20px !important;  
+}
+
+.menu-hidden div#menuContent {
+  display: none;  
+}
+
+.menu-hidden div#menuControl {
+  
+}
+
+div#menuControl {
+  float: right;
+  border: 1px solid #ccc;
+  padding: 0 4px 3px 4px;
+}
+
+div#menuControl a{
+  text-decoration: none;
+  font-family: cursive;
+  font-weight: bold;
+}
+
+/* BODY STYLES */
+
+div#bodyWrapper {
+  width: auto;
+  margin: 0 0 0 200px;
+  padding: 1em 0 0 1em;
+  border-left: 1px solid #ccc;
+  overflow: hidden;
+}
+
+div#bodyContent {
+  width: 95%;  
+}
+
+.body-wide {
+  margin: 0 0 0 20px !important;  
+}
+
+div#bodyWrapper div#layoutEmptyDiv {
+  width: 100%;
+  clear: both;
+  height: 1px;
+  background-color: transparent;
+}
+
+/* FOOTER STYLES */
+
+div#footerWrapper {
+  clear: both;
+  height: 2em;
+  border-top: 1px solid #ccc;
+  width: auto;
+  padding: 0.5em 0 0 1em;
+}
+

@@ -1,0 +1,91 @@
+/**
+ * CSS attributes for styling the ui.
+ *
+ * Contents:
+ *  - Create new menu
+ *  - Footer
+ */
+ 
+.backlogInfo {
+  width: 98%;
+  min-width: 800px;
+}
+.backlogInfo ul.backlogTabs {
+  height: 23px !important;  
+}
+.backlogInfo div.details {
+  border: 1px solid #ccc;
+  min-height: 200px;
+}
+
+/**
+ * CREATE NEW -menu
+ */
+
+#createNewMenuLink a span {
+  display: block;
+  float: left;
+  width: 16px;
+  height: 16px;
+  margin-right: 3px;
+  background-image: url('../img/create_new.png');
+  background-position: 0%;
+}
+
+#createNewMenuLink a:hover span {
+  background-position: 100%;  
+}
+
+ul#createNewMenu {
+  margin: 0;
+  padding: 0;
+  position: relative;
+  border: 1px solid #aaa;
+  top: 4px;
+  width: 160px;
+  z-index: 300;
+}
+
+ul#createNewMenu li {
+  height: 20px;
+  background-color: #eee;
+  list-style-type: none;
+  margin: 0;
+}
+
+ul#createNewMenu li:hover {
+  background-color: #ccc;
+}
+
+ul#createNewMenu a, ul#createNewMenu span.inactive {
+  display: block;
+  padding-left: 8px;
+  width: 100%;
+  height: 100%;
+}
+
+ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
+  display: block;
+  background: #aaa;
+  width: 100%;
+  height: 1px;
+  padding: 0;
+}
+
+
+/**
+ * FOOTER STYLES
+ */
+#footerText a:link, #footerText a:visited, #footerText a:active {
+  color: #444;
+  text-decoration: none;
+  cursor: pointer;  
+}
+
+#footerText a:hover {
+  color: #e50;  
+}
+
+div#footerText label {
+  cursor: pointer;
+}

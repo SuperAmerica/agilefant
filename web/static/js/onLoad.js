@@ -264,13 +264,14 @@ $(document).ready(function() {
     /* 
      * Initialize the create new menu
      */
+    
     var hideCreateNewMenuFunction = function() {
         $("#createNewMenu").hide();
         $(window).unbind("click", hideCreateNewMenuFunction);
     }
     $('#createNewMenuLink a').click(function() {
         $(window).click(hideCreateNewMenuFunction);
-        $("#createNewMenu").show();
+        var a = $("#createNewMenu").show();
         return false;
     });
     $('#createNewMenu li a').click(function() {

@@ -7,18 +7,20 @@
  */
 var DailyWorkModel = function() {
   this.initialize();
-  this.persistedClassName = "";
+  this.persistedClassName = "fi.hut.soberit.agilefant.model.DailyWork";
+  this.id = 1;
   this.relations = {
-      user: null,
-      task: [   ]
+      user:    null,
+      dailyWorkTask: [   ]
   };
+
   this.copiedFields = {
       "userId": "userId"
   };
 
   this.classNameToRelation = {
-      "fi.hut.soberit.agilefant.model.Task": "task",
-      "fi.hut.soberit.agilefant.model.User": "user"
+      "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": "dailyWorkTask",
+      "fi.hut.soberit.agilefant.model.User":               "user"
   };
 };
 
@@ -41,17 +43,41 @@ DailyWorkModel.prototype.reload = function() {
 
 DailyWorkModel.prototype._setData = function(newData) {
     if (newData.assignedTasks) {
-    	this._updateRelations(ModelFactory.types.task, newData.assignedTasks);
+        this._updateRelations(ModelFactory.types.dailyWorkTask, newData.assignedTasks);
     }
+
     if (newData.user) {
       this._updateRelations(ModelFactory.types.user, newData.user);
     }
 };
 
-DailyWorkModel.prototype.getTasks = function() {
-    return this.relations.task;
+DailyWorkModel.prototype.getMyWorks = function() {
+    return this._getChildrenByTaskClass("CURRENT");
+};
+
+DailyWorkModel.prototype.getWhatsNexts = function() {
+    return this._getChildrenByTaskClass("NEXT");
+};
+
+DailyWorkModel.prototype.getAllTasks = function() {
+    return this.relations.dailyWorkTask;
+}
+
+DailyWorkModel.prototype._getChildrenByTaskClass = function(taskClass) {
+    var returnedTasks = [];
+    var children = this.getAllTasks();
+    for (var i = 0; i < children.length; i++) {
+        if (children[i].getTaskClass() === taskClass) {
+            returnedTasks.push(children[i]);
+        }
+    }
+    return returnedTasks;
 };
 
 DailyWorkModel.prototype.getUserId = function() {
     return this.currentData.userId;
+};
+
+DailyWorkModel.prototype.getUser = function() {
+    return this.relations.user;
 };

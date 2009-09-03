@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public class DailyWorkActionTest {
     private DailyWorkAction testable;
@@ -49,25 +50,31 @@ public class DailyWorkActionTest {
     public void testRetrieve() {
         User user = new User(); 
         testable.setUserId(1);
-        
-        Collection<Task> returnedList = Arrays.asList(new Task(), new Task());
-        
+
+        Collection<DailyWorkTaskTO> returnedList  = Arrays.asList(
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.CURRENT), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.CURRENT), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT)
+        );
+
         List<User> users = getUserList();
         User u1 = users.get(0);
         User u2 = users.get(1);
-        
+
         expect(userBusiness.getEnabledUsers()).andReturn(users);
         expect(userBusiness.retrieve(1)).andReturn(user);
-        expect(dailyWorkBusiness.getDailyTasksForUser(user))
-            .andReturn(returnedList);       
-        
+        expect(dailyWorkBusiness.getAllCurrentTasksForUser(user))
+            .andReturn(returnedList);
+
         replayAll();
-        
+
         assertEquals(Action.SUCCESS, testable.retrieve());
 
         verifyAll();
-        
-        assertEquals(returnedList, testable.getAssignedTasks());
+
+        assertEquals(returnedList,  testable.getAssignedTasks());
         
         Collection<User> usersReturned = testable.getEnabledUsers();
         assertEquals(usersReturned.size(), 2);

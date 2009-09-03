@@ -1,9 +1,11 @@
 var DailyWorkController = function(options) {
-    this.id = options.id;
-    this.element = options.dailyWorkElement;
+    this.id                      = options.id;
+    this.myWorkListElement       = options.myWorkListElement;
+    this.whatsNextListElement    = options.whatsNextListElement;
+    alert("here");
 
     this.init();
-    this.initializeDailyWorkConfig();
+    this.initializeConfigs();
     this.paint();
 };
 
@@ -13,39 +15,87 @@ DailyWorkController.prototype.paint = function() {
     var me = this;
     
     ModelFactory.initializeFor(
-            ModelFactory.initializeForTypes.dailyWork,
-            this.id, 
-            function(model) {
-                me.model = model;
-                
-                me.createTaskList();
-            }
+        ModelFactory.initializeForTypes.dailyWork,
+        this.id, 
+        function(model) {
+            me.model = model;
+            me.createTaskLists();
+        }
     );
+//
+//    ModelFactory.initializeFor(
+//        ModelFactory.initializeForTypes.dailyWork,
+//        this.id, 
+//        function(model) {
+//            me.model = model;
+//            me.createWhatsNextList();
+//        }
+//    );
 };
 
-DailyWorkController.prototype.createTaskList = function() {
-    this.taskListView = new DynamicTable(
+DailyWorkController.prototype.createTaskLists = function() {
+    this.createMyWorkList();
+    this.createWhatsNextList();
+}
+
+DailyWorkController.prototype.createMyWorkList = function() {
+    this.myWorkListView = new DynamicTable(
         this, 
         this.model, 
-        this.dailyWorkConfig,
-        this.element
+        this.myWorkListConfig,
+        this.myWorkListElement
     );
 
-    this.taskListView.render();
+    this.myWorkListView.render();
+};
+
+DailyWorkController.prototype.createWhatsNextList = function() {
+    this.whatsNextListView = new DynamicTable(
+        this, 
+        this.model, 
+        this.whatsNextListConfig,
+        this.whatsNextListElement
+    );
+
+    this.whatsNextListView.render();
 };
 
 DailyWorkController.prototype.taskControllerFactory = function(view, model) {
     var taskController = new TaskController(model, view, this);
     this.addChildController("task", taskController);
     return taskController;
-  };
+};
 
-DailyWorkController.prototype.initializeDailyWorkConfig = function() {
-    var config = new DynamicTableConfiguration({
-        rowControllerFactory: DailyWorkController.prototype.taskControllerFactory,
-        dataSource: DailyWorkModel.prototype.getTasks,
-        caption: "Current tasks"
-    });
+DailyWorkController.prototype.createConfig = function(configType) {
+    var configItems = ({
+        current: {
+            caption: "My work",
+            dataSource: DailyWorkModel.prototype.getMyWorks,
+            actionColumnFactory: DailyWorkController.prototype.currentActionColumnFactory
+        },
+        next: {
+            caption: "What's next",
+            dataSource: DailyWorkModel.prototype.getWhatsNexts,
+            actionColumnFactory: DailyWorkController.prototype.nextActionColumnFactory
+        }
+    })[configType];
+
+    var options = {
+       rowControllerFactory: DailyWorkController.prototype.taskControllerFactory,
+       dataSource:           configItems.dataSource,
+       caption:              configItems.caption
+    };
+    
+    if (configType == 'next') {
+        options.sortCallback = DailyWorkController.prototype.sortAndMoveDailyTask;
+        options.sortOptions = {
+                items: "> .dynamicTableDataRow",
+                handle: "." + DynamicTable.cssClasses.dragHandle,
+                connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
+        };
+    }
+    
+    var config = new DynamicTableConfiguration(options);
 
     config.addColumnConfiguration(TaskController.columnIndices.prio, {
         minWidth : 24,
@@ -68,10 +118,10 @@ DailyWorkController.prototype.initializeDailyWorkConfig = function() {
         editable : true,
         dragHandle: true,
         edit : {
-        editor : "Text",
-        set : TaskModel.prototype.setName,
-        required: true
-    }
+            editor : "Text",
+            set : TaskModel.prototype.setName,
+            required: true
+        }
     });
 
     config.addColumnConfiguration(TaskController.columnIndices.state, {
@@ -157,7 +207,7 @@ DailyWorkController.prototype.initializeDailyWorkConfig = function() {
         autoScale : true,
         cssClass : 'task-row',
         title : "Edit",
-        subViewFactory: TaskController.prototype.actionColumnFactory
+        subViewFactory: configItems.actionColumnFactory
     });
 
     config.addColumnConfiguration(TaskController.columnIndices.description, {
@@ -178,13 +228,93 @@ DailyWorkController.prototype.initializeDailyWorkConfig = function() {
         cssClass : 'task-row',
         subViewFactory : TaskController.prototype.taskButtonFactory
     });
-//    config.addColumnConfiguration(TaskController.columnIndices.data, {
-//        fullWidth : true,
-//        visible : false,
-//        cssClass : 'task-data',
-//        visible : false
-//    });
+    
+    return config;
+}
 
-    this.dailyWorkConfig = config;
+DailyWorkController.prototype.nextActionColumnFactory = function(view, model) {
+    var actionView = new DynamicTableRowActions(DailyWorkController.nextListActionItems, 
+        this, this.model, view);
+    return actionView;
 };
+
+DailyWorkController.prototype.currentActionColumnFactory = function(view, model) {
+    var actionView = new DynamicTableRowActions(DailyWorkController.currentListActionItems, 
+        this, this.model, view);
+    return actionView;
+};
+
+DailyWorkController.prototype.initializeConfigs = function() {
+    this.myWorkListConfig = this.createConfig('current'); 
+    this.whatsNextListConfig    = this.createConfig('next'); 
+};
+
+DailyWorkController.prototype.moveToNext = function() {
+    alert("Unfortunately this functionality is not yet implemented");
+};
+
+DailyWorkController.prototype.removeFromNext = function() {
+    alert("Remove from what's next");
+};
+
+DailyWorkController.prototype.sortAndMoveDailyTask = function(view, model, newPos) {
+    var previousRow = newPos - 1;
+    var targetModel = view.getParentView().getModel();
+    if (view.getParentView().getDataRowAt(previousRow)) {
+        previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
+        model.rankDailyUnder(previousTask.getId(), targetModel);
+    }
+    else {
+        model.rankDailyUnder(-1, targetModel);
+    }
+};
+
+
+DailyWorkController.currentListActionItems = 
+    [
+     {
+         text: "Details",
+         callback : TaskController.prototype.openDetails
+     }, 
+     {
+         text : "Add to my What's next list",
+         callback : DailyWorkController.prototype.moveToNext
+     },
+     {
+         text : "Edit",
+         callback : TaskController.prototype.editTask
+     },
+     {
+         text : "Delete",
+         callback : TaskController.prototype.removeTask
+     }, 
+     {
+         text : "Reset original estimate",
+         callback : TaskController.prototype.resetOriginalEstimate
+     }
+];
+
+DailyWorkController.nextListActionItems = 
+    [
+     {
+         text: "Details",
+         callback : TaskController.prototype.openDetails
+     }, 
+     {
+         text : "Remove from this list",
+         callback : DailyWorkController.prototype.removeFromNext
+     },
+     {
+         text : "Edit",
+         callback : TaskController.prototype.editTask
+     },
+     {
+         text : "Delete",
+         callback : TaskController.prototype.removeTask
+     }, 
+     {
+         text : "Reset original estimate",
+         callback : TaskController.prototype.resetOriginalEstimate
+     }
+];
 

@@ -1,16 +1,12 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -25,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public class DailyWorkBusinessTest {
     private DailyWorkBusiness testable;
@@ -47,8 +44,20 @@ public class DailyWorkBusinessTest {
         verify(taskDAO);
     }
     
+    private void assertTOListEquals(Collection<Task> tasks, Collection<DailyWorkTaskTO> returned, DailyWorkTaskTO.TaskClass type) {
+        assertEquals(tasks.size(), returned.size());
+        Iterator<DailyWorkTaskTO> retIt = returned.iterator();
+        Iterator<Task> origIt = tasks.iterator();
+        
+        while (origIt.hasNext() || retIt.hasNext()) {
+            DailyWorkTaskTO nextRet =  retIt.next();
+            assertEquals(origIt.next().getId(), nextRet.getId());
+            assertEquals(nextRet.getTaskClass(), type);
+        }
+    }
+    
     @Test
-    public void testGetNumberOfChildren() {
+    public void test_getDailyTasksForUser() {
         Backlog backlog = new Product();
         backlog.setId(5);
         
@@ -60,17 +69,20 @@ public class DailyWorkBusinessTest {
         expect(taskDAO.getAllIterationAndStoryTasks(EasyMock.eq(user), 
                 EasyMock.and(EasyMock.capture(interval), EasyMock.isA(Interval.class)))).andReturn(tasks);
 
+//        expect(taskDAO.getAllIterationAndStoryTasks(EasyMock.eq(user), 
+//                EasyMock.and(EasyMock.capture(interval), EasyMock.isA(Interval.class)))).andReturn(tasks);
+
         replayAll();
-        Collection<Task> returned = testable.getDailyTasksForUser(user);               
+        Collection<DailyWorkTaskTO> returned = testable.getAllCurrentTasksForUser(user);
         verifyAll();
+
+        // assertTOListEquals(tasks, returned, DailyWorkTaskTO.TaskClass.CURRENT);
         
-        assertEquals(tasks, returned);
         assertTrue(interval.hasCaptured());
         Interval intervalValue = interval.getValue();
         assertNotNull(intervalValue);
 
-        // race condition during midnight... ;)
-        // must contain today!
+        // race condition during midnight... ;) must contain today!
         assertTrue(intervalValue.containsNow());
         
         // duration of interval is exactly 24 hours

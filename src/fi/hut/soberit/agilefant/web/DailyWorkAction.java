@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
 @Component("dailyWorkAction")
@@ -31,10 +32,12 @@ public class DailyWorkAction extends ActionSupport {
     @Autowired
     private UserBusiness userBusiness;
  
-    private Collection<Task> assignedTasks = new ArrayList<Task>();
-    private int userId;
+    private int  userId;
     private User user; 
-    private List<User> enabledUsers = new ArrayList<User>();
+
+    private List<User> enabledUsers        = new ArrayList<User>();
+    private Collection<DailyWorkTaskTO> assignedTasks = new ArrayList<DailyWorkTaskTO>();
+    private Collection<DailyWorkTaskTO> nextTasks     = new ArrayList<DailyWorkTaskTO>();
     
     /**
      * Retrieve for JSON data.
@@ -68,7 +71,7 @@ public class DailyWorkAction extends ActionSupport {
         Collections.sort(enabledUsers, new UserComparator());
 
         user = userBusiness.retrieve(userId);
-        assignedTasks = dailyWorkBusiness.getDailyTasksForUser(user);
+        assignedTasks = dailyWorkBusiness.getAllCurrentTasksForUser(user);
 
         return Action.SUCCESS;
     }
@@ -89,7 +92,7 @@ public class DailyWorkAction extends ActionSupport {
         this.dailyWorkBusiness = dailyWorkBusiness;
     }
     
-    public Collection<Task> getAssignedTasks() {
+    public Collection<DailyWorkTaskTO> getAssignedTasks() {
         return assignedTasks;
     }
    
@@ -103,5 +106,9 @@ public class DailyWorkAction extends ActionSupport {
 
     public void setEnabledUsers(List<User> enabledUsers) {
         this.enabledUsers = enabledUsers;
+    }
+
+    public Collection<DailyWorkTaskTO> getNextTasks() {
+        return nextTasks;
     }
 }

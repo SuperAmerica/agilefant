@@ -26,16 +26,23 @@
 <c:when test="${!(empty assignedTasks)}" >
 
 <script type="text/javascript">
+
+var dailyWorkController = null;
+var nextWorkController = null;
+
 $(document).ready(function() {
     $("#backlogInfo").tabs();
-    var controller = new DailyWorkController({
+    dailyWorkController = new DailyWorkController({
         id: '${userId}', 
-        dailyWorkElement: $("#daily-work-div")
+        type: 'current',
+        myWorkListElement: $("#my-work-div"),
+        whatsNextListElement: $("#whats-next-div")
     });
 });
 </script>
 
-<div id="daily-work-div"></div>
+<div id="whats-next-div"></div>
+<div id="my-work-div"></div>
 
 </c:when>
 <c:otherwise>

@@ -21,9 +21,10 @@
 <script type="text/javascript" src="static/js/dynamics/model/IterationModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/ProjectModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/ProductModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/model/DailyWorkModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/StoryModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/TaskModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model/DailyWorkTaskModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model/DailyWorkModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/UserModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/comparators.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/AssignmentModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>

@@ -2,7 +2,6 @@ var DailyWorkController = function(options) {
     this.id                      = options.id;
     this.myWorkListElement       = options.myWorkListElement;
     this.whatsNextListElement    = options.whatsNextListElement;
-    alert("here");
 
     this.init();
     this.initializeConfigs();
@@ -66,17 +65,27 @@ DailyWorkController.prototype.taskControllerFactory = function(view, model) {
     return taskController;
 };
 
+DailyWorkController.prototype.dailyWorkTaskControllerFactory = function(view, model) {
+    var taskController = new TaskController(model, view, this);
+    this.addChildController("dailyWorkTask", taskController);
+    return taskController;
+};
+
+DailyWorkController.prototype.addToWhatsNext = function() {
+    alert("Unfortunately this functionality is not yet implemented");
+};
+
 DailyWorkController.prototype.createConfig = function(configType) {
     var configItems = ({
         current: {
             caption: "My work",
             dataSource: DailyWorkModel.prototype.getMyWorks,
-            actionColumnFactory: DailyWorkController.prototype.currentActionColumnFactory
+            actionColumnFactory: TaskController.prototype.actionColumnFactory
         },
         next: {
             caption: "What's next",
             dataSource: DailyWorkModel.prototype.getWhatsNexts,
-            actionColumnFactory: DailyWorkController.prototype.nextActionColumnFactory
+            actionColumnFactory: DailyWorkTaskController.prototype.actionColumnFactory
         }
     })[configType];
 
@@ -90,8 +99,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         options.sortCallback = DailyWorkController.prototype.sortAndMoveDailyTask;
         options.sortOptions = {
                 items: "> .dynamicTableDataRow",
-                handle: "." + DynamicTable.cssClasses.dragHandle,
-                connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
+                handle: "." + DynamicTable.cssClasses.dragHandle
         };
     }
     
@@ -232,89 +240,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     return config;
 }
 
-DailyWorkController.prototype.nextActionColumnFactory = function(view, model) {
-    var actionView = new DynamicTableRowActions(DailyWorkController.nextListActionItems, 
-        this, this.model, view);
-    return actionView;
-};
-
-DailyWorkController.prototype.currentActionColumnFactory = function(view, model) {
-    var actionView = new DynamicTableRowActions(DailyWorkController.currentListActionItems, 
-        this, this.model, view);
-    return actionView;
-};
-
 DailyWorkController.prototype.initializeConfigs = function() {
     this.myWorkListConfig = this.createConfig('current'); 
     this.whatsNextListConfig    = this.createConfig('next'); 
 };
-
-DailyWorkController.prototype.moveToNext = function() {
-    alert("Unfortunately this functionality is not yet implemented");
-};
-
-DailyWorkController.prototype.removeFromNext = function() {
-    alert("Remove from what's next");
-};
-
-DailyWorkController.prototype.sortAndMoveDailyTask = function(view, model, newPos) {
-    var previousRow = newPos - 1;
-    var targetModel = view.getParentView().getModel();
-    if (view.getParentView().getDataRowAt(previousRow)) {
-        previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
-        model.rankDailyUnder(previousTask.getId(), targetModel);
-    }
-    else {
-        model.rankDailyUnder(-1, targetModel);
-    }
-};
-
-
-DailyWorkController.currentListActionItems = 
-    [
-     {
-         text: "Details",
-         callback : TaskController.prototype.openDetails
-     }, 
-     {
-         text : "Add to my What's next list",
-         callback : DailyWorkController.prototype.moveToNext
-     },
-     {
-         text : "Edit",
-         callback : TaskController.prototype.editTask
-     },
-     {
-         text : "Delete",
-         callback : TaskController.prototype.removeTask
-     }, 
-     {
-         text : "Reset original estimate",
-         callback : TaskController.prototype.resetOriginalEstimate
-     }
-];
-
-DailyWorkController.nextListActionItems = 
-    [
-     {
-         text: "Details",
-         callback : TaskController.prototype.openDetails
-     }, 
-     {
-         text : "Remove from this list",
-         callback : DailyWorkController.prototype.removeFromNext
-     },
-     {
-         text : "Edit",
-         callback : TaskController.prototype.editTask
-     },
-     {
-         text : "Delete",
-         callback : TaskController.prototype.removeTask
-     }, 
-     {
-         text : "Reset original estimate",
-         callback : TaskController.prototype.resetOriginalEstimate
-     }
-];
-

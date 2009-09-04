@@ -54,10 +54,9 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
     var data = {
         taskId:      me.getId(),
         rankUnderId: rankUnderId,
-        userId: me.getDailyWork().getUser().getId()
+        userId:      me.getDailyWork().getUser().getId()
     };
 
-    alert(JSON.stringify(data));
     jQuery.ajax({
         url: "ajax/rankDailyTaskAndMoveUnder.action",
         type: "post",
@@ -74,6 +73,32 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
         },
         error: function(xhr, status) {
             var msg = new MessageDisplay.ErrorMessage("An error occured while ranking the task.", xhr);
+        }
+    });
+};
+
+DailyWorkTaskModel.prototype.removeFromDailyWork = function(successCallback) {
+    var me = this;
+
+    jQuery.ajax({
+        type: "POST",
+        url: "ajax/deleteFromWhatsNext.action",
+        async: true,
+        cache: false,
+        dataType: "text",
+        data: {
+            taskId: me.getId(),
+            userId: me.getDailyWork().getUser().getId()
+        },
+        success: function(data,status) {
+          var msg = new MessageDisplay.OkMessage("Task removed from What's next list");
+          me.getDailyWork().reload();
+          if (successCallback) {
+            successCallback();
+          }
+        },
+        error: function(xhr,status) {
+          var msg = new MessageDisplay.ErrorMessage("Error removing task from What's next list.", xhr);
         }
     });
 };

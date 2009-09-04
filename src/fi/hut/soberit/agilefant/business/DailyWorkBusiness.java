@@ -3,13 +3,16 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public interface DailyWorkBusiness {
     public void setTaskDAO(TaskDAO dao);
-    
+    public void setWhatsNextEntryDAO(WhatsNextEntryDAO whatsNextEntryDAO);
+    public void setRankingBusiness(RankingBusiness rankingBusiness);
+
     /**
      * Retrieves the list of tasks assigned
      * to the user.
@@ -26,4 +29,33 @@ public interface DailyWorkBusiness {
      * to the user.
      */
     public Collection<DailyWorkTaskTO> getAllCurrentTasksForUser(User user);
+    
+    /**
+     * @param user the user whose daily work we are ranking
+     * @param task
+     * @param upperTask
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public DailyWorkTaskTO rankUnderTaskOnWhatsNext(User user, Task task, Task upperTask) throws IllegalArgumentException;
+    
+    /**
+     * @param user the user whose daily work we are ranking
+     * @param task the task ...
+     */
+    public DailyWorkTaskTO rankToBottomOnWhatsNext(User user, Task task) throws IllegalArgumentException;
+
+    /**
+     * Removes the task from user's what's next list
+     * @param user
+     * @param task
+     */
+    public void removeFromWhatsNext(User user, Task task) throws IllegalArgumentException;
+
+    /**
+     * Adds the task to the user's what's next list
+     * @param user
+     * @param task
+     */
+    public void addToWhatsNext(User user, Task task) throws IllegalArgumentException;
 }

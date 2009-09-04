@@ -52,11 +52,11 @@ public class DailyWorkActionTest {
         testable.setUserId(1);
 
         Collection<DailyWorkTaskTO> returnedList  = Arrays.asList(
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.CURRENT), 
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT), 
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT), 
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.CURRENT), 
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT)
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.CURRENT, -1), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 1), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 2), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.CURRENT, -1), 
+            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 4)
         );
 
         List<User> users = getUserList();

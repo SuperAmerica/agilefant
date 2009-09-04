@@ -11,13 +11,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import flexjson.JSON;
 
 
 @Entity
-@Table(name = "whatsnextentry")
-public class WhatsNextEntry {
+@Table(
+        name = "whatsnextentry",
+        uniqueConstraints={@UniqueConstraint(columnNames={"task_id", "user_id"})}
+)
+public class WhatsNextEntry implements Rankable {
     private int id;
     private int rank = 0;
     private User user;

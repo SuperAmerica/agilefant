@@ -17,16 +17,20 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.DailyWorkBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public class DailyWorkBusinessTest {
     private DailyWorkBusiness testable;
     
     private TaskDAO taskDAO;
+
+    private WhatsNextEntryDAO whatsNextEntryDAO;
     
     @Before
     public void setUp() {
@@ -34,14 +38,17 @@ public class DailyWorkBusinessTest {
         
         taskDAO = createMock(TaskDAO.class);
         testable.setTaskDAO(taskDAO);
+        
+        whatsNextEntryDAO = createMock(WhatsNextEntryDAO.class);
+        testable.setWhatsNextEntryDAO(whatsNextEntryDAO);
     }
 
     private void replayAll() {
-        replay(taskDAO);
+        replay(taskDAO, whatsNextEntryDAO);
     }
     
     private void verifyAll() {
-        verify(taskDAO);
+        verify(taskDAO, whatsNextEntryDAO);
     }
     
     private void assertTOListEquals(Collection<Task> tasks, Collection<DailyWorkTaskTO> returned, DailyWorkTaskTO.TaskClass type) {
@@ -63,20 +70,50 @@ public class DailyWorkBusinessTest {
         
         User user = new User();
         ArrayList<Task> tasks = new ArrayList<Task>();
-        tasks.addAll(Arrays.asList(new Task(), new Task()));
+        
+        Task task1 = new Task();
+        task1.setId(1);
+        Task task2 = new Task();
+        task2.setId(2);
+        Task task3 = new Task();
+        task3.setId(3);
+        
+        tasks.addAll(Arrays.asList(task1, task2));
 
+        WhatsNextEntry entry1 = new WhatsNextEntry();
+        entry1.setTask(task2);
+        entry1.setUser(user);
+        entry1.setRank(2);
+        
+        WhatsNextEntry entry2 = new WhatsNextEntry();
+        entry2.setTask(task3);
+        entry2.setUser(user);
+        entry2.setRank(1);
+        
+        
+        ArrayList<WhatsNextEntry> entries = new ArrayList<WhatsNextEntry>();
+        entries.add(entry1);
+        entries.add(entry2);
+        
         Capture<Interval> interval = new Capture<Interval>();
         expect(taskDAO.getAllIterationAndStoryTasks(EasyMock.eq(user), 
                 EasyMock.and(EasyMock.capture(interval), EasyMock.isA(Interval.class)))).andReturn(tasks);
 
-//        expect(taskDAO.getAllIterationAndStoryTasks(EasyMock.eq(user), 
-//                EasyMock.and(EasyMock.capture(interval), EasyMock.isA(Interval.class)))).andReturn(tasks);
-
+        expect(whatsNextEntryDAO.getWhatsNextEntriesFor(user)).andReturn(entries);
+        
         replayAll();
         Collection<DailyWorkTaskTO> returned = testable.getAllCurrentTasksForUser(user);
         verifyAll();
 
-        // assertTOListEquals(tasks, returned, DailyWorkTaskTO.TaskClass.CURRENT);
+        assertEquals(3, returned.size());
+        
+        int numberOfNext = 0;
+        for (DailyWorkTaskTO to: returned) {
+            if (to.getTaskClass() == DailyWorkTaskTO.TaskClass.NEXT) {
+                numberOfNext ++;
+            }
+        }
+        assertEquals(2, numberOfNext);
         
         assertTrue(interval.hasCaptured());
         Interval intervalValue = interval.getValue();

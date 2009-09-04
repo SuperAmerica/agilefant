@@ -387,12 +387,5 @@ function toggleHide(clickedElement, elements) {
 
 function toggleMenu() {
   $('#outerWrapper').toggleClass('menu-collapsed');
-
-  if ($('#menuToggleLink').text() === '»') {
-    $('#menuToggleLink').text('«');
-  }
-  else {
-    $('#menuToggleLink').text('»');
-  }
   return false;
 }

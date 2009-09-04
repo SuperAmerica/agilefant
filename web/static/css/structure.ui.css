@@ -23,6 +23,13 @@
   margin: 0 0 0 2em !important;  
 }
 
+.menu-collapsed #menuControl {
+  background-position: 100% 0%;  
+}
+.menu-collapsed #menuControl:hover {
+  background-position: 100% 100%;  
+}
+
 /**
  * LEFT HAND MENU
  */

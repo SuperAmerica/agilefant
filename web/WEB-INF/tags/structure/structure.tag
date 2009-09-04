@@ -40,7 +40,8 @@
       $("#quickRefInput").focus(function () { 
           $(this).val("").unbind("focus").css("color","#000");
       });
-      
+
+      $('#menuControl').click(function() { toggleMenu(); return false; });
   });
   </script>
 
@@ -74,9 +75,7 @@
 
 <div id="menuWrapper">
 
-  <div id="menuControl">
-    <a id="menuToggleLink" href="#" title="Expand/collapse left hand menu" onclick="toggleMenu(); return false;">&laquo;</a>
-  </div>
+  <div id="menuControl"> </div>
   
   <div id="menuContent">
     <c:choose>

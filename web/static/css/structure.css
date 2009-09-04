@@ -65,8 +65,19 @@ img {
 
 #menuControl {
   float: right;
-  padding: 2px 5px;  
+  height: 16px;
+  width: 16px;
+  height: 16px;
+  margin: 2px 2px 0 0;
+  cursor: pointer;
+  background: url('../img/toggle.png');
+  background-position: 0% 0;
 }
+
+#menuControl:hover {
+  background-position: 0% 100%;
+}
+    
 
 /* BODY WRAPPER */
 

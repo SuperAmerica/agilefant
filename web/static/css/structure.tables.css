@@ -1,0 +1,16 @@
+/**
+ * Table structure stylesheet
+ */
+
+th {
+  text-align: left;
+  background-color: #ddd;  
+}
+
+tr.even {
+  background: #eee;
+}
+
+tr.odd {
+  background: #fdfdfd;
+}

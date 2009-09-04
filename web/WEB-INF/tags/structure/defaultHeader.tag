@@ -6,3 +6,4 @@
   <img alt="Agilefant logo" src="static/img/fant_small.png" />
   <h1>Agilefant</h1>
 </div>
+

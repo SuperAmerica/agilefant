@@ -7,6 +7,7 @@
  * Author:    Reko Jokelainen
  * Date:      09/2009
  */
+@import "structure.tables.css";
 @import "structure.text.css";
 @import "structure.ui.css";
 
@@ -35,13 +36,25 @@ img {
   height: 7em;
 }
 
-#headerWrapper img {
+#headerDiv {
   float: left;  
 }
 
-#headerWrapper h1 {
+#headerDiv img {
+  float: left;  
+}
+
+#headerDiv h1 {
   margin: 0 0 0 1.8em;
   padding: 0.4em 0 0 0;  
+}
+
+#logoutDiv {
+  float: right;
+}
+
+#logoutDiv form {
+  display: inline;  
 }
 
 /* CONTROLS WRAPPER */

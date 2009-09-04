@@ -1,41 +1,36 @@
 <%@ include file="./WEB-INF/jsp/inc/_taglibs.jsp" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-	<head>
-		<title>Agilefant</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
-<style type="text/css" media="screen,projection">
-<!--
-@import url(static/css/v5.css); 
--->
-</style>
 
-<script type="text/javascript" src="static/js/generic.js?<%--<ww:text name="struts.agilefantReleaseId" />--%>"></script>
-<script type="text/javascript" src="static/js/jquery.js?<%--<ww:text name="struts.agilefantReleaseId" />--%>"></script>
+<struct:htmlWrapper navi="">
 
-<style type="text/css" media="screen">
-<!--
-@import url(static/css/import.css);
--->
-</style>
+<jsp:attribute name="hideMenu">true</jsp:attribute>
+<jsp:attribute name="hideLogout">true</jsp:attribute>
+<jsp:attribute name="hideControl">true</jsp:attribute>
 
-<!--[if IE 5]>
-<style type="text/css" media="screen, projection">
-#outer_wrapper {width:expression(document.body.clientWidth < 740 ? "740px" : "auto" )}
-</style>
-<![endif]-->
-<!--[if IE 6]>
-<style type="text/css" media="screen, projection">
-#outer_wrapper {width:expression(documentElement.clientWidth < 740 ? "740px" : "auto" )}
-</style>
-<![endif]-->
+<jsp:body>
 
-
-
-
-  ----</head>
-  <body>
+  <style>
+  <!--
+  div.disclaimer {
+    width: 300px;
+    font-size: 80%;
+    padding: 5px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    color: #f00;
+  }
+  #login {
+   width: 26em;
+  }
+  
+  #login p {
+    text-align: right;
+  }
+  
+  #login td {
+    padding: 10px;
+  }
+  -->
+  </style>
 
   <script type="text/javascript">
   $(document).ready(function() {
@@ -43,81 +38,58 @@
   });
   </script>
   
-  <div id="outer_wrapper">
-     <div id="wrapper">
+  <br/><br/>
 
-       <div id="header">
-          <div id="maintitle">
-						<img src="static/img/fant_small.png" alt="logo"/>
-						<h1>Agilefant</h1>
-					</div>
-       </div>
+  <c:if test="${param.logout == 1}">
+  	<p style="margin-bottom:20px">You have logged out successfully.</p>
+  </c:if>
+  
+  <c:if test="${param.error == 1}">
+  	<p style="color: #f00; margin-bottom:20px">Invalid username or password, please try again.</p>
+  </c:if>
+  
+  <c:if test="${param.access_denied == 1}">
+  	<p style="color: #f00; margin-bottom:20px">Access denied!</p>
+  </c:if>
+  
+  <div id="login">
+     <form method="post" action="j_spring_security_check">
+        <table border="0">
+        <tr>
+        <td>Username</td><td><input id="username" name="j_username" size="30" type="text" /></td>
+        </tr>
+        <tr>
+        <td>Password</td><td><input name="j_password" size="30" type="password" /></td>
+        </tr>
+        <tr>
+        <td>&nbsp;</td><td>Remember me <input type="checkbox" name="_spring_security_remember_me" /></td>
+        </tr>
+        <tr>
+        <td>&nbsp;</td><td><input value="Log in" type="submit" /></td>
+        </tr>
+        </table>                
+      </form>
+    </div>
+<!-- login -->
+    
+    <!-- URL to new password generation -->
+    <div id="forgot">
+    	<ww:url var="newPasswordAction" action="newPassword" />
+    	Forgot your password? <ww:a href="%{newPasswordAction}">Get a new one!</ww:a>
+    </div>
+    
+    <!-- Show disclaimer only if browser is not Mozilla Firefox -->
+    <script type="text/javascript">
+    if (!jQuery.browser.mozilla) {
+        var disc = $("<div/>").addClass("disclaimer")
+            .html("Agilefant currently supports only " + 
+            '<a href="http://www.getfirefox.com/">'
+            + "Mozilla Firefox</a>.</p>");
+        $('#forgot').after(disc);
+    }
+    </script>
 
-       <!-- /header -->
-       <div id="menuwrap1">
-          <div id="submenuwrap">
-             <ul id="menu">
-             </ul>
-          </div>
-       </div>
-   
-       <div id="main">
-          <br/>
-          <br/>
-          
-          <c:if test="${param.logout == 1}">
-          	<p style="margin-bottom:20px">You have logged out successfully.</p>
-          </c:if>
-          
-          <c:if test="${param.error == 1}">
-          	<p style="color: #f00; margin-bottom:20px">Invalid username or password, please try again.</p>
-          </c:if>
-          
-          <c:if test="${param.access_denied == 1}">
-          	<p style="color: #f00; margin-bottom:20px">Access denied!</p>
-          </c:if>
-          
-          <div id="login">
-             <form method="post" action="j_spring_security_check">
-                <table border="0">
-                <tr>
-                <td>Username</td><td><input id="username" name="j_username" size="30" type="text" /></td>
-                </tr>
-                <tr>
-                <td>Password</td><td><input name="j_password" size="30" type="password" /></td>
-                </tr>
-                <tr>
-                <td>&nbsp;</td><td>Remember me <input type="checkbox" name="_spring_security_remember_me" /></td>
-                </tr>
-                <tr>
-                <td>&nbsp;</td><td><input value="Log in" type="submit" /></td>
-                </tr>
-                </table>                
-              </form>
-            </div>
-			<!-- login -->
-            
-            <!-- URL to new password generation -->
-            <div id="forgot">
-            	<ww:url var="newPasswordAction" action="newPassword" />
-            	Forgot your password? <ww:a href="%{newPasswordAction}">Get a new one!</ww:a>
-            </div>
-            
-            <!-- Show disclaimer only if browser is not Mozilla Firefox -->
-            <script type="text/javascript">
-            if (!jQuery.browser.mozilla) {
-                var disc = $("<div/>").addClass("disclaimer")
-                    .html("Agilefant currently supports only " + 
-                    '<a href="http://www.getfirefox.com/">'
-                    + "Mozilla Firefox</a>.</p>");
-                $('#forgot').after(disc);
-            }
-            </script>
-                       
-        </div>
-        <!-- main -->
+<!-- main -->
 
-
-
-<%@ include file="./WEB-INF/jsp/inc/_footer.jsp" %>
-
+</jsp:body>
+</struct:htmlWrapper>

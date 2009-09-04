@@ -9,6 +9,10 @@
 <%@attribute name="headerContent" fragment="true" %>
 <%@attribute name="menuContent" fragment="true" %>
 
+<%@attribute name="hideLogout" fragment="false" required="false" %>
+<%@attribute name="hideControl" fragment="false" required="false" %>
+<%@attribute name="hideMenu" fragment="false" required="false" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
@@ -62,31 +66,40 @@
     <struct:header />
   </c:otherwise>
   </c:choose>
+  
+  <c:if test="${hideLogout != true}">
+    <struct:defaultRightHeader />
+  </c:if>
 </div>
+
 
 <div id="controlWrapper">
-  <div id="createNewMenuWrapper">
-    <struct:createNewMenu />
-  </div>
-  <div id="navigationTabsWrapper">
-    <struct:mainTabs navi="${navi}" />
-  </div>
+  <c:if test="${hideControl != true}">
+    <div id="createNewMenuWrapper">
+      <struct:createNewMenu />
+    </div>
+    <div id="navigationTabsWrapper">
+      <struct:mainTabs navi="${navi}" />
+    </div>
+  </c:if>
 </div>
 
-<div id="menuWrapper">
 
-  <div id="menuControl"> </div>
-  
-  <div id="menuContent">
-    <c:choose>
-    <c:when test="${menuContent != null}">
-      <jsp:invoke fragment="menuContent" />
-    </c:when>
-    <c:otherwise>
-      <struct:backlogMenu />
-    </c:otherwise>
-    </c:choose>
-  </div>
+<div id="menuWrapper">
+  <c:if test="${hideMenu != true}">
+    <div id="menuControl"> </div>
+    
+    <div id="menuContent">
+      <c:choose>
+      <c:when test="${menuContent != null}">
+        <jsp:invoke fragment="menuContent" />
+      </c:when>
+      <c:otherwise>
+        <struct:backlogMenu />
+      </c:otherwise>
+      </c:choose>
+    </div>
+  </c:if>
 </div>
 
 

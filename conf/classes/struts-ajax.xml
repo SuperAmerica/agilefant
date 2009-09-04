@@ -369,6 +369,19 @@
     </action>
     <!-- /Task actions -->
 
+    <!-- Daily work actions -->
+    <action name="addToWhatsNext" method="addToWhatsNext" class="dailyWorkAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+
+    <action name="deleteFromWhatsNext" method="deleteFromWhatsNext" class="dailyWorkAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+    <!-- /Daily work actions -->
 
 
     <!-- User actions -->

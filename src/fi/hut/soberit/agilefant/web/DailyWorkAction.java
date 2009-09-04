@@ -14,6 +14,7 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -31,13 +32,19 @@ public class DailyWorkAction extends ActionSupport {
     
     @Autowired
     private UserBusiness userBusiness;
- 
+
+    @Autowired
+    private TaskBusiness taskBusiness;
+
     private int  userId;
     private User user; 
 
     private List<User> enabledUsers        = new ArrayList<User>();
     private Collection<DailyWorkTaskTO> assignedTasks = new ArrayList<DailyWorkTaskTO>();
     private Collection<DailyWorkTaskTO> nextTasks     = new ArrayList<DailyWorkTaskTO>();
+
+    // TODO: refactor these outside...
+    private int taskId;
     
     /**
      * Retrieve for JSON data.
@@ -76,6 +83,28 @@ public class DailyWorkAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
+    public String deleteFromWhatsNext() {
+        User thisUser = userBusiness.retrieve(userId);
+        Task thisTask = taskBusiness.retrieve(taskId);
+        
+        dailyWorkBusiness.removeFromWhatsNext(thisUser, thisTask);
+
+        return Action.SUCCESS;
+    }
+    
+    public String addToWhatsNext() {
+        if (userId == 0) {
+            userId = SecurityUtil.getLoggedUserId();
+        }
+        
+        user = userBusiness.retrieve(userId);
+        Task task = taskBusiness.retrieve(taskId);
+
+        dailyWorkBusiness.addToWhatsNext(user, task);
+        
+        return Action.SUCCESS;
+    }
+    
     public int getUserId() {
         return userId;
     }
@@ -110,5 +139,9 @@ public class DailyWorkAction extends ActionSupport {
 
     public Collection<DailyWorkTaskTO> getNextTasks() {
         return nextTasks;
+    }
+    
+    public void setTaskId(int taskId) {
+        this.taskId = taskId; 
     }
 }

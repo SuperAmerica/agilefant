@@ -89,6 +89,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         return tasks;
     }
 
+    @Transactional
     public DailyWorkTaskTO rankToBottomOnWhatsNext(WhatsNextEntry entry) throws IllegalArgumentException {
         if (entry == null) {
             throw new IllegalArgumentException();
@@ -102,11 +103,13 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.NEXT, entry.getRank());
     }
     
+    @Transactional
     public DailyWorkTaskTO rankToBottomOnWhatsNext(User user, Task task)
             throws IllegalArgumentException {
         return rankToBottomOnWhatsNext(whatsNextEntryDAO.getWhatsNextEntryFor(user, task));
     }
 
+    @Transactional
     public DailyWorkTaskTO rankUnserTaskOnWhatsNext(WhatsNextEntry entry, WhatsNextEntry upperEntry) {
         RankDirection dir = rankingBusiness.findOutRankDirection(entry, upperEntry);
         int newRank = rankingBusiness.findOutNewRank(entry, upperEntry, dir);
@@ -120,6 +123,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.CURRENT, newRank);
     }
     
+    @Transactional
     public DailyWorkTaskTO rankUnderTaskOnWhatsNext(User user, Task task,
             Task upperTask) throws IllegalArgumentException {
         WhatsNextEntry entry = whatsNextEntryDAO.getWhatsNextEntryFor(user, task);
@@ -128,6 +132,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         return rankUnserTaskOnWhatsNext(entry, upperEntry);
     }
 
+    @Transactional
     public void removeFromWhatsNext(User user, Task task)
             throws IllegalArgumentException {
         WhatsNextEntry entry = whatsNextEntryDAO.getWhatsNextEntryFor(user, task);
@@ -136,6 +141,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         }
     }
     
+    @Transactional
     public void addToWhatsNext(User user, Task task) {
         WhatsNextEntry entry = new WhatsNextEntry();
         entry.setTask(task);

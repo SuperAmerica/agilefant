@@ -167,6 +167,38 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   });
 };
 
+TaskModel.prototype.addToMyWhatsNext = function() {
+    var me = this;
+    
+    if (me.getDailyWork) {
+        var dailyWork = me.getDailyWork();
+    }
+    
+    jQuery.ajax({
+        type: "POST",
+        url: "ajax/addToWhatsNext.action",
+        async: true,
+        cache: false,
+        dataType: "text",
+        data: {
+           taskId: me.getId(),
+        },
+        success: function(data,status) {
+            var msg = new MessageDisplay.OkMessage("Task added to What's next list");
+            
+            if (dailyWork) {
+                dailyWork.reload();
+            }
+            if (successCallback) {
+               successCallback();
+            }
+        },
+        error: function(xhr,status) {
+            var msg = new MessageDisplay.ErrorMessage("Error adding task to What's next list.", xhr);
+        }
+    });
+}
+
 /**
  * Resets the tasks original estimate and effort left
  */

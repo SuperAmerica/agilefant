@@ -95,13 +95,13 @@ DailyWorkController.prototype.createConfig = function(configType) {
        caption:              configItems.caption
     };
     
-    if (configType == 'next') {
-        options.sortCallback = DailyWorkController.prototype.sortAndMoveDailyTask;
-        options.sortOptions = {
-                items: "> .dynamicTableDataRow",
-                handle: "." + DynamicTable.cssClasses.dragHandle
-        };
-    }
+//    if (configType == 'next') {
+//        options.sortCallback = DailyWorkController.prototype.sortAndMoveDailyTask;
+//        options.sortOptions = {
+//                items: "> .dynamicTableDataRow",
+//                handle: "." + DynamicTable.cssClasses.dragHandle
+//        };
+//    }
     
     var config = new DynamicTableConfiguration(options);
 

@@ -23,12 +23,9 @@ DailyWorkTaskController.prototype.moveTask = function(targetModel) {
 };
 
 DailyWorkTaskController.prototype.removeTaskFromDailyWork = function() {
-  var me = this;
-  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to remove this task from your What's next?", function() {
-    me.parentController.removeChildController("dailyWorkTask", this);
-    me.model.removeFromDailyWork();
-  });
+  this.model.removeFromDailyWork();
 };
+
 DailyWorkTaskController.prototype.actionColumnFactory = function(view, model) {
     var items = [
      {

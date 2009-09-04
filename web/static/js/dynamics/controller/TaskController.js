@@ -83,6 +83,10 @@ TaskController.prototype.toggleFactory = function(view, model) {
     return this.toggleView;
 };
 
+TaskController.prototype.addToMyWhatsNext = function() {
+  this.model.addToMyWhatsNext();
+};
+
 TaskController.prototype.removeTask = function() {
   var me = this;
   var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this task?", function() {
@@ -122,7 +126,10 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
   }, {
     text : "Edit",
     callback : TaskController.prototype.editTask
-  }, /*{
+  }, {
+    text : "Add to my What's next",
+    callback : TaskController.prototype.addToMyWhatsNext
+  },/*{
     text : "Move",
     callback : TaskController.prototype.moveTask
   }, */{

@@ -45,6 +45,8 @@ public class DailyWorkAction extends ActionSupport {
 
     // TODO: refactor these outside...
     private int taskId;
+
+    private int rankUnderId;
     
     /**
      * Retrieve for JSON data.
@@ -105,6 +107,19 @@ public class DailyWorkAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
+    public String rankWhatsNextTaskAndMoveUnder() {
+        if (userId == 0) {
+            userId = SecurityUtil.getLoggedUserId();
+        }
+        
+        user = userBusiness.retrieve(userId);
+        Task task = taskBusiness.retrieve(taskId);
+        
+        dailyWorkBusiness.rankUnderTaskOnWhatsNext(user, task, taskBusiness.retrieve(rankUnderId));
+        
+        return Action.SUCCESS;
+    }
+    
     public int getUserId() {
         return userId;
     }
@@ -143,5 +158,9 @@ public class DailyWorkAction extends ActionSupport {
     
     public void setTaskId(int taskId) {
         this.taskId = taskId; 
+    }
+    
+    public void setRankUnderId(int rankUnderId) {
+        this.rankUnderId = rankUnderId;
     }
 }

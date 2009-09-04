@@ -381,6 +381,12 @@
         <param name="status">200</param>
       </result>
     </action>
+
+    <action name="rankDailyTaskAndMoveUnder" method="rankWhatsNextTaskAndMoveUnder" class="dailyWorkAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
     <!-- /Daily work actions -->
 
 

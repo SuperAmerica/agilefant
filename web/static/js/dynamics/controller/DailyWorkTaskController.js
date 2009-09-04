@@ -6,15 +6,15 @@ DailyWorkTaskController = function(model, view, parentController) {
 
 DailyWorkTaskController.prototype = new TaskController();
 
-DailyWorkTaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
+DailyWorkTaskController.prototype.sortAndMoveDailyTask = function(view, model, newPos) {
   var previousRow = newPos - 1;
   var targetModel = view.getParentView().getModel();
   if (view.getParentView().getDataRowAt(previousRow)) {
     previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
-    model.rankUnder(previousTask.getId(), targetModel);
+    model.rankDailyUnder(previousTask.getId(), targetModel);
   }
   else {
-    model.rankUnder(-1, targetModel);
+    model.rankDailyUnder(-1, targetModel);
   }
 };
 

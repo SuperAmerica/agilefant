@@ -60,12 +60,12 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
     jQuery.ajax({
         url: "ajax/rankDailyTaskAndMoveUnder.action",
         type: "post",
-        dataType: "json",
+        dataType: "text",
         data: data,
         success: function(data, status) {
             var msg = new MessageDisplay.OkMessage("Task ordered successfully.");
-            var oldParent = me.getParent();
-            me.setData(data);
+            var oldParent = me.getDailyWork();
+            // me.setData(data);
             oldParent.reload();
             if (oldParent !== moveUnder) {
                 moveUnder.reload();

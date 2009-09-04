@@ -13,7 +13,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 
-@Repository("taskDAO")
+@Repository("whatsNextEntryDAO")
 public class WhatsNextEntryDAOHibernate extends GenericDAOHibernate<WhatsNextEntry> implements
         WhatsNextEntryDAO {
 

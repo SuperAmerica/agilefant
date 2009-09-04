@@ -14,7 +14,9 @@
 
 .menu-collapsed #menuContent {
   position: relative;
-  right: -400px;
+  left: -100px;
+  width: 1px;
+  overflow: hidden;
 }
 
 .menu-collapsed #bodyWrapper {

@@ -13,7 +13,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 
 <head>
-  <title>Agilefant test</title>
+  <title>Agilefant</title>
   <link rel="stylesheet" type="text/css" href="static/css/structure.css" />
   <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
   

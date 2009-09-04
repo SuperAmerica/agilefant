@@ -47,8 +47,7 @@
   <script type="text/javascript">
   <!--
   function toggleMenu() {
-    $('#menuWrapper').toggleClass('menu-hidden');
-    $('#bodyWrapper').toggleClass('body-wide');
+    $('#outerWrapper').toggleClass('menu-collapsed');
 
     if ($('#menuToggleLink').text() === '»') {
       $('#menuToggleLink').text('«');
@@ -90,7 +89,7 @@
 <div id="menuWrapper">
 
   <div id="menuControl">
-    <a id="menuToggleLink" href="#" onclick="toggleMenu();">&laquo;</a>
+    <a id="menuToggleLink" href="#" onclick="toggleMenu(); return false;">&laquo;</a>
   </div>
   
   <div id="menuContent">

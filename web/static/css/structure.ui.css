@@ -6,6 +6,24 @@
  *  - Footer
  */
  
+/* MENU HIDING*/
+
+.menu-collapsed #menuWrapper {
+  width: 2em;
+}
+
+.menu-collapsed #menuContent {
+  position: relative;
+  right: -400px;
+}
+
+.menu-collapsed #bodyWrapper {
+  margin: 0 0 0 2em !important;  
+}
+
+
+/* BACKLOG INFO TABLES */
+ 
 .backlogInfo {
   width: 98%;
   min-width: 800px;

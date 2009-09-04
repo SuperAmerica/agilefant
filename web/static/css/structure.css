@@ -7,117 +7,87 @@
  * Author:    Reko Jokelainen
  * Date:      09/2009
  */
- 
 @import "structure.text.css";
 @import "structure.ui.css";
-
-@import "dynamictable.css";  
-@import "autocomplete.css";
 
 @import "jquery-ui.css";
 @import "jquery.wysiwyg.css";
 @import "ui.dynatree.css";
 
-html {
+@import "autocomplete.css";
+@import "dynamictable.css";
+
+html, body {
   margin: 0;
   padding: 0;
-  background-color: white;  
 }
 
-body, div, img {
-  margin: 0;
-  padding: 0;
-  border: none;  
+img {
+  border: 0;  
 }
 
+/* HEADER WRAPPER */
 
-/* HEADER STYLES */
-
-div#headerWrapper {
-  height: 7em;
+#headerWrapper {
   width: auto;
-  padding: 10px;
   margin: 0;
+  padding: 1em;
+  height: 7em;
 }
 
-div#headerWrapper img {
+#headerWrapper img {
   float: left;  
 }
 
-div#headerWrapper h1 {
-  padding: 0.5em 0 0 2em;
-}
+/* CONTROLS WRAPPER */
 
-
-div#controlWrapper {
-  height: 1.5em;
+#controlWrapper {
+  width: auto;
+  margin: 0;
+  padding: 0.5em;
+  height: 1em;
   border-bottom: 1px solid #ccc;  
 }
 
-/* MENU STYLES */
+/* MENU WRAPPER */
 
-div#menuWrapper {
+#menuWrapper {
+  width: 15em;
   float: left;
-  width: 200px;
   overflow: hidden;
 }
 
-.menu-hidden {
-  width: 20px !important;  
-}
-
-.menu-hidden div#menuContent {
-  display: none;  
-}
-
-.menu-hidden div#menuControl {
-  
-}
-
-div#menuControl {
+#menuControl {
   float: right;
-  border: 1px solid #ccc;
-  padding: 0 4px 3px 4px;
+  padding: 2px 5px;  
 }
 
-div#menuControl a{
-  text-decoration: none;
-  font-family: cursive;
-  font-weight: bold;
-}
+/* BODY WRAPPER */
 
-/* BODY STYLES */
-
-div#bodyWrapper {
+#bodyWrapper {
   width: auto;
-  margin: 0 0 0 200px;
-  padding: 1em 0 0 1em;
+  margin: 0 0 0 15em;
+  padding: 1em 2em;
   border-left: 1px solid #ccc;
-  overflow: hidden;
 }
 
-div#bodyContent {
-  width: 95%;  
-}
-
-.body-wide {
-  margin: 0 0 0 20px !important;  
-}
-
-div#bodyWrapper div#layoutEmptyDiv {
-  width: 100%;
-  clear: both;
-  height: 1px;
+#layoutEmptyDiv {
   background-color: transparent;
+  width: 100%;
+  height: 1px;
+  clear: both;  
 }
 
-/* FOOTER STYLES */
+/* FOOTER WRAPPER */
 
-div#footerWrapper {
-  clear: both;
-  height: 2em;
-  border-top: 1px solid #ccc;
+#footerWrapper {
   width: auto;
-  padding: 0.5em 0 0 1em;
+  margin: 0;
+  padding: 0.7em;
+  height: 2em;
+  clear: both;
+  border-top: 1px solid #ccc;
 }
+
+
 

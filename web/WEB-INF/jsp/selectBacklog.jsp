@@ -1,7 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
 
-<aef:menu navi="backlog" title="Select Backlog"/>
+<struct:htmlWrapper navi="backlog">
+
 
 <h2>No backlog selected</h2>
 
@@ -55,8 +55,6 @@ start by creating a new object.</p>
         </c:otherwise>
     </c:choose>
     </li>
-        
-    <li class="separator" />
 
     <li><ww:url id="createLink" action="ajaxCreateProjectType"
         includeParams="none" />
@@ -92,4 +90,4 @@ start by creating a new object.</p>
     </li>
 </ul>
 
-<%@ include file="./inc/_footer.jsp"%>
+</struct:htmlWrapper>

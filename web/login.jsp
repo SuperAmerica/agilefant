@@ -1,10 +1,6 @@
 <%@ include file="./WEB-INF/jsp/inc/_taglibs.jsp" %>
 
-<struct:htmlWrapper navi="">
-
-<jsp:attribute name="hideMenu">true</jsp:attribute>
-<jsp:attribute name="hideLogout">true</jsp:attribute>
-<jsp:attribute name="hideControl">true</jsp:attribute>
+<struct:htmlWrapper navi="" hideMenu="true" hideLogout="true" hideControl="true">
 
 <jsp:body>
 

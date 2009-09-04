@@ -1,9 +1,12 @@
 <%@ include file="../inc/_taglibs.jsp"%>
-<%@ include file="../inc/_header.jsp"%>
 
-<aef:menu navi="administration" subnavi="settings" title="Settings"/>
-<aef:existingObjects />
+<struct:htmlWrapper navi="settings">
 
+<jsp:attribute name="menuContent">
+  <struct:settingsMenu />
+</jsp:attribute>
+
+<jsp:body>
 <h2>Timesheet settings</h2>
 
 <ww:form action="storeSettings.action" method="post">
@@ -62,4 +65,5 @@
 <ww:submit value="Save"></ww:submit>
 </ww:form>
 
-<%@ include file="../inc/_footer.jsp"%>
+</jsp:body>
+</struct:htmlWrapper>

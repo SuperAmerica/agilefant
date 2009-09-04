@@ -78,7 +78,7 @@ $(window).resize(function() {
 			effort</span></a></li>
 		</c:if>
 	</ul>
-	<div class="subItems" style="width: 100%; margin-top: 0;">
+	<div class="subItems" style="width: 100%; margin-top: 0; overflow: hidden;">
 		<div id="Spent_Effort"></div>
 		<div id="detailedLoadTable">
 		  <div style="position: relative">

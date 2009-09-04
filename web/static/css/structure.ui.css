@@ -6,7 +6,7 @@
  *  - Footer
  */
  
-/* MENU HIDING*/
+/* MENU HIDING */
 
 .menu-collapsed #menuWrapper {
   width: 2em;
@@ -21,6 +21,17 @@
   margin: 0 0 0 2em !important;  
 }
 
+/**
+ * LEFT HAND MENU
+ */
+#menuContent ul {
+  margin: 0;
+  padding: 1em;  
+}
+
+#menuContent ul li {
+  list-style-type: none;  
+}
 
 /* BACKLOG INFO TABLES */
  
@@ -39,6 +50,11 @@
 /**
  * CREATE NEW -menu
  */
+ 
+#createNewMenuWrapper {
+  width: 15em;
+  float: left;  
+}
 
 #createNewMenuLink a span {
   display: block;
@@ -57,10 +73,10 @@
 ul#createNewMenu {
   margin: 0;
   padding: 0;
-  position: relative;
+  position: absolute;
   border: 1px solid #aaa;
-  top: 4px;
-  width: 160px;
+  top: 11em;
+  width: 12em;
   z-index: 300;
 }
 
@@ -88,6 +104,52 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
   width: 100%;
   height: 1px;
   padding: 0;
+}
+
+/**
+ * NAVIGATION TABS
+ */
+
+#navigationTabsWrapper {
+  
+}
+
+#navigationTabsWrapper ul, #navigationTabsWrapper ul li {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;  
+}
+
+#navigationTabsWrapper ul li {
+  border-width: 1px 1px 0 1px;
+  border-color: #ccc;
+  border-style: solid;
+  -moz-border-radius-bottomleft:  0;
+  -moz-border-radius-bottomright: 0;
+  -moz-border-radius-topleft: 5px;
+  -moz-border-radius-topright: 5px;
+  -webkit-border-radius-bottomleft:  0;
+  -webkit-border-radius-bottomright: 0;
+  -webkit-border-radius-topleft: 5px;
+  -webkit-border-radius-topright: 5px;
+  padding: 0.3em 0.5em 0.1em 0.5em; 
+  margin: 0 0.5em 0 0;
+  background: #dfeffc url("../img/ui/ui-bg_glass_85_dfeffc_1x400.png") repeat-x scroll 50% 50%;
+}
+
+#navigationTabsWrapper ul li.navitab-selected {
+  background: #fff;
+  padding-bottom: 0.2em;  
+}
+
+#navigationTabsWrapper ul li a {
+  font-weight: bold !important;
+  color: #2E6E9E !important;  
+}
+
+#navigationTabsWrapper ul li.navitab-selected a {
+  color: #E17009 !important;  
 }
 
 

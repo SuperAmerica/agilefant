@@ -11,28 +11,38 @@
   <description>Agilefant html structure tag library</description>
 
   <tag-file>
-     <name>htmlWrapper</name>
-     <path>/WEB-INF/tags/structure/structure.tag</path>
+    <name>htmlWrapper</name>
+    <path>/WEB-INF/tags/structure/structure.tag</path>
   </tag-file>
 
   <tag-file>
-     <name>createNewMenu</name>
-     <path>/WEB-INF/tags/structure/createNewMenu.tag</path>
+    <name>createNewMenu</name>
+    <path>/WEB-INF/tags/structure/createNewMenu.tag</path>
   </tag-file>
 
   <tag-file>
-     <name>backlogMenu</name>
-     <path>/WEB-INF/tags/structure/backlogmenu.tag</path>
+    <name>mainTabs</name>
+    <path>/WEB-INF/tags/structure/defaultTabs.tag</path>
+  </tag-file>
+
+  <tag-file>
+    <name>backlogMenu</name>
+    <path>/WEB-INF/tags/structure/backlogmenu.tag</path>
   </tag-file>
   
   <tag-file>
-     <name>header</name>
-     <path>/WEB-INF/tags/structure/defaultHeader.tag</path>
+    <name>settingsMenu</name>
+    <path>/WEB-INF/tags/structure/settingsMenu.tag</path>
+  </tag-file>
+  
+  <tag-file>
+    <name>header</name>
+    <path>/WEB-INF/tags/structure/defaultHeader.tag</path>
   </tag-file>
 
   <tag-file>
-     <name>footer</name>
-     <path>/WEB-INF/tags/structure/defaultFooter.tag</path>
+    <name>footer</name>
+    <path>/WEB-INF/tags/structure/defaultFooter.tag</path>
   </tag-file>
 
 </taglib>

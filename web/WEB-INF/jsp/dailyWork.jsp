@@ -1,13 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<%@ include file="./inc/_header.jsp" %>
 
-<!-- Author:	rjokelai
-	 Version:	1.3.1
--->
 
-<aef:menu navi="dailyWork" title="Daily Work"/> 
-<ww:actionerror/>
-<ww:actionmessage/>
+<struct:htmlWrapper navi="dailyWork">
 
 <c:set var="currentAction" value="dailyWork" scope="session" />
 <c:set var="dailyWorkUserId" value="${userId}" scope="session" />
@@ -60,4 +54,4 @@ $(document).ready(function() {
 </c:otherwise>
 </c:choose>
 
-<%@ include file="./inc/_footer.jsp" %>
+</struct:htmlWrapper>

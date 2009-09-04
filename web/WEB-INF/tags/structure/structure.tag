@@ -4,6 +4,8 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="/struts-tags" prefix="ww" %>
 
+<%@attribute name="navi" fragment="false" required="true"%>
+
 <%@attribute name="headerContent" fragment="true" %>
 <%@attribute name="menuContent" fragment="true" %>
 
@@ -44,22 +46,6 @@
 
   <script type="text/javascript" src="static/js/onLoad.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
-  <script type="text/javascript">
-  <!--
-  function toggleMenu() {
-    $('#outerWrapper').toggleClass('menu-collapsed');
-
-    if ($('#menuToggleLink').text() === '»') {
-      $('#menuToggleLink').text('«');
-    }
-    else {
-      $('#menuToggleLink').text('»');
-    }
-    return false;
-  }
-  //-->
-  </script>
-
 </head>
 
 <body>
@@ -82,14 +68,14 @@
     <struct:createNewMenu />
   </div>
   <div id="navigationTabsWrapper">
-  
+    <struct:mainTabs navi="${navi}" />
   </div>
 </div>
 
 <div id="menuWrapper">
 
   <div id="menuControl">
-    <a id="menuToggleLink" href="#" onclick="toggleMenu(); return false;">&laquo;</a>
+    <a id="menuToggleLink" href="#" title="Expand/collapse left hand menu" onclick="toggleMenu(); return false;">&laquo;</a>
   </div>
   
   <div id="menuContent">

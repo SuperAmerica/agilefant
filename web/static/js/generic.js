@@ -384,3 +384,15 @@ function toggleHide(clickedElement, elements) {
     }
     me.toggleClass('expand').toggleClass('collapse');
 }
+
+function toggleMenu() {
+  $('#outerWrapper').toggleClass('menu-collapsed');
+
+  if ($('#menuToggleLink').text() === '»') {
+    $('#menuToggleLink').text('«');
+  }
+  else {
+    $('#menuToggleLink').text('»');
+  }
+  return false;
+}

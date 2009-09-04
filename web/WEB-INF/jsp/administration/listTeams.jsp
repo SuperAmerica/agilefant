@@ -1,7 +1,12 @@
 <%@ include file="../inc/_taglibs.jsp"%>
-<%@ include file="../inc/_header.jsp"%>
-<aef:menu navi="administration" subnavi="teams"  title="Teams"/>
 
+<struct:htmlWrapper navi="settings">
+
+<jsp:attribute name="menuContent">
+  <struct:settingsMenu />
+</jsp:attribute>
+
+<jsp:body>
 <aef:userList />
 
 <h2>Teams</h2>
@@ -58,5 +63,5 @@
 	</div>
 
 	</div>
-
-<%@ include file="../inc/_footer.jsp"%>
+</jsp:body>
+</struct:htmlWrapper>

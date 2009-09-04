@@ -39,6 +39,11 @@ img {
   float: left;  
 }
 
+#headerWrapper h1 {
+  margin: 0 0 0 1.8em;
+  padding: 0.4em 0 0 0;  
+}
+
 /* CONTROLS WRAPPER */
 
 #controlWrapper {
@@ -46,7 +51,8 @@ img {
   margin: 0;
   padding: 0.5em;
   height: 1em;
-  border-bottom: 1px solid #ccc;  
+  border-bottom: 1px solid #ccc;
+  white-space: nowrap;
 }
 
 /* MENU WRAPPER */

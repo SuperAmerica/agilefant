@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
-<aef:menu navi="timesheet" title="Timesheets"/>
+
+<struct:htmlWrapper navi="timesheet">
 
 
 <script type="text/javascript">
@@ -253,4 +253,5 @@ function tsToggle(caller) {
 <p>No matching effort entries were found.</p>
 </c:if>
 </div>
-<%@ include file="./inc/_footer.jsp"%>
+
+</struct:htmlWrapper>

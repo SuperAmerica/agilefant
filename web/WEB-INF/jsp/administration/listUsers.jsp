@@ -1,6 +1,12 @@
 <%@ include file="../inc/_taglibs.jsp"%>
-<%@ include file="../inc/_header.jsp"%>
-<aef:menu navi="administration" subnavi="users" title="Users"/>
+
+<struct:htmlWrapper navi="settings">
+
+<jsp:attribute name="menuContent">
+  <struct:settingsMenu />
+</jsp:attribute>
+
+<jsp:body>
 
 <h2>Users</h2>
 
@@ -116,4 +122,5 @@
 	</div>
 	</c:if>
 
-<%@ include file="../inc/_footer.jsp"%>
+</jsp:body>
+</struct:htmlWrapper>

@@ -1,14 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
 
-<c:set var="divId" value="1336" scope="page" />
-<aef:currentBacklog backlogId="${product.id}"/>
-
-<aef:menu navi="backlog" title="${product.name}" menuContextId="${product.id}"/>
-
-<ww:actionerror />
-<ww:actionmessage />
-
+<struct:htmlWrapper navi="backlog">
 
 <div class="backlogInfo" id="backlogInfo">
 <ul class="backlogTabs">
@@ -46,7 +38,4 @@ $(document).ready(function() {
 
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 
-
-
-
-<%@ include file="./inc/_footer.jsp"%>
+</struct:htmlWrapper>

@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 
-<struct:htmlWrapper>
+<struct:htmlWrapper navi="backlog">
 <jsp:body>
 
 

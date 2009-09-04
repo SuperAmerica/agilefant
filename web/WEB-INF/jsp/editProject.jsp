@@ -1,18 +1,7 @@
 <%@ include file="./inc/_taglibs.jsp"%>
-<%@ include file="./inc/_header.jsp"%>
 
-
-<%--<aef:projectTypeList id="projectTypes"/>--%>
-
-<aef:currentBacklog backlogId="${project.id}"/>
-
-<c:set var="divId" value="1336" scope="page" />
-<aef:menu navi="backlog" title="${project.name}" menuContextId="${project.id}"/>
-<ww:actionerror />
-<ww:actionmessage />
-<script type="text/javascript">
-var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
-</script>
+<struct:htmlWrapper navi="backlog">
+<jsp:body>
 
 <div class="backlogInfo" id="backlogInfo">
 <ul class="backlogTabs">
@@ -37,6 +26,8 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 
 
 <script type="text/javascript">
+var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
+
 $(document).ready(function() {
   $("#backlogInfo").tabs();
   var controller = new ProjectController({
@@ -67,13 +58,5 @@ $(document).ready(function() {
 <p><img src="drawProjectBurnup.action?backlogId=${project.id}"
 						id="bigChart" width="780" height="600" /></p>
 
-<%-- Hour reporting here - Remember to expel David H. --%>
-<%--
-<c:if test="${settings.hourReportingEnabled && project.id != 0}" >
-	<c:set var="myAction" value="editProject" scope="session" />
-	<%@ include file="./inc/_hourEntryList.jsp"%>
-</c:if> 
---%>
-<%-- Hour reporting on --%>
-
-<%@ include file="./inc/_footer.jsp"%>
+</jsp:body>
+</struct:htmlWrapper>

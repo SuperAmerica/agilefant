@@ -46,6 +46,9 @@
       });
 
       $('#menuControl').click(function() { toggleMenu(); return false; });
+      if($.cookie("agilefantMenuClosed")) {
+        toggleMenu();
+      }
   });
   </script>
 

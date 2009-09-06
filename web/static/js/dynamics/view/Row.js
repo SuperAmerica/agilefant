@@ -19,6 +19,13 @@ DynamicTableRow.prototype.initialize = function() {
   var me = this;
   this.element = $("<div />").addClass(DynamicTable.cssClasses.tableRow);
   this.element.data("row", this);
+  this.hasFocus = false;
+  this.element.bind("DynamicsFocus", function() {
+    me.hasFocus = true;
+  });
+  this.element.bind("DynamicsBlur", function() {
+    me.hasFocus = false;
+  });
 };
 
 DynamicTableRow.prototype.registerEventHandlers = function(config) {
@@ -32,12 +39,7 @@ DynamicTableRow.prototype.registerEventHandlers = function(config) {
 };
 
 DynamicTableRow.prototype.isFocused = function() {
-  for ( var i = 0; i < this.cells.length; i++) {
-    if(this.cells[i].isFocused()) {
-      return true;
-    }
-  }
-  return false;
+  return this.hasFocus;
 };
 
 /**

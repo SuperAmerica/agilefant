@@ -29,7 +29,9 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
   this.setEditorValue();
   this.errorMessageVisible = false;
   this.element.trigger("editorOpening");
-  this.focus();
+  if(!this.options.editRow) {
+    this.focus();
+  }
 };
 /**
  * Save editor value if editor content is valid
@@ -82,22 +84,31 @@ TableEditors.CommonEditor.prototype.focus = function() {
 TableEditors.CommonEditor.prototype.isValid = function() {
   return true;
 };
+//bind events to the cell object as this.element may contain iframes,
+//which are in different document context
+TableEditors.CommonEditor.prototype._focusHandler = function() {
+  this.hasFocus = true;
+  this.cell.getElement().trigger("DynamicsFocus");
+};
+TableEditors.CommonEditor.prototype._blurHandler = function(event) {
+  if(!this.options.editRow) {
+    this._handleBlurEvent(event);
+  }
+  this.hasFocus = false;
+  this.cell.getElement().trigger("DynamicsBlur");
+};
+
 TableEditors.CommonEditor.prototype._registerEvents = function() {
   var me = this;
   this.element.keypress(function(event) {
     me._handleKeyEvent(event);
     return true;
   });
-  if(!this.options.editRow) {
-    this.element.blur(function(event) {
-      me._handleBlurEvent(event);
-    });
-  }
-  this.element.focus(function() {
-    me.hasFocus = true;
+  this.element.blur(function(event) {
+    me._blurHandler(event);
   });
-  this.element.blur(function() {
-    me.hasFocus = false;
+  this.element.focus(function() {
+    me._focusHandler();
   });
 };
 TableEditors.CommonEditor.prototype._handleBlurEvent = function(event) {
@@ -406,9 +417,6 @@ TableEditors.Wysiwyg = function(row, cell, options) {
       me.element = $(me.actualElement.wysiwyg("getDocument"));
       me._registerEvents();   
     }
-  });
-  this.actualElement.change(function() {
-    console.log("value changed, new value : " + me.actualElement.val());
   });
 };
 TableEditors.Wysiwyg.prototype = new TableEditors.CommonEditor();

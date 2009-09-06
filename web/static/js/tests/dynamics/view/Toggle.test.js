@@ -24,6 +24,7 @@ $(document).ready(function() {
 	    }
 	  };
 	  var testable = new DynamicTableToggleView(options, this, this.cell);
+	  testable.render();
 	  equals(collapseCalled, 1, "Correct collapse call count");
 	  equals(expandCalled, 0, "Correct expand call count");
 	  ok(testable.button.hasClass("dynamictable-expand"), "Expandable");
@@ -50,6 +51,7 @@ $(document).ready(function() {
 	      expanded: true
 	    };
 	    var testable = new DynamicTableToggleView(options, this, this.cell);
+	    testable.render();
 	    equals(collapseCalled, 0, "Correct collapse call count");
 	    equals(expandCalled, 1, "Correct expand call count");
 	    ok(testable.button.hasClass("dynamictable-collapse"), "Collapsable");

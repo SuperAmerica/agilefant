@@ -8,6 +8,7 @@ import static org.easymock.EasyMock.verify;
 import java.util.Arrays;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -58,6 +59,16 @@ public class UserBusinessTest {
         LocalDate start = new LocalDate(2009,6,1);
         Duration expected = new Duration(start.toDateMidnight(), start.plusDays(4).toDateMidnight());
         Interval interval = new Interval(start.toDateMidnight(), start.plusDays(4).toDateMidnight());
+        Duration actual = this.userBusiness.calculateWorktimePerPeriod(user, interval);
+        assertEquals(expected.getMillis(), actual.getMillis());
+    }
+    
+    @Test
+    public void testCalculateWorktimePerPeriod_inWeekend() {
+        User user = new User();
+        DateTime start = new DateTime(2009,9,5, 14, 50, 0, 0);
+        Duration expected = new Duration(0);
+        Interval interval = new Interval(start, start.plusDays(1).toDateMidnight());
         Duration actual = this.userBusiness.calculateWorktimePerPeriod(user, interval);
         assertEquals(expected.getMillis(), actual.getMillis());
     }

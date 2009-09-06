@@ -11,7 +11,6 @@ var IterationRowController = function(model, view, backlogController) {
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.initializeStoryConfig();
 };
 IterationRowController.prototype = new BacklogController();
 
@@ -56,7 +55,7 @@ IterationRowController.prototype.storyControllerFactory = function(view, model) 
 };
 
 IterationRowController.prototype.rowContentsFactory = function(view, model) { 
-  this.storyListView = new DynamicTable(this, this.model, this.storyListConfig, view); 
+  this.storyListView = new DynamicTable(this, this.model, IterationRowController.storyListConfig, view); 
   return this.storyListView;
 };
 
@@ -83,6 +82,7 @@ IterationRowController.prototype.toggleFactory = function(view, model) {
   var options = {
     collapse : IterationRowController.prototype.hideDetails,
     expand : IterationRowController.prototype.showDetails,
+    targetCell: IterationRowController.columnIndices.storiesData,
     expanded: false
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
@@ -159,7 +159,7 @@ IterationRowController.prototype.createStory = function() {
 /**
  * Initialize configuration for story lists.
  */
-IterationRowController.prototype.initializeStoryConfig = function() {
+(function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : IterationRowController.prototype.storyControllerFactory,
     dataSource : IterationModel.prototype.getStories,
@@ -277,5 +277,5 @@ IterationRowController.prototype.initializeStoryConfig = function() {
     cssClass : 'story-data',
     subViewFactory : StoryController.prototype.storyButtonFactory
   });
-  this.storyListConfig = config;
-};
+  IterationRowController.storyListConfig = config;
+})();

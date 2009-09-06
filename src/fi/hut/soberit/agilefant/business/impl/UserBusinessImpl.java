@@ -76,7 +76,12 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
             }
             iterator.addDays(1);
         }
-        return new Duration(interval.getStart(), interval.getEnd().minusDays(deductDays));
+        //if interval ends on a holiday at 00:00 the result would be negative
+        Duration worktime = new Duration(interval.getStart(), interval.getEnd().minusDays(deductDays));
+        if(worktime.getMillis() < 0 ) {
+            return new Duration(0);
+        }
+        return worktime;
     }
 
     @Autowired

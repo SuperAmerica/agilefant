@@ -59,9 +59,7 @@ DynamicTableRow.prototype.show = function() {
  */
 DynamicTableRow.prototype.render = function() {
   for ( var i = 0; i < this.cells.length; i++) {
-    if(!this.cells[i].delayedRender) {
-      this.cells[i].render();
-    }
+    this.cells[i].render();
   }
 };
 

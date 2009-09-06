@@ -379,7 +379,8 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     fullWidth : true,
     visible : false,
     cssClass : 'story-data',
-    subViewFactory : IterationRowController.prototype.rowContentsFactory
+    subViewFactory : IterationRowController.prototype.rowContentsFactory,
+    delayedRender: true
   });
 };
 

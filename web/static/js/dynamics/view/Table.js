@@ -331,6 +331,17 @@ DynamicTable.prototype._renderHeaderColumn = function(index) {
   }
 };
 
+DynamicTable.prototype.setFilter = function(filter) {
+  this.currentFilter = filter;
+};
+
+DynamicTable.prototype._filter = function(data) {
+  if(this.currentFilter) {
+    data = this.currentFilter(data);
+  };
+  return data;
+};
+
 /**
  * Render all table rows
  */
@@ -343,12 +354,15 @@ DynamicTable.prototype.render = function() {
       rowsWithInvalidConfig.push(this.middleRows[i]);
     }
   }
-  //remove invalid ones
-  $.each(rowsWithInvalidConfig, function() {
-    this.remove();
-  });
+  if(rowsWithInvalidConfig.length > 0) {
+    //remove invalid ones
+    $.each(rowsWithInvalidConfig, function() {
+      this.remove();
+    });
+  }
   if (this.config.getDataSource()) {
     var rowData = this.config.getDataSource().call(this.getModel());
+    rowData = this._filter(rowData);
     this._renderFromDataSource(rowData);
   }
   this._sort();

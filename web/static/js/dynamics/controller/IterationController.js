@@ -416,8 +416,9 @@ IterationController.prototype.initializeStoryConfig = function() {
   });
   config.addColumnConfiguration(StoryController.columnIndices.tasksData, {
     fullWidth : true,
-    visible : true,
+    visible : false,
     cssClass : 'story-data',
+    targetCell: StoryController.columnIndices.tasksData,
     subViewFactory : StoryController.prototype.storyContentsFactory
   });
   this.storyListConfig = config;

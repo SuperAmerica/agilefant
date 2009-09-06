@@ -3,7 +3,6 @@ var StoryController = function(model, view, backlogController) {
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.initTaskListConfiguration();
 };
 
 StoryController.columnIndices = {
@@ -132,7 +131,7 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   });
   var infoContents = new DynamicVerticalTable(this, this.model, config, info);
   var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
-  this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
+  this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig,
       tasks);
   this.contentsPanels.addPanel(infoContents);
   this.contentsPanels.addPanel(this.taskListView);
@@ -222,10 +221,11 @@ StoryController.prototype.createTask = function() {
  */
 StoryController.prototype.taskToggleFactory = function(view, model) {
   var me = this;
+  var expanded = model.getState() !== "DONE";
   var options = {
     collapse : StoryController.prototype.hideTaskColumn,
     expand : StoryController.prototype.showTaskColumn,
-    expanded: true
+    expanded: expanded
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;
@@ -289,7 +289,7 @@ StoryController.prototype.storyPointsEditable = function() {
 /**
  * 
  */
-StoryController.prototype.initTaskListConfiguration = function() {
+(function() {
   var config = new DynamicTableConfiguration( {
     cssClass: "dynamicTable-sortable-tasklist",
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
@@ -434,9 +434,8 @@ StoryController.prototype.initTaskListConfiguration = function() {
   });
   config.addColumnConfiguration(TaskController.columnIndices.data, {
     fullWidth : true,
-    visible : false,
     cssClass : 'task-data',
     visible : false
   });
-  this.taskListConfig = config;
-};
+  StoryController.taskListConfig = config;
+})();

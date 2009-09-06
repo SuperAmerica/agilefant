@@ -12,17 +12,23 @@ var DynamicTableToggleView = function(options, controller, parentView) {
   this.parentView = parentView;
   this.button = null;
   this.initialize();
-  if (this.options.expanded) {
-    this.expand();
-  } else {
-    this.collapse();
-  }
 };
 
 DynamicTableToggleView.prototype = new ViewPart();
 
 DynamicTableToggleView.collapsed = 1;
 DynamicTableToggleView.expanded = 2;
+
+DynamicTableToggleView.prototype.render = function() {
+  if(this.parentView instanceof DynamicTableCell && this.options.targetCell) {
+    this.targetView = this.parentView.getRow().getCell(this.options.targetCell);
+  };
+  if (this.options.expanded) {
+    this.expand();
+  } else {
+    this.collapse();
+  }
+};
 
 DynamicTableToggleView.prototype.initialize = function() {
   this.button = $("<div />").appendTo(this.parentView.getElement());
@@ -44,8 +50,8 @@ DynamicTableToggleView.prototype.showCollapsed = function() {
 };
 DynamicTableToggleView.prototype.collapse = function() {
   this.showCollapsed();
-  if(this.options.targetView && this.options.targetView()) {
-    this.options.targetView().hide();
+  if(this.targetView) {
+    this.targetView.hide();
   } else {
     this.options.collapse.call(this.controller, this);
   }
@@ -57,9 +63,9 @@ DynamicTableToggleView.prototype.showExpanded = function() {
 };
 DynamicTableToggleView.prototype.expand = function() {
   this.showExpanded();
-  if(this.options.targetView && this.options.targetView()) {
-    this.options.targetView().render();
-    this.options.targetView().show();
+  if(this.targetView) {
+    this.targetView.render();
+    this.targetView.show();
   } else {
     this.options.expand.call(this.controller, this);
   }

@@ -1,3 +1,8 @@
+<script type="text/javascript" src="static/js/dynamics/Dynamics.events.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+
+<script type="text/javascript" src="static/js/utils/ArrayUtils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/utils/Configuration.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+
 <script type="text/javascript" src="static/js/dynamics/view/ViewPart.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/MessageDisplay.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/DynamicView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
@@ -33,22 +38,17 @@
 
 <script type="text/javascript" src="static/js/dynamics/controller/CommonController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/BacklogController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/TaskController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/AssignmentController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/StoryController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/IterationController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/ProductController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/IterationRowController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/ProjectController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/ProjectRowController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller/StoryController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller/TaskController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/DailyWorkTaskController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/DailyWorkController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TasksWithoutStoryController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller/AssignmentController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-
-<script type="text/javascript" src="static/js/dynamics/Dynamics.events.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-
-<script type="text/javascript" src="static/js/utils/ArrayUtils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/utils/Configuration.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSelectedBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>

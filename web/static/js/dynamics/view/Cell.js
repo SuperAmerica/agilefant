@@ -15,6 +15,10 @@ var DynamicTableCell = function(row, config) {
 
 DynamicTableCell.prototype = new ViewPart();
 
+DynamicTableCell.prototype.getRow = function() {
+  return this.row;
+};
+
 /**
  * Set up cell DOM elements and styles
  */
@@ -89,7 +93,7 @@ DynamicTableCell.prototype.show = function() {
   }
 };
 DynamicTableCell.prototype.render = function() {
-  if(this.delayedRender) {
+  if(this.delayedRender && !this.config.isVisible()) {
     this.delayedRender = false;
     return;
   }

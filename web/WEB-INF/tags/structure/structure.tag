@@ -78,11 +78,11 @@
 
 <div id="controlWrapper">
   <c:if test="${hideControl != true}">
-    <div id="createNewMenuWrapper">
-      <struct:createNewMenu />
-    </div>
     <div id="navigationTabsWrapper">
       <struct:mainTabs navi="${navi}" />
+    </div>
+    <div id="createNewMenuWrapper">
+      <struct:createNewMenu />
     </div>
   </c:if>
 </div>

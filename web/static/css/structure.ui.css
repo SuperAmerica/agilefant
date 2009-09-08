@@ -8,6 +8,10 @@
  
 /* MENU HIDING */
 
+.menu-collapsed #navigationTabsWrapper {
+  margin-left: 2em;
+}
+
 .menu-collapsed #menuWrapper {
   width: 2em;
 }
@@ -49,7 +53,7 @@
   min-width: 800px;
 }
 .backlogInfo ul.backlogTabs {
-  height: 25px !important;  
+  height: 24px !important;  
 }
 .backlogInfo div.details {
   min-height: 200px;
@@ -64,8 +68,8 @@
  */
  
 #createNewMenuWrapper {
-  width: 15em;
-  float: left;  
+  margin-right: 1em;
+  float: right;
 }
 
 #createNewMenuLink a span {
@@ -87,7 +91,8 @@ ul#createNewMenu {
   padding: 0;
   position: absolute;
   border: 1px solid #aaa;
-  top: 11em;
+  top: 6.3em;
+  right: 1em;
   width: 12em;
   z-index: 300;
 }
@@ -123,7 +128,8 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
  */
 
 #navigationTabsWrapper {
-  
+  margin-left: 15em;
+  float: left;
 }
 
 #navigationTabsWrapper ul, #navigationTabsWrapper ul li {
@@ -135,7 +141,7 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
 
 #navigationTabsWrapper ul li {
   border-width: 1px 1px 0 1px;
-  border-color: #ccc;
+  border-color: #A6C9E2;
   border-style: solid;
   -moz-border-radius-bottomleft:  0;
   -moz-border-radius-bottomright: 0;

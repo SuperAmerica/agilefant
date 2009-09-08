@@ -70,7 +70,7 @@ $(window).resize(function() {
 <script type="text/javascript" src="static/js/simile/extensions/init-load.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/load-plot.js"></script>
 <div id="dailyWorkTabs">
-	<ul id="dwTabs" style="display: none; height: 21px;">
+	<ul id="dwTabs" style="display: none; height: 23px;">
 		<li><a href="#smallLoadTable"><span>Load</span></a></li>
 		<li><a href="#detailedLoadTable"><span>Detailed</span></a></li>
 		<c:if test="${settings.hourReportingEnabled}">
@@ -95,7 +95,7 @@ $(window).resize(function() {
               <div class="legend-box" style="background-color: rgba(224, 17, 2, 0.7);">Critical</div>
               <div class="legend-box" style="background-color: rgba(245, 221, 57, 0.7);">Optimal high</div>
               <div class="legend-box" style="background-color: rgba(9, 144, 14, 0.7);">Optimal low</div>
-              <div class="legend-box" style="background-color: rgba(204, 204, 204, 0.7);">Low</div>
+              <div class="legend-box" style="background-color: rgba(130, 180, 244, 0.7);">Low</div>
             </div>
 		</div>
 	</div>

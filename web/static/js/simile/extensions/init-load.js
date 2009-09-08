@@ -21,7 +21,7 @@ function init_user_load(timeplotTrack, userId, detailed, detailedLegends) {
 	    userLoadLimits = data;
 	  }
 	});
-	var stepValues = [["rgba(204, 204, 204, 0.7)", userLoadLimits.dailyLoadLow/60, userLoadLimits.dailyLoadMedium/60],
+	var stepValues = [["rgba(130, 180, 244, 0.7)", userLoadLimits.dailyLoadLow/60, userLoadLimits.dailyLoadMedium/60],
 	                  ["rgba(9, 144, 14, 0.7)", userLoadLimits.dailyLoadMedium/60, userLoadLimits.dailyLoadHigh/60],
 	                  ["rgba(245, 221, 57, 0.7)", userLoadLimits.dailyLoadHigh/60, userLoadLimits.dailyLoadCritical/60],
 	                  ["rgba(224, 17, 2, 0.7)", userLoadLimits.dailyLoadCritical/60, userLoadLimits.dailyLoadMaximum/60],

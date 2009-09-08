@@ -8,8 +8,8 @@
  */
 div.ui-dynatree-container
 {
-	font-family: tahoma, arial, helvetica;
-	font-size: 10pt; /* font size should not be too big */
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9pt; /* font size should not be too big */
 	white-space: nowrap; 
 	padding: 3px;
 	
@@ -243,6 +243,7 @@ div.ui-dynatree-container a:hover
 span.ui-dynatree-document a,
 span.ui-dynatree-folder a
 {
+  color: #1E5EEE !important;
 	display: inline-block; /* Better alignment, when title contains <br> */  
 /*	vertical-align: top;*/
 	padding-left: 3px;

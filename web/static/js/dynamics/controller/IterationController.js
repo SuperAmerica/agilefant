@@ -96,7 +96,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     saveRowCallback: TaskController.prototype.saveTask,
     dataSource: IterationModel.prototype.getTasks,
     caption: "Tasks without story",
-    cssClass: "dynamicTable-sortable-tasklist",
+    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all",
     sortCallback: TaskController.prototype.sortAndMoveTask,
     sortOptions: {
       items: "> .dynamicTableDataRow",
@@ -261,6 +261,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
+    cssClass: "ui-widget-content ui-corner-all",
     rowDroppable: true,
     dropOptions: {
       callback: TaskController.prototype.moveTask,

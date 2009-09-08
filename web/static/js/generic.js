@@ -1,13 +1,8 @@
 
 function toggleDiv(id) { $('#' + id).toggle(); }
 
-function confirmDeleteTodo() { return confirm("Really delete TODO?");}
-function confirmDeleteHour() { return confirm("Really delete hour entry?"); }
-function confirmDeleteStory() { return confirm("Deleting the story will cause all of its tasks and logged effort to be deleted.");}
 function confirmDelete() { return confirm("Are you sure?"); }
 function confirmDeleteTeam() { return confirm("Really delete the team?"); }
-function confirmReset() { return confirm("Really reset the original estimate?"); }
-function confirmDeleteIteration() { return confirm("Are you sure you wish to delete this iteration?"); }
 
 function deleteStory(storyId) {
 	var url = "ajax/deleteStory.action";			
@@ -389,6 +384,11 @@ function toggleMenu() {
   var wrapper = $('#outerWrapper');
   var isClosed = wrapper.hasClass("menu-collapsed");
   wrapper.toggleClass('menu-collapsed');
-  $.cookie("agilefantMenuClosed", isClosed);
+  if (isClosed) {
+    $.cookie("agilefantMenuClosed", null);
+  }
+  else {
+    $.cookie("agilefantMenuClosed", true);
+  }
   return false;
 }

@@ -49,12 +49,15 @@
   min-width: 800px;
 }
 .backlogInfo ul.backlogTabs {
-  height: 23px !important;  
+  height: 25px !important;  
 }
 .backlogInfo div.details {
-  border: 1px solid #ccc;
   min-height: 200px;
 }
+
+.backlogInfo th {
+  background-color: white;  
+} 
 
 /**
  * CREATE NEW -menu

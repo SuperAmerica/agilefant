@@ -112,10 +112,10 @@ public class DailyWorkAction extends ActionSupport {
             userId = SecurityUtil.getLoggedUserId();
         }
         
-        user = userBusiness.retrieve(userId);
+        user      = userBusiness.retrieve(userId);
         Task task = taskBusiness.retrieve(taskId);
         
-        dailyWorkBusiness.rankUnderTaskOnWhatsNext(user, task, taskBusiness.retrieve(rankUnderId));
+        dailyWorkBusiness.rankUnderTaskOnWhatsNext(user, task, taskBusiness.retrieveIfExists(rankUnderId));
         
         return Action.SUCCESS;
     }
@@ -139,7 +139,11 @@ public class DailyWorkAction extends ActionSupport {
     public Collection<DailyWorkTaskTO> getAssignedTasks() {
         return assignedTasks;
     }
-   
+    
+    public Collection<DailyWorkTaskTO> getNextTasks() {
+        return nextTasks;
+    }
+    
     public User getUser() {
         return user;
     }
@@ -152,10 +156,6 @@ public class DailyWorkAction extends ActionSupport {
         this.enabledUsers = enabledUsers;
     }
 
-    public Collection<DailyWorkTaskTO> getNextTasks() {
-        return nextTasks;
-    }
-    
     public void setTaskId(int taskId) {
         this.taskId = taskId; 
     }

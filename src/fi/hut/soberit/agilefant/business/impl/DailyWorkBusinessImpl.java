@@ -23,7 +23,7 @@ import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.util.Pair;
 
 @Service("dailyWorkBusiness")
-@Transactional(readOnly=true)
+@Transactional
 public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     private TaskDAO taskDAO;
     private WhatsNextEntryDAO whatsNextEntryDAO;
@@ -98,8 +98,13 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         WhatsNextEntry lastInRank;
         lastInRank = whatsNextEntryDAO.getLastTaskInRank(entry.getUser());
         
-        entry.setRank(lastInRank.getRank() + 1);
-
+        // might be null if all tasks done.
+        if (lastInRank != null) {
+            entry.setRank(lastInRank.getRank() + 1);
+        }
+        else {
+            entry.setRank(0);
+        }
         return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.NEXT, entry.getRank());
     }
     
@@ -110,7 +115,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     }
 
     @Transactional
-    public DailyWorkTaskTO rankUnserTaskOnWhatsNext(WhatsNextEntry entry, WhatsNextEntry upperEntry) {
+    public DailyWorkTaskTO rankUnderTaskOnWhatsNext(WhatsNextEntry entry, WhatsNextEntry upperEntry) {
         RankDirection dir = rankingBusiness.findOutRankDirection(entry, upperEntry);
         int newRank = rankingBusiness.findOutNewRank(entry, upperEntry, dir);
         Pair<Integer, Integer> borders = rankingBusiness.getRankBorders(entry, upperEntry);
@@ -127,9 +132,13 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     public DailyWorkTaskTO rankUnderTaskOnWhatsNext(User user, Task task,
             Task upperTask) throws IllegalArgumentException {
         WhatsNextEntry entry = whatsNextEntryDAO.getWhatsNextEntryFor(user, task);
-        WhatsNextEntry upperEntry = whatsNextEntryDAO.getWhatsNextEntryFor(user, upperTask);
         
-        return rankUnserTaskOnWhatsNext(entry, upperEntry);
+        WhatsNextEntry upperEntry = null;
+        if (upperTask != null) {
+            upperEntry = whatsNextEntryDAO.getWhatsNextEntryFor(user, upperTask);
+        }
+        
+        return rankUnderTaskOnWhatsNext(entry, upperEntry);
     }
 
     @Transactional

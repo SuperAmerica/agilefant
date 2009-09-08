@@ -21,7 +21,8 @@ DailyWorkTaskModel = function() {
       "effortLeft":       "effortLeft",
       "originalEstimate": "originalEstimate",
       "rank":             "rank",
-      "taskClass":        "taskClass"
+      "taskClass":        "taskClass",
+      "whatsNextRank":    "whatsNextRank"
     };
 
     this.classNameToRelation = {
@@ -41,6 +42,14 @@ DailyWorkTaskModel.prototype.getTaskClass = function() {
 
 DailyWorkTaskModel.prototype.getDailyWork = function() {
     return this.relations.dailyWork;
+};
+
+DailyWorkTaskModel.prototype.getRank = function() {
+    return this.currentData.whatsNextRank;
+};
+
+DailyWorkTaskModel.prototype.getWhatsNextRank = function() {
+    return this.currentData.whatsNextRank;
 };
 
 DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {

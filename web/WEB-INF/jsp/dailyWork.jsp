@@ -17,7 +17,7 @@
 <%@ include file="./inc/_userLoad.jsp" %>
 
 <c:choose>
-<c:when test="${!(empty assignedTasks)}" >
+<c:when test="${!(empty assignedTasks) or !(empty nextTasks)}" >
 
 <script type="text/javascript">
 

@@ -42,7 +42,6 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private boolean usersChanged = false;
 
     // CRUD
-    
     public String create() {
         setTask(new Task());
         return Action.SUCCESS;

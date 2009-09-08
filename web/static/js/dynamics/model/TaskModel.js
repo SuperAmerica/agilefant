@@ -167,7 +167,7 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   });
 };
 
-TaskModel.prototype.addToMyWhatsNext = function() {
+TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
     var me = this;
     
     if (me.getDailyWork) {

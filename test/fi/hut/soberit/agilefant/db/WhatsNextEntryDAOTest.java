@@ -43,7 +43,9 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
     public void testGetLastTaskInRank() {
         WhatsNextEntry e = testable.getLastTaskInRank(user1);
         Task t = e.getTask();
-        assertEquals(5, t.getId());
+        
+        // task 5 would be returned if it were not done already!
+        assertEquals(4, t.getId());
     }
     
     @Test
@@ -92,7 +94,9 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
     @Test
     public void testGetWhatsNextEntriesFor() {
         Collection<WhatsNextEntry> entries = testable.getWhatsNextEntriesFor(user1);
-        assertEquals(5, entries.size());
+        
+        // tasks #1 and #5 are out because they've been done already!
+        assertEquals(3, entries.size());
     }
     
     @Test

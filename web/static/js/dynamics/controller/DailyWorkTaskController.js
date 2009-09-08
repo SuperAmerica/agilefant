@@ -2,9 +2,23 @@ DailyWorkTaskController = function(model, view, parentController) {
     this.model = model;
     this.view = view;
     this.parentController = parentController;
+    
+    var me = this;
+    this.stateListener = function (event) {
+        me.actualStateListener(event);
+    };
+    
+    this.model.addListener(this.stateListener);
 };
 
 DailyWorkTaskController.prototype = new TaskController();
+
+DailyWorkTaskController.prototype.actualStateListener = function(event) {
+    if (event instanceof DynamicsEvents.EditEvent && event.getObject().getState() === "DONE") {
+        this.removeTaskFromDailyWork();
+        this.model.removeListener(this.stateListener);
+    }
+};
 
 DailyWorkTaskController.prototype.sortAndMoveDailyTask = function(view, model, newPos) {
   var previousRow = newPos - 1;

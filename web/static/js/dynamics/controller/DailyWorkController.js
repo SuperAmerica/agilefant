@@ -66,13 +66,9 @@ DailyWorkController.prototype.taskControllerFactory = function(view, model) {
 };
 
 DailyWorkController.prototype.dailyWorkTaskControllerFactory = function(view, model) {
-    var taskController = new TaskController(model, view, this);
+    var taskController = new DailyWorkTaskController(model, view, this);
     this.addChildController("dailyWorkTask", taskController);
     return taskController;
-};
-
-DailyWorkController.prototype.addToWhatsNext = function() {
-    alert("Unfortunately this functionality is not yet implemented");
 };
 
 DailyWorkController.prototype.createConfig = function(configType) {
@@ -96,6 +92,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     };
     
     if (configType == 'next') {
+        options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory,
         options.sortCallback = DailyWorkTaskController.prototype.sortAndMoveDailyTask;
         options.sortOptions = {
                 items: "> .dynamicTableDataRow",
@@ -112,7 +109,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         cssClass : 'task-row',
         title : "#",
         headerTooltip : 'Priority',
-        sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
+        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWhatsNextRank),
         defaultSortColumn: true,
         subViewFactory: TaskController.prototype.toggleFactory
     });
@@ -242,6 +239,6 @@ DailyWorkController.prototype.createConfig = function(configType) {
 }
 
 DailyWorkController.prototype.initializeConfigs = function() {
-    this.myWorkListConfig = this.createConfig('current'); 
-    this.whatsNextListConfig    = this.createConfig('next'); 
+    this.myWorkListConfig    = this.createConfig('current'); 
+    this.whatsNextListConfig = this.createConfig('next'); 
 };

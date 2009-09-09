@@ -8,6 +8,8 @@ var DynamicTableRow = function(config) {
   this.cells = [];
   this.cellIndex = {};
   this.initialize();
+  this.dynamicCssClasses = [];
+  this.cssClassResolver = null;
 };
 
 DynamicTableRow.prototype = new DynamicView();
@@ -63,13 +65,37 @@ DynamicTableRow.prototype.render = function() {
   for ( var i = 0; i < this.cells.length; i++) {
     this.cells[i].render();
   }
+
+  this._updateCssClasses();
 };
+
+DynamicTableRow.prototype._updateCssClasses = function() {
+  if (this.cssClassResolver === null) {
+      return;
+  }
+  
+  var newClasses = this.cssClassResolver(this.getModel());
+  var oldClasses = this.dynamicCssClasses;
+  for (var i = 0; i < oldClasses.length; i++) {
+    if ($.inArray(oldClasses[i], newClasses) != -1) {
+      this.element.removeClass(oldClasses[i]);
+    }
+  }
+  for (var i = 0; i < newClasses.length; i++) {
+    this.element.addClass(newClasses[i]);
+  }
+  this.dynamicCssClasses = newClasses;
+}
 
 /**
  * Update row and cell styles
  */
 DynamicTableRow.prototype.layout = function() {
 
+};
+
+DynamicTableRow.prototype.setCssClassResolver = function(resolver) {
+  this.cssClassResolver = resolver;
 };
 
 /**

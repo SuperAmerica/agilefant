@@ -22,7 +22,10 @@ DailyWorkTaskController.prototype.actualStateListener = function(event) {
 
 DailyWorkTaskController.prototype.sortAndMoveDailyTask = function(view, model, newPos) {
   var previousRow = newPos - 1;
+  var targetView  = view.getParentView();
   var targetModel = view.getParentView().getModel();
+  
+  // viewType === whatsNext, hopefully
   if (view.getParentView().getDataRowAt(previousRow)) {
     previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
     model.rankDailyUnder(previousTask.getId(), targetModel);
@@ -32,12 +35,41 @@ DailyWorkTaskController.prototype.sortAndMoveDailyTask = function(view, model, n
   }
 };
 
+DailyWorkTaskController.prototype.addAndRankDailyTask = function (view, model, newPos) {
+    var previousRow = newPos - 1;
+    var targetView  = view.getParentView();
+    var targetModel = view.getParentView().getModel();
+    var viewType    = targetView.dailyWorkViewType;
+
+    if (viewType === "myWork") {
+        return;
+    }
+
+    model.addToMyWhatsNext();
+
+    // viewType === whatsNext, hopefully
+    if (view.getParentView().getDataRowAt(previousRow)) {
+      previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
+      model.rankDailyUnder(previousTask.getId(), targetModel);
+    }
+    else {
+      model.rankDailyUnder(-1, targetModel);
+    }
+}
+
 DailyWorkTaskController.prototype.moveTask = function(targetModel) {
   this.model.rankUnder(-1, targetModel);
 };
 
 DailyWorkTaskController.prototype.removeTaskFromDailyWork = function() {
   this.model.removeFromDailyWork();
+};
+
+DailyWorkTaskController.prototype.cssClassResolver = function() {
+  if (this.model.getTaskClass() === "NEXT_ASSIGNED") {
+      return ["dynamic-table-row-next-task"];
+  }
+  return [];
 };
 
 DailyWorkTaskController.prototype.actionColumnFactory = function(view, model) {

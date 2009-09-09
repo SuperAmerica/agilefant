@@ -435,6 +435,9 @@ li.dynamictable-captionaction {
 .dynamictable .dynamictable-row .task-row {
 	background-color: #eee;
 }
+.dynamictable div.dynamic-table-row-next-task div.task-row {
+    background-color: #cfc;
+}
 .dynamictable .dynamictable-row .task-data {
 	background-color: #fff;
 }
@@ -478,4 +481,8 @@ div.corner-border {
 	-webkit-border-radius: 5px;
 	border:1px solid #A6C9E2;
 	margin-left: -8px;
+}
+
+div.dynamictable-tailer {
+	height: 20px;
 }

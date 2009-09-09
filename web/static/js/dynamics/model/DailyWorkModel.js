@@ -52,22 +52,22 @@ DailyWorkModel.prototype._setData = function(newData) {
 };
 
 DailyWorkModel.prototype.getMyWorks = function() {
-    return this._getChildrenByTaskClass("CURRENT");
+    return this._getChildrenByTaskClass(["ASSIGNED", "NEXT_ASSIGNED"]);
 };
 
 DailyWorkModel.prototype.getWhatsNexts = function() {
-    return this._getChildrenByTaskClass("NEXT");
+    return this._getChildrenByTaskClass(["NEXT", "NEXT_ASSIGNED"]);
 };
 
 DailyWorkModel.prototype.getAllTasks = function() {
     return this.relations.dailyWorkTask;
 }
 
-DailyWorkModel.prototype._getChildrenByTaskClass = function(taskClass) {
+DailyWorkModel.prototype._getChildrenByTaskClass = function(taskClasses) {
     var returnedTasks = [];
     var children = this.getAllTasks();
     for (var i = 0; i < children.length; i++) {
-        if (children[i].getTaskClass() === taskClass) {
+        if ($.inArray(children[i].getTaskClass(), taskClasses) != -1) {
             returnedTasks.push(children[i]);
         }
     }

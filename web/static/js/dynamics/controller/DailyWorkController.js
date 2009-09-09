@@ -21,15 +21,15 @@ DailyWorkController.prototype.paint = function() {
             me.createTaskLists();
         }
     );
-//
-//    ModelFactory.initializeFor(
-//        ModelFactory.initializeForTypes.dailyWork,
-//        this.id, 
-//        function(model) {
-//            me.model = model;
-//            me.createWhatsNextList();
-//        }
-//    );
+
+//  ModelFactory.initializeFor(
+//      ModelFactory.initializeForTypes.dailyWork,
+//      this.id, 
+//      function(model) {
+//          me.model = model;
+//          me.createWhatsNextList();
+//      }
+//  );
 };
 
 DailyWorkController.prototype.createTaskLists = function() {
@@ -45,6 +45,7 @@ DailyWorkController.prototype.createMyWorkList = function() {
         this.myWorkListElement
     );
 
+    this.myWorkListView.dailyWorkViewType = "myWork";
     this.myWorkListView.render();
 };
 
@@ -57,6 +58,7 @@ DailyWorkController.prototype.createWhatsNextList = function() {
     );
 
     this.whatsNextListView.render();
+    this.whatsNextListView.dailyWorkViewType = "whatsNext";
 };
 
 DailyWorkController.prototype.taskControllerFactory = function(view, model) {
@@ -72,37 +74,53 @@ DailyWorkController.prototype.dailyWorkTaskControllerFactory = function(view, mo
 };
 
 DailyWorkController.prototype.createConfig = function(configType) {
-    var configItems = ({
-        current: {
-            caption: "My work",
-            dataSource: DailyWorkModel.prototype.getMyWorks,
-            actionColumnFactory: TaskController.prototype.actionColumnFactory
-        },
-        next: {
-            caption: "What's next",
-            dataSource: DailyWorkModel.prototype.getWhatsNexts,
-            actionColumnFactory: DailyWorkTaskController.prototype.actionColumnFactory
-        }
-    })[configType];
-
-    var options = {
-       rowControllerFactory: DailyWorkController.prototype.taskControllerFactory,
-       dataSource:           configItems.dataSource,
-       caption:              configItems.caption
-    };
-    
+    var options = {};
+    var actionColumnFactory = null;
     if (configType == 'next') {
+        options.caption = "What's next";
+        options.dataSource = DailyWorkModel.prototype.getWhatsNexts;
+
         options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory,
         options.sortCallback = DailyWorkTaskController.prototype.sortAndMoveDailyTask;
         options.sortOptions = {
                 items: "> .dynamicTableDataRow",
                 handle: "." + DynamicTable.cssClasses.dragHandle,
-                connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
+                // keep the tasks within this control
+                containment: this.whatsNextListElement,
+                axis: 'y'
+        };
+        
+        options.appendTailer = true;
+        actionColumnFactory = DailyWorkTaskController.prototype.actionColumnFactory;
+    }
+    else {
+        options.caption = "My work";
+        options.dataSource = DailyWorkModel.prototype.getMyWorks;
+        actionColumnFactory = TaskController.prototype.actionColumnFactory;
+
+        options.tableDroppable = true;
+        options.alwaysDrop = true;
+        options.dropOptions = {
+            accepts: function(model) {
+                return (model instanceof DailyWorkTaskModel);
+            },
+            callback: function() {
+            }
+        };
+        
+        options.cssClassResolver = DailyWorkTaskController.prototype.cssClassResolver;
+        options.rowControllerFactory = DailyWorkController.prototype.taskControllerFactory;
+        options.sortCallback = DailyWorkTaskController.prototype.addAndRankDailyTask;
+        options.sortOptions = {
+                items: "> .dynamicTableDataRow",
+                handle: "." + DynamicTable.cssClasses.dragHandle,
+                // -sortable-tasklist
+                connectWith: ".dynamictable > .ui-sortable",
+                helper: 'clone',
         };
     }
     
     var config = new DynamicTableConfiguration(options);
-
     config.addColumnConfiguration(TaskController.columnIndices.prio, {
         minWidth : 24,
         autoScale : true,
@@ -213,7 +231,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         autoScale : true,
         cssClass : 'task-row',
         title : "Edit",
-        subViewFactory: configItems.actionColumnFactory
+        subViewFactory: actionColumnFactory
     });
 
     config.addColumnConfiguration(TaskController.columnIndices.description, {

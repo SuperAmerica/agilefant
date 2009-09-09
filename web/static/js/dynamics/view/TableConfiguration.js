@@ -23,6 +23,8 @@ var DynamicTableColumnConfiguration = function(options) {
 			onDoubleClick: null,
 			delayedRender: false,
 			editableCallback: function() { return true; },
+			draggableOnly: false,
+			cssClassResolver: null,
 			edit: {
 				decorator: null,
 				items: null,
@@ -31,7 +33,7 @@ var DynamicTableColumnConfiguration = function(options) {
 				buttons: null,
 				required: false,
 				minlength: null
-			}
+			},
 	};
 	$.extend(this.options,options);
 	this.options.edit.get = this.options.get;
@@ -157,6 +159,7 @@ var DynamicTableConfiguration = function(options) {
 			dropOptions: null,
 			tableDroppable: false,
 			rowDroppable: false,
+			alwaysDrop: false,
 			caption: "Table",
 			saveRowCallback: function() {},
 			cancelEditRowCallback: function() {},
@@ -184,11 +187,17 @@ DynamicTableConfiguration.prototype.getDataSource = function() {
 DynamicTableConfiguration.prototype.isSortable = function() {
   return this.options.sortCallback !== null;
 };
+DynamicTableConfiguration.prototype.isDraggableOnly = function() {
+    return this.options.draggableOnly;
+  };
 DynamicTableConfiguration.prototype.getSortOptions = function() {
   return this.options.sortOptions;
 };
 DynamicTableConfiguration.prototype.getSortCallback = function() {
   return this.options.sortCallback;
+};
+DynamicTableConfiguration.prototype.getCssClassResolver = function() {
+  return this.options.cssClassResolver;
 };
 DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum) {
 	return this.columns[columnNum];

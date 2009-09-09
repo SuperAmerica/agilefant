@@ -27,6 +27,7 @@ DynamicTable.cssClasses = {
   tableRow : "dynamictable-row",
   tableCell : "dynamictable-cell",
   tableHeader : "dynamictable-header",
+  tableTailer : "dynamictable-tailer",
   tableCaption : "dynamictable-caption",
   table : "dynamictable",
   notSortable : "dynamictable-notsortable",
@@ -87,6 +88,11 @@ DynamicTable.prototype.initialize = function() {
         .getCaptionConfiguration(), this.config.getCaption(), this
         .getController());
   this._renderHeader();
+  
+  if (this.config.options.appendTailer) {
+      this._createTailer();
+  }
+  
   this._bindEvents();
   if(this.config.isTableDroppable()) {
     me._registerDropFor(this.container);
@@ -132,18 +138,38 @@ DynamicTable.prototype._bindEvents = function() {
     me.debug(" sort remove + " + targetRow.getViewId());
   });
   
-  this.element.bind("sortover", function(event, ui) {
-    event.stopPropagation();
-    ui.item.data("sortactive", true);
-  });
-  
-  this.element.bind("sortout", function(event, ui) {
-    event.stopPropagation();
-    ui.item.data("sortactive", false);
-  });
- 
-  
+  if (this.config.alwaysDrop) {
+      this._bindSortEventsForAlwaysDrop();
+  }
+  else {
+      this._bindSortEvents();
+  }
 };
+
+DynamicTable.prototype._bindSortEvents = function() {
+    this.element.bind("sortover", function(event, ui) {
+        event.stopPropagation();
+        ui.item.data("sortactive", true);
+    });
+    
+    this.element.bind("sortout", function(event, ui) {
+        event.stopPropagation();
+        ui.item.data("sortactive", false);
+    });
+}
+
+DynamicTable.prototype._bindSortEventsForAlwaysDrop = function() {
+    this.element.bind("sortover", function(event, ui) {
+        event.stopPropagation();
+        ui.item.data("sortactive", false);
+    });
+    
+    this.element.bind("sortout", function(event, ui) {
+        event.stopPropagation();
+        ui.item.data("sortactive", false);
+    });
+}
+
 DynamicTable.prototype._computeColumns = function() {
   var columnConfigs = this.config.getColumns();
   var numberOfColumns = 0;
@@ -197,7 +223,14 @@ DynamicTable.prototype._computeColumns = function() {
 
 DynamicTable.prototype.layout = function() {
   for(var i = 0; i < this.middleRows.length; i++) {
-    this.middleRows[i].getElement().addClass("dynamicTableDataRow");
+    var row = this.middleRows[i];
+    var element = row.getElement();
+    
+    element.addClass("dynamicTableDataRow");
+    
+    if (this.config.isDraggableOnly()) {
+      element.draggable({ opacity: 0.7, helper: 'clone' });
+    }
   }
   var me = this;
   if(this.config.isSortable()) {
@@ -306,6 +339,12 @@ DynamicTable.prototype._renderHeader = function() {
   }
 };
 
+DynamicTable.prototype._createTailer = function() {
+    this.tailer = $('<div />').appendTo(this.element).addClass(
+        DynamicTable.cssClasses.tableTailer).addClass(
+        DynamicTable.cssClasses.tableRow);
+}
+
 DynamicTable.prototype._renderHeaderColumn = function(index) {
   var columnConf = this.config.getColumnConfiguration(index);
   var columnHeader = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
@@ -370,6 +409,8 @@ DynamicTable.prototype.render = function() {
   this._addSectionToTable(this.upperRows);
   this._addSectionToTable(this.middleRows);
   this._addSectionToTable(this.bottomRows);
+  this._appendTailerIfExists();
+  
   this.element.find("textarea.tableSortListener").trigger("tableSorted");
   if (this.rowCount() === 0) {
     this.header.hide();
@@ -377,6 +418,12 @@ DynamicTable.prototype.render = function() {
     this.header.show();
   }
   this.layout();
+};
+
+DynamicTable.prototype._appendTailerIfExists = function () {
+    if (this.tailer !== null) {
+        this.element.append(this.tailer);
+    }
 };
 
 DynamicTable.prototype._addSectionToTable = function(section) {
@@ -464,6 +511,11 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
   }
   row.init(controller, model, this);
   row.registerEventHandlers(this.config);
+  
+  var rowCssCallback = this.config.getCssClassResolver();
+  if (rowCssCallback) {
+      row.setCssClassResolver(rowCssCallback);
+  }
 };
 
 DynamicTable.prototype._dataSourceRow = function(model, columnConfig) {

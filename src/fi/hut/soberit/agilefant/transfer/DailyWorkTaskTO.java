@@ -5,16 +5,18 @@ import fi.hut.soberit.agilefant.util.BeanCopier;
 
 public class DailyWorkTaskTO extends Task {
     public enum TaskClass {
-        CURRENT,
+        ASSIGNED,
         NEXT,
+        NEXT_ASSIGNED
     }
     
     private TaskClass taskClass;
     private int whatsNextRank;
     
-    public DailyWorkTaskTO() {
-        
+    public DailyWorkTaskTO(Task task) {
+        BeanCopier.copy(task, this);
     }
+
 
     public DailyWorkTaskTO(Task task, TaskClass clazz, int whatsNextRank) {
         BeanCopier.copy(task, this);
@@ -39,5 +41,9 @@ public class DailyWorkTaskTO extends Task {
 
     public TaskClass getTaskClass() {
         return taskClass;
+    }
+
+    public void setTask(Task task) {
+        BeanCopier.copy(task, this);
     }
 }

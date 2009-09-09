@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 import fi.hut.soberit.agilefant.util.Pair;
 
 @Service("dailyWorkBusiness")
@@ -52,7 +53,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         
         ArrayList<DailyWorkTaskTO> returned = new ArrayList<DailyWorkTaskTO>();
         for (Task task: taskDAO.getAllIterationAndStoryTasks(user, interval)) {
-            returned.add(new DailyWorkTaskTO(task, DailyWorkTaskTO.TaskClass.CURRENT, -1));
+            returned.add(new DailyWorkTaskTO(task, DailyWorkTaskTO.TaskClass.ASSIGNED, -1));
         }
         
         return returned;
@@ -63,8 +64,18 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         Collection<DailyWorkTaskTO> returned = new ArrayList<DailyWorkTaskTO>();
         
         for (WhatsNextEntry entry: entries) {
-            DailyWorkTaskTO item = new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.NEXT, entry.getRank());
+            Task task = entry.getTask();
+
+            DailyWorkTaskTO item = new DailyWorkTaskTO(task);
             item.setRank(entry.getRank());
+            
+            Collection<User> responsibles = task.getResponsibles();
+            if (responsibles != null && responsibles.contains(user)) {
+                item.setTaskClass(TaskClass.NEXT_ASSIGNED);
+            }
+            else {
+                item.setTaskClass(TaskClass.NEXT);
+            }
             
             returned.add(item);
         }
@@ -125,7 +136,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
 
         rankingBusiness.shiftRanks(dir, shiftables);
         entry.setRank(newRank);
-        return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.CURRENT, newRank);
+        return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.ASSIGNED, newRank);
     }
     
     @Transactional

@@ -41,7 +41,6 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<User> enabledUsers        = new ArrayList<User>();
     private Collection<DailyWorkTaskTO> assignedTasks = new ArrayList<DailyWorkTaskTO>();
-    private Collection<DailyWorkTaskTO> nextTasks     = new ArrayList<DailyWorkTaskTO>();
 
     // TODO: refactor these outside...
     private int taskId;
@@ -138,10 +137,6 @@ public class DailyWorkAction extends ActionSupport {
     
     public Collection<DailyWorkTaskTO> getAssignedTasks() {
         return assignedTasks;
-    }
-    
-    public Collection<DailyWorkTaskTO> getNextTasks() {
-        return nextTasks;
     }
     
     public User getUser() {

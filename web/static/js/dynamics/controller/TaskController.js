@@ -127,7 +127,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     text : "Edit",
     callback : TaskController.prototype.editTask
   }, {
-    text : "Add to my What's next",
+    text : "Do this week",
     callback : TaskController.prototype.addToMyWhatsNext
   },/*{
     text : "Move",

@@ -67,7 +67,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
             Task task = entry.getTask();
 
             DailyWorkTaskTO item = new DailyWorkTaskTO(task);
-            item.setRank(entry.getRank());
+            item.setWhatsNextRank(entry.getRank());
             
             Collection<User> responsibles = task.getResponsibles();
             if (responsibles != null && responsibles.contains(user)) {
@@ -76,7 +76,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
             else {
                 item.setTaskClass(TaskClass.NEXT);
             }
-            
+
             returned.add(item);
         }
         
@@ -144,6 +144,10 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
             Task upperTask) throws IllegalArgumentException {
         WhatsNextEntry entry = whatsNextEntryDAO.getWhatsNextEntryFor(user, task);
         
+        if (entry == null) {
+            entry = addToWhatsNext(user, task);
+        }
+        
         WhatsNextEntry upperEntry = null;
         if (upperTask != null) {
             upperEntry = whatsNextEntryDAO.getWhatsNextEntryFor(user, upperTask);
@@ -162,12 +166,13 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     }
     
     @Transactional
-    public void addToWhatsNext(User user, Task task) {
+    public WhatsNextEntry addToWhatsNext(User user, Task task) {
         WhatsNextEntry entry = new WhatsNextEntry();
         entry.setTask(task);
         entry.setUser(user);
         whatsNextEntryDAO.store(entry);
         rankToBottomOnWhatsNext(entry);
+        return entry;
     }
 
 }

@@ -77,7 +77,7 @@ DynamicTableRow.prototype._updateCssClasses = function() {
   var newClasses = this.cssClassResolver(this.getModel());
   var oldClasses = this.dynamicCssClasses;
   for (var i = 0; i < oldClasses.length; i++) {
-    if ($.inArray(oldClasses[i], newClasses) != -1) {
+    if ($.inArray(oldClasses[i], newClasses) == -1) {
       this.element.removeClass(oldClasses[i]);
     }
   }

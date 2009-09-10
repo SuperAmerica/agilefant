@@ -184,7 +184,7 @@ TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
            taskId: me.getId(),
         },
         success: function(data,status) {
-            var msg = new MessageDisplay.OkMessage("Task added to What's next list");
+            var msg = new MessageDisplay.OkMessage("Task added to this week's tasks");
             
             if (dailyWork) {
                 dailyWork.reload();
@@ -194,7 +194,7 @@ TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
             }
         },
         error: function(xhr,status) {
-            var msg = new MessageDisplay.ErrorMessage("Error adding task to What's next list.", xhr);
+            var msg = new MessageDisplay.ErrorMessage("Error adding task to this week's tasks.", xhr);
         }
     });
 }

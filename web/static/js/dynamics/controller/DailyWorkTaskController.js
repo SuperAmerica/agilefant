@@ -45,8 +45,6 @@ DailyWorkTaskController.prototype.addAndRankDailyTask = function (view, model, n
         return;
     }
 
-    model.addToMyWhatsNext();
-
     // viewType === whatsNext, hopefully
     if (view.getParentView().getDataRowAt(previousRow)) {
       previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
@@ -67,8 +65,9 @@ DailyWorkTaskController.prototype.removeTaskFromDailyWork = function() {
 
 DailyWorkTaskController.prototype.cssClassResolver = function() {
   if (this.model.getTaskClass() === "NEXT_ASSIGNED") {
-      return ["dynamic-table-row-next-task"];
+      return ["daily-work-next-assigned"];
   }
+
   return [];
 };
 

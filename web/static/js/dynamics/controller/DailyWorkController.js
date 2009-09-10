@@ -21,15 +21,6 @@ DailyWorkController.prototype.paint = function() {
             me.createTaskLists();
         }
     );
-
-//  ModelFactory.initializeFor(
-//      ModelFactory.initializeForTypes.dailyWork,
-//      this.id, 
-//      function(model) {
-//          me.model = model;
-//          me.createWhatsNextList();
-//      }
-//  );
 };
 
 DailyWorkController.prototype.createTaskLists = function() {
@@ -63,7 +54,7 @@ DailyWorkController.prototype.createWhatsNextList = function() {
 
 DailyWorkController.prototype.taskControllerFactory = function(view, model) {
     var taskController = new TaskController(model, view, this);
-    this.addChildController("task", taskController);
+    this.addChildController("dailyWorkTask", taskController);
     return taskController;
 };
 
@@ -76,8 +67,10 @@ DailyWorkController.prototype.dailyWorkTaskControllerFactory = function(view, mo
 DailyWorkController.prototype.createConfig = function(configType) {
     var options = {};
     var actionColumnFactory = null;
+    var sortCallback = null;
+    
     if (configType == 'next') {
-        options.caption = "What's next";
+        options.caption = "Tasks I'm going to do this week  ";
         options.dataSource = DailyWorkModel.prototype.getWhatsNexts;
 
         options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory,
@@ -87,14 +80,16 @@ DailyWorkController.prototype.createConfig = function(configType) {
                 handle: "." + DynamicTable.cssClasses.dragHandle,
                 // keep the tasks within this control
                 containment: this.whatsNextListElement,
-                axis: 'y'
+                axis: 'y',
         };
         
         options.appendTailer = true;
+
+        sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWhatsNextRank);
         actionColumnFactory = DailyWorkTaskController.prototype.actionColumnFactory;
     }
     else {
-        options.caption = "My work";
+        options.caption = "Tasks assigned to me";
         options.dataSource = DailyWorkModel.prototype.getMyWorks;
         actionColumnFactory = TaskController.prototype.actionColumnFactory;
 
@@ -117,7 +112,10 @@ DailyWorkController.prototype.createConfig = function(configType) {
                 // -sortable-tasklist
                 connectWith: ".dynamictable > .ui-sortable",
                 helper: 'clone',
+                cancel: '.daily-work-next-assigned > .task-row'
         };
+
+        sortCallback = DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank);
     }
     
     var config = new DynamicTableConfiguration(options);
@@ -127,7 +125,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         cssClass : 'task-row',
         title : "#",
         headerTooltip : 'Priority',
-        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWhatsNextRank),
+        sortCallback: sortCallback,
         defaultSortColumn: true,
         subViewFactory: TaskController.prototype.toggleFactory
     });

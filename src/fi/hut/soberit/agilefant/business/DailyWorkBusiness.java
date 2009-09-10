@@ -6,6 +6,7 @@ import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public interface DailyWorkBusiness {
@@ -57,5 +58,5 @@ public interface DailyWorkBusiness {
      * @param user
      * @param task
      */
-    public void addToWhatsNext(User user, Task task) throws IllegalArgumentException;
+    public WhatsNextEntry addToWhatsNext(User user, Task task) throws IllegalArgumentException;
 }

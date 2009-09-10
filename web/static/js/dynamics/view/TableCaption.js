@@ -1,6 +1,6 @@
-var DynamicTableCaption = function(element, itemConfigs, text, controller) {
+var DynamicTableCaption = function(element, config, text, controller) {
   this.captionItems = {};
-  this.config = itemConfigs;
+  this.config = config;
   this.element = element;
   this.captionText = text;
   this.controller = controller;
@@ -11,8 +11,12 @@ DynamicTableCaption.prototype._initialize = function() {
   this.captionTextContainer = $("<div />").css("float", "left").text(this.captionText).appendTo(this.element).width("30%");
   this.captionItemContainer = $('<ul />').addClass(DynamicTable.cssClasses.captionActions).appendTo(this.element).css("float","right").width("68%");
   
-  for(var i = 0; i < this.config.length; i++) {
-    this._addCaptionItem(this.config[i]);
+  if (this.config.cssClasses) {
+    this.element.addClass(this.config.cssClasses);
+  }
+  
+  for(var i = 0; i < this.config.captionItems.length; i++) {
+    this._addCaptionItem(this.config.captionItems[i]);
   }
 };
 

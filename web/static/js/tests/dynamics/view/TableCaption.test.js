@@ -16,7 +16,11 @@ $(document).ready(function() {
     conf.expects().getCssClass().andReturn(null);
     conf.expects().isVisible().andReturn(true);
     
-    var testable = new DynamicTableCaption(this.parent, [conf], "", window);
+    var config = {
+        captionItems: [conf]
+    };
+    
+    var testable = new DynamicTableCaption(this.parent, config, "", window);
     var clickCallCount = 0;
     testable._click = function() {
       clickCallCount++;
@@ -41,7 +45,8 @@ $(document).ready(function() {
     conf.expects().getCssClass().andReturn("myClass");
     conf.expects().isVisible().andReturn(false);
     
-    var testable = new DynamicTableCaption(this.parent, [conf], "", window);
+    
+    var testable = new DynamicTableCaption(this.parent, {captionItems:[conf]}, "", window);
     var clickCallCount = 0;
     
     
@@ -65,7 +70,7 @@ $(document).ready(function() {
       callbackCalled++;
     });
     
-    var testable = new DynamicTableCaption(this.parent, [conf], "", window);
+    var testable = new DynamicTableCaption(this.parent, {captionItems:[conf]}, "", window);
     
     this.parent.children("ul").children("li").click();
     equals(callbackCalled, 1, "Callback called once");
@@ -86,7 +91,7 @@ $(document).ready(function() {
       callbackCalled++;
     });
     
-    var testable = new DynamicTableCaption(this.parent, [conf], "", window);
+    var testable = new DynamicTableCaption(this.parent, {captionItems:[conf]}, "", window);
     var connectedToggleCalled = 0;
     testable.captionItems["connected"] = {
         toggle: function() { connectedToggleCalled++; }

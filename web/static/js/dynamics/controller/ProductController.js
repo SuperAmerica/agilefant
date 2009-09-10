@@ -147,7 +147,11 @@ ProductController.prototype.initializeStoryConfig = function() {
     dataSource : ProductModel.prototype.getStories,
     saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
-    caption : "Stories"
+    caption : "Stories",
+    captionConfig: {
+      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    },
+    cssClass: "ui-widget-content ui-corner-all"
   });
 
   config.addCaptionItem( {
@@ -289,7 +293,11 @@ ProductController.prototype.initializeProjectListConfig = function() {
     rowControllerFactory : ProductController.prototype.projectRowControllerFactory,
     dataSource : ProductModel.prototype.getProjects,
     saveRowCallback: ProjectRowController.prototype.saveProject,
-    caption : "Projects"
+    caption : "Projects",
+    captionConfig: {
+      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    },
+    cssClass: "ui-widget-content ui-corner-all"
   });
 
   config.addCaptionItem( {

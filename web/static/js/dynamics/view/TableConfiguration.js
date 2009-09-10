@@ -152,7 +152,11 @@ DynamicTableCaptionItemConfiguration.prototype.getCssClass = function() {
  */
 var DynamicTableConfiguration = function(options) {
 	this.columns = [];
-	this.captionItems = [];
+	this.captionConfig = {
+	    captionItems: [],
+	    cssClasses: ""
+	};
+	
 	this.options = {
 			rowControllerFactory: function() {},
 			dataSource: null,
@@ -161,6 +165,7 @@ var DynamicTableConfiguration = function(options) {
 			rowDroppable: false,
 			alwaysDrop: false,
 			caption: "Table",
+			captionStyles: null,
 			saveRowCallback: function() {},
 			cancelEditRowCallback: function() {},
 			sortCallback: null,
@@ -170,6 +175,7 @@ var DynamicTableConfiguration = function(options) {
 			}
 	};
 	jQuery.extend(this.options, options);
+	jQuery.extend(this.captionConfig, this.options.captionConfig);
 };
 
 DynamicTableConfiguration.prototype.getSaveRowCallback = function() {
@@ -203,13 +209,10 @@ DynamicTableConfiguration.prototype.getColumnConfiguration = function(columnNum)
 	return this.columns[columnNum];
 };
 DynamicTableConfiguration.prototype.addCaptionItem = function(options) {
-  this.captionItems.push(new DynamicTableCaptionItemConfiguration(options));
+  this.captionConfig.captionItems.push(new DynamicTableCaptionItemConfiguration(options));
 };
 DynamicTableConfiguration.prototype.getCaptionConfiguration = function() {
-	return this.captionItems;
-};
-DynamicTableConfiguration.prototype.hasCaptionConfiguration = function() {
-	return this.captionItems.length > 0;
+	return this.captionConfig;
 };
 DynamicTableConfiguration.prototype.getColumns = function() {
 	return this.columns;

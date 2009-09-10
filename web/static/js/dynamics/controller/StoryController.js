@@ -221,7 +221,7 @@ StoryController.prototype.createTask = function() {
  */
 StoryController.prototype.taskToggleFactory = function(view, model) {
   var me = this;
-  var expanded = model.getState() !== "DONE";
+  var expanded =  false; // model.getState() !== "DONE";
   var options = {
     collapse : StoryController.prototype.hideTaskColumn,
     expand : StoryController.prototype.showTaskColumn,

@@ -26,8 +26,8 @@ $(document).ready(function() {
     testable._registerEvents();
     
     this.elementMock.expects().keypress(TypeOf.isA(Function));
-    this.elementMock.expects().focus(TypeOf.isA(Function)).andReturn(this.elementMock);
     this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
+    this.elementMock.expects().focus(TypeOf.isA(Function)).andReturn(this.elementMock);
     testable.options = {editRow: true};
     testable._registerEvents();
     ok(true, "Events registered"); //verify only mock calls

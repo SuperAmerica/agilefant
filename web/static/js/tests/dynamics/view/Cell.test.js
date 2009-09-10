@@ -77,8 +77,7 @@ $(document).ready(function() {
 	   var me = this;
      
 	   var editorOpt = {
-         editor: "foo",
-         
+         editor: "foo"
      };
 	    this.cellConfig.expects().hasDelayedRender().andReturn(false);
 	   this.cellConfig.expects().getWidth().andReturn(null);

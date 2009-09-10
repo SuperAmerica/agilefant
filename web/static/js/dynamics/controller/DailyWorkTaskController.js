@@ -53,7 +53,7 @@ DailyWorkTaskController.prototype.addAndRankDailyTask = function (view, model, n
     else {
       model.rankDailyUnder(-1, targetModel);
     }
-}
+};
 
 DailyWorkTaskController.prototype.moveTask = function(targetModel) {
   this.model.rankUnder(-1, targetModel);

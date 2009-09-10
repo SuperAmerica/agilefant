@@ -81,11 +81,11 @@ DynamicTableRow.prototype._updateCssClasses = function() {
       this.element.removeClass(oldClasses[i]);
     }
   }
-  for (var i = 0; i < newClasses.length; i++) {
+  for (i = 0; i < newClasses.length; i++) {
     this.element.addClass(newClasses[i]);
   }
   this.dynamicCssClasses = newClasses;
-}
+};
 
 /**
  * Update row and cell styles

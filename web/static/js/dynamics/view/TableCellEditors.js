@@ -304,7 +304,7 @@ TableEditors.Date.prototype._registerEvents = function() {
     this.cus = true;
   }).blur(function() {
     this.cus = false;
-  })
+  });
 };
 TableEditors.Date.prototype.close = function() {
   this.element.trigger("editorClosing");

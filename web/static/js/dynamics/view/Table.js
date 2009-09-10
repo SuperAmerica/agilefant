@@ -156,7 +156,7 @@ DynamicTable.prototype._bindSortEvents = function() {
         event.stopPropagation();
         ui.item.data("sortactive", false);
     });
-}
+};
 
 DynamicTable.prototype._bindSortEventsForAlwaysDrop = function() {
     this.element.bind("sortover", function(event, ui) {
@@ -168,7 +168,7 @@ DynamicTable.prototype._bindSortEventsForAlwaysDrop = function() {
         event.stopPropagation();
         ui.item.data("sortactive", false);
     });
-}
+};
 
 DynamicTable.prototype._computeColumns = function() {
   var columnConfigs = this.config.getColumns();
@@ -343,41 +343,13 @@ DynamicTable.prototype._createTailer = function() {
     this.tailer = $('<div />').appendTo(this.element).addClass(
         DynamicTable.cssClasses.tableTailer).addClass(
         DynamicTable.cssClasses.tableRow);
-}
-
-DynamicTable.prototype._renderHeaderColumn = function(index) {
-  var columnConf = this.config.getColumnConfiguration(index);
-  var columnHeader = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
-  if (columnConf.getWidth()) {
-    columnHeader.width(columnConf.getWidth());
-  }
-  columnHeader.appendTo(this.header);
-  var nameElement;
-  var me = this;
-  if (columnConf.isSortable()) {
-    nameElement = $('<a />').click(function() {
-      me._sortByColumn(index);
-      return false;
-    });
-    $('<div/>').addClass(DynamicTable.cssClasses.sortImg)
-        .appendTo(columnHeader);
-  } else {
-    nameElement = $('<span />');
-  }
-  nameElement.appendTo(columnHeader).text(columnConf.getTitle());
-  if (columnConf.getHeaderTooltip()) {
-    columnHeader.attr("title", columnConf.getHeaderTooltip());
-  }
 };
 
-DynamicTable.prototype.setFilter = function(filter) {
-  this.currentFilter = filter;
-};
 
 DynamicTable.prototype._filter = function(data) {
   if(this.currentFilter) {
     data = this.currentFilter(data);
-  };
+  }
   return data;
 };
 
@@ -405,7 +377,7 @@ DynamicTable.prototype.render = function() {
     this._renderFromDataSource(rowData);
   }
   this._sort();
-  var i = 0;
+  i = 0;
   this._addSectionToTable(this.upperRows);
   this._addSectionToTable(this.middleRows);
   this._addSectionToTable(this.bottomRows);
@@ -418,6 +390,35 @@ DynamicTable.prototype.render = function() {
     this.header.show();
   }
   this.layout();
+};
+
+DynamicTable.prototype._renderHeaderColumn = function(index) {
+  var columnConf = this.config.getColumnConfiguration(index);
+  var columnHeader = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
+  if (columnConf.getWidth()) {
+    columnHeader.width(columnConf.getWidth());
+  }
+  columnHeader.appendTo(this.header);
+  var nameElement;
+  var me = this;
+  if (columnConf.isSortable()) {
+    nameElement = $('<a />').click(function() {
+      me._sortByColumn(index);
+      return false;
+    });
+    $('<div/>').addClass(DynamicTable.cssClasses.sortImg)
+        .appendTo(columnHeader);
+  } else {
+    nameElement = $('<span />');
+  }
+  nameElement.appendTo(columnHeader).text(columnConf.getTitle());
+  if (columnConf.getHeaderTooltip()) {
+    columnHeader.attr("title", columnConf.getHeaderTooltip());
+  }
+};
+
+DynamicTable.prototype.setFilter = function(filter) {
+  this.currentFilter = filter;
 };
 
 DynamicTable.prototype._appendTailerIfExists = function () {

@@ -61,7 +61,7 @@ DailyWorkModel.prototype.getWhatsNexts = function() {
 
 DailyWorkModel.prototype.getAllTasks = function() {
     return this.relations.dailyWorkTask;
-}
+};
 
 DailyWorkModel.prototype._getChildrenByTaskClass = function(taskClasses) {
     var returnedTasks = [];

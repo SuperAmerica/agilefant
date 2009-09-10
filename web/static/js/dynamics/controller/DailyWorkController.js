@@ -26,7 +26,7 @@ DailyWorkController.prototype.paint = function() {
 DailyWorkController.prototype.createTaskLists = function() {
     this.createMyWorkList();
     this.createWhatsNextList();
-}
+};
 
 DailyWorkController.prototype.createMyWorkList = function() {
     this.myWorkListView = new DynamicTable(
@@ -70,17 +70,17 @@ DailyWorkController.prototype.createConfig = function(configType) {
     var sortCallback = null;
     
     if (configType == 'next') {
-        options.caption = "Tasks I'm going to do this week  ";
+        options.caption = "Tasks I'm going to do next";
         options.dataSource = DailyWorkModel.prototype.getWhatsNexts;
 
-        options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory,
+        options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory;
         options.sortCallback = DailyWorkTaskController.prototype.sortAndMoveDailyTask;
         options.sortOptions = {
                 items: "> .dynamicTableDataRow",
                 handle: "." + DynamicTable.cssClasses.dragHandle,
                 // keep the tasks within this control
                 containment: this.whatsNextListElement,
-                axis: 'y',
+                axis: 'y'
         };
         
         options.appendTailer = true;
@@ -252,7 +252,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     });
     
     return config;
-}
+};
 
 DailyWorkController.prototype.initializeConfigs = function() {
     this.myWorkListConfig    = this.createConfig('current'); 

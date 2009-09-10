@@ -33,7 +33,7 @@ var DynamicTableColumnConfiguration = function(options) {
 				buttons: null,
 				required: false,
 				minlength: null
-			},
+			}
 	};
 	$.extend(this.options,options);
 	this.options.edit.get = this.options.get;

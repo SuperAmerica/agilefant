@@ -22,7 +22,7 @@ DynamicTableToggleView.expanded = 2;
 DynamicTableToggleView.prototype.render = function() {
   if(this.parentView instanceof DynamicTableCell && this.options.targetCell) {
     this.targetView = this.parentView.getRow().getCell(this.options.targetCell);
-  };
+  }
   if (this.options.expanded) {
     this.expand();
   } else {

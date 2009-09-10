@@ -9,7 +9,7 @@
 $(document).ready(function() {
   $('#backlogMenuTree').dynatree({
     onClick: function(dtnode, event) {
-      if ($(event.originalTarget).hasClass("ui-dynatree-title")) {
+      if ($(event.target).hasClass("ui-dynatree-title")) {
         window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
       }
     },

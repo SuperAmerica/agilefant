@@ -2,11 +2,18 @@
  * CSS attributes for styling the ui.
  *
  * Contents:
+ *  - Menu collapsing
+ *  - Left hand menu
+ *  - Backlog info tables
  *  - Create new menu
+ *  - Navigation tabs
  *  - Footer
+ *  - Daily work styles
  */
  
-/* MENU HIDING */
+/**
+ * MENU HIDING 
+ */
 
 .menu-collapsed #navigationTabsWrapper {
   margin-left: 2em;
@@ -147,10 +154,10 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
   -moz-border-radius-bottomright: 0;
   -moz-border-radius-topleft: 5px;
   -moz-border-radius-topright: 5px;
-  -webkit-border-radius-bottomleft:  0;
-  -webkit-border-radius-bottomright: 0;
-  -webkit-border-radius-topleft: 5px;
-  -webkit-border-radius-topright: 5px;
+  -webkit-border-bottom-right-radius:  0;
+  -webkit-border-bottom-left-radius: 0;
+  -webkit-border-top-left-radius: 5px;
+  -webkit-border-top-right-radius: 5px;
   padding: 0.3em 0.5em 0.1em 0.5em; 
   margin: 0 0.5em 0 0;
   background: #dfeffc url("../img/ui/ui-bg_glass_85_dfeffc_1x400.png") repeat-x scroll 50% 50%;
@@ -158,7 +165,7 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
 
 #navigationTabsWrapper ul li.navitab-selected {
   background: #fff;
-  padding-bottom: 0.2em;  
+  padding-bottom: 2px;  
 }
 
 #navigationTabsWrapper ul li a {
@@ -186,4 +193,12 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
 
 div#footerText label {
   cursor: pointer;
+}
+
+/**
+ * DAILY WORK
+ */
+ 
+#dailyWorkTabs {
+  min-width: 750px;  
 }

@@ -7,128 +7,77 @@
 <link rel="Stylesheet" media="screen" href="testsuite.css" />
 
 <script type="text/javascript" src="../jquery.js"></script>
-<script type="text/javascript" src="jsmock.js"></script>
-<script type="text/javascript" src="qunit.js"></script>
-<script type="text/javascript">
-    <!--
-    var tests = [
-                 {
-                   pathToFiles: "../utils/",
-                   pathToTests: "utils/",
-                   filesUnderTest: ["ArrayUtils.js"],
-                   testFiles: ["ArrayUtils.test.js"],
-                 },
-                 {
-                   pathToFiles: "../autocomplete/",
-                   pathToTests: "autocomplete/",
-                   filesUnderTest: [
-                                    "autocompleteSearchBox.js",
-                                    "autocompleteSelectedBox.js",
-                                    "autocompleteBundle.js",
-                                    "autocompleteDataProvider.js"
-                                    ],
-                   testFiles: [
-                               "autocomplete.search.test.js",
-                               "autocomplete.selection.test.js",
-                               "autocomplete.dataProvider.test.js",
-                               "autocomplete.bundle.test.js"
-                               ]
-                 },
-                 {
-                   pathToFiles: "../dynamics/",
-                   pathToTests: "dynamics/",
-                   filesUnderTest: ["Dynamics.events.js"],
-                   testFiles: ["Dynamics.events.test.js"],
-                 },
-                 {
-                   pathToFiles: "../dynamics/model/",
-                   pathToTests: "dynamics/model/",
-                   filesUnderTest: [
-                                    "CommonModel.js",
-                                    "AssignmentModel.js",
-                                    "BacklogModel.js",
-                                    "HourEntryModel.js",
-                                    "IterationModel.js",
-                                    "ProjectModel.js",
-                                    "ProductModel.js",
-                                    "StoryModel.js",
-                                    "TaskModel.js",
-                                    "DailyWorkTaskModel.js",
-                                    "DailyWorkModel.js",
-                                    "UserModel.js",
-                                    "comparators.js",
-                                    "ModelFactory.js"
-                                    ],
-                   testFiles: [
-                               "ModelFactory.test.js",
-                               "CommonModel.test.js",
-                               "BacklogModel.test.js",
-                               "IterationModel.test.js",
-                               "StoryModel.test.js",
-                               "TaskModel.test.js",
-                               "UserModel.test.js",
-                               "comparators.test.js"
-                               ]
-                 },
-                 {
-                   pathToFiles: "../dynamics/view/",
-                   pathToTests: "dynamics/view/",
-                   filesUnderTest: [
-                              "TableConfiguration.js",
-                              "ViewPart.js",
-                              "DynamicView.js",
-                              "Table.js",
-                              "Row.js",
-                              "Cell.js",
-                              "Toggle.js",
-                              "RowActions.js",
-                              "TableCaption.js",
-                              "TableCellEditors.js",
-                              "decorators.js"
-                                  
-                                    ],
-                   testFiles: [
-                              "DynamicView.test.js",
-                              "Table.test.js",
-                              "Row.test.js",
-                              "Cell.test.js",
-                              "Toggle.test.js",
-                              "RowAction.test.js",
-                              "TableCaption.test.js",
-                              "TableCellEditors.test.js"
-								                 ]
-                 },
-                 {
-                   pathToFiles: "../dynamics/controller/",
-                   pathToTests: "dynamics/controller/",
-                   filesUnderTest: [
-								"CommonController.js",
-								"BacklogController.js",
-								"IterationController.js",
-                                "StoryController.js",
-                                "TaskController.js"
-                                    ],
-                   testFiles: [
-								"CommonController.test.js",
-								"BacklogController.test.js",
-								"IterationController.test.js",
-                                "StoryController.test.js",
-                                "TaskController.test.js"
-                               ]
-                 }
-                 ];
 
-    function addImport(fileName) {
-      var body = document.getElementsByTagName('body').item(0);
-      var script = document.createElement('script');
-      script.type = "text/javascript";
-      script.src = fileName;
-      body.appendChild(script);
-    }
-    
-    
-    //-->
-    </script>
+<script type="text/javascript" src="jsmock.js"></script>
+
+<script type="text/javascript" src="qunit.js"></script>
+
+
+<script type="text/javascript" src="../utils/ArrayUtils.js"></script>
+<script type="text/javascript" src="../utils/Configuration.js"></script>
+
+<script type="text/javascript" src="utils/ArrayUtils.test.js"></script>
+<script type="text/javascript" src="../autocomplete/autocompleteSearchBox.js"></script>
+<script type="text/javascript" src="../autocomplete/autocompleteSelectedBox.js"></script>
+<script type="text/javascript" src="../autocomplete/autocompleteBundle.js"></script>
+<script type="text/javascript" src="../autocomplete/autocompleteDataProvider.js"></script>
+<script type="text/javascript" src="autocomplete/autocomplete.search.test.js"></script>
+<script type="text/javascript" src="autocomplete/autocomplete.selection.test.js"></script>
+<script type="text/javascript" src="autocomplete/autocomplete.dataProvider.test.js"></script>
+<script type="text/javascript" src="autocomplete/autocomplete.bundle.test.js"></script>
+<script type="text/javascript" src="../dynamics/Dynamics.events.js"></script>
+<script type="text/javascript" src="dynamics/Dynamics.events.test.js"></script>
+<script type="text/javascript" src="../dynamics/model/CommonModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/TaskModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/AssignmentModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/BacklogModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/HourEntryModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/IterationModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/ProjectModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/ProductModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/StoryModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/DailyWorkTaskModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/DailyWorkModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/UserModel.js"></script>
+<script type="text/javascript" src="../dynamics/model/comparators.js"></script>
+<script type="text/javascript" src="../dynamics/model/ModelFactory.js"></script>
+<script type="text/javascript" src="dynamics/model/ModelFactory.test.js"></script>
+<script type="text/javascript" src="dynamics/model/CommonModel.test.js"></script>
+<script type="text/javascript" src="dynamics/model/BacklogModel.test.js"></script>
+<script type="text/javascript" src="dynamics/model/IterationModel.test.js"></script>
+<script type="text/javascript" src="dynamics/model/StoryModel.test.js"></script>
+<script type="text/javascript" src="dynamics/model/TaskModel.test.js"></script>
+<script type="text/javascript" src="dynamics/model/UserModel.test.js"></script>
+<script type="text/javascript" src="dynamics/model/comparators.test.js"></script>
+<script type="text/javascript" src="../dynamics/view/TableConfiguration.js"></script>
+<script type="text/javascript" src="../dynamics/view/ViewPart.js"></script>
+<script type="text/javascript" src="../dynamics/view/DynamicView.js"></script>
+<script type="text/javascript" src="../dynamics/view/Table.js"></script>
+<script type="text/javascript" src="../dynamics/view/Row.js"></script>
+<script type="text/javascript" src="../dynamics/view/Cell.js"></script>
+<script type="text/javascript" src="../dynamics/view/Toggle.js"></script>
+<script type="text/javascript" src="../dynamics/view/RowActions.js"></script>
+<script type="text/javascript" src="../dynamics/view/TableCaption.js"></script>
+<script type="text/javascript" src="../dynamics/view/TableCellEditors.js"></script>
+<script type="text/javascript" src="../dynamics/view/decorators.js"></script>
+<script type="text/javascript" src="dynamics/view/DynamicView.test.js"></script>
+<script type="text/javascript" src="dynamics/view/Table.test.js"></script>
+<script type="text/javascript" src="dynamics/view/Row.test.js"></script>
+<script type="text/javascript" src="dynamics/view/Cell.test.js"></script>
+<script type="text/javascript" src="dynamics/view/Toggle.test.js"></script>
+<script type="text/javascript" src="dynamics/view/RowAction.test.js"></script>
+<script type="text/javascript" src="dynamics/view/TableCaption.test.js"></script>
+<script type="text/javascript" src="dynamics/view/TableCellEditors.test.js"></script>
+<script type="text/javascript" src="../dynamics/controller/CommonController.js"></script>
+<script type="text/javascript" src="../dynamics/controller/BacklogController.js"></script>
+<script type="text/javascript" src="../dynamics/controller/IterationController.js"></script>
+<script type="text/javascript" src="../dynamics/controller/TaskController.js"></script>
+<script type="text/javascript" src="../dynamics/controller/StoryController.js"></script>
+<script type="text/javascript" src="dynamics/controller/CommonController.test.js"></script>
+<script type="text/javascript" src="dynamics/controller/BacklogController.test.js"></script>
+<script type="text/javascript" src="dynamics/controller/IterationController.test.js"></script>
+<script type="text/javascript" src="dynamics/controller/StoryController.test.js"></script>
+<script type="text/javascript" src="dynamics/controller/TaskController.test.js"></script>
 
 </head>
 <body id="body">
@@ -140,22 +89,5 @@
 
 <div id="main"></div>
 
-<script type="text/javascript">
-    <!--
-    $(document).ready(function() {
-	    for (i = 0; i < tests.length; i++) {
-	      var currentIncludes = tests[i];
-	      for (var j = 0; j < currentIncludes.filesUnderTest.length; j++) {
-	        var filename = currentIncludes.pathToFiles + currentIncludes.filesUnderTest[j];
-	        addImport(filename);
-	      }
-	      for (var k = 0; k < currentIncludes.testFiles.length; k++) {
-	        var filename = currentIncludes.pathToTests + currentIncludes.testFiles[k];
-	        addImport(filename);
-	      } 
-	    }
-    });
-    //-->
-    </script>
 </body>
 </html>

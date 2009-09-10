@@ -181,7 +181,7 @@ TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
         cache: false,
         dataType: "text",
         data: {
-           taskId: me.getId(),
+           taskId: me.getId()
         },
         success: function(data,status) {
             var msg = new MessageDisplay.OkMessage("Task added to this week's tasks");
@@ -197,7 +197,7 @@ TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
             var msg = new MessageDisplay.ErrorMessage("Error adding task to this week's tasks.", xhr);
         }
     });
-}
+};
 
 /**
  * Resets the tasks original estimate and effort left

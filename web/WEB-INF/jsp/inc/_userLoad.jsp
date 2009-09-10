@@ -1,5 +1,7 @@
 <%@ include file="./_taglibs.jsp"%>
 
+<script type="text/javascript" src="static/js/excanvas.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#dwTabs").show();

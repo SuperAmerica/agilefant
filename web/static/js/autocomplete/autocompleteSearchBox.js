@@ -131,7 +131,7 @@ AutocompleteSearch.prototype.updateMatches = function() {
 
 AutocompleteSearch.prototype.filterSuggestions = function(list, match) {
   var me = this;
-  var returnedList = list.filter(function(element, index, array) {
+  var returnedList = jQuery.grep(list, function(element, index) {
     return (element.enabled && me.matchSearchString(element.name, match) &&
         !me.bundle.isItemSelected(element.id));
   });

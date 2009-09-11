@@ -20,7 +20,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -53,6 +55,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     private ExactEstimate originalEstimate;
     private Collection<User> responsibles = new ArrayList<User>();
     private Collection<TaskHourEntry> hourEntries = new ArrayList<TaskHourEntry>();
+    private Collection<WhatsNextEntry> whatsNextEntries;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -154,6 +157,37 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
         this.responsibles = responsibles;
     }
 
+    @NotAudited
+    @OneToMany(
+            targetEntity = fi.hut.soberit.agilefant.model.WhatsNextEntry.class,
+            fetch = FetchType.LAZY,
+            mappedBy = "task"
+    )
+    @Cascade(value = { org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
+    @JSON(include = false)
+    public Collection<WhatsNextEntry> getWhatsNextEntries() {
+        return whatsNextEntries;
+    }
+    
+    public void setWhatsNextEntries(Collection<WhatsNextEntry> entries) {
+        this.whatsNextEntries = entries;
+    }
+
+    @JSON(include = false)
+    @Transient
+    public Collection<User> getWorkingOnTask() {
+        ArrayList<User> returned = new ArrayList<User>();
+        for (WhatsNextEntry e: getWhatsNextEntries()) {
+            returned.add(e.getUser());
+        }
+        
+        return returned;
+    }
+    
+    @Transient
+    public void setWorkingOnTask(Collection<User> users) {
+    }
+    
     @OneToMany(mappedBy="task")
     @OrderBy("date desc")
     @NotAudited
@@ -165,7 +199,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
         this.hourEntries = hourEntries;
     }
 
-    
     @Column(nullable = false, columnDefinition = "int default 0")
     public int getRank() {
         return rank;

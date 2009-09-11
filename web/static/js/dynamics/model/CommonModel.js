@@ -16,6 +16,7 @@ CommonModel.prototype.initialize = function() {
   this.relations = {};
   this.currentData = {};
   this.persistedData = {};
+  this.transientData = {};
   this.classNameToRelation = {};
   this.inTransaction = false;
 };
@@ -156,7 +157,7 @@ CommonModel.prototype.remove = function() {
 };
 
 /**
- * Internal abstact method to handle the delete ajax request.
+ * Internal abstract method to handle the delete ajax request.
  */
 CommonModel.prototype._remove = function(successCallback) {
   throw new Error("Abstract method called: _remove");

@@ -170,12 +170,13 @@ DailyWorkController.prototype.createConfig = function(configType) {
         title : "Responsibles",
         headerTooltip : 'Task responsibles',
         get : TaskModel.prototype.getResponsibles,
-        decorator: DynamicsDecorators.userInitialsListDecorator,
+        getView : TaskModel.prototype.getAnnotatedResponsibles,
+        decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
         editable : true,
         edit : {
-        editor : "User",
-        set : TaskModel.prototype.setResponsibles
-    }
+            editor : "User",
+            set : TaskModel.prototype.setResponsibles
+        }
     });
 
     config.addColumnConfiguration(TaskController.columnIndices.el, {

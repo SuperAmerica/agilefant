@@ -101,8 +101,7 @@ BacklogController.prototype.initSpentEffortConfiguration = function() {
 };
 
 BacklogController.prototype.deleteAssignmentButtonFactory = function(view, model) {
-  return new DynamicsButtons(this,[{text: 'Delete', callback: AssignmentController.prototype.remove}
-                                   ] ,view);
+  return new DynamicsButtons(this, [{text: 'Delete', callback: AssignmentController.prototype.remove}] ,view);
 };
 BacklogController.prototype.assignmentControllerFactory = function(view, model) {
   return new AssignmentController(model, view, this);

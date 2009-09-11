@@ -98,7 +98,7 @@ DynamicTableCell.prototype.render = function() {
     return;
   }
 	var model = this.row.getModel();
-	var getter = this.config.getGetter();
+	var getter = this.config.getViewGetter();
 	var decorator = this.config.getDecorator();
 	var value = "";
   if (this.subView && !this.cellRenderComplete) {

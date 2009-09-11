@@ -145,7 +145,7 @@ $(document).ready(function() {
      this.mockRow.expects().getController().andReturn(window);
      
      this.mockRow.expects().getModel().andReturn(null);
-     this.cellConfig.expects().getGetter().andReturn(null);
+     this.cellConfig.expects().getViewGetter().andReturn(null);
      this.cellConfig.expects().getDecorator().andReturn(null);
      
      mockView.expects().render();

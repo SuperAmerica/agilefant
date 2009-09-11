@@ -232,7 +232,7 @@
     <action name="iterationData" class="iterationAction" method="retrieve">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">+stories, +stories.tasks, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles</param>
+        <param name="patterns">+stories, +stories.tasks, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles, +*.workingOnTask</param>
       </result>
     </action>
         
@@ -242,7 +242,7 @@
             
     <action name="dailyWorkData" class="dailyWorkAction" method="retrieve">
       <result name="success" type="json">
-      	<param name="patterns">+assignedTasks, +assignedTasks.responsibles, +nextTasks, +nextTasks.responsibles, +user, -locale</param>
+      	<param name="patterns">+assignedTasks, +assignedTasks.responsibles, +nextTasks, +nextTasks.responsibles, +*.workingOnTask, +user, -locale</param>
       </result>
     </action>
     

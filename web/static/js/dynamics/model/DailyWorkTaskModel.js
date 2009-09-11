@@ -26,12 +26,14 @@ DailyWorkTaskModel = function() {
     };
 
     this.classNameToRelation = {
-        "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
-        "fi.hut.soberit.agilefant.model.User":          "user",
-        "fi.hut.soberit.agilefant.model.Story":         "story",
-        "fi.hut.soberit.agilefant.model.DailyWork":     "dailyWork",
-        "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
+      "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
+      "fi.hut.soberit.agilefant.model.User":          "user",
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.DailyWork":     "dailyWork",
+      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
     };
+    
+    this.transientData.workingOnTaskIds = [];
 };
 
 DailyWorkTaskModel.prototype = new TaskModelExtender();
@@ -90,9 +92,6 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
 
 DailyWorkTaskModel.prototype.removeFromDailyWork = function(successCallback) {
     var me = this;
-    var successCallback = function() {
-        
-    };
     jQuery.ajax({
         type: "POST",
         url: "ajax/deleteFromWhatsNext.action",

@@ -58,6 +58,20 @@ var DynamicsDecorators = {
     }
     return initials.join(", ");
   },
+  annotatedUserInitialsListDecorator: function(annotatedList) {
+      if(!annotatedList || !annotatedList.length) {
+          return "";
+      }
+      var initials = [];
+      $.each(annotatedList, function (k, v) {
+          var i = v.user.getInitials();
+          if (v.workingOnTask) {
+              i = '<strong class="user-initials-next-assigned">' + i + '</strong>';
+          }
+          initials.push(i);
+      });
+      return initials.join(", ");
+  },
   totalPersonalLoadDecorator: function(value) {
     var baseline = this.getBacklog().getBaselineLoad();
     var strBaseline = DynamicsDecorators.exactEstimateDecorator(baseline);

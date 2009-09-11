@@ -9,6 +9,7 @@ var DynamicTableColumnConfiguration = function(options) {
 			fullWidth: false,
 			autoScale: false,
 			get: null,
+			getView: null,
 			tooltip: "",
 			headerTooltip: "",
 			decorator: null,
@@ -55,6 +56,12 @@ DynamicTableColumnConfiguration.prototype.getMinWidth = function() {
 };
 DynamicTableColumnConfiguration.prototype.getGetter = function() {
 	return this.options.get;
+};
+DynamicTableColumnConfiguration.prototype.getViewGetter = function() {
+    if (this.options.getView) {
+        return this.options.getView;
+    }
+    return this.options.get;
 };
 DynamicTableColumnConfiguration.prototype.getTooltip = function() {
 	return this.options.tooltip;

@@ -21,6 +21,7 @@ var TaskModel = function() {
     user: [],
     hourEntry: []
   };
+  this.transientData = { };
   this.copiedFields = {
     "name": "name",
     "state": "state",
@@ -35,6 +36,7 @@ var TaskModel = function() {
       "fi.hut.soberit.agilefant.model.Story":         "story",
       "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
   };
+  this.transientData.workingOnTaskIds = [];
 };
 
 TaskModel.prototype = new CommonModel();
@@ -44,8 +46,18 @@ TaskModel.prototype._setData = function(newData) {
     this.id = newData.id;
   }
   
-  if(newData.responsibles) {
+  if (newData.responsibles) {
     this._updateRelations(ModelFactory.types.user, newData.responsibles);
+  }
+  
+  if (newData.workingOnTask) {
+    var workingOnTaskIds= [];
+    
+    $.each(newData.workingOnTask, function (k, v) {
+      workingOnTaskIds.push(v.id);
+    });
+    
+    this.transientData.workingOnTaskIds = workingOnTaskIds;
   }
 };
 
@@ -298,6 +310,19 @@ TaskModel.prototype.getResponsibles = function() {
     return users;
   }
   return this.relations.user;
+};
+
+TaskModel.prototype.getAnnotatedResponsibles = function() {
+  var annotated = [];
+  var me = this;
+  $.each(this.getResponsibles(), function (k, v) {
+    var workingOnTask = $.inArray(v.id, me.transientData.workingOnTaskIds) !== -1;
+    annotated.push({
+        user:    v,
+        workingOnTask: workingOnTask
+    });
+  });
+  return annotated;
 };
 
 TaskModel.prototype.setResponsibles = function(userIds, userJson) {

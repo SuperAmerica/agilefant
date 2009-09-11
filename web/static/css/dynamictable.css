@@ -491,3 +491,9 @@ div.corner-border {
 div.dynamictable-tailer {
 	height: 20px;
 }
+
+/* for annotating users working on tasks in user lists */ 
+strong.user-initials-next-assigned {
+	color: #AA2222;
+	font-weight: bold;
+};

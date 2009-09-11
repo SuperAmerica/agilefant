@@ -13,6 +13,8 @@ var DynamicTable = function(controller, model, config, parentView) {
   this.bottomRows = [];
   // objects in the table (middle rows)
   this.rowHashes = [];
+  // old middle rows
+  this.oldMiddleRows = [];
   // headers
   this.headers = null;
   if (config) {
@@ -23,6 +25,7 @@ var DynamicTable = function(controller, model, config, parentView) {
   this.debugLevel = 0;
   this.initialize();
 };
+
 DynamicTable.cssClasses = {
   tableRow : "dynamictable-row",
   tableCell : "dynamictable-cell",
@@ -378,9 +381,9 @@ DynamicTable.prototype.render = function() {
   }
   this._sort();
   i = 0;
-  this._addSectionToTable(this.upperRows);
-  this._addSectionToTable(this.middleRows);
-  this._addSectionToTable(this.bottomRows);
+  this._addSectionToTable(this.upperRows, null);
+  this._addSectionToTable(this.middleRows, this.oldMiddleRows);
+  this._addSectionToTable(this.bottomRows, null);
   this._appendTailerIfExists();
   
   this.element.find("textarea.tableSortListener").trigger("tableSorted");
@@ -389,7 +392,9 @@ DynamicTable.prototype.render = function() {
   } else {
     this.header.show();
   }
+  
   this.layout();
+  this.oldMiddleRows = this.middleRows.slice();
 };
 
 DynamicTable.prototype._renderHeaderColumn = function(index) {
@@ -427,11 +432,36 @@ DynamicTable.prototype._appendTailerIfExists = function () {
     }
 };
 
-DynamicTable.prototype._addSectionToTable = function(section) {
+DynamicTable.prototype.isSameArray = function (array1, array2) {
+  var count = array1.length;
+  for (var i = 0; i < count; i++) {
+    if (array1[i] !== array2[i]) {
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+DynamicTable.prototype._addSectionToTable = function(section, oldSection) {
+  var i;
   var rowCount = section.length;
+  
+  if ((oldSection) && (oldSection.length == section.length)) {
+    if (this.isSameArray(section, oldSection)) {
+      for (i = 0; i < rowCount; i ++) {
+        if (! section[i].isFocused()) {
+          section[i].render();
+        }
+      }
+      
+      return;
+    }
+  }
+  
   var focusAt = -1;
   //check for focus
-  for(var i = 0; i < rowCount; i++) {
+  for(i = 0; i < rowCount; i++) {
     if(section[i].isFocused()) {
       focusAt = i;
       break;

@@ -79,19 +79,30 @@ img {
   overflow: hidden;
 }
 
-#menuControl {
+#menuControlPanel {
   float: right;
-  height: 16px;
-  width: 16px;
-  height: 16px;
   margin: 2px 2px 0 0;
-  cursor: pointer;
-  background: url('../img/toggle.png');
-  background-position: 0% 0;
 }
 
-#menuControl:hover {
+#menuControlPanel div {
+  height: 16px;
+  width: 16px;
+  margin: 2px 0 0 0;
+  padding: 0;
+  cursor: pointer;
+  background-position: 0% 0%;
+}
+
+#menuControlPanel div:hover {
   background-position: 0% 100%;
+}
+
+#menuToggleControl {
+  background: url('../img/toggle.png');
+}
+
+#menuRefreshControl {
+  background: url('../img/refresh.png');
 }
     
 

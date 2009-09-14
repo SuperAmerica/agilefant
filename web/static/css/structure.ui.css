@@ -34,10 +34,10 @@
   margin: 0 0 0 2em !important;  
 }
 
-.menu-collapsed #menuControl {
+.menu-collapsed #menuToggleControl {
   background-position: 100% 0%;  
 }
-.menu-collapsed #menuControl:hover {
+.menu-collapsed #menuToggleControl:hover {
   background-position: 100% 100%;  
 }
 

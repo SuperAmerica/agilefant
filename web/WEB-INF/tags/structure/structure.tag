@@ -35,6 +35,9 @@
   <script type="text/javascript" src="static/js/backlogChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/backlogSelector.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
+  <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  
   <script type="text/javascript">
   $(document).ready(function() {
       if(document.cookie.indexOf("SPRING_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
@@ -45,10 +48,7 @@
           $(this).val("").unbind("focus").css("color","#000");
       });
 
-      $('#menuControl').click(function() { toggleMenu(); return false; });
-      if($.cookie("agilefantMenuClosed")) {
-        toggleMenu();
-      }
+      PageController.initialize();
   });
   </script>
 
@@ -90,7 +90,10 @@
 
 <div id="menuWrapper">
   <c:if test="${hideMenu != true}">
-    <div id="menuControl"> </div>
+    <div id="menuControlPanel"> 
+      <div id="menuToggleControl"> </div>
+      <div id="menuRefreshControl"> </div>
+    </div>
     
     <div id="menuContent">
       <c:choose>

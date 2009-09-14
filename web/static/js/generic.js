@@ -379,16 +379,3 @@ function toggleHide(clickedElement, elements) {
     }
     me.toggleClass('expand').toggleClass('collapse');
 }
-
-function toggleMenu() {
-  var wrapper = $('#outerWrapper');
-  var isClosed = wrapper.hasClass("menu-collapsed");
-  wrapper.toggleClass('menu-collapsed');
-  if (isClosed) {
-    $.cookie("agilefantMenuClosed", null);
-  }
-  else {
-    $.cookie("agilefantMenuClosed", true);
-  }
-  return false;
-}

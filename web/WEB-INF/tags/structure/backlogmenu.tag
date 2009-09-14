@@ -7,21 +7,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-  $('#backlogMenuTree').dynatree({
-    onClick: function(dtnode, event) {
-      if ($(event.target).hasClass("ui-dynatree-title")) {
-        window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
-      }
-    },
-    initAjax: {
-      url: "ajax/menuData.action"
-    },
-    persist: true,
-    debugLevel: 0,
-    cookieId: "agilefant-menu-dynatree"
-  });
+  window.menuController = new BacklogMenuController($('#backlogMenuTree'), $('#menuControl'));  
 });
 </script>
-
-
 

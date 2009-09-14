@@ -22,6 +22,7 @@ ModelFactory = function() {
 };
 
 ModelFactory.instance = null;
+ModelFactory.rootObject = null;
 
 /**
  * Convert persisted class names to <code>ModelFactory</code> types.
@@ -192,6 +193,16 @@ ModelFactory.initializeFor = function(type, id, callback) {
  * @member ModelFactory
  */
 ModelFactory.currentTimer = null;
+
+/**
+ * Reloads the root object of the page.
+ * <p>
+ * Root object is the object for which the method <code>initializeFor</code>
+ * has been called.
+ */
+ModelFactory.reloadRoot = function() {
+  ModelFactory.rootObject.reload();
+};
 
 /**
  * Set the object to reload every <code>time</code> milliseconds.
@@ -383,29 +394,33 @@ ModelFactory.prototype._getData = function(type, id, callback) {
  * Internal function to construct an iteration
  */
 ModelFactory.prototype._constructIteration = function(id, data) {
-  return ModelFactory.updateObject(data);
+  ModelFactory.rootObject = ModelFactory.updateObject(data);
+  return ModelFactory.rootObject;
 };
 
 /**
  * Internal function to construct a project
  */
 ModelFactory.prototype._constructProject = function(id, data) {
-  return ModelFactory.updateObject(data);
+  ModelFactory.rootObject = ModelFactory.updateObject(data);
+  return ModelFactory.rootObject;
 };
 
 /**
  * Internal function to construct a project
  */
 ModelFactory.prototype._constructProduct = function(id, data) {
-  return ModelFactory.updateObject(data);
+  ModelFactory.rootObject = ModelFactory.updateObject(data);
+  return ModelFactory.rootObject;
 };
 
 /**
  * Internal function to construct a daily work model
  */
 ModelFactory.prototype._constructDailyWork = function(id, data) {
-    var a = new DailyWorkModel();
-    a.setData(data);
+  var a = new DailyWorkModel();
+  a.setData(data);
+  ModelFactory.rootObject = a;
 	return a;
 };
 

@@ -114,6 +114,14 @@ StoryController.prototype.moveStoryToBacklog = function(targetModel) {
   this.model.rankUnder(-1, targetModel);
 };
 
+
+/**
+ * Open a split dialog. 
+ */
+StoryController.prototype.splitStory = function() {
+  var dialog = new StorySplitDialog(this.model);
+};
+
 /**
  * 
  */
@@ -260,6 +268,9 @@ StoryController.prototype.storyActionFactory = function(view, model) {
   }, {
     text : "Move",
     callback : StoryController.prototype.moveStory
+  }, {
+    text : "Split",
+    callback : StoryController.prototype.splitStory
   }, {
     text : "Delete",
     callback : StoryController.prototype.removeStory

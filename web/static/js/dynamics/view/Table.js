@@ -661,6 +661,9 @@ DynamicVerticalTable.prototype = new DynamicView();
 DynamicVerticalTable.prototype.initialize = function() {
   this.container = $("<div />").appendTo(this.getParentElement()).addClass(
       DynamicTable.cssClasses.table);
+  if (this.config.options.cssClass) {
+    this.container.addClass(this.config.options.cssClass);
+  }
   this.element = $("<div />").appendTo(this.container);
   var columnConfigs = this.config.getColumns();
   var titleColumnConfig = new DynamicTableColumnConfiguration( {

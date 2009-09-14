@@ -129,10 +129,6 @@ div.gear {
   white-space: nowrap;
 }
 
-.actionColumn:hover .gear {
-  background-position: 100%;
-}
-
 .invalidValue {
   background-color: #FF6666;
 }
@@ -300,7 +296,7 @@ li.dynamictable-captionaction {
 	-webkit-border-radius:5px;
 	border-radius: 5px;
 	background-color:#f3f3f3;
-	border:0.5px solid black;
+	border: 1px solid #999;
 	font-size:10pt;
 	height:16px !important;
 	padding-left:3px;

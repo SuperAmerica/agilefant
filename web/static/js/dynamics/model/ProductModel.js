@@ -61,6 +61,9 @@ ProductModel.prototype._saveData = function(id, changedData) {
   var url = "ajax/storeProduct.action";
   var data = this.serializeFields("product", changedData);
   data.productId = id;
+  if (!id) {
+    url = "ajax/storeNewProduct.action";
+  }
  
   jQuery.ajax({
     type: "POST",

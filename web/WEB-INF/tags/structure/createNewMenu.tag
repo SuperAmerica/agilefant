@@ -8,29 +8,32 @@
 <aef:existingObjects />
 
 <span id="createNewMenuLink">
-  <a href="#">
+  <a href="#" onclick="return false;" >
       <span> </span>
       Create new &raquo;
   </a>
 </span>
 
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#createNewMenu a').click(function() {
+    CreateDialog.createById($(this).attr('id'));
+  });
+});
+</script>
+
 <ul id="createNewMenu" style="display: none">
     <li>
-        <ww:url id="createLink" action="createProduct" namespace="ajax" includeParams="none" />
-        <ww:a href="%{createLink}" onclick="return false;" title="Create a new product" cssClass="openCreateDialog openProductDialog">Product &raquo;</ww:a>
+        <a href="#" id="createNewProduct" onclick="return false;"  title="Create a new product">Product &raquo;</a>
     </li>
 
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="createProject" namespace="ajax" includeParams="none">
-                <ww:param name="productId">${currentProductId}</ww:param>
-            </ww:url>
-            <ww:a href="%{createLink}" onclick="return false;" title="Create a new project" cssClass="openCreateDialog openProjectDialog">Project &raquo;</ww:a>
+            <a href="#" id="createNewProject" onclick="return false;" title="Create a new project">Project &raquo;</a>
         </c:when>
         <c:otherwise>
-            <span class="inactive"
-                title="Create a product before creating a project">
+            <span class="inactive" title="Create a product before creating a project">
             Project &raquo;</span>
         </c:otherwise>
     </c:choose>
@@ -39,10 +42,7 @@
     <li>
     <c:choose>
         <c:when test="${hasProjects}">
-            <ww:url id="createLink" action="createIteration" namespace="ajax" includeParams="none">
-                <ww:param name="projectId">${currentProjectId}</ww:param>
-            </ww:url>
-            <ww:a href="%{createLink}" onclick="return false;"  title="Create a new iteration" cssClass="openCreateDialog openIterationDialog">Iteration &raquo;</ww:a>
+            <a href="#" id="createNewIteration" onclick="return false;"  title="Create a new iteration">Iteration &raquo;</a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -51,13 +51,11 @@
     </c:choose>
     </li>
     
+    <%--
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="createStoryForm" namespace="ajax" includeParams="none">
-              <ww:param name="backlogId">${currentPageId}</ww:param>
-            </ww:url>
-            <ww:a href="%{createLink}" onclick="return false;" title="Create a new story" cssClass="openCreateDialog openStoryDialog">Story &raquo;</ww:a>
+            <a href="#" id="createNewStory" onclick="return false;"  title="Create a new story">Story &raquo;</a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -66,14 +64,15 @@
         </c:otherwise>
     </c:choose>
     </li>
-    
+     --%>
     
     <li class="separator"></li>
-    <li><ww:url id="createLink" action="createTeam" namespace="ajax" includeParams="none" />
-        <ww:a href="%{createLink}" onclick="return false;" title="Create a new team" cssClass="openCreateDialog openTeamDialog">Team &raquo;</ww:a>
+    
+    <li>
+      <a href="#" id="createNewTeam" onclick="return false;"  title="Create a new team">Team &raquo;</a>
     </li>
 
-    <li><ww:url id="createLink" action="createUser" namespace="ajax" includeParams="none" />
-    <ww:a href="%{createLink}" onclick="return false;" title="Create a new user" cssClass="openCreateDialog openUserDialog">User &raquo;</ww:a>
+    <li>
+      <a href="#" id="createNewUser" onclick="return false;"  title="Create a new user">User &raquo;</a>
     </li>
 </ul>

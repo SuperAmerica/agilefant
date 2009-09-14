@@ -686,6 +686,28 @@ DynamicVerticalTable.prototype.render = function() {
     this.rows[i].render();
   }
 };
+
+DynamicVerticalTable.prototype.openFullEdit = function() {
+  this._applyToAllRows(DynamicTableRow.prototype.editRow, []);
+};
+
+DynamicVerticalTable.prototype.isFullEditValid = function() {
+  return this._applyToAllRows(DynamicTableRow.prototype.isRowValid, []);
+};
+
+DynamicVerticalTable.prototype.saveFullEdit = function() {
+  return this._applyToAllRows(DynamicTableRow.prototype.saveRowEdit, []);
+};
+
+DynamicVerticalTable.prototype._applyToAllRows = function(command, args) {
+  var retVal = true;
+  for (var i = 0; i < this.rows.length; i++) {
+    var commandRet = command.apply(this.rows[i], args);
+    retVal = retVal && commandRet;
+  }
+  return retVal;
+};
+
 DynamicVerticalTable.prototype.onEdit = function() {
   this.render();
 };

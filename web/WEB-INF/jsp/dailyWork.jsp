@@ -6,8 +6,6 @@
 <c:set var="currentAction" value="dailyWork" scope="session" />
 <c:set var="dailyWorkUserId" value="${userId}" scope="session" />
 
-<%@include file="./inc/includeDynamics.jsp"%>
-
 <ww:form method="get">
 <h2>The daily work of <ww:select list="enabledUsers"
     listKey="id" listValue="fullName" name="userId" value="%{user.id}"

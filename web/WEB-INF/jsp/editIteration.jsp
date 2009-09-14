@@ -54,9 +54,6 @@ $(document).ready(function() {
 });
 </script>
 
-
-<%@include file="./inc/includeDynamics.jsp" %>
-
 <form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
 
 <form onsubmit="return false;"><div id="tasksWithoutStory" style="min-width: 800px; width: 98%;">&nbsp;</div></form>

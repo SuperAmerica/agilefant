@@ -288,14 +288,13 @@ IterationController.prototype.initializeStoryConfig = function() {
     text : "Show tasks",
     connectWith : "hideTasks",
     cssClass : "hide",
-    visible: false,
+    visible: true,
     callback : IterationController.prototype.showTasks
-
   });
   config.addCaptionItem( {
     name : "hideTasks",
     text : "Hide tasks",
-    visible : true,
+    visible : false,
     connectWith : "showTasks",
     cssClass : "show",
     callback : IterationController.prototype.hideTasks

@@ -26,7 +26,7 @@ $(document).ready(function() {
     <li>
         <a href="#" id="createNewProduct" onclick="return false;"  title="Create a new product">Product &raquo;</a>
     </li>
-
+<%--
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
@@ -51,7 +51,7 @@ $(document).ready(function() {
     </c:choose>
     </li>
     
-    <%--
+    
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
@@ -64,7 +64,7 @@ $(document).ready(function() {
         </c:otherwise>
     </c:choose>
     </li>
-     --%>
+     
     
     <li class="separator"></li>
     
@@ -75,4 +75,5 @@ $(document).ready(function() {
     <li>
       <a href="#" id="createNewUser" onclick="return false;"  title="Create a new user">User &raquo;</a>
     </li>
+    --%>
 </ul>

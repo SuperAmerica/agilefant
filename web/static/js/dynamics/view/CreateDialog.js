@@ -49,6 +49,7 @@ CreateDialogClass.prototype.init = function(config) {
     resizable: false,
     draggable: true,
     width: 750,
+    position: 'top',
     buttons: {
       "Cancel": function() { me._cancel(); },  
       "Ok": function() { me._ok(); }

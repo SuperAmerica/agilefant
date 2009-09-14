@@ -460,7 +460,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
   config.addColumnConfiguration(StoryController.columnIndices.points, {
-    minWidth : 60,
+    minWidth : 50,
     autoScale : true,
     cssClass : 'projectstory-row',
     title : "Points",
@@ -475,7 +475,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
   config.addColumnConfiguration(StoryController.columnIndices.state, {
-    minWidth : 60,
+    minWidth : 70,
     autoScale : true,
     cssClass : 'projectstory-row',
     title : "State",

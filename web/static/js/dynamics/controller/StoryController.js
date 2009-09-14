@@ -322,7 +322,7 @@ StoryController.prototype.storyPointsEditable = function() {
     subViewFactory: TaskController.prototype.toggleFactory
   });
   config.addColumnConfiguration(TaskController.columnIndices.name, {
-    minWidth : 200,
+    minWidth : 180,
     autoScale : true,
     cssClass : 'task-row',
     title : "Name",
@@ -337,7 +337,7 @@ StoryController.prototype.storyPointsEditable = function() {
     }
   });
   config.addColumnConfiguration(TaskController.columnIndices.state, {
-    minWidth : 60,
+    minWidth : 80,
     autoScale : true,
     cssClass : 'task-row',
     title : "State",

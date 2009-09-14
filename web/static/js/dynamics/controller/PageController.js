@@ -71,5 +71,6 @@ PageController.prototype.toggleMenu = function() {
   else {
     $.cookie("agilefantMenuClosed", true);
   }
+  $(window).resize();
   return false;
 };

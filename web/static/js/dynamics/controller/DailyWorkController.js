@@ -69,6 +69,11 @@ DailyWorkController.prototype.createConfig = function(configType) {
     var actionColumnFactory = null;
     var sortCallback = null;
     
+    options.captionConfig = {
+        cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    };
+    options.cssClasses = "ui-widget-content ui-corner-all"
+    
     if (configType == 'next') {
         options.caption = "Tasks I'm going to do next";
         options.dataSource = DailyWorkModel.prototype.getWhatsNexts;

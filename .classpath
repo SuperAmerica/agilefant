@@ -73,7 +73,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/xalan.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xercesImpl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xml-apis.jar"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-security-core-2.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/spring-security-core-tiger-2.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flexjson.jar"/>
@@ -83,7 +82,6 @@
 	<classpathentry kind="lib" path="lib/joda-time-hibernate-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>
 	<classpathentry kind="lib" path="lib/spring-test.jar"/>
-	<classpathentry kind="lib" path="lib/build/junit-4.6.jar"/>
 	<classpathentry kind="lib" path="lib/build/h2-1.1.114.jar"/>
 	<classpathentry kind="lib" path="lib/jettison-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/build/easymock-2.5.jar"/>
@@ -100,5 +98,6 @@
 	<classpathentry kind="lib" path="lib/javassist-3.9.0.GA.jar"/>
 	<classpathentry kind="lib" path="lib/jta-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
+	<classpathentry kind="lib" path="lib/build/junit-4.4.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

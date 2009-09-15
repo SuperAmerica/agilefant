@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +29,7 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
     private User user1;
     private User user2;
     private User user3;
+    private Task task4;
     
     @Before
     public void setUp_data() {
@@ -38,14 +42,23 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
         user3 = new User();
         user3.setId(3);
 
+        task4 = new Task();
+        task4.setId(4);
+        
         executeClassSql();
+    }
+    
+    private Task createTask(int id) {
+        Task returned = new Task();
+        returned.setId(id);
+        return returned;
     }
     
     @Test
     public void testGetLastTaskInRank() {
         WhatsNextEntry e = testable.getLastTaskInRank(user1);
         Task t = e.getTask();
-        
+
         // task 5 would be returned if it were not done already!
         assertEquals(4, t.getId());
     }
@@ -68,6 +81,7 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
         }
         
         // all ids found.
+        
         assertEquals(0, ids.size());
     }
     
@@ -105,5 +119,22 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
     public void testGetWhatsNextEntriesFor_notFound() {
         Collection<WhatsNextEntry> entries = testable.getWhatsNextEntriesFor(user3);
         assertEquals(0, entries.size());
+    }
+    
+    @Test
+    public void testRemoveAllByTask() {
+        assertNotNull(testable.getWhatsNextEntryFor(user1, task4));
+        assertNotNull(testable.getWhatsNextEntryFor(user2, task4));
+
+        testable.removeAllByTask(task4);
+
+        assertNull(testable.getWhatsNextEntryFor(user1, task4));
+        assertNull(testable.getWhatsNextEntryFor(user2, task4));
+    }
+
+    @Test
+    public void testGetTopmostWorkQueueEntries() {
+        Map<User, List<Task>> returnValue = testable.getTopmostWorkQueueEntries();
+        assertEquals(2, returnValue.size());
     }
 }

@@ -71,10 +71,11 @@ INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (20,1,10000,55,0
 INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (21,1,10000,55,1);
 INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (22,1,10000,55,666);
 
-INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (1, 0, 1, 1);
-INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (2, 1, 2, 1);
-INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (4, 2, 3, 1);
-INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (7, 3, 4, 1);
-INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (8, 5, 5, 1);
+INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (1,  0, 1, 1);
+INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (2,  1, 2, 1);
+INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (4,  2, 3, 1);
+INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (7,  3, 4, 1);
+INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (8,  5, 5, 1);
 INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (9,  3, 5, 2);
-INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (12, 2, 1, 2);
+INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (12, 9, 1, 2);
+INSERT INTO whatsnextentry (id, rank, task_id, user_id) VALUES (13, 3, 4, 2);

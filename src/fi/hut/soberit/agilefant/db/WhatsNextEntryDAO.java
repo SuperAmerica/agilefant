@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -40,4 +42,10 @@ public interface WhatsNextEntryDAO extends GenericDAO<WhatsNextEntry> {
      * @param task
      */
     public void removeAllByTask(Task task);
+    
+    /**
+     * Fetches User->Task mappings, for each user the first task on their work queue.
+     * @return
+     */
+    public Map<User, List<Task>> getTopmostWorkQueueEntries();
 }

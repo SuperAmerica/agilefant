@@ -362,5 +362,8 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     public void setRankingBusiness(RankingBusiness rankingBusiness) {
         this.rankingBusiness = rankingBusiness;
     }
-    
+
+    public void setDailyWorkBusiness(DailyWorkBusiness dailyWorkBusiness) {
+        this.dailyWorkBusiness = dailyWorkBusiness;
+    }
 }

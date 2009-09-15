@@ -30,6 +30,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 
 public class TaskBusinessTest {
@@ -52,6 +53,7 @@ public class TaskBusinessTest {
     private Story story;
     private Task task;
     private User loggedInUser;
+    private DailyWorkBusiness dailyWorkBusiness;
    
     @Before
     public void setUp_dependencies() {
@@ -70,16 +72,19 @@ public class TaskBusinessTest {
         iterationHistoryEntryBusiness = createStrictMock(IterationHistoryEntryBusiness.class);
         taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
         
+        dailyWorkBusiness = createStrictMock(DailyWorkBusiness.class);
+        taskBusiness.setDailyWorkBusiness(dailyWorkBusiness);
+        
         rankingBusiness = new RankinkBusinessImpl();
         taskBusiness.setRankingBusiness(rankingBusiness);
     }
     
     private void replayAll() {
-        replay(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness);
+        replay(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
     }
     
     private void verifyAll() {
-        verify(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness);
+        verify(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
     }
     
     @Before
@@ -168,6 +173,22 @@ public class TaskBusinessTest {
             taskBusiness.storeTask(task, iteration.getId(), null, null);
         
         assertEquals(task.getId(), actualTask.getId());
+        
+        verifyAll();
+    }
+    
+    @Test
+    public void testStoreTask_existingTaskStateSetToDone() {
+        task.setId(54326);
+        task.setState(TaskState.DONE);
+        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
+        taskDAO.store(task);
+        dailyWorkBusiness.removeTaskFromWorkQueues(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
+        
+        replayAll();
+        
+        taskBusiness.storeTask(task, iteration.getId(), null, null);
         
         verifyAll();
     }

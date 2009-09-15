@@ -1,9 +1,14 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -97,4 +102,43 @@ WhatsNextEntryDAO {
             remove(entry);
         };
     }
+    
+    public Map<User, List<Task>> getTopmostWorkQueueEntries() {
+        String hqlQuery = "SELECT user, entry.task " +
+                          "FROM User as user, WhatsNextEntry as entry " +
+                          "WHERE entry.user = user AND " +
+                          "entry.rank = (" +
+                              "SELECT min(e.rank) FROM WhatsNextEntry as e "+
+                              "WHERE e.user = user" +
+                          ")"; 
+        
+        Query q = getCurrentSession().createQuery(hqlQuery);
+
+        List returned = q.list();
+        
+        Map<User, List<Task>> returnValue = new HashMap<User, List<Task>>(returned.size()); 
+        
+        if (returned != null) {
+            for (Object o: returned) {
+                Object[] array = (Object[])o;
+                User user = (User)array[0];
+                Task task = (Task)array[1];
+                
+                // should not ever happen?
+                if (user == null || task == null) {
+                    continue;
+                }
+
+                List<Task> tasks = returnValue.get(user);
+                if (tasks == null) {
+                    tasks = new ArrayList<Task>();
+                    returnValue.put(user, tasks);
+                }
+                
+                tasks.add(task);
+            }
+        }
+        
+        return returnValue;
+    };
 }

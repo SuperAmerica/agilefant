@@ -50,21 +50,9 @@ public class DailyWorkBusinessTest {
     private void verifyAll() {
         verify(taskDAO, whatsNextEntryDAO);
     }
-    
-    private void assertTOListEquals(Collection<Task> tasks, Collection<DailyWorkTaskTO> returned, DailyWorkTaskTO.TaskClass type) {
-        assertEquals(tasks.size(), returned.size());
-        Iterator<DailyWorkTaskTO> retIt = returned.iterator();
-        Iterator<Task> origIt = tasks.iterator();
-        
-        while (origIt.hasNext() || retIt.hasNext()) {
-            DailyWorkTaskTO nextRet =  retIt.next();
-            assertEquals(origIt.next().getId(), nextRet.getId());
-            assertEquals(nextRet.getTaskClass(), type);
-        }
-    }
-    
+
     @Test
-    public void test_getDailyTasksForUser() {
+    public void testGetAllCurrentTasksForUser() {
         Backlog backlog = new Product();
         backlog.setId(5);
         

@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,16 +28,19 @@ public class StoryDAOTest extends AbstractHibernateTests {
     @Autowired
     private StoryDAO storyDAO;
     
+    @Test
     public void testGetStoryPointSumByBacklog_firstBacklog() {
         executeClassSql();
         assertEquals(29, storyDAO.getStoryPointSumByBacklog(1));
     }
     
+    @Test
     public void testGetStoryPointSumByBacklog_secondBacklog() {
         executeClassSql();
         assertEquals(33, storyDAO.getStoryPointSumByBacklog(3));
     }
     
+    @Test
     public void testRemoveStoryWithStoryHourEntries() {
         executeClassSql();
         try {
@@ -45,6 +50,7 @@ public class StoryDAOTest extends AbstractHibernateTests {
         } catch (ConstraintViolationException cve) {}
     }
     
+    @Test
     public void testRemoveStoryWithTaskHourEntries() {
         executeClassSql();
         try {
@@ -54,23 +60,27 @@ public class StoryDAOTest extends AbstractHibernateTests {
         } catch (ConstraintViolationException cve) {}
     }
     
-   public void testGetNumberOfResponsiblesByTask() {
-       executeClassSql();
-       Set<Integer> storyIds = new HashSet<Integer>(Arrays.asList(1,2,3));
-       Map<Integer, Integer> actual = this.storyDAO.getNumOfResponsiblesByStory(storyIds);
-       assertEquals(1, actual.size());
-       assertEquals(1, (int)actual.get(1));      
-   }
+    @Test
+    public void testGetNumberOfResponsiblesByTask() {
+        executeClassSql();
+        Set<Integer> storyIds = new HashSet<Integer>(Arrays.asList(1, 2, 3));
+        Map<Integer, Integer> actual = this.storyDAO
+                .getNumOfResponsiblesByStory(storyIds);
+        assertEquals(1, actual.size());
+        assertEquals(1, (int) actual.get(1));
+    }
    
    /*
     * RANKING
     */
    Backlog rankingParent;
+   @Before
    public void setUp() {
        rankingParent = new Iteration();
        rankingParent.setId(4);
    }
-      
+   
+   @Test
    public void testGetLastStoryInRank() {
        executeClassSql();
        Story actual = storyDAO.getLastStoryInRank(rankingParent);
@@ -79,6 +89,7 @@ public class StoryDAOTest extends AbstractHibernateTests {
        assertEquals(24, actual.getId());
    }
    
+   @Test
    public void testGetLastStoryInRank_noStories() {
        executeClassSql();
        rankingParent.setId(5);
@@ -86,7 +97,7 @@ public class StoryDAOTest extends AbstractHibernateTests {
        assertNull(actual);
    }
    
-   
+   @Test
    public void testGetStoriesWithRankBetween_noStories() {
        executeClassSql();
        rankingParent.setId(5);
@@ -95,6 +106,7 @@ public class StoryDAOTest extends AbstractHibernateTests {
        assertEquals(0, actual.size());
    }
    
+   @Test
    public void testGetStoriesWithRankBetween_inverseBorders() {
        executeClassSql();
        Collection<Story> actual = storyDAO.getStoriesWithRankBetween(rankingParent, 1000, 0);
@@ -102,6 +114,7 @@ public class StoryDAOTest extends AbstractHibernateTests {
        assertEquals(0, actual.size());
    }
    
+   @Test
    public void testGetStoriesWithRankBetween_onlyFirst() {
        executeClassSql();
        Collection<Story> actual = storyDAO.getStoriesWithRankBetween(rankingParent, 0, 0);
@@ -109,6 +122,7 @@ public class StoryDAOTest extends AbstractHibernateTests {
        assertEquals(21, actual.iterator().next().getId());
    }
    
+   @Test
    public void testGetStoriesWithRankBetween_all() {
        executeClassSql();
        Collection<Story> actual = storyDAO.getStoriesWithRankBetween(rankingParent, 0, 10000);

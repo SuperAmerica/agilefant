@@ -67,7 +67,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
             Task task = entry.getTask();
 
             DailyWorkTaskTO item = new DailyWorkTaskTO(task);
-            item.setWhatsNextRank(entry.getRank());
+            item.setWorkQueueRank(entry.getRank());
             
             Collection<User> responsibles = task.getResponsibles();
             if (responsibles != null && responsibles.contains(user)) {
@@ -175,4 +175,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         return entry;
     }
 
+    public void removeTaskFromWorkQueues(Task task) {
+        whatsNextEntryDAO.removeAllByTask(task);
+    }
 }

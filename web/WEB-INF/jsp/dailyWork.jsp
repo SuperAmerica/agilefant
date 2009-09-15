@@ -27,13 +27,13 @@ $(document).ready(function() {
     dailyWorkController = new DailyWorkController({
         id: '${userId}', 
         type: 'current',
-        myWorkListElement: $("#my-work-div"),
-        whatsNextListElement: $("#whats-next-div")
+        workQueueElement: $("#work-queue-div"),
+        myWorkListElement: $("#my-work-div")
     });
 });
 </script>
 
-<div id="whats-next-div"></div>
+<div id="work-queue-div"></div>
 <div id="my-work-div"></div>
 
 </c:when>

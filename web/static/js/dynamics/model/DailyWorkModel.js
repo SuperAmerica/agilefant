@@ -55,7 +55,7 @@ DailyWorkModel.prototype.getMyWorks = function() {
     return this._getChildrenByTaskClass(["ASSIGNED", "NEXT_ASSIGNED"]);
 };
 
-DailyWorkModel.prototype.getWhatsNexts = function() {
+DailyWorkModel.prototype.getWorkQueueItems = function() {
     return this._getChildrenByTaskClass(["NEXT", "NEXT_ASSIGNED"]);
 };
 

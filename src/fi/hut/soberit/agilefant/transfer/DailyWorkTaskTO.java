@@ -11,7 +11,7 @@ public class DailyWorkTaskTO extends Task {
     }
     
     private TaskClass taskClass;
-    private int whatsNextRank;
+    private int workQueueRank;
     
     public DailyWorkTaskTO(Task task) {
         BeanCopier.copy(task, this);
@@ -22,16 +22,16 @@ public class DailyWorkTaskTO extends Task {
         BeanCopier.copy(task, this);
         
         this.taskClass = clazz;
-        this.whatsNextRank = whatsNextRank;
+        this.workQueueRank = whatsNextRank;
     }
     
 
-    public int getWhatsNextRank() {
-        return whatsNextRank;
+    public int getWorkQueueRank() {
+        return workQueueRank;
     }
 
-    public void setWhatsNextRank(int whatsNextRank) {
-        this.whatsNextRank = whatsNextRank;
+    public void setWorkQueueRank(int workQueueRank) {
+        this.workQueueRank = workQueueRank;
     }
 
 

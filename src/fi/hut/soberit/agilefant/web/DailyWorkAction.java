@@ -84,7 +84,7 @@ public class DailyWorkAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
-    public String deleteFromWhatsNext() {
+    public String deleteFromWorkQueue() {
         User thisUser = userBusiness.retrieve(userId);
         Task thisTask = taskBusiness.retrieve(taskId);
         
@@ -93,7 +93,7 @@ public class DailyWorkAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
-    public String addToWhatsNext() {
+    public String addToWorkQueue() {
         if (userId == 0) {
             userId = SecurityUtil.getLoggedUserId();
         }
@@ -106,7 +106,7 @@ public class DailyWorkAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
-    public String rankWhatsNextTaskAndMoveUnder() {
+    public String rankQueueTaskAndMoveUnder() {
         if (userId == 0) {
             userId = SecurityUtil.getLoggedUserId();
         }

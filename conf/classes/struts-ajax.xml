@@ -371,19 +371,19 @@
     <!-- /Task actions -->
 
     <!-- Daily work actions -->
-    <action name="addToWhatsNext" method="addToWhatsNext" class="dailyWorkAction">
+    <action name="addToWorkQueue" method="addToWorkQueue" class="dailyWorkAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>
     </action>
 
-    <action name="deleteFromWhatsNext" method="deleteFromWhatsNext" class="dailyWorkAction">
+    <action name="deleteFromWorkQueue" method="deleteFromWorkQueue" class="dailyWorkAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>
     </action>
 
-    <action name="rankDailyTaskAndMoveUnder" method="rankWhatsNextTaskAndMoveUnder" class="dailyWorkAction">
+    <action name="rankDailyTaskAndMoveUnder" method="rankQueueTaskAndMoveUnder" class="dailyWorkAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>

@@ -72,6 +72,14 @@ WhatsNextEntryDAO {
         return asList(crit);
     }
     
+    public Collection<WhatsNextEntry> getAllWorkQueueEntriesFor(Task task) {
+        Criteria crit = getCurrentSession().createCriteria(WhatsNextEntry.class);
+        crit.add(Restrictions.eq("task", task));
+        crit.setFetchMode("task", FetchMode.SELECT);
+        return asList(crit);
+    }
+
+    
     public Collection<WhatsNextEntry> getWhatsNextEntriesForIteration(int iterationId) {
         String hqlQuery = 
             "SELECT entry FROM WhatsNextEntry AS entry " +
@@ -81,5 +89,12 @@ WhatsNextEntryDAO {
         
         // Query q = getCurrentSession().createQuery(hqlQuery);
         return null;
+    }
+
+    public void removeAllByTask(Task task) {
+        // needs to use this for cascading rules to work!
+        for (WhatsNextEntry entry: getAllWorkQueueEntriesFor(task)) {
+            remove(entry);
+        };
     }
 }

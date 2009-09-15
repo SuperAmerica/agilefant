@@ -25,7 +25,7 @@ DailyWorkTaskController.prototype.sortAndMoveDailyTask = function(view, model, n
   var targetView  = view.getParentView();
   var targetModel = view.getParentView().getModel();
   
-  // viewType === whatsNext, hopefully
+  // viewType === workQueue, hopefully
   if (view.getParentView().getDataRowAt(previousRow)) {
     previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
     model.rankDailyUnder(previousTask.getId(), targetModel);
@@ -45,7 +45,7 @@ DailyWorkTaskController.prototype.addAndRankDailyTask = function (view, model, n
         return;
     }
 
-    // viewType === whatsNext, hopefully
+    // viewType === workQueue, hopefully
     if (view.getParentView().getDataRowAt(previousRow)) {
       previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
       model.rankDailyUnder(previousTask.getId(), targetModel);

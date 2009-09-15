@@ -34,4 +34,10 @@ public interface WhatsNextEntryDAO extends GenericDAO<WhatsNextEntry> {
      * Gets the What's next entry for given user and given task, if exists
      */
     public Collection<WhatsNextEntry> getWhatsNextEntriesFor(User user);
+
+    /**
+     * Removes all entries by task
+     * @param task
+     */
+    public void removeAllByTask(Task task);
 }

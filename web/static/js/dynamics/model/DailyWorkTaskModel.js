@@ -22,7 +22,7 @@ DailyWorkTaskModel = function() {
       "originalEstimate": "originalEstimate",
       "rank":             "rank",
       "taskClass":        "taskClass",
-      "whatsNextRank":    "whatsNextRank"
+      "workQueueRank":    "workQueueRank"
     };
 
     this.classNameToRelation = {
@@ -47,11 +47,11 @@ DailyWorkTaskModel.prototype.getDailyWork = function() {
 };
 
 DailyWorkTaskModel.prototype.getRank = function() {
-    return this.currentData.whatsNextRank;
+    return this.currentData.workQueueRank;
 };
 
-DailyWorkTaskModel.prototype.getWhatsNextRank = function() {
-    return this.currentData.whatsNextRank;
+DailyWorkTaskModel.prototype.getWorkQueueRank = function() {
+    return this.currentData.workQueueRank;
 };
 
 DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
@@ -94,7 +94,7 @@ DailyWorkTaskModel.prototype.removeFromDailyWork = function(successCallback) {
     var me = this;
     jQuery.ajax({
         type: "POST",
-        url: "ajax/deleteFromWhatsNext.action",
+        url: "ajax/deleteFromWorkQueue.action",
         async: true,
         cache: false,
         dataType: "text",

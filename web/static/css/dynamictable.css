@@ -436,9 +436,10 @@ li.dynamictable-captionaction {
 .dynamictable .dynamictable-row .task-row {
 	background-color: #eee;
 }
-.dynamictable div.daily-work-next-assigned div.task-row {
+/* .dynamictable div.daily-work-next-assigned div.task-row {
     background-color: #dfd;
-}
+} */
+
 .dynamictable .dynamictable-row .task-data {
 	background-color: #fff;
 }
@@ -490,6 +491,6 @@ div.dynamictable-tailer {
 
 /* for annotating users working on tasks in user lists */ 
 strong.user-initials-next-assigned {
-	color: #AA2222;
+/*	color: #AA2222; */
 	font-weight: bold;
 };

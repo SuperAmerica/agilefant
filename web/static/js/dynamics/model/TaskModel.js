@@ -179,7 +179,7 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   });
 };
 
-TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
+TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
     var me = this;
     
     if (me.getDailyWork) {
@@ -188,7 +188,7 @@ TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
     
     jQuery.ajax({
         type: "POST",
-        url: "ajax/addToWhatsNext.action",
+        url: "ajax/addToWorkQueue.action",
         async: true,
         cache: false,
         dataType: "text",
@@ -196,7 +196,7 @@ TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
            taskId: me.getId()
         },
         success: function(data,status) {
-            var msg = new MessageDisplay.OkMessage("Task added to this week's tasks");
+            var msg = new MessageDisplay.OkMessage("Task appended to work queue");
             
             if (dailyWork) {
                 dailyWork.reload();
@@ -206,7 +206,7 @@ TaskModel.prototype.addToMyWhatsNext = function(successCallback) {
             }
         },
         error: function(xhr,status) {
-            var msg = new MessageDisplay.ErrorMessage("Error adding task to this week's tasks.", xhr);
+            var msg = new MessageDisplay.ErrorMessage("Error adding task to work queue.", xhr);
         }
     });
 };

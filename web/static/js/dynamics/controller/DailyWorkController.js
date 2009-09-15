@@ -1,7 +1,7 @@
 var DailyWorkController = function(options) {
     this.id                      = options.id;
     this.myWorkListElement       = options.myWorkListElement;
-    this.whatsNextListElement    = options.whatsNextListElement;
+    this.workQueueElement        = options.workQueueElement;
 
     this.init();
     this.initializeConfigs();
@@ -25,7 +25,7 @@ DailyWorkController.prototype.paint = function() {
 
 DailyWorkController.prototype.createTaskLists = function() {
     this.createMyWorkList();
-    this.createWhatsNextList();
+    this.createWorkQueue();
 };
 
 DailyWorkController.prototype.createMyWorkList = function() {
@@ -40,16 +40,16 @@ DailyWorkController.prototype.createMyWorkList = function() {
     this.myWorkListView.render();
 };
 
-DailyWorkController.prototype.createWhatsNextList = function() {
-    this.whatsNextListView = new DynamicTable(
+DailyWorkController.prototype.createWorkQueue = function() {
+    this.workQueueView = new DynamicTable(
         this, 
         this.model, 
-        this.whatsNextListConfig,
-        this.whatsNextListElement
+        this.workQueueConfig,
+        this.workQueueElement
     );
 
-    this.whatsNextListView.render();
-    this.whatsNextListView.dailyWorkViewType = "whatsNext";
+    this.workQueueView.render();
+    this.workQueueView.dailyWorkViewType = "workQueue";
 };
 
 DailyWorkController.prototype.taskControllerFactory = function(view, model) {
@@ -72,11 +72,11 @@ DailyWorkController.prototype.createConfig = function(configType) {
     options.captionConfig = {
         cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     };
-    options.cssClass = "ui-widget-content ui-corner-all"
+    options.cssClass = "ui-widget-content ui-corner-all";
     
     if (configType == 'next') {
-        options.caption = "Tasks I'm going to do next";
-        options.dataSource = DailyWorkModel.prototype.getWhatsNexts;
+        options.caption = "My work queue";
+        options.dataSource = DailyWorkModel.prototype.getWorkQueueItems;
 
         options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory;
         options.sortCallback = DailyWorkTaskController.prototype.sortAndMoveDailyTask;
@@ -84,13 +84,13 @@ DailyWorkController.prototype.createConfig = function(configType) {
                 items: "> .dynamicTableDataRow",
                 handle: "." + DynamicTable.cssClasses.dragHandle,
                 // keep the tasks within this control
-                containment: this.whatsNextListElement,
+                containment: this.workQueueElement,
                 axis: 'y'
         };
         
         options.appendTailer = true;
 
-        sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWhatsNextRank);
+        sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWorkQueueRank);
         actionColumnFactory = DailyWorkTaskController.prototype.actionColumnFactory;
     }
     else {
@@ -262,5 +262,5 @@ DailyWorkController.prototype.createConfig = function(configType) {
 
 DailyWorkController.prototype.initializeConfigs = function() {
     this.myWorkListConfig    = this.createConfig('current'); 
-    this.whatsNextListConfig = this.createConfig('next'); 
+    this.workQueueConfig = this.createConfig('next'); 
 };

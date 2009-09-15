@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
@@ -45,6 +46,9 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
 
     @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    
+    @Autowired
+    private DailyWorkBusiness dailyWorkBusiness;
     
     @Autowired
     private RankingBusiness rankingBusiness;
@@ -100,6 +104,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         }
         
         updateIterationHistoryIfApplicable(task);
+        
+        if (task.getState() == TaskState.DONE) {
+            dailyWorkBusiness.removeTaskFromWorkQueues(task);
+        }
         
         return storedTask;
     }

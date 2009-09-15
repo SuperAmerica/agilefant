@@ -59,4 +59,10 @@ public interface DailyWorkBusiness {
      * @param task
      */
     public WhatsNextEntry addToWhatsNext(User user, Task task) throws IllegalArgumentException;
+    
+    /**
+     * Removes all queue entries that are related to this task from the queues
+     * @param task
+     */
+    public void removeTaskFromWorkQueues(Task task);
 }

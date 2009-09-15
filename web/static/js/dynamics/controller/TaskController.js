@@ -83,8 +83,8 @@ TaskController.prototype.toggleFactory = function(view, model) {
     return this.toggleView;
 };
 
-TaskController.prototype.addToMyWhatsNext = function() {
-  this.model.addToMyWhatsNext();
+TaskController.prototype.addToMyWorkQueue = function() {
+  this.model.addToMyWorkQueue();
 };
 
 TaskController.prototype.removeTask = function() {
@@ -127,8 +127,8 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     text : "Edit",
     callback : TaskController.prototype.editTask
   }, {
-    text : "Do this week",
-    callback : TaskController.prototype.addToMyWhatsNext
+    text : "Append to my work queue",
+    callback : TaskController.prototype.addToMyWorkQueue
   },/*{
     text : "Move",
     callback : TaskController.prototype.moveTask

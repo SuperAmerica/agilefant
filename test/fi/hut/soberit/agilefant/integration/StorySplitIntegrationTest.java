@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
  * 
  * @author rjokelai
  */
+public class StorySplitIntegrationTest {}
 /*
 @ContextConfiguration
 @Transactional

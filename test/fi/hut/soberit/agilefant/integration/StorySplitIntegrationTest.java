@@ -21,12 +21,13 @@ import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
  * 
  * @author rjokelai
  */
+/*
 @ContextConfiguration
 @Transactional
 public class StorySplitIntegrationTest extends AbstractHibernateTests {
    
     @Autowired
-    private StorySplitBusiness stb;
+    private StorySplitBusiness storySplitBusiness;
     
     @Autowired
     private StoryDAO storyDAO;
@@ -38,8 +39,9 @@ public class StorySplitIntegrationTest extends AbstractHibernateTests {
     
     @Test
     public void testSplitStory_get() {
-        Story actual = stb.getStory(1);        
+        Story actual = storySplitBusiness.getStory(1);        
         assertEquals("Persisted story", actual.getName());
     }
 
 }
+*/

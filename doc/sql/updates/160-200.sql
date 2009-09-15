@@ -654,3 +654,7 @@ DROP PROCEDURE IF EXISTS UpdateStoryRanks;
 create table whatsnextentry (id integer not null auto_increment, rank int default 0 not null, task_id integer, user_id integer, primary key (id), unique (task_id, user_id)) ENGINE=InnoDB;
 alter table whatsnextentry add index FK4B213410C1610AD2 (user_id), add constraint FK4B213410C1610AD2 foreign key (user_id) references users (id);
 alter table whatsnextentry add index FK4B2134106E84F892 (task_id), add constraint FK4B2134106E84F892 foreign key (task_id) references tasks (id);
+
+alter table stories add column parent_id integer;
+alter table stories_AUD add column parent_id integer;
+alter table stories add index FK8FB06053F5E897CD (parent_id), add constraint FK8FB06053F5E897CD foreign key (parent_id) references stories (id);

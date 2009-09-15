@@ -174,6 +174,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         persisted.setName(dataItem.getName());
         persisted.setState(dataItem.getState());
         persisted.setStoryPoints(dataItem.getStoryPoints());
+        persisted.setParent(dataItem.getParent());
     }
 
     private void setResponsibles(Story story, Set<Integer> responsibleIds) {

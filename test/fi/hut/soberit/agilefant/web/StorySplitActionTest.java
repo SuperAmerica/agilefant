@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StorySplitBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -18,26 +19,34 @@ public class StorySplitActionTest {
     
     StoryBusiness storyBusiness;
     
+    StorySplitBusiness storySplitBusiness;
+    
     @Before
     public void setUp_dependencies() {
         testable = new StorySplitAction();
         
         storyBusiness = createStrictMock(StoryBusiness.class);
         testable.setStoryBusiness(storyBusiness);
+        
+        storySplitBusiness = createStrictMock(StorySplitBusiness.class);
+        testable.setStorySplitBusiness(storySplitBusiness);
     }
     
     private void replayAll() {
-        replay(storyBusiness);
+        replay(storyBusiness, storySplitBusiness);
     }
     
     private void verifyAll() {
-        verify(storyBusiness);
+        verify(storyBusiness, storySplitBusiness);
     }    
     
     @Test
     public void testSplit() {
         testable.setOriginalStoryId(123);
-        expect(storyBusiness.retrieve(123)).andReturn(new Story());
+        Story story = new Story();
+        expect(storyBusiness.retrieve(123)).andReturn(story);
+        expect(storySplitBusiness.splitStory(story, testable.getNewStories())).andReturn(null);
+        
         replayAll();
         assertEquals(Action.SUCCESS, testable.split());
         verifyAll();

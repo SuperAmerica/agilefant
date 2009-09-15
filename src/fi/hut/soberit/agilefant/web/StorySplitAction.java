@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StorySplitBusiness;
 import fi.hut.soberit.agilefant.model.Story;
 
 @Component("storySplitAction")
@@ -19,13 +20,17 @@ public class StorySplitAction {
     @Autowired
     private StoryBusiness storyBusiness;
     
+    @Autowired
+    private StorySplitBusiness storySplitBusiness;
+    
     private int originalStoryId;
    
     private Collection<Story> newStories = new ArrayList<Story>(); 
     
     
     public String split() {
-        storyBusiness.retrieve(originalStoryId);
+        Story original = storyBusiness.retrieve(originalStoryId);
+        storySplitBusiness.splitStory(original, newStories);
         return Action.SUCCESS;
     }
 
@@ -49,6 +54,10 @@ public class StorySplitAction {
 
     public Collection<Story> getNewStories() {
         return newStories;
+    }
+
+    public void setStorySplitBusiness(StorySplitBusiness storySplitBusiness) {
+        this.storySplitBusiness = storySplitBusiness;
     }
 
 }

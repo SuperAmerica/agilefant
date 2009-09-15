@@ -22,6 +22,8 @@ import javax.persistence.Table;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -39,6 +41,8 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable {
     private Backlog backlog;
     private StoryState state = StoryState.NOT_STARTED;
     private int rank = 0;
+    private Story parent;
+    private Collection<Story> children;
     
     private Set<User> responsibles = new HashSet<User>();
     private Collection<Task> tasks = new ArrayList<Task>();
@@ -102,8 +106,7 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable {
      * @return collection of the responsible users
      */
     @ManyToMany(
-            targetEntity = fi.hut.soberit.agilefant.model.User.class,
-            fetch = FetchType.LAZY
+            targetEntity = fi.hut.soberit.agilefant.model.User.class
     )
     @JoinTable(
             name = "story_user",
@@ -111,6 +114,7 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable {
             inverseJoinColumns={@JoinColumn(name = "User_id")}
     )
     @BatchSize(size=20)
+    @Fetch(FetchMode.SUBSELECT)
     public Set<User> getResponsibles() {
         return responsibles;
     }
@@ -157,5 +161,27 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable {
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    @JSON(include=false)
+    @ManyToOne
+    public Story getParent() {
+        return parent;
+    }
+
+    public void setParent(Story parent) {
+        this.parent = parent;
+    }
+
+    @JSON(include=false)
+    @OneToMany(mappedBy="parent", targetEntity=fi.hut.soberit.agilefant.model.Story.class)
+    @Fetch(FetchMode.SELECT)
+    @NotAudited
+    public Collection<Story> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Collection<Story> children) {
+        this.children = children;
     }
 }

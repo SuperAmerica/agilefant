@@ -72,7 +72,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     options.captionConfig = {
         cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     };
-    options.cssClasses = "ui-widget-content ui-corner-all"
+    options.cssClass = "ui-widget-content ui-corner-all"
     
     if (configType == 'next') {
         options.caption = "Tasks I'm going to do next";

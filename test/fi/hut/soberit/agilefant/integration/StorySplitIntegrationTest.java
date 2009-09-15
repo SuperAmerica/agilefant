@@ -21,7 +21,12 @@ import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
  * 
  * @author rjokelai
  */
-public class StorySplitIntegrationTest {}
+public class StorySplitIntegrationTest {
+    @Test
+    public void testDummy() {
+        
+    }
+}
 /*
 @ContextConfiguration
 @Transactional

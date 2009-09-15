@@ -4,38 +4,6 @@ function toggleDiv(id) { $('#' + id).toggle(); }
 function confirmDelete() { return confirm("Are you sure?"); }
 function confirmDeleteTeam() { return confirm("Really delete the team?"); }
 
-function deleteStory(storyId) {
-	var url = "ajax/deleteStory.action";			
-	if (confirmDeleteStory()) {
-		$.post(url,{storyId: storyId},function(data) {
-			reloadPage();
-		});
-	}
-}
-
-function deleteIteration(iterationId, projectId) {
-	var url = "ajax/deleteIteration.action";
-	if (confirmDeleteIteration()) {
-	  jQuery.ajax({
-		    async: false,
-		    error: function(XMLHttpRequest) {
-		      if (XMLHttpRequest.status === 403) {
-		    	commonView.showError("Iterations with stories or tasks cannot be deleted.")
-		      } else {
-		    	commonView.showError("An error occured while deleting this iteration.");
-		      }
-		    },
-		    success: function() {
-		    	window.location = "editProject.action?projectId=" + projectId;
-		    },
-		    cache: false,
-		    type: "POST",
-		    url: url,
-		    data: {iterationId: iterationId}
-		  });
-	}
-}
-
 function addRandomToURL(url) {
     var rand = Math.round(Math.random()*1000000000);
     
@@ -255,26 +223,6 @@ function disableElementIfValue(me, handle, ref) {
     return false;
 }
 
-function getStories(backlogId, element, preselectedId) {
-    jQuery.getJSON("ajax/retrieveStories.action",
-        { 'backlogId': backlogId }, function(data, status) {
-        var select = $(element);
-        
-        if (data.length > 0) {
-            select.parents('tr:eq(0)').show();
-            $('<option/>').attr('value','').attr('class','inactive').text('(none)').appendTo(select);
-            for (var i = 0; i < data.length; i++) {
-                var opt = $('<option/>').attr('value',data[i].id).text(data[i].name).appendTo(select);
-                if (preselectedId == data[i].id) {
-                    opt.attr('selected','selected');
-                }
-            }
-        }
-        else {
-            select.parents('tr:eq(0)').hide();
-        }
-    });
-}
 function handleQuickRef(form) {
 	form = $(form);
 	var field = form.find(":text");
@@ -297,74 +245,10 @@ function handleQuickRef(form) {
 	return true;
 }
 
-
-function resetStoryOriginalEstimate(storyId, me) {
-    if (!confirmReset()) {
-        return false;
-    }
-    // Send the request to the server
-    jQuery.post('resetStoryOrigEstAndEffortLeft.action', {storyId: storyId});
-    
-    var form = $(me).parents('form:eq(0)');
-    var origEstField = form.find('input[name=story.originalEstimate]').removeAttr('disabled').val('');
-    var effLeftField = form.find('input[name=story.effortLeft]');
-    
-    effLeftField.parents('tr:eq(0)').remove();
-    
-    $(me).hide();
-    
-    return false;
-}
-
-function setThemeActivityStatus(themeId,status) {
-    var url = "";
-    if(status == true) {
-        url = "ajaxActivateBusinessTheme.action";
-    } else {
-        url = "ajaxDeactivateBusinessTheme.action";
-    }
-    $.post(url,{businessThemeId: themeId},function(data,status) {
-        reloadPage();
-    });
-}
-
-function removeThemes(container) {
-    $(container).empty().text('(none)');
-}
-
-function deleteTheme(themeId) {
-    var confirm = confirmDelete();
-    var url = "ajaxDeleteBusinessTheme.action";         
-    if (confirm) {
-        $.post(url,{businessThemeId: themeId},function(data) {
-            var a = "foo";
-            reloadPage();
-        });
-    }
-}
-
 function stripHTML(htmlString) {
 	return htmlString.replace(/(<([^>]+)>)/ig,""); 
 }
 
-function toggleExpand(clickedElement, elementId, settings) {
-    var me = $(clickedElement); var elem = $(elementId);
-    var options = {
-        height_min: '14em',
-        height_max: '1000em'
-    };
-    jQuery.extend(options, settings);
-    if (me.hasClass('expand')) {
-        elem.css('max-height',options.height_max);
-        me.attr("title","Collapse");
-    }
-    else {
-        elem.css('max-height',options.height_min);
-        me.attr("title","Expand");
-    }
-    me.toggleClass('expand').toggleClass('collapse');
-    return false;
-}
 
 function toggleHide(clickedElement, elements) {
     var elems = $(elements);

@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.integration;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +31,12 @@ public class StorySplitIntegrationTest extends AbstractHibernateTests {
     @Autowired
     private StoryDAO storyDAO;
     
+    @Before
     public void setUp() {
         executeClassSql();       
     }
     
+    @Test
     public void testSplitStory_get() {
         Story actual = stb.getStory(1);        
         assertEquals("Persisted story", actual.getName());

@@ -163,7 +163,6 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     title : "Name",
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
     editable : true,
     defaultSortColumn: true,
     edit : {

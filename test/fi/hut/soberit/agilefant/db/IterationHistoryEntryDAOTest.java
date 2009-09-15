@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.junit.Test;
@@ -11,7 +13,6 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 import fi.hut.soberit.agilefant.util.Pair;
-
 @ContextConfiguration
 @Transactional
 public class IterationHistoryEntryDAOTest extends AbstractHibernateTests {

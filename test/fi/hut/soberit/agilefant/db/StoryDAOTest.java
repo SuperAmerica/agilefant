@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;

@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.simple.SimpleJdbcTemplate;
-import org.springframework.test.context.junit38.AbstractTransactionalJUnit38SpringContextTests;
+import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.jdbc.SimpleJdbcTestUtils;
 
 public abstract class AbstractHibernateTests extends
-        AbstractTransactionalJUnit38SpringContextTests {
+        AbstractTransactionalJUnit4SpringContextTests {
 
     @Autowired
     protected ApplicationContext applicationContext;

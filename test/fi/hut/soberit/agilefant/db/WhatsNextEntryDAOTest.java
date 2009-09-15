@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -26,7 +28,7 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
     private User user3;
     
     @Before
-    public void setUp() {
+    public void setUp_data() {
         user1 = new User();
         user1.setId(1);
 

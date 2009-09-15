@@ -89,6 +89,7 @@ StorySplitDialog.prototype.createStory = function() {
   var row = this.newStoriesView.createRow(controller, mockModel, "top");
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.actions]);
+  row.render();
   row.editRow();
   this.rows.push(row);
   $(window).resize();
@@ -100,6 +101,7 @@ StorySplitDialog.prototype.createStory = function() {
 StorySplitDialog.prototype.isFormDataValid = function() {
   var retVal = true;
   for (var i = 0; i < this.rows.length; i++) {
+    this.rows[i].saveRowEdit();
     retVal = retVal && this.rows[i].isRowValid(); 
   }
   return retVal;

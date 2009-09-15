@@ -6,9 +6,12 @@
  */
 var StorySplitDialog = function(story) {
   this.model = story;
+  this.init();
   this.initDialog();
   this.initConfigs();
   this.render();
+  this.newModels = [];
+  this.rows = [];
 };
 StorySplitDialog.prototype = new CommonController();
 
@@ -21,7 +24,7 @@ StorySplitDialog.prototype.initDialog = function() {
   this.element.dialog({
     width: 750,
     position: 'top',
-    modal: true,
+    modal: false,
     draggable: true,
     resizable: true,
     title: 'Split story',
@@ -57,7 +60,10 @@ StorySplitDialog.prototype.render = function() {
  * The callback for the 'Save' button.
  */
 StorySplitDialog.prototype._save = function() {
-  this.close();
+  if (this.isFormDataValid()) {
+    this.saveStories();
+    this.close();
+  }
 };
 
 /**
@@ -77,14 +83,35 @@ StorySplitDialog.prototype.close = function() {
 
 StorySplitDialog.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+  mockModel.setInTransaction(true);
+  this.newModels.push(mockModel);
   var controller = new StoryController(mockModel, null, this);
   var row = this.newStoriesView.createRow(controller, mockModel, "top");
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.actions]);
-  row.render;
-  controller.editStory();
+  row.editRow();
+  this.rows.push(row);
+  $(window).resize();
 };
 
+/**
+ * Check input validity.
+ */
+StorySplitDialog.prototype.isFormDataValid = function() {
+  var retVal = true;
+  for (var i = 0; i < this.rows.length; i++) {
+    retVal = retVal && this.rows[i].isRowValid(); 
+  }
+  return retVal;
+};
+
+/**
+ * Serialize and save the data.
+ */
+StorySplitDialog.prototype.saveStories = function() {
+  var ssc = new StorySplitContainer(this.model, this.newModels);
+  ssc.commit();
+};
 
 /*
  * DYNAMICS CONFIGURATIONS
@@ -104,6 +131,12 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
   config.addColumnConfiguration(0, {
     title: 'Name',
     get: StoryModel.prototype.getName,
+    editable: false
+  });
+  
+  config.addColumnConfiguration(1, {
+    title: 'Points',
+    get: StoryModel.prototype.getStoryPoints,
     editable: false
   });
   
@@ -146,7 +179,6 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     title : "Points",
     headerTooltip : 'Estimate in story points',
     get : StoryModel.prototype.getStoryPoints,
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
     editable : true,
     editableCallback: StoryController.prototype.storyPointsEditable,
     edit : {
@@ -161,7 +193,6 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     title : "State",
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
       editor : "SingleSelection",
@@ -169,6 +200,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
+  /*
   config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
     minWidth : 60,
     autoScale : true,
@@ -183,6 +215,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
+  */
   config.addColumnConfiguration(StoryController.columnIndices.description, {
     fullWidth : true,
     visible : false,
@@ -194,13 +227,6 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.buttons, {
-    fullWidth : true,
-    visible : false,
-    cssClass : 'projectstory-data',
-    subViewFactory : StoryController.prototype.storyButtonFactory
-  });
-
-  
+    
   this.newStoriesConfig = config;
 };

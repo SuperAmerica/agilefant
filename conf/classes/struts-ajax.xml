@@ -303,8 +303,9 @@
       </result>
     </action>
     
-    <action name="storyTabs" method="retrieve"  class="storyAction">
-      <result type="dispatcher">/WEB-INF/jsp/tabs/storyTabs.jsp</result>
+    <action name="splitStory" method="split" class="storySplitAction">
+      <result name="success" type="json">
+      </result>
     </action>
     
     <action name="storyContents" method="storyContents" class="storyAction">

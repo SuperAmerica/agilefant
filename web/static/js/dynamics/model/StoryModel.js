@@ -186,6 +186,10 @@ StoryModel.prototype.addTask = function(task) {
   this.relationEvents();
 };
 
+
+
+
+
 // Getters and setters in property alphabetical order
 StoryModel.prototype.getBacklog = function() {
   return this.relations.backlog;

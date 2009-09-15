@@ -59,13 +59,16 @@ AssignmentModel.prototype._saveData = function(id, changedData) {
   });
 };
 
-AssignmentModel.prototype._remove = function() {
+AssignmentModel.prototype._remove = function(callback) {
   var me = this;
   jQuery.post(
       "ajax/deleteAssignment.action",
       {assignmentId: me.getId()},
       function(data, status) {
         var msg = new MessageDisplay.OkMessage("Assignment removed");
+        if(callback) {
+          callback();
+        }
         return;
       }
   );

@@ -42,7 +42,7 @@ import flexjson.JSON;
 @Entity
 @BatchSize(size = 20)
 @Audited
-public class Iteration extends Backlog implements Schedulable {
+public class Iteration extends Backlog implements Schedulable, TaskContainer {
  
     private DateTime startDate;
 

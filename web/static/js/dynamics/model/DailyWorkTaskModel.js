@@ -15,14 +15,16 @@ DailyWorkTaskModel = function() {
     };
 
     this.copiedFields = {
-      "name":             "name",
-      "state":            "state",
-      "description":      "description",
-      "effortLeft":       "effortLeft",
-      "originalEstimate": "originalEstimate",
-      "rank":             "rank",
-      "taskClass":        "taskClass",
-      "workQueueRank":    "workQueueRank"
+      "name":               "name",
+      "state":              "state",
+      "description":        "description",
+      "effortLeft":         "effortLeft",
+      "originalEstimate":   "originalEstimate",
+      "rank":               "rank",
+      "taskClass":          "taskClass",
+      "workQueueRank":      "workQueueRank",
+      "contextLink":        "contextLink",
+      "contextDescription": "contextDescription"
     };
 
     this.classNameToRelation = {
@@ -48,6 +50,14 @@ DailyWorkTaskModel.prototype.getDailyWork = function() {
 
 DailyWorkTaskModel.prototype.getRank = function() {
     return this.currentData.workQueueRank;
+};
+
+DailyWorkTaskModel.prototype.getContextLink = function() {
+    return this.currentData.contextLink;
+};
+
+DailyWorkTaskModel.prototype.getContextDescription = function() {
+    return this.currentData.contextDescription;
 };
 
 DailyWorkTaskModel.prototype.getWorkQueueRank = function() {

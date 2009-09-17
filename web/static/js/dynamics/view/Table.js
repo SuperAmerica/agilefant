@@ -382,7 +382,7 @@ DynamicTable.prototype.render = function() {
   this._sort();
   i = 0;
   this._addSectionToTable(this.upperRows, null);
-  this._addSectionToTable(this.middleRows, this.oldMiddleRows);
+  this._addSectionToTable(this.middleRows, null); /* this.oldMiddleRows); */
   this._addSectionToTable(this.bottomRows, null);
   this._appendTailerIfExists();
   

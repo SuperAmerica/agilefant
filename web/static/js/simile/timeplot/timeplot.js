@@ -473,7 +473,8 @@ Timeplot._Impl.prototype = {
             this._prepareCanvas();
     
             // inserting copyright and link to simile
-            var elmtCopyright = SimileAjax.Graphics.createTranslucentImage(Timeplot.urlPrefix + "images/copyright.png");
+            // Modified for Agilefant
+            var elmtCopyright = SimileAjax.Graphics.createTranslucentImage("static/img/simile_copyright.png");
             elmtCopyright.className = "timeplot-copyright";
             elmtCopyright.title = "SIMILE Timeplot - http://www.simile-widgets.organ/timeplot/";
             SimileAjax.DOM.registerEvent(elmtCopyright, "click", function() { window.location = "http://www.simile-widgets.organ/timeplot/"; });

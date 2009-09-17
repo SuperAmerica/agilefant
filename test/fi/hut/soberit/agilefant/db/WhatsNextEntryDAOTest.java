@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,11 +47,12 @@ public class WhatsNextEntryDAOTest extends AbstractHibernateTests {
         executeClassSql();
     }
     
-    private Task createTask(int id) {
-        Task returned = new Task();
-        returned.setId(id);
-        return returned;
-    }
+    //    private Task createTask(int id) {
+    //        Task returned = new Task();
+    //        returned.setId(id);
+    //        return returned;
+    //    }
+    //
     
     @Test
     public void testGetLastTaskInRank() {

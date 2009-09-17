@@ -61,10 +61,10 @@ public class TaskContextLinkGenerator implements ContextLinkGenerator<Task>, Ser
 
         List<String> fragmentPieces = new ArrayList<String>();
         if (story != null) {
-            fragmentPieces.add("story=" + story.getId());
+            fragmentPieces.add("storyId=" + story.getId());
         }
         
-        fragmentPieces.add("task=" + task.getId());
+        fragmentPieces.add("taskId=" + task.getId());
         
         uri += "#" + StringUtils.join(fragmentPieces, "&");
         return uri;

@@ -1,6 +1,6 @@
 package fi.hut.soberit.agilefant.web.context;
 
-import com.sun.jmx.snmp.tasks.Task;
+import fi.hut.soberit.agilefant.model.Task;
 
 public class ContextLinkGeneratorFactory {
     private static ContextLinkGeneratorFactory instance = new ContextLinkGeneratorFactory();
@@ -10,10 +10,10 @@ public class ContextLinkGeneratorFactory {
     }
     
     public <T> ContextLinkGenerator<T> getContextLinkGenerator(T obj) {
-        return getContextLinkGenerator(obj.getClass());
+        return getContextLinkGenerator((Class<? extends T>)obj.getClass());
     }
     
-    public <T> ContextLinkGenerator<T> getContextLinkGenerator(Class cls) {
+    public <T> ContextLinkGenerator<T> getContextLinkGenerator(Class<? extends T> cls) {
         if (Task.class.isAssignableFrom(cls)) {
             return (ContextLinkGenerator<T>) new TaskContextLinkGenerator();
         }

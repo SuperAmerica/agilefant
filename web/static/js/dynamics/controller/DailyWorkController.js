@@ -124,7 +124,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     }
     
     var config = new DynamicTableConfiguration(options);
-    config.addColumnConfiguration(TaskController.columnIndices.prio, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.prio, {
         minWidth : 24,
         autoScale : true,
         cssClass : 'task-row',
@@ -135,11 +135,11 @@ DailyWorkController.prototype.createConfig = function(configType) {
         subViewFactory: TaskController.prototype.toggleFactory
     });
     
-    config.addColumnConfiguration(TaskController.columnIndices.name, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.name, {
         minWidth : 200,
         autoScale : true,
         cssClass : 'task-row',
-        title : "Name",
+        title : "Task Name",
         headerTooltip : 'Task name',
         get : TaskModel.prototype.getName,
         editable : true,
@@ -151,7 +151,19 @@ DailyWorkController.prototype.createConfig = function(configType) {
         }
     });
 
-    config.addColumnConfiguration(TaskController.columnIndices.state, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.context, {
+        minWidth : 60,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : 'Context',
+        headerTooltip : 'Task context',
+        get : DailyWorkTaskModel.prototype.getContext,
+        decorator: DynamicsDecorators.contextDecorator,
+        editable : true,
+        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext)
+    });
+
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.state, {
         minWidth : 60,
         autoScale : true,
         cssClass : 'task-row',
@@ -168,7 +180,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         }
     });
 
-    config.addColumnConfiguration(TaskController.columnIndices.responsibles, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.responsibles, {
         minWidth : 60,
         autoScale : true,
         cssClass : 'task-row',
@@ -184,7 +196,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         }
     });
 
-    config.addColumnConfiguration(TaskController.columnIndices.el, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.el, {
         minWidth : 30,
         autoScale : true,
         cssClass : 'task-row',
@@ -201,7 +213,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     }
     });
 
-    config.addColumnConfiguration(TaskController.columnIndices.oe, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.oe, {
         minWidth : 30,
         autoScale : true,
         cssClass : 'task-row',
@@ -219,7 +231,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     });
 
     if (Configuration.isTimesheetsEnabled()) {
-        config.addColumnConfiguration(TaskController.columnIndices.es, {
+        config.addColumnConfiguration(DailyWorkTaskController.columnIndices.es, {
             minWidth : 30,
             autoScale : true,
             cssClass : 'task-row',
@@ -230,7 +242,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         });
     }
 
-    config.addColumnConfiguration(TaskController.columnIndices.actions, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.actions, {
         minWidth : 35,
         autoScale : true,
         cssClass : 'task-row',
@@ -238,19 +250,19 @@ DailyWorkController.prototype.createConfig = function(configType) {
         subViewFactory: actionColumnFactory
     });
 
-    config.addColumnConfiguration(TaskController.columnIndices.description, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.description, {
         fullWidth : true,
         get : TaskModel.prototype.getDescription,
         cssClass : 'task-data',
         visible : false,
         editable : true,
         edit : {
-        editor : "Wysiwyg",
-        set : TaskModel.prototype.setDescription
-    }
+            editor : "Wysiwyg",
+            set : TaskModel.prototype.setDescription
+        }
     });
 
-    config.addColumnConfiguration(TaskController.columnIndices.buttons, {
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.buttons, {
         fullWidth : true,
         visible : false,
         cssClass : 'task-row',
@@ -261,6 +273,6 @@ DailyWorkController.prototype.createConfig = function(configType) {
 };
 
 DailyWorkController.prototype.initializeConfigs = function() {
-    this.myWorkListConfig    = this.createConfig('current'); 
-    this.workQueueConfig = this.createConfig('next'); 
+    this.myWorkListConfig = this.createConfig('current'); 
+    this.workQueueConfig  = this.createConfig('next'); 
 };

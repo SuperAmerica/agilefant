@@ -7,15 +7,16 @@ var TaskController = function(model, view, parentController) {
 TaskController.columnIndices = {
     prio: 0,
     name: 1,
-    state: 2,
-    responsibles: 3,
-    el: 4,
-    oe: 5,
-    es: 6,
-    actions: 7,
-    description: 8,
-    buttons: 9,
-    data: 10
+    context: 2,
+    state: 3,
+    responsibles: 4,
+    el: 5,
+    oe: 6,
+    es: 7,
+    actions: 8,
+    description: 9,
+    buttons: 10,
+    data: 11
 };
 
 TaskController.prototype = new CommonController();
@@ -129,10 +130,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
   }, {
     text : "Append to my work queue",
     callback : TaskController.prototype.addToMyWorkQueue
-  },/*{
-    text : "Move",
-    callback : TaskController.prototype.moveTask
-  }, */{
+  }, {
     text : "Delete",
     callback : TaskController.prototype.removeTask
   }, {

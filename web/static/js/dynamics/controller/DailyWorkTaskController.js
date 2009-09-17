@@ -20,6 +20,8 @@ DailyWorkTaskController.prototype.actualStateListener = function(event) {
     }
 };
 
+DailyWorkTaskController.columnIndices = TaskController.columnIndices;
+
 DailyWorkTaskController.prototype.sortAndMoveDailyTask = function(view, model, newPos) {
   var previousRow = newPos - 1;
   var targetView  = view.getParentView();

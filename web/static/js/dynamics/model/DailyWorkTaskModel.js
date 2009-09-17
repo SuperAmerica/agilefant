@@ -49,20 +49,17 @@ DailyWorkTaskModel.prototype.getDailyWork = function() {
     return this.relations.dailyWork;
 };
 
-DailyWorkTaskModel.prototype.getRank = function() {
-    return this.currentData.workQueueRank;
-};
-
-DailyWorkTaskModel.prototype.getContextLink = function() {
-    return this.currentData.contextLink;
-};
-
-DailyWorkTaskModel.prototype.getContextDescription = function() {
-    return this.currentData.contextDescription;
-};
-
 DailyWorkTaskModel.prototype.getWorkQueueRank = function() {
     return this.currentData.workQueueRank;
+};
+
+DailyWorkTaskModel.prototype.getContext = function() {
+    return {
+        name: this.currentData.contextName,
+        storyId: this.currentData.parentStoryId,
+        backlogId: this.currentData.backlogId,
+        taskId: this.getId()
+    };
 };
 
 DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {

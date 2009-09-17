@@ -37,6 +37,22 @@ var DynamicsDecorators = {
     date.setTime(value);
     return date.asString();
   },
+  contextDecorator: function(value) {
+    var uri = "";
+    if (value.backlogId) {
+        uri = "editBacklog.action?backlogId=" + value.backlogId;
+
+        if (value.storyId) {
+            uri += "&storyId=" + value.storyId;
+        }
+
+        if (value.taskId) {
+            uri += "&taskId=" + value.taskId;
+        }
+    }
+    
+    return ('<a href="' + uri + '">' + value.name + '</a>');
+  },
   dateDecorator: function(value) {
     if(!value) {
       return "";

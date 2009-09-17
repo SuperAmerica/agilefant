@@ -125,13 +125,14 @@ DailyWorkController.prototype.createConfig = function(configType) {
     
     var config = new DynamicTableConfiguration(options);
 
-    if (configType == "next")
-        config.addCaptionItem({
-          name : "createTask",
-          text : "Create task",
-          cssClass : "create",
-          callback : DailyWorkController.prototype.createTask
-    });
+//    if (configType == "next") {
+//        config.addCaptionItem({
+//          name : "createTask",
+//          text : "Create task",
+//          cssClass : "create",
+//          callback : DailyWorkController.prototype.createTask
+//        });
+//    }
 
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.prio, {
         minWidth : 24,

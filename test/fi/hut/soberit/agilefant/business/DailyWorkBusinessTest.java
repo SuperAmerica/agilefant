@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;

@@ -1,11 +1,9 @@
 package fi.hut.soberit.agilefant.transfer;
 
-import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.BeanCopier;
-import fi.hut.soberit.agilefant.web.context.ContextLinkGenerator;
-import fi.hut.soberit.agilefant.web.context.ContextLinkGeneratorFactory;
 
 public class DailyWorkTaskTO extends Task {
     public enum TaskClass {
@@ -16,13 +14,14 @@ public class DailyWorkTaskTO extends Task {
     
     private TaskClass taskClass;
     private int workQueueRank;
-    private String contextLink;
-    private String contextDescription;
+    private int backlogId;
+    private int parentStoryId;
+    private String contextName = "";
     
     public DailyWorkTaskTO(Task task) {
         BeanCopier.copy(task, this);
-        
-        setupContextLinks();
+
+        setupContext();
     }
 
     public DailyWorkTaskTO(Task task, TaskClass clazz, int whatsNextRank) {
@@ -31,28 +30,27 @@ public class DailyWorkTaskTO extends Task {
         this.taskClass = clazz;
         this.workQueueRank = whatsNextRank;
         
-        setupContextLinks();
+        setupContext();
     }
-
-    private void setupContextLinks() {
-        ContextLinkGenerator<Task> linkGenerator = ContextLinkGeneratorFactory
-            .getInstance().getContextLinkGenerator(Task.class);
+    
+    private void setupContext() {
+        Backlog backlog = null;
+        Story story = getStory();
         
-        if (linkGenerator == null) {
-            return;
-        }
-        this.contextLink = linkGenerator.createLink();
-        Story story = this.getStory();
         if (story != null) {
-            this.contextDescription = "Story: " + story.getName();
+            parentStoryId = story.getId();
+            
+            backlog = story.getBacklog();
+            if (backlog != null) {
+                this.contextName  = "" + String.valueOf(backlog.getName()) + "> " + String.valueOf(story.getName());
+                backlogId = backlog.getId();
+            }
         }
         else {
-            Iteration iteration = this.getIteration();
-            if (iteration != null) {
-                this.contextDescription = "Iteration: " + iteration.getName();
-            }
-            else {
-                this.contextDescription = "-";
+            backlog = getIteration();
+            if (backlog != null) {
+                this.contextName  = "" + String.valueOf(backlog.getName());
+                backlogId = backlog.getId();
             }
         }
     }
@@ -69,22 +67,30 @@ public class DailyWorkTaskTO extends Task {
         this.taskClass = clazz;
     }
 
-    public String getContextLink() {
-        return this.contextLink;
+    public int getBacklogId() {
+        return this.backlogId;
     }
     
-    public void setContextLink(String link) {
-        this.setContextLink(link);
+    public void setBacklogId(int backlogId) {
+        this.backlogId = backlogId;
     }
     
-    public String getContextDescription() {
-        return this.contextDescription;
+    public int getParentStoryId() {
+        return parentStoryId;
+    }
+
+    public void setParentStoryId(int parentStoryId) {
+        this.parentStoryId = parentStoryId;
     }
     
-    public void setContextDescription(String description) {
-        this.contextDescription = description;
+    public String getContextName() {
+        return contextName;
     }
-    
+
+    public void setContextName(String contextName) {
+        this.contextName = contextName;
+    }
+
     public TaskClass getTaskClass() {
         return taskClass;
     }

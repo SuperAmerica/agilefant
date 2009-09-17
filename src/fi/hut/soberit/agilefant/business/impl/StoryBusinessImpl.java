@@ -136,6 +136,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if(story.getTasks().size() != 0) {
             throw new OperationNotPermittedException("Story contains tasks.");
         }
+        if (story.getChildren().size() > 0) {
+            throw new OperationNotPermittedException("Story has child stories.");
+        }
         Backlog backlog = story.getBacklog();
         if (backlog != null) {
             backlog.getStories().remove(story);

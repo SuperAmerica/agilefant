@@ -255,6 +255,7 @@ StoryController.prototype.storyButtonFactory = function(view, model) {
                                    ] ,view);
 };
 
+
 /**
  * 
  */

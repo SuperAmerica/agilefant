@@ -88,7 +88,7 @@ StorySplitDialog.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.newStoriesView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([StoryController.columnIndices.actions]);
+  row.autoCreateCells([StorySplitDialog.columnIndices.description]);
   row.render();
   row.editRow();
   this.rows.push(row);
@@ -114,6 +114,18 @@ StorySplitDialog.prototype.saveStories = function() {
   var ssc = new StorySplitContainer(this.model, this.newModels);
   ssc.commit();
 };
+
+StorySplitDialog.prototype.rowCancelFactory = function(view, model) {
+  var me = this;
+  return new DynamicsButtons(this,[{text: 'Cancel',
+    callback: function() {
+      ArrayUtils.remove(me.parentController.rows, this.view);
+      ArrayUtils.remove(me.parentController.newModels, this.model);
+      this.view.remove();
+    }
+  }] ,view);
+};
+
 
 /*
  * DYNAMICS CONFIGURATIONS
@@ -145,6 +157,14 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
   this.storyInfoConfig = config;
 };
 
+StorySplitDialog.columnIndices = {
+    name: 0,
+    points: 1,
+    state: 2,
+    cancel: 3,
+    description: 4
+};
+
 StorySplitDialog.prototype._initNewStoriesConfig = function() {
   var config = new DynamicTableConfiguration({
     cssClass: "ui-widget-content ui-corner-all",
@@ -158,7 +178,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     callback: StorySplitDialog.prototype.createStory
   });
   
-  config.addColumnConfiguration(StoryController.columnIndices.priority, {
+  config.addColumnConfiguration(StorySplitDialog.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
     cssClass : 'projectstory-row',
@@ -173,7 +193,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.points, {
+  config.addColumnConfiguration(StorySplitDialog.columnIndices.points, {
     minWidth : 50,
     autoScale : true,
     cssClass : 'projectstory-row',
@@ -187,7 +207,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.state, {
+  config.addColumnConfiguration(StorySplitDialog.columnIndices.state, {
     minWidth : 70,
     autoScale : true,
     cssClass : 'projectstory-row',
@@ -201,22 +221,15 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
-  /*
-  config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
-    minWidth : 60,
+  
+  config.addColumnConfiguration(StorySplitDialog.columnIndices.cancel, {
+    minWidth : 70,
     autoScale : true,
     cssClass : 'projectstory-row',
-    title : "Responsibles",
-    headerTooltip : 'Story responsibles',
-    get : StoryModel.prototype.getResponsibles,
-    decorator: DynamicsDecorators.userInitialsListDecorator,
-    editable : true,
-    edit : {
-      editor : "User",
-      set : StoryModel.prototype.setResponsibles
-    }
+    title : "Cancel",
+    subViewFactory: StorySplitDialog.prototype.rowCancelFactory
   });
-  */
+
   config.addColumnConfiguration(StoryController.columnIndices.description, {
     fullWidth : true,
     visible : false,

@@ -1,17 +1,6 @@
 package fi.hut.soberit.agilefant.integration;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-
-import fi.hut.soberit.agilefant.business.StorySplitBusiness;
-import fi.hut.soberit.agilefant.db.StoryDAO;
-import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 
 /**
  * Integration test class for story splitting.

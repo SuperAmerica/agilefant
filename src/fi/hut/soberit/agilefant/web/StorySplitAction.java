@@ -9,31 +9,38 @@ import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.Action;
 
+import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StorySplitBusiness;
 import fi.hut.soberit.agilefant.model.Story;
 
 @Component("storySplitAction")
 @Scope("prototype")
-public class StorySplitAction {
+public class StorySplitAction implements Prefetching {
 
     @Autowired
     private StoryBusiness storyBusiness;
     
     @Autowired
     private StorySplitBusiness storySplitBusiness;
-    
+
+    @PrefetchId
     private int originalStoryId;
    
+    private Story original;
+    
     private Collection<Story> newStories = new ArrayList<Story>(); 
     
     
     public String split() {
-        Story original = storyBusiness.retrieve(originalStoryId);
         storySplitBusiness.splitStory(original, newStories);
         return Action.SUCCESS;
     }
 
+    public void initializePrefetchedData(int objectId) {
+        original = storyBusiness.retrieve(objectId);
+    }
+    
     /* GETTERS AND SETTERS */
     
     public void setOriginalStoryId(int originalStoryId) {
@@ -58,6 +65,14 @@ public class StorySplitAction {
 
     public void setStorySplitBusiness(StorySplitBusiness storySplitBusiness) {
         this.storySplitBusiness = storySplitBusiness;
+    }
+
+    public void setOriginal(Story original) {
+        this.original = original;
+    }
+
+    public Story getOriginal() {
+        return original;
     }
 
 }

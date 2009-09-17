@@ -7,6 +7,7 @@ MessageDisplay.cssClasses = {
   genericMessage: "genericMessage",
   okMessage:      "okMessage",
   errorMessage:   "errorMessage",
+  warningMessage: "warningMessage",
   
   messageArea:    "messageArea",
   closeButton:    "closeButton"
@@ -143,4 +144,19 @@ MessageDisplay.OkMessage = function(message, opts) {
 MessageDisplay.OkMessage.prototype = new MessageDisplay.GenericMessage();
 
 
+/*
+ * WARNING MESSAGE
+ */
+MessageDisplay.WarningMessage = function(message, opts) {
+  this.options = {
+      displayTime: 2000,
+      fadeOutTime: 200
+  };
+  jQuery.extend(this.options, opts);
+  this.message = message;
+  this.init();
+  this.element.addClass(MessageDisplay.cssClasses.warningMessage);
+};
+
+MessageDisplay.WarningMessage.prototype = new MessageDisplay.GenericMessage();
 

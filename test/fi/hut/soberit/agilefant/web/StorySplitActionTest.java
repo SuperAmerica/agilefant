@@ -44,20 +44,29 @@ public class StorySplitActionTest {
     public void testSplit() {
         testable.setOriginalStoryId(123);
         Story story = new Story();
-        expect(storyBusiness.retrieve(123)).andReturn(story);
+        testable.setOriginal(story);
         expect(storySplitBusiness.splitStory(story, testable.getNewStories())).andReturn(null);
         
         replayAll();
         assertEquals(Action.SUCCESS, testable.split());
         verifyAll();
     }
-
+    
+    @Test
+    public void testPrefetching() {
+        Story story = new Story();       
+        expect(storyBusiness.retrieve(123)).andReturn(story);
+        replayAll();
+        testable.initializePrefetchedData(123);
+        verifyAll();
+        assertEquals(story, testable.getOriginal());
+    }
+    
     @Test(expected = ObjectNotFoundException.class)
-    public void testSplit_notFound() {
-        testable.setOriginalStoryId(-1);
+    public void testPrefetching_notFound() {     
         expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
-        testable.split();
+        testable.initializePrefetchedData(-1);
         verifyAll();
     }
 }

@@ -7,7 +7,7 @@ ul.dynamicsMessageContainer {
   position: fixed;
   right: 50px;
   top: 150px;
-  z-index: 500;
+  z-index: 1500;
   height: 0;
   width: 0;
 }
@@ -71,4 +71,9 @@ li.genericMessage .closeButton {
 
 li.genericMessage .closeButton:hover {
     color: rgba(0,0,0,0.2);
+}
+
+li.warningMessage {
+  background-color: #ffc;
+  color: #930;
 }

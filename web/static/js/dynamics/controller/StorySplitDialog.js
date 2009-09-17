@@ -6,6 +6,7 @@
  */
 var StorySplitDialog = function(story) {
   this.model = story;
+  this.model.setInTransaction(true);
   this.init();
   this.initDialog();
   this.initConfigs();
@@ -24,7 +25,7 @@ StorySplitDialog.prototype.initDialog = function() {
   this.element.dialog({
     width: 750,
     position: 'top',
-    modal: false,
+    modal: true,
     draggable: true,
     resizable: true,
     title: 'Split story',
@@ -60,6 +61,10 @@ StorySplitDialog.prototype.render = function() {
  * The callback for the 'Save' button.
  */
 StorySplitDialog.prototype._save = function() {
+  if (this.rows.length < 1) {
+    var msg = new MessageDisplay.WarningMessage("Create some stories first");
+    return;
+  }
   if (this.isFormDataValid()) {
     this.saveStories();
     this.close();
@@ -70,6 +75,7 @@ StorySplitDialog.prototype._save = function() {
  * The callback for the 'Cancel' button.
  */
 StorySplitDialog.prototype._cancel = function() {
+  this.model.rollback();
   this.close();
 };
 
@@ -77,6 +83,7 @@ StorySplitDialog.prototype._cancel = function() {
  * Close and destroy the dialog.
  */
 StorySplitDialog.prototype.close = function() {
+  this.model.setInTransaction(false);
   this.element.dialog('destroy').remove();
 };
 
@@ -148,14 +155,18 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
   
   config.addColumnConfiguration(0, {
     title: 'Name',
-    get: StoryModel.prototype.getName,
-    editable: false
+    get: StoryModel.prototype.getName
   });
   
   config.addColumnConfiguration(1, {
     title: 'Points',
-    get: StoryModel.prototype.getStoryPoints,
-    editable: false
+    get: StoryModel.prototype.getStoryPoints
+  });
+  
+  config.addColumnConfiguration(2, {
+    title: 'State',
+    get: StoryModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator
   });
   
   this.storyInfoConfig = config;

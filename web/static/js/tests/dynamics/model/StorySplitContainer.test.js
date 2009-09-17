@@ -24,21 +24,31 @@ $(document).ready(function() {
     var first = this.mockControl.createMock(StoryModel);
     var second = this.mockControl.createMock(StoryModel);
     
+    var changed = {};
+    var serialized = {
+        "original.name": "Modified name"
+    };
+    
+    origStory.expects().getChangedData().andReturn(changed);
+    origStory.expects().serializeFields("original", changed).andReturn(serialized);
     origStory.expects().getId().andReturn(313);
     
-    first.expects().getName().andReturn("First split");
-    first.expects().getStoryPoints().andReturn(2);
-    first.expects().getStoryPoints().andReturn(2);
-    first.expects().getDescription();
-    first.expects().getState().andReturn("BLOCKED");
-    first.expects().getState().andReturn("BLOCKED");
+    serialized = {
+      "newStories[0].name":        "First split",
+      "newStories[0].storyPoints": 2,
+      "newStories[0].state":       "BLOCKED"
+    };
+    first.expects().getChangedData().andReturn(changed);
+    first.expects().serializeFields("newStories[0]", changed).andReturn(serialized);
     
-    second.expects().getName().andReturn("Second split");
-    second.expects().getStoryPoints();
-    second.expects().getDescription().andReturn("Foo bar");
-    second.expects().getDescription().andReturn("Foo bar");
-    second.expects().getState().andReturn("NOT_STARTED");
-    second.expects().getState().andReturn("NOT_STARTED");
+    
+    serialized = {
+        "newStories[1].name":        "Second split",
+        "newStories[1].description": "Foo bar",
+        "newStories[1].state":       "NOT_STARTED"
+      };
+    second.expects().getChangedData().andReturn(changed);
+    second.expects().serializeFields("newStories[1]", changed).andReturn(serialized);
     
     var ssc = new StorySplitContainer(origStory, [first, second]);
     
@@ -48,6 +58,7 @@ $(document).ready(function() {
 
 var expectedSerialized = {
   "originalStoryId":           313,
+  "original.name":             "Modified name",
   "newStories[0].name":        "First split",
   "newStories[0].storyPoints": 2,
   "newStories[0].state":       "BLOCKED",

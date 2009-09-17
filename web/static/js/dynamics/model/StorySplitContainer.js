@@ -40,24 +40,19 @@ StorySplitContainer.prototype.commit = function() {
  * Serialize the data for ajax request.
  */
 StorySplitContainer.prototype.serializeData = function() {
-  var data = {
-    originalStoryId: this.originalStory.getId()
-  };
+
+  var originalChangedData = this.originalStory.getChangedData();
+  var data = this.originalStory.serializeFields("original", originalChangedData);
+  
+  data.originalStoryId = this.originalStory.getId();
   
   for (var i = 0; i < this.newStories.length; i++) {
     var story = this.newStories[i];
-    var fieldName = "newStories[" + i + "].";
+    var fieldPrefix = "newStories[" + i + "]";
 
-    data[fieldName + "name"] = story.getName();
-    if (story.getStoryPoints()) {
-      data[fieldName + "storyPoints"] = story.getStoryPoints();
-    }
-    if (story.getDescription()) {
-      data[fieldName + "description"] = story.getDescription();
-    }
-    if (story.getState()) {
-      data[fieldName + "state"] = story.getState();
-    }
+    var storyData = story.serializeFields(fieldPrefix, story.getChangedData());
+    
+    jQuery.extend(data, storyData);
   }
   
   return data;

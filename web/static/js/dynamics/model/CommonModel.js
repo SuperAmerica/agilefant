@@ -259,18 +259,26 @@ CommonModel.prototype.callListeners = function(event) {
  */
 CommonModel.prototype.commit = function() {
   this.inTransaction = false;
+  var changedData = this._getChangedData();
+  this._saveData(this.getId(), changedData);
+};
+
+/**
+ * Get the changed fields.
+ */
+CommonModel.prototype.getChangedData = function() {
   var changedData = {};
   for (field in this.currentData) {
     if(this.currentData.hasOwnProperty(field)) {
       var currentValue = this.currentData[field];
-	    var persistedValue = this.persistedData[field];
-	    
-	    if (currentValue !== persistedValue) {
-	      changedData[field] = currentValue;
-	    }
+      var persistedValue = this.persistedData[field];
+      
+      if (currentValue !== persistedValue) {
+        changedData[field] = currentValue;
+      }
     }
   }
-  this._saveData(this.getId(), changedData);
+  return changedData;
 };
 
 /**

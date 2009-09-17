@@ -304,6 +304,7 @@
     </action>
     
     <action name="splitStory" method="split" class="storySplitAction">
+      <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">
       </result>
     </action>

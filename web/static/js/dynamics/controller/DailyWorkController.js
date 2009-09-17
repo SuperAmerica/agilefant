@@ -124,6 +124,15 @@ DailyWorkController.prototype.createConfig = function(configType) {
     }
     
     var config = new DynamicTableConfiguration(options);
+
+    if (configType == "next")
+        config.addCaptionItem({
+          name : "createTask",
+          text : "Create task",
+          cssClass : "create",
+          callback : DailyWorkController.prototype.createTask
+    });
+
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.prio, {
         minWidth : 24,
         autoScale : true,
@@ -270,6 +279,25 @@ DailyWorkController.prototype.createConfig = function(configType) {
     });
     
     return config;
+};
+
+DailyWorkController.prototype.createTask = function() {
+    var mockModel = ModelFactory.createObject(ModelFactory.types.dailyWorkTask);
+
+    mockModel.setDailyWork(this.model);
+    // the user in question must have been loaded, and it is!
+    mockModel.addResponsible(this.model.getUserId());
+
+    var controller = new DailyWorkTaskController(mockModel, null, this);
+    var row = this.workQueueView.createRow(controller, mockModel, "top");
+
+    controller.view = row;
+    row.autoCreateCells([DailyWorkTaskController.columnIndices.actions, DailyWorkTaskController.columnIndices.data]);
+
+    row.render();
+
+    controller.editTask();
+    row.getCell(DailyWorkTaskController.columnIndices.data).hide();
 };
 
 DailyWorkController.prototype.initializeConfigs = function() {

@@ -49,6 +49,10 @@ DailyWorkTaskModel.prototype.getDailyWork = function() {
     return this.relations.dailyWork;
 };
 
+DailyWorkTaskModel.prototype.setDailyWork = function(dailyWork) {
+    this.addRelation(dailyWork);
+};
+
 DailyWorkTaskModel.prototype.getWorkQueueRank = function() {
     return this.currentData.workQueueRank;
 };

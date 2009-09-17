@@ -196,7 +196,7 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
            taskId: me.getId()
         },
         success: function(data,status) {
-            var msg = new MessageDisplay.OkMessage("Task appended to work queue");
+            var msg = new MessageDisplay.OkMessage("Task appended to / removed from your work queue");
             
             if (dailyWork) {
                 dailyWork.reload();
@@ -348,4 +348,3 @@ TaskModel.prototype.addResponsible = function(userId) {
     this.currentData.userIds = [userId];
   }
 };
-

@@ -17,7 +17,6 @@ import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskContainer;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
@@ -174,6 +173,23 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         whatsNextEntryDAO.store(entry);
         rankToBottomOnWhatsNext(entry);
         return entry;
+    }
+
+    @Transactional
+    public WhatsNextEntry addToOrRemoveFromWhatsNext(User user, Task task) {
+        WhatsNextEntry entry = whatsNextEntryDAO.getWhatsNextEntryFor(user, task);
+        if (entry == null) {
+            entry = new WhatsNextEntry();
+            entry.setTask(task);
+            entry.setUser(user);
+            whatsNextEntryDAO.store(entry);
+            rankToBottomOnWhatsNext(entry);
+            return entry;
+        }
+        else {
+            whatsNextEntryDAO.remove(entry);
+            return null;
+        }
     }
 
     public void removeTaskFromWorkQueues(Task task) {

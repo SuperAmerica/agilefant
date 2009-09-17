@@ -128,7 +128,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     text : "Edit",
     callback : TaskController.prototype.editTask
   }, {
-    text : "Append to my work queue",
+    text : "Append to/Remove from my work queue",
     callback : TaskController.prototype.addToMyWorkQueue
   }, {
     text : "Delete",

@@ -101,7 +101,7 @@ public class DailyWorkAction extends ActionSupport {
         user = userBusiness.retrieve(userId);
         Task task = taskBusiness.retrieve(taskId);
 
-        dailyWorkBusiness.addToWhatsNext(user, task);
+        dailyWorkBusiness.addToOrRemoveFromWhatsNext(user, task);
         
         return Action.SUCCESS;
     }

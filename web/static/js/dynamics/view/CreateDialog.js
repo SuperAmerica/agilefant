@@ -441,8 +441,8 @@ CreateDialog.idToClass = {
  * @see CreateDialog.typeToClass
  */
 CreateDialog.createById = function(id) {
-  var c = CreateDialog.idToClass[id];
-  var dialog = new c();
+  var C = CreateDialog.idToClass[id];
+  var dialog = new C();
 };
 
 

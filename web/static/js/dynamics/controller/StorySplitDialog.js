@@ -11,6 +11,7 @@ var StorySplitDialog = function(story) {
   this.initDialog();
   this.initConfigs();
   this.render();
+  this.model.reload();
   this.newModels = [];
   this.rows = [];
 };
@@ -76,6 +77,7 @@ StorySplitDialog.prototype._save = function() {
  */
 StorySplitDialog.prototype._cancel = function() {
   this.model.rollback();
+  this.newStoriesView.remove();
   this.close();
 };
 
@@ -183,7 +185,8 @@ StorySplitDialog.columnIndices = {
 StorySplitDialog.prototype._initNewStoriesConfig = function() {
   var config = new DynamicTableConfiguration({
     cssClass: "ui-widget-content ui-corner-all",
-    caption: "New stories"
+    caption: "New stories",
+    dataSource: StoryModel.prototype.getChildren
   });
   
   config.addCaptionItem({

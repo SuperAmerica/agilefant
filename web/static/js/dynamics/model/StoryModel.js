@@ -13,7 +13,9 @@ var StoryModel = function() {
     backlog: {},
     task: [],
     hourEntry: [],
-    user: []
+    user: [],
+    story: [],
+    parent: null
   };
   this.copiedFields = {
     "name": "name",
@@ -28,7 +30,8 @@ var StoryModel = function() {
       "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
       "fi.hut.soberit.agilefant.model.User":          "user",
       "fi.hut.soberit.agilefant.model.Task":          "task",
-      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
+      "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
+      "fi.hut.soberit.agilefant.model.Story":         "story"
   };
 };
 
@@ -49,6 +52,12 @@ StoryModel.prototype._setData = function(newData) {
   
   if(newData.responsibles) {
     this._updateRelations(ModelFactory.types.user, newData.responsibles);
+  }
+  if(newData.children) {
+    this._updateRelations(ModelFactory.types.story, newData.children);
+  }
+  if(newData.parent) {
+    this.relations.parent = ModelFactory.updateObject(newData.parent);
   }
 };
 
@@ -273,4 +282,9 @@ StoryModel.prototype.getTasks = function() {
   return this.relations.task;
 };
 
-
+StoryModel.prototype.getChildren = function() {
+  return this.relations.story;
+};
+StoryModel.prototype.getParentStory = function() {
+  return this.relations.parent;
+};

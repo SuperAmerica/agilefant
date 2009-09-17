@@ -97,7 +97,6 @@ IterationModel.prototype._saveData = function(id, changedData) {
       if(id === null || id === undefined) {
         me.getParent().addIteration(me);
       }
-      me.callListeners(new DynamicsEvents.DeleteEvent(me));
     },
     error: function(xhr, status, error) {
       var msg = new MessageDisplay.ErrorMessage("Error saving iteration", xhr);

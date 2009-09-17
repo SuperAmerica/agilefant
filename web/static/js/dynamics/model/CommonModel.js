@@ -259,7 +259,7 @@ CommonModel.prototype.callListeners = function(event) {
  */
 CommonModel.prototype.commit = function() {
   this.inTransaction = false;
-  var changedData = this._getChangedData();
+  var changedData = this.getChangedData();
   this._saveData(this.getId(), changedData);
 };
 

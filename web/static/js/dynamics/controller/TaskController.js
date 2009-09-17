@@ -88,6 +88,10 @@ TaskController.prototype.addToMyWorkQueue = function() {
   this.model.addToMyWorkQueue();
 };
 
+TaskController.prototype.removeFromMyWorkQueue = function() {
+  this.model.removeFromMyWorkQueue();
+};
+
 TaskController.prototype.removeTask = function() {
   var me = this;
   var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this task?", function() {
@@ -128,8 +132,13 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     text : "Edit",
     callback : TaskController.prototype.editTask
   }, {
-    text : "Append to/Remove from my work queue",
-    callback : TaskController.prototype.addToMyWorkQueue
+    text : "Append to my work queue",
+    callback : TaskController.prototype.addToMyWorkQueue,
+    enabled : TaskController.prototype.addToQueueEnabled
+  }, {
+    text : "Remove from work queue",
+    callback : TaskController.prototype.removeFromMyWorkQueue,
+    enabled : TaskController.prototype.removeFromQueueEnabled
   }, {
     text : "Delete",
     callback : TaskController.prototype.removeTask
@@ -140,6 +149,14 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;
+};
+
+TaskController.prototype.addToQueueEnabled = function(model, parentView) {
+  return true; // return model.isOnMyWorkQueue();
+};
+
+TaskController.prototype.removeFromQueueEnabled = function(model, parentView) {
+  return true;
 };
 
 TaskController.prototype.resetOriginalEstimate = function() {

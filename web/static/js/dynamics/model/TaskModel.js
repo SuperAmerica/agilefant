@@ -196,7 +196,7 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
            taskId: me.getId()
         },
         success: function(data,status) {
-            var msg = new MessageDisplay.OkMessage("Task appended to / removed from your work queue");
+            var msg = new MessageDisplay.OkMessage("Task appended to your work queue");
             
             if (dailyWork) {
                 dailyWork.reload();
@@ -207,6 +207,38 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
         },
         error: function(xhr,status) {
             var msg = new MessageDisplay.ErrorMessage("Error adding task to work queue.", xhr);
+        }
+    });
+};
+
+TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
+    var me = this;
+    
+    if (me.getDailyWork) {
+        var dailyWork = me.getDailyWork();
+    }
+    
+    jQuery.ajax({
+        type: "POST",
+        url: "ajax/deleteFromWorkQueue.action",
+        async: true,
+        cache: false,
+        dataType: "text",
+        data: {
+           taskId: me.getId()
+        },
+        success: function(data,status) {
+            var msg = new MessageDisplay.OkMessage("Task removed from your work queue");
+            
+            if (dailyWork) {
+                dailyWork.reload();
+            }
+            if (successCallback) {
+               successCallback();
+            }
+        },
+        error: function(xhr,status) {
+            var msg = new MessageDisplay.ErrorMessage("Error removing task from work queue.", xhr);
         }
     });
 };
@@ -334,6 +366,10 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
   this._commitIfNotInTransaction();
+};
+
+TaskModel.prototype.isOnMyWorkQueue = function() {
+  return false;
 };
 
 /**

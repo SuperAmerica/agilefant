@@ -105,6 +105,7 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
             mappedBy = "backlog")
     @JSON(include = false)
+    @Cascade(CascadeType.DELETE_ORPHAN)
     public Collection<Assignment> getAssignments() {
         return assignments;
     }

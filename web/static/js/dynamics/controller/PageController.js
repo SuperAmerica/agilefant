@@ -21,6 +21,9 @@ PageController.prototype._init = function() {
   $('#menuRefreshControl').click(function() {
     me.refreshMenu();
   });
+  
+  // Needed for autoresponsible
+  // ModelFactory.initUsers();
 };
 
 /**

@@ -25,8 +25,6 @@ $(document).ready(function() {
     equals(anotherInstance, instance, "Instance is singleton");
   });
   
-  
-  
   test("Initialization", function() {
     var expectedId = 222;
     var expectedType = "iteration";
@@ -48,9 +46,7 @@ $(document).ready(function() {
     ok(ModelFactory.currentTimer, "Timer set");
     same(internalInitializeCallCount, 1, "Internal initialize called");
    });
-  
-  
-  
+
   
   test("Initialization invalid checks", function() {
     var exceptionCount = 0;

@@ -6,6 +6,7 @@
  * @constructor
  */
 ModelFactory = function() {
+  this.rootObject = null;
   this.data = {
     backlog: {},
     
@@ -22,7 +23,6 @@ ModelFactory = function() {
 };
 
 ModelFactory.instance = null;
-ModelFactory.rootObject = null;
 
 /**
  * Convert persisted class names to <code>ModelFactory</code> types.
@@ -201,7 +201,7 @@ ModelFactory.currentTimer = null;
  * has been called.
  */
 ModelFactory.reloadRoot = function() {
-  ModelFactory.rootObject.reload();
+  ModelFactory.getInstance().getRootObject().reload();
 };
 
 /**
@@ -320,6 +320,12 @@ ModelFactory.updateObject = function(data) {
   return object;
 };
 
+/**
+ * Get all users with an ajax query and create UserModel instances.
+ */
+ModelFactory.initUsers = function(callback) {
+  ModelFactory.getInstance()._initUsers(callback);
+};
 
 /* OBJECT METHODS */
 
@@ -391,27 +397,50 @@ ModelFactory.prototype._getData = function(type, id, callback) {
 };
 
 /**
+ * Get all users with an ajax query.
+ */
+ModelFactory.prototype._initUsers = function(callback) {
+  var me = this;
+  
+  jQuery.ajax({
+    type: "POST",
+    dataType: "json",
+    url: "ajax/retrieveAllUsers.action",
+    async: true,
+    success: function(data,status) {
+      for (var i = 0; i < data.length; i++) {
+        ModelFactory.updateObject(data[i]);
+      }
+      if (callback) { callback(data); }
+    },
+    error: function(xhr, status, error) {
+      var msg = MessageDisplay.ErrorMessage("Error loading users.", xhr);
+    }
+  });
+};
+
+/**
  * Internal function to construct an iteration
  */
 ModelFactory.prototype._constructIteration = function(id, data) {
-  ModelFactory.rootObject = ModelFactory.updateObject(data);
-  return ModelFactory.rootObject;
+  ModelFactory.getInstance().rootObject = ModelFactory.updateObject(data);
+  return ModelFactory.getInstance().rootObject;
 };
 
 /**
  * Internal function to construct a project
  */
 ModelFactory.prototype._constructProject = function(id, data) {
-  ModelFactory.rootObject = ModelFactory.updateObject(data);
-  return ModelFactory.rootObject;
+  ModelFactory.getInstance().rootObject = ModelFactory.updateObject(data);
+  return ModelFactory.getInstance().rootObject;
 };
 
 /**
  * Internal function to construct a project
  */
 ModelFactory.prototype._constructProduct = function(id, data) {
-  ModelFactory.rootObject = ModelFactory.updateObject(data);
-  return ModelFactory.rootObject;
+  ModelFactory.getInstance().rootObject = ModelFactory.updateObject(data);
+  return ModelFactory.getInstance().rootObject;
 };
 
 /**
@@ -420,7 +449,7 @@ ModelFactory.prototype._constructProduct = function(id, data) {
 ModelFactory.prototype._constructDailyWork = function(id, data) {
   var a = new DailyWorkModel();
   a.setData(data);
-  ModelFactory.rootObject = a;
+  ModelFactory.getInstance().rootObject = a;
 	return a;
 };
 

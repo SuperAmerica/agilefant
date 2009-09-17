@@ -336,4 +336,16 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
   this._commitIfNotInTransaction();
 };
 
+/**
+ * Add a responsible for the task and modify the current data.
+ * Does not commit the change.
+ */
+TaskModel.prototype.addResponsible = function(userId) {
+  if (this.currentData.userIds) {
+    this.currentData.userIds.push(userId);
+  }
+  else {
+    this.currentData.userIds = [userId];
+  }
+};
 

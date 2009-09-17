@@ -4,10 +4,12 @@
 
 $(document).ready(function() {
   
-  module("Dynamics: Task Model", {
+  module("Dynamics: TaskModel", {
     setup: function() {
+      this.mockControl = new MockControl();
     },
     teardown: function() {
+      this.mockControl.verify();
     }
   });
   
@@ -26,5 +28,12 @@ $(document).ready(function() {
     CommonModel.prototype.initialize = originalInitialize;
   });
   
-  
+  test("Add responsible", function() {
+    var task = new TaskModel();
+    var user = new UserModel();
+    
+    task.addResponsible(223);
+    
+    same(1, task.currentData.userIds.length, "User id list length correct");
+  });
 });

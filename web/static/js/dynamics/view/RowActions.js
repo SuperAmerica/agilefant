@@ -52,10 +52,18 @@ DynamicTableRowActions.prototype.open = function() {
   this.menu.css(menuCss);
   $.each(this.items, function(index, item) {
     var it = $('<li />').text(item.text).appendTo(me.menu);
-    it.click(function() {
-      me._click(index);
-      return false;
-    });
+    
+    if (me._isEnabled(item)) {
+      it.click(function() {
+        me._click(index);
+        me.close();
+        return false;
+      });
+    }
+    else {
+      it.addClass("actionCell-rowaction-disabled");
+      it.click(function() { return false; });
+    }
   });
 };
 
@@ -70,4 +78,16 @@ DynamicTableRowActions.prototype.close = function() {
 
 DynamicTableRowActions.prototype._click = function(index) {
   this.items[index].callback.call(this.controller, this.model, this.parentView);
+};
+
+DynamicTableRowActions.prototype._isEnabled = function(item) {
+  var typeofEn = typeof item.enabled;
+  if (typeofEn == "undefined") {
+    return true;
+  }
+  if (typeofEn == "function") {
+    var returned = item.enabled.call(this.controller, this.model, this.parentView);
+    return !! returned;
+  }
+  return !! item.enabled;
 };

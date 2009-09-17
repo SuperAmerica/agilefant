@@ -113,8 +113,7 @@
 
 .actionCell li.actionCell-rowaction-disabled {
 	color: #AAA;
-};
-
+}
 
 .actionCell li:hover {
   background: transparent url(../img/gradient.png) 80% 60% repeat-x;

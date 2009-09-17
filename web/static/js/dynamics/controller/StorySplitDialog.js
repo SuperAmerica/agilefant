@@ -101,8 +101,12 @@ StorySplitDialog.prototype.createStory = function() {
 StorySplitDialog.prototype.isFormDataValid = function() {
   var retVal = true;
   for (var i = 0; i < this.rows.length; i++) {
-    this.rows[i].saveRowEdit();
     retVal = retVal && this.rows[i].isRowValid(); 
+  }
+  if (retVal) {
+    for (i = 0; i < this.rows.length; i++) {
+      this.rows[i].saveRowEdit();
+    }
   }
   return retVal;
 };

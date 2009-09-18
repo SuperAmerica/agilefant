@@ -453,43 +453,146 @@ TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
  * @constructor
  * @base TableEditors.CommonEditor
  */
+TableEditors.Autocomplete = function(row, cell, options) {
+    if (arguments.length > 0) {
+        this.init(row, cell, options);
+    }
+};
+
+TableEditors.Autocomplete.prototype = new TableEditors.CommonEditor();
+TableEditors.Autocomplete.superclass = TableEditors.CommonEditor.prototype;
+
+TableEditors.Autocomplete.prototype.init = function(row, cell, options) {
+    this.element = cell.getElement();
+
+    TableEditors.Autocomplete.superclass.init.call(this, row, cell, options);
+
+    this.value = [];
+    this.autocomplete = this.createDialog();
+};
+TableEditors.Autocomplete.prototype.createDialog = function () {
+    var me = this;
+
+    this.autocomplete = $(window).autocompleteDialog({
+        dataType: this.autocompleteOptions.dataType,
+        callback: function(keys, items) { 
+            me.save(keys, items); 
+        },
+        cancel:   function() { 
+            me.close(); 
+        },
+        title:    this.autocompleteOptions.title,
+        selected: me.getInitialSelection(),
+        multiSelect: true
+    });
+}
+TableEditors.Autocomplete.prototype.save = function(values, data) {
+    this.onSave(values, data);
+    this.cell.getElement().trigger("editorClosing");
+    this.cell.render();
+};
+TableEditors.Autocomplete.prototype.onSave = function(values, data) {
+};
+TableEditors.Autocomplete.prototype._registerEvents = function() { };
+TableEditors.Autocomplete.prototype.setEditorValue  = function() { };
+TableEditors.Autocomplete.prototype.getEditorValue  = function() { return this.value; };
+TableEditors.Autocomplete.prototype.getSelectedKeys = function() { return [] };
+TableEditors.Autocomplete.prototype.close           = function() {
+    this.cell.getElement().trigger("editorClosing");
+};
+TableEditors.Autocomplete.prototype.getInitialSelection = function() {
+    var modelObjects = this.options.get.call(this.model);
+
+    var modelIds = [];
+    for(var i = 0; i < modelObjects.length; i++) {
+        modelIds.push(modelObjects[i].getId());
+    }
+
+    return modelIds;
+};
+TableEditors.Autocomplete.prototype.onSave = function(keys, data) {
+    this.options.set.call(this.model, keys, data);
+};
+TableEditors.Autocomplete.prototype.autocompleteOptions = {
+    dataType: null,
+    caption:  null
+};
+
+TableEditors.AutocompleteSingle = function(row, cell, options) {
+    if (arguments.length > 0) {
+        this.init(row, cell, options);
+    }
+}
+TableEditors.AutocompleteSingle.prototype = new TableEditors.Autocomplete();
+TableEditors.AutocompleteSingle.superclass = TableEditors.Autocomplete.prototype;
+
+TableEditors.AutocompleteSingle.prototype.createDialog = function () {
+    var me = this;
+
+    this.autocomplete = $(window).autocompleteDialog({
+        dataType: this.autocompleteOptions.dataType,
+        callback: function(keys, items) { 
+            me.save(keys, items); 
+        },
+        cancel:   function() { 
+            me.close(); 
+        },
+        title:    this.autocompleteOptions.title,
+        selected: me.getInitialSelection(),
+        multiSelect: false
+    });
+};
+TableEditors.AutocompleteSingle.prototype.getInitialSelection = function () {
+    var modelObject = this.options.get.call(this.model);
+    if (modelObject) {
+        return [ modelObject.getId() ];
+    }
+    return [ ];
+};
+TableEditors.AutocompleteSingle.prototype.onSave = function (keys, data) {
+    this.options.set.call(this.model, keys[0], data[0]);
+};
+
 TableEditors.User = function(row, cell, options) {
-  this.element = cell.getElement();
-  this.init(row, cell, options);
-  var me = this;
-  this.autocomplete = $(window).autocompleteDialog({
-    dataType: 'usersAndTeams',
-    callback: function(ids, items) { me.save(ids, items); },
-    cancel: function() { me.close(); },
-    title: 'Select users',
-    selected: this._currentUsers()
-  });
-  this.value = [];
+    if (arguments.length > 0) {
+        TableEditors.User.superclass.init.call(this, row, cell, options); 
+    }
 };
-TableEditors.User.prototype = new TableEditors.CommonEditor();
-
-TableEditors.User.prototype._currentUsers = function() {
-  var users = this.options.get.call(this.model);
-  var userIds = [];
-  for(var i = 0; i < users.length; i++) {
-    userIds.push(users[i].getId());
-  }
-  return userIds;
-};
-TableEditors.User.prototype.save = function(ids, data) {
-  this.options.set.call(this.model, ids, data);
-  this.cell.getElement().trigger("editorClosing");
-  this.cell.render();
-};
-TableEditors.User.prototype._registerEvents = function() {
-};
-TableEditors.User.prototype.setEditorValue = function() { 
-};
-TableEditors.User.prototype.getEditorValue = function() { 
-  return this.value;
-};
-TableEditors.User.prototype.close = function() {
-  this.cell.getElement().trigger("editorClosing");
+TableEditors.User.prototype = new TableEditors.Autocomplete();
+TableEditors.User.superclass = TableEditors.Autocomplete.prototype;
+TableEditors.User.prototype.autocompleteOptions = {
+    dataType: "usersAndTeams",
+    title:    "Select users"
 };
 
-
+TableEditors.Backlog = function(row, cell, options) {
+    if (arguments.length > 0) {
+        TableEditors.User.superclass.init.call(this, row, cell, options); 
+    }
+};
+TableEditors.Backlog.prototype = new TableEditors.AutocompleteSingle();
+TableEditors.Backlog.superclass = TableEditors.AutocompleteSingle.prototype;
+TableEditors.Backlog.prototype.onSave = function (keys, data) {
+    iterationId     = keys[0];
+    
+    var iterationObject = null;
+    if (data) {
+        iterationObject = data[0];
+    }
+    
+    if (! iterationObject) {
+        var model    = this.model;
+        var callback = this.options.set;
+        
+        ModelFactory.getOrRetrieveObject("iteration", iterationId, function (type, id, object) {
+            callback.call(model, object);
+        });
+    }
+    else {
+        this.options.set.call(this.model, iterationObject);
+    }
+};
+TableEditors.Backlog.prototype.autocompleteOptions = {
+    dataType: "backlogs",
+    title:    "Select backlog"
+};

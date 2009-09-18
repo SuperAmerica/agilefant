@@ -125,14 +125,14 @@ DailyWorkController.prototype.createConfig = function(configType) {
     
     var config = new DynamicTableConfiguration(options);
 
-//    if (configType == "next") {
-//        config.addCaptionItem({
-//          name : "createTask",
-//          text : "Create task",
-//          cssClass : "create",
-//          callback : DailyWorkController.prototype.createTask
-//        });
-//    }
+    if (configType == "next") {
+        config.addCaptionItem({
+            name : "createTask",
+            text : "Create task",
+            cssClass : "create",
+            callback : DailyWorkController.prototype.createTask
+         });
+    }
 
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.prio, {
         minWidth : 24,
@@ -167,10 +167,16 @@ DailyWorkController.prototype.createConfig = function(configType) {
         cssClass : 'task-row',
         title : 'Context',
         headerTooltip : 'Task context',
-        get : DailyWorkTaskModel.prototype.getContext,
+        get : DailyWorkTaskModel.prototype.getIteration,
+        getView : DailyWorkTaskModel.prototype.getContext,
         decorator: DynamicsDecorators.contextDecorator,
         editable : true,
-        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext)
+        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
+        edit : {
+            editor : "Backlog",
+            set : TaskModel.prototype.setIteration,
+            required: true
+        },
     });
 
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.state, {

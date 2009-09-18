@@ -58,6 +58,15 @@ DailyWorkTaskModel.prototype.getWorkQueueRank = function() {
 };
 
 DailyWorkTaskModel.prototype.getContext = function() {
+    if (this.relations.backlog) {
+        return {
+            name: this.relations.backlog.getName(),
+            storyId: 0,
+            backlogId: this.relations.backlog.getId(),
+            taskId: this.getId()
+        };
+    }
+    
     return {
         name: this.currentData.contextName,
         storyId: this.currentData.parentStoryId,

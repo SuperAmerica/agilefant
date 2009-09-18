@@ -55,7 +55,7 @@ DynamicTableRowActions.prototype.open = function() {
     
     if (me._isEnabled(item)) {
       it.click(function() {
-        me._click(index);
+        me._click(item);
         me.close();
         return false;
       });
@@ -76,8 +76,8 @@ DynamicTableRowActions.prototype.close = function() {
   this.menuOpen = false;
 };
 
-DynamicTableRowActions.prototype._click = function(index) {
-  this.items[index].callback.call(this.controller, this.model, this.parentView);
+DynamicTableRowActions.prototype._click = function(item) {
+  item.callback.call(this.controller, this.model, this.parentView);
 };
 
 DynamicTableRowActions.prototype._isEnabled = function(item) {

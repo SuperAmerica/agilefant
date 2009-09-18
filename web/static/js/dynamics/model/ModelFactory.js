@@ -109,6 +109,10 @@ ModelFactory.typeToClassName = {
     hourEntry:  "fi.hut.soberit.agilefant.model.HourEntry"
 };
 
+ModelFactory.typeToLazyLoadingUri = {
+   iteration:   "ajax/retrieveIteration.action"
+};
+
 /**
  * The different types the <code>ModelFactory</code> accepts.
  * @member ModelFactory
@@ -269,6 +273,34 @@ ModelFactory.getObjectIfExists = function(type, id) {
   }
   return ModelFactory.getInstance()._getObject(type,id);
 };
+
+/**
+ * Gets the object of the given type and id.
+ * <p>
+ * @return the object, null if doesn't exist
+ * 
+ * @throws {TypeError} if type not recognized
+ * 
+ * @see ModelFactory.types
+ * @see CommonModel#getId
+ */
+ModelFactory.getOrRetrieveObject = function(type, id, callback, error) {
+    var factory = ModelFactory.getInstance();
+    if (!(type in ModelFactory.types)) {
+      throw new TypeError("Type not recognized");
+    }
+    
+    var objectType = ModelFactory.classNameToType[ModelFactory.typeToClassName[type]];
+    
+    var object = factory._getObject(objectType, id);
+    if (! object) {
+        object = factory._retrieveLazily(type, id, callback, error);
+    }
+    else {
+        callback(type, id, object);
+    }
+};
+
 
 /**
  * Creates a new object of the given type.
@@ -479,3 +511,19 @@ ModelFactory.listener = function(event) {
   }
 };
 
+ModelFactory.prototype._retrieveLazily = function(type, id, callback, errorCallback) {
+    var uri = ModelFactory.typeToLazyLoadingUri[type];
+    
+    if (! uri) {
+        throw new TypeError("Type " + type + " cannot be loaded lazily");
+    }
+    
+    jQuery.getJSON(
+        uri,
+        { iterationId: id },
+        function (data, status) {
+            var object = ModelFactory.updateObject(data);
+            callback(type, id, object);
+        }
+    );
+};

@@ -268,7 +268,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    cssClass : 'productstory-row',
+    cssClass : 'productstory-data',
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -278,7 +278,7 @@ ProductController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(StoryController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
-    cssClass : 'productstory-row',
+    cssClass : 'productstory-data',
     subViewFactory : StoryController.prototype.storyButtonFactory
   });
 

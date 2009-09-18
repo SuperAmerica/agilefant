@@ -92,14 +92,14 @@ IterationModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      var msg = new MessageDisplay.OkMessage("Iteration saved successfully");
+      MessageDisplay.Ok("Iteration saved successfully");
       me.setData(data);
       if(id === null || id === undefined) {
         me.getParent().addIteration(me);
       }
     },
     error: function(xhr, status, error) {
-      var msg = new MessageDisplay.ErrorMessage("Error saving iteration", xhr);
+      MessageDisplay.Error("Error saving iteration", xhr);
       me.rollback();
     }
   });
@@ -130,13 +130,13 @@ IterationModel.prototype._remove = function(successCallback) {
       dataType: "text",
       data: {iterationId: me.getId()},
       success: function(data,status) {
-        var msg = new MessageDisplay.OkMessage("Iteration removed");
+        MessageDisplay.Ok("Iteration removed");
         if (successCallback) {
           successCallback();
         }
       },
       error: function(xhr,status) {
-        var msg = new MessageDisplay.ErrorMessage("Error deleting iteration.", xhr);
+        MessageDisplay.Error("Error deleting iteration.", xhr);
       }
   });
 };

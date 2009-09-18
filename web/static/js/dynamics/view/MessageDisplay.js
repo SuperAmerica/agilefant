@@ -25,13 +25,13 @@ MessageDisplay.initMessageList = function() {
  * Constructs a generic message object.
  * @constructor 
  */
-MessageDisplay.GenericMessage = function() {};
-MessageDisplay.GenericMessage.prototype = new ViewPart(); 
+MessageDisplay.GenericMessageClass = function() {};
+MessageDisplay.GenericMessageClass.prototype = new ViewPart(); 
 
 /**
  * Initialize a new generic message box.
  */
-MessageDisplay.GenericMessage.prototype.init = function() {
+MessageDisplay.GenericMessageClass.prototype.init = function() {
   var me = this;
   MessageDisplay.initMessageList();
   
@@ -50,7 +50,7 @@ MessageDisplay.GenericMessage.prototype.init = function() {
 /**
  * Renders the inner elements of the message. 
  */
-MessageDisplay.GenericMessage.prototype.render = function() {
+MessageDisplay.GenericMessageClass.prototype.render = function() {
   var me = this;
   if (this.options.closeButton) {
     this.messageArea = $('<div/>').addClass(MessageDisplay.cssClasses.messageArea).appendTo(this.element);
@@ -63,27 +63,27 @@ MessageDisplay.GenericMessage.prototype.render = function() {
   this.addContent();
 };
 
-MessageDisplay.GenericMessage.prototype.addContent = function() {
+MessageDisplay.GenericMessageClass.prototype.addContent = function() {
   this.messageArea.text(this.message);
 };
 
 /**
  * Tell the message to fade out and destroy.
  */
-MessageDisplay.GenericMessage.prototype.fadeOut = function() {
+MessageDisplay.GenericMessageClass.prototype.fadeOut = function() {
   var me = this;
   this.element.hide('blind',{},this.options.fadeOutTime, function() { me.destroy(); });
 //  this.element.fadeOut(this.options.fadeOutTime, function() { me.destroy(); });
 };
 
-MessageDisplay.GenericMessage.prototype.destroy = function() {
+MessageDisplay.GenericMessageClass.prototype.destroy = function() {
   this.element.remove();
 };
 
 /**
  * Tells the message to fade out after <code>displayTime</code> milliseconds.
  */
-MessageDisplay.GenericMessage.prototype.fadeOutTimer = function(displayTime) {
+MessageDisplay.GenericMessageClass.prototype.fadeOutTimer = function(displayTime) {
   var me = this;
   setTimeout(function() {
     me.fadeOut();
@@ -93,7 +93,18 @@ MessageDisplay.GenericMessage.prototype.fadeOutTimer = function(displayTime) {
 /*
  * ERROR MESSAGE
  */
-MessageDisplay.ErrorMessage = function(message, xhr, opts) {
+/**
+ * Create a new error message.
+ * <p>
+ * <strong>Use this method to generate messages</strong>
+ */
+MessageDisplay.Error = function(message, xhr, opts) {
+  return new MessageDisplay.ErrorMessageClass(message, xhr, opts);
+};
+/**
+ * @constructor
+ */
+MessageDisplay.ErrorMessageClass = function(message, xhr, opts) {
   this.options = {
       fadeOutTime: 1000,
       closeButton: true
@@ -109,9 +120,9 @@ MessageDisplay.ErrorMessage = function(message, xhr, opts) {
   this.element.addClass(MessageDisplay.cssClasses.errorMessage);
 };
 
-MessageDisplay.ErrorMessage.prototype = new MessageDisplay.GenericMessage();
+MessageDisplay.ErrorMessageClass.prototype = new MessageDisplay.GenericMessageClass();
 
-MessageDisplay.ErrorMessage.prototype.addContent = function() {
+MessageDisplay.ErrorMessageClass.prototype.addContent = function() {
   var message = "<span>" + this.message + "</span>";
   
   if (this.jsonData) {
@@ -130,7 +141,18 @@ MessageDisplay.ErrorMessage.prototype.addContent = function() {
 /*
  * OK MESSAGE
  */
-MessageDisplay.OkMessage = function(message, opts) {
+/**
+ * Create a new ok message.
+ * <p>
+ * <strong>Use this method to generate messages</strong>
+ */
+MessageDisplay.Ok = function(message, opts) {
+  return new MessageDisplay.OkMessageClass(message, opts);
+};
+/**
+ * @constructor
+ */
+MessageDisplay.OkMessageClass = function(message, opts) {
   this.options = {
       displayTime: 2000,
       fadeOutTime: 200
@@ -141,13 +163,23 @@ MessageDisplay.OkMessage = function(message, opts) {
   this.element.addClass(MessageDisplay.cssClasses.okMessage);
 };
 
-MessageDisplay.OkMessage.prototype = new MessageDisplay.GenericMessage();
+MessageDisplay.OkMessageClass.prototype = new MessageDisplay.GenericMessageClass();
 
 
 /*
  * WARNING MESSAGE
  */
-MessageDisplay.WarningMessage = function(message, opts) {
+/**
+ * Create a new warning message.
+ * <strong>Use this method to generate messages</strong>
+ */
+MessageDisplay.Warning = function(message, opts) {
+  return new MessageDisplay.WarningMessageClass(message, opts);
+};
+/**
+ * @constructor
+ */
+MessageDisplay.WarningMessageClass = function(message, opts) {
   this.options = {
       displayTime: 2000,
       fadeOutTime: 200
@@ -158,5 +190,5 @@ MessageDisplay.WarningMessage = function(message, opts) {
   this.element.addClass(MessageDisplay.cssClasses.warningMessage);
 };
 
-MessageDisplay.WarningMessage.prototype = new MessageDisplay.GenericMessage();
+MessageDisplay.WarningMessageClass.prototype = new MessageDisplay.GenericMessageClass();
 

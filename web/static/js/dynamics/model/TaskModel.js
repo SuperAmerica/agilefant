@@ -95,7 +95,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      var msg = new MessageDisplay.OkMessage("Task saved successfully");
+      MessageDisplay.Ok("Task saved successfully");
       me.setData(data);
       if(!id) {
         if (me.relations.story instanceof StoryModel) {
@@ -107,7 +107,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
       }
     },
     error: function(xhr, status, error) {
-      var msg = new MessageDisplay.ErrorMessage("Error saving task", xhr);
+      MessageDisplay.Error("Error saving task", xhr);
     }
   });
 };
@@ -122,13 +122,13 @@ TaskModel.prototype._remove = function(successCallback) {
       dataType: "text",
       data: {taskId: me.getId()},
       success: function(data,status) {
-        var msg = new MessageDisplay.OkMessage("Task removed");
+        MessageDisplay.Ok("Task removed");
         if (successCallback) {
           successCallback();
         }
       },
       error: function(xhr,status) {
-        var msg = new MessageDisplay.ErrorMessage("Error deleting task.", xhr);
+        MessageDisplay.Error("Error deleting task.", xhr);
       }
   });
 };
@@ -165,7 +165,7 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
     dataType: "json",
     data: data,
     success: function(data, status) {
-      var msg = new MessageDisplay.OkMessage("Task ranked successfully.");
+      MessageDisplay.Ok("Task ranked successfully.");
       var oldParent = me.getParent();
       me.setData(data);
       oldParent.reload();
@@ -174,7 +174,7 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       }
     },
     error: function(xhr, status) {
-      var msg = new MessageDisplay.ErrorMessage("An error occured while ranking the task.", xhr);
+      MessageDisplay.Error("An error occured while ranking the task.", xhr);
     }
   });
 };
@@ -196,7 +196,7 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
            taskId: me.getId()
         },
         success: function(data,status) {
-            var msg = new MessageDisplay.OkMessage("Task appended to your work queue");
+            MessageDisplay.Ok("Task appended to your work queue");
             
             if (dailyWork) {
                 dailyWork.reload();
@@ -206,7 +206,7 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
             }
         },
         error: function(xhr,status) {
-            var msg = new MessageDisplay.ErrorMessage("Error adding task to work queue.", xhr);
+            MessageDisplay.Error("Error adding task to work queue.", xhr);
         }
     });
 };
@@ -228,7 +228,7 @@ TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
            taskId: me.getId()
         },
         success: function(data,status) {
-            var msg = new MessageDisplay.OkMessage("Task removed from your work queue");
+            MessageDisplay.Ok("Task removed from your work queue");
             
             if (dailyWork) {
                 dailyWork.reload();
@@ -238,7 +238,7 @@ TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
             }
         },
         error: function(xhr,status) {
-            var msg = new MessageDisplay.ErrorMessage("Error removing task from work queue.", xhr);
+            MessageDisplay.Error("Error removing task from work queue.", xhr);
         }
     });
 };
@@ -254,11 +254,11 @@ TaskModel.prototype.resetOriginalEstimate = function() {
     dataType: "json",
     data: {taskId: me.getId()},
     success: function(data, status) {
-      var msg = new MessageDisplay.OkMessage("Original estimate reset.");
+      MessageDisplay.Ok("Original estimate reset.");
       me.setData(data);
     },
     error: function(xhr) {
-      var msg = new MessageDisplay.ErrorMessage("An error occured while ranking reseting the original estimate.", xhr);
+      MessageDisplay.Error("An error occured while ranking reseting the original estimate.", xhr);
     }
   });
 };

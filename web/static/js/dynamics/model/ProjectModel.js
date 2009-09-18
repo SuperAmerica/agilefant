@@ -93,14 +93,14 @@ ProjectModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      var msg = new MessageDisplay.OkMessage("Project saved successfully");
+      MessageDisplay.Ok("Project saved successfully");
       me.setData(data);
       if(!id) {
         me.getParent().addProject(me);
       }
     },
     error: function(xhr, status, error) {
-      var msg = new MessageDisplay.ErrorMessage("Error saving project", xhr);
+      MessageDisplay.Error("Error saving project", xhr);
       me.rollback();
     }
   });
@@ -112,7 +112,7 @@ ProjectModel.prototype.reload = function() {
     "ajax/projectData.action",
     {projectId: me.getId()},
     function(data,status) {
-      var msg = new MessageDisplay.OkMessage("Project reloaded successfully");
+      MessageDisplay.Ok("Project reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }
@@ -129,13 +129,13 @@ ProjectModel.prototype._remove = function(successCallback) {
       dataType: "text",
       data: {projectId: me.getId()},
       success: function(data,status) {
-        var msg = new MessageDisplay.OkMessage("Project removed");
+        MessageDisplay.Ok("Project removed");
         if (successCallback) {
           successCallback();
         }
       },
       error: function(xhr,status) {
-        var msg = new MessageDisplay.ErrorMessage("Error deleting project.", xhr);
+        MessageDisplay.Error("Error deleting project.", xhr);
       }
   });
 };

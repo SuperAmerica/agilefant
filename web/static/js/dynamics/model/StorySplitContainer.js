@@ -27,11 +27,11 @@ StorySplitContainer.prototype.commit = function() {
     cache: false,
     async: true,
     success: function(data,status) {
-      var msg = new MessageDisplay.OkMessage("Story split successfully");
+      MessageDisplay.Ok("Story split successfully");
       me.originalStory.getParent().reload();
     },
     error: function(xhr, status, error) {
-      var msg = new MessageDisplay.ErrorMessage("Error splitting story", xhr);
+      MessageDisplay.Error("Error splitting story", xhr);
     }
   });
 };

@@ -70,7 +70,7 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
     var me = this;
 
     if (moveUnder && moveUnder !== me.getDailyWork()) {
-        var msg = new MessageDisplay.ErrorMessage("An UI error occured while ranking the task.");
+        MessageDisplay.Error("An UI error occured while ranking the task.");
         return;
     }
 
@@ -86,7 +86,7 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
         dataType: "text",
         data: data,
         success: function(data, status) {
-            var msg = new MessageDisplay.OkMessage("Task ordered successfully.");
+            MessageDisplay.Ok("Task ordered successfully.");
             var oldParent = me.getDailyWork();
             // me.setData(data);
             oldParent.reload();
@@ -97,7 +97,7 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
             me.getDailyWork().reload();
         },
         error: function(xhr, status) {
-            var msg = new MessageDisplay.ErrorMessage("An error occured while ranking the task.", xhr);
+            MessageDisplay.Error("An error occured while ranking the task.", xhr);
         }
     });
 };
@@ -115,11 +115,11 @@ DailyWorkTaskModel.prototype.removeFromDailyWork = function(successCallback) {
             userId: me.getDailyWork().getUser().getId()
         },
         success: function(data,status) {
-          var msg = new MessageDisplay.OkMessage("Task removed from this week's tasks");
+          MessageDisplay.Ok("Task removed from this week's tasks");
           me.getDailyWork().reload();
         },
         error: function(xhr,status) {
-          var msg = new MessageDisplay.ErrorMessage("Error removing task from this week's tasks.", xhr);
+          MessageDisplay.Error("Error removing task from this week's tasks.", xhr);
         }
     });
 

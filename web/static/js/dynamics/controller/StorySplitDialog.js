@@ -63,7 +63,7 @@ StorySplitDialog.prototype.render = function() {
  */
 StorySplitDialog.prototype._save = function() {
   if (this.rows.length < 1) {
-    var msg = new MessageDisplay.WarningMessage("Create some stories first");
+    MessageDisplay.Warning("Create some stories first");
     return;
   }
   if (this.isFormDataValid()) {
@@ -155,20 +155,44 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     cssClass: "ui-widget-content ui-corner-all"
   });
   
+  config.addCaptionItem({
+    text: "Edit original story",
+    name: "editOriginal",
+    visible: true,
+    callback: function() { MessageDisplay.Ok("Foo"); }
+  });
+  
   config.addColumnConfiguration(0, {
     title: 'Name',
-    get: StoryModel.prototype.getName
+    get: StoryModel.prototype.getName,
+    editable: true,
+    edit: {
+      editor: "Text",
+      required: true,
+      set: StoryModel.prototype.setName
+    }
   });
   
   config.addColumnConfiguration(1, {
     title: 'Points',
-    get: StoryModel.prototype.getStoryPoints
+    get: StoryModel.prototype.getStoryPoints,
+    editable: true,
+    edit: {
+      editor: "Number",
+      set: StoryModel.prototype.setStoryPoints
+    }
   });
   
   config.addColumnConfiguration(2, {
     title: 'State',
     get: StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator
+    decorator: DynamicsDecorators.stateColorDecorator,
+    editable: true,
+    edit: {
+      editor: "SingleSelection",
+      items: DynamicsDecorators.stateOptions,
+      set: StoryModel.prototype.setState
+    }
   });
   
   this.storyInfoConfig = config;
@@ -185,7 +209,7 @@ StorySplitDialog.columnIndices = {
 StorySplitDialog.prototype._initNewStoriesConfig = function() {
   var config = new DynamicTableConfiguration({
     cssClass: "ui-widget-content ui-corner-all",
-    caption: "New stories",
+    caption: "Child stories",
     dataSource: StoryModel.prototype.getChildren
   });
   
@@ -232,6 +256,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     title : "State",
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
       editor : "SingleSelection",

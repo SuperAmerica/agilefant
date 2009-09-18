@@ -93,14 +93,14 @@ StoryModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      var msg = new MessageDisplay.OkMessage("Story saved successfully");  
+      MessageDisplay.Ok("Story saved successfully");  
       me.setData(data);
       if(!id) {
         me.relations.backlog.addStory(me);
       }
     },
     error: function(xhr, status, error) {
-      var msg = new MessageDisplay.ErrorMessage("Error saving story", xhr);
+      MessageDisplay.Error("Error saving story", xhr);
     }
   });
 };
@@ -127,12 +127,12 @@ StoryModel.prototype.moveStory = function(backlogId) {
     async: true,
     cache: false,
     success: function(data,status) {
-      var msg = new MessageDisplay.OkMessage("Story moved");
+      MessageDisplay.Ok("Story moved");
       me.getParent().reload();
       me.callListeners(new DynamicsEvents.EditEvent(me));  
     },
     error: function(xhr) {
-      var msg = new MessageDisplay.ErrorMessage("An error occurred moving the story", xhr);
+      MessageDisplay.Error("An error occurred moving the story", xhr);
     }
   });
 };
@@ -156,7 +156,7 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
     async: true,
     cache: false,
     success: function(data, status) {
-      var msg = new MessageDisplay.OkMessage("Story ranked");
+      MessageDisplay.Ok("Story ranked");
       var oldParent = me.getParent();
       me.setData(data);
       oldParent.reload();
@@ -165,7 +165,7 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       }
     },
     error: function(xhr) {
-      var msg = new MessageDisplay.ErrorMessage("An error occurred while ranking the story", xhr);
+      MessageDisplay.Error("An error occurred while ranking the story", xhr);
     }
   });
 };
@@ -181,11 +181,11 @@ StoryModel.prototype._remove = function(successCallback) {
       async: true,
       cache: false,
       success: function(data, status) {
-        var msg = new MessageDisplay.OkMessage("Story removed");
+        MessageDisplay.Ok("Story removed");
         successCallback();
       },
       error: function(data, status) {
-        var msg = new MessageDisplay.ErrorMessage("Error deleting story.", data);
+        MessageDisplay.Error("Error deleting story.", data);
       }
   });
 };

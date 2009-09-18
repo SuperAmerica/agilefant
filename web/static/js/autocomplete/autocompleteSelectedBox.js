@@ -60,8 +60,6 @@ AutocompleteSelected.prototype.isItemSelected = function(id) {
 
 /**
  * Gets all items as list by their id.
- * 
- * 
  */
 AutocompleteSelected.prototype.getItemsByIdList = function(idList) {
   if (!idList) {

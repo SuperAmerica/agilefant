@@ -16,6 +16,9 @@ var AutocompleteVars = {
       selectedItemName: 'autocomplete-selectedName',
       selectedItemRemove: 'autocomplete-selectedRemove',
       
+      recentElement: 'autocomplete-recentSelections',
+      recentList: 'autocomplete-recentList',
+      
       suggestionIcon: 'autocomplete-suggestionIcon',
       suggestionUserIcon: 'autocomplete-userIcon',
       suggestionTeamIcon: 'autocomplete-teamIcon',
@@ -47,7 +50,8 @@ var Autocomplete = function(element, options) {
   this.options = {
       multiSelect: true,
       dataType: "",
-      preSelected: []
+      preSelected: [],
+      showRecent: true
   };
   jQuery.extend(this.options, options);
   this.dataProvider = null;
@@ -134,3 +138,16 @@ Autocomplete.prototype.getSelectedItems = function() {
   return this.selectedBox.getSelectedItems();
 };
 
+Autocomplete.prototype.getItemsByIdList = function(idList) {
+  if (!idList) {
+    return [];
+  }
+  
+  var list = [];
+  for (var i = 0; i < this.items.length; i++) {
+    if (jQuery.inArray(this.items[i].id, idList) !== -1) {
+      list.push(this.items[i]);
+    }
+  }
+  return list;
+};

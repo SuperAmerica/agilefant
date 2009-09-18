@@ -175,6 +175,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @JSON(include = false)
     @Transient
+    @Deprecated
     public Collection<User> getWorkingOnTask() {
         ArrayList<User> returned = new ArrayList<User>();
         for (WhatsNextEntry e: getWhatsNextEntries()) {
@@ -185,6 +186,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     }
     
     @Transient
+    @Deprecated
     public void setWorkingOnTask(Collection<User> users) {
     }
     

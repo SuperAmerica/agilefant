@@ -155,13 +155,6 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     cssClass: "ui-widget-content ui-corner-all"
   });
   
-  config.addCaptionItem({
-    text: "Edit original story",
-    name: "editOriginal",
-    visible: true,
-    callback: function() { MessageDisplay.Ok("Foo"); }
-  });
-  
   config.addColumnConfiguration(0, {
     title: 'Name',
     get: StoryModel.prototype.getName,

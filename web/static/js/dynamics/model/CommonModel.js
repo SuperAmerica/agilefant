@@ -60,7 +60,9 @@ CommonModel.prototype._copyFields = function(newData) {
       data[ownField] = newData[field];
     }
   }
-  jQuery.extend(this.currentData, data);
+  if (!this.inTransaction) {
+    jQuery.extend(this.currentData, data);
+  }
   jQuery.extend(this.persistedData, data);
 };
 
@@ -289,6 +291,9 @@ CommonModel.prototype.getChangedData = function() {
 CommonModel.prototype._commitIfNotInTransaction = function() {
   if (!this.inTransaction) {
     this.commit();
+  }
+  else {
+    this.callListeners(new DynamicsEvents.TransactionEditEvent(this));
   }
 };
 

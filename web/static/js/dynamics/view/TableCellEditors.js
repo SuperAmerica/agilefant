@@ -33,6 +33,7 @@ TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
     this.focus();
   }
 };
+
 /**
  * Save editor value if editor content is valid
  */

@@ -106,15 +106,15 @@ $(document).ready(function() {
     
     this.as.initialize($('<div/>'));
     
-    var enterEvent = jQuery.Event("keypress");
+    var enterEvent = jQuery.Event("keyup");
     enterEvent.keyCode = 13;
-    var escEvent = jQuery.Event("keypress");
+    var escEvent = jQuery.Event("keyup");
     escEvent.keyCode = 27;
-    var downEvent = jQuery.Event("keypress");
+    var downEvent = jQuery.Event("keyup");
     downEvent.keyCode = 40;
-    var upEvent = jQuery.Event("keypress");
+    var upEvent = jQuery.Event("keyup");
     upEvent.keyCode = 38;
-    var genericKeyEvent = jQuery.Event("keypress");
+    var genericKeyEvent = jQuery.Event("keyup");
     
     // Trigger the key events
     this.as.searchInput.trigger(upEvent);

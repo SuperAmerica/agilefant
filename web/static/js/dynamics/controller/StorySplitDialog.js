@@ -5,6 +5,7 @@
  * @constructor
  */
 var StorySplitDialog = function(story) {
+  var me = this;
   this.model = story;
   this.model.setInTransaction(true);
   this.init();
@@ -12,6 +13,8 @@ var StorySplitDialog = function(story) {
   this.initConfigs();
   this.render();
   this.model.reload();
+  this.listener = function(event) { me.transactionEditListener(event) };
+  this.model.addListener(this.listener);
   this.newModels = [];
   this.rows = [];
 };
@@ -38,6 +41,7 @@ StorySplitDialog.prototype.initDialog = function() {
   
   this.storyInfoElement = $('<div/>').addClass('story-info').appendTo(this.element);
   this.newStoriesElement = $('<div/>').addClass('story-split-list').appendTo(this.element);
+  this.oldStoriesElement = $('<div/>').addClass('story-split-list').appendTo(this.element);
 };
 
 /**
@@ -55,8 +59,23 @@ StorySplitDialog.prototype.render = function() {
       this.model,
       this.newStoriesConfig,
       this.newStoriesElement);
+  
+  this.oldStoriesView = new DynamicTable(
+      this,
+      this.model,
+      this.oldStoriesConfig,
+      this.oldStoriesElement);
 };
 
+/**
+ * Transaction edit listener for updating fields
+ * when not committing changes.
+ */
+StorySplitDialog.prototype.transactionEditListener = function(event) {
+  if (event instanceof DynamicsEvents.TransactionEditEvent) {
+    this.storyInfoView.render();
+  }
+};
 
 /**
  * The callback for the 'Save' button.
@@ -85,10 +104,17 @@ StorySplitDialog.prototype._cancel = function() {
  * Close and destroy the dialog.
  */
 StorySplitDialog.prototype.close = function() {
+  this.model.removeListener(this.listener);
   this.model.setInTransaction(false);
   this.element.dialog('destroy').remove();
 };
 
+StorySplitDialog.prototype.storyControllerFactory = function(view, model) {
+  model.setInTransaction(true);
+  var storyController = new StoryController(model, view, this);
+  this.addChildController("story", storyController);
+  return storyController;
+};
 
 StorySplitDialog.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
@@ -145,14 +171,46 @@ StorySplitDialog.prototype.rowCancelFactory = function(view, model) {
  */
 StorySplitDialog.prototype.initConfigs = function() {
   this._initOriginalStoryConfig();
-  this._initNewStoriesConfig();
+  this._initStoryListConfigs();
+};
+
+StorySplitDialog.prototype._initStoryListConfigs = function() {
+  var cancel = {
+    minWidth : 70,
+    autoScale : true,
+    cssClass : 'projectstory-row',
+    title : "Cancel",
+    subViewFactory: StorySplitDialog.prototype.rowCancelFactory
+  };
+  
+  
+  var newStoriesConfig = this._getStoryConfig({
+    caption: "New stories"
+  }, true);
+  
+  newStoriesConfig.addCaptionItem({
+    text: "Create a story",
+    name: "createStory",
+    cssClass: "create",
+    callback: StorySplitDialog.prototype.createStory
+  });
+  
+  newStoriesConfig.addColumnConfiguration(StorySplitDialog.columnIndices.cancel, cancel);
+  
+  this.newStoriesConfig = newStoriesConfig;
+  
+  this.oldStoriesConfig = this._getStoryConfig({
+    caption: "Old stories",
+    dataSource: StoryModel.prototype.getChildren
+  }, false);
 };
 
 StorySplitDialog.prototype._initOriginalStoryConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
     rightWidth: '75%',
-    cssClass: "ui-widget-content ui-corner-all"
+    cssClass: "ui-widget-content ui-corner-all",
+    rowControllerFactory: StorySplitDialog.prototype.storyRowFactory
   });
   
   config.addColumnConfiguration(0, {
@@ -199,19 +257,12 @@ StorySplitDialog.columnIndices = {
     description: 4
 };
 
-StorySplitDialog.prototype._initNewStoriesConfig = function() {
-  var config = new DynamicTableConfiguration({
-    cssClass: "ui-widget-content ui-corner-all",
-    caption: "Child stories",
-    dataSource: StoryModel.prototype.getChildren
-  });
-  
-  config.addCaptionItem({
-    name: "createStory",
-    text: "Create a story",
-    visible: true,
-    callback: StorySplitDialog.prototype.createStory
-  });
+StorySplitDialog.prototype._getStoryConfig = function(options, editable) {
+  var opts = {
+      cssClass: "ui-widget-content ui-corner-all"
+  };
+  jQuery.extend(opts, options);
+  var config = new DynamicTableConfiguration(opts);
   
   config.addColumnConfiguration(StorySplitDialog.columnIndices.name, {
     minWidth : 280,
@@ -220,7 +271,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     title : "Name",
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
-    editable : true,
+    editable : editable,
     defaultSortColumn: true,
     edit : {
       editor : "Text",
@@ -235,7 +286,7 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     title : "Points",
     headerTooltip : 'Estimate in story points',
     get : StoryModel.prototype.getStoryPoints,
-    editable : true,
+    editable : editable,
     editableCallback: StoryController.prototype.storyPointsEditable,
     edit : {
       editor : "Estimate",
@@ -250,20 +301,12 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
-    editable : true,
+    editable : editable,
     edit : {
       editor : "SingleSelection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }
-  });
-  
-  config.addColumnConfiguration(StorySplitDialog.columnIndices.cancel, {
-    minWidth : 70,
-    autoScale : true,
-    cssClass : 'projectstory-row',
-    title : "Cancel",
-    subViewFactory: StorySplitDialog.prototype.rowCancelFactory
   });
 
   config.addColumnConfiguration(StoryController.columnIndices.description, {
@@ -271,12 +314,11 @@ StorySplitDialog.prototype._initNewStoriesConfig = function() {
     visible : false,
     get : StoryModel.prototype.getDescription,
     cssClass : 'projectstory-data',
-    editable : true,
+    editable : editable,
     edit : {
       editor : "Wysiwyg",
       set : StoryModel.prototype.setDescription
     }
   });
-    
-  this.newStoriesConfig = config;
+  return config;
 };

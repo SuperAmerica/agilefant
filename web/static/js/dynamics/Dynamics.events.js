@@ -115,3 +115,15 @@ DynamicsEvents.CancelEdit = function(origin) {
 };
 DynamicsEvents.CancelEdit.prototype = new DynamicsEvents.CommonEvent();
 
+
+/**
+ * Used, when editing item in transaction.
+ * @see DynamicsEvents.EditEvent
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.TransactionEditEvent = function(origin) {
+  this.initialize();
+  this.type = "transactionEdit";
+  this.object = origin;
+};
+DynamicsEvents.TransactionEditEvent.prototype = new DynamicsEvents.CommonEvent();

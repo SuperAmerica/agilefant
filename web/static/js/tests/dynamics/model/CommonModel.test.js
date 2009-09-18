@@ -84,6 +84,34 @@ $(document).ready(function() {
     same(this.commonModel.currentData.anotherField, "Another value", "Field not overwritten");
   });
   
+  /**
+   * Should not overwrite <code>currentData</code>
+   */
+  test("Copy fields in transaction", function() {
+    var newData = {
+        name: "Name with no meaning",
+        desc: "Emptiness"
+    };
+    var origData = {
+      name: "Original name",
+      desc: "Original desc"
+    };
+    this.commonModel.currentData = {};
+    this.commonModel.persistedData = {};
+    this.commonModel.copiedFields = {
+        "name": "name",
+        "desc": "desc"
+    };
+    jQuery.extend(this.commonModel.currentData, origData);
+    jQuery.extend(this.commonModel.persistedData, origData);
+    
+    this.commonModel.setInTransaction(true);
+    this.commonModel._copyFields(newData);
+    
+    same(this.commonModel.persistedData, newData, "Persisted data changed");
+    same(this.commonModel.currentData, origData, "Current data stayed the same");
+  })
+  
   
   
   test("Update relations", function() {

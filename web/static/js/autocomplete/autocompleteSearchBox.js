@@ -43,7 +43,8 @@ AutocompleteSearch.prototype.initialize = function(element) {
 
 AutocompleteSearch.prototype.bindEvents = function() {
   var me = this;
-  this.searchInput.bind("keypress", function(keyEvent) {
+  this.searchInput.bind("keyup", function(keyEvent) {
+    var msg = new MessageDisplay.OkMessage("Keycode: " + keyEvent.keyCode);
     var kc = keyEvent.keyCode;
     if (kc === AutocompleteVars.keyCodes.up) {
       me.shiftSelectionUp();

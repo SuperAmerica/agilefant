@@ -6,6 +6,11 @@ var DailyWorkController = function(options) {
     this.init();
     this.initializeConfigs();
     this.paint();
+    
+    var me = this;
+    this.newTaskListener = function (event) {
+        me.onCreateNewTask(event);
+    };
 };
 
 DailyWorkController.prototype = new CommonController();
@@ -167,14 +172,14 @@ DailyWorkController.prototype.createConfig = function(configType) {
         cssClass : 'task-row',
         title : 'Context',
         headerTooltip : 'Task context',
-        get : DailyWorkTaskModel.prototype.getIteration,
+        get : TaskModel.prototype.getIteration,
         getView : DailyWorkTaskModel.prototype.getContext,
         decorator: DynamicsDecorators.contextDecorator,
         editable : true,
         sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
         edit : {
-            editor : "Backlog",
-            set : TaskModel.prototype.setIteration,
+            editor : "CurrentIteration",
+            set : TaskModel.prototype.setIterationToSave,
             required: true
         },
     });
@@ -290,11 +295,12 @@ DailyWorkController.prototype.createConfig = function(configType) {
 
 DailyWorkController.prototype.createTask = function() {
     var mockModel = ModelFactory.createObject(ModelFactory.types.dailyWorkTask);
-
+    
     mockModel.setDailyWork(this.model);
     // the user in question must have been loaded, and it is!
     mockModel.addResponsible(this.model.getUserId());
-
+    mockModel.addListener(this.newTaskListener);
+    
     var controller = new DailyWorkTaskController(mockModel, null, this);
     var row = this.workQueueView.createRow(controller, mockModel, "top");
 
@@ -305,6 +311,14 @@ DailyWorkController.prototype.createTask = function() {
 
     controller.editTask();
     row.getCell(DailyWorkTaskController.columnIndices.data).hide();
+};
+
+DailyWorkController.prototype.onCreateNewTask = function(event) {
+    if (event.type === 'edit') {
+        var task = event.getObject();
+        task.removeListener(this.newTaskListener);
+        this.model.reload();
+    }
 };
 
 DailyWorkController.prototype.initializeConfigs = function() {

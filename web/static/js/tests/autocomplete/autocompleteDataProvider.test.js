@@ -37,7 +37,7 @@ $(document).ready(function() {
     ];
     var fetchDataCalledCount = 0;
     this.dataProvider._fetchData = function(url, params) {
-      same(url, AutocompleteDataProvider.vars.urls.usersAndTeams, "Urls match");
+      same(url, AutocompleteDataProvider.vars.urls.usersAndTeams.url, "Urls match");
       fetchDataCalledCount++;
       return returnedData; 
     };

@@ -74,8 +74,18 @@ TaskModel.prototype._saveData = function(id, changedData) {
   }
   jQuery.extend(data, this.serializeFields("task", changedData));
   // Add the id
+
   if (id) {
-    data.taskId = id;    
+    data.taskId = id;
+
+    if (changedData.iterationChanged) {
+        if(this.relations.backlog instanceof BacklogModel) {
+            data.iterationId = this.relations.backlog.getId();
+            data.iterationChanged = true;
+
+            delete changedData.iterationChanged;
+        }
+    }
   }
   else {
     url = "ajax/createTask.action";
@@ -178,6 +188,23 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
     }
   });
 };
+
+TaskModel.prototype.getIteration = function() {
+    var parent = this.getParent();
+    if (! parent) {
+        return null
+    }
+    
+    else if (parent instanceof StoryModel) {
+        return parent.getIteration();
+    }
+    else if (parent instanceof IterationModel) {
+        return parent;
+    }
+    return null;
+}
+
+
 
 TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
     var me = this;
@@ -370,6 +397,17 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
   this._commitIfNotInTransaction();
 };
 
+TaskModel.prototype.setIterationToSave = function(iteration) {
+  this.setIteration(iteration);
+
+  this.currentData.iterationChanged = true;
+  this._commitIfNotInTransaction();
+  
+  if (this.getDailyWork) {
+    this.getDailyWork().reload();
+  }
+};
+
 TaskModel.prototype.isOnMyWorkQueue = function() {
   return false;
 };
@@ -385,4 +423,6 @@ TaskModel.prototype.addResponsible = function(userId) {
   else {
     this.currentData.userIds = [userId];
   }
+  
+  this.currentData.usersChanged = true;
 };

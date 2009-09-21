@@ -1,10 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isNull;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -42,6 +38,7 @@ public class TransferObjectBusinessTest {
     private UserBusiness userBusiness;
     private TeamBusiness teamBusiness;
     private BacklogBusiness backlogBusiness;
+    private IterationBusiness iterationBusiness;
     
     Project project;
     Iteration iteration;
@@ -70,14 +67,17 @@ public class TransferObjectBusinessTest {
         
         backlogBusiness = createMock(BacklogBusiness.class);
         transferObjectBusiness.setBacklogBusiness(backlogBusiness);
+        
+        iterationBusiness = createMock(IterationBusiness.class);
+        transferObjectBusiness.setIterationBusiness(iterationBusiness);
     }
     
     private void verifyAll() {
-        verify(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness);
+        verify(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness, iterationBusiness);
     }
 
     private void replayAll() {
-        replay(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness);
+        replay(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness, iterationBusiness);
     }
     
     
@@ -380,6 +380,46 @@ public class TransferObjectBusinessTest {
         node = getDataNodeById(615, nodes);
         assertEquals("Product > Iter 2", node.getName());
     }
+
+    @Test
+    public void testGetCurrentIterationAutocompleteData() {
+        Backlog product = new Product();
+        product.setId(1);
+        product.setName("Product");
+        
+        Backlog project = new Project();
+        project.setId(7);
+        project.setParent(product);
+        project.setName("Project");
+        
+        Iteration iterationUnderProject = new Iteration();
+        iterationUnderProject.setId(333);
+        iterationUnderProject.setParent(project);
+        iterationUnderProject.setName("Iter 1");
+        
+        Iteration iterationUnderProduct = new Iteration();
+        iterationUnderProduct.setId(615);
+        iterationUnderProduct.setParent(product);
+        iterationUnderProduct.setName("Iter 2");
+        
+        expect(iterationBusiness.retrieveCurrentAndFutureIterations())
+            .andReturn(Arrays.asList(iterationUnderProject, iterationUnderProduct));
+        
+        replayAll();
+        
+        List<AutocompleteDataNode> nodes = transferObjectBusiness
+                .constructCurrentIterationAutocompleteData();
+        
+        verifyAll();
+        
+        assertEquals(2, nodes.size());
+        AutocompleteDataNode node = getDataNodeById(333, nodes);
+        assertEquals("Product > Project > Iter 1", node.getName());
+        
+        node = getDataNodeById(615, nodes);
+        assertEquals("Product > Iter 2", node.getName());
+    }
+
     
     /**
      * Helper method to get a <code>AutocompleteDataNode</code> with specified id.

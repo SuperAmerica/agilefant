@@ -42,6 +42,11 @@ public class AutocompleteAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
+    public String currentIterationData() {
+        autocompleteData = transferObjectBusiness.constructCurrentIterationAutocompleteData();
+        return Action.SUCCESS;
+    }
+
     public void setTransferObjectBusiness(
             TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;

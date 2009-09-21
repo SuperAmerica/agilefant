@@ -3,8 +3,10 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -266,6 +268,13 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
     }
 
+    public Collection<Iteration> retrieveCurrentAndFutureIterations() {
+        DateTime now = new DateTime();
+        DateTime dayStart = now.withMillisOfDay(0);
+
+        return iterationDAO.retrieveCurrentAndFutureIterationsAt(dayStart);
+    }
+    
     public void setTransferObjectBusiness(
             TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;

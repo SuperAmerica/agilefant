@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Collection;
+
 import org.joda.time.LocalDate;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
@@ -19,4 +21,6 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
 
     public Iteration store(int iterationId, int parentBacklogId,
             Iteration iterationData);
+    
+    public Collection<Iteration> retrieveCurrentAndFutureIterations();
 }

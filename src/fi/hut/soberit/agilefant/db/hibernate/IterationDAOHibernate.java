@@ -152,4 +152,12 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
 
         return asList(crit);
     }
+
+    public List<Iteration> retrieveCurrentAndFutureIterationsAt(
+            DateTime point) {
+
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.ge("endDate", point));
+        return asList(crit);
+    }
 }

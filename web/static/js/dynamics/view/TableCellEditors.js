@@ -593,6 +593,17 @@ TableEditors.Backlog.prototype.onSave = function (keys, data) {
     }
 };
 TableEditors.Backlog.prototype.autocompleteOptions = {
-    dataType: "backlogs",
+    dataType: "backlog",
     title:    "Select backlog"
+};
+TableEditors.CurrentIteration = function(row, cell, options) {
+    if (arguments.length > 0) {
+        TableEditors.Backlog.superclass.init.call(this, row, cell, options); 
+    }
+};
+TableEditors.CurrentIteration.prototype = new TableEditors.Backlog();
+TableEditors.CurrentIteration.superclass = TableEditors.Backlog.prototype;
+TableEditors.CurrentIteration.prototype.autocompleteOptions = {
+    dataType: "currentIterations",
+    title:    "Select iteration"
 };

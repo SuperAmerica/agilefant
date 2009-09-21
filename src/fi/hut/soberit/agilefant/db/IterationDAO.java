@@ -34,4 +34,7 @@ public interface IterationDAO extends GenericDAO<Iteration> {
 
     public List<Iteration> retrieveEmptyIterationsWithPlannedSize(
             DateTime startDate, DateTime endDate, User assignee);
+
+    public List<Iteration> retrieveCurrentAndFutureIterationsAt(
+            DateTime dayStart);
 }

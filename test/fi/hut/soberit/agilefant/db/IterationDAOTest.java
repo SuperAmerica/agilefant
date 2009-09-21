@@ -51,4 +51,15 @@ public class IterationDAOTest extends AbstractHibernateTests {
         assertEquals(1, actual.size());
         assertEquals(4, actual.get(0).getId());
     }
+
+    @Test
+    public void testRetrieveCurrentAndFutureIterationsAt() {
+        executeClassSql();
+        DateTime startDate = new DateTime(2009, 8, 1, 0, 0, 0, 0);
+        List<Iteration> actual = iterationDAO
+                .retrieveCurrentAndFutureIterationsAt(startDate);
+
+        assertEquals(3, actual.get(0).getId());
+        assertEquals(1, actual.size());
+    }
 }

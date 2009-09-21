@@ -58,6 +58,11 @@ public interface TransferObjectBusiness {
      */
     public List<AutocompleteDataNode> constructBacklogAutocompleteData();
     
+    /**
+     * Get all backlogs in AutoCompleteData containers.
+     */
+    public List<AutocompleteDataNode> constructCurrentIterationAutocompleteData();
+
     /**    
      * Checks whether the backlog is ongoing, past or future.
      */

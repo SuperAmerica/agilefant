@@ -10,9 +10,10 @@ AutocompleteDataProvider = function() {};
 
 AutocompleteDataProvider.vars = {
   urls: {
-    "usersAndTeams": "ajax/userChooserData.action",
-    "backlogs": "ajax/backlogChooserData.action",
-    "products": "ajax/productChooserData.action"
+    "usersAndTeams":     { url: "ajax/userChooserData.action"                  },
+    "backlogs":          { url: "ajax/backlogChooserData.action"               },
+    "currentIterations": { url: "ajax/currentIterationChooserData.action"      },
+    "products":          { url: "ajax/productChooserData.action"               }
   }
 };
 
@@ -37,9 +38,13 @@ AutocompleteDataProvider.getInstance = function() {
  * @see AutocompleteDataProvider.vars.urls
  */
 AutocompleteDataProvider.prototype.get = function(dataType) {
-  var url = AutocompleteDataProvider.vars.urls[dataType];
+  var urlInfo = AutocompleteDataProvider.vars.urls[dataType];
   var params = {};
-  return this._fetchData(url, params);
+  if (urlInfo.params) {
+      params = urlInfo.params;
+  }
+  
+  return this._fetchData(urlInfo.url, params);
 };
 
 AutocompleteDataProvider.prototype.filterIdLists = function(items) {
@@ -52,13 +57,14 @@ AutocompleteDataProvider.prototype.filterIdLists = function(items) {
   }
   return retList;
 };
-AutocompleteDataProvider.prototype._fetchData = function(url,params) {
+AutocompleteDataProvider.prototype._fetchData = function(url, params) {
   var returnedData = null;
   jQuery.ajax({
     async: false,
     url: url,
     cache: false,
     dataType: "json",
+    data: params,
     type: "post",
     success: function(data,status) {
       returnedData = data;

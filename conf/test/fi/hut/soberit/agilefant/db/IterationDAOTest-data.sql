@@ -1,6 +1,6 @@
 INSERT INTO backlogs (id, backlogtype, name, backlogSize, startDate, endDate) VALUES (1, 'Iteration', 'Iteration 1', 400, '2009-05-20 10:15:00', '2009-07-01 10:15:00');
 INSERT INTO backlogs (id, backlogtype, name, backlogSize, startDate, endDate) VALUES (2, 'Iteration', 'Iteration 2', 400, '2009-05-20 10:15:00', '2009-07-01 10:15:00');
-INSERT INTO backlogs (id, backlogtype, name, startDate, endDate) VALUES (3, 'Iteration', 'Iteration 3', '2009-05-20 10:15:00', '2009-07-01 10:15:00');
+INSERT INTO backlogs (id, backlogtype, name, startDate, endDate) VALUES (3, 'Iteration', 'Iteration 3', '2009-05-20 10:15:00', '2009-08-01 10:15:00');
 INSERT INTO backlogs (id, backlogtype, name, backlogSize, startDate, endDate) VALUES (4, 'Iteration', 'Iteration 4', 400, '2009-05-20 10:15:00', '2009-07-01 10:15:00');
 
 INSERT INTO users (id, enabled) VALUES (1, true);

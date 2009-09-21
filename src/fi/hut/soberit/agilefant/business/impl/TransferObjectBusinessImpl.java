@@ -13,12 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Schedulable;
@@ -53,6 +55,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     
     @Autowired
     private TeamBusiness teamBusiness;
+
+    @Autowired
+    private IterationBusiness iterationBusiness;
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
@@ -212,5 +217,21 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
     }
-    
+
+    @Transactional(readOnly = true)
+    public List<AutocompleteDataNode> constructCurrentIterationAutocompleteData() {
+        Collection<Iteration> currentAndFutureIterations = this.iterationBusiness.retrieveCurrentAndFutureIterations();
+        List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
+        for (Backlog blog : currentAndFutureIterations) {
+            String name = recurseBacklogNameWithParents(blog);
+            AutocompleteDataNode node = new AutocompleteDataNode(Backlog.class,
+                    blog.getId(), name);
+            autocompleteData.add(node);
+        }
+        return autocompleteData; 
+    }
+
+    public void setIterationBusiness(IterationBusiness iterationBusiness) {
+        this.iterationBusiness = iterationBusiness;
+    }
 }

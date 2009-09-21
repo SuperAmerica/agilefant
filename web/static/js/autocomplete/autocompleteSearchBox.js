@@ -8,7 +8,7 @@
  * @see Autocomplete
  * @constructor
  */
-var AutocompleteSearch = function(bundle) {
+var AutocompleteSearch = function(bundle, options) {
   // Elements
   this.element = null;
   this.searchInput = null;
@@ -22,6 +22,11 @@ var AutocompleteSearch = function(bundle) {
   // No selection is -1
   this.selectedItem = -1;
   this.timer = null;
+  
+  this.options = {
+      visibleSuggestions: 5
+  };
+  jQuery.extend(this.options, options);
 };
 
 AutocompleteSearch.prototype.setItems = function(items) {

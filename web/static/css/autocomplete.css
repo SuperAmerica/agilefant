@@ -1,6 +1,6 @@
 .autocomplete {
-  border: 1px solid #ccc;
-  width: 400px;
+  width: 100%;
+  height: 100%;
 }
 
 .autocomplete-dialog {
@@ -11,9 +11,23 @@
   overflow: visible !important;  
 }
 
+.autocomplete-left {
+  width: 100%;
+}
+
+.autocomplete-right {
+  width: 25%;
+  float: right;
+}
+
+.autocomplete-recent-visible .autocomplete-left {
+  width: 75% !important;
+  margin: 0 25% 0 0 !important;  
+}
+
 .autocomplete-searchBoxContainer {
   width: 100%;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #A6C9E2c;
   margin: 0;
   padding: 4px 0;
   height: 25px;
@@ -21,7 +35,7 @@
 
 .autocomplete-searchBoxContainer input {
   margin-left: 5px;
-  width: 80%;  
+  width: 80%;
 }
 
 .autocomplete-selectedBoxContainer {
@@ -35,7 +49,7 @@
   background-color: white;
   position: relative;
   width: 80%;
-  border: 1px solid #ccc;
+  border: 1px solid #A6C9E2;
   border-top-width: 0;
   left: 5px;
   top: -2px;
@@ -46,7 +60,7 @@
   margin: 0;
   padding: 5px;
   list-style-type: none;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #A6C9E2;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -88,6 +102,34 @@
   height: 16px;
   margin-right: 6px;
   background-repeat: none;
+}
+
+.autocomplete-recentBox {
+  overflow: hidden;  
+}
+
+.autocomplete-recentBox span {
+  font-size: 10pt;
+  font-weight: normal;
+  text-decoration: underline;
+  display: block;
+}
+
+.autocomplete-recentBox ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  line-height: 130%;  
+}
+
+.autocomplete-recentBox ul li {
+  color: #3169C6;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.autocomplete-recentBox ul li:hover {
+  text-decoration: underline;
 }
 
 .autocomplete-userIcon {

@@ -485,7 +485,7 @@ TableEditors.Autocomplete.prototype.createDialog = function () {
         selected: me.getInitialSelection(),
         multiSelect: true
     });
-}
+};
 TableEditors.Autocomplete.prototype.save = function(values, data) {
     this.onSave(values, data);
     this.cell.getElement().trigger("editorClosing");
@@ -496,7 +496,7 @@ TableEditors.Autocomplete.prototype.onSave = function(values, data) {
 TableEditors.Autocomplete.prototype._registerEvents = function() { };
 TableEditors.Autocomplete.prototype.setEditorValue  = function() { };
 TableEditors.Autocomplete.prototype.getEditorValue  = function() { return this.value; };
-TableEditors.Autocomplete.prototype.getSelectedKeys = function() { return [] };
+TableEditors.Autocomplete.prototype.getSelectedKeys = function() { return []; };
 TableEditors.Autocomplete.prototype.close           = function() {
     this.cell.getElement().trigger("editorClosing");
 };
@@ -522,7 +522,7 @@ TableEditors.AutocompleteSingle = function(row, cell, options) {
     if (arguments.length > 0) {
         this.init(row, cell, options);
     }
-}
+};
 TableEditors.AutocompleteSingle.prototype = new TableEditors.Autocomplete();
 TableEditors.AutocompleteSingle.superclass = TableEditors.Autocomplete.prototype;
 

@@ -192,7 +192,7 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
 TaskModel.prototype.getIteration = function() {
     var parent = this.getParent();
     if (! parent) {
-        return null
+        return null;
     }
     
     else if (parent instanceof StoryModel) {
@@ -202,9 +202,7 @@ TaskModel.prototype.getIteration = function() {
         return parent;
     }
     return null;
-}
-
-
+};
 
 TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
     var me = this;

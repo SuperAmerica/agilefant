@@ -181,7 +181,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
             editor : "CurrentIteration",
             set : TaskModel.prototype.setIterationToSave,
             required: true
-        },
+        }
     });
 
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.state, {

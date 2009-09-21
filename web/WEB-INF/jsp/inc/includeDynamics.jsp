@@ -55,6 +55,7 @@
 
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSelectedBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteRecent.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteBundle.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteDataProvider.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>

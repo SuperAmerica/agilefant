@@ -25,6 +25,7 @@
 				minHeight: 150,
 				position: 'center',
 				title: this.options.title,
+				modal: true,
 				close: function() {
 				  me._cancel();
 				},

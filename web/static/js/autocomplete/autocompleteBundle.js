@@ -6,6 +6,9 @@
 var AutocompleteVars = {
     cssClasses: {
       autocompleteDialog: 'autocomplete-dialog',
+      
+      leftPanel: 'autocomplete-left',
+      rightPanel: 'autocomplete-right',
   
       autocompleteElement: 'autocomplete',
       searchParent: 'autocomplete-searchBoxContainer',
@@ -16,7 +19,7 @@ var AutocompleteVars = {
       selectedItemName: 'autocomplete-selectedName',
       selectedItemRemove: 'autocomplete-selectedRemove',
       
-      recentElement: 'autocomplete-recentSelections',
+      recentElement: 'autocomplete-recentBox',
       recentList: 'autocomplete-recentList',
       
       suggestionIcon: 'autocomplete-suggestionIcon',
@@ -43,18 +46,24 @@ var AutocompleteVars = {
 var Autocomplete = function(element, options) {
   this.parent = element;
   this.items = [];
+  this.leftPanel = $('<div/>').addClass(AutocompleteVars.cssClasses.leftPanel);
+  this.rightPanel = $('<div/>').addClass(AutocompleteVars.cssClasses.rightPanel);
   this.searchBoxContainer = $('<div/>');
   this.selectedBoxContainer = $('<div/>');
-  this.selectedBox = new AutocompleteSelected(this);
-  this.searchBox = new AutocompleteSearch(this);
+  this.recentContainer = $('<div/>');
   this.options = {
       multiSelect: true,
       dataType: "",
       preSelected: [],
+      visibleSuggestions: 5,
       showRecent: true
   };
   jQuery.extend(this.options, options);
+
   this.dataProvider = null;
+  this.selectedBox = new AutocompleteSelected(this);
+  this.searchBox = new AutocompleteSearch(this);
+  this.recentBox = new AutocompleteRecent(this.recentContainer, this.options.dataType, this, {});
 };
 
 jQuery.fn.autocomplete = function(options) {
@@ -71,9 +80,12 @@ jQuery.fn.autocomplete = function(options) {
 Autocomplete.prototype.initialize = function() {
   this.element = $('<div/>').addClass(AutocompleteVars.cssClasses.autocompleteElement)
     .appendTo(this.parent);
+  
+  this.rightPanel.appendTo(this.element);
+  this.leftPanel.appendTo(this.element);
   this.dataProvider = AutocompleteDataProvider.getInstance();
   
-  this.searchBoxContainer.appendTo(this.element);
+  this.searchBoxContainer.appendTo(this.leftPanel);
   
   if (this.options.multiSelect) {
     this._initializeMultiSelect();
@@ -81,10 +93,15 @@ Autocomplete.prototype.initialize = function() {
   else {
     this._initializeSingleSelect();
   }
+  
+  if (this.options.showRecent) {
+    this.element.addClass('autocomplete-recent-visible');
+    this._initializeRecent();
+  }
 };
 
 Autocomplete.prototype._initializeMultiSelect = function() {
-  this.selectedBoxContainer.appendTo(this.element);
+  this.selectedBoxContainer.appendTo(this.leftPanel);
   
   this.getData();
   
@@ -104,8 +121,19 @@ Autocomplete.prototype._initializeSingleSelect = function() {
   this.searchBox.initialize(this.searchBoxContainer);
 };
 
+Autocomplete.prototype._initializeRecent = function() {
+  this.recentBox.initialize();
+  
+  if (this.options.showRecent) {
+    this.recentContainer.addClass(AutocompleteVars.cssClasses.recentElement)
+        .appendTo(this.rightPanel);
+    this.recentBox.render();
+  }
+};
+
 
 Autocomplete.prototype.selectItem = function(item) {
+  this.recentBox.pushToRecent(item);
   if (this.options.multiSelect) {
     this.selectedBox.addItem(item);
   }
@@ -142,11 +170,12 @@ Autocomplete.prototype.getItemsByIdList = function(idList) {
   if (!idList) {
     return [];
   }
-  
+    
   var list = [];
-  for (var i = 0; i < this.items.length; i++) {
-    if (jQuery.inArray(this.items[i].id, idList) !== -1) {
-      list.push(this.items[i]);
+  var items = this.dataProvider.filterIdLists(this.items);
+  for (var i = 0; i < items.length; i++) {
+    if (jQuery.inArray(items[i].id, idList) !== -1) {
+      list.push(items[i]);
     }
   }
   return list;

@@ -5,6 +5,7 @@ $(document).ready(function() {
       this.mockControl = new MockControl();
       this.searchBox = this.mockControl.createMock(AutocompleteSearch);
       this.selectedBox = this.mockControl.createMock(AutocompleteSelected);
+      this.recentBox = this.mockControl.createMock(AutocompleteRecent);
       
       this.searchBox.selectedItemsBox = this.selectedBox;
       this.selectedBox.selectedItemsBox = this.searchBox;
@@ -13,6 +14,7 @@ $(document).ready(function() {
       // Override the fields with mocks
       this.ac.searchBox = this.searchBox;
       this.ac.selectedBox = this.selectedBox;
+      this.ac.recentBox = this.recentBox;
     },
     teardown: function() {
       this.mockControl.verify();
@@ -21,6 +23,7 @@ $(document).ready(function() {
   
   test("Autocomplete creation", function() {
     var original = Autocomplete;
+    var originalInit = Autocomplete.prototype.initialize;
     var parent = $('<div/>');
     
     var constructorCalled = false;
@@ -48,10 +51,11 @@ $(document).ready(function() {
     ok(initializeCalled, "The constructor should be called");
     
     Autocomplete = original;
+    Autocomplete.prototype.initialize = originalInit;
   });
   
   
-  test("Parent element", function() {
+  test("Construction", function() {
     var parent = $('<div/>');
     var ac = new Autocomplete(parent);
     
@@ -80,6 +84,8 @@ $(document).ready(function() {
     
     this.searchBox.expects().initialize(this.ac.searchBoxContainer);
     this.selectedBox.expects().initialize(this.ac.selectedBoxContainer);
+    this.recentBox.expects().initialize();
+    this.recentBox.expects().render();
     
     var dataProviderCallCount = 0;
     AutocompleteDataProvider.instance = {};
@@ -97,10 +103,13 @@ $(document).ready(function() {
     ok(this.ac.element, 'Element should be initialized');
     ok(this.ac.element.hasClass('.autocomplete'), 'Correct class should be added');
     same(this.ac.parent.find('.autocomplete').length, 1, "Element should be appended to parent");
+    same(this.ac.parent.find('.autocomplete > div').length, 2, "Panels should be added");
+    same(this.ac.parent.find('.autocomplete div div').length, 3, "Functional elements should be added");
     same(this.ac.element.children().length, 2, 'Children count should be 2');
     
-    same(this.ac.element.children().get(0), this.ac.searchBoxContainer.get(0));
-    same(this.ac.element.children().get(1), this.ac.selectedBoxContainer.get(0));
+    same(this.ac.leftPanel.children().get(0), this.ac.searchBoxContainer.get(0));
+    same(this.ac.leftPanel.children().get(1), this.ac.selectedBoxContainer.get(0));
+    same(this.ac.rightPanel.children().get(0), this.ac.recentContainer.get(0));
     
     same(dataProviderCallCount, 1, "Data provider called");
   });
@@ -136,7 +145,7 @@ $(document).ready(function() {
   
   test("Remove bundle", function() {
     var parent = $('<div/>').appendTo(document.body)
-    this.ac = new Autocomplete(parent);
+    this.ac = new Autocomplete(parent, { showRecent: false });
     this.ac.initialize();
     
     this.ac.remove();
@@ -149,4 +158,38 @@ $(document).ready(function() {
     same(this.ac.getSelectedIds(), [1,2,3], "Selected ids match");
   });
   
+  test("Select item in single mode and recent shown", function() {
+    
+    this.ac.options.multiSelect = false;
+    
+    var singleSelectCalled = false;
+    this.ac.options.singleSelectCallback = function(item) {
+      equals(item, tester, "Single select item correct");
+      singleSelectCalled = true;
+    };
+    
+    var tester = {
+      "Foo": "Bar"  
+    };
+    
+    this.recentBox.expects().pushToRecent(tester);
+    
+    this.ac.selectItem(tester);
+    
+    ok(singleSelectCalled, "Single select callback called");
+  });
+  
+  test("Select item in multi mode, recent hidden", function() {
+    this.ac.options.showRecent = false;
+    this.ac.options.multiSelect = true;
+    
+    var tester = {
+      "Foo": "Bar"  
+    };
+    
+    this.recentBox.expects().pushToRecent(tester);
+    this.selectedBox.expects().addItem(tester);
+    
+    this.ac.selectItem(tester);
+  });
 });

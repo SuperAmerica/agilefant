@@ -17,7 +17,7 @@
 			
 			if (! this.options.multiSelect) {
 				autocompleteParams.singleSelectCallback = 
-					function(val) { me.select(val); }
+					function(val) { me.select(val); };
 			}
 
 			var autocomplete = new Autocomplete(this.element, autocompleteParams);
@@ -33,6 +33,7 @@
 					}
 				},
 				width: 500,
+				modal: true,
 				minHeight: multiSelect ? 400 : 150,
 				position: multiSelect ? 'top' : 'center',
 				title: this.options.title,

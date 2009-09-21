@@ -128,13 +128,14 @@ CommonModel.prototype._updateSingleRelation = function(type, newData) {
 CommonModel.prototype._removeAllRelations = function() {
   var me = this;
   var removeThese = [];
+  var addToRemoveThese = function(k,v) {
+    removeThese.push(v);
+  };
   for (field in this.relations) {
     if(this.relations.hasOwnProperty(field) && this.relations[field]) {
       var rels = this.relations[field];
       if (rels.constructor == Array) {
-        $.each(rels, function(k,v) {
-          removeThese.push(v);
-        });
+        $.each(rels, addToRemoveThese);
       }
       else {
         removeThese.push(rels);

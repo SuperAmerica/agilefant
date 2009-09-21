@@ -6,6 +6,7 @@ import flexjson.JSON;
 
 public class AutocompleteDataNode {
     private String name = "";
+    private String matchedString = "";
     private Integer id = 0;
     private Set<Integer> idList = null;
     private String baseClassName;
@@ -64,5 +65,14 @@ public class AutocompleteDataNode {
 
     public void setOriginalObject(Object originalObject) {
         this.originalObject = originalObject;
+    }
+
+    public void setMatchedString(String matchedString) {
+        this.matchedString = matchedString;
+    }
+
+    @JSON
+    public String getMatchedString() {
+        return matchedString;
     }
 }

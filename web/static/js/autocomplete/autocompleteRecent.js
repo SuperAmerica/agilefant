@@ -36,7 +36,7 @@ AutocompleteRecent.prototype.render = function() {
   
   $.each(items, function(k,v) {
     var select = function() { me.parent.selectItem(v); };
-    var listItem = $('<li/>').text(v.name).appendTo(me.suggestionList);
+    var listItem = $('<li/>').text(v.name).attr('title',v.name).appendTo(me.suggestionList);
     listItem.click(select);
   });
 };

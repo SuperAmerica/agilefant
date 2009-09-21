@@ -116,7 +116,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         Collection<User> allUsers = this.userBusiness.retrieveAll();
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
         for(User user : allUsers) {
-            AutocompleteDataNode curNode = new AutocompleteDataNode(User.class, user.getId(), user.getFullName(), user.isEnabled());
+            AutocompleteDataNode curNode = new AutocompleteDataNode(User.class,
+                    user.getId(), user.getFullName(), user.isEnabled());
+            curNode.setMatchedString(user.getFullName() + " " + user.getLoginName());
             curNode.setOriginalObject(user);
             autocompleteData.add(curNode);
         }
@@ -134,6 +136,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
                 userIds.add(user.getId());
             }
             AutocompleteDataNode curNode = new AutocompleteDataNode(Team.class, team.getId(), team.getName(), userIds);
+            curNode.setMatchedString(team.getName());
             autocompleteData.add(curNode);
         }
         return autocompleteData;
@@ -148,6 +151,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             String name = recurseBacklogNameWithParents(blog);
             AutocompleteDataNode node = new AutocompleteDataNode(Backlog.class,
                     blog.getId(), name);
+            node.setMatchedString(name);
             autocompleteData.add(node);
         }
         return autocompleteData; 

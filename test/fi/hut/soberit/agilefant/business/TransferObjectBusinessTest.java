@@ -255,6 +255,7 @@ public class TransferObjectBusinessTest {
         User user = new User();
         user.setId(1);
         user.setFullName("daadaa");
+        user.setLoginName("additional");
         
         expect(userBusiness.retrieveAll()).andReturn(Arrays.asList(user));
         
@@ -263,6 +264,7 @@ public class TransferObjectBusinessTest {
         assertEquals(1, actual.size());
         assertEquals(1, (int)actual.get(0).getId());
         assertEquals("daadaa", actual.get(0).getName());
+        assertEquals("daadaa additional", actual.get(0).getMatchedString());
         assertEquals("fi.hut.soberit.agilefant.model.User", actual.get(0).getBaseClassName());
         assertNull(actual.get(0).getIdList());
         verifyAll();
@@ -286,6 +288,7 @@ public class TransferObjectBusinessTest {
         assertEquals(1, actual.size());
         assertEquals(1, (int)actual.get(0).getId());
         assertEquals("daa", actual.get(0).getName());
+        assertEquals("daa", actual.get(0).getMatchedString());
         assertEquals("fi.hut.soberit.agilefant.model.Team", actual.get(0).getBaseClassName());
         assertEquals(2, actual.get(0).getIdList().size());
         verifyAll();
@@ -373,12 +376,15 @@ public class TransferObjectBusinessTest {
         
         node = getDataNodeById(7, nodes);
         assertEquals("Product > Project", node.getName());
+        assertEquals(node.getName(), node.getMatchedString());
         
         node = getDataNodeById(333, nodes);
         assertEquals("Product > Project > Iter 1", node.getName());
+        assertEquals(node.getName(), node.getMatchedString());
         
         node = getDataNodeById(615, nodes);
         assertEquals("Product > Iter 2", node.getName());
+        assertEquals(node.getName(), node.getMatchedString());
     }
 
     @Test

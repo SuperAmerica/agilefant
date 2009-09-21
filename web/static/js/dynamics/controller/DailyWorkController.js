@@ -130,7 +130,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     
     var config = new DynamicTableConfiguration(options);
 
-    if (configType == "next") {
+    if (configType != "next") {
         config.addCaptionItem({
             name : "createTask",
             text : "Create task",
@@ -151,7 +151,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     });
     
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.name, {
-        minWidth : 200,
+        minWidth : 140,
         autoScale : true,
         cssClass : 'task-row',
         title : "Task Name",
@@ -167,7 +167,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
     });
 
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.context, {
-        minWidth : 60,
+        minWidth : 120,
         autoScale : true,
         cssClass : 'task-row',
         title : 'Context',
@@ -302,7 +302,7 @@ DailyWorkController.prototype.createTask = function() {
     mockModel.addListener(this.newTaskListener);
     
     var controller = new DailyWorkTaskController(mockModel, null, this);
-    var row = this.workQueueView.createRow(controller, mockModel, "top");
+    var row = this.myWorkListView.createRow(controller, mockModel, "top");
 
     controller.view = row;
     row.autoCreateCells([DailyWorkTaskController.columnIndices.actions, DailyWorkTaskController.columnIndices.data]);

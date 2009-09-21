@@ -144,7 +144,7 @@ AutocompleteSearch.prototype.matchSearchString = function(text, match) {
   }
   
   // Split to fragments
-  var replaceRe = new RegExp("[!#$%&()*+,./:;<=>?@[\\\]_`{|}~]+");
+  var replaceRe = new RegExp("[]\\\\!#$%&()*+,./:;<=>?@[_`{|}~]+");
   var matchFragments = match.replace(replaceRe, ' ').split(' ');
   
   var a = 5;

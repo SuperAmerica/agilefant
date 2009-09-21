@@ -38,6 +38,9 @@ var DynamicsDecorators = {
     return date.asString();
   },
   contextDecorator: function(value) {
+    if (! value || ! value.backlogId) {
+        return "(not set)";
+    }
     var uri = "";
     if (value.backlogId) {
         uri = "editBacklog.action?backlogId=" + value.backlogId;
@@ -51,7 +54,7 @@ var DynamicsDecorators = {
         }
     }
     
-    return ('<a href="' + uri + '">' + value.name + '</a>');
+    return ('<a class="daily-work-task-context" href="' + uri + '">' + value.name + '</a>');
   },
   dateDecorator: function(value) {
     if(!value) {

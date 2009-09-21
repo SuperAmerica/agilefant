@@ -49,7 +49,7 @@ $(document).ready(function() {
             {text: "Item 1", callback: this.controller.func2, enabled: function() { return false }},
             {text: "Item 2", callback: this.controller.func2, enabled: false },
             {text: "Item 3", callback: this.controller.func1, enabled: function() { return true }},
-            {text: "Item 4", callback: this.controller.func2, enabled: true },
+            {text: "Item 4", callback: this.controller.func2, enabled: true }
         ];
         
         var testable = new DynamicTableRowActions(items, this.controller, null, this.parentView);

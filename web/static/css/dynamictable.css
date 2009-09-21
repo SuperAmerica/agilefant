@@ -499,6 +499,10 @@ strong.user-initials-next-assigned {
 	font-weight: bold;
 }
 
-.dynamictable .dynamictable-row a.daily-work-task-context {
+.dynamictable .dynamictable-row a.daily-work-task-context  {
 	color: #1E5EEE !important;
+}
+
+.dynamictable .dynamictable-row a.daily-work-task-context:hover {
+  color: #e50 !important;
 }

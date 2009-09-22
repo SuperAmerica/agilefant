@@ -42,15 +42,8 @@
   
   <script type="text/javascript">
   $(document).ready(function() {
-      if(document.cookie.indexOf("SPRING_SECURITY_HASHED_REMEMBER_ME_COOKIE") == -1) {
-          var sessionLength = <%=session.getMaxInactiveInterval()%>*1000;
-          setTimeout('reloadPage()',sessionLength+5);
-      }
-      $("#quickRefInput").focus(function () { 
-          $(this).val("").unbind("focus").css("color","#000");
-      });
-
-      PageController.initialize();
+      PageController.initialize(${currentUserJson});
+      Configuration.setConfiguration({ timesheets: ${settings.hourReportingEnabled} });
   });
   </script>
 

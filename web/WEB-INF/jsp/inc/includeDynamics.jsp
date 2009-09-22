@@ -1,7 +1,6 @@
 <script type="text/javascript" src="static/js/dynamics/Dynamics.events.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript" src="static/js/utils/ArrayUtils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/utils/Configuration.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript" src="static/js/dynamics/view/ViewPart.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/MessageDisplay.js?<ww:text name="struts.agilefantReleaseId" />"></script>

@@ -11,6 +11,7 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import flexjson.JSONSerializer;
 
 /**
  * Interceptor, which ensures proper user-id is set during each request. Ie.
@@ -68,6 +69,8 @@ public class RefreshUserInterceptor implements Interceptor {
         
         //push current user to the value stack
         invocation.getStack().set("currentUser", user);
+        invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));
+        
         // perform request
         String result = invocation.invoke();
 

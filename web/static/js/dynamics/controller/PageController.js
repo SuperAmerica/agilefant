@@ -6,9 +6,18 @@ window.pageController = null;
  * 
  * @constructor
  */
-var PageController = function(currentUserId) {
-  this.currentUserId = currentUserId;
+var PageController = function(currentUserJson) {
+  if (currentUserJson) {
+    this.currentUser = ModelFactory.updateObject(currentUserJson);
+  }
   this._init();
+};
+
+/**
+ * Initialize a page controller.
+ */
+PageController.initialize = function(currentUserJson) {
+  window.pageController = new PageController(currentUserJson);
 };
 
 PageController.prototype._init = function() {
@@ -22,9 +31,6 @@ PageController.prototype._init = function() {
   $('#menuRefreshControl').click(function() {
     me.refreshMenu();
   });
-  
-  // Needed for autoresponsible
-  // ModelFactory.initUsers();
 };
 
 /**
@@ -34,13 +40,6 @@ PageController.prototype._init = function() {
  */
 PageController.getInstance = function() {
   return window.pageController;
-};
-
-/**
- * Initialize a page controller.
- */
-PageController.initialize = function() {
-  window.pageController = new PageController();
 };
 
 /**
@@ -63,6 +62,13 @@ PageController.prototype.refreshContent = function() {
 };
 
 /**
+ * Get the currently logged in user.
+ */
+PageController.prototype.getCurrentUser = function() {
+  return this.currentUser;
+};
+
+/**
  * Toggle the hiding and showing of the left hand menu.
  */
 PageController.prototype.toggleMenu = function() {
@@ -77,4 +83,19 @@ PageController.prototype.toggleMenu = function() {
   }
   $(window).resize();
   return false;
+};
+
+
+/*
+ * PAGE-WIDE CONFIGURATIONS.
+ */
+
+var Configuration = {};
+
+Configuration.setConfiguration = function(newConfig) {
+  Configuration.options = newConfig;
+};
+
+Configuration.isTimesheetsEnabled = function() {
+  return Configuration.options.timesheets;
 };

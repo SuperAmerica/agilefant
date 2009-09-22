@@ -22,7 +22,7 @@ $(document).ready(function() {
     this.elementMock.expects().keypress(TypeOf.isA(Function)).andReturn(this.elementMock);
     this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
     this.elementMock.expects().focus(TypeOf.isA(Function)).andReturn(this.elementMock);
-    this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
+//    this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
     testable._registerEvents();
     
     this.elementMock.expects().keypress(TypeOf.isA(Function));

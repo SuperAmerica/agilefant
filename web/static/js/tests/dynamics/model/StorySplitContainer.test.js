@@ -23,6 +23,7 @@ $(document).ready(function() {
         
     var first = this.mockControl.createMock(StoryModel);
     var second = this.mockControl.createMock(StoryModel);
+    var third = this.mockControl.createMock(StoryModel);
     
     var changed = {};
     var serialized = {
@@ -43,14 +44,21 @@ $(document).ready(function() {
     
     
     serialized = {
-        "newStories[1].name":        "Second split",
-        "newStories[1].description": "Foo bar",
-        "newStories[1].state":       "NOT_STARTED"
-      };
+      "newStories[1].name":        "Second split",
+      "newStories[1].description": "Foo bar",
+      "newStories[1].state":       "NOT_STARTED"
+    };
     second.expects().getChangedData().andReturn(changed);
     second.expects().serializeFields("newStories[1]", changed).andReturn(serialized);
     
-    var ssc = new StorySplitContainer(origStory, [first, second]);
+    serialized = {
+      "oldStories[0].state":       "STARTED"
+    };
+    third.expects().getId().andReturn(515);
+    third.expects().getChangedData().andReturn(changed);
+    third.expects().serializeFields("oldStories[0]", changed).andReturn(serialized);
+    
+    var ssc = new StorySplitContainer(origStory, [first, second], [third]);
     
     same(ssc.serializeData(), expectedSerialized, "Data serialized correctly");
   });
@@ -64,5 +72,7 @@ var expectedSerialized = {
   "newStories[0].state":       "BLOCKED",
   "newStories[1].name":        "Second split",
   "newStories[1].description": "Foo bar",
-  "newStories[1].state":       "NOT_STARTED"
+  "newStories[1].state":       "NOT_STARTED",
+  "oldStories[0].id":          515,
+  "oldStories[0].state":       "STARTED"
 };

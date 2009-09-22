@@ -12,6 +12,9 @@ var StorySplitContainer = function(originalStory, newStories, oldStories) {
   this.originalStory = originalStory;
   this.newStories = newStories;
   this.oldStories = oldStories;
+  
+  if (!this.newStories) { this.newStories = []; }
+  if (!this.oldStories) { this.oldStories = []; }
 };
 
 /**
@@ -54,6 +57,18 @@ StorySplitContainer.prototype.serializeData = function() {
     var storyData = story.serializeFields(fieldPrefix, story.getChangedData());
     
     jQuery.extend(data, storyData);
+  }
+  
+  for (i = 0; i < this.oldStories.length; i++) {
+    story = this.oldStories[i];
+    fieldPrefix = "oldStories[" + i + "]";
+    
+    var addedId = {};
+    addedId[fieldPrefix + ".id"] = story.getId();
+    
+    storyData = story.serializeFields(fieldPrefix, story.getChangedData());
+    jQuery.extend(data, storyData);
+    jQuery.extend(data, addedId);
   }
   
   return data;

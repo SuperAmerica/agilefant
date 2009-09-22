@@ -19,13 +19,13 @@ $(document).ready(function() {
     testable.element = this.elementMock;
     testable.options = {};
     
-    this.elementMock.expects().keypress(TypeOf.isA(Function)).andReturn(this.elementMock);
+    this.elementMock.expects().keyup(TypeOf.isA(Function)).andReturn(this.elementMock);
     this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
     this.elementMock.expects().focus(TypeOf.isA(Function)).andReturn(this.elementMock);
 //    this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
     testable._registerEvents();
     
-    this.elementMock.expects().keypress(TypeOf.isA(Function));
+    this.elementMock.expects().keyup(TypeOf.isA(Function));
     this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
     this.elementMock.expects().focus(TypeOf.isA(Function)).andReturn(this.elementMock);
     testable.options = {editRow: true};

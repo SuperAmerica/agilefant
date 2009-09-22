@@ -374,7 +374,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
     editable: true,
     get: UserModel.prototype.getEmail,
     edit: {
-      editor: "Text",
+      editor: "Email",
       required: true,
       set: UserModel.prototype.setEmail
     }

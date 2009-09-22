@@ -405,11 +405,14 @@
 
 
     <!-- User actions -->
-    <action name="createUser" method="create" class="userAction">
-      <result type="dispatcher">/WEB-INF/jsp/forms/createUser.jsp</result>
+    <action name="storeUser" method="store" class="userAction">
+      <interceptor-ref name="prefetchStack" />
+      <result name="success" type="json">
+        <param name="target">user</param>
+      </result>
     </action>
     
-    <action name="storeUser" method="store" class="userAction">
+    <action name="storeNewUser" method="store" class="userAction">
       <result name="success" type="json">
         <param name="target">user</param>
       </result>

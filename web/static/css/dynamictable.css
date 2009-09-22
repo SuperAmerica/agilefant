@@ -447,6 +447,14 @@ li.dynamictable-captionaction {
 .dynamictable .dynamictable-row .task-data {
 	background-color: #fff;
 }
+.dynamictable .dynamictable-row .user-row {
+  background-color: #efe;
+}
+.dynamictable .dynamictable-row .user-data {
+  background-color: #fff;
+}
+
+
 .dynamictable .dynamictable-row .text-editor {
   cursor: text;  
 }

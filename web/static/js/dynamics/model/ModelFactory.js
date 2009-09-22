@@ -153,7 +153,8 @@ ModelFactory.initializeForTypes = {
     iteration:  "iteration",
     project:    "project",
     product:    "product",
-    dailyWork:  "dailyWork"
+    dailyWork:  "dailyWork",
+    users:      "users"
 };
 
 
@@ -411,6 +412,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       url: "ajax/dailyWorkData.action",
       params: { userId: id },
       callback: me._constructDailyWork
+    },
+    "users": {
+      url: "ajax/retrieveAllUsers.action",
+      params: { },
+      callback: me._constructUserList
     }
   };
   
@@ -449,6 +455,24 @@ ModelFactory.prototype._initUsers = function(callback) {
       var msg = MessageDisplay.ErrorMessage("Error loading users.", xhr);
     }
   });
+};
+
+/**
+ * Internal function to construct list of users.
+ * <p>
+ * Will instantiate a new <code>UserListContainer</code> model object,
+ * but not store it to the instance's data. I.e. the user list object
+ * will be transient and the <code>ModelFactory</code> module is only aware
+ * of its existence as a root object.
+ */
+ModelFactory.prototype._constructUserList = function(id, data) {
+  var userList = new UserListContainer();
+  for (var i = 0; i < data.length; i++) {
+    var user = ModelFactory.updateObject(data[i]);
+    userList.addRelation(user);
+  }
+  ModelFactory.getInstance().rootObject = userList;
+  return userList;
 };
 
 /**

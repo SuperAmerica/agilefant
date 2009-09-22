@@ -6,7 +6,8 @@ window.pageController = null;
  * 
  * @constructor
  */
-var PageController = function() {
+var PageController = function(currentUserId) {
+  this.currentUserId = currentUserId;
   this._init();
 };
 

@@ -54,6 +54,13 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         return storyDAO.countByCreator(user) > 0;
     }
     
+    @Transactional
+    public User storeUser(User data, String password1, String password2) {
+        super.store(data);
+        User returned = this.retrieve(data.getId());
+        return returned;
+    }
+    
     public boolean isDayUserHoliday(DateTime date, User user) {
         for(Holiday holiday : user.getHolidays()) {
             if(holiday.getInterval().contains(date)) {

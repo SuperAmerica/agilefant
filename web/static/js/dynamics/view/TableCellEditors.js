@@ -59,7 +59,7 @@ TableEditors.CommonEditor.prototype.showError = function(message) {
       me.hideError();
     }
   };
-  this.element.keypress(this.errorChangeListener);
+  this.element.keyup(this.errorChangeListener);
   this.errorMessageVisible = true;
   if(message) {
     this.errorMessage = $('<div />').appendTo(this.cell.getElement())
@@ -101,7 +101,7 @@ TableEditors.CommonEditor.prototype._blurHandler = function(event) {
 
 TableEditors.CommonEditor.prototype._registerEvents = function() {
   var me = this;
-  this.element.keypress(function(event) {
+  this.element.keyup(function(event) {
     me._handleKeyEvent(event);
     return true;
   });
@@ -311,7 +311,7 @@ TableEditors.Date.prototype._mouseEvent = function(event) {
 };
 TableEditors.Date.prototype._registerEvents = function() {
   var me = this;
-  this.element.keypress(function(event) {
+  this.element.keyup(function(event) {
     me._handleKeyEvent(event);
     return true;
   });
@@ -626,4 +626,34 @@ TableEditors.CurrentIteration.superclass = TableEditors.Backlog.prototype;
 TableEditors.CurrentIteration.prototype.autocompleteOptions = {
     dataType: "currentIterations",
     title:    "Select iteration"
+};
+
+
+/**
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.Password = function(row, cell, options) {
+  this.containerElement = $('<div/>').appendTo(cell.getElement());
+  $('<span/>').text(options.title).appendTo(this.containerElement);
+  this.element = $('<input type="password"/>').width("40%").appendTo(
+      this.containerElement);
+  $('<span/>').text(options.confirmTitle).appendTo(this.containerElement);
+  this.confirmElement = $('<input type="password"/>').width("40%").appendTo(
+      this.containerElement);
+  this.init(row, cell, options);
+};
+TableEditors.Password.prototype = new TableEditors.CommonEditor();
+TableEditors.Password.prototype.isValid = function() {
+  if(this.element.val() !== this.confirmElement.val()) {
+    this.showError("Passwords don't match");
+    return false;
+  }
+  return true;
+};
+TableEditors.Password.prototype.close = function() {
+  this.element.trigger("editorClosing");
+  this.hideError();
+  this.containerElement.remove();
 };

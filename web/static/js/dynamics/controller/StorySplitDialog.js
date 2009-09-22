@@ -82,7 +82,7 @@ StorySplitDialog.prototype._transactionEditListener = function(event) {
  * The callback for the 'Save' button.
  */
 StorySplitDialog.prototype._save = function() {
-  if (this.rows.length < 1) {
+  if (this.newModels.length < 1) {
     MessageDisplay.Warning("Create some stories first");
     return;
   }

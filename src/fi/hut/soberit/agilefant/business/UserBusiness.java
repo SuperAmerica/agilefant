@@ -16,6 +16,14 @@ import fi.hut.soberit.agilefant.model.User;
 public interface UserBusiness extends GenericBusiness<User> {
 
     /**
+     * Store a user and return the persisted object.
+     * <p>
+     * Changes the password if (password1 != null) and (password1 == password2)
+     * @return the newly persisted user
+     */
+    User storeUser(User data, String password1, String password2);  
+    
+    /**
      * Check if user is creator of any stories.
      * 
      * @param user

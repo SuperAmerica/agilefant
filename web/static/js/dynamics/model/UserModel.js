@@ -23,7 +23,9 @@ var UserModel = function() {
       "fullName": "fullName",
       "initials": "initials",
       "loginName": "loginName",
-      "email": "email"  
+      "email": "email",
+      "weekEffort": "weekEffort",
+      "enabled":    "enabled"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Story":         "story",
@@ -38,12 +40,64 @@ UserModel.prototype._setData = function(newData) {
   this.id = newData.id;
 };
 
+
+/**
+ * Internal function to send the data to server.
+ */
+UserModel.prototype._saveData = function(id, changedData) {
+  var me = this;
+  
+  var url = "ajax/storeUser.action";
+  var data = {
+      password1: this.currentData.password1,
+      password2: this.currentData.password2
+  };
+  
+  jQuery.extend(data, this.serializeFields("user", changedData));
+  // Add the id
+  if (id) {
+    data.userId = id;
+  }
+  else {
+    url = "ajax/storeNewUser.action";
+  }
+  
+  jQuery.ajax({
+    type: "POST",
+    url: url,
+    async: true,
+    cache: false,
+    data: data,
+    dataType: "json",
+    success: function(data, status) {
+      MessageDisplay.Ok("User saved successfully");  
+      me.setData(data);
+    },
+    error: function(xhr, status, error) {
+      MessageDisplay.Error("Error saving user", xhr);
+    }
+  });
+};
+
+/*
+ * GETTERS AND SETTERS
+ */
+
 UserModel.prototype.getEmail = function() {
   return this.currentData.email;
 };
 
 UserModel.prototype.setEmail = function(email) {
   this.currentData.email = email;
+  this._commitIfNotInTransaction();
+};
+
+UserModel.prototype.isEnabled = function() {
+  return this.currentData.enabled;
+};
+
+UserModel.prototype.setEnabled = function(enabled) {
+  this.currentData.enabled = enabled;
   this._commitIfNotInTransaction();
 };
 
@@ -89,6 +143,15 @@ UserModel.prototype.getPassword2 = function() {
 
 UserModel.prototype.setPassword2 = function(password) {
   this.currentData.password2 = password;
+  this._commitIfNotInTransaction();
+};
+
+UserModel.prototype.getWeekEffort = function() {
+  return this.currentData.weekEffort;
+};
+
+UserModel.prototype.setWeekEffort = function(weekEffort) {
+  this.currentData.weekEffort = weekEffort;
   this._commitIfNotInTransaction();
 };
 

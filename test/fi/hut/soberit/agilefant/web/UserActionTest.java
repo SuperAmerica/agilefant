@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -8,13 +11,8 @@ import org.junit.Test;
 
 import com.opensymphony.xwork2.Action;
 
-import static org.junit.Assert.*;
-import static org.easymock.EasyMock.*;
-
-import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 
 public class UserActionTest {
@@ -24,7 +22,6 @@ public class UserActionTest {
     
     // Dependencies
     UserBusiness userBusiness;
-    TeamBusiness teamBusiness;
     
     // Test data
     User user;
@@ -35,17 +32,14 @@ public class UserActionTest {
         
         userBusiness = createStrictMock(UserBusiness.class);
         userAction.setUserBusiness(userBusiness);
-        
-        teamBusiness = createStrictMock(TeamBusiness.class);
-        userAction.setTeamBusiness(teamBusiness);
     }
     
     private void replayAll() {
-        replay(userBusiness, teamBusiness);
+        replay(userBusiness);
     }
     
     private void verifyAll() {
-        verify(userBusiness, teamBusiness);
+        verify(userBusiness);
     }
     
     @Before
@@ -57,19 +51,12 @@ public class UserActionTest {
     @Test
     public void testRetrieve() {
         userAction.setUserId(user.getId());
-        Team team = new Team();
-        team.setName("Tiimi");
-        Collection<Team> teamList = Arrays.asList(team);
         
         expect(userBusiness.retrieve(user.getId())).andReturn(user);
-        expect(teamBusiness.retrieveAll()).andReturn(teamList);
-        
+       
         replayAll();
-        
         assertEquals(Action.SUCCESS, userAction.retrieve());
         assertEquals(user, userAction.getUser());
-        assertEquals(teamList, userAction.getTeamList());
-        
         verifyAll();
     }
     
@@ -95,5 +82,33 @@ public class UserActionTest {
         assertEquals(userList, userAction.getUsers());
         
         verifyAll();
+    }
+    
+    @Test
+    public void testStore() {
+        User returned = new User();
+        expect(userBusiness.storeUser(user, null, null)).andReturn(returned);
+        replayAll();
+        assertEquals(Action.SUCCESS, userAction.store());
+        verifyAll();
+        assertEquals(returned, userAction.getUser());
+    }
+    
+    @Test
+    public void testDelete() {
+        userAction.setUserId(user.getId());
+        expect(userBusiness.retrieve(user.getId())).andReturn(user);
+        replayAll();
+        assertEquals(Action.SUCCESS, userAction.delete());
+        verifyAll();
+    }
+    
+    @Test
+    public void testInitializePrefetchedData() {
+        expect(userBusiness.retrieve(user.getId())).andReturn(user);
+        replayAll();
+        userAction.initializePrefetchedData(user.getId());
+        verifyAll();
+        assertEquals(user, userAction.getUser());
     }
 }

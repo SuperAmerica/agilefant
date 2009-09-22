@@ -288,3 +288,11 @@ StoryModel.prototype.getChildren = function() {
 StoryModel.prototype.getParentStory = function() {
   return this.relations.parent;
 };
+StoryModel.prototype.getParentStoryName = function() {
+  var parentName = "";
+  if(this.relations.parent) {
+    parentName = this.relations.parent.getName();
+  }
+  return parentName;
+};
+

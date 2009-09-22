@@ -216,6 +216,11 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
   });
   
   config.addColumnConfiguration(1, {
+    title: "Parent story",
+    get: StoryModel.prototype.getParentStoryName
+  });
+  
+  config.addColumnConfiguration(2, {
     title: 'Points',
     get: StoryModel.prototype.getStoryPoints,
     editable: true,
@@ -225,7 +230,7 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(3, {
     title: 'State',
     get: StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,

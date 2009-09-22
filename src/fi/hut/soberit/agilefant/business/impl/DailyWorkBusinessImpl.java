@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl.RankDirection;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
@@ -29,7 +30,8 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     private TaskDAO taskDAO;
     private WhatsNextEntryDAO whatsNextEntryDAO;
     private RankingBusiness rankingBusiness;
-
+    private TaskBusiness taskBusiness;
+    
     @Autowired
     public void setTaskDAO(TaskDAO taskDAO) {
         this.taskDAO = taskDAO;
@@ -43,6 +45,11 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     @Autowired
     public void setRankingBusiness(RankingBusiness rankingBusiness) {
         this.rankingBusiness = rankingBusiness;
+    }
+
+    @Autowired
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
     }
 
     public Collection<DailyWorkTaskTO> getCurrentTasksForUser(User user) {
@@ -171,25 +178,9 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         entry.setTask(task);
         entry.setUser(user);
         whatsNextEntryDAO.store(entry);
+        taskBusiness.addResponsible(task, user);
         rankToBottomOnWhatsNext(entry);
         return entry;
-    }
-
-    @Transactional
-    public WhatsNextEntry addToOrRemoveFromWhatsNext(User user, Task task) {
-        WhatsNextEntry entry = whatsNextEntryDAO.getWhatsNextEntryFor(user, task);
-        if (entry == null) {
-            entry = new WhatsNextEntry();
-            entry.setTask(task);
-            entry.setUser(user);
-            whatsNextEntryDAO.store(entry);
-            rankToBottomOnWhatsNext(entry);
-            return entry;
-        }
-        else {
-            whatsNextEntryDAO.remove(entry);
-            return null;
-        }
     }
 
     public void removeTaskFromWorkQueues(Task task) {

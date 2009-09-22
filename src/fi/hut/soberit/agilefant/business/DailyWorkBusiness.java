@@ -65,10 +65,4 @@ public interface DailyWorkBusiness {
      * @param task
      */
     public void removeTaskFromWorkQueues(Task task);
-    
-    /**
-     * Removes all queue entries that are related to this task from the queues
-     * @param task
-     */
-    public WhatsNextEntry addToOrRemoveFromWhatsNext(User user, Task task);
 }

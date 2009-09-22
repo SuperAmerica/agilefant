@@ -6,7 +6,7 @@ TableEditors.getEditorClassByName = function(name) {
   return null;
 };
 TableEditors.isDialog = function(name) {
-  var dialogs = ["User"];
+  var dialogs = ["User", "CurrentIteration", "Backlog"];
   return jQuery.inArray(name, dialogs) !== -1;
 };
 /**
@@ -487,6 +487,8 @@ TableEditors.Autocomplete.prototype.init = function(row, cell, options) {
 
     TableEditors.Autocomplete.superclass.init.call(this, row, cell, options);
 
+    // Hack to show the cell contents no matter what...
+    cell.cellContents.show();
     this.value = [];
     this.autocomplete = this.createDialog();
 };
@@ -498,8 +500,7 @@ TableEditors.Autocomplete.prototype.createDialog = function () {
         callback: function(keys, items) { 
             me.save(keys, items); 
         },
-        cancel:   function() { 
-            me.close(); 
+        cancel:   function() {
         },
         title:    this.autocompleteOptions.title,
         selected: me.getInitialSelection(),
@@ -508,7 +509,6 @@ TableEditors.Autocomplete.prototype.createDialog = function () {
 };
 TableEditors.Autocomplete.prototype.save = function(values, data) {
     this.onSave(values, data);
-    this.cell.getElement().trigger("editorClosing");
     this.cell.render();
 };
 TableEditors.Autocomplete.prototype.onSave = function(values, data) {
@@ -616,6 +616,7 @@ TableEditors.Backlog.prototype.autocompleteOptions = {
     dataType: "backlog",
     title:    "Select backlog"
 };
+
 TableEditors.CurrentIteration = function(row, cell, options) {
     if (arguments.length > 0) {
         TableEditors.Backlog.superclass.init.call(this, row, cell, options); 
@@ -625,7 +626,16 @@ TableEditors.CurrentIteration.prototype = new TableEditors.Backlog();
 TableEditors.CurrentIteration.superclass = TableEditors.Backlog.prototype;
 TableEditors.CurrentIteration.prototype.autocompleteOptions = {
     dataType: "currentIterations",
-    title:    "Select iteration"
+    title:    "Select iteration",
+    required: true
+};
+TableEditors.CurrentIteration.prototype.isValid = function() {
+  var modelObject = this.options.get.call(this.model);
+  if (this.options.required && ! modelObject) {
+    return false;
+  }
+  
+  return true;
 };
 
 

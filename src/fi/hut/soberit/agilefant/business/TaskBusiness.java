@@ -5,6 +5,7 @@ import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 public interface TaskBusiness extends GenericBusiness<Task> {
@@ -72,4 +73,10 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * @throws IllegalArgumentException if both parents were given 
      */
     public Task rankToBottom(Task task, Integer parentStoryId, Integer parentIterationId) throws IllegalArgumentException;
+
+    /**
+     * Adds the given user to the set of responsibles for task
+     */
+    public void addResponsible(Task task, User user);
+
 }

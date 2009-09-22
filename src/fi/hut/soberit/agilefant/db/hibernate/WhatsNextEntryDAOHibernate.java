@@ -61,7 +61,7 @@ WhatsNextEntryDAO {
         crit.add(Restrictions.eq("task", task));
 
         // Filter out tasks that are done!
-        filterDoneTasks(crit);
+        // filterDoneTasks(crit);
         crit.setMaxResults(1);
         return uniqueResult(crit);
     }

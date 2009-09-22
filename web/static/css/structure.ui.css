@@ -199,6 +199,14 @@ div#footerText label {
  * DAILY WORK
  */
  
-#dailyWorkTabs {
+#dailyWorkTabsContainer {
   min-width: 750px;  
+}
+
+#work-queue-div {
+  min-width: 750px;
+}
+
+#my-work-div {
+  min-width: 750px;
 }

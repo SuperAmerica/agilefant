@@ -60,7 +60,7 @@ DynamicTable.constants = {
 DynamicTable.prototype.initialize = function() {
   var me = this;
   this.container = $("<div />").appendTo(this.getParentElement()).addClass(
-      DynamicTable.cssClasses.table).width("100%");
+      DynamicTable.cssClasses.table);
   this.container.attr("id", "container_" + this.getViewId());
   if (this.config.options.cssClass) {
     this.container.addClass(this.config.options.cssClass);

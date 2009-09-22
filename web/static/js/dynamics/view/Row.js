@@ -165,7 +165,7 @@ DynamicTableRow.prototype.closeRowEdit = function() {
 };
 
 DynamicTableRow.prototype.saveRowEdit = function() {
-  var isValid = this.isRowValid(); 
+  var isValid = this.isRowValid();
   if (isValid) {
     return this._applyToAllCells(DynamicTableCell.prototype.saveEditorValue);
   }

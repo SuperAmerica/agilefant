@@ -2,7 +2,7 @@
 
 .dynamictable {
  /* border: 1px solid #ccc;*/
-  width: 100%;
+  width: auto;
   overflow: hidden;
   margin-top: 5px;
   padding: 0.2em;

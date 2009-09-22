@@ -34,6 +34,9 @@ TaskController.prototype.editTask = function() {
 TaskController.prototype.saveTask = function() {
   var createNewTask = !this.model.getId();
   if(this.view.saveRowEdit()) {
+    if (! this.model.getParent()) {
+        
+    }
     this.model.commit();
   }
   else {
@@ -152,11 +155,11 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
 };
 
 TaskController.prototype.addToQueueEnabled = function(model, parentView) {
-  return true; // return model.isOnMyWorkQueue();
+  return model.getState() != "DONE";
 };
 
 TaskController.prototype.removeFromQueueEnabled = function(model, parentView) {
-  return true;
+  return model.getState() != "DONE";
 };
 
 TaskController.prototype.resetOriginalEstimate = function() {

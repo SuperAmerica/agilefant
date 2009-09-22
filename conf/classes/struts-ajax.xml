@@ -385,14 +385,16 @@
 
     <!-- Daily work actions -->
     <action name="addToWorkQueue" method="addToWorkQueue" class="dailyWorkAction">
-      <result name="success" type="httpheader">
-        <param name="status">200</param>
+      <result name="success" type="json">
+        <param name="target">task</param>
+        <param name="patterns">+*.responsibles, +*.workingOnTask</param>
       </result>
     </action>
 
     <action name="deleteFromWorkQueue" method="deleteFromWorkQueue" class="dailyWorkAction">
-      <result name="success" type="httpheader">
-        <param name="status">200</param>
+      <result name="success" type="json">
+        <param name="target">task</param>
+        <param name="patterns">+*.responsibles, +*.workingOnTask</param>
       </result>
     </action>
 

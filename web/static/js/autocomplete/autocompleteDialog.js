@@ -19,19 +19,25 @@
 				autocompleteParams.singleSelectCallback = 
 					function(val) { me.select(val); };
 			}
+			
+			var buttons = {
+			    "Ok": function() {
+			        me.select();
+			    }
+			};
+			
 
+			if (! this.options.required) {
+			    buttons["Cancel"] = function() {
+			        me._cancel();
+			    };
+			}
+			
 			var autocomplete = new Autocomplete(this.element, autocompleteParams);
 			autocomplete.initialize();
 			this.setValue(this.options.selected);
 			var dialog = this.element.dialog({
-				buttons: {
-					"Ok": function() {
-						me.select();
-					},
-					"Cancel": function() {
-						me._cancel();
-					}
-				},
+				buttons: buttons,
 				width: 500,
 				modal: true,
 				minHeight: multiSelect ? 400 : 150,
@@ -58,7 +64,7 @@
 		    this.destroy();
 		},
 		value: function() {
-			var ids = this.element.data("autocomplete").getSelectedIds();
+			var ids   = this.element.data("autocomplete").getSelectedIds();
 			var items = this.element.data("autocomplete").getSelectedItems();
 			return [ids, items];
 		},

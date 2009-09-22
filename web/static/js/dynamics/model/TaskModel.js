@@ -206,9 +206,10 @@ TaskModel.prototype.getIteration = function() {
 
 TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
     var me = this;
-    
+    var dailyWork = null;
+
     if (me.getDailyWork) {
-        var dailyWork = me.getDailyWork();
+        dailyWork = me.getDailyWork();
     }
     
     jQuery.ajax({
@@ -216,13 +217,14 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
         url: "ajax/addToWorkQueue.action",
         async: true,
         cache: false,
-        dataType: "text",
+        dataType: "json",
         data: {
            taskId: me.getId()
         },
         success: function(data,status) {
             MessageDisplay.Ok("Task appended to your work queue");
             
+            me.setData(data);
             if (dailyWork) {
                 dailyWork.reload();
             }
@@ -239,9 +241,10 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
 
 TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
     var me = this;
-    
+    var dailyWork = null;
+
     if (me.getDailyWork) {
-        var dailyWork = me.getDailyWork();
+        dailyWork = me.getDailyWork();
     }
     
     jQuery.ajax({
@@ -249,16 +252,18 @@ TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
         url: "ajax/deleteFromWorkQueue.action",
         async: true,
         cache: false,
-        dataType: "text",
+        dataType: "json",
         data: {
            taskId: me.getId()
         },
         success: function(data,status) {
             MessageDisplay.Ok("Task removed from your work queue");
             
+            me.setData(data);
             if (dailyWork) {
                 dailyWork.reload();
             }
+            
             if (successCallback) {
                successCallback();
             }

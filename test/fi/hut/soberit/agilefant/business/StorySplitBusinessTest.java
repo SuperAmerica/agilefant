@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Before;
@@ -38,6 +39,8 @@ public class StorySplitBusinessTest {
     Story parentStory;
 
     List<Story> childStories;
+    Collection<Story> oldStories;
+    
 
     @Before
     public void setUp_dependencies() {
@@ -109,8 +112,9 @@ public class StorySplitBusinessTest {
         parentStory.setBacklog(product);
         childCreationExpects();
         backlogHistoryBusiness.updateHistory(1);
+        storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories);
+        testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
         checkChildStories(product);
     }
@@ -120,8 +124,9 @@ public class StorySplitBusinessTest {
         parentStory.setBacklog(iteration);
         childCreationExpects();
         storyBusiness.moveStoryToBacklog(parentStory, product);
+        storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories);
+        testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
         checkChildStories(iteration);
     }
@@ -131,24 +136,25 @@ public class StorySplitBusinessTest {
         parentStory.setBacklog(project);
         childCreationExpects();
         storyBusiness.moveStoryToBacklog(parentStory, product);
+        storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories);
+        testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
         checkChildStories(project);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSplitStory_emptyList() {
-        testable.splitStory(new Story(), new ArrayList<Story>());
+        testable.splitStory(new Story(), new ArrayList<Story>(), oldStories);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSplitStory_nullOriginal() {
-        testable.splitStory(null, Arrays.asList(new Story()));
+        testable.splitStory(null, Arrays.asList(new Story()), oldStories);
     }
     
     @Test(expected = RuntimeException.class)
     public void testSplitStory_originalNotPersisted() {
-        testable.splitStory(new Story(), Arrays.asList(new Story()));
+        testable.splitStory(new Story(), Arrays.asList(new Story()), oldStories);
     }
 }

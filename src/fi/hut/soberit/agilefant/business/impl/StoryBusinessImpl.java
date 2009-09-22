@@ -172,6 +172,24 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return persisted;
     }
 
+    @Transactional
+    public void storeBatch(Collection<Story> stories) {
+        for(Story story : stories) {
+            if(story.getId() == 0) {
+                throw new IllegalArgumentException("non persited story");
+            }
+            this.store(story);
+        }
+    }
+    
+    public Collection<Story> retrieveMultiple(Collection<Story> stories) {
+        Collection<Story> ret = new ArrayList<Story>();
+        for(Story story : stories) {
+            ret.add(this.retrieve(story.getId()));
+        }
+        return ret;
+    }
+    
     private void populateStoryFields(Story persisted, Story dataItem) {
         persisted.setDescription(dataItem.getDescription());
         persisted.setName(dataItem.getName());

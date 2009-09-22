@@ -13,7 +13,7 @@ public interface StorySplitBusiness {
      * @param newStories the new stories to create
      * @return the split story
      */
-    public Story splitStory(Story original, Collection<Story> newStories);
+    public Story splitStory(Story original, Collection<Story> newStories, Collection<Story> oldChangedStories);
     
     public Story getStory(int id);
 }

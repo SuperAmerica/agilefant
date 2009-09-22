@@ -645,4 +645,30 @@ public class StoryBusinessTest {
         assertEquals(expectedParent, actual.getBacklog());
         assertEquals(0, actual.getRank());
     }
+    
+    @Test
+    public void testStoreBatch() {
+        Story s1 = new Story();
+        s1.setId(1);
+        Story s2 = new Story();
+        s2.setId(2);
+        Collection<Story> batch = Arrays.asList(s1,s2);
+        storyDAO.store(s1);
+        storyDAO.store(s2);
+        replayAll();
+        storyBusiness.storeBatch(batch);
+        verifyAll();
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testStoreBatch_nonPersited() {
+        Story s1 = new Story();
+        Story s2 = new Story();
+        Collection<Story> batch = Arrays.asList(s1,s2);
+        storyDAO.store(s1);
+        storyDAO.store(s2);
+        replayAll();
+        storyBusiness.storeBatch(batch);
+        verifyAll();
+    }
 }

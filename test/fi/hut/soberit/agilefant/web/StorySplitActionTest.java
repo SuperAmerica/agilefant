@@ -45,7 +45,8 @@ public class StorySplitActionTest {
         testable.setOriginalStoryId(123);
         Story story = new Story();
         testable.setOriginal(story);
-        expect(storySplitBusiness.splitStory(story, testable.getNewStories())).andReturn(null);
+        testable.setOldStories(null);
+        expect(storySplitBusiness.splitStory(story, testable.getNewStories(), null)).andReturn(null);
         
         replayAll();
         assertEquals(Action.SUCCESS, testable.split());
@@ -53,20 +54,24 @@ public class StorySplitActionTest {
     }
     
     @Test
-    public void testPrefetching() {
+    public void testPrepare() {
         Story story = new Story();       
         expect(storyBusiness.retrieve(123)).andReturn(story);
+        expect(storyBusiness.retrieveMultiple(null)).andReturn(null);
         replayAll();
-        testable.initializePrefetchedData(123);
+        testable.setOriginalStoryId(123);
+        testable.setOldStories(null);
+        testable.prepare();
         verifyAll();
         assertEquals(story, testable.getOriginal());
     }
     
     @Test(expected = ObjectNotFoundException.class)
-    public void testPrefetching_notFound() {     
+    public void testPrepare_notFound() {     
         expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
-        testable.initializePrefetchedData(-1);
+        testable.setOriginalStoryId(-1);
+        testable.prepare();
         verifyAll();
     }
 }

@@ -42,6 +42,18 @@
           <param name="validateAnnotatedMethodOnly">true</param>
       </interceptor-ref>
       </interceptor-stack>
+      
+      <interceptor-stack name="preparedStack">
+        <interceptor-ref name="exception" />
+        <interceptor-ref name="params" />
+        <interceptor-ref name="prepare" />
+        <interceptor-ref name="completeStack" />
+        <interceptor-ref name="refreshUser" />
+        <interceptor-ref name="settings" />
+        <interceptor-ref name="validation">
+          <param name="validateAnnotatedMethodOnly">true</param>
+      </interceptor-ref>
+      </interceptor-stack>
     </interceptors>
     
     <default-interceptor-ref name="authenticationStack" />
@@ -304,7 +316,7 @@
     </action>
     
     <action name="splitStory" method="split" class="storySplitAction">
-      <interceptor-ref name="prefetchStack" />
+      <interceptor-ref name="preparedStack" />
       <result name="success" type="json">
       </result>
     </action>

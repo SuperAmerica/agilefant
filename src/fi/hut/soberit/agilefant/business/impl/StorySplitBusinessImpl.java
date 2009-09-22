@@ -27,7 +27,7 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
     private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     
     @Transactional
-    public Story splitStory(Story original, Collection<Story> newStories) {
+    public Story splitStory(Story original, Collection<Story> newStories, Collection<Story> oldChangedStories) {
         if (original == null || newStories.size() == 0) {
             throw new IllegalArgumentException(
                     "Original story and new stories should be given");
@@ -38,6 +38,7 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
 
         persistChildStories(original, newStories);
         updateOriginalStoryBacklog(original);
+        this.storyBusiness.storeBatch(oldChangedStories);
         return original;
     }
 

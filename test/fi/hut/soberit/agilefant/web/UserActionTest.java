@@ -87,6 +87,7 @@ public class UserActionTest {
     @Test
     public void testStore() {
         User returned = new User();
+        userAction.setUser(user);
         expect(userBusiness.storeUser(user, null, null)).andReturn(returned);
         replayAll();
         assertEquals(Action.SUCCESS, userAction.store());

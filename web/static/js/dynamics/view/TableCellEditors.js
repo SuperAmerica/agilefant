@@ -175,6 +175,7 @@ TableEditors.Text.prototype.isValid = function() {
   return valid;
 };
 
+
 /**
  * 
  * @constructor
@@ -204,6 +205,25 @@ TableEditors.Number.prototype.isValid = function() {
   } 
   if((this.options.maxVal || this.options.maxVal === 0) && this.options.maxVal < intVal) {
     this.showError("Value must be smaller than " + this.options.maxVal);
+    return false;
+  }
+  return true;
+};
+
+/** 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.Email = function(row, cell, options) {
+  this.element = $('<input type="text"/>').width("98%").appendTo(
+      cell.getElement());
+  this.init(row, cell, options);
+};
+TableEditors.Email.prototype = new TableEditors.CommonEditor();
+TableEditors.Email.prototype.isValid = function() {
+  var emailRegEx = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  if (!this.element.val().match(emailRegEx)) {
+    this.showError("Email address not valid");
     return false;
   }
   return true;

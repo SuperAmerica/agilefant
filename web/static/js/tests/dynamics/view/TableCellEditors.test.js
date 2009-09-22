@@ -238,4 +238,31 @@ $(document).ready(function() {
     
 
   });
+  
+  
+  test("Email validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery);
+    var context = {element: mockElement, options: {}};
+    context.showError = function() {};
+    
+    // Invalid
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn("abc");
+    mockElement.expects().val().andReturn("abc@abc");
+    mockElement.expects().val().andReturn("@abc.com");
+    mockElement.expects().val().andReturn("abc@.com");
+    
+    // Valid
+    mockElement.expects().val().andReturn("abc@abc.info");
+    
+    ok(!TableEditors.Email.prototype.isValid.call(context), "Not valid: ''");
+    ok(!TableEditors.Email.prototype.isValid.call(context), "Not valid: ' '");
+    ok(!TableEditors.Email.prototype.isValid.call(context), "Not valid: 'abc'");
+    ok(!TableEditors.Email.prototype.isValid.call(context), "Not valid: 'abc@abc'");
+    ok(!TableEditors.Email.prototype.isValid.call(context), "Not valid: '@abc.com'");
+    ok(!TableEditors.Email.prototype.isValid.call(context), "Not valid: 'abc@.com'");
+    
+    ok(TableEditors.Email.prototype.isValid.call(context), "Valid: 'abc@abc.info'");
+  });
 });

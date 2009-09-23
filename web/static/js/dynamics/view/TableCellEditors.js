@@ -6,16 +6,15 @@ TableEditors.getEditorClassByName = function(name) {
   return null;
 };
 TableEditors.isDialog = function(name) {
-  var dialogs = ["User", "CurrentIteration", "Backlog"];
+  var dialogs = ["User", "Backlog"];
+  // "CurrentIteration", 
   return jQuery.inArray(name, dialogs) !== -1;
 };
 /**
  * @
  * @constructor
  */
-TableEditors.CommonEditor = function() {
-  
-};
+TableEditors.CommonEditor = function() {};
 TableEditors.CommonEditor.prototype.isFocused = function() {
   return this.hasFocus;
 };
@@ -69,6 +68,7 @@ TableEditors.CommonEditor.prototype.showError = function(message) {
     .appendTo(this.errorMessage).css("position", "relative").text(message);
   }
 };
+
 TableEditors.CommonEditor.prototype.hideError = function() {
   if(this.element) {
     this.element.removeClass(DynamicTable.cssClasses.fieldError);
@@ -79,9 +79,11 @@ TableEditors.CommonEditor.prototype.hideError = function() {
     this.errorMessage.remove();
   }
 };
+
 TableEditors.CommonEditor.prototype.focus = function() {
   this.element.focus();
 };
+
 TableEditors.CommonEditor.prototype.isValid = function() {
   return true;
 };
@@ -252,7 +254,7 @@ TableEditors.SingleSelection.prototype._renderOptions = function() {
   var me = this;
   var selected = this.options.get.call(this.model);
   var items = this.options.items;
-  jQuery.each(items, function(key,val) {
+  jQuery.each(items, function(key, val) {
     var el = $('<option />').val(key).text(val).appendTo(me.element);
     if(key === selected) {
       el.attr("selected", "selected");
@@ -484,35 +486,38 @@ TableEditors.Autocomplete.superclass = TableEditors.CommonEditor.prototype;
 
 TableEditors.Autocomplete.prototype.init = function(row, cell, options) {
     this.element = cell.getElement();
-
+    this.dialogOpening = false;
+    this.newValue = null;
+    
     TableEditors.Autocomplete.superclass.init.call(this, row, cell, options);
 
     // Hack to show the cell contents no matter what...
-    cell.cellContents.show();
     this.value = [];
-    this.autocomplete = this.createDialog();
+    this.createInitialDialog();
 };
-TableEditors.Autocomplete.prototype.createDialog = function () {
+TableEditors.Autocomplete.prototype.createInitialDialog = function () {
     var me = this;
 
     this.autocomplete = $(window).autocompleteDialog({
         dataType: this.autocompleteOptions.dataType,
         callback: function(keys, items) { 
-            me.save(keys, items); 
+            me.setValue(keys, items); 
         },
         cancel:   function() {
+            me.close();
         },
         title:    this.autocompleteOptions.title,
         selected: me.getInitialSelection(),
         multiSelect: true
     });
 };
+
 TableEditors.Autocomplete.prototype.save = function(values, data) {
-    this.onSave(values, data);
-    this.cell.render();
+  if (this.newValue) {
+    this.options.set.call(this.model, this.newValue.keys, this.newValue.data)
+  }
 };
-TableEditors.Autocomplete.prototype.onSave = function(values, data) {
-};
+
 TableEditors.Autocomplete.prototype._registerEvents = function() { };
 TableEditors.Autocomplete.prototype.setEditorValue  = function() { };
 TableEditors.Autocomplete.prototype.getEditorValue  = function() { return this.value; };
@@ -520,6 +525,7 @@ TableEditors.Autocomplete.prototype.getSelectedKeys = function() { return []; };
 TableEditors.Autocomplete.prototype.close           = function() {
     this.cell.getElement().trigger("editorClosing");
 };
+
 TableEditors.Autocomplete.prototype.getInitialSelection = function() {
     var modelObjects = this.options.get.call(this.model);
 
@@ -530,8 +536,12 @@ TableEditors.Autocomplete.prototype.getInitialSelection = function() {
 
     return modelIds;
 };
-TableEditors.Autocomplete.prototype.onSave = function(keys, data) {
-    this.options.set.call(this.model, keys, data);
+TableEditors.Autocomplete.prototype.setValue = function(keys, data) {
+    this.newValue = { keys: keys, data: data };
+    if (! this.options.editRow) {
+        this.save();
+        this.close();
+    }
 };
 TableEditors.Autocomplete.prototype.autocompleteOptions = {
     dataType: null,
@@ -545,23 +555,63 @@ TableEditors.AutocompleteSingle = function(row, cell, options) {
 };
 TableEditors.AutocompleteSingle.prototype = new TableEditors.Autocomplete();
 TableEditors.AutocompleteSingle.superclass = TableEditors.Autocomplete.prototype;
+TableEditors.AutocompleteSingle.prototype.createInitialDialog = function () { };
 
-TableEditors.AutocompleteSingle.prototype.createDialog = function () {
+TableEditors.AutocompleteSingle.prototype.init = function (row, cell, options) {
+    this.inputElement = $('<input readonly="readonly" type="text"/>').width("98%").appendTo(
+        cell.getElement());
+    
+    if (options.editRow) {
+        var me = this;
+        var open = function () { 
+            if (! me.dialogOpening) {
+                me.dialogOpening = true;
+                me.openDialog();
+            }
+        };
+        
+        this.inputElement.click(open).focus(open);
+    }
+
+    TableEditors.AutocompleteSingle.superclass.init.call(this, row, cell, options);
+    
+    if (this.options.editRow) {
+        this.element.trigger("editorOpening");
+    }
+    else {
+        this.openDialog();
+    }
+};
+
+TableEditors.AutocompleteSingle.prototype.openDialog = function () {
     var me = this;
 
     this.autocomplete = $(window).autocompleteDialog({
         dataType: this.autocompleteOptions.dataType,
         callback: function(keys, items) { 
-            me.save(keys, items); 
+            me.inputElement.get(0).focus();
+            me.setRealValue(keys, items); 
+            me.dialogOpening = false;
         },
-        cancel:   function() { 
-            me.close(); 
+        cancel:   function() {
+            me.inputElement.get(0).focus();
+            if (! me.options.editRow) {
+                me.close();
+            }
+            me.dialogOpening = false;
         },
         title:    this.autocompleteOptions.title,
         selected: me.getInitialSelection(),
         multiSelect: false
     });
 };
+
+TableEditors.AutocompleteSingle.prototype.close = function()  {
+    this.hideError();
+    this.inputElement.remove();
+    this.cell.getElement().trigger("editorClosing");
+};
+
 TableEditors.AutocompleteSingle.prototype.getInitialSelection = function () {
     var modelObject = this.options.get.call(this.model);
     if (modelObject) {
@@ -569,8 +619,33 @@ TableEditors.AutocompleteSingle.prototype.getInitialSelection = function () {
     }
     return [ ];
 };
-TableEditors.AutocompleteSingle.prototype.onSave = function (keys, data) {
-    this.options.set.call(this.model, keys[0], data[0]);
+
+TableEditors.AutocompleteSingle.prototype.setRealValue = function (keys, data) {
+};
+
+TableEditors.CommonEditor.prototype.hideError = function() {
+   if (this.inputElement) {
+    this.inputElement.removeClass(DynamicTable.cssClasses.fieldError);
+    this.inputElement.unbind("change", this.errorChangeListener);
+  }
+   else if (this.element) {
+    this.element.removeClass(DynamicTable.cssClasses.fieldError);
+    this.element.unbind("change", this.errorChangeListener);
+  }
+  this.errorMessageVisible = false;
+  if(this.errorMessage) {
+    this.errorMessage.remove();
+  }
+};
+
+TableEditors.AutocompleteSingle.prototype.setEditorValue = function(value) {
+    if(!value) {
+      value = this.options.get.call(this.model);
+    }
+    if (this.options.decorator) {
+      value = this.options.decorator(value);
+    }
+    this.inputElement.val(value);
 };
 
 TableEditors.User = function(row, cell, options) {
@@ -587,12 +662,12 @@ TableEditors.User.prototype.autocompleteOptions = {
 
 TableEditors.Backlog = function(row, cell, options) {
     if (arguments.length > 0) {
-        TableEditors.User.superclass.init.call(this, row, cell, options); 
+        TableEditors.Backlog.superclass.init.call(this, row, cell, options); 
     }
 };
 TableEditors.Backlog.prototype = new TableEditors.AutocompleteSingle();
 TableEditors.Backlog.superclass = TableEditors.AutocompleteSingle.prototype;
-TableEditors.Backlog.prototype.onSave = function (keys, data) {
+TableEditors.Backlog.prototype.setRealValue = function (keys, data) {
     iterationId     = keys[0];
     
     var iterationObject = null;
@@ -601,22 +676,22 @@ TableEditors.Backlog.prototype.onSave = function (keys, data) {
     }
     
     if (! iterationObject) {
+        var me = this;
         var model    = this.model;
         var callback = this.options.set;
         
         ModelFactory.getOrRetrieveObject("iteration", iterationId, function (type, id, object) {
-            callback.call(model, object);
+            TableEditors.Backlog.superclass.setValue.call(me, object, null);
         });
     }
     else {
-        this.options.set.call(this.model, iterationObject);
+        TableEditors.Backlog.superclass.setValue.call(this, object, null);
     }
 };
 TableEditors.Backlog.prototype.autocompleteOptions = {
     dataType: "backlog",
     title:    "Select backlog"
 };
-
 TableEditors.CurrentIteration = function(row, cell, options) {
     if (arguments.length > 0) {
         TableEditors.Backlog.superclass.init.call(this, row, cell, options); 
@@ -629,13 +704,23 @@ TableEditors.CurrentIteration.prototype.autocompleteOptions = {
     title:    "Select iteration",
     required: true
 };
+
 TableEditors.CurrentIteration.prototype.isValid = function() {
   var modelObject = this.options.get.call(this.model);
-  if (this.options.required && ! modelObject) {
-    return false;
+  if (! this.options.required || modelObject) {
+      return true
   }
   
-  return true;
+  this.inputElement.addClass(DynamicTable.cssClasses.fieldError);
+
+  var me = this;
+  this.errorChangeListener = function() {
+    if (me.isValid()) {
+      me.hideError();
+    }
+  };
+
+  return false;
 };
 
 

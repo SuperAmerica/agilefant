@@ -85,7 +85,8 @@ DailyWorkTaskController.prototype.actionColumnFactory = function(view, model) {
      },
      {
          text : "Edit",
-         callback : TaskController.prototype.editTask
+         callback : TaskController.prototype.editTask,
+         enabled : function () { return ! this.model.isInTransaction(); }
      },
      {
          text : "Delete",

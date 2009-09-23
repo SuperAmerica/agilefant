@@ -34,9 +34,6 @@ TaskController.prototype.editTask = function() {
 TaskController.prototype.saveTask = function() {
   var createNewTask = !this.model.getId();
   if(this.view.saveRowEdit()) {
-    if (! this.model.getParent()) {
-        
-    }
     this.model.commit();
   }
   else {
@@ -133,7 +130,8 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     callback : TaskController.prototype.openDetails
   }, {
     text : "Edit",
-    callback : TaskController.prototype.editTask
+    callback : TaskController.prototype.editTask,
+    enabled : function () { return ! this.model.isInTransaction(); }
   }, {
     text : "Append to my work queue",
     callback : TaskController.prototype.addToMyWorkQueue,

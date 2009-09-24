@@ -40,8 +40,13 @@
   <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
+  <c:if test="${settings != null}">
   <script type="text/javascript">
   Configuration.setConfiguration({ timesheets: ${settings.hourReportingEnabled} });
+  </script>
+  </c:if>
+  
+  <script type="text/javascript">
   $(document).ready(function() {
     PageController.initialize(${currentUserJson});
   });

@@ -383,25 +383,27 @@ CreateDialog.User.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.User.columnIndices.password1,{
     title: "Password",
     editable: true,
-    get: UserModel.prototype.getPassword1,
+    get: function() { return ""; },
+    cssClass: "user-password1",
     edit: {
-      editor: "Text",
-      required: true,
-      set: UserModel.prototype.setPassword1
+      editor: "Password",
+      set: UserModel.prototype.setPassword1,
+      required: true
     }
   });
-  
+  /*  
   config.addColumnConfiguration(CreateDialog.User.columnIndices.password2,{
     title: "Confirm password",
     editable: true,
-    get: UserModel.prototype.getPassword2,
+    get: function() { return ""; },
+    cssClass: "user-password2",
     edit: {
-      editor: "Text",
-      required: true,
-      set: UserModel.prototype.setPassword2
+      editor: "Password",
+      set: UserModel.prototype.setPassword2,
+      bindToColumn: CreateDialog.User.columnIndices.password2
     }
   });
-  
+
   config.addColumnConfiguration(CreateDialog.User.columnIndices.teams,{
     title: "Teams",
     editable: true,
@@ -413,7 +415,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
       set: UserModel.prototype.setTeams
     }
   });
-  
+  */
   this.formConfig = config;
 };
 

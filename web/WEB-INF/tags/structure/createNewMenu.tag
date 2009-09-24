@@ -71,9 +71,9 @@ $(document).ready(function() {
     <li>
       <a href="#" id="createNewTeam" onclick="return false;"  title="Create a new team">Team &raquo;</a>
     </li>
-
+--%>
     <li>
       <a href="#" id="createNewUser" onclick="return false;"  title="Create a new user">User &raquo;</a>
     </li>
-    --%>
+    
 </ul>

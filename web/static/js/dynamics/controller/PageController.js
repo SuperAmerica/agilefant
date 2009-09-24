@@ -91,6 +91,7 @@ PageController.prototype.toggleMenu = function() {
  */
 
 var Configuration = {};
+Configuration.options = {};
 
 Configuration.setConfiguration = function(newConfig) {
   Configuration.options = newConfig;

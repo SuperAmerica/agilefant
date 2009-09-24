@@ -25,14 +25,7 @@ UserListController.prototype.userControllerFactory = function(view, model) {
 };
 
 UserListController.prototype.createUser = function() {
-  var mockModel = ModelFactory.createObject(ModelFactory.types.user);
-  mockModel.setInTransaction(true);
-  var controller = new UserRowController(mockModel, null, this);
-  var row = this.enabledUserListView.createRow(controller, mockModel, "top");
-  controller.view = row;
-  row.autoCreateCells();
-  row.render();
-  controller.editUser();
+  var dialog = new CreateDialog.User();
 };
 
 

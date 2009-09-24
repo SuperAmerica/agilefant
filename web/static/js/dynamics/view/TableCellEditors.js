@@ -729,26 +729,16 @@ TableEditors.CurrentIteration.prototype.isValid = function() {
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.Password = function(row, cell, options) {
-  this.containerElement = $('<div/>').appendTo(cell.getElement());
-  $('<span/>').text(options.title).appendTo(this.containerElement);
-  this.element = $('<input type="password"/>').width("40%").appendTo(
-      this.containerElement);
-  $('<span/>').text(options.confirmTitle).appendTo(this.containerElement);
-  this.confirmElement = $('<input type="password"/>').width("40%").appendTo(
-      this.containerElement);
+TableEditors.Password = function(row, cell, options) { 
+  this.element = $('<input type="password"/>').width("30%").appendTo(cell.getElement());
   this.init(row, cell, options);
 };
 TableEditors.Password.prototype = new TableEditors.CommonEditor();
 TableEditors.Password.prototype.isValid = function() {
-  if(this.element.val() !== this.confirmElement.val()) {
-    this.showError("Passwords don't match");
+  if (this.options.required && this.element.val().length < 1) {
+    this.showError("Required field");
     return false;
   }
   return true;
 };
-TableEditors.Password.prototype.close = function() {
-  this.element.trigger("editorClosing");
-  this.hideError();
-  this.containerElement.remove();
-};
+

@@ -75,8 +75,28 @@ UserRowController.prototype.enableUser = function() {
 };
 
 UserRowController.prototype.changePassword = function() {
-  MessageDisplay.Error("Not implemented");
+  var model = this.model;
+  var element = $('<div/>').appendTo(document.body);
+  $('<div/>').text("Change password of " + model.getFullName()).appendTo(element);
+  
+  var container = $('<div/>').text('New password: ').appendTo(element);
+  var input = $('<input type="password"/>').appendTo(container);
+  var dialog = element.dialog({
+    modal: true,
+    buttons: {
+      'Ok': function() {
+        model.setPassword1(input.val());
+        element.dialog('destroy');
+        element.remove();
+      },
+      'Cancel': function() {
+        element.dialog('destroy');
+        element.remove();
+      }
+    }
+  });
 };
+
 
 /**
  * 

@@ -172,12 +172,12 @@ DailyWorkController.prototype.createConfig = function(configType) {
         cssClass : 'task-row',
         title : 'Context',
         headerTooltip : 'Task context',
-        get : TaskModel.prototype.getIteration,
-        getView : DailyWorkTaskModel.prototype.getContext,
+        get  : DailyWorkTaskModel.prototype.getContext,
         decorator: DynamicsDecorators.contextDecorator,
         editable : true,
         sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
         edit : {
+            decorator : DynamicsDecorators.plainContextDecorator,
             editor : "CurrentIteration",
             set : TaskModel.prototype.setIterationToSave,
             required: true

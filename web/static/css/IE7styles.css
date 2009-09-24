@@ -9,3 +9,11 @@
 li.dynamictable-captionaction {
   margin: -1.5em 1em 0 0 !important;
 }
+
+ul.dynamicsMessageContainer {
+  width: auto;
+}
+
+ul.dynamicsMessageContainer li {
+  float: none;
+}

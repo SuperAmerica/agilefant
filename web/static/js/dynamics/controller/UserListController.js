@@ -30,13 +30,13 @@ UserListController.prototype.createUser = function() {
 
 
 UserListController.prototype.paintEnabledUserList = function() {
-  this.userListView = new DynamicTable(this, this.model, this.userListConfig,
+  this.userListView = new DynamicTable(this, this.model, this.enabledUserListConfig,
       this.enabledUserListElement);
   this.userListView.render();
 };
 
 UserListController.prototype.paintDisabledUserList = function() {
-  this.disabledUserListView = new DynamicTable(this, this.model, this.userListConfig,
+  this.disabledUserListView = new DynamicTable(this, this.model, this.disabledUserListConfig,
       this.disabledUserListElement);
   this.disabledUserListView.render();
 };
@@ -50,6 +50,7 @@ UserListController.prototype.paint = function() {
       1, function(model) {
         me.model = model;
         me.paintEnabledUserList();
+        me.paintDisabledUserList();
       });
 };
 
@@ -59,9 +60,9 @@ UserListController.prototype.paint = function() {
  * user list.
  */
 UserListController.prototype.initConfig = function() {
-  var config = new DynamicTableConfiguration({
-    caption: "Users",
-    dataSource: UserListContainer.prototype.getUsers,
+  this.enabledUserListConfig = new DynamicTableConfiguration({
+    caption: "Enabled users",
+    dataSource: UserListContainer.prototype.getEnabledUsers,
     rowControllerFactory: UserListController.prototype.userControllerFactory,
     saveRowCallback: UserRowController.prototype.saveUser,
     cssClass: "ui-widget-content ui-corner-all",
@@ -70,20 +71,28 @@ UserListController.prototype.initConfig = function() {
     } 
   });
   
-  config.addCaptionItem({
+  this.enabledUserListConfig.addCaptionItem({
     text: "Create user",
     name: "createUser",
     callback: UserListController.prototype.createUser
   });
-  /*
-  config.addColumnConfiguration(UserRowController.columnIndices.toggle, {
-    minWidth : 20,
-    autoScale : true,
-    cssClass : 'user-row',
-    title: "",
-    subViewFactory: UserRowController.prototype.userToggleFactory
-  });*/
   
+  this.disabledUserListConfig = new DynamicTableConfiguration({
+    caption: "Disabled users",
+    dataSource: UserListContainer.prototype.getDisabledUsers,
+    rowControllerFactory: UserListController.prototype.userControllerFactory,
+    saveRowCallback: UserRowController.prototype.saveUser,
+    cssClass: "ui-widget-content ui-corner-all",
+    captionConfig: {
+      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    } 
+  });
+  
+  this._addColumnConfig(this.enabledUserListConfig);
+  this._addColumnConfig(this.disabledUserListConfig);
+};
+
+UserListController.prototype._addColumnConfig = function(config, actionFactory) { 
   config.addColumnConfiguration(UserRowController.columnIndices.name, {
     minWidth : 150,
     autoScale : true,
@@ -145,20 +154,6 @@ UserListController.prototype.initConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(UserRowController.columnIndices.enabled, {
-    minWidth : 60,
-    autoScale : true,
-    cssClass : 'user-row',
-    title: "Enabled",
-    get: UserModel.prototype.isEnabled,
-    editable: true,
-    edit: {
-      editor: "SingleSelection",
-      items: { "true": "True", "false": "False" },
-      set: UserModel.prototype.setEnabled
-    }
-  });
-  /*
   config.addColumnConfiguration(UserRowController.columnIndices.actions, {
     minWidth : 60,
     autoScale : true,
@@ -168,16 +163,14 @@ UserListController.prototype.initConfig = function() {
   });
   
   config.addColumnConfiguration(UserRowController.columnIndices.password, {
-    visible: true,
+    visible: false,
     fullWidth: true,
     cssClass : 'user-data',
-    get: function() { return ""; },
     editable: true,
+    get: function() { return ""; },
     edit: {
       editor: "Password",
-      set: UserModel.prototype.setPassword,
-      title: "Password",
-      confirmTitle: "Confirm password"
+      set: UserModel.prototype.setPassword1
     }
   });
   
@@ -186,7 +179,5 @@ UserListController.prototype.initConfig = function() {
     fullWidth: true,
     cssClass : 'user-data',
     subViewFactory: UserRowController.prototype.userButtonsFactory
-  });*/
-  
-  this.userListConfig = config;
+  });
 };

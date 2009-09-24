@@ -11,12 +11,15 @@
 <script type="text/javascript">
 $(document).ready(function() {
   var controller = new UserListController({
-    enabledElement: $('#userListElement')
+    enabledElement: $('#enabledUserListElement'),
+    disabledElement: $('#disabledUserListElement')
   });
 });
 </script>
 
-<div id="userListElement" style="min-width: 750px"> </div>
+<div id="enabledUserListElement" style="min-width: 750px"> </div>
+
+<div id="disabledUserListElement" style="min-width: 750px"> </div>
 
 </jsp:body>
 </struct:htmlWrapper>

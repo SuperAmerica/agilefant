@@ -45,6 +45,21 @@ UserListContainer.prototype.reload = function() {
 
 /* GETTERS */
 
-UserListContainer.prototype.getUsers = function() {
-  return this.relations.user;
+UserListContainer.prototype._getUsersByEnabledStatus = function(enabled) {
+  var returned = [];
+  for (var i = 0; i < this.relations.user.length; i++) {
+    var user = this.relations.user[i]
+    if (user.isEnabled() === enabled) {
+      returned.push(user);
+    }
+  }
+  return returned;
+};
+
+UserListContainer.prototype.getEnabledUsers = function() {
+  return this._getUsersByEnabledStatus(true);
+};
+
+UserListContainer.prototype.getDisabledUsers = function() {
+  return this._getUsersByEnabledStatus(false);
 };

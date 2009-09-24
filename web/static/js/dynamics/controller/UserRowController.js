@@ -24,15 +24,12 @@ UserRowController.columnIndices = {
     email:    2,
     weekHours:3,
     enabled:  4,
-    actions:  5
-    /*password: 7,
-    buttons:  8*/
+    actions:  5,
+    password: 6,
+    buttons:  7
 };
 
-UserRowController.prototype.editUser = function() {
-  this.model.setInTransaction(true);
-  this.view.editRow();
-};
+
 
 /**
  * 
@@ -42,12 +39,43 @@ UserRowController.prototype.userActionFactory = function(view, model) {
     text : "Edit",
     callback : UserRowController.prototype.editUser
   }, {
+    text : "Change password",
+    callback : UserRowController.prototype.changePassword
+  }, {
+    text : "Enable",
+    callback : UserRowController.prototype.enableUser,
+    enabled: UserRowController.prototype.showEnableAction
+  }, {
+    text : "Disable",
+    callback : UserRowController.prototype.disableUser,
+    enabled: UserRowController.prototype.showDisableAction
+  }, {
     text : "Delete",
     callback : UserRowController.prototype.removeUser
   } ];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;
+};
+
+UserRowController.prototype.showEnableAction = function() {
+  return !this.model.isEnabled();
+};
+
+UserRowController.prototype.showDisableAction = function() {
+  return this.model.isEnabled();
+};
+
+UserRowController.prototype.disableUser = function() {
+  this.model.setEnabled(false);
+};
+
+UserRowController.prototype.enableUser = function() {
+  this.model.setEnabled(true);
+};
+
+UserRowController.prototype.changePassword = function() {
+  MessageDisplay.Error("Not implemented");
 };
 
 /**
@@ -80,6 +108,12 @@ UserRowController.prototype.showDetails = function() {
 };
 
 
+UserRowController.prototype.editUser = function() {
+  this.model.setInTransaction(true);
+  this.view.getCell(UserRowController.columnIndices.buttons).show();
+  this.view.editRow();
+};
+
 UserRowController.prototype.cancelEdit = function() {
   var createNew = !this.model.getId();
   if(createNew) {
@@ -105,6 +139,5 @@ UserRowController.prototype.saveUser = function() {
     this.view.remove();
     return;
   }
-//  this.view.getCell(StoryController.columnIndices.description).hide();
-//  this.view.getCell(StoryController.columnIndices.buttons).hide();
+  this.view.getCell(StoryController.columnIndices.buttons).hide();
 };

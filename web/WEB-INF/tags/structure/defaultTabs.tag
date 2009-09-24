@@ -2,6 +2,8 @@
 
 <%@attribute name="navi" required="true" %>
 
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <script type="text/javascript">
 $(document).ready(function() {
   var selector = '#navitab-${navi}';
@@ -30,6 +32,7 @@ $(document).ready(function() {
   </span>
   </a>
 </li>
+
 
 <%-- Timesheet --%>
 <c:if test="${settings.hourReportingEnabled}">

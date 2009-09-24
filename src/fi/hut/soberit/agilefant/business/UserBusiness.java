@@ -21,7 +21,7 @@ public interface UserBusiness extends GenericBusiness<User> {
      * Changes the password if (password1 != null) and (password1 == password2)
      * @return the newly persisted user
      */
-    User storeUser(User data, String password1, String password2);  
+    User storeUser(User data, String password);  
     
     /**
      * Check if user is creator of any stories.

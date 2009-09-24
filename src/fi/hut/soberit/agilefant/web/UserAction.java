@@ -31,7 +31,6 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
     private User user;
     
     private String password1;
-    private String password2;
 
     private Collection<User> users = new ArrayList<User>();
     
@@ -55,7 +54,7 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
     }
     
     public String store() {
-        user = userBusiness.storeUser(user, null, null);
+        user = userBusiness.storeUser(user, password1);
         return Action.SUCCESS;
     }
     
@@ -112,9 +111,5 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
 
     public void setPassword1(String password1) {
         this.password1 = password1;
-    }
-
-    public void setPassword2(String password2) {
-        this.password2 = password2;
     }
 }

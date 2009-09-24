@@ -30,27 +30,36 @@ public class UserBusinessTest {
         userDAO = createMock(UserDAO.class);
         userBusiness.setUserDAO(userDAO);
     }
+
+    private void verifyAll() {
+        verify(userDAO);
+    }
+
+    private void replayAll() {
+        replay(userDAO);
+    }
     
     @Test
     public void testGetEnabledUsers_interaction() {
         List<User> listOfEnabledUsers = Arrays.asList(new User());
         expect(userDAO.listUsersByEnabledStatus(true)).andReturn(listOfEnabledUsers);
-        replay(userDAO);
+        replayAll();
         
         assertSame(listOfEnabledUsers, userBusiness.getEnabledUsers());
         
-        verify(userDAO);
+        verifyAll();
     }
+
     
     @Test
     public void testGetDisabledUsers_interaction() {
         List<User> listOfDisabledUsers = Arrays.asList(new User());
         expect(userDAO.listUsersByEnabledStatus(false)).andReturn(listOfDisabledUsers);
-        replay(userDAO);
+        replayAll();
         
         assertSame(listOfDisabledUsers, userBusiness.getDisabledUsers());
         
-        verify(userDAO);
+        verifyAll();
     }
     
     @Test
@@ -97,5 +106,50 @@ public class UserBusinessTest {
         Interval interval = new Interval(start.toDateMidnight(), start.plusDays(8).toDateMidnight());
         Duration actual = this.userBusiness.calculateWorktimePerPeriod(user, interval);
         assertEquals(expected.getMillis(), actual.getMillis());        
+    }
+    
+    @Test
+    public void testStore_newUser() {
+        User user = new User();
+        user.setFullName("Teemu Teekkari");
+        
+        expect(userDAO.create(user)).andReturn(1756);
+        expect(userDAO.get(1756)).andReturn(user);
+        replayAll();
+        User actual = userBusiness.storeUser(user, "teemu");
+        verifyAll();
+        
+        assertEquals("Teemu Teekkari", actual.getFullName());
+    }
+    
+    @Test
+    public void testStore_noPasswordChange() {
+        User dataItem = new User();
+        dataItem.setId(123);
+        dataItem.setPassword("password string");
+        
+        userDAO.store(dataItem);
+        replayAll();
+        User actual = userBusiness.storeUser(dataItem, null);
+        verifyAll();
+        
+        assertEquals("password string", actual.getPassword());
+    }
+    
+    @Test
+    public void testStore_passwordChange() {
+        String password = "teemu";
+        String md5hash = "f38bb5caf4771ef31e2d8456e5e93f2f";
+        
+        User user = new User();
+        user.setId(123);
+        user.setPassword("Foo");
+        
+        userDAO.store(user);
+        replayAll();
+        User actual = userBusiness.storeUser(user, password);
+        verifyAll();
+        
+        assertEquals(md5hash, actual.getPassword());
     }
 }

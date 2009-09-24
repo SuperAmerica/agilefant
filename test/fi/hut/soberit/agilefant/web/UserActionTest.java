@@ -88,7 +88,8 @@ public class UserActionTest {
     public void testStore() {
         User returned = new User();
         userAction.setUser(user);
-        expect(userBusiness.storeUser(user, null, null)).andReturn(returned);
+        userAction.setPassword1("new password");
+        expect(userBusiness.storeUser(user, "new password")).andReturn(returned);
         replayAll();
         assertEquals(Action.SUCCESS, userAction.store());
         verifyAll();

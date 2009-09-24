@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Holiday;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 /**
  * 
@@ -55,9 +56,23 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     }
     
     @Transactional
-    public User storeUser(User data, String password1, String password2) {
-        super.store(data);
-        User returned = this.retrieve(data.getId());
+    public User storeUser(User data, String password) {
+        User returned = null;
+        
+        if (password != null) {
+            String md5hash = SecurityUtil.MD5(password);
+            data.setPassword(md5hash);
+        }
+        
+        if (data.getId() == 0) {
+            int newId = (Integer)userDAO.create(data);
+            returned = userDAO.get(newId);
+        }
+        else {
+            userDAO.store(data);
+            returned = data;
+        }
+        
         return returned;
     }
     

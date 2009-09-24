@@ -11,9 +11,9 @@ DynamicsConfirmationDialog.prototype._show = function() {
   this.messageElement.dialog({
     modal: true,
     title: this.title,
-    minHeight: '200px',
-    minWidth: '400px',
-    width: '400px',
+    minHeight: '200',
+    minWidth: '400',
+    width: '400',
     position: 'center',
     resizable: false,
     buttons: {

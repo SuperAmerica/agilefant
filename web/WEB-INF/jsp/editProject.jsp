@@ -16,7 +16,6 @@
   <li class=""><a href="#backlogSpentEffort"><span><img
     alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
 </ul>
-</ul>
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
 <div class="details" id="backlogAssignees"></div>

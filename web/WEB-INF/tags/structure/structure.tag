@@ -38,14 +38,14 @@
   <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
-  <%@include file="../../jsp/inc/includeDynamics.jsp" %>
-  
   <script type="text/javascript">
+  Configuration.setConfiguration({ timesheets: ${settings.hourReportingEnabled} });
   $(document).ready(function() {
-      PageController.initialize(${currentUserJson});
-      Configuration.setConfiguration({ timesheets: ${settings.hourReportingEnabled} });
+    PageController.initialize(${currentUserJson});
   });
   </script>
+  
+  <%@include file="../../jsp/inc/includeDynamics.jsp" %>
 
   <script type="text/javascript" src="static/js/onLoad.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 

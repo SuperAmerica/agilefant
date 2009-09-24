@@ -628,7 +628,7 @@ TableEditors.CommonEditor.prototype.hideError = function() {
     this.inputElement.removeClass(DynamicTable.cssClasses.fieldError);
     this.inputElement.unbind("change", this.errorChangeListener);
   }
-   else if (this.element) {
+  else if (this.element) {
     this.element.removeClass(DynamicTable.cssClasses.fieldError);
     this.element.unbind("change", this.errorChangeListener);
   }

@@ -56,6 +56,12 @@ var DynamicsDecorators = {
     
     return ('<a class="daily-work-task-context" href="' + uri + '">' + value.name + '</a>');
   },
+  plainContextDecorator: function(value) {
+    if (! value || ! value.backlogId) {
+      return "(not set)";
+    }
+    return value.name;
+  },
   dateDecorator: function(value) {
     if(!value) {
       return "";

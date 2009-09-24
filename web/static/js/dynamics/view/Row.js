@@ -167,12 +167,12 @@ DynamicTableRow.prototype.closeRowEdit = function() {
 DynamicTableRow.prototype.saveRowEdit = function() {
   var isValid = this.isRowValid();
   if (isValid) {
-    return this._applyToAllCells(DynamicTableCell.prototype.saveEditorValue);
+    return this._applyToAllCells(DynamicTableCell.prototype.saveEditorValue, []);
   }
   return false;
 };
 
 DynamicTableRow.prototype.isRowValid = function() {
-  return this._applyToAllCells(DynamicTableCell.prototype.isEditorValueValid);
+  return this._applyToAllCells(DynamicTableCell.prototype.isEditorValueValid, []);
 };
 

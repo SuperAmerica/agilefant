@@ -9,7 +9,7 @@ ul.dynamicsMessageContainer {
   top: 150px;
   z-index: 1500;
   height: 0;
-  width: 0;
+  width: auto;
 }
 
 ul.dynamicsMessageContainer li {

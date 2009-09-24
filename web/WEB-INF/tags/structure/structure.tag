@@ -19,6 +19,8 @@
 <head>
   <title>Agilefant</title>
   <link rel="stylesheet" type="text/css" href="static/css/structure.css" />
+  <!--[if IE 7]><link rel="stylesheet" type="text/css" href="static/css/IE7styles.css" /><![endif]-->  
+  
   <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
   
   <script type="text/javascript" src="static/js/datacache.js?<ww:text name="struts.agilefantReleaseId" />"></script>

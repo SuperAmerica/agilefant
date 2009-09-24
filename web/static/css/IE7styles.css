@@ -1,0 +1,11 @@
+/**
+ * Stupid hacks for IE7 to work correctly.
+ */
+ 
+/*
+ * DYNAMICTABLE STYLES
+ */
+
+li.dynamictable-captionaction {
+  margin: -1.5em 1em 0 0 !important;
+}

@@ -1,16 +1,8 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.*;
+import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

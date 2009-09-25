@@ -1,17 +1,15 @@
 package fi.hut.soberit.agilefant.business;
 
+import static org.easymock.EasyMock.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 
 import junit.framework.TestCase;
+
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 import fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl;
 import fi.hut.soberit.agilefant.db.SettingDAO;

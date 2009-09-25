@@ -1,6 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.*;
 
 import org.apache.struts2.StrutsTestCase;
 import org.junit.Before;

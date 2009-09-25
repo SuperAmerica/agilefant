@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
@@ -36,7 +37,6 @@ import fi.hut.soberit.agilefant.transfer.IntervalLoadContainer;
 import fi.hut.soberit.agilefant.transfer.IterationLoadContainer;
 import fi.hut.soberit.agilefant.transfer.UnassignedLoadTO;
 import fi.hut.soberit.agilefant.transfer.UserLoadLimits;
-import static org.easymock.EasyMock.*;
 
 public class PersonalLoadBusinessTest {
 

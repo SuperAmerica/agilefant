@@ -1,10 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
 import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import fi.hut.soberit.agilefant.business.AssignmentBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;

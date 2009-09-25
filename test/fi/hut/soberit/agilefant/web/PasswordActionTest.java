@@ -1,9 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import junit.framework.TestCase;
 
 import com.opensymphony.xwork2.Action;

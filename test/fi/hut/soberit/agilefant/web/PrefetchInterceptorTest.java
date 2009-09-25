@@ -1,16 +1,14 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createStrictMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.easymock.classextension.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionContext;

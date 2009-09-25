@@ -1,5 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,10 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.opensymphony.xwork2.Action;
-
-import static org.junit.Assert.*;
-
-import static org.easymock.EasyMock.*;
 
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;

@@ -1,13 +1,13 @@
 package fi.hut.soberit.agilefant.business;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-
-import static org.easymock.EasyMock.*;
 
 import fi.hut.soberit.agilefant.business.impl.ProductBusinessImpl;
 import fi.hut.soberit.agilefant.db.ProductDAO;

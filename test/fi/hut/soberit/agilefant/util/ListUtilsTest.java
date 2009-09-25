@@ -1,10 +1,11 @@
 package fi.hut.soberit.agilefant.util;
 
+import static org.junit.Assert.*;
+
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.Test;
 
 public class ListUtilsTest {
 

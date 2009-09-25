@@ -5,7 +5,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 
-public class DailyWorkTaskTO extends Task {
+public class DailyWorkTaskTO extends TaskTO {
     public enum TaskClass {
         ASSIGNED,
         NEXT,
@@ -19,14 +19,12 @@ public class DailyWorkTaskTO extends Task {
     private String contextName = "";
     
     public DailyWorkTaskTO(Task task) {
-        BeanCopier.copy(task, this);
-
+        super(task);
         setupContext();
     }
 
     public DailyWorkTaskTO(Task task, TaskClass clazz, int whatsNextRank) {
-        BeanCopier.copy(task, this);
-        
+        super(task);
         this.taskClass = clazz;
         this.workQueueRank = whatsNextRank;
         

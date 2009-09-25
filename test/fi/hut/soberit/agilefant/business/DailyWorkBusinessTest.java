@@ -13,7 +13,6 @@ import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.impl.DailyWorkBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
@@ -194,7 +193,7 @@ public class DailyWorkBusinessTest {
         );
         
         // from delegate:
-        expect(whatsNextEntryDAO.getTasksWithRankBetween(1, 2, user)).andReturn(new ArrayList());
+        expect(whatsNextEntryDAO.getTasksWithRankBetween(1, 2, user)).andReturn(new ArrayList<WhatsNextEntry>());
         
         replayAll();
 
@@ -226,6 +225,16 @@ public class DailyWorkBusinessTest {
         
         replayAll();
         testable.removeTaskFromWorkQueues(task1);
+        verifyAll();
+    }
+    
+    @Test
+    public void testRemoveFromWhatsNext_notFound() {
+        expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(null);
+        replayAll();
+        
+        // should not throw whenever an entry is not found, just be happy.
+        testable.removeFromWhatsNext(user, task1);
         verifyAll();
     }
 }

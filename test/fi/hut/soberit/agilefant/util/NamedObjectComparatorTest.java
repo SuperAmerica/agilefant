@@ -1,10 +1,11 @@
 package fi.hut.soberit.agilefant.util;
 
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.model.NamedObject;
-import static org.junit.Assert.*;
 
 public class NamedObjectComparatorTest {
 

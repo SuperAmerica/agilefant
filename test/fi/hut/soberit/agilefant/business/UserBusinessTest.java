@@ -1,9 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -12,8 +10,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.UserBusinessImpl;
 import fi.hut.soberit.agilefant.db.UserDAO;

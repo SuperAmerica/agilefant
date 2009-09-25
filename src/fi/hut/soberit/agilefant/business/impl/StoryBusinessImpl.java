@@ -33,7 +33,6 @@ import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.util.Pair;
-import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 @Service("storyBusiness")
@@ -96,16 +95,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             return null;
         }
         return getStoryContents(story, iter);
-    }
-
-    @Transactional(readOnly = true)
-    public Collection<ResponsibleContainer> getStoryResponsibles(Story story) {
-        Collection<ResponsibleContainer> responsibleContainers = new ArrayList<ResponsibleContainer>();
-        Collection<User> storyResponsibles = story.getResponsibles();
-        for (User user : storyResponsibles) {
-            responsibleContainers.add(new ResponsibleContainer(user, true));
-        }
-        return responsibleContainers;
     }
     
     @Transactional(readOnly = true)

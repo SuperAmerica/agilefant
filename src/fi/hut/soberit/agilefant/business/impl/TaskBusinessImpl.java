@@ -28,7 +28,6 @@ import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.Pair;
-import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 @Service("taskBusiness")
 @Transactional
@@ -65,16 +64,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         this.taskDAO = taskDAO;
     }
     
-    @Transactional(readOnly = true)
-    public Collection<ResponsibleContainer> getTaskResponsibles(Task task) {
-   
-        Collection<ResponsibleContainer> responsibleContainers = new ArrayList<ResponsibleContainer>();
-        Collection<User> storyResponsibles = task.getResponsibles();
-        for (User user : storyResponsibles) {
-            responsibleContainers.add(new ResponsibleContainer(user, true));
-        }
-        return responsibleContainers;
-    }
     
     /** {@inheritDoc} */
     public Task storeTask(Task task, Integer iterationId, Integer storyId, Set<Integer> userIds) {

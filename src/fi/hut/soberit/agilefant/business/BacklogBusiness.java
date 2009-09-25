@@ -1,13 +1,9 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 /**
  * This description contains generic information on <code>Business</code>
@@ -42,12 +38,6 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      * Get the number of backlog's child backlogs.
      */
     public int getNumberOfChildren(Backlog backlog);
-    
-    /**
-     * Get the backlog's responsibles grouped by story.
-     */
-    public Map<Story, List<ResponsibleContainer>> getResponsiblesByBacklog(Backlog backlog);
-
     
     /**
      * Gets the backlog's child backlogs or all products if backlog is <code>null</code>.

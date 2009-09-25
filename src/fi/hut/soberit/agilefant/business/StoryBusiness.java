@@ -11,7 +11,6 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
-import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public interface StoryBusiness extends GenericBusiness<Story> {
@@ -42,8 +41,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      */
     public Collection<Task> getStoryContents(Story story, Iteration iteration);
     public Collection<Task> getStoryContents(int storyId, int iterationId);
-    
-    public Collection<ResponsibleContainer> getStoryResponsibles(Story story);
 
     StoryMetrics calculateMetrics(int storyId);
 

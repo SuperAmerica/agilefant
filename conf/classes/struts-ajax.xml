@@ -241,7 +241,7 @@
       </result>
     </action>
     
-    <action name="iterationData" class="iterationAction" method="retrieve">
+    <action name="iterationData" class="iterationAction" method="fetchIterationData">
       <result name="success" type="json">
         <param name="target">iteration</param>
         <param name="patterns">+stories, +stories.tasks, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles, +*.workingOnTask</param>

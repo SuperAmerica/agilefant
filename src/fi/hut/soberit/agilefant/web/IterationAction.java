@@ -50,6 +50,12 @@ public class IterationAction implements
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
+    
+    public String fetchIterationData() {
+        iterationBusiness.retrieve(iterationId);
+        iteration = iterationBusiness.getIterationContents(iterationId);
+        return Action.SUCCESS;
+    }
 
     public String delete() {
         iteration = iterationBusiness.retrieve(iterationId);

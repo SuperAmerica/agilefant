@@ -16,6 +16,8 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 
 /**
@@ -44,6 +46,38 @@ public class IterationActionTest {
 
     private void replayAll() {
         replay(iterationBusiness);
+    }
+    
+    @Test
+    public void testRetrieve() {
+        Project parent = new Project();
+        Iteration iter = new Iteration();
+        iter.setParent(parent);
+               
+        expect(iterationBusiness.retrieve(1)).andReturn(iter);
+        expect(iterationBusiness.getIterationMetrics(iter)).andReturn(
+                new IterationMetrics());
+        replayAll();
+        assertEquals(Action.SUCCESS, iterationAction.retrieve());
+        verifyAll();
+        
+        assertEquals(parent, iterationAction.getParentBacklog());
+    }
+    
+    @Test
+    public void testFetchIterationData() {
+        Iteration iter = new Iteration();
+        
+        iterationAction.setIterationId(123);
+        
+        expect(iterationBusiness.retrieve(123)).andReturn(iter);
+        expect(iterationBusiness.getIterationContents(123)).andReturn(new IterationTO(iter));
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, iterationAction.fetchIterationData());
+        verifyAll();
+        
+        assertEquals(IterationTO.class, iterationAction.getIteration().getClass());
     }
     
     @Test

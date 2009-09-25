@@ -1,14 +1,10 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -33,8 +29,8 @@ import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.transfer.IterationDataContainer;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.Pair;
@@ -43,7 +39,6 @@ public class IterationBusinessTest {
 
     IterationBusinessImpl iterationBusiness = new IterationBusinessImpl();
     TransferObjectBusiness transferObjectBusiness;
-    ProjectBusiness projectBusiness;
     StoryBusiness storyBusiness;
     HourEntryBusiness hourEntryBusiness;
     IterationDAO iterationDAO;
@@ -58,7 +53,7 @@ public class IterationBusinessTest {
     List<StoryTO> storiesList;
     List<Task> tasksWithoutStoryList;
     List<TaskTO> tasksTOsWithoutStoryList;
-    IterationDataContainer expectedIterationData;
+    IterationTO expectedIterationData;
     Task task;
     TaskTO taskTO;
 
@@ -69,9 +64,6 @@ public class IterationBusinessTest {
 
         storyBusiness = createMock(StoryBusiness.class);
         iterationBusiness.setStoryBusiness(storyBusiness);
-
-        projectBusiness = createMock(ProjectBusiness.class);
-        iterationBusiness.setProjectBusiness(projectBusiness);
 
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         iterationBusiness.setHourEntryBusiness(hourEntryBusiness);
@@ -118,21 +110,23 @@ public class IterationBusinessTest {
         tasksWithoutStoryList = Arrays.asList(task);
         tasksTOsWithoutStoryList = Arrays.asList(taskTO);
 
-        expectedIterationData = new IterationDataContainer();
+        expectedIterationData = new IterationTO(new Iteration());
+        expectedIterationData.setStories(new ArrayList<Story>());
         expectedIterationData.getStories().addAll(storiesList);
-        expectedIterationData.getTasksWithoutStory().addAll(
+        expectedIterationData.setTasks(new ArrayList<Task>());
+        expectedIterationData.getTasks().addAll(
                 tasksTOsWithoutStoryList);
     }
 
     private void verifyAll() {
-        verify(iterationDAO, transferObjectBusiness, projectBusiness,
+        verify(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
                 assignmentBusiness, backlogHistoryEntryBusiness);
     }
 
     private void replayAll() {
-        replay(iterationDAO, transferObjectBusiness, projectBusiness,
+        replay(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
                 assignmentBusiness, backlogHistoryEntryBusiness);
@@ -140,22 +134,17 @@ public class IterationBusinessTest {
 
     @Test
     public void testGetIterationContents_doNotExcludeTasks() {
-        Collection<User> assignedUsers = Arrays.asList(new User());
-
         expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
-        expect(
-                projectBusiness.getAssignedUsers((Project) iteration
-                        .getParent())).andReturn(assignedUsers);
-        expect(
-                transferObjectBusiness.constructBacklogDataWithUserData(
-                        iteration, assignedUsers)).andReturn(storiesList);
+
+        expect(transferObjectBusiness.constructBacklogData(
+                        iteration)).andReturn(storiesList);
         for (StoryTO storyTO : storiesList) {
             expect(storyBusiness.calculateMetrics(storyTO)).andReturn(null);
         }
         expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
                 .andReturn(tasksWithoutStoryList);
 
-        expect(transferObjectBusiness.constructTaskTO(task, assignedUsers))
+        expect(transferObjectBusiness.constructTaskTO(task))
                 .andReturn(taskTO);
 
         expect(hourEntryBusiness.calculateSum(taskTO.getHourEntries()))
@@ -163,14 +152,18 @@ public class IterationBusinessTest {
 
         replayAll();
 
-        IterationDataContainer actualIterationData = iterationBusiness
+        IterationTO actualIterationData = iterationBusiness
                 .getIterationContents(iteration.getId());
 
         assertEquals(expectedIterationData.getStories(), actualIterationData
                 .getStories());
-        assertEquals(expectedIterationData.getTasksWithoutStory(),
-                actualIterationData.getTasksWithoutStory());
+        assertEquals(expectedIterationData.getTasks(),
+                actualIterationData.getTasks());
 
+        assertEquals(1, actualIterationData.getTasks().size());
+        assertEquals(2, actualIterationData.getStories().size());
+        assertEquals(storiesList, actualIterationData.getStories());
+        
         verifyAll();
     }
 

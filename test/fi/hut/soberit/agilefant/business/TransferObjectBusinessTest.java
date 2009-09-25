@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -27,14 +28,11 @@ import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
-import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 public class TransferObjectBusinessTest {
 
     private TransferObjectBusinessImpl transferObjectBusiness = new TransferObjectBusinessImpl();
-    private ProjectBusiness projectBusiness;
     private HourEntryBusiness hourEntryBusiness;
-    private StoryBusiness storyBusiness;
     private UserBusiness userBusiness;
     private TeamBusiness teamBusiness;
     private BacklogBusiness backlogBusiness;
@@ -50,14 +48,8 @@ public class TransferObjectBusinessTest {
 
     @Before
     public void setUp_dependencies() {
-        projectBusiness = createMock(ProjectBusiness.class);
-        transferObjectBusiness.setProjectBusiness(projectBusiness);
-        
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         transferObjectBusiness.setHourEntryBusiness(hourEntryBusiness);
-        
-        storyBusiness = createMock(StoryBusiness.class);
-        transferObjectBusiness.setStoryBusiness(storyBusiness);
         
         userBusiness = createMock(UserBusiness.class);
         transferObjectBusiness.setUserBusiness(userBusiness);
@@ -73,11 +65,11 @@ public class TransferObjectBusinessTest {
     }
     
     private void verifyAll() {
-        verify(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness, iterationBusiness);
+        verify(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, iterationBusiness);
     }
 
     private void replayAll() {
-        replay(projectBusiness, hourEntryBusiness, storyBusiness, userBusiness, teamBusiness, backlogBusiness, iterationBusiness);
+        replay(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, iterationBusiness);
     }
     
     
@@ -116,8 +108,7 @@ public class TransferObjectBusinessTest {
 
         Collection<Story> actualStories = new ArrayList<Story>();
         actualStories.addAll(transferObjectBusiness
-                .constructBacklogDataWithUserData(iteration, Arrays
-                        .asList(assignedUser)));
+                .constructBacklogData(iteration));
 
         verifyAll();
 
@@ -133,121 +124,46 @@ public class TransferObjectBusinessTest {
     public void testContructBacklogDataWithUserData_emptyIteration() {
         iteration.getStories().clear();
         Collection<StoryTO> stories = transferObjectBusiness
-                .constructBacklogDataWithUserData(iteration, null);
+                .constructBacklogData(iteration);
         assertEquals(0, stories.size());
-    }
-    
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testConstructTaskTO_delegate() {
-        task.setStory(null);
-        task.setIteration(iteration);
-        task.setHourEntries(null);
-        
-        expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
-                .andReturn(Long.valueOf(0)).anyTimes();
-
-        expect(projectBusiness.getAssignedUsers((Project) task.getIteration()
-                        .getParent())).andReturn(Arrays.asList(assignedUser));
-
-        replayAll();
-
-        assertEquals(task.getId(), transferObjectBusiness.constructTaskTO(task)
-                .getId());
-
-        verifyAll();
-    }
-    
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testConstructTaskTO_delegateForStory() {
-        task.setStory(story1);
-        task.setIteration(null);
-        task.setHourEntries(null);
-
-        expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
-                .andReturn(Long.valueOf(0)).anyTimes();
-
-        expect(storyBusiness.getStorysProjectResponsibles(story1))
-            .andReturn(Arrays.asList(assignedUser));
-
-        replayAll();
-
-        assertEquals(task.getId(), transferObjectBusiness.constructTaskTO(task)
-                .getId());
-
-        verifyAll();
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testConstructTaskTO() {
+        Collection<User> responsibles = new ArrayList<User>(Arrays.asList(assignedUser, notAssignedUser));
+        
         task.setIteration(iteration);
-        task.setResponsibles(new ArrayList<User>(Arrays.asList(assignedUser, notAssignedUser)));
+        task.setResponsibles(responsibles);
         task.setHourEntries(null);
 
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
 
         replayAll();
-        TaskTO actualTO = transferObjectBusiness.constructTaskTO(task,
-                new ArrayList<User>(Arrays.asList(assignedUser)));
+        TaskTO actualTO = transferObjectBusiness.constructTaskTO(task);
         verifyAll();
 
         assertEquals("Task and transfer object id's not equal", task.getId(),
                 actualTO.getId());
 
-        boolean assignedUserFound = false;
-        boolean notAssignedUserFound = false;
-        for (ResponsibleContainer rc : actualTO.getUserData()) {
-            if (rc.getUser() == assignedUser) {
-                assignedUserFound = true;
-                assertTrue(
-                        "The assigned user seems not to be assigned to project",
-                        rc.isInProject());
-            }
-            if (rc.getUser() == notAssignedUser) {
-                notAssignedUserFound = true;
-                assertFalse(
-                        "The not assigned user seems to be assigned to project",
-                        rc.isInProject());
-            }
-        }
-        assertTrue("User not found in responsible containers",
-                assignedUserFound && notAssignedUserFound);
+        assertEquals(responsibles, actualTO.getResponsibles());
     }
 
     @Test
     public void testConstructStoryTO() {
+        Set<User> responsibles = new HashSet<User>(Arrays.asList(assignedUser, notAssignedUser));
         story1.setBacklog(iteration);
-        story1.setResponsibles(new HashSet<User>(Arrays.asList(assignedUser, notAssignedUser)));
+        story1.setResponsibles(responsibles);
 
         replayAll();
-        StoryTO actualTO = transferObjectBusiness.constructStoryTO(story1,
-                Arrays.asList(assignedUser));
+        StoryTO actualTO = transferObjectBusiness.constructStoryTO(story1);
         verifyAll();
 
         assertEquals("Task and transfer object id's not equal", story1.getId(),
                 actualTO.getId());
 
-        boolean assignedUserFound = false;
-        boolean notAssignedUserFound = false;
-        for (ResponsibleContainer rc : actualTO.getUserData()) {
-            if (rc.getUser() == assignedUser) {
-                assignedUserFound = true;
-                assertTrue(
-                        "The assigned user seems not to be assigned to project",
-                        rc.isInProject());
-            }
-            if (rc.getUser() == notAssignedUser) {
-                notAssignedUserFound = true;
-                assertFalse(
-                        "The not assigned user seems to be assigned to project",
-                        rc.isInProject());
-            }
-        }
-        assertTrue("User not found in responsible containers",
-                assignedUserFound && notAssignedUserFound);
+        assertEquals(responsibles, actualTO.getResponsibles());
     }
     
     @Test

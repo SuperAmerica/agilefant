@@ -1,14 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,7 +31,6 @@ import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.util.ResponsibleContainer;
 
 public class StoryBusinessTest {
 
@@ -154,17 +146,7 @@ public class StoryBusinessTest {
         
         verifyAll();
     }
-    
-    @Test
-    public void testGetStoryResponsibles() {
-        User user = new User();
-        story1.getResponsibles().add(user);
-        ResponsibleContainer respCont = new ResponsibleContainer(user, true);
-        Collection<ResponsibleContainer> responsibles = Arrays.asList(respCont);
-        
-        assertEquals(responsibles.size(), storyBusiness.getStoryResponsibles(story1).size());
-    }
-    
+       
     @Test
     public void testGetStoryContents_delegate() {
         expect(storyDAO.get(story1.getId())).andReturn(story1);

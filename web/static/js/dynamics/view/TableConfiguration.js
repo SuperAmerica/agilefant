@@ -176,6 +176,7 @@ var DynamicTableConfiguration = function(options) {
 			saveRowCallback: function() {},
 			cancelEditRowCallback: function() {},
 			sortCallback: null,
+			editableCallback: function() { return true; },
 			sortOptions: {
 			  items: "> div.dynamicTableDataRow",
 	      handle: "div." + DynamicTable.cssClasses.dragHandle
@@ -226,6 +227,9 @@ DynamicTableConfiguration.prototype.getColumns = function() {
 };
 DynamicTableConfiguration.prototype.getCaption = function() {
   return this.options.caption;
+};
+DynamicTableConfiguration.prototype.getEditableCallback = function() {
+  return this.options.editableCallback;
 };
 DynamicTableConfiguration.prototype.addColumnConfiguration = function(columnNum, options) {
 	this.columns[columnNum] = new DynamicTableColumnConfiguration(options);

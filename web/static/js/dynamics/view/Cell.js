@@ -47,7 +47,9 @@ DynamicTableCell.prototype.initialize = function() {
 	if(this.config.isEditable()) {
 	  this.element.attr("title", "Double click to edit");
 	  this.element.dblclick(function() {
-	    me.openEditor();
+	    if (me.getRow().isEditable()) {
+	        me.openEditor();
+	    }
 	  });
 	} else if(this.config.getDoubleClickCallback()) {
 	  this.element.dblclick(function() {
@@ -129,15 +131,15 @@ DynamicTableCell.prototype.setValue = function(value) {
  */
 DynamicTableCell.prototype.openEditor = function(editRow, onClose) {
   if(this.editor) {
-   return true; 
+    return true; 
   }
+
   var editorOptions = this.config.getEditOptions();
   if(editRow) {
     editorOptions = jQuery.extend({editRow: true}, editorOptions);
   }
   
   var editorName = editorOptions.editor;
-  
   if(editRow && TableEditors.isDialog(editorName)) {
     return false;
   }

@@ -164,6 +164,11 @@ DynamicTableRow.prototype.closeRowEdit = function() {
   this._applyToAllCells(DynamicTableCell.prototype.closeEditor);
 };
 
+DynamicTableRow.prototype.isEditable = function() {
+  // TODO: fix
+  return this.parentView.config.getEditableCallback().call(this.getController());
+};
+
 DynamicTableRow.prototype.saveRowEdit = function() {
   var isValid = this.isRowValid();
   if (isValid) {

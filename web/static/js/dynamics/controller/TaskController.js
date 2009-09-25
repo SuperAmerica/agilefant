@@ -181,3 +181,8 @@ TaskController.prototype.originalEstimateEditable = function() {
   }
   return true;
 };
+
+TaskController.prototype.isEditable = function () {
+  return ! this.model.isInTransaction(); 
+};
+

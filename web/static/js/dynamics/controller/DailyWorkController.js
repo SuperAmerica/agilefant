@@ -127,6 +127,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
 
         sortCallback = DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank);
     }
+    options.editableCallback = TaskController.prototype.isEditable;
     
     var config = new DynamicTableConfiguration(options);
 

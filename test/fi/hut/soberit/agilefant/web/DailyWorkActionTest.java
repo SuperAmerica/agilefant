@@ -26,10 +26,18 @@ public class DailyWorkActionTest {
         
     private DailyWorkBusiness dailyWorkBusiness;
     private UserBusiness userBusiness;
+
+    protected int LOGGED_IN_USER = 2;
     
+    @SuppressWarnings("serial")
     @Before
     public void setUp_dependencies() {
-        testable = new DailyWorkAction();
+        testable = new DailyWorkAction() {
+            @Override
+            protected int getLoggedInUserId() {
+                return LOGGED_IN_USER ;
+            }
+        };
         
         dailyWorkBusiness = createStrictMock(DailyWorkBusiness.class);
         testable.setDailyWorkBusiness(dailyWorkBusiness);
@@ -63,8 +71,8 @@ public class DailyWorkActionTest {
         User u1 = users.get(0);
         User u2 = users.get(1);
 
-        expect(userBusiness.getEnabledUsers()).andReturn(users);
         expect(userBusiness.retrieve(1)).andReturn(user);
+        expect(userBusiness.getEnabledUsers()).andReturn(users);
         expect(dailyWorkBusiness.getAllCurrentTasksForUser(user))
             .andReturn(returnedList);
 
@@ -81,34 +89,29 @@ public class DailyWorkActionTest {
         assertTrue(usersReturned.contains(u1));
         assertTrue(usersReturned.contains(u2));
     }
+
+    @Test(expected=ObjectNotFoundException.class)
+    public void testRetrieve_withDefaultUserAndUserNotFound() {
+        expect(userBusiness.retrieve(LOGGED_IN_USER)).andThrow(new ObjectNotFoundException());
+        replayAll();
+        testable.retrieve();
+        verifyAll();
+    }
     
     private List<User> getUserList() {
         List<User> users = new ArrayList<User>();
         User u1 = new User();
         u1.setId(5);
-        u1.setFullName("Antti Haapala");
+        u1.setFullName("Antti Haapala Sr");
 
         User u2 = new User();
         u1.setId(9);
-        u1.setFullName("Pentti Hirvonen");
+        u1.setFullName("Antti Haapala Jr");
 
         users.add(u1);
         users.add(u2);
         return users;
     }
     
-    @Test(expected=ObjectNotFoundException.class)
-    public void testRetrieve_UserNotFound() {
-        int id = 123123123;
-        testable.setUserId(id);
- 
-        expect(userBusiness.getEnabledUsers()).andReturn(getUserList());
-        expect(userBusiness.retrieve(id)).andThrow(new ObjectNotFoundException());
-        
-        replayAll();
-
-        testable.retrieve();
-        
-        verifyAll();
-    }
+    
 }

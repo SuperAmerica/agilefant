@@ -42,11 +42,8 @@ public class DailyWorkAction extends ActionSupport {
     private List<User> enabledUsers        = new ArrayList<User>();
     private Collection<DailyWorkTaskTO> assignedTasks = new ArrayList<DailyWorkTaskTO>();
 
-    // TODO: refactor these outside...
-    private int taskId;
-
-    private int rankUnderId;
-
+    private int  taskId;
+    private int  rankUnderId;
     private Task task;
     
     /**
@@ -54,6 +51,61 @@ public class DailyWorkAction extends ActionSupport {
      * @return
      */
     public String retrieve() {
+        /*
+         * Get the user id from session variables. This enables the Daily Work
+         * page to remember the selected user.
+         */
+        
+        if (userId == 0) {
+            userId = getStoredDailyWorkUserId();
+        }
+
+        user = getDefaultUser();
+
+        enabledUsers.addAll(userBusiness.getEnabledUsers());
+        Collections.sort(enabledUsers, new UserComparator());
+
+        assignedTasks = dailyWorkBusiness.getAllCurrentTasksForUser(user);
+
+        return Action.SUCCESS;
+    }
+
+    public String deleteFromWorkQueue() {
+        User thisUser = getDefaultUser();
+        setTask(taskBusiness.retrieve(taskId));
+        
+        dailyWorkBusiness.removeFromWhatsNext(thisUser, getTask());
+
+        return Action.SUCCESS;
+    }
+    
+    public String addToWorkQueue() {
+        User thisUser = getDefaultUser();
+        setTask(taskBusiness.retrieve(taskId));
+
+        dailyWorkBusiness.addToWhatsNext(thisUser, getTask());
+        
+        return Action.SUCCESS;
+    }
+    
+    public String rankQueueTaskAndMoveUnder() {
+        User user = getDefaultUser();
+        Task task = taskBusiness.retrieve(taskId);
+        
+        dailyWorkBusiness.rankUnderTaskOnWhatsNext(user, task, taskBusiness.retrieveIfExists(rankUnderId));
+        
+        return Action.SUCCESS;
+    }
+    
+    protected User getDefaultUser() {
+        if (userId == 0) {
+            userId = getLoggedInUserId();
+        }
+        
+        return userBusiness.retrieve(userId);
+    }
+    
+    protected int getStoredDailyWorkUserId() {
         /*
          * Get the user id from session variables. This enables the Daily Work
          * page to remember the selected user.
@@ -68,63 +120,14 @@ public class DailyWorkAction extends ActionSupport {
                 dailyWorkUserId = (Integer) sessionUser;
             }
         }
-
-        if (userId == 0) {
-            if (dailyWorkUserId == 0) {
-                userId = SecurityUtil.getLoggedUserId();
-            } else {
-                userId = dailyWorkUserId;
-            }
-        }
-
-        enabledUsers.addAll(userBusiness.getEnabledUsers());
-        Collections.sort(enabledUsers, new UserComparator());
-
-        user = userBusiness.retrieve(userId);
-        assignedTasks = dailyWorkBusiness.getAllCurrentTasksForUser(user);
-
-        return Action.SUCCESS;
-    }
-
-    public String deleteFromWorkQueue() {
-        if (userId == 0) {
-            userId = SecurityUtil.getLoggedUserId();
-        }
-
-        User thisUser = userBusiness.retrieve(userId);
-        setTask(taskBusiness.retrieve(taskId));
         
-        dailyWorkBusiness.removeFromWhatsNext(thisUser, getTask());
-
-        return Action.SUCCESS;
+        return dailyWorkUserId;
     }
     
-    public String addToWorkQueue() {
-        if (userId == 0) {
-            userId = SecurityUtil.getLoggedUserId();
-        }
-        
-        user = userBusiness.retrieve(userId);
-        setTask(taskBusiness.retrieve(taskId));
+    protected int getLoggedInUserId() {
+        return SecurityUtil.getLoggedUserId();
+    }
 
-        dailyWorkBusiness.addToWhatsNext(user, getTask());
-        
-        return Action.SUCCESS;
-    }
-    
-    public String rankQueueTaskAndMoveUnder() {
-        if (userId == 0) {
-            userId = SecurityUtil.getLoggedUserId();
-        }
-        
-        user      = userBusiness.retrieve(userId);
-        Task task = taskBusiness.retrieve(taskId);
-        
-        dailyWorkBusiness.rankUnderTaskOnWhatsNext(user, task, taskBusiness.retrieveIfExists(rankUnderId));
-        
-        return Action.SUCCESS;
-    }
-    
     public int getUserId() {
         return userId;
     }
@@ -133,14 +136,6 @@ public class DailyWorkAction extends ActionSupport {
         this.userId = userId;
     }
 
-    public void setUserBusiness(UserBusiness userBusiness) {
-        this.userBusiness = userBusiness;
-    }
-
-    public void setDailyWorkBusiness(DailyWorkBusiness dailyWorkBusiness) {
-        this.dailyWorkBusiness = dailyWorkBusiness;
-    }
-    
     public Collection<DailyWorkTaskTO> getAssignedTasks() {
         return assignedTasks;
     }
@@ -165,11 +160,19 @@ public class DailyWorkAction extends ActionSupport {
         this.rankUnderId = rankUnderId;
     }
 
+    public Task getTask() {
+        return task;
+    }
+
     public void setTask(Task task) {
         this.task = task;
     }
 
-    public Task getTask() {
-        return task;
+    public void setUserBusiness(UserBusiness userBusiness) {
+        this.userBusiness = userBusiness;
+    }
+
+    public void setDailyWorkBusiness(DailyWorkBusiness dailyWorkBusiness) {
+        this.dailyWorkBusiness = dailyWorkBusiness;
     }
 }

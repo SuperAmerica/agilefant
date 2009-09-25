@@ -175,4 +175,8 @@ public class DailyWorkAction extends ActionSupport {
     public void setDailyWorkBusiness(DailyWorkBusiness dailyWorkBusiness) {
         this.dailyWorkBusiness = dailyWorkBusiness;
     }
+
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
+    }
 }

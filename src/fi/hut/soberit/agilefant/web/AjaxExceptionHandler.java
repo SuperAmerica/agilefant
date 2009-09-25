@@ -1,16 +1,30 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.*;
+import fi.hut.soberit.agilefant.model.Assignment;
+import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
+import fi.hut.soberit.agilefant.model.Holiday;
+import fi.hut.soberit.agilefant.model.HourEntry;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.ProjectType;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Team;
+import fi.hut.soberit.agilefant.model.User;
 import flexjson.JSON;
 
 

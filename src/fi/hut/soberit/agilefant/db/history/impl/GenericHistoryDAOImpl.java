@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.db.history.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.hibernate.SessionFactory;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;

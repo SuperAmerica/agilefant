@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.util;
 
 import java.util.Collection;
 import java.util.HashMap;
-
 import java.util.Map;
 
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;

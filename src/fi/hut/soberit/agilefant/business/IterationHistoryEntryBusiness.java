@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
-
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;

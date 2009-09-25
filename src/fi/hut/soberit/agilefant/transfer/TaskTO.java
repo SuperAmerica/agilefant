@@ -1,6 +1,11 @@
 package fi.hut.soberit.agilefant.transfer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 import flexjson.JSON;
 
@@ -21,6 +26,15 @@ public class TaskTO extends Task {
     public void setEffortSpent(long effortSpent) {
         this.effortSpent = effortSpent;
     }
-
+    
+    @JSON(include=false)
+    public Collection<User> getWorkingOnTask() {
+        ArrayList<User> returned = new ArrayList<User>();
+        for (WhatsNextEntry e: getWhatsNextEntries()) {
+            returned.add(e.getUser());
+        }
+        
+        return returned;
+    }
 }
 

@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 public interface DailyWorkBusiness {
     public void setTaskDAO(TaskDAO dao);
     public void setWhatsNextEntryDAO(WhatsNextEntryDAO whatsNextEntryDAO);
+    public void setTaskBusiness(TaskBusiness taskBusiness);
     public void setRankingBusiness(RankingBusiness rankingBusiness);
 
     /**

@@ -84,18 +84,6 @@ WhatsNextEntryDAO {
         return asList(crit);
     }
 
-    
-    public Collection<WhatsNextEntry> getWhatsNextEntriesForIteration(int iterationId) {
-        //        String hqlQuery = 
-        //            "SELECT entry FROM WhatsNextEntry AS entry " +
-        //                "INNER JOIN FETCH entry.user " +
-        //                "WHERE (entry.task.iteration IS NULL OR entry.task.iteration.id = :iterationId)" +
-        //                "OR (entry.task.story.iteration IS NULL OR entry.task.story.iteration = :iterationId";
-        //        
-        // Query q = getCurrentSession().createQuery(hqlQuery);
-        return null;
-    }
-
     public void removeAllByTask(Task task) {
         // needs to use this for cascading rules to work!
         for (WhatsNextEntry entry: getAllWorkQueueEntriesFor(task)) {

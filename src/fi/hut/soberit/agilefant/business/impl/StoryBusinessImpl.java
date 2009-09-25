@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl.RankDirection;
@@ -262,15 +263,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         Backlog parent = backlogBusiness.retrieve(parentBacklogId);
         Story last = storyDAO.getLastStoryInRank(parent);
-        if (last != null) { 
-            story.setRank(last.getRank() + 1);
-        }
+        rankingBusiness.rankToBottom(story, last);
         return story;
     }
     
     /** {@inheritDoc} */
     @Transactional
-    public Story rankUnderStory(Story story, Story upperStory)
+    public Story rankUnderStory(final Story story, Story upperStory)
             throws IllegalArgumentException {
         if (story == null) {
             throw new IllegalArgumentException("Story should be given");
@@ -279,17 +278,12 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             throw new IllegalArgumentException("Stories' parent's should be the same");
         }
         
-        RankDirection dir = rankingBusiness.findOutRankDirection(story, upperStory);
-        int newRank = rankingBusiness.findOutNewRank(story, upperStory, dir);
-        Pair<Integer, Integer> borders = rankingBusiness.getRankBorders(story, upperStory);
-        
-        Collection<Rankable> storiesToShift = new ArrayList<Rankable>();
-        storiesToShift.addAll(storyDAO.getStoriesWithRankBetween(story.getBacklog(), borders.first, borders.second));
-        
-        rankingBusiness.shiftRanks(dir, storiesToShift);
-        
-        story.setRank(newRank);
-        
+        rankingBusiness.rankUnder(story, upperStory, new RankUnderDelegate() {
+            public Collection<? extends Rankable> getWithRankBetween(Integer first, Integer second) {
+                return storyDAO.getStoriesWithRankBetween(story.getBacklog(), first, second);
+            }
+        });
+
         return story;
     }
     

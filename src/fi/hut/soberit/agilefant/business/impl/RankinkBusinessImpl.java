@@ -1,10 +1,12 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.util.Pair;
@@ -12,10 +14,16 @@ import fi.hut.soberit.agilefant.util.Pair;
 @Transactional(readOnly = true)
 @Service("rankingBusiness")
 public class RankinkBusinessImpl implements RankingBusiness {
-
     public enum RankDirection { TOP, UP, DOWN };
     
-    /** {@inheritDoc} */
+    /**
+     * Get the border values of the ranks of the rankables to shift.
+     * 
+     * @param rankable the rankable to rank
+     * @param upper 
+     * @return a pair with first the lower rank and second the upper rank
+     * @throws IllegalArgumentException if rankable was null
+     */
     public Pair<Integer, Integer> getRankBorders(Rankable rankable,
             Rankable upper) throws IllegalArgumentException {
         validateRankable(rankable);
@@ -45,7 +53,9 @@ public class RankinkBusinessImpl implements RankingBusiness {
         }
     }
     
-    /** {@inheritDoc} */
+    /**
+     * Find out the direction of the ranking.
+     */
     public RankDirection findOutRankDirection(Rankable rankable, Rankable upper) {
         validateRankable(rankable);
         
@@ -58,7 +68,11 @@ public class RankinkBusinessImpl implements RankingBusiness {
         return RankDirection.DOWN;
     }
     
-    /** {@inheritDoc} */
+    /**
+     * Shift ranks of all the given rankables according to the direction. 
+     * @param dir
+     * @param rankablesToShift
+     */
     public void shiftRanks(RankDirection dir,
             Collection<Rankable> rankablesToShift) {
         if (dir == null || rankablesToShift == null) {
@@ -76,7 +90,9 @@ public class RankinkBusinessImpl implements RankingBusiness {
         }
     }
     
-    /** {@inheritDoc} */
+    /**
+     * Get the new rank number.
+     */
     public int findOutNewRank(Rankable rankable, Rankable upper,
             RankDirection dir) {
         if (dir == RankDirection.TOP) {
@@ -86,5 +102,35 @@ public class RankinkBusinessImpl implements RankingBusiness {
             return upper.getRank() + 1;
         }
         return upper.getRank();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void rankToBottom(Rankable rankable, Rankable lastInRank) {
+        // might be null if all tasks done.
+        if (lastInRank != null) {
+            rankable.setRank(lastInRank.getRank() + 1);
+        }
+        else {
+            rankable.setRank(0);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void rankUnder(Rankable entry, Rankable upperEntry,
+            RankUnderDelegate delegate) {
+        
+        RankDirection dir = findOutRankDirection(entry, upperEntry);
+        int newRank = findOutNewRank(entry, upperEntry, dir);
+        Pair<Integer, Integer> borders = getRankBorders(entry, upperEntry);
+        
+        Collection<Rankable> shiftables = new ArrayList<Rankable>();
+        shiftables.addAll(delegate.getWithRankBetween(borders.first, borders.second));
+
+        shiftRanks(dir, shiftables);
+        entry.setRank(newRank);
     }
 }

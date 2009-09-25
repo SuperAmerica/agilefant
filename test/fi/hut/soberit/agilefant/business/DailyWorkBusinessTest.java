@@ -17,7 +17,6 @@ import org.junit.Test;
 import fi.hut.soberit.agilefant.business.impl.DailyWorkBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -28,8 +27,25 @@ public class DailyWorkBusinessTest {
     private DailyWorkBusiness testable;
     
     private TaskDAO taskDAO;
-
     private WhatsNextEntryDAO whatsNextEntryDAO;
+
+    private RankingBusiness rankingBusiness;
+    private TaskBusiness taskBusiness;
+
+    private Task task1;
+
+    private Task task3;
+
+    private Task task2;
+
+
+    private User user;
+
+    private Product backlog;
+
+    private WhatsNextEntry whatsNextEntry_forTask1AndUser;
+
+    private WhatsNextEntry whatsNextEntry_forTask2AndUser;
     
     @Before
     public void setUp() {
@@ -40,31 +56,45 @@ public class DailyWorkBusinessTest {
         
         whatsNextEntryDAO = createMock(WhatsNextEntryDAO.class);
         testable.setWhatsNextEntryDAO(whatsNextEntryDAO);
+        
+        rankingBusiness = createMock(RankingBusiness.class);
+        testable.setRankingBusiness(rankingBusiness);
+        
+        taskBusiness = createMock(TaskBusiness.class);
+        testable.setTaskBusiness(taskBusiness);
+        
+        backlog = new Product();
+        backlog.setId(5);
+        
+        user = new User();
+        
+        task1 = new Task();
+        task1.setId(1);
+        task2 = new Task();
+        task2.setId(2);
+        task3 = new Task();
+        task3.setId(3);
+
+        whatsNextEntry_forTask1AndUser = new WhatsNextEntry();
+        whatsNextEntry_forTask1AndUser.setUser(user);
+        whatsNextEntry_forTask1AndUser.setTask(task1);
+
+        whatsNextEntry_forTask2AndUser = new WhatsNextEntry();
+        whatsNextEntry_forTask2AndUser.setUser(user);
+        whatsNextEntry_forTask2AndUser.setTask(task2);
     }
 
     private void replayAll() {
-        replay(taskDAO, whatsNextEntryDAO);
+        replay(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness);
     }
     
     private void verifyAll() {
-        verify(taskDAO, whatsNextEntryDAO);
+        verify(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness);
     }
 
     @Test
     public void testGetAllCurrentTasksForUser() {
-        Backlog backlog = new Product();
-        backlog.setId(5);
-        
-        User user = new User();
         ArrayList<Task> tasks = new ArrayList<Task>();
-        
-        Task task1 = new Task();
-        task1.setId(1);
-        Task task2 = new Task();
-        task2.setId(2);
-        Task task3 = new Task();
-        task3.setId(3);
-        
         tasks.addAll(Arrays.asList(task1, task2));
 
         WhatsNextEntry entry1 = new WhatsNextEntry();

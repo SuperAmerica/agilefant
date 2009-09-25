@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
+import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
@@ -258,7 +259,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     /* RANKING */
     /** {@inheritDoc} */
     @Transactional
-    public Task rankUnderTask(Task task, Task upperTask) throws IllegalArgumentException {
+    public Task rankUnderTask(final Task task, Task upperTask) throws IllegalArgumentException {
         if (task == null) {
             throw new IllegalArgumentException("Task should be given");
         }
@@ -271,21 +272,13 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             }
         }
         
-        RankDirection dir = rankingBusiness.findOutRankDirection(task, upperTask);
-        int newRank = rankingBusiness.findOutNewRank(task, upperTask, dir);
-        
-        Pair<Integer, Integer> borders = rankingBusiness.getRankBorders(task, upperTask);
-        
-        Collection<Rankable> shiftables = new ArrayList<Rankable>();
-        shiftables.addAll(taskDAO.getTasksWithRankBetween(
-                borders.first, borders.second, task.getIteration(), task.getStory()));
-        
-        rankingBusiness.shiftRanks(dir, shiftables);
-        
-//        Collection<Task> shiftedTasks = getShiftedTasks(dir, task, upperTask);
-//        shiftTaskRanks(dir, shiftedTasks);
-        
-        task.setRank(newRank);
+        rankingBusiness.rankUnder(task, upperTask, new RankUnderDelegate() {
+            public Collection<? extends Rankable> getWithRankBetween(Integer first,
+                    Integer second) {
+                return taskDAO.getTasksWithRankBetween(
+                        first, second, task.getIteration(), task.getStory());
+            }
+        });
         
         return task;
     }
@@ -299,6 +292,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         if (task == null || (parentStoryId == null && parentIterationId == null)) {
             throw new IllegalArgumentException();
         }
+
         Task lastInRank;
         
         if (parentStoryId != null) {
@@ -307,8 +301,8 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         else {
             lastInRank = taskDAO.getLastTaskInRank(null, iterationBusiness.retrieve(parentIterationId));
         }
-        
-        task.setRank(lastInRank.getRank() + 1);
+
+        rankingBusiness.rankToBottom(task, lastInRank);
         return task;
     }
     

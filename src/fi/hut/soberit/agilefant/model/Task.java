@@ -173,23 +173,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
         this.whatsNextEntries = entries;
     }
 
-    @JSON(include = false)
-    @Transient
-    @Deprecated
-    public Collection<User> getWorkingOnTask() {
-        ArrayList<User> returned = new ArrayList<User>();
-        for (WhatsNextEntry e: getWhatsNextEntries()) {
-            returned.add(e.getUser());
-        }
-        
-        return returned;
-    }
-    
-    @Transient
-    @Deprecated
-    public void setWorkingOnTask(Collection<User> users) {
-    }
-    
     @OneToMany(mappedBy="task")
     @OrderBy("date desc")
     @NotAudited

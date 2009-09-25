@@ -85,7 +85,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
     @Transactional(readOnly = true)
     public IterationTO getIterationContents(int iterationId) {
-
         Iteration iteration = this.retrieve(iterationId);
         IterationTO iterationTO = new IterationTO(iteration);
 

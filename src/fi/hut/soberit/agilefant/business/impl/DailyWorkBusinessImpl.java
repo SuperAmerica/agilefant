@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
+import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
-import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl.RankDirection;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Rankable;
@@ -22,7 +22,6 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
-import fi.hut.soberit.agilefant.util.Pair;
 
 @Service("dailyWorkBusiness")
 @Transactional
@@ -108,21 +107,12 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     }
 
     @Transactional
-    public DailyWorkTaskTO rankToBottomOnWhatsNext(WhatsNextEntry entry) throws IllegalArgumentException {
+    public DailyWorkTaskTO rankToBottomOnWhatsNext(final WhatsNextEntry entry) throws IllegalArgumentException {
         if (entry == null) {
             throw new IllegalArgumentException();
         }
         
-        WhatsNextEntry lastInRank;
-        lastInRank = whatsNextEntryDAO.getLastTaskInRank(entry.getUser());
-        
-        // might be null if all tasks done.
-        if (lastInRank != null) {
-            entry.setRank(lastInRank.getRank() + 1);
-        }
-        else {
-            entry.setRank(0);
-        }
+        rankingBusiness.rankToBottom(entry, whatsNextEntryDAO.getLastTaskInRank(entry.getUser()));
         return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.NEXT, entry.getRank());
     }
     
@@ -133,17 +123,20 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     }
 
     @Transactional
-    public DailyWorkTaskTO rankUnderTaskOnWhatsNext(WhatsNextEntry entry, WhatsNextEntry upperEntry) {
-        RankDirection dir = rankingBusiness.findOutRankDirection(entry, upperEntry);
-        int newRank = rankingBusiness.findOutNewRank(entry, upperEntry, dir);
-        Pair<Integer, Integer> borders = rankingBusiness.getRankBorders(entry, upperEntry);
-        
-        Collection<Rankable> shiftables = new ArrayList<Rankable>();
-        shiftables.addAll(whatsNextEntryDAO.getTasksWithRankBetween(borders.first, borders.second, entry.getUser()));
+    public DailyWorkTaskTO rankUnderTaskOnWhatsNext(final WhatsNextEntry entry, WhatsNextEntry upperEntry) {
+        if (entry == null) {
+            throw new IllegalArgumentException();
+        }
 
-        rankingBusiness.shiftRanks(dir, shiftables);
-        entry.setRank(newRank);
-        return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.ASSIGNED, newRank);
+        RankUnderDelegate delegate = new RankUnderDelegate() {
+            public Collection<? extends Rankable> getWithRankBetween(Integer lower,
+                    Integer upper) {
+                return whatsNextEntryDAO.getTasksWithRankBetween(lower, upper, entry.getUser());
+            }
+        };
+        
+        rankingBusiness.rankUnder(entry, upperEntry, delegate);
+        return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.ASSIGNED, entry.getRank());
     }
     
     @Transactional

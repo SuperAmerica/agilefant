@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,11 +21,15 @@ public class RankingBusinessTest {
 
     private Rankable rankable1;
     private Rankable rankable2;
+    private Rankable rankable3;
+    private Rankable rankable4;
     
     @Before
     public void setUp_data() {
         rankable1 = new Task();
         rankable2 = new Task();
+        rankable3 = new Task();
+        rankable4 = new Task();
     }
     
     /*
@@ -164,5 +169,44 @@ public class RankingBusinessTest {
         rankable1.setRank(713);
         rankable2.setRank(97);
         assertEquals(713, rankingBusiness.findOutNewRank(rankable2, rankable1, RankDirection.DOWN));
+    }
+    
+    @Test
+    public void testRankToBottom() {
+        rankable1.setRank(2);
+        rankable2.setRank(4);
+        
+        rankingBusiness.rankToBottom(rankable1, rankable2);
+        
+        assertEquals(5, rankable1.getRank());
+    }
+
+    @Test
+    public void testRankToBottom_nothingBefore() {
+        rankable1.setRank(2);
+        
+        rankingBusiness.rankToBottom(rankable1, null);
+        
+        assertEquals(0, rankable1.getRank());
+    }
+
+    @Test
+    public void testRankUnder() {
+        rankable1.setRank(1);
+        rankable2.setRank(2);
+        rankable3.setRank(3);
+        rankable4.setRank(4);
+        
+        rankingBusiness.rankUnder(rankable1, rankable3, new RankUnderDelegate() {
+            public Collection<? extends Rankable> getWithRankBetween(
+                    Integer first, Integer second) {
+                assertEquals(2, first.intValue());
+                assertEquals(3, second.intValue());
+                
+                return Arrays.asList(new Rankable[] { rankable2, rankable3 }); 
+            }
+        });
+        
+        assertEquals(3, rankable1.getRank());
     }
 }

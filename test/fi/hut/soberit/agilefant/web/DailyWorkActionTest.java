@@ -14,10 +14,12 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public class DailyWorkActionTest {
@@ -26,6 +28,7 @@ public class DailyWorkActionTest {
         
     private DailyWorkBusiness dailyWorkBusiness;
     private UserBusiness userBusiness;
+    private TaskBusiness taskBusiness;
 
     protected int LOGGED_IN_USER = 2;
     
@@ -44,14 +47,17 @@ public class DailyWorkActionTest {
 
         userBusiness = createStrictMock(UserBusiness.class);
         testable.setUserBusiness(userBusiness);
+
+        taskBusiness = createStrictMock(TaskBusiness.class);
+        testable.setTaskBusiness(taskBusiness);
     }
     
     private void replayAll() {
-        replay(dailyWorkBusiness, userBusiness);
+        replay(dailyWorkBusiness, taskBusiness, userBusiness);
     }
 
     private void verifyAll() {
-        verify(dailyWorkBusiness, userBusiness);
+        verify(dailyWorkBusiness, taskBusiness, userBusiness);
     }
     
     @Test
@@ -98,6 +104,82 @@ public class DailyWorkActionTest {
         verifyAll();
     }
     
+    @Test
+    public void testDeleteFromQueue() {
+        User user = new User();
+        user.setId(LOGGED_IN_USER);
+        
+        Task task = new Task();
+        task.setId(1);
+        
+        testable.setTaskId(1);
+        
+        expect(userBusiness.retrieve(LOGGED_IN_USER)).andReturn(user);
+        expect(taskBusiness.retrieve(1)).andReturn(task);
+        dailyWorkBusiness.removeFromWhatsNext(user, task);
+
+        replayAll();
+        testable.deleteFromWorkQueue();
+        
+        verifyAll();
+        
+        // This is to be provided in JSON
+        assertSame(task, testable.getTask());
+    }
+
+    @Test
+    public void testAddToQueue() {
+        User user = new User();
+        user.setId(3);
+        
+        Task task = new Task();
+        task.setId(1);
+        
+        testable.setTaskId(1);
+        testable.setUserId(3);
+        
+        expect(userBusiness.retrieve(3)).andReturn(user);
+        expect(taskBusiness.retrieve(1)).andReturn(task);
+        
+        WhatsNextEntry entry = new WhatsNextEntry();
+        expect(dailyWorkBusiness.addToWhatsNext(user, task)).andReturn(entry);
+
+        replayAll();
+        testable.addToWorkQueue();
+        
+        verifyAll();
+        
+        // This is to be provided in JSON
+        assertSame(task, testable.getTask());
+    }
+    
+    @Test
+    public void testRankQueueTaskAndMoveUnder() {
+        Task task = new Task();
+        task.setId(1);
+        
+        Task rankUnder = new Task();
+        rankUnder.setId(2);
+        
+        User user = new User();
+        user.setId(3);
+        
+        testable.setTaskId(1);
+        testable.setRankUnderId(2);
+        testable.setUserId(3);
+
+        expect(userBusiness.retrieve(3)).andReturn(user);
+        expect(taskBusiness.retrieve(1)).andReturn(task);
+        expect(taskBusiness.retrieveIfExists(2)).andReturn(rankUnder);
+        expect(dailyWorkBusiness.rankUnderTaskOnWhatsNext(user, task, rankUnder)).andReturn(new DailyWorkTaskTO(task));
+        
+        replayAll();
+        
+        testable.rankQueueTaskAndMoveUnder();
+        
+        verifyAll();
+    }
+
     private List<User> getUserList() {
         List<User> users = new ArrayList<User>();
         User u1 = new User();
@@ -112,6 +194,5 @@ public class DailyWorkActionTest {
         users.add(u2);
         return users;
     }
-    
     
 }

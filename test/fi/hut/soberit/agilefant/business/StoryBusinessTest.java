@@ -15,7 +15,7 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl;
+import fi.hut.soberit.agilefant.business.impl.RankingBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.StoryBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
@@ -99,7 +99,7 @@ public class StoryBusinessTest {
         iheBusiness = createMock(IterationHistoryEntryBusiness.class);
         storyBusiness.setIterationHistoryEntryBusiness(iheBusiness);
         
-        rankingBusiness = new RankinkBusinessImpl();
+        rankingBusiness = new RankingBusinessImpl();
         storyBusiness.setRankingBusiness(rankingBusiness);
     }
     

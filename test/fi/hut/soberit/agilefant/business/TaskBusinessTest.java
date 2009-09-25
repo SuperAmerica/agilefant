@@ -18,7 +18,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl;
+import fi.hut.soberit.agilefant.business.impl.RankingBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.TaskBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -75,7 +75,7 @@ public class TaskBusinessTest {
         dailyWorkBusiness = createStrictMock(DailyWorkBusiness.class);
         taskBusiness.setDailyWorkBusiness(dailyWorkBusiness);
         
-        rankingBusiness = new RankinkBusinessImpl();
+        rankingBusiness = new RankingBusinessImpl();
         taskBusiness.setRankingBusiness(rankingBusiness);
     }
     

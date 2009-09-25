@@ -13,7 +13,7 @@ import fi.hut.soberit.agilefant.util.Pair;
 
 @Transactional(readOnly = true)
 @Service("rankingBusiness")
-public class RankinkBusinessImpl implements RankingBusiness {
+public class RankingBusinessImpl implements RankingBusiness {
     public enum RankDirection { TOP, UP, DOWN };
     
     /**

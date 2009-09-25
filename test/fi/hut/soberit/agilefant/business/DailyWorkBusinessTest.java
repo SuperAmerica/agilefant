@@ -13,11 +13,13 @@ import org.joda.time.Duration;
 import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.impl.DailyWorkBusinessImpl;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
@@ -144,5 +146,86 @@ public class DailyWorkBusinessTest {
 
         // and the milliseconds within the day must be 0 
         assertEquals(0, intervalValue.getStart().getMillisOfDay());
+    }
+    
+    @Test
+    public void testRankToBottomOnWhatsNext() {
+        expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(whatsNextEntry_forTask1AndUser);
+        expect(whatsNextEntryDAO.getLastTaskInRank(user)).andReturn(whatsNextEntry_forTask2AndUser);
+        rankingBusiness.rankToBottom(whatsNextEntry_forTask1AndUser, whatsNextEntry_forTask2AndUser);
+        replayAll();
+        
+        testable.rankToBottomOnWhatsNext(user, task1);
+        verifyAll();
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testRankToBottom_noEntry() {
+        expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(null);
+        
+        replayAll();
+
+        testable.rankToBottomOnWhatsNext(user, task1);
+        verifyAll();
+    }
+    
+    @Test
+    public void testRankUnder_addEntry() {
+        expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(null);
+
+        Capture<WhatsNextEntry> entryCapture    = new Capture<WhatsNextEntry>();
+        Capture<WhatsNextEntry> entryCapture2   = new Capture<WhatsNextEntry>();
+        Capture<RankUnderDelegate> delegateCapture = new Capture<RankUnderDelegate>();
+
+        whatsNextEntryDAO.store(and(isA(WhatsNextEntry.class), EasyMock.capture(entryCapture)));
+        taskBusiness.addResponsible(task1, user);
+        expect(whatsNextEntryDAO.getLastTaskInRank(user)).andReturn(whatsNextEntry_forTask2AndUser);
+        expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task2)).andReturn(null);
+        
+        rankingBusiness.rankToBottom(and(isA(WhatsNextEntry.class), 
+            EasyMock.capture(entryCapture2)), 
+            eq(whatsNextEntry_forTask2AndUser)
+        );
+        
+        rankingBusiness.rankUnder(
+            isA(Rankable.class), 
+            eq((Rankable)null),
+            and(isA(RankUnderDelegate.class), capture(delegateCapture))
+        );
+        
+        // from delegate:
+        expect(whatsNextEntryDAO.getTasksWithRankBetween(1, 2, user)).andReturn(new ArrayList());
+        
+        replayAll();
+
+        testable.rankUnderTaskOnWhatsNext(user, task1, task2);
+
+        entryCapture.hasCaptured();
+        entryCapture2.hasCaptured();
+        delegateCapture.hasCaptured();
+       
+        delegateCapture.getValue().getWithRankBetween(1, 2);
+        
+        verifyAll();
+    }
+    
+    @Test
+    public void testRemoveFromWhatsNext() {
+        expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(whatsNextEntry_forTask1AndUser);
+        whatsNextEntryDAO.remove(whatsNextEntry_forTask1AndUser);
+
+        replayAll();
+        testable.removeFromWhatsNext(user, task1);
+        
+        verifyAll();
+    }
+    
+    @Test
+    public void testRemoveTaskFromWorkQueues() {
+        whatsNextEntryDAO.removeAllByTask(task1);
+        
+        replayAll();
+        testable.removeTaskFromWorkQueues(task1);
+        verifyAll();
     }
 }

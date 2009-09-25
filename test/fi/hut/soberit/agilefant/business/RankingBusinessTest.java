@@ -9,15 +9,15 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl;
-import fi.hut.soberit.agilefant.business.impl.RankinkBusinessImpl.RankDirection;
+import fi.hut.soberit.agilefant.business.impl.RankingBusinessImpl;
+import fi.hut.soberit.agilefant.business.impl.RankingBusinessImpl.RankDirection;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.Pair;
 
 public class RankingBusinessTest {
 
-    private RankinkBusinessImpl rankingBusiness = new RankinkBusinessImpl();
+    private RankingBusinessImpl rankingBusiness = new RankingBusinessImpl();
 
     private Rankable rankable1;
     private Rankable rankable2;

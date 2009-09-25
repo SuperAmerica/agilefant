@@ -25,7 +25,8 @@ var UserModel = function() {
       "loginName": "loginName",
       "email": "email",
       "weekEffort": "weekEffort",
-      "enabled":    "enabled"
+      "enabled":    "enabled",
+      "autoassignToTasks": "autoassignToTasks"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Story":         "story",
@@ -82,6 +83,10 @@ UserModel.prototype._saveData = function(id, changedData) {
 /*
  * GETTERS AND SETTERS
  */
+
+UserModel.prototype.isAutoassignToTasks = function() {
+  return this.currentData.autoassignToTasks;
+};
 
 UserModel.prototype.getEmail = function() {
   return this.currentData.email;
@@ -154,5 +159,6 @@ UserModel.prototype.setWeekEffort = function(weekEffort) {
   this.currentData.weekEffort = weekEffort;
   this._commitIfNotInTransaction();
 };
+
 
 

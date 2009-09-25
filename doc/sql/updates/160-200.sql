@@ -658,3 +658,6 @@ alter table whatsnextentry add index FK4B2134106E84F892 (task_id), add constrain
 alter table stories add column parent_id integer;
 alter table stories_AUD add column parent_id integer;
 alter table stories add index FK8FB06053F5E897CD (parent_id), add constraint FK8FB06053F5E897CD foreign key (parent_id) references stories (id);
+
+alter table users add column autoassignToTasks bit default 1;
+

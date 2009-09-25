@@ -17,6 +17,12 @@ TasksWithoutStoryController.prototype.taskControllerFactory = function(view, mod
 TasksWithoutStoryController.prototype.createTask = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.task);
   mockModel.setIteration(this.model);
+  // Check whether to add the current user as a responsible.
+  var currentUser = PageController.getInstance().getCurrentUser(); 
+  if (currentUser.isAutoassignToTasks()) {
+    mockModel.addResponsible(currentUser.getId());
+  }
+  
   var controller = new TaskController(mockModel, null, this);
   var row = this.taskListView.createRow(controller, mockModel, "top");
   controller.view = row;

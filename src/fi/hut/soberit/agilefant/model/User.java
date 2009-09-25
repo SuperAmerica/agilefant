@@ -69,7 +69,13 @@ public class User {
     private Collection<Holiday> holidays = new HashSet<Holiday>();
     
     private Collection<HolidayAnomaly> holidayAnomalies = new HashSet<HolidayAnomaly>();
-        
+    
+    /*
+     * User-specific settings
+     */
+    private boolean autoassignToTasks = true;
+    
+    
     /**
      * Get the id of this object.
      * <p>
@@ -292,4 +298,16 @@ public class User {
         this.holidayAnomalies = holidayAnomalies;
     }
 
+    @JSON
+    @NotAudited
+    @Column(columnDefinition = "bit default 1")
+    public boolean isAutoassignToTasks() {
+        return autoassignToTasks;
+    }
+
+    public void setAutoassignToTasks(boolean autoassignToTasks) {
+        this.autoassignToTasks = autoassignToTasks;
+    }
+
+    
 }

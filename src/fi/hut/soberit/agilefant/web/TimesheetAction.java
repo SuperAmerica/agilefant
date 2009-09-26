@@ -6,7 +6,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.Principal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,13 +15,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.struts2.interceptor.PrincipalAware;
-import org.apache.struts2.interceptor.PrincipalProxy;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
-import org.springframework.security.providers.rememberme.RememberMeAuthenticationToken;
 import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.Action;
@@ -32,7 +27,6 @@ import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.business.TimesheetExportBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.AgilefantUserDetails;
 import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
 import fi.hut.soberit.agilefant.util.CalendarUtils;
 import flexjson.JSONSerializer;
@@ -45,7 +39,7 @@ import flexjson.JSONSerializer;
  */
 @Component("timesheetAction")
 @Scope("prototype")
-public class TimesheetAction extends ActionSupport implements PrincipalAware {
+public class TimesheetAction extends ActionSupport {
 
     private static final long serialVersionUID = -8988740967426943267L;
     
@@ -66,92 +60,44 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
     
     private List<BacklogTimesheetNode> products;
     
-    private String startDate;
+    private DateTime startDate;
 
-    private String endDate;
+    private DateTime endDate;
     
     private String interval;
     
     private Set<Integer> userIds = new HashSet<Integer>();
-    
-    private int currentUserId = 0;
-    
-    private boolean onlyOngoing = true;
+        
+    private boolean onlyOngoing = false;
     
     private long effortSum = 0;
     
     private ByteArrayOutputStream exportableReport;
    
     
-    
-    /**
-     * Needed for xwork's execAndWait as action is executed in a different
-     * thread than the wait page. Thus no static threadLocal based principals
-     * (such as those in SecurityUtil) can be used.
-     */
-    public void setPrincipalProxy(PrincipalProxy principalProxy) {
-        Principal principal = principalProxy.getUserPrincipal();
-        AgilefantUserDetails ud;
-        if (principal instanceof RememberMeAuthenticationToken) {
-            ud = (AgilefantUserDetails) ((RememberMeAuthenticationToken) principal)
-                    .getPrincipal();
-        } else {
-            ud = (AgilefantUserDetails) ((UsernamePasswordAuthenticationToken) principal)
-                    .getPrincipal();
-        }
-        currentUserId = ud.getUserId();
-        
-    }
-    /*
-     * -1 in product, project or iteration id array remarks "select all" option
-     */
     public Set<Integer> getSelectedBacklogs() {
-        Set<Integer> ret = new HashSet<Integer>();
-        if(this.projectIds.contains(-1)) {
-            if(this.onlyOngoing) {
-                ret.addAll(this.projectIds);
-            } else {
-                ret.addAll(this.productIds);
-            }
-        } else if(this.iterationIds.contains(-1)) {
-             if(this.onlyOngoing) {
-                ret.addAll(this.iterationIds);
-            } else {
-                ret.addAll(this.projectIds);
-            }
-        } else {
-            if(this.projectIds.size() == 0) {
-                ret.addAll(this.productIds);
-            } else if(this.iterationIds.size() == 0) {
-                ret.addAll(this.projectIds);
-            } else {
-                ret.addAll(this.iterationIds);
-            }
+        if(this.iterationIds.size() > 0) {
+            return this.iterationIds;
+        } else if(this.projectIds.size() > 0) {
+            return this.projectIds;
+        } else if(this.productIds.size() > 0) {
+            return this.productIds;
         }
-        ret.remove(-1);
-        return ret;
+        return new HashSet<Integer>();
     }
     public String initialize() {
         this.interval = "TODAY";
         this.onlyOngoing = false;
-        //this.userIds.add(this.currentUserId);
         return Action.SUCCESS;
     }
-    private DateTime getDateTimeFromString(String val) {
-        try {
-            Date dateVal = CalendarUtils.parseDateFromString(val);
-            return new DateTime(dateVal.getTime());
-        } catch (ParseException e) {
-            return null;
-        }
-    }
+
     public String generateTree(){
         Set<Integer> selectedBacklogIds = this.getSelectedBacklogs();
         if(selectedBacklogIds == null || selectedBacklogIds.size() == 0) {
-            addActionError("No backlogs selected.");
+            //addActionError("No backlogs selected.");
             return Action.ERROR;
         }        
-        products = timesheetBusiness.getRootNodes(selectedBacklogIds, getDateTimeFromString(startDate), getDateTimeFromString(endDate), this.userIds);
+        products = timesheetBusiness.getRootNodes(selectedBacklogIds, startDate, endDate, this.userIds);
         effortSum = timesheetBusiness.getRootNodeSum(products);
         return Action.SUCCESS;
     }
@@ -162,7 +108,7 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
             addActionError("No backlogs selected.");
             return Action.ERROR;
         }        
-        Workbook wb = this.timesheetExportBusiness.generateTimesheet(this, selectedBacklogIds, getDateTimeFromString(startDate), getDateTimeFromString(endDate), userIds);
+        Workbook wb = this.timesheetExportBusiness.generateTimesheet(this, selectedBacklogIds, startDate, endDate, userIds);
         this.exportableReport = new ByteArrayOutputStream();
         try {
             wb.write(this.exportableReport);
@@ -225,19 +171,19 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
         this.products = products;
     }
 
-    public String getStartDate() {
+    public DateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(String startDate) {
+    public void setStartDate(DateTime startDate) {
         this.startDate = startDate;
     }
 
-    public String getEndDate() {
+    public DateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -255,14 +201,6 @@ public class TimesheetAction extends ActionSupport implements PrincipalAware {
 
     public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
-    }
-
-    public int getCurrentUserId() {
-        return currentUserId;
-    }
-
-    public void setCurrentUserId(int currentUserId) {
-        this.currentUserId = currentUserId;
     }
 
     public boolean isOnlyOngoing() {

@@ -11,7 +11,15 @@
 <!--
 $(function()
 {
-	$('#${id}').datePicker({displayClose: true, createButton: true, clickInput: false});
+	$('#${id}').datepicker({
+		dateFormat : 'yy-mm-dd', 
+		numberOfMonths : 3, 
+		buttonImage : 'static/img/calendar.gif',
+    buttonImageOnly : true,
+    showOn : 'button',
+    showButtonPanel : true,
+    constrainInput : false
+    });
 });
 //-->
 </script>

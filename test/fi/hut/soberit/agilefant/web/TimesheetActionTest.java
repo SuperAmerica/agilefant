@@ -43,8 +43,8 @@ public class TimesheetActionTest {
     public void testGenerateTree_noBacklogsSelected() {
         Set<Integer> productIds = Collections.emptySet();
         timesheetAction.setUserIds(userIds);
-        timesheetAction.setStartDate("2009-01-01 01:01");
-        timesheetAction.setEndDate("2009-05-01 01:01");
+        timesheetAction.setStartDate(new DateTime(2009,1,1,1,1,0,0));
+        timesheetAction.setEndDate(new DateTime(2009,5,1,1,1,0,0));
         timesheetAction.setProductIds(productIds);
         assertEquals(Action.ERROR, timesheetAction.generateTree());
     }
@@ -53,8 +53,8 @@ public class TimesheetActionTest {
     public void testGenerateTree() {
         Set<Integer> productIds = new HashSet<Integer>(Arrays.asList(4,5));
         timesheetAction.setUserIds(userIds);
-        timesheetAction.setStartDate("2009-01-01 01:01");
-        timesheetAction.setEndDate("2009-05-01 01:01");
+        timesheetAction.setStartDate(new DateTime(2009,1,1,1,1,0,0));
+        timesheetAction.setEndDate(new DateTime(2009,5,1,1,1,0,0));
         timesheetAction.setProductIds(productIds);
         
         List<BacklogTimesheetNode> rootNodes = Collections.emptyList();
@@ -71,8 +71,8 @@ public class TimesheetActionTest {
     public void testGenerateTree_emptyDates() {
         Set<Integer> productIds = new HashSet<Integer>(Arrays.asList(4,5));
         timesheetAction.setUserIds(userIds);
-        timesheetAction.setStartDate("");
-        timesheetAction.setEndDate("");
+        timesheetAction.setStartDate(null);
+        timesheetAction.setEndDate(null);
         timesheetAction.setProductIds(productIds);
         
         List<BacklogTimesheetNode> rootNodes = Collections.emptyList();
@@ -83,16 +83,6 @@ public class TimesheetActionTest {
         assertEquals(rootNodes, timesheetAction.getProducts());
         assertEquals(500L, timesheetAction.getEffortSum());
         verify(timesheetBusiness);
-    }
-    @Test
-    public void testGetSelectedBacklogs_allProjects() {
-        Set<Integer> projectIds = new HashSet<Integer>(Arrays.asList(-1,1,2,3));
-        Set<Integer> productIds = new HashSet<Integer>(Arrays.asList(4,5));
-        timesheetAction.setProductIds(productIds);
-        timesheetAction.setOnlyOngoing(false);
-        timesheetAction.setProjectIds(projectIds);
-        Set<Integer> backlogIds = timesheetAction.getSelectedBacklogs();
-        assertEquals(productIds, backlogIds);
     }
     
     @Test
@@ -115,16 +105,6 @@ public class TimesheetActionTest {
         Set<Integer> backlogIds = timesheetAction.getSelectedBacklogs();
         assertEquals(projectIds, backlogIds);
     }
-    @Test
-    public void testGetSelectedBacklogs_allOngoinProjects() {
-        Set<Integer> projectIds = new HashSet<Integer>(Arrays.asList(1,2,3,-1));
-        Set<Integer> productIds = new HashSet<Integer>(Arrays.asList(4,5));
-        timesheetAction.setProductIds(productIds);
-        timesheetAction.setOnlyOngoing(true);
-        timesheetAction.setProjectIds(projectIds);
-        Set<Integer> backlogIds = timesheetAction.getSelectedBacklogs();
-        assertEquals(3, backlogIds.size());
-    }
     
     @Test
     public void testGetSelectedBacklogs_selectedProducts() {
@@ -133,29 +113,6 @@ public class TimesheetActionTest {
         timesheetAction.setOnlyOngoing(true);
         Set<Integer> backlogIds = timesheetAction.getSelectedBacklogs();
         assertEquals(productIds, backlogIds);
-    }
-    
-    
-    @Test
-    public void testGetSelectedBacklogs_allIterations() {
-        Set<Integer> iterationIds = new HashSet<Integer>(Arrays.asList(-1,1,2,3));
-        Set<Integer> projectIds = new HashSet<Integer>(Arrays.asList(4,5));
-        timesheetAction.setProjectIds(projectIds);
-        timesheetAction.setOnlyOngoing(false);
-        timesheetAction.setIterationIds(iterationIds);
-        Set<Integer> backlogIds = timesheetAction.getSelectedBacklogs();
-        assertEquals(projectIds, backlogIds);
-    }
-    
-    @Test
-    public void testGetSelectedBacklogs_allOngoingIterations() {
-        Set<Integer> iterationIds = new HashSet<Integer>(Arrays.asList(1,2,3,-1));
-        Set<Integer> projectIds = new HashSet<Integer>(Arrays.asList(4,5));
-        timesheetAction.setProjectIds(projectIds);
-        timesheetAction.setOnlyOngoing(true);
-        timesheetAction.setIterationIds(iterationIds);
-        Set<Integer> backlogIds = timesheetAction.getSelectedBacklogs();
-        assertEquals(3, backlogIds.size());
     }
     
     @Test

@@ -34,7 +34,7 @@
 				
 				this.auxFields = $('<span />').appendTo(this.container).hide();
 
-				$.post("ajax/retrieveProduct.action", {}, function(data,retType) {
+				$.post("ajax/retrieveAllProducts.action", {}, function(data,retType) {
 					if(data.length == 0) {
 						$('<option/>').appendTo(me.productContainer).text("There are no Products in the system.");
 					} else {
@@ -123,37 +123,39 @@
 				this.projectContainer.empty();
 				this.selectedProducts = this.getSelected(this.productContainer);
 				this.renderBacklogSelector(this.projectContainer, this.selectedProducts, this.selectedProjects);
-				if(this.isSelectAll(this.projectContainer)) {
+				/*if(this.isSelectAll(this.projectContainer)) {
 					this.selectAll(this.projectContainer);
 					this.iterationContainer.hide();
 				}
+				*/
 			},
 			clickProject: function() {
 				this.iterationContainer.empty();
 				this.selectedProjects = this.getSelected(this.projectContainer);
-				if(this.isSelectAll(this.projectContainer)) {
+				/*if(this.isSelectAll(this.projectContainer)) {
 					this.selectAll(this.projectContainer);
 					this.iterationContainer.hide();
 				} else {
+				*/
 					this.renderBacklogSelector(this.iterationContainer, this.selectedProjects, this.selectedIterations);
 					if(this.isSelectAll(this.iterationContainer)) {
 						this.selectAll(this.iterationContainer);
 					}
-				}
+				//}
 			},
 			clickIteration: function() {
 				this.selectedIterations = this.getSelected(this.iterationContainer);
-				if(this.isSelectAll(this.iterationContainer)) {
-					this.selectAll(this.iterationContainer);
-				}
+				//if(this.isSelectAll(this.iterationContainer)) {
+				//	this.selectAll(this.iterationContainer);
+				//}
 			},
 			renderBacklogSelector: function(container, selectedItems, selectedInContainer) {
 				container.empty();
 				var selectAllOpt = false;
-				if(selectedItems.length > 0) {
-					var selectAll = $('<option/>').appendTo(container).html("<b>Select all</b>").attr("value",-1);
-					selectAllOpt = ($.inArray(-1,selectedInContainer) != -1);
-				}
+				//if(selectedItems.length > 0) {
+				//	var selectAll = $('<option/>').appendTo(container).html("<b>Select all</b>").attr("value",-1);
+				//	selectAllOpt = ($.inArray(-1,selectedInContainer) != -1);
+				//}
 				 
 				var cnt = 0;
 				var numSelected = 0;
@@ -171,9 +173,9 @@
 					});
 					cnt++;
 				});
-				if((numSelected == 0 || selectAllOpt) && selectAll) {
-					selectAll.attr("selected","selected");
-				}
+				//if((numSelected == 0 || selectAllOpt) && selectAll) {
+				//	selectAll.attr("selected","selected");
+				//}
 				if(cnt == 0) {
 					container.empty();
 					$('<option/>').appendTo(container).html("No backlogs found").attr("value",-2);

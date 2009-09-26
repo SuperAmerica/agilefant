@@ -4,6 +4,10 @@
 
 
 <script type="text/javascript">
+var selectedReportUsers = [];
+<c:forEach items="${selectedUsers}" var="selu">
+  selectedReportUsers.push(${selu.id});
+</c:forEach>
 $(document).ready(function() {
     var chooserDiv = $("#selectBacklogs");
     var userSel = $("#userSelect");
@@ -21,12 +25,23 @@ $(document).ready(function() {
         selectedProjects: ${JSONProjects},
         selectedIterations: ${JSONIterations}
     });
-    $('#userChooserLink-createStory').userChooser({
-        legacyMode: false,
-        renderFor: 'allUsers',
-        storyId: 0,
-        userListContainer: '#userListContainer-createStory',
-        emptySelectionText: "(all)"
+    
+    $('#userChooserLink-createStory').click(function() {
+      $(window).autocompleteDialog({
+        dataType: "usersAndTeams",
+        callback: function(ids, objs) {
+          var contain = $("#userListContainer-createStory").empty();
+          var names = [];
+          selectedReportUsers = [];
+          $.each(objs, function() {
+            $('<input type="hidden" name="userIds" />').val(this.id).appendTo(contain);
+            names.push(this.initials);
+            selectedReportUsers.push(this.id);
+          });
+          $('<span />').text(names.join(", ")).appendTo(contain);
+        },
+        selected: selectedReportUsers
+      });
     });
 });
 

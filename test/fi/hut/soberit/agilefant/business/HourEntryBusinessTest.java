@@ -1,7 +1,10 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,16 +23,11 @@ import org.junit.Test;
 import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
-import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 

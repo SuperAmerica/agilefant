@@ -6,10 +6,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +26,6 @@ import fi.hut.soberit.agilefant.business.TimesheetExportBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
-import fi.hut.soberit.agilefant.util.CalendarUtils;
 import flexjson.JSONSerializer;
 
 /**

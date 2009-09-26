@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -12,8 +11,6 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.TimesheetLoggable;
-import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
 /**

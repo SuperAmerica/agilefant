@@ -1,7 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,10 +15,6 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.business.StoryBusiness;
-import fi.hut.soberit.agilefant.business.TaskBusiness;
-import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.User;

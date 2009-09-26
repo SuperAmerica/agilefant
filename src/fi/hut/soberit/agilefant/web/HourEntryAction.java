@@ -1,9 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.text.ParseException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -15,17 +12,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
-import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.business.StoryBusiness;
-import fi.hut.soberit.agilefant.business.TaskBusiness;
-import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.HourEntry;
-import fi.hut.soberit.agilefant.model.TimesheetLoggable;
-import fi.hut.soberit.agilefant.util.CalendarUtils;
-import fi.hut.soberit.agilefant.util.HourEntryUtils;
-import fi.hut.soberit.agilefant.util.MinorUnitsParser;
-import flexjson.JSONSerializer;
 
 @Component("hourEntryAction")
 @Scope("prototype")

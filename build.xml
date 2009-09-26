@@ -156,6 +156,17 @@
 		<clover-clean />
 	</target>
 
+	<target name="test-clover-xml-and-html-report" depends="clean,test-clover-enable,compile-tests,test">
+    <mkdir dir="${test.reports.clover}" />
+    <clover-report>
+      <current outfile="${test.reports.clover}/coverage.xml">
+        <format type="xml" />
+      </current>
+    </clover-report>
+    <clover-html-report outdir="${test.reports.clover}" title="Agilefant" />
+    <clover-clean />
+	</target>
+	
 	<target name="test-checkstyle-xmlreport" description="Generates a report of code convention violations.">
 		<mkdir dir="${test.reports.checkstyle}" />
     <taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/build/checkstyle-all-4.3.jar" />
@@ -171,7 +182,7 @@
 	</target>
 
 
-	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-htmlreport,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
+	<target name="test-bamboo" depends="clean,test-clover-enable,compile-tests,test,test-clover-xml-and-html-report,test-clover-clean,test-checkstyle-xmlreport" description="Bamboo uses this target" />
 
 
 	<target name="compile-tests" depends="compile">

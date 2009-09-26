@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.Duration;
 import org.joda.time.Interval;
@@ -19,10 +21,11 @@ public interface UserBusiness extends GenericBusiness<User> {
      * Store a user and return the persisted object.
      * <p>
      * Changes the password if (password1 != null) and (password1 == password2)
+     * 
      * @return the newly persisted user
      */
-    User storeUser(User data, String password);  
-    
+    User storeUser(User data, String password);
+
     /**
      * Check if user is creator of any stories.
      * 
@@ -50,11 +53,13 @@ public interface UserBusiness extends GenericBusiness<User> {
     void disableUser(int id);
 
     void enableUser(int id);
-    
+
     /**
      * Duration object representing total (days) that the given user can work
      * within the given timeframe.
      */
     public Duration calculateWorktimePerPeriod(User user, Interval interval);
+
+    public Collection<User> retrieveMultiple(Set<Integer> userIds);
 
 }

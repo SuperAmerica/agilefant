@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,10 +25,6 @@ public class HourEntryActionTest {
     private HourEntryAction hourEntryAction;
 
     private HourEntryBusiness hourEntryBusiness;
-    private StoryBusiness storyBusiness;
-    private TaskBusiness taskBusiness;
-    private ProjectBusiness projectBusiness;
-    private UserBusiness userBusiness;
     
     private HourEntry hourEntry;
     private User user;
@@ -36,26 +35,14 @@ public class HourEntryActionTest {
         
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         hourEntryAction.setHourEntryBusiness(hourEntryBusiness);
-        
-        storyBusiness = createMock(StoryBusiness.class);
-        hourEntryAction.setStoryBusiness(storyBusiness);
-        
-        taskBusiness = createMock(TaskBusiness.class);
-        hourEntryAction.setTaskBusiness(taskBusiness);
-        
-        projectBusiness = createMock(ProjectBusiness.class);
-        hourEntryAction.setProjectBusiness(projectBusiness);
-        
-        userBusiness = createMock(UserBusiness.class);
-        hourEntryAction.setUserBusiness(userBusiness);
     }
     
     private void replayAll() {
-        replay(hourEntryBusiness, storyBusiness, taskBusiness, projectBusiness, userBusiness);
+        replay(hourEntryBusiness);
     }
     
     private void verifyAll() {
-        verify(hourEntryBusiness, storyBusiness, taskBusiness, projectBusiness, userBusiness);
+        verify(hourEntryBusiness);
     }
     
     @Before
@@ -101,5 +88,18 @@ public class HourEntryActionTest {
         hourEntryAction.retrieve();
         
         verifyAll();
-    }    
+    }  
+    
+    @Test
+    public void testLogStoryEffort() {
+        HourEntry effortEntry = new HourEntry();
+        Set<Integer> userIds = new HashSet<Integer>();
+        hourEntryBusiness.logStoryEffort(1, effortEntry, userIds);
+        replayAll();
+        hourEntryAction.setParentObjectId(1);
+        hourEntryAction.setHourEntry(effortEntry);
+        hourEntryAction.setUserIds(userIds);
+        hourEntryAction.logStoryEffort();
+        verifyAll();
+    }
 }

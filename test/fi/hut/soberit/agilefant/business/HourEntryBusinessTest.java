@@ -4,9 +4,15 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.easymock.Capture;
+import org.easymock.classextension.EasyMock;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,10 +21,13 @@ import fi.hut.soberit.agilefant.business.impl.HourEntryBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.TaskHourEntryDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
@@ -29,100 +38,62 @@ import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 public class HourEntryBusinessTest {
 
     private HourEntryBusinessImpl hourEntryBusiness;
-    private TaskHourEntryDAO theDAO;
-    private BacklogHourEntryDAO blheDAO;
-    private HourEntryDAO heDAO;
+    private BacklogHourEntryDAO backlogHourEntryDAO;
+    private HourEntryDAO hourEntryDAO;
+    private StoryBusiness storyBusiness;
+    private UserBusiness userBusiness;
     
-    private void compareHe(HourEntry he1, HourEntry he2) 
-            throws Exception {
-        if(he1.getUser().getId() != he2.getUser().getId()) {
-            throw new Exception("Users not equal.");
-        }
-        if(!he1.getDate().equals(he2.getDate())) {
-            throw new Exception("Dates not equal.");
-        }
-        if(!he1.getDescription().equals(he2.getDescription())) {
-            throw new Exception("Descriptions not equal.");
-        }
-        if(he1.getMinutesSpent() != he2.getMinutesSpent()) {
-            throw new Exception("Time spent not equal.");
-        }
+    private Collection<User> targetUsers;
+    private Set<Integer> targetUserIds;
+    
+    private void compareHe(HourEntry he1, HourEntry he2) {
+
+        assertEquals(he1.getDate(), he2.getDate());
+        assertEquals(he1.getDescription(), he2.getDescription());
+        assertEquals(he1.getMinutesSpent(), he2.getMinutesSpent());
     }
     
     @Before
     public void setUp_dependencies() {
         hourEntryBusiness = new HourEntryBusinessImpl();
-        heDAO = createMock(HourEntryDAO.class);
-        theDAO = createMock(TaskHourEntryDAO.class);
-        blheDAO = createMock(BacklogHourEntryDAO.class);
-        hourEntryBusiness.setHourEntryDAO(heDAO);
-        hourEntryBusiness.setBacklogHourEntryDAO(blheDAO);
-        hourEntryBusiness.setTaskHourEntryDAO(theDAO);
+        hourEntryDAO = createMock(HourEntryDAO.class);
+        backlogHourEntryDAO = createMock(BacklogHourEntryDAO.class);
+        
+        storyBusiness = createMock(StoryBusiness.class);
+        hourEntryBusiness.setStoryBusiness(storyBusiness);
+                
+        userBusiness = createMock(UserBusiness.class);
+        hourEntryBusiness.setUserBusiness(userBusiness);
+        
+        hourEntryBusiness.setHourEntryDAO(hourEntryDAO);
+        hourEntryBusiness.setBacklogHourEntryDAO(backlogHourEntryDAO);
     }
     
-    @Test
-    public void testStore() {
-        Backlog bl = new Iteration();
-        Task task = new Task();
-        HourEntry he = new HourEntry();
-        TaskHourEntry taskHourEntry = new TaskHourEntry();
-        BacklogHourEntry backlogHourEntry = new BacklogHourEntry();
-        User u = new User();
-        u.setId(1);
-        he.setUser(u);
-        he.setDate(new DateTime());
-        he.setDescription("test");
-        he.setMinutesSpent(120);
-        backlogHourEntry.setId(1);
-        taskHourEntry.setId(1);
-        
-        he.setId(1);
-        expect(theDAO.get(1)).andReturn(taskHourEntry).times(1);
-        expect(blheDAO.get(1)).andReturn(backlogHourEntry).times(1);
-        theDAO.store(taskHourEntry);
-        blheDAO.store(backlogHourEntry);
-        replay(blheDAO);
-        replay(theDAO);
-        //store under BLI
-        hourEntryBusiness.store(task, he);
-        try {
-            compareHe(he,taskHourEntry);
-        } catch(Exception e) {
-            fail("Hour entry data update failed!");
-        }
-        //store under BL
-        hourEntryBusiness.store(bl, he);
-        try {
-            compareHe(he,backlogHourEntry);
-        } catch(Exception e) {
-            fail("Hour entry data update failed!");
-        }
-        //store under null
-        try {
-            hourEntryBusiness.store(null, he);
-            fail("Exception expected when storing under invalid parent.");
-        } catch(IllegalArgumentException iae) { }
-        //store null entry
-        try {
-            hourEntryBusiness.store(bl, null);
-            fail("Exception expected when storing null entry.");
-        } catch(IllegalArgumentException iae) { }
-        
-        verify(theDAO);
-        verify(blheDAO);
+    @Before
+    public void setUp_data() {
+        targetUsers = Arrays.asList(new User());
+        targetUserIds = new HashSet<Integer>(Arrays.asList(1));
+    }
+    
+    private void replayAll() {
+        replay(hourEntryDAO, backlogHourEntryDAO, storyBusiness, userBusiness);
+    }
+    
+    private void verifyAll() {
+        verify(hourEntryDAO, backlogHourEntryDAO, storyBusiness, userBusiness);
     }
     
     @Test
     public void testCalculateSumOfBacklogsHourEntries() {
         Iteration iteration = new Iteration();
         iteration.setId(123);
-        expect(heDAO.calculateIterationHourEntriesSum(123))
+        expect(hourEntryDAO.calculateIterationHourEntriesSum(123))
             .andReturn(22332L);
-        replay(heDAO);
+        replay(hourEntryDAO);
         
         assertEquals(22332L, hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration));
         
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -137,13 +108,13 @@ public class HourEntryBusinessTest {
         User user = new User();
         user.setId(11);
         
-        expect(heDAO.calculateSumByUserAndTimeInterval(user, start, end)).andReturn(400L);
-        expect(heDAO.calculateSumByUserAndTimeInterval(11, start, end)).andReturn(400L);
+        expect(hourEntryDAO.calculateSumByUserAndTimeInterval(user, start, end)).andReturn(400L);
+        expect(hourEntryDAO.calculateSumByUserAndTimeInterval(11, start, end)).andReturn(400L);
         
-        replay(heDAO);
+        replay(hourEntryDAO);
         assertEquals(400L, this.hourEntryBusiness.calculateSumByUserAndTimeInterval(11, start, end));
         assertEquals(400L, this.hourEntryBusiness.calculateSumByUserAndTimeInterval(user, start, end));
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     @Test
@@ -151,10 +122,10 @@ public class HourEntryBusinessTest {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(7);
         List<HourEntry> noEntries = Collections.emptyList();
-        expect(heDAO.getHourEntriesByFilter(start, end, 11)).andReturn(noEntries);
-        replay(heDAO);
+        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 11)).andReturn(noEntries);
+        replay(hourEntryDAO);
         assertEquals(noEntries, hourEntryBusiness.getEntriesByUserAndTimeInterval(11, start, end));
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     private static HourEntry createEntry(int year, int month, int day, long effort) {
@@ -170,11 +141,11 @@ public class HourEntryBusinessTest {
         DateTime end = new DateTime(2009,6,7,23,59,59,0);
         List<HourEntry> entries = Collections.emptyList();
         
-        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
 
-        replay(heDAO);
+        replay(hourEntryDAO);
         assertEquals(7, hourEntryBusiness.getDailySpentEffortByWeek(start.toLocalDate(), 0).size());
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     @Test
@@ -182,11 +153,11 @@ public class HourEntryBusinessTest {
         DateTime start = new DateTime(2009,6,1,0,0,1,0);
         DateTime end = new DateTime(2009,6,7,23,59,59,0);
         
-        expect(heDAO.calculateSumByUserAndTimeInterval(0, start, end)).andReturn(0L);
+        expect(hourEntryDAO.calculateSumByUserAndTimeInterval(0, start, end)).andReturn(0L);
 
-        replay(heDAO);
+        replay(hourEntryDAO);
         assertEquals(0L, hourEntryBusiness.calculateWeekSum(start.plusDays(3).toLocalDate(), 0));
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     @Test
@@ -196,9 +167,9 @@ public class HourEntryBusinessTest {
         
         List<HourEntry> entries = new ArrayList<HourEntry>();
 
-        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
 
-        replay(heDAO);
+        replay(hourEntryDAO);
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
         assertEquals(7, res.size());
         assertEquals(null, res.get(0).getSpentEffort());
@@ -209,7 +180,7 @@ public class HourEntryBusinessTest {
         assertEquals(null, res.get(5).getSpentEffort());
         assertEquals(null, res.get(6).getSpentEffort());
         
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     @Test
@@ -225,8 +196,8 @@ public class HourEntryBusinessTest {
         DateTime start = new DateTime(2008,12,27,0,0,0,0);
         DateTime end = new DateTime(2009,1,3,0,0,0,0);
         
-        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
-        replay(heDAO);
+        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        replay(hourEntryDAO);
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
         assertEquals(8, res.size());
         assertEquals(null, res.get(0).getSpentEffort());
@@ -237,7 +208,7 @@ public class HourEntryBusinessTest {
         assertEquals(50000L, (long)res.get(5).getSpentEffort());
         assertEquals(6000000L, (long)res.get(6).getSpentEffort());
         assertEquals(null, res.get(7).getSpentEffort());
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     @Test
@@ -254,25 +225,86 @@ public class HourEntryBusinessTest {
         DateTime end = new DateTime(2009,5,1,23,59,0,0);
 
         
-        expect(heDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
-        replay(heDAO);
+        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        replay(hourEntryDAO);
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
         assertEquals(4, res.size());
         assertEquals(1900L, (long)res.get(0).getSpentEffort());
         assertEquals(null, res.get(1).getSpentEffort());
         assertEquals(54000L, (long)res.get(2).getSpentEffort());
         assertEquals(6000000L, (long)res.get(3).getSpentEffort());
-        verify(heDAO);
+        verify(hourEntryDAO);
     }
     
     @Test
     public void testGetEntriesByUserAndDay() {
         DateTime start = new DateTime(2009,6,2,0,0,0,0);
         DateTime end = new DateTime(2009,6,2,23,59,59,0);
-        expect(heDAO.getHourEntriesByFilter(start, end, 42)).andReturn(null);
-        replay(heDAO);
+        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 42)).andReturn(null);
+        replay(hourEntryDAO);
         assertEquals(null, hourEntryBusiness.getEntriesByUserAndDay(start.toLocalDate(), 42));
-        verify(heDAO);
+        verify(hourEntryDAO);
+    }
+    
+    @Test
+    public void testLogStoryEffort() {
+        HourEntry effortEntry = new HourEntry();
+        effortEntry.setDate(new DateTime());
+        effortEntry.setDescription("daadaa");
+        effortEntry.setMinutesSpent(10L);
+        
+        Story parent = new Story();
+        
+        expect(storyBusiness.retrieve(1)).andReturn(parent);
+        expect(userBusiness.retrieveMultiple(targetUserIds)).andReturn(targetUsers);
+
+        Capture<StoryHourEntry> storedEntry = new Capture<StoryHourEntry>();
+        expect(hourEntryDAO.create(EasyMock.capture(storedEntry))).andReturn(1);
+        
+        replayAll();
+        hourEntryBusiness.logStoryEffort(1, effortEntry, targetUserIds);
+        verifyAll();
+        StoryHourEntry actual = (StoryHourEntry)storedEntry.getValue();
+        assertEquals(parent, actual.getStory());
+        compareHe(effortEntry, actual);
+    }
+    
+    @Test(expected=ObjectNotFoundException.class)
+    public void testLogStoryEffort_invalidStory() {
+        HourEntry effortEntry = new HourEntry();
+                
+        expect(storyBusiness.retrieve(1)).andThrow(new ObjectNotFoundException());
+        
+        replayAll();
+        hourEntryBusiness.logStoryEffort(1, effortEntry, targetUserIds);
+        verifyAll();
+
+    }
+    
+    @Test(expected=ObjectNotFoundException.class)
+    public void testLogStoryEffort_invalidUser() {
+        HourEntry effortEntry = new HourEntry();
+        
+        Story parent = new Story();
+        
+        expect(storyBusiness.retrieve(1)).andReturn(parent);
+        expect(userBusiness.retrieveMultiple(targetUserIds)).andThrow(new ObjectNotFoundException());
+        
+        replayAll();
+        hourEntryBusiness.logStoryEffort(1, effortEntry, targetUserIds);
+        verifyAll();
+
+    }
+    
+    @Test
+    public void testLogTaskEffort() {
+        replayAll();
+        verifyAll();
+    }
+    @Test
+    public void testLogBacklogEffort() {
+        replayAll();
+        verifyAll();
     }
 
 }

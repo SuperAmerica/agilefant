@@ -1,6 +1,9 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -125,6 +128,14 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     public void enableUser(int id) {
         User user = userDAO.get(id);
         user.setEnabled(true);  
+    }
+
+    public Collection<User> retrieveMultiple(Set<Integer> userIds) {
+        Collection<User> users = new ArrayList<User>();
+        for(int userId : userIds) {
+            users.add(this.retrieve(userId));
+        }
+        return users;
     }
     
 

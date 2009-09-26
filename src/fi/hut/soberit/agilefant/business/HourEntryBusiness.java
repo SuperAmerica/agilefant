@@ -20,61 +20,53 @@ import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
  * Business interface for handling functionality related to Hour Entries
  * 
  * @author kjniiran
+ * @author Pasi Pekkanen
  * 
  */
 public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
 
     /**
-     * Creates one entry for each of the selected users
-     * 
-     * @param hourEntry
-     *            the hour entry that we well "copy"
-     * @param userIds
-     *            the IDs of the users that we are adding entries for
+     * Create one effort entry for each given user under the given story.
      */
-    public void addHourEntryForMultipleUsers(TimesheetLoggable parent,
-            HourEntry hourEntry, Set<Integer> userIds);
+    public void logStoryEffort(int storyId, HourEntry effortEntry,
+            Set<Integer> userIds);
 
     /**
-     * Update multiple hour entries
-     * 
-     * @param userIds
-     * @param dates
-     * @param efforts
-     * @param descriptions
+     * Create one effort entry for each given user under the given task.
      */
-    public void updateMultiple(Map<Integer, String[]> userIds,
-            Map<Integer, String[]> dates, Map<Integer, String[]> efforts,
-            Map<Integer, String[]> descriptions);
-
-    
-    HourEntry store(TimesheetLoggable parent, HourEntry hourEntry);
+    public void logTaskEffort(int taskId, HourEntry effortEntry,
+            Set<Integer> userIds);
 
     /**
-     * Gets all task, story and backlog hour entries for an iteration
-     * and calculates their sum.
+     * Create one effort entry for each given user under the given backlog.
+     */
+    public void logBacklogEffort(int backlogId, HourEntry effortEntry,
+            Set<Integer> userIds);
+
+    /**
+     * Gets all task, story and backlog hour entries for an iteration and
+     * calculates their sum.
      */
     long calculateSumOfIterationsHourEntries(Iteration iteration);
-    
+
     List<BacklogHourEntry> retrieveByParent(Backlog item);
 
-    long calculateSumByUserAndTimeInterval(User user,
-            DateTime startDate, DateTime endDate);
-    
-    long calculateSumByUserAndTimeInterval(int userId,
-            DateTime startDate, DateTime endDate);
-    
-    long calculateSum(Collection<? extends HourEntry> hourEntries);
-    
-    public List<HourEntry> getEntriesByUserAndTimeInterval(int userId, DateTime startDate,
+    long calculateSumByUserAndTimeInterval(int userId, DateTime startDate,
             DateTime endDate);
-    
+
+    long calculateSum(Collection<? extends HourEntry> hourEntries);
+
+    public List<HourEntry> getEntriesByUserAndTimeInterval(int userId,
+            DateTime startDate, DateTime endDate);
+
     public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId);
-    
-    public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week, int userId);
-    
-    public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start, DateTime end, int userId);
-    
+
+    public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week,
+            int userId);
+
+    public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
+            DateTime end, int userId);
+
     public long calculateWeekSum(LocalDate week, int userId);
 
 }

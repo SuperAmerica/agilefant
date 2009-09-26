@@ -4,7 +4,10 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -149,5 +152,16 @@ public class UserBusinessTest {
         verifyAll();
         
         assertEquals(md5hash, actual.getPassword());
+    }
+    
+    @Test
+    public void testRetrieveMultiple() {
+        Set<Integer> userIds = new HashSet<Integer>(Arrays.asList(1,2));
+        expect(userDAO.get(1)).andReturn(new User());
+        expect(userDAO.get(2)).andReturn(new User());
+        replayAll();
+        Collection<User> actual = userBusiness.retrieveMultiple(userIds);
+        verifyAll();
+        assertEquals(2, actual.size());
     }
 }

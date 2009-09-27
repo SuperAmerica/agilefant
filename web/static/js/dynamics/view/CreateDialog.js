@@ -19,6 +19,9 @@ CreateDialog.configurations = {
     },
     team: {
       title: "Create a new team"
+    },
+    effortEntry: { 
+      title: "Log effort"
     }
   };
 
@@ -419,6 +422,75 @@ CreateDialog.User.prototype.initFormConfig = function() {
   this.formConfig = config;
 };
 
+/**
+ * Spent effort entry creation dialog.
+ * @constructor
+ */
+CreateDialog.EffortEntry = function() {
+  this.model = new HourEntryModel();
+  this.model.setUsers([], [PageController.getInstance().getCurrentUser()]);
+  this.model.setDate(new Date().toString());
+  this.initFormConfig();
+  this.init(CreateDialog.configurations.effortEntry);
+};
+CreateDialog.EffortEntry.prototype = new CreateDialogClass();
+CreateDialog.EffortEntry.columnIndices = {
+    effortSpent: 0,
+    date: 1,
+    users: 2,
+    comment: 3
+};
+
+CreateDialog.EffortEntry.prototype.initFormConfig = function() {
+  var config = new DynamicTableConfiguration({
+    leftWidth: '20%',
+    rightWidth: '75%'
+  });
+  
+  config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.effortSpent,{
+    title: "Effort Spent",
+    editable: true,
+    get: CreateDialog.returnNull,
+    edit: {
+      editor: "ExactEstimate",
+      required: true,
+      set: HourEntryModel.prototype.setMinutesSpent
+    }
+  });
+  config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.date,{
+    title: "Date",
+    editable: true,
+    get: CreateDialog.returnNull,
+    edit: {
+      editor: "Date",
+      required: true,
+      set: HourEntryModel.prototype.setDate
+    }
+  });
+  config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.users,{
+    title: "Users",
+    editable: true,
+    get: HourEntryModel.prototype.getUsers,
+    decorator: DynamicsDecorators.userInitialsListDecorator,
+    edit: {
+      editor: "User",
+      required: true,
+      set: HourEntryModel.prototype.setUsers
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.comment, {
+    title: "Comment",
+    get: CreateDialog.returnNull,
+    edit: {
+      editor: "Text",
+      set: HourEntryModel.prototype.setDescription
+    }
+  });
+  
+  this.formConfig = config;
+};
+
 
 /*
  * CREATION BY LINK ID.
@@ -434,7 +506,9 @@ CreateDialog.idToClass = {
   /** @member CreateDialog */
   "createNewUser": CreateDialog.User,
   /** @member CreateDialog */
-  "createNewTeam": CreateDialog.Team
+  "createNewTeam": CreateDialog.Team,
+  /** @member CreateDialog */
+  "createNewEffortEntry": CreateDialog.EffortEntry
 };
 
 /**

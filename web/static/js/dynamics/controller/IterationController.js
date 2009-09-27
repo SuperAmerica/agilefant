@@ -394,7 +394,8 @@ IterationController.prototype.initializeStoryConfig = function() {
       cssClass : 'story-row',
       title : "ES",
       headerTooltip : 'Total task effort spent',
-      get : StoryModel.prototype.getTotalEffortSpent
+      get : StoryModel.prototype.getTotalEffortSpent,
+      onDoubleClick: StoryController.prototype.openLogEffort
     });
   }
   config.addColumnConfiguration(StoryController.columnIndices.actions, {

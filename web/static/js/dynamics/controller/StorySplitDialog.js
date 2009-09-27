@@ -34,6 +34,7 @@ StorySplitDialog.prototype.initDialog = function() {
     draggable: true,
     resizable: true,
     title: 'Split story',
+    close: function() { me._cancel(); },
     buttons: {
       "Save": function() { me._save(); },
       "Cancel":  function() { me._cancel(); }

@@ -133,6 +133,11 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
     rightWidth: '100%'
   });
   config.addColumnConfiguration(0, {
+    get : StoryModel.prototype.getParentStoryName,
+    decorator: DynamicsDecorators.parentStoryDecorator,
+    cssClass : 'task-data'
+  });
+  config.addColumnConfiguration(1, {
     get : StoryModel.prototype.getDescription,
     onDoubleClick: StoryController.prototype.editDescription,
     cssClass : 'task-data text-editor'
@@ -201,7 +206,7 @@ StoryController.prototype.hideTasks = function() {
 };
 
 StoryController.prototype.openDetails = function() {
-  alert("Not implemented.");
+  var details = new StoryInfoDialog(this.model);
 };
 /**
  * 
@@ -291,6 +296,10 @@ StoryController.prototype.acceptsDraggable = function(model) {
     return true;
   }
   return false;
+};
+
+StoryController.prototype.openLogEffort = function() {
+CreateDialog.createById("createNewEffortEntry");
 };
 
 /**

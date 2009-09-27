@@ -38,3 +38,24 @@ HourEntryModel.prototype.getMinutesSpent = function() {
 HourEntryModel.prototype.getDescription = function() {
   return this.currentData.description;
 };
+
+HourEntryModel.prototype.setDate = function(date) {
+  this.currentData.date = date;
+};
+
+HourEntryModel.prototype.setMinutesSpent = function(minutesSpent) {
+  this.currentData.minutesSpent = minutesSpent;
+};
+
+HourEntryModel.prototype.setDescription = function(description) {
+  this.currentData.description = description;
+};
+
+//for creating multiple entries
+HourEntryModel.prototype.getUsers = function() {
+  return this.tmpUsers;
+};
+HourEntryModel.prototype.setUsers = function(userIds, users) {
+  this.tmpUsers = users;
+};
+

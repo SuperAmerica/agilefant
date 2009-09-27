@@ -4,7 +4,6 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -123,13 +122,13 @@ public class AssignmentBusinessTest {
         expect(userBusiness.retrieve(1)).andReturn(user1);
         expect(userBusiness.retrieve(2)).andReturn(user2);
         expect(assignmentDAO.create(EasyMock.capture(capt1))).andReturn(new Integer(111));
-        expect(assignmentDAO.get(111)).andReturn(null);
+        expect(assignmentDAO.get(111)).andReturn(new Assignment());
         expect(assignmentDAO.create(EasyMock.capture(capt2))).andReturn(new Integer(112));
-        expect(assignmentDAO.get(112)).andReturn(null);
+        expect(assignmentDAO.get(112)).andReturn(new Assignment());
 
         replayAll();
         
-        Collection<Assignment> actual = testable.addMultiple(iter, new HashSet<Integer>(Arrays.asList(1, 2)),
+        Set<Assignment> actual = testable.addMultiple(iter, new HashSet<Integer>(Arrays.asList(1, 2)),
                 personalLoad, 100);
         
         assertEquals(3, actual.size());
@@ -137,8 +136,9 @@ public class AssignmentBusinessTest {
         assertEquals(iter, capt1.getValue().getBacklog());
         assertEquals(iter, capt2.getValue().getBacklog());
         
-        assertEquals(user1.getId(), capt1.getValue().getUser().getId());
-        assertEquals(user2.getId(), capt2.getValue().getUser().getId());
+        Set<User> users = new HashSet<User>(Arrays.asList(capt1.getValue().getUser(), capt2.getValue().getUser()));
+        assertTrue(users.contains(user1));
+        assertTrue(users.contains(user2));
         
         assertEquals((short)100, capt1.getValue().getAvailability());
         assertEquals((short)100, capt2.getValue().getAvailability());

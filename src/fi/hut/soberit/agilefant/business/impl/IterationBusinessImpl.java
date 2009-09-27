@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +21,7 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
@@ -85,14 +85,17 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
     @Transactional(readOnly = true)
     public IterationTO getIterationContents(int iterationId) {
-        Iteration iteration = this.retrieve(iterationId);
+        Iteration iteration = this.iterationDAO.retrieveDeep(iterationId);
+        if(iteration == null) {
+            throw new ObjectNotFoundException();
+        }
         IterationTO iterationTO = new IterationTO(iteration);
 
         // 1. Set iteration's stories as transfer objects and include story
         // metrics
         Collection<StoryTO> stories = transferObjectBusiness
                 .constructBacklogData(iteration);
-        iterationTO.setStories(new ArrayList<Story>());
+        iterationTO.setStories(new HashSet<Story>());
         for (StoryTO storyTO : stories) {
             storyTO.setMetrics(storyBusiness.calculateMetrics(storyTO));
             iterationTO.getStories().add(storyTO);
@@ -102,7 +105,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Collection<Task> tasksWithoutStory = iterationDAO
                 .getTasksWithoutStoryForIteration(iteration);
 
-        iterationTO.setTasks(new ArrayList<Task>());
+        iterationTO.setTasks(new HashSet<Task>());
 
         for (Task task : tasksWithoutStory) {
             TaskTO taskTO = transferObjectBusiness.constructTaskTO(task);

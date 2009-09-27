@@ -99,7 +99,7 @@ public class TransferObjectBusinessTest {
     public void testContructBacklogDataWithUserData() {
         story1.getTasks().add(task);
         task.setHourEntries(null);
-        iteration.setStories(Arrays.asList(story1, story2));
+        iteration.setStories(new HashSet<Story>(Arrays.asList(story1, story2)));
 
         expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
                 .andReturn(Long.valueOf(0)).anyTimes();
@@ -131,7 +131,7 @@ public class TransferObjectBusinessTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testConstructTaskTO() {
-        Collection<User> responsibles = new ArrayList<User>(Arrays.asList(assignedUser, notAssignedUser));
+        List<User> responsibles = Arrays.asList(assignedUser, notAssignedUser);
         
         task.setIteration(iteration);
         task.setResponsibles(responsibles);

@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -219,7 +218,7 @@ public class StoryBusinessTest {
         newBacklog.setId(1904);
         Story movable = new Story();
         
-        oldBacklog.setStories(new ArrayList<Story>(Arrays.asList(movable)));
+        oldBacklog.setStories(new HashSet<Story>(Arrays.asList(movable)));
         movable.setBacklog(oldBacklog);
         
         Story last = new Story();

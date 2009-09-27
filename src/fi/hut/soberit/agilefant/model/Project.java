@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -62,7 +62,7 @@ public class Project extends Backlog implements Schedulable {
 
     private Status status = Status.GREEN;
     
-    private Collection<Assignment> assignments = new HashSet<Assignment>();
+    private Set<Assignment> assignments = new HashSet<Assignment>();
         
     private ExactEstimate baselineLoad = new ExactEstimate(0);
     
@@ -130,11 +130,11 @@ public class Project extends Backlog implements Schedulable {
                 mappedBy = "backlog")
     @JSON(include = false)
     @NotAudited
-    public Collection<Assignment> getAssignments() {
+    public Set<Assignment> getAssignments() {
         return assignments;
     }
 
-    public void setAssignments(Collection<Assignment> assignments) {
+    public void setAssignments(Set<Assignment> assignments) {
         this.assignments = assignments;
     }
 

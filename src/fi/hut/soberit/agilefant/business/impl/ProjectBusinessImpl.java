@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -141,7 +141,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public ProjectTO getProjectData(int projectId) {
         Project original = this.retrieve(projectId);
         ProjectTO project = new ProjectTO(original);
-        project.setChildren(new ArrayList<Backlog>());
+        project.setChildren(new HashSet<Backlog>());
         for (Backlog backlog : original.getChildren()) {
             IterationTO iter = new IterationTO((Iteration)backlog);
             iter.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));

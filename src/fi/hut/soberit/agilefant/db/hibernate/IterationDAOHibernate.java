@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
@@ -160,4 +161,23 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         crit.add(Restrictions.ge("endDate", point));
         return asList(crit);
     }
+    
+    public Iteration retrieveDeep(int iterationId) {
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        Criteria storyCrit = crit.createCriteria("stories");
+        Criteria taskCrit = crit.createCriteria("tasks");
+        //Criteria taskWOStoryCrit = crit.createCriteria("tasks");
+        
+        crit.setFetchMode("stories", FetchMode.JOIN);
+        storyCrit.setFetchMode("tasks",FetchMode.JOIN);
+        
+        taskCrit.setFetchMode("responsibles", FetchMode.JOIN);
+        taskCrit.setFetchMode("whatsNextEntries", FetchMode.JOIN);
+        
+        crit.add(Restrictions.idEq(iterationId));
+        
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return (Iteration)crit.uniqueResult();
+    }
 }
+

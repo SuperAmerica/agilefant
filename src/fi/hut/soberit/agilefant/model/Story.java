@@ -1,9 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,11 +38,11 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
     private StoryState state = StoryState.NOT_STARTED;
     private int rank = 0;
     private Story parent;
-    private Collection<Story> children;
+    private Set<Story> children;
     
     private Set<User> responsibles = new HashSet<User>();
-    private Collection<Task> tasks = new ArrayList<Task>();
-    private Collection<StoryHourEntry> hourEntries = new ArrayList<StoryHourEntry>();
+    private Set<Task> tasks = new HashSet<Task>();
+    private Set<StoryHourEntry> hourEntries = new HashSet<StoryHourEntry>();
 
     private Integer storyPoints;
     
@@ -101,7 +99,7 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
 
     /**
      * Get the users responsible for this story item.
-     * @return collection of the responsible users
+     * @return Set of the responsible users
      */
     @ManyToMany(
             targetEntity = fi.hut.soberit.agilefant.model.User.class
@@ -122,11 +120,11 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
     )
     @Cascade(CascadeType.DELETE_ORPHAN)
     @NotAudited
-    public Collection<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
 
-    public void setTasks(Collection<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 
@@ -143,11 +141,11 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
             targetEntity = fi.hut.soberit.agilefant.model.StoryHourEntry.class )
     @NotAudited
     @OrderBy("date desc")
-    public Collection<StoryHourEntry> getHourEntries() {
+    public Set<StoryHourEntry> getHourEntries() {
         return hourEntries;
     }
     
-    public void setHourEntries(Collection<StoryHourEntry> hourEntries) {
+    public void setHourEntries(Set<StoryHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
     }
 
@@ -161,8 +159,9 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
         this.rank = rank;
     }
 
-    @JSON(include=false)
+    @JSON
     @ManyToOne
+    @Fetch(FetchMode.JOIN)
     public Story getParent() {
         return parent;
     }
@@ -175,11 +174,11 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
     @OneToMany(mappedBy="parent", targetEntity=fi.hut.soberit.agilefant.model.Story.class)
     @Fetch(FetchMode.SELECT)
     @NotAudited
-    public Collection<Story> getChildren() {
+    public Set<Story> getChildren() {
         return children;
     }
 
-    public void setChildren(Collection<Story> children) {
+    public void setChildren(Set<Story> children) {
         this.children = children;
     }
 }

@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -40,14 +39,13 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
         return persisted;
     }
 
-    private Collection<Assignment> getAssignemntsFromBacklog(Backlog backlog) {
-        Collection<Assignment> assignments = new ArrayList<Assignment>();
+    private Set<Assignment> getAssignemntsFromBacklog(Backlog backlog) {
         if(backlog instanceof Iteration) {
-            assignments = ((Iteration)backlog).getAssignments();
+            return ((Iteration)backlog).getAssignments();
         } else if(backlog instanceof Project) {
-            assignments = ((Project)backlog).getAssignments();
+            return ((Project)backlog).getAssignments();
         }
-        return assignments;
+        return new HashSet<Assignment>();
     }
     public Set<Integer> getAssignedUserIds(Backlog backlog) {
         Set<Integer> userIds = new HashSet<Integer>();
@@ -58,9 +56,9 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
         return userIds;
     }
     
-    public Collection<Assignment> addMultiple(Backlog backlog,
+    public Set<Assignment> addMultiple(Backlog backlog,
             Set<Integer> userIds, SignedExactEstimate personalLoad, int availability) {
-        Collection<Assignment> assignments = this.getAssignemntsFromBacklog(backlog);
+        Set<Assignment> assignments = this.getAssignemntsFromBacklog(backlog);
         Set<Integer> assignedUserIds = this.getAssignedUserIds(backlog);
         for (int userId : userIds) {
             //only one assignment per user per backlog

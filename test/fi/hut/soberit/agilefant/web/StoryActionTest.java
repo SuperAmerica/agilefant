@@ -4,7 +4,8 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
@@ -130,7 +131,7 @@ public class StoryActionTest {
         story.setBacklog(iter);
         storyAction.setStoryId(story.getId());
         
-        Collection<Task> tasks = Arrays.asList(new Task(), new Task());
+        Set<Task> tasks = new HashSet<Task>(Arrays.asList(new Task(), new Task()));
         story.setTasks(tasks);
         
         expect(storyBusiness.getStoryContents(story.getId(), iter.getId()))

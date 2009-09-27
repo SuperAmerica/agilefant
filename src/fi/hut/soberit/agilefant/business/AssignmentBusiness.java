@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.Collection;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Assignment;
@@ -11,6 +10,6 @@ public interface AssignmentBusiness extends GenericBusiness<Assignment> {
     public Assignment store(int assignmentId, SignedExactEstimate personalLoad,
             int availability);
 
-    public Collection<Assignment> addMultiple(Backlog backlog,
+    public Set<Assignment> addMultiple(Backlog backlog,
             Set<Integer> userIds, SignedExactEstimate personalLoad, int availability);
 }

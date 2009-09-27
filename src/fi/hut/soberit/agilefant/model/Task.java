@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -52,9 +54,9 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     
     private ExactEstimate effortLeft;
     private ExactEstimate originalEstimate;
-    private Collection<User> responsibles = new ArrayList<User>();
-    private Collection<TaskHourEntry> hourEntries = new ArrayList<TaskHourEntry>();
-    private Collection<WhatsNextEntry> whatsNextEntries;
+    private List<User> responsibles = new ArrayList<User>();
+    private Set<TaskHourEntry> hourEntries = new HashSet<TaskHourEntry>();
+    private Set<WhatsNextEntry> whatsNextEntries;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -148,11 +150,11 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     )
     @OrderBy("initials asc")
     @JSON(include = false)
-    public Collection<User> getResponsibles() {
+    public List<User> getResponsibles() {
         return responsibles;
     }
     
-    public void setResponsibles(Collection<User> responsibles) {
+    public void setResponsibles(List<User> responsibles) {
         this.responsibles = responsibles;
     }
 
@@ -164,22 +166,22 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     )
     @Cascade(value = { org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
     @JSON(include = false)
-    public Collection<WhatsNextEntry> getWhatsNextEntries() {
+    public Set<WhatsNextEntry> getWhatsNextEntries() {
         return whatsNextEntries;
     }
     
-    public void setWhatsNextEntries(Collection<WhatsNextEntry> entries) {
+    public void setWhatsNextEntries(Set<WhatsNextEntry> entries) {
         this.whatsNextEntries = entries;
     }
 
     @OneToMany(mappedBy="task")
     @OrderBy("date desc")
     @NotAudited
-    public Collection<TaskHourEntry> getHourEntries() {
+    public Set<TaskHourEntry> getHourEntries() {
         return hourEntries;
     }
     
-    public void setHourEntries(Collection<TaskHourEntry> hourEntries) {
+    public void setHourEntries(Set<TaskHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
     }
 

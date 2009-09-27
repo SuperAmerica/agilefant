@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +27,7 @@ public class BacklogActionTest {
     private BacklogBusiness backlogBusiness;
     
     private Product product;
-    private Collection<Story> stories;
+    private Set<Story> stories;
     
     @Before
     public void setUp_dependencies() {
@@ -47,7 +49,7 @@ public class BacklogActionTest {
         product = new Product();
         product.setId(1235);
         
-        stories = Arrays.asList(new Story(), new Story());
+        stories = new HashSet<Story>(Arrays.asList(new Story(), new Story()));
         product.setStories(stories);
     }
     

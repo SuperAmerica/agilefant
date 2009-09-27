@@ -57,7 +57,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         
         for (Story story : backlog.getStories()) {
             StoryTO storyTO = this.constructStoryTO(story);
-            storyTO.setTasks(new ArrayList<Task>());
+            storyTO.setTasks(new HashSet<Task>());
             
             for (Task task : story.getTasks()) {
                 TaskTO taskTO = this.constructTaskTO(task);

@@ -83,7 +83,7 @@ public class ProjectBusinessTest {
         Task task = new Task();
         task.setId(86);
         task.setResponsibles(Arrays.asList(user1));
-        story1.setTasks(Arrays.asList(task));
+        story1.setTasks(new HashSet<Task>(Arrays.asList(task)));
     }
 
     private void replayAll() {

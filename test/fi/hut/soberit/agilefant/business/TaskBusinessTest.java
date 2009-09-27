@@ -60,7 +60,7 @@ public class TaskBusinessTest {
         storyBusiness = createStrictMock(StoryBusiness.class);
         taskBusiness.setStoryBusiness(storyBusiness);
         
-        userBusiness = createStrictMock(UserBusiness.class);
+        userBusiness = createMock(UserBusiness.class);
         taskBusiness.setUserBusiness(userBusiness);
         
         iterationHistoryEntryBusiness = createStrictMock(IterationHistoryEntryBusiness.class);

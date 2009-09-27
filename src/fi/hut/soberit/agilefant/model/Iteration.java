@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -50,11 +50,11 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     
     private ExactEstimate backlogSize = new ExactEstimate(0);
     
-    private Collection<Assignment> assignments = new ArrayList<Assignment>();
+    private Set<Assignment> assignments = new HashSet<Assignment>();
     
-    private Collection<Task> tasks = new ArrayList<Task>();
+    private Set<Task> tasks = new HashSet<Task>();
 
-    private Collection<IterationHistoryEntry> historyEntries = new ArrayList<IterationHistoryEntry>();
+    private Set<IterationHistoryEntry> historyEntries = new HashSet<IterationHistoryEntry>();
     
     private ExactEstimate baselineLoad = new ExactEstimate(0);
     
@@ -91,14 +91,14 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
         this.backlogSize = backlogSize;
     }
 
-    public void setTasks(Collection<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
     
     @OneToMany(mappedBy = "iteration")
     @JSON(include = false)
     @NotAudited
-    public Collection<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
     
@@ -106,11 +106,11 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
             mappedBy = "backlog")
     @JSON(include = false)
     @Cascade(CascadeType.DELETE_ORPHAN)
-    public Collection<Assignment> getAssignments() {
+    public Set<Assignment> getAssignments() {
         return assignments;
     }
     
-    public void setAssignments(Collection<Assignment> assignments) {
+    public void setAssignments(Set<Assignment> assignments) {
         this.assignments = assignments;
     }
  
@@ -118,11 +118,11 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     @JSON(include = false)
     @Cascade(CascadeType.DELETE)
     @NotAudited
-    public Collection<IterationHistoryEntry> getHistoryEntries() {
+    public Set<IterationHistoryEntry> getHistoryEntries() {
         return historyEntries;
     }
 
-    public void setHistoryEntries(Collection<IterationHistoryEntry> historyEntries) {
+    public void setHistoryEntries(Set<IterationHistoryEntry> historyEntries) {
         this.historyEntries = historyEntries;
     }
     

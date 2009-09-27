@@ -1,10 +1,10 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface TaskContainer {
-    public Collection<Task> getTasks();
-    public void setTasks(Collection<Task> tasks);
+    public Set<Task> getTasks();
+    public void setTasks(Set<Task> tasks);
     public String getDescription();
     public int getId();
 }

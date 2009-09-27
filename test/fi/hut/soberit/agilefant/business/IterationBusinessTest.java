@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,9 +51,9 @@ public class IterationBusinessTest {
     
     Iteration iteration;
     Project project;
-    List<StoryTO> storiesList;
-    List<Task> tasksWithoutStoryList;
-    List<TaskTO> tasksTOsWithoutStoryList;
+    Set<StoryTO> storiesList;
+    Set<Task> tasksWithoutStoryList;
+    Set<TaskTO> tasksTOsWithoutStoryList;
     IterationTO expectedIterationData;
     Task task;
     TaskTO taskTO;
@@ -102,18 +103,18 @@ public class IterationBusinessTest {
         story2.setId(667);
         StoryTO storyTO1 = new StoryTO(story1);
         StoryTO storyTO2 = new StoryTO(story2);
-        storiesList = Arrays.asList(storyTO1, storyTO2);
+        storiesList = new HashSet<StoryTO>(Arrays.asList(storyTO1, storyTO2));
 
         task = new Task();
         task.setId(1254);
         taskTO = new TaskTO(task);
-        tasksWithoutStoryList = Arrays.asList(task);
-        tasksTOsWithoutStoryList = Arrays.asList(taskTO);
+        tasksWithoutStoryList = new HashSet<Task>(Arrays.asList(task));
+        tasksTOsWithoutStoryList = new HashSet<TaskTO>(Arrays.asList(taskTO));
 
         expectedIterationData = new IterationTO(new Iteration());
-        expectedIterationData.setStories(new ArrayList<Story>());
+        expectedIterationData.setStories(new HashSet<Story>());
         expectedIterationData.getStories().addAll(storiesList);
-        expectedIterationData.setTasks(new ArrayList<Task>());
+        expectedIterationData.setTasks(new HashSet<Task>());
         expectedIterationData.getTasks().addAll(
                 tasksTOsWithoutStoryList);
     }
@@ -134,7 +135,7 @@ public class IterationBusinessTest {
 
     @Test
     public void testGetIterationContents_doNotExcludeTasks() {
-        expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
+        expect(iterationDAO.retrieveDeep(iteration.getId())).andReturn(iteration);
 
         expect(transferObjectBusiness.constructBacklogData(
                         iteration)).andReturn(storiesList);
@@ -169,7 +170,7 @@ public class IterationBusinessTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testGetIterationContents_nullBacklog() {
-        expect(iterationDAO.get(0)).andReturn(null);
+        expect(iterationDAO.retrieveDeep(0)).andReturn(null);
         replay(iterationDAO);
         assertNull(iterationBusiness.getIterationContents(0));
         verify(iterationDAO);
@@ -375,7 +376,7 @@ public class IterationBusinessTest {
         expect(iterationDAO.get(16)).andReturn(iteration);
         expect(assignmentBusiness.addMultiple(EasyMock.eq(iteration), 
                 EasyMock.capture(userIdCapture), EasyMock.eq(SignedExactEstimate.ZERO), 
-                EasyMock.eq(100))).andReturn(Arrays.asList(projectAssignment));
+                EasyMock.eq(100))).andReturn(new HashSet<Assignment>(Arrays.asList(projectAssignment)));
         replayAll();
         
         this.iterationBusiness.store(0, 11, iter);

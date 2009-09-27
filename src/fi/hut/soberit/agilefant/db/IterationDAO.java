@@ -37,4 +37,6 @@ public interface IterationDAO extends GenericDAO<Iteration> {
 
     public List<Iteration> retrieveCurrentAndFutureIterationsAt(
             DateTime dayStart);
+    
+    public Iteration retrieveDeep(int iterationId);
 }

@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -63,11 +63,11 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     private Backlog parent;
     
-    private Collection<Backlog> children = new ArrayList<Backlog>();
+    private Set<Backlog> children = new HashSet<Backlog>();
     
-    private Collection<Story> stories = new ArrayList<Story>();
+    private Set<Story> stories = new HashSet<Story>();
     
-    private Collection<BacklogHourEntry> hourEntries = new ArrayList<BacklogHourEntry>();
+    private Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>();
     
     /**
      * Get the id of this object.
@@ -135,7 +135,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      * Set the backlog's child backlogs.
      * @param children
      */
-    public void setChildren(Collection<Backlog> children) {
+    public void setChildren(Set<Backlog> children) {
         this.children = children;
     }
 
@@ -145,28 +145,28 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @OneToMany(mappedBy = "parent")
     @NotAudited
-    public Collection<Backlog> getChildren() {
+    public Set<Backlog> getChildren() {
         return children;
     }
    
     @OneToMany(mappedBy = "backlog")
     @NotAudited
-    public Collection<Story> getStories() {
+    public Set<Story> getStories() {
         return stories;
     }
     
-    public void setStories(Collection<Story> stories) {
+    public void setStories(Set<Story> stories) {
         this.stories = stories;
     }
 
     @OneToMany(mappedBy="backlog")
     @OrderBy("date desc")
     @NotAudited
-    public Collection<BacklogHourEntry> getHourEntries() {
+    public Set<BacklogHourEntry> getHourEntries() {
         return hourEntries;
     }
 
-    public void setHourEntries(Collection<BacklogHourEntry> hourEntries) {
+    public void setHourEntries(Set<BacklogHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
     }
 }

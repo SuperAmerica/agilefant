@@ -299,7 +299,8 @@ StoryController.prototype.acceptsDraggable = function(model) {
 };
 
 StoryController.prototype.openLogEffort = function() {
-CreateDialog.createById("createNewEffortEntry");
+  var dialog = CreateDialog.createById("createNewEffortEntry");
+  dialog.getModel().setParent(this.model);
 };
 
 /**

@@ -85,6 +85,10 @@ CreateDialogClass.prototype.close = function() {
   this.element.dialog("destroy").remove();
 };
 
+CreateDialogClass.prototype.getModel = function() {
+  return this.model;
+};
+
 /**
  * Create the fields for the dialog.
  */
@@ -428,8 +432,9 @@ CreateDialog.User.prototype.initFormConfig = function() {
  */
 CreateDialog.EffortEntry = function() {
   this.model = new HourEntryModel();
+  this.model.setInTransaction(true);
   this.model.setUsers([], [PageController.getInstance().getCurrentUser()]);
-  this.model.setDate(new Date().toString());
+  this.model.setDate(new Date().getTime());
   this.initFormConfig();
   this.init(CreateDialog.configurations.effortEntry);
 };
@@ -464,6 +469,7 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
     edit: {
       editor: "Date",
       required: true,
+      withTime: true,
       set: HourEntryModel.prototype.setDate
     }
   });
@@ -519,6 +525,7 @@ CreateDialog.idToClass = {
 CreateDialog.createById = function(id) {
   var C = CreateDialog.idToClass[id];
   var dialog = new C();
+  return dialog;
 };
 
 

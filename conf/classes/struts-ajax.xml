@@ -508,6 +508,14 @@
 		</result>
 	</action>
 	<!-- /Utility actions -->
+	
+	<!-- timesheets -->
+	<action name="logStoryEffort" class="hourEntryAction" method="logStoryEffort">
+	 <result name="success" type="httpheader">
+	   <param name="status">200</param>
+	 </result>
+	</action>
+	<!-- /timesheets -->
   </package>
   
 </struts>

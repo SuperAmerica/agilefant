@@ -171,7 +171,7 @@ var DynamicTableConfiguration = function(options) {
 			tableDroppable: false,
 			rowDroppable: false,
 			alwaysDrop: false,
-			caption: "Table",
+			caption: null,
 			captionStyles: null,
 			saveRowCallback: function() {},
 			cancelEditRowCallback: function() {},

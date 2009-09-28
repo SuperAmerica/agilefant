@@ -115,6 +115,10 @@ AutocompleteSearch.prototype.cancelSelection = function() {
   this.suggestionList.hide();
 };
 
+AutocompleteSearch.prototype.clearInput = function() {
+  this.searchInput.val("");
+  this.cancelSelection();
+};
 
 AutocompleteSearch.prototype.timeoutUpdateMatches = function() {
   var me = this;

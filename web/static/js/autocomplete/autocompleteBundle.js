@@ -140,6 +140,7 @@ Autocomplete.prototype.selectItem = function(item) {
   else {
     this.options.singleSelectCallback(item);
   }
+  this.searchBox.clearInput();
 };
 
 Autocomplete.prototype.getData = function() {

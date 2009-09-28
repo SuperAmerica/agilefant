@@ -138,6 +138,20 @@ public class UserBusinessTest {
     }
     
     @Test
+    public void testStore_emptyPasswordString() {
+        User dataItem = new User();
+        dataItem.setId(123);
+        dataItem.setPassword("password string");
+        
+        userDAO.store(dataItem);
+        replayAll();
+        User actual = userBusiness.storeUser(dataItem, "");
+        verifyAll();
+        
+        assertEquals("password string", actual.getPassword());
+    }
+    
+    @Test
     public void testStore_passwordChange() {
         String password = "teemu";
         String md5hash = "f38bb5caf4771ef31e2d8456e5e93f2f";

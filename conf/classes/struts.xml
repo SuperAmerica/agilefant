@@ -165,6 +165,9 @@
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->
+		<action name="editUser" class="userAction">
+      <result type="dispatcher">/WEB-INF/jsp/administration/editUser.jsp</result>
+    </action>
 		
 		<action name="listUsers" class="userAction">
 			<result type="dispatcher">/WEB-INF/jsp/administration/listUsers.jsp</result>

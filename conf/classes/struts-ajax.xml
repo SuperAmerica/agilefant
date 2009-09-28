@@ -407,6 +407,13 @@
 
 
     <!-- User actions -->
+    <action name="retrieveUser" method="retrieve" class="userAction">
+      <result name="success" type="json">
+        <param name="target">user</param>
+      </result>
+    </action>
+    
+    
     <action name="storeUser" method="store" class="userAction">
       <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">

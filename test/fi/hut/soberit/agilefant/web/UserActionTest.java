@@ -26,9 +26,15 @@ public class UserActionTest {
     // Test data
     User user;
     
+    @SuppressWarnings("serial")
     @Before
     public void setUp_dependencies() {
-        userAction = new UserAction();
+        userAction = new UserAction() {
+            @Override
+            protected int getLoggedInUserId() {
+                return 817;
+            }
+        };
         
         userBusiness = createStrictMock(UserBusiness.class);
         userAction.setUserBusiness(userBusiness);
@@ -46,6 +52,20 @@ public class UserActionTest {
     public void setUp_data() {
         user = new User();
         user.setId(11);
+    }
+    
+    @Test
+    public void testExecute_defaultUser() {
+        userAction.setUserId(0);
+        assertEquals(Action.SUCCESS, userAction.execute());
+        assertEquals(817, userAction.getUserId());
+    }
+    
+    @Test
+    public void testExecute_userSet() {
+        userAction.setUserId(555);
+        assertEquals(Action.SUCCESS, userAction.execute());
+        assertEquals(555, userAction.getUserId());
     }
     
     @Test

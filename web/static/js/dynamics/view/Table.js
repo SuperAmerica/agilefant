@@ -664,7 +664,13 @@ DynamicVerticalTable.prototype.initialize = function() {
   if (this.config.options.cssClass) {
     this.container.addClass(this.config.options.cssClass);
   }
+  
+  if (this.config.getCaption()) {
+    this._addCaption();
+  }
+  
   this.element = $("<div />").appendTo(this.container);
+  
   var columnConfigs = this.config.getColumns();
   var titleColumnConfig = new DynamicTableColumnConfiguration( {
     width : this.config.options.leftWidth,
@@ -682,6 +688,15 @@ DynamicVerticalTable.prototype.initialize = function() {
     this.rows.push(row);
   }
   this.render();
+};
+
+DynamicVerticalTable.prototype._addCaption = function() {
+  this.captionElement = $('<div />').width("100%").addClass(
+      DynamicTable.cssClasses.tableCaption).prependTo(this.container);
+  this.caption = null;
+  this.caption = new DynamicTableCaption(this.captionElement, this.config
+        .getCaptionConfiguration(), this.config.getCaption(), this
+        .getController());
 };
 
 DynamicVerticalTable.prototype.render = function() {

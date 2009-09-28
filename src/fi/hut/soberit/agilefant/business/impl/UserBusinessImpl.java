@@ -62,7 +62,7 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     public User storeUser(User data, String password) {
         User returned = null;
         
-        if (password != null) {
+        if (password != null && !password.equalsIgnoreCase("")) {
             String md5hash = SecurityUtil.MD5(password);
             data.setPassword(md5hash);
         }

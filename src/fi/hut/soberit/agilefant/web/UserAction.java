@@ -13,6 +13,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 /**
  * UserAction
@@ -37,6 +38,18 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
     @Autowired
     private UserBusiness userBusiness;
 
+    @Override
+    public String execute() {
+        if (userId == 0) {
+            userId = getLoggedInUserId();
+        }
+        return Action.SUCCESS;
+    }
+    
+    protected int getLoggedInUserId() {
+        return SecurityUtil.getLoggedUserId();
+    }
+    
     public String create() {
         user = new User();
         user.setEnabled(true);

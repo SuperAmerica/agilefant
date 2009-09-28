@@ -154,7 +154,8 @@ ModelFactory.initializeForTypes = {
     project:    "project",
     product:    "product",
     dailyWork:  "dailyWork",
-    users:      "users"
+    users:      "users",
+    user:       "user"
 };
 
 
@@ -417,6 +418,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       url: "ajax/retrieveAllUsers.action",
       params: { },
       callback: me._constructUserList
+    },
+    "user": {
+      url: "ajax/retrieveUser.action",
+      params: { userId: id},
+      callback: me._constructUser
     }
   };
   
@@ -473,6 +479,14 @@ ModelFactory.prototype._constructUserList = function(id, data) {
   }
   ModelFactory.getInstance().rootObject = userList;
   return userList;
+};
+
+/**
+ * Internal function to construct an user
+ */
+ModelFactory.prototype._constructUser = function(id, data) {
+  ModelFactory.getInstance().rootObject = ModelFactory.updateObject(data);
+  return ModelFactory.getInstance().rootObject;
 };
 
 /**

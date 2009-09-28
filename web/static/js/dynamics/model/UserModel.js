@@ -15,9 +15,7 @@ var UserModel = function() {
   };
   this.currentData = {
     initials: "",
-    fullName: "",
-    password1: "",
-    password2: ""
+    fullName: ""
   };
   this.copiedFields = {
       "fullName": "fullName",
@@ -49,10 +47,11 @@ UserModel.prototype._saveData = function(id, changedData) {
   var me = this;
   
   var url = "ajax/storeUser.action";
-  var data = {
-      password1: this.currentData.password1,
-      password2: this.currentData.password2
-  };
+  var data = {};
+  
+  if (this.currentData.password1) {
+    data.password1 = this.currentData.password1;
+  }
   
   jQuery.extend(data, this.serializeFields("user", changedData));
   // Add the id
@@ -86,6 +85,11 @@ UserModel.prototype._saveData = function(id, changedData) {
 
 UserModel.prototype.isAutoassignToTasks = function() {
   return this.currentData.autoassignToTasks;
+};
+
+UserModel.prototype.setAutoassignToTasks = function(assign) {
+  this.currentData.autoassignToTasks = assign;
+  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getEmail = function() {

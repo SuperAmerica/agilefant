@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
+import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -39,6 +40,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     @Autowired
     private BacklogBusiness backlogBusiness;
+    
+    @Autowired
+    private ProductBusiness productBusiness;
     
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
@@ -129,6 +133,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
                     blog.getId(), name);
             node.setMatchedString(name);
             autocompleteData.add(node);
+            node.setOriginalObject(blog);
         }
         return autocompleteData; 
     }
@@ -141,6 +146,18 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             parent = parent.getParent();
         }
         return name;
+    }
+    
+    @Transactional(readOnly = true)
+    public List<AutocompleteDataNode> constructProductAutocompleteData() {
+        List<AutocompleteDataNode> nodes = new ArrayList<AutocompleteDataNode>();
+        for (Product prod : this.productBusiness.retrieveAll()) {
+            AutocompleteDataNode node = new AutocompleteDataNode(Product.class,
+                    prod.getId(), prod.getName());
+            node.setOriginalObject(prod);
+            nodes.add(node);
+        }
+        return nodes;
     }
     
    
@@ -258,5 +275,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setIterationBusiness(IterationBusiness iterationBusiness) {
         this.iterationBusiness = iterationBusiness;
+    }
+
+    public void setProductBusiness(ProductBusiness productBusiness) {
+        this.productBusiness = productBusiness;
     }
 }

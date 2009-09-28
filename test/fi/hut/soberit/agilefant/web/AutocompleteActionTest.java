@@ -64,6 +64,18 @@ public class AutocompleteActionTest {
         
         assertEquals(list, autocompleteAction.getAutocompleteData());
     }
+    
+    @Test
+    public void testProductData() {
+        List<AutocompleteDataNode> list = Arrays.asList(node, node);
+        expect(toBusiness.constructProductAutocompleteData()).andReturn(list);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, autocompleteAction.productData());
+        verifyAll();
+        
+        assertEquals(list, autocompleteAction.getAutocompleteData());
+    }
 
     @Test
     public void testCurrentIterationData() {

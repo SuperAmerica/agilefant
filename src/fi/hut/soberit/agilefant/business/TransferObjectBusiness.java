@@ -46,6 +46,11 @@ public interface TransferObjectBusiness {
     public List<AutocompleteDataNode> constructBacklogAutocompleteData();
     
     /**
+     * Get all products in <code>AutoCompleteData</code> containers.
+     */
+    public List<AutocompleteDataNode> constructProductAutocompleteData();
+    
+    /**
      * Get all backlogs in AutoCompleteData containers.
      */
     public List<AutocompleteDataNode> constructCurrentIterationAutocompleteData();

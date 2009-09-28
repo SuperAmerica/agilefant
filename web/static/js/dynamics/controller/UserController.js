@@ -32,16 +32,43 @@ UserController.prototype._renderTables = function()  {
       this, this.model, this.userInfoConfig,
       this.infoElement);
   this.infoView.render();
-  
+  /*
   this.passwordView = new DynamicVerticalTable(
       this, this.model, this.passwordViewConfig,
       this.passwordElement);
   this.passwordView.render();
-  
+  */
   this.settingsView = new DynamicVerticalTable(
       this, this.model, this.settingsViewConfig,
       this.userSettingsElement);
   this.settingsView.render(); 
+};
+
+
+/**
+ * Callback for changing password.
+ */
+UserController.prototype.changePassword = function() {
+  var model = this.model;
+  var element = $('<div/>').appendTo(document.body);
+  $('<div/>').text("Change password of " + model.getFullName()).appendTo(element);
+  
+  var container = $('<div/>').text('New password: ').appendTo(element);
+  var input = $('<input type="password"/>').appendTo(container);
+  var dialog = element.dialog({
+    modal: true,
+    buttons: {
+      'Ok': function() {
+        model.setPassword1(input.val());
+        element.dialog('destroy');
+        element.remove();
+      },
+      'Cancel': function() {
+        element.dialog('destroy');
+        element.remove();
+      }
+    }
+  });
 };
 
 /**
@@ -70,6 +97,12 @@ UserController.prototype._initUserInfoConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     }
+  });
+  
+  config.addCaptionItem({
+    text: "Change password",
+    name: "changePassword",
+    callback: UserController.prototype.changePassword
   });
   
   config.addColumnConfiguration(UserController.columnIndices.fullName, {
@@ -132,31 +165,6 @@ UserController.prototype._initUserInfoConfig = function() {
   this.userInfoConfig = config;
 };
 
-/**
- * Callback for changing password.
- */
-UserController.prototype.changePassword = function() {
-  var model = this.model;
-  var element = $('<div/>').appendTo(document.body);
-  $('<div/>').text("Change password of " + model.getFullName()).appendTo(element);
-  
-  var container = $('<div/>').text('New password: ').appendTo(element);
-  var input = $('<input type="password"/>').appendTo(container);
-  var dialog = element.dialog({
-    modal: true,
-    buttons: {
-      'Ok': function() {
-        model.setPassword1(input.val());
-        element.dialog('destroy');
-        element.remove();
-      },
-      'Cancel': function() {
-        element.dialog('destroy');
-        element.remove();
-      }
-    }
-  });
-};
 
 
 /**
@@ -173,11 +181,7 @@ UserController.prototype._initPasswordConfig = function() {
     }
   });
   
-  config.addCaptionItem({
-    text: "Change password",
-    name: "changePassword",
-    callback: UserController.prototype.changePassword
-  });
+  
   /*
   config.addColumnConfiguration(0, {
     title : "Password",
@@ -216,18 +220,19 @@ UserController.prototype._initSettingsConfig = function() {
     }
   });
 
-  /*
+  
   config.addColumnConfiguration(0, {
-    title : "Autoassign to tasks",
-    get: UserModel.prototype.isAutoAssignToTasks,
-    editable : true,
-    edit : {
-      editor : "SingleSelection",
-      items  : { "true": "True", "false": "False" },
-      set: UserModel.prototype.setAutoAssignToTasks
+    title: 'Autoassign to tasks',
+    get: UserModel.prototype.isAutoassignToTasksAsString,
+    editable: true,
+    decorator: DynamicsDecorators.enabledDisabledColorDecorator,
+    edit: {
+      editor: "SingleSelection",
+      items: DynamicsDecorators.enabledDisabledOptions,
+      set: UserModel.prototype.setAutoassignToTasks
     }
   });
-  */
+  
   this.settingsViewConfig = config;
 };
 

@@ -14,6 +14,18 @@ var DynamicsDecorators = {
     var text = DynamicsDecorators.stateDecorator(state);
     return '<div class="taskState taskState'+state+'">'+text+'</div>';
   },
+  enabledDisabledOptions: {
+    "true":  "Enabled",
+    "false": "Disabled"
+  },
+  enabledDisabledColorDecorator: function(state) {
+    var text = DynamicsDecorators.enabledDisabledOptions[state];
+    var stateClass = {
+      "false": "NOT_STARTED",
+      "true":  "DONE"
+    };
+    return '<div class="taskState taskState'+stateClass[state]+'">'+text+'</div>';
+  },
   exactEstimateDecorator: function(value) {
     if(value === null || value === undefined) {
       return "&mdash;";

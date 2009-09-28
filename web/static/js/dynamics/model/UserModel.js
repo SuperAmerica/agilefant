@@ -87,6 +87,13 @@ UserModel.prototype.isAutoassignToTasks = function() {
   return this.currentData.autoassignToTasks;
 };
 
+UserModel.prototype.isAutoassignToTasksAsString = function() {
+  if (this.currentData.autoassignToTasks) {
+    return "true";
+  }
+  return "false";
+};
+
 UserModel.prototype.setAutoassignToTasks = function(assign) {
   this.currentData.autoassignToTasks = assign;
   this._commitIfNotInTransaction();

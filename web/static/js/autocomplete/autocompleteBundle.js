@@ -138,9 +138,18 @@ Autocomplete.prototype.selectItem = function(item) {
     this.selectedBox.addItem(item);
   }
   else {
-    this.options.singleSelectCallback(item);
+    this.options.selectCallback(item);
   }
   this.searchBox.clearInput();
+};
+
+/**
+ * Calls <code>selectCallback</code> if given and in multiselect mode. 
+ */
+Autocomplete.prototype.selectAndClose = function() {
+  if (this.options.multiSelect && this.options.selectCallback) {
+    this.options.selectCallback();
+  }
 };
 
 Autocomplete.prototype.getData = function() {

@@ -16,8 +16,11 @@
 			};
 			
 			if (! this.options.multiSelect) {
-				autocompleteParams.singleSelectCallback = 
-					function(val) { me.select(val); };
+				autocompleteParams.callback = 
+					function(val) { me.selectCallback(val); };
+			}
+			else {
+			  autocompleteParams.selectCallback = function() { me.select(); }
 			}
 			
 			var buttons = {

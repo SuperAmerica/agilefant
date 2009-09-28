@@ -91,9 +91,9 @@ $(document).ready(function() {
     this.as.shiftSelectionDown = function() {
       selectionShiftedDownwards = true;
     };
-    var currentSelected = false;
-    this.as.selectCurrentItem = function() {
-      currentSelected = true;
+    var enterHandled = false;
+    this.as.handleEnterEvent = function() {
+      enterHandled = true;
     };
     var selectionCancelled = 0;
     this.as.cancelSelection = function() {
@@ -124,7 +124,7 @@ $(document).ready(function() {
     ok(selectionShiftedDownwards, "Selection should be shifted downwards with keypress");
     
     this.as.searchInput.trigger(enterEvent);
-    ok(currentSelected, "Current value should be selected with enter");
+    ok(enterHandled, "Enter handler called");
     
     this.as.searchInput.trigger(escEvent);
     same(selectionCancelled, 1, "Selection should be cancelled with esc");
@@ -285,6 +285,25 @@ $(document).ready(function() {
   });
   
   
+  test("Handle enter event", function() {
+    
+    var selectCurrentCallCount = 0;
+    this.as.selectCurrentItem = function() {
+      selectCurrentCallCount++;
+    };
+    
+    this.as.searchInput.val('Foo');
+    
+    this.as.handleEnterEvent();
+    same(selectCurrentCallCount, 1, "Select current called");
+    
+    this.as.searchInput.val('');
+    this.bundle.expects().selectAndClose();
+    
+    this.as.handleEnterEvent();
+    
+  });
+  
   test("Select current item", function() {
     this.as.matchedItems = this.testDataSet;
     this.as.selectedItem = 1;
@@ -302,7 +321,6 @@ $(document).ready(function() {
     
     ok(elementClicked, "The element should be clicked");
   });
-  
   
   test("Select item", function() {
     var selectionCancelled = false;

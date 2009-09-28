@@ -162,10 +162,10 @@ $(document).ready(function() {
     
     this.ac.options.multiSelect = false;
     
-    var singleSelectCalled = false;
-    this.ac.options.singleSelectCallback = function(item) {
+    var selectCalled = false;
+    this.ac.options.selectCallback = function(item) {
       equals(item, tester, "Single select item correct");
-      singleSelectCalled = true;
+      selectCalled = true;
     };
     
     var tester = {
@@ -177,7 +177,7 @@ $(document).ready(function() {
     
     this.ac.selectItem(tester);
     
-    ok(singleSelectCalled, "Single select callback called");
+    ok(selectCalled, "Single select callback called");
   });
   
   test("Select item in multi mode, recent hidden", function() {

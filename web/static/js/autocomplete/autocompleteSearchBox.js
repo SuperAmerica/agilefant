@@ -57,7 +57,7 @@ AutocompleteSearch.prototype.bindEvents = function() {
       me.shiftSelectionDown();
     }
     else if (kc === AutocompleteVars.keyCodes.enter) {
-      me.selectCurrentItem();
+      me.handleEnterEvent();
     }
     else if (kc === AutocompleteVars.keyCodes.esc) {
       me.cancelSelection();
@@ -99,6 +99,18 @@ AutocompleteSearch.prototype.updateSelectedListItem = function() {
   this.suggestionList.children().eq(this.selectedItem).addClass(AutocompleteVars.cssClasses.selectedLi);
 };
 
+/**
+ * If search field empty, then call <code>Autocomplete.selectAndClose</code>.
+ * Otherwise call <code>selectCurrentItem</code>
+ */
+AutocompleteSearch.prototype.handleEnterEvent = function() {
+  if (this.searchInput.val() === "") {
+    this.bundle.selectAndClose();
+  }
+  else {
+    this.selectCurrentItem();
+  }
+};
 
 AutocompleteSearch.prototype.selectCurrentItem = function() {
   this.suggestionList.children('li').eq(this.selectedItem).click();

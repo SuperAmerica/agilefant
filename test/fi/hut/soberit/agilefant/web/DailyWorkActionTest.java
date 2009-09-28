@@ -15,12 +15,14 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
+import fi.hut.soberit.agilefant.transfer.TaskTO;
 
 public class DailyWorkActionTest {
     private DailyWorkAction testable;
@@ -29,6 +31,7 @@ public class DailyWorkActionTest {
     private DailyWorkBusiness dailyWorkBusiness;
     private UserBusiness userBusiness;
     private TaskBusiness taskBusiness;
+    private TransferObjectBusiness transferObjectBusiness;
 
     protected int LOGGED_IN_USER = 2;
     
@@ -50,14 +53,17 @@ public class DailyWorkActionTest {
 
         taskBusiness = createStrictMock(TaskBusiness.class);
         testable.setTaskBusiness(taskBusiness);
+        
+        transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
+        testable.setTransferObjectBusiness(transferObjectBusiness);
     }
     
     private void replayAll() {
-        replay(dailyWorkBusiness, taskBusiness, userBusiness);
+        replay(dailyWorkBusiness, taskBusiness, userBusiness, transferObjectBusiness);
     }
 
     private void verifyAll() {
-        verify(dailyWorkBusiness, taskBusiness, userBusiness);
+        verify(dailyWorkBusiness, taskBusiness, userBusiness, transferObjectBusiness);
     }
     
     @Test
@@ -117,6 +123,9 @@ public class DailyWorkActionTest {
         expect(userBusiness.retrieve(LOGGED_IN_USER)).andReturn(user);
         expect(taskBusiness.retrieve(1)).andReturn(task);
         dailyWorkBusiness.removeFromWhatsNext(user, task);
+        
+        TaskTO taskTO = new TaskTO(task);
+        expect(transferObjectBusiness.constructTaskTO(task)).andReturn(taskTO);
 
         replayAll();
         testable.deleteFromWorkQueue();
@@ -124,7 +133,7 @@ public class DailyWorkActionTest {
         verifyAll();
         
         // This is to be provided in JSON
-        assertSame(task, testable.getTask());
+        assertSame(taskTO, testable.getTask());
     }
 
     @Test
@@ -144,13 +153,16 @@ public class DailyWorkActionTest {
         WhatsNextEntry entry = new WhatsNextEntry();
         expect(dailyWorkBusiness.addToWhatsNext(user, task)).andReturn(entry);
 
+        TaskTO taskTO = new TaskTO(task);
+        expect(transferObjectBusiness.constructTaskTO(task)).andReturn(taskTO);
+
         replayAll();
         testable.addToWorkQueue();
         
         verifyAll();
         
         // This is to be provided in JSON
-        assertSame(task, testable.getTask());
+        assertSame(taskTO, testable.getTask());
     }
     
     @Test

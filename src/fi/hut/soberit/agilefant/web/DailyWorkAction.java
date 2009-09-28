@@ -15,11 +15,13 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
+import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
 @Component("dailyWorkAction")
@@ -35,6 +37,9 @@ public class DailyWorkAction extends ActionSupport {
 
     @Autowired
     private TaskBusiness taskBusiness;
+
+    @Autowired
+    private TransferObjectBusiness transferObjectBusiness;
 
     private int  userId;
     private User user; 
@@ -72,19 +77,21 @@ public class DailyWorkAction extends ActionSupport {
 
     public String deleteFromWorkQueue() {
         User thisUser = getDefaultUser();
-        setTask(taskBusiness.retrieve(taskId));
+        Task task = taskBusiness.retrieve(taskId);
         
-        dailyWorkBusiness.removeFromWhatsNext(thisUser, getTask());
-
+        dailyWorkBusiness.removeFromWhatsNext(thisUser, task);
+        
+        this.setTask(transferObjectBusiness.constructTaskTO(task));
         return Action.SUCCESS;
     }
     
     public String addToWorkQueue() {
         User thisUser = getDefaultUser();
-        setTask(taskBusiness.retrieve(taskId));
+        Task task = taskBusiness.retrieve(taskId);
 
-        dailyWorkBusiness.addToWhatsNext(thisUser, getTask());
+        dailyWorkBusiness.addToWhatsNext(thisUser, task);
         
+        this.setTask(transferObjectBusiness.constructTaskTO(task));
         return Action.SUCCESS;
     }
     
@@ -178,5 +185,9 @@ public class DailyWorkAction extends ActionSupport {
 
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
+    }
+
+    public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
     }
 }

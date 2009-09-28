@@ -153,11 +153,19 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
 };
 
 TaskController.prototype.addToQueueEnabled = function(model, parentView) {
-  return model.getState() != "DONE";
+  if (model.getState() == "DONE") {
+    return false;
+  }
+  
+  return ! model.isWorkingOnTask(PageController.getInstance().getCurrentUser());
 };
 
 TaskController.prototype.removeFromQueueEnabled = function(model, parentView) {
-  return model.getState() != "DONE";
+  if (model.getState() == "DONE") {
+    return false;
+  }
+  
+  return model.isWorkingOnTask(PageController.getInstance().getCurrentUser());
 };
 
 TaskController.prototype.resetOriginalEstimate = function() {

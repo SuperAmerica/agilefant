@@ -411,9 +411,11 @@ TaskModel.prototype.setIterationToSave = function(iteration) {
   }
 };
 
-TaskModel.prototype.isOnMyWorkQueue = function() {
-  return false;
-};
+TaskModel.prototype.isWorkingOnTask = function(user) {
+  var userId = user.getId();
+  return $.inArray(userId, this.transientData.workingOnTaskIds) != -1;
+}
+
 
 /**
  * Add a responsible for the task and modify the current data.

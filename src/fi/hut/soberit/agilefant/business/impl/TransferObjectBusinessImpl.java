@@ -174,12 +174,10 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     }
 
     /** {@inheritDoc} */
-    @Transactional(readOnly = true)
-    public DailyWorkTaskTO constructUnqueuedDailyWorkTaskTO(Task task) {
-        DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
-        
+
+    private void fillInDailyWorkItemContextData(DailyWorkTaskTO transferObj) {
         Backlog backlog = null;
-        Story story = task.getStory();
+        Story story = transferObj.getStory();
 
         String contextName = null;
         int parentStoryId = 0;
@@ -195,19 +193,27 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             }
         }
         else {
-            backlog = task.getIteration();
+            backlog = transferObj.getIteration();
             if (backlog != null) {
                 contextName  = "" + String.valueOf(backlog.getName());
                 backlogId = backlog.getId();
             }
         }
+        
+        transferObj.setBacklogId(backlogId);
+        transferObj.setContextName(contextName);
+        transferObj.setParentStoryId(parentStoryId);
+    }
+    
+    @Transactional(readOnly = true)
+    public DailyWorkTaskTO constructUnqueuedDailyWorkTaskTO(Task task) {
+        DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
+        
+        fillInDailyWorkItemContextData(toReturn);
 
         toReturn.setWorkQueueRank(-1);
         toReturn.setTaskClass(TaskClass.ASSIGNED);
 
-        toReturn.setBacklogId(backlogId);
-        toReturn.setContextName(contextName);
-        toReturn.setParentStoryId(parentStoryId);
         return toReturn;
     }
     
@@ -216,33 +222,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     public DailyWorkTaskTO constructQueuedDailyWorkTaskTO(WhatsNextEntry entry) {
         Task task = entry.getTask();
         DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
-        
-        Backlog backlog = null;
-        Story story = task.getStory();
-
-        String contextName = null;
-        int parentStoryId = 0;
-        int backlogId = 0;
-
-        if (story != null) {
-            parentStoryId = story.getId();
-
-            backlog = story.getBacklog();
-            if (backlog != null) {
-                contextName  = "" + String.valueOf(backlog.getName()) + "> " + String.valueOf(story.getName());
-                backlogId = backlog.getId();
-            }
-        }
-        else {
-            backlog = task.getIteration();
-            if (backlog != null) {
-                contextName  = "" + String.valueOf(backlog.getName());
-                backlogId = backlog.getId();
-            }
-        }
-
+        fillInDailyWorkItemContextData(toReturn);
         toReturn.setWorkQueueRank(entry.getRank());
-        
+
         Collection<User> responsibles = toReturn.getResponsibles();
         if (responsibles != null && responsibles.contains(entry.getUser())) {
             toReturn.setTaskClass(TaskClass.NEXT_ASSIGNED);
@@ -250,15 +232,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         else {
             toReturn.setTaskClass(TaskClass.NEXT);
         }
-
-        toReturn.setBacklogId(backlogId);
-        toReturn.setContextName(contextName);
-        toReturn.setParentStoryId(parentStoryId);
+        
         return toReturn;
     }
-
-
-
     
     /*
      * GETTERS AND SETTERS

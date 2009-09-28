@@ -24,10 +24,13 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 
 public class TransferObjectBusinessTest {
 
@@ -386,7 +389,58 @@ public class TransferObjectBusinessTest {
     }
     
     @Test
-    public void testCreateDailyWorkTaskTO() {
+    public void testCreateQueueudDailyWorkTaskTO_withStoryTask() {
+        Task task = new Task();
+
+        WhatsNextEntry entry = new WhatsNextEntry();
+        User user = new User();
+        entry.setUser(user);
+        entry.setTask(task);
+        entry.setRank(2);
         
-    }
+        Story story = new Story();
+        story.setName("story");
+        story.setId(3);
+        
+        task.setId(5);
+        
+        Iteration iteration = new Iteration();
+        iteration.setName("iter");
+        iteration.setId(4);
+        
+        story.setBacklog(iteration);
+        
+        task.setStory(story);
+        task.setResponsibles(Arrays.asList(new User[] { user } ));
+
+        DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
+        assertEquals("iter> story", transferObj.getContextName());
+        assertEquals(2, transferObj.getWorkQueueRank());
+        assertEquals(3, transferObj.getParentStoryId());
+        assertEquals(4, transferObj.getBacklogId());
+        assertEquals(5, transferObj.getId());
+        
+        
+        assertEquals(TaskClass.NEXT_ASSIGNED, transferObj.getTaskClass());
+    };
+
+    @Test
+    public void testCreateUnqueueudDailyWorkTaskTO_withIterationTask() {
+        Task task = new Task();
+        task.setId(5);
+        
+        Iteration iteration = new Iteration();
+        iteration.setName("iter");
+        iteration.setId(4);
+        
+        task.setIteration(iteration);
+
+        DailyWorkTaskTO transferObj = transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task);
+        assertEquals("iter", transferObj.getContextName());
+        assertEquals(-1, transferObj.getWorkQueueRank());
+        assertEquals(0, transferObj.getParentStoryId());
+        assertEquals(4, transferObj.getBacklogId());
+        assertEquals(5, transferObj.getId());
+        assertEquals(TaskClass.ASSIGNED, transferObj.getTaskClass());
+    };
 }

@@ -23,7 +23,6 @@
   <li class=""><a href="#backlogSpentEffort"><span><img
     alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
 </ul>
-</ul>
 <div class="details" id="backlogDetails" style="overflow: auto;">
 <div id="detailContainer" style="width: 70%; float: left; padding: 8px;"></div>
 <div style="width: 28%; float: right">

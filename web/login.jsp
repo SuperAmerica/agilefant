@@ -67,13 +67,14 @@
       </form>
     </div>
 <!-- login -->
-    
+    <%-- 
     <!-- URL to new password generation -->
+    
     <div id="forgot">
     	<ww:url var="newPasswordAction" action="newPassword" />
     	Forgot your password? <ww:a href="%{newPasswordAction}">Get a new one!</ww:a>
     </div>
-    
+    --%>
     <!-- Show disclaimer only if browser is not Mozilla Firefox -->
     <script type="text/javascript">
     if (!jQuery.browser.mozilla) {
@@ -81,7 +82,7 @@
             .html("Agilefant currently supports only " + 
             '<a href="http://www.getfirefox.com/">'
             + "Mozilla Firefox</a>.</p>");
-        $('#forgot').after(disc);
+        $('#login').after(disc);
     }
     </script>
 

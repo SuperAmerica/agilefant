@@ -269,7 +269,7 @@ $(document).ready(function() {
         $("#createNewMenu").hide();
         $(window).unbind("click", hideCreateNewMenuFunction);
     }
-    $('#createNewMenuLink a').click(function() {
+    $('#createNewMenuLink').click(function() {
         $(window).click(hideCreateNewMenuFunction);
         var a = $("#createNewMenu").show();
         return false;

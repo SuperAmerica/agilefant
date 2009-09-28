@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

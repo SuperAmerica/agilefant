@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;

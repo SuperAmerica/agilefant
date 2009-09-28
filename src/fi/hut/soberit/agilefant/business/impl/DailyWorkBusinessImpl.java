@@ -22,7 +22,6 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
-import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 
 @Service("dailyWorkBusiness")
 @Transactional

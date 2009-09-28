@@ -6,7 +6,9 @@ import java.util.List;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -52,4 +54,14 @@ public interface TransferObjectBusiness {
      * Checks whether the backlog is ongoing, past or future.
      */
     public ScheduleStatus getBacklogScheduleStatus(Backlog backlog);
+    
+    /**
+     * Constructs a new daily work task transfer object
+     */
+    public DailyWorkTaskTO constructUnqueuedDailyWorkTaskTO(Task task);
+
+    /**
+     * Constructs a new daily work task transfer object for queue entry
+     */
+    public DailyWorkTaskTO constructQueuedDailyWorkTaskTO(WhatsNextEntry task);
 }

@@ -25,10 +25,13 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 
 @Service("transferObjectBusiness")
 @Transactional(readOnly = true)
@@ -170,6 +173,93 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return autocompleteData; 
     }
 
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public DailyWorkTaskTO constructUnqueuedDailyWorkTaskTO(Task task) {
+        DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
+        
+        Backlog backlog = null;
+        Story story = task.getStory();
+
+        String contextName = null;
+        int parentStoryId = 0;
+        int backlogId = 0;
+
+        if (story != null) {
+            parentStoryId = story.getId();
+
+            backlog = story.getBacklog();
+            if (backlog != null) {
+                contextName  = "" + String.valueOf(backlog.getName()) + "> " + String.valueOf(story.getName());
+                backlogId = backlog.getId();
+            }
+        }
+        else {
+            backlog = task.getIteration();
+            if (backlog != null) {
+                contextName  = "" + String.valueOf(backlog.getName());
+                backlogId = backlog.getId();
+            }
+        }
+
+        toReturn.setWorkQueueRank(-1);
+        toReturn.setTaskClass(TaskClass.ASSIGNED);
+
+        toReturn.setBacklogId(backlogId);
+        toReturn.setContextName(contextName);
+        toReturn.setParentStoryId(parentStoryId);
+        return toReturn;
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public DailyWorkTaskTO constructQueuedDailyWorkTaskTO(WhatsNextEntry entry) {
+        Task task = entry.getTask();
+        DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
+        
+        Backlog backlog = null;
+        Story story = task.getStory();
+
+        String contextName = null;
+        int parentStoryId = 0;
+        int backlogId = 0;
+
+        if (story != null) {
+            parentStoryId = story.getId();
+
+            backlog = story.getBacklog();
+            if (backlog != null) {
+                contextName  = "" + String.valueOf(backlog.getName()) + "> " + String.valueOf(story.getName());
+                backlogId = backlog.getId();
+            }
+        }
+        else {
+            backlog = task.getIteration();
+            if (backlog != null) {
+                contextName  = "" + String.valueOf(backlog.getName());
+                backlogId = backlog.getId();
+            }
+        }
+
+        toReturn.setWorkQueueRank(entry.getRank());
+        
+        Collection<User> responsibles = toReturn.getResponsibles();
+        if (responsibles != null && responsibles.contains(entry.getUser())) {
+            toReturn.setTaskClass(TaskClass.NEXT_ASSIGNED);
+        }
+        else {
+            toReturn.setTaskClass(TaskClass.NEXT);
+        }
+
+        toReturn.setBacklogId(backlogId);
+        toReturn.setContextName(contextName);
+        toReturn.setParentStoryId(parentStoryId);
+        return toReturn;
+    }
+
+
+
+    
     /*
      * GETTERS AND SETTERS
      */

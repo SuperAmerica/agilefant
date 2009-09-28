@@ -10,11 +10,6 @@ import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public interface DailyWorkBusiness {
-    public void setTaskDAO(TaskDAO dao);
-    public void setWhatsNextEntryDAO(WhatsNextEntryDAO whatsNextEntryDAO);
-    public void setTaskBusiness(TaskBusiness taskBusiness);
-    public void setRankingBusiness(RankingBusiness rankingBusiness);
-
     /**
      * Retrieves the list of tasks assigned
      * to the user.
@@ -66,4 +61,10 @@ public interface DailyWorkBusiness {
      * @param task
      */
     public void removeTaskFromWorkQueues(Task task);
+
+    public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness);
+    public void setTaskDAO(TaskDAO dao);
+    public void setWhatsNextEntryDAO(WhatsNextEntryDAO whatsNextEntryDAO);
+    public void setTaskBusiness(TaskBusiness taskBusiness);
+    public void setRankingBusiness(RankingBusiness rankingBusiness);
 }

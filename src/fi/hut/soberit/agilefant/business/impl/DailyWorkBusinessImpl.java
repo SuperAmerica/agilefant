@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Rankable;
@@ -30,6 +31,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     private WhatsNextEntryDAO whatsNextEntryDAO;
     private RankingBusiness rankingBusiness;
     private TaskBusiness taskBusiness;
+    private TransferObjectBusiness transferObjectBusiness;
     
     @Autowired
     public void setTaskDAO(TaskDAO taskDAO) {
@@ -50,6 +52,11 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
     }
+    
+    @Autowired
+    public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
+    }
 
     public Collection<DailyWorkTaskTO> getCurrentTasksForUser(User user) {
         DateTime now = new DateTime();
@@ -59,7 +66,8 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         
         ArrayList<DailyWorkTaskTO> returned = new ArrayList<DailyWorkTaskTO>();
         for (Task task: taskDAO.getAllIterationAndStoryTasks(user, interval)) {
-            returned.add(new DailyWorkTaskTO(task, DailyWorkTaskTO.TaskClass.ASSIGNED, -1));
+            DailyWorkTaskTO transferObj = transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task);
+            returned.add(transferObj);
         }
         
         return returned;
@@ -70,19 +78,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         Collection<DailyWorkTaskTO> returned = new ArrayList<DailyWorkTaskTO>();
         
         for (WhatsNextEntry entry: entries) {
-            Task task = entry.getTask();
-
-            DailyWorkTaskTO item = new DailyWorkTaskTO(task);
-            item.setWorkQueueRank(entry.getRank());
-            
-            Collection<User> responsibles = task.getResponsibles();
-            if (responsibles != null && responsibles.contains(user)) {
-                item.setTaskClass(TaskClass.NEXT_ASSIGNED);
-            }
-            else {
-                item.setTaskClass(TaskClass.NEXT);
-            }
-            
+            DailyWorkTaskTO item = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
             returned.add(item);
         }
         
@@ -107,13 +103,19 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     }
 
     @Transactional
+    private void doRankToBottomOnWhatsNext(WhatsNextEntry entry) throws IllegalArgumentException {
+        rankingBusiness.rankToBottom(entry, whatsNextEntryDAO.getLastTaskInRank(entry.getUser()));
+    }
+
+    @Transactional
     public DailyWorkTaskTO rankToBottomOnWhatsNext(final WhatsNextEntry entry) throws IllegalArgumentException {
         if (entry == null) {
             throw new IllegalArgumentException();
         }
         
-        rankingBusiness.rankToBottom(entry, whatsNextEntryDAO.getLastTaskInRank(entry.getUser()));
-        return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.NEXT, entry.getRank());
+        doRankToBottomOnWhatsNext(entry);
+        DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
+        return transferObj;
     }
     
     @Transactional
@@ -136,7 +138,8 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         };
         
         rankingBusiness.rankUnder(entry, upperEntry, delegate);
-        return new DailyWorkTaskTO(entry.getTask(), DailyWorkTaskTO.TaskClass.ASSIGNED, entry.getRank());
+        DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
+        return transferObj;
     }
     
     @Transactional
@@ -172,7 +175,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         entry.setUser(user);
         whatsNextEntryDAO.store(entry);
         taskBusiness.addResponsible(task, user);
-        rankToBottomOnWhatsNext(entry);
+        doRankToBottomOnWhatsNext(entry);
         return entry;
     }
 

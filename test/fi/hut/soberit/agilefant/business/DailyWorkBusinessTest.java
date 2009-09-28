@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
+import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 
 public class DailyWorkBusinessTest {
     private DailyWorkBusiness testable;
@@ -47,6 +48,8 @@ public class DailyWorkBusinessTest {
     private WhatsNextEntry whatsNextEntry_forTask1AndUser;
 
     private WhatsNextEntry whatsNextEntry_forTask2AndUser;
+
+    private TransferObjectBusiness transferObjectBusiness;
     
     @Before
     public void setUp() {
@@ -64,6 +67,9 @@ public class DailyWorkBusinessTest {
         taskBusiness = createMock(TaskBusiness.class);
         testable.setTaskBusiness(taskBusiness);
         
+        transferObjectBusiness = createMock(TransferObjectBusiness.class);
+        testable.setTransferObjectBusiness(transferObjectBusiness);
+
         backlog = new Product();
         backlog.setId(5);
         
@@ -86,11 +92,11 @@ public class DailyWorkBusinessTest {
     }
 
     private void replayAll() {
-        replay(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness);
+        replay(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
     }
     
     private void verifyAll() {
-        verify(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness);
+        verify(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
     }
 
     @Test
@@ -119,6 +125,20 @@ public class DailyWorkBusinessTest {
 
         expect(whatsNextEntryDAO.getWhatsNextEntriesFor(user)).andReturn(entries);
         
+        DailyWorkTaskTO entry1TO = new DailyWorkTaskTO(entry1.getTask());
+        entry1TO.setTaskClass(TaskClass.NEXT);
+        DailyWorkTaskTO entry2TO = new DailyWorkTaskTO(entry2.getTask());
+        entry2TO.setTaskClass(TaskClass.NEXT);
+        DailyWorkTaskTO entry3TO = new DailyWorkTaskTO(task1);
+        entry3TO.setTaskClass(TaskClass.ASSIGNED);
+        DailyWorkTaskTO entry4TO = new DailyWorkTaskTO(task2);
+        entry4TO.setTaskClass(TaskClass.ASSIGNED);
+        
+        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry1)).andReturn(entry1TO);
+        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry2)).andReturn(entry2TO);
+        expect(transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task1)).andReturn(entry3TO);
+        expect(transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task2)).andReturn(entry4TO);
+
         replayAll();
         Collection<DailyWorkTaskTO> returned = testable.getAllCurrentTasksForUser(user);
         verifyAll();
@@ -152,10 +172,17 @@ public class DailyWorkBusinessTest {
         expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(whatsNextEntry_forTask1AndUser);
         expect(whatsNextEntryDAO.getLastTaskInRank(user)).andReturn(whatsNextEntry_forTask2AndUser);
         rankingBusiness.rankToBottom(whatsNextEntry_forTask1AndUser, whatsNextEntry_forTask2AndUser);
+        
+        DailyWorkTaskTO originalTO = new DailyWorkTaskTO(task1);
+        
+        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(whatsNextEntry_forTask1AndUser)).andReturn(
+            originalTO
+        );
         replayAll();
         
-        testable.rankToBottomOnWhatsNext(user, task1);
+        DailyWorkTaskTO returnedTO = testable.rankToBottomOnWhatsNext(user, task1);
         verifyAll();
+        assertSame(originalTO, returnedTO);
     }
     
     @Test(expected=IllegalArgumentException.class)
@@ -195,17 +222,23 @@ public class DailyWorkBusinessTest {
         // from delegate:
         expect(whatsNextEntryDAO.getTasksWithRankBetween(1, 2, user)).andReturn(new ArrayList<WhatsNextEntry>());
         
+        DailyWorkTaskTO originalTO = new DailyWorkTaskTO(task1);
+        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(isA(WhatsNextEntry.class))).andReturn(
+            originalTO
+        );
+
         replayAll();
 
-        testable.rankUnderTaskOnWhatsNext(user, task1, task2);
+        DailyWorkTaskTO returnedTO = testable.rankUnderTaskOnWhatsNext(user, task1, task2);
 
-        entryCapture.hasCaptured();
-        entryCapture2.hasCaptured();
-        delegateCapture.hasCaptured();
-       
+        assertTrue(delegateCapture.hasCaptured());
         delegateCapture.getValue().getWithRankBetween(1, 2);
-        
         verifyAll();
+
+        assertTrue(entryCapture.hasCaptured());
+        assertTrue(entryCapture2.hasCaptured());
+
+        assertSame(originalTO, returnedTO);
     }
     
     @Test

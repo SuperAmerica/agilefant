@@ -384,4 +384,9 @@ public class TransferObjectBusinessTest {
         iter.setEndDate(new DateTime().plusYears(3).plusMonths(1));
         assertEquals(ScheduleStatus.FUTURE, transferObjectBusiness.getBacklogScheduleStatus(iter));
     }
+    
+    @Test
+    public void testCreateDailyWorkTaskTO() {
+        
+    }
 }

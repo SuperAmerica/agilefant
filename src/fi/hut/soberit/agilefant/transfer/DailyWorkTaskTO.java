@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.transfer;
 
-import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 
@@ -20,39 +18,14 @@ public class DailyWorkTaskTO extends TaskTO {
     
     public DailyWorkTaskTO(Task task) {
         super(task);
-        setupContext();
-    }
-
-    public DailyWorkTaskTO(Task task, TaskClass clazz, int whatsNextRank) {
-        super(task);
-        this.taskClass = clazz;
-        this.workQueueRank = whatsNextRank;
-        
-        setupContext();
     }
     
-    private void setupContext() {
-        Backlog backlog = null;
-        Story story = getStory();
-        
-        if (story != null) {
-            parentStoryId = story.getId();
-            
-            backlog = story.getBacklog();
-            if (backlog != null) {
-                this.contextName  = "" + String.valueOf(backlog.getName()) + "> " + String.valueOf(story.getName());
-                backlogId = backlog.getId();
-            }
-        }
-        else {
-            backlog = getIteration();
-            if (backlog != null) {
-                this.contextName  = "" + String.valueOf(backlog.getName());
-                backlogId = backlog.getId();
-            }
-        }
+    public DailyWorkTaskTO(Task task, TaskClass taskClass, int workQueueRank) {
+        super(task);
+        this.taskClass = taskClass;
+        this.workQueueRank = workQueueRank;
     }
-
+    
     public int getWorkQueueRank() {
         return workQueueRank;
     }

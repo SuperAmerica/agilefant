@@ -7,13 +7,6 @@
 
 <aef:existingObjects />
 
-<span id="createNewMenuLink">
-  <a href="#" onclick="return false;" >
-      <span> </span>
-      Create new &raquo;
-  </a>
-</span>
-
 <script type="text/javascript">
 $(document).ready(function() {
   $('#createNewMenu a').click(function() {
@@ -26,7 +19,7 @@ $(document).ready(function() {
     <li>
         <a href="#" id="createNewProduct" onclick="return false;"  title="Create a new product">Product &raquo;</a>
     </li>
-<%--
+
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
@@ -71,7 +64,7 @@ $(document).ready(function() {
     <li>
       <a href="#" id="createNewTeam" onclick="return false;"  title="Create a new team">Team &raquo;</a>
     </li>
---%>
+
     <li>
       <a href="#" id="createNewUser" onclick="return false;"  title="Create a new user">User &raquo;</a>
     </li>

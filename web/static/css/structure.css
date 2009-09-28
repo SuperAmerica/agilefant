@@ -54,10 +54,13 @@ img {
 #logoutDiv {
   margin-top: 0.2em;
   float: right;
+  height: 1.5em;
+  overflow: visible;
 }
 
 #logoutDiv a {
-  text-decoration: underline;  
+  text-decoration: underline;
+  margin: 0 0.1em;  
 }
 
 /* CONTROLS WRAPPER */

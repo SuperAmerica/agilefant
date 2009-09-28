@@ -83,9 +83,6 @@
     <div id="navigationTabsWrapper">
       <struct:mainTabs navi="${navi}" />
     </div>
-    <div id="createNewMenuWrapper">
-      <struct:createNewMenu />
-    </div>
   </c:if>
 </div>
 

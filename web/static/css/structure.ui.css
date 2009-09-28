@@ -16,7 +16,7 @@
  */
 
 .menu-collapsed #navigationTabsWrapper {
-  margin-left: 2em;
+  margin-left: 3em;
 }
 
 .menu-collapsed #menuWrapper {
@@ -135,7 +135,7 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
  */
 
 #navigationTabsWrapper {
-  margin-left: 15em;
+  margin-left: 16em;
   float: left;
 }
 

@@ -162,6 +162,11 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         return asList(crit);
     }
     
+    /**
+     * 090928 Reko: Does not work, when iteration has no stories 
+     * or tasks.
+     */
+    @Deprecated
     public Iteration retrieveDeep(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
         Criteria storyCrit = crit.createCriteria("stories");

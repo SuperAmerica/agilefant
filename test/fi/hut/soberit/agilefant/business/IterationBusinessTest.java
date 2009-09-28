@@ -135,7 +135,7 @@ public class IterationBusinessTest {
 
     @Test
     public void testGetIterationContents_doNotExcludeTasks() {
-        expect(iterationDAO.retrieveDeep(iteration.getId())).andReturn(iteration);
+        expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
 
         expect(transferObjectBusiness.constructBacklogData(
                         iteration)).andReturn(storiesList);
@@ -170,7 +170,7 @@ public class IterationBusinessTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testGetIterationContents_nullBacklog() {
-        expect(iterationDAO.retrieveDeep(0)).andReturn(null);
+        expect(iterationDAO.get(0)).andReturn(null);
         replay(iterationDAO);
         assertNull(iterationBusiness.getIterationContents(0));
         verify(iterationDAO);

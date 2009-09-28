@@ -105,28 +105,20 @@ WhatsNextEntryDAO {
         List<?> returned = q.list();
         
         Map<User, List<Task>> returnValue = new HashMap<User, List<Task>>(returned.size()); 
-        
-        if (returned != null) {
-            for (Object o: returned) {
-                Object[] array = (Object[])o;
-                User user = (User)array[0];
-                Task task = (Task)array[1];
-                
-                // should not ever happen?
-                if (user == null || task == null) {
-                    continue;
-                }
 
-                List<Task> tasks = returnValue.get(user);
-                if (tasks == null) {
-                    tasks = new ArrayList<Task>();
-                    returnValue.put(user, tasks);
-                }
-                
-                tasks.add(task);
+        for (Object o: returned) {
+            Object[] array = (Object[])o;
+            User user = (User)array[0];
+            Task task = (Task)array[1];
+
+            List<Task> tasks = returnValue.get(user);
+            if (tasks == null) {
+                tasks = new ArrayList<Task>();
+                returnValue.put(user, tasks);
             }
-        }
-        
+
+            tasks.add(task);
+        }        
         return returnValue;
     };
 }

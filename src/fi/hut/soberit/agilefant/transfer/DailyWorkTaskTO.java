@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.transfer;
 
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.util.BeanCopier;
 
 public class DailyWorkTaskTO extends TaskTO {
     public enum TaskClass {
@@ -64,9 +63,5 @@ public class DailyWorkTaskTO extends TaskTO {
 
     public TaskClass getTaskClass() {
         return taskClass;
-    }
-
-    public void setTask(Task task) {
-        BeanCopier.copy(task, this);
     }
 }

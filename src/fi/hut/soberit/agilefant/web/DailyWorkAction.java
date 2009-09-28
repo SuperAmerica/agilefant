@@ -154,10 +154,6 @@ public class DailyWorkAction extends ActionSupport {
         return enabledUsers;
     }
 
-    public void setEnabledUsers(List<User> enabledUsers) {
-        this.enabledUsers = enabledUsers;
-    }
-
     public void setTaskId(int taskId) {
         this.taskId = taskId; 
     }

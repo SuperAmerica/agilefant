@@ -414,7 +414,7 @@ public class TransferObjectBusinessTest {
         task.setResponsibles(Arrays.asList(new User[] { user } ));
 
         DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
-        assertEquals("iter> story", transferObj.getContextName());
+        assertEquals("iter > story", transferObj.getContextName());
         assertEquals(2, transferObj.getWorkQueueRank());
         assertEquals(3, transferObj.getParentStoryId());
         assertEquals(4, transferObj.getBacklogId());

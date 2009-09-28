@@ -188,7 +188,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
             backlog = story.getBacklog();
             if (backlog != null) {
-                contextName  = "" + String.valueOf(backlog.getName()) + "> " + String.valueOf(story.getName());
+                contextName  = "" + String.valueOf(backlog.getName()) + " > " + String.valueOf(story.getName());
                 backlogId = backlog.getId();
             }
         }

@@ -306,6 +306,10 @@ StoryController.prototype.openLogEffort = function() {
   dialog.getModel().setParent(this.model);
 };
 
+StoryController.prototype.openQuickLogEffort = function(model, view) {
+  view.openEditor(false, null, true);
+};
+
 /**
  * NOTE: this method will be called in the context of StoryModel!
  * Thus this-variable contains a reference to the model object,

@@ -395,12 +395,12 @@ IterationController.prototype.initializeStoryConfig = function() {
       title : "ES",
       headerTooltip : 'Total task effort spent',
       get : StoryModel.prototype.getTotalEffortSpent,
-      editable : true,
+      editable : false,
+      onDoubleClick: StoryController.prototype.openQuickLogEffort,
       edit : {
         editor : "ExactEstimate",
         decorator: DynamicsDecorators.empty,
         set : StoryController.prototype.quickLogEffort
-        //set: StoryModel.prototype.getTotalEffortSpent
       }
     });
   }

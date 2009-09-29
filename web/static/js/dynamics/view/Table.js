@@ -5,6 +5,7 @@
 var DynamicTable = function(controller, model, config, parentView) {
   this.init(controller, model, parentView);
   this.config = {};
+  this.currentTableRows = [];
   // these will be rendered first and will not be sorted
   this.upperRows = [];
   // rendered after upper rows and will be sorted
@@ -380,13 +381,17 @@ DynamicTable.prototype.render = function() {
     this._renderFromDataSource(rowData);
   }
   this._sort();
-  i = 0;
-  this._addSectionToTable(this.upperRows, null);
-  this._addSectionToTable(this.middleRows, null); /* this.oldMiddleRows); */
-  this._addSectionToTable(this.bottomRows, null);
-  this._appendTailerIfExists();
-  
+  var tableRows = [];
+  //concat different sections together
+  tableRows = tableRows.concat(this.upperRows,this.middleRows, this.bottomRows); 
+  if(!ArrayUtils.compare(tableRows, this.currentTableRows)) { //row order has changed
+    this.currentTableRows = tableRows;
+    this._hardRender(this.currentTableRows);
+  } else { //row order hasn't changed
+    this._softRender();
+  }
   this.element.find("textarea.tableSortListener").trigger("tableSorted");
+  this._appendTailerIfExists();
   if (this.rowCount() === 0) {
     this.header.hide();
   } else {
@@ -394,7 +399,6 @@ DynamicTable.prototype.render = function() {
   }
   
   this.layout();
-  this.oldMiddleRows = this.middleRows.slice();
 };
 
 DynamicTable.prototype._renderHeaderColumn = function(index) {
@@ -432,32 +436,27 @@ DynamicTable.prototype._appendTailerIfExists = function () {
     }
 };
 
-DynamicTable.prototype.isSameArray = function (array1, array2) {
-  var count = array1.length;
-  for (var i = 0; i < count; i++) {
-    if (array1[i] !== array2[i]) {
-      return false;
-    }
+/**
+ * Refresh only row contents without removing and re-adding
+ * the rows.
+ */
+DynamicTable.prototype._softRender = function() {
+  var rowCount = this.currentTableRows.length;
+  for(var i = 0; i < rowCount ; i++) { 
+    this.currentTableRows[i].render();
   }
-  
-  return true;
 };
 
-DynamicTable.prototype._addSectionToTable = function(section, oldSection) {
+/**
+ * Repaint all the table rows.
+ * Will first look up if one of the table rows currently has focus, 
+ * because that row can not be removed from the DOM or the focus
+ * will be lost. All other rows will be inserted around the row that contains
+ * the focus or if such row doesn't exist rows will be added top down.
+ */
+DynamicTable.prototype._hardRender = function(section) {
   var i;
   var rowCount = section.length;
-  
-  if ((oldSection) && (oldSection.length == section.length)) {
-    if (this.isSameArray(section, oldSection)) {
-      for (i = 0; i < rowCount; i ++) {
-        if (! section[i].isFocused()) {
-          section[i].render();
-        }
-      }
-      
-      return;
-    }
-  }
   
   var focusAt = -1;
   //check for focus
@@ -579,7 +578,7 @@ DynamicTable.prototype._sortByColumn = function(column) {
   }
   this._updateSortArrow();
   this._sort();
-  this._addSectionToTable(this.middleRows);
+  this.render();
   this.element.find("textarea.tableSortListener").trigger("tableSorted");
 };
 

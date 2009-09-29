@@ -19,3 +19,23 @@ ArrayUtils.remove = function(array, object) {
     array.splice(index, 1);
   }
 };
+
+/**
+ * Compare two arrays.
+ * 
+ * @return true if arrays contain exactly the same elements in the same order,
+ *         otherwise false.
+ */
+ArrayUtils.compare = function(array1, array2) {
+  try {
+    var len = array1.length;
+    for(var i = 0 ; i < len; i++)  {
+      if(array1[i] !== array2[i]) {
+        return false;
+      }
+    }
+  } catch (e) {
+    return false;
+  }
+  return true;
+};

@@ -63,6 +63,7 @@ $(document).ready(function() {
 	    this.cellConfig.expects().isDragHandle().andReturn(false);
 	    this.cellConfig.expects().isEditable().andReturn(true);
 	    this.cellConfig.expects().getSubViewFactory().andReturn(null);
+	    this.mockRow.expects().isEditable().andReturn(true);
 
 	    var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 	    var openEditCalled = 0;

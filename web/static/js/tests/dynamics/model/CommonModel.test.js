@@ -122,6 +122,12 @@ $(document).ready(function() {
     storyThatIsRemoved.id = 223;
     storyThatIsRemoved.relations.backlog = this.commonModel;
     
+    window.pageController = {};
+    var pageListenerCallCount = 0;
+    window.pageController.pageListener = function() {
+      pageListenerCallCount++;
+    };
+    
     
     this.commonModel.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
     this.commonModel.classNameToRelation["fi.hut.soberit.agilefant.model.Story"] = "story";
@@ -171,6 +177,10 @@ $(document).ready(function() {
     ok(checkParent(storyThatStays), "Parent is correct for story that stays");
     ok(!checkParent(storyThatIsRemoved), "Parent is removed from story");
     ok(checkParent(newStory), "Parent is correct for added story");
+    
+    same(pageListenerCallCount, 2, "Page listener called twice");
+    
+    window.pageController = null;
   });
   
   

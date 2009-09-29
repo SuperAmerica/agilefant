@@ -471,6 +471,12 @@ $(document).ready(function() {
         id: 123,
         "class": "fi.hut.soberit.agilefant.model.Iteration"
     };
+    window.pageController = {};
+    var pageListenerCallCount = 0;
+    window.pageController.pageListener = function() {
+      pageListenerCallCount++;
+    };
+    
     var iter = ModelFactory.updateObject(iterData);
     
     ok(this.instance.data.backlog[123], "The backlog exists in the data");
@@ -478,6 +484,8 @@ $(document).ready(function() {
     // Call delete listeners
     iter.callListeners(new DynamicsEvents.DeleteEvent(iter));
     
+    window.pageController = null;
+    same(pageListenerCallCount, 2 ,"Page listener called twice");
     ok(!this.instance.data.backlog[123], "The backlog does not exist in the data");
   });
   

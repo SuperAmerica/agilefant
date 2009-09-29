@@ -309,6 +309,8 @@ public class IterationBusinessTest {
         expect(backlogBusiness.retrieve(11)).andReturn(project);
         expect(iterationDAO.get(10)).andReturn(iteration);
         iterationDAO.store(iteration);
+        expect(transferObjectBusiness.constructIterationTO(EasyMock.isA(Iteration.class)))
+            .andReturn(new IterationTO(iter));
 
         replayAll();
 
@@ -377,6 +379,9 @@ public class IterationBusinessTest {
         expect(assignmentBusiness.addMultiple(EasyMock.eq(iteration), 
                 EasyMock.capture(userIdCapture), EasyMock.eq(SignedExactEstimate.ZERO), 
                 EasyMock.eq(100))).andReturn(new HashSet<Assignment>(Arrays.asList(projectAssignment)));
+        expect(transferObjectBusiness.constructIterationTO(iteration))
+                .andReturn(new IterationTO(iteration));
+        
         replayAll();
         
         this.iterationBusiness.store(0, 11, iter);
@@ -397,6 +402,8 @@ public class IterationBusinessTest {
         expect(backlogBusiness.retrieve(11)).andReturn(project);
         expect(iterationDAO.create(EasyMock.isA(Iteration.class))).andReturn(new Integer(16));
         expect(iterationDAO.get(16)).andReturn(iteration);
+        expect(transferObjectBusiness.constructIterationTO(iteration))
+            .andReturn(new IterationTO(iteration));
         replayAll();
         this.iterationBusiness.store(0, 11, iter);
         verifyAll();

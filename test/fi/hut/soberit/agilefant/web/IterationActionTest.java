@@ -115,13 +115,14 @@ public class IterationActionTest {
     public void testStore() {
         Iteration iter = new Iteration();
         Iteration iter2 = new Iteration();
-        expect(iterationBusiness.store(1, 2, iter)).andReturn(iter2);
+        IterationTO transfer = new IterationTO(iter2);
+        expect(iterationBusiness.store(1, 2, iter)).andReturn(transfer);
         replayAll();
         iterationAction.setIteration(iter);
         iterationAction.setIterationId(1);
         iterationAction.setParentBacklogId(2);
         iterationAction.store();
-        assertEquals(IterationTO.class, iterationAction.getIteration().getClass());
+        assertEquals(transfer, iterationAction.getIteration());
         verifyAll();
     }
 }

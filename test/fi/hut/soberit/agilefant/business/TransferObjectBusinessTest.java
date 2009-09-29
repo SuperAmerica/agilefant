@@ -27,6 +27,7 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -176,6 +177,18 @@ public class TransferObjectBusinessTest {
 
         assertEquals(responsibles, actualTO.getResponsibles());
     }
+    
+    @Test
+    public void constructIterationTO() {
+        Iteration past = new Iteration();
+        past.setStartDate(new DateTime().minusMonths(2));
+        past.setEndDate(new DateTime().minusMonths(1));
+        replayAll();
+        IterationTO actual = transferObjectBusiness.constructIterationTO(past);
+        verifyAll();
+        assertEquals(ScheduleStatus.PAST, actual.getScheduleStatus());
+    }
+    
     
     @Test
     public void testConstructUserAutocompleteData() {

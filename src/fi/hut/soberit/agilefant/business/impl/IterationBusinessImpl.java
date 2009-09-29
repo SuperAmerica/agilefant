@@ -198,7 +198,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         return metrics;
     }
 
-    public Iteration store(int iterationId, int parentBacklogId,
+    public IterationTO store(int iterationId, int parentBacklogId,
             Iteration iterationData) {
         Backlog parent = null;
         if(parentBacklogId != 0) {
@@ -215,7 +215,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             throw new IllegalArgumentException("End date before start date");
         }
         if (iterationId == 0) {
-            return this.create(parent, iterationData);
+            return transferObjectBusiness.constructIterationTO(this.create(parent, iterationData));
         }
         Iteration iter = this.retrieve(iterationId);
         iter.setStartDate(iterationData.getStartDate());
@@ -228,7 +228,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         if (parent != null && iter.getParent() != parent) {
             this.moveTo(iter, parent);
         }
-        return iter;
+        return transferObjectBusiness.constructIterationTO(iter);
     }
 
     private Iteration create(Backlog parentBacklog, Iteration iterationData) {

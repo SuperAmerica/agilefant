@@ -11,7 +11,7 @@
 				dataType: this.options.dataType,
 				preSelected: this.options.selected,
 				multiSelect: false,
-				singleSelectCallback: function(val) { me.select(val); }
+				selectCallback: function(val) { me.select(val); }
 			});
 			autocomplete.initialize();
 			this.setValue(this.options.selected);

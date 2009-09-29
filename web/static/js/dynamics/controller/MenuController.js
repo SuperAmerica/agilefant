@@ -6,13 +6,17 @@
  * @constructor
  */
 var BacklogMenuController = function(element, toggleElement) {
+  this.init();
+};
+
+BacklogMenuController.prototype.init = function(element, toggleElement) {
   this.element = element;
   this.toggleControl = toggleElement;
   this.tree = null;
-  this._init();
+  this.initTree();
 };
 
-BacklogMenuController.prototype._init = function() {
+BacklogMenuController.prototype.initTree = function() {
   this.element.dynatree({
     onClick: function(dtnode, event) {
       if ($(event.target).hasClass("ui-dynatree-title")) {

@@ -75,14 +75,25 @@ PageController.prototype.toggleMenu = function() {
   var wrapper = $('#outerWrapper');
   var isClosed = wrapper.hasClass("menu-collapsed");
   wrapper.toggleClass('menu-collapsed');
+  this._updateMenuCookie(isClosed);
+  $(window).resize();
+  return false;
+};
+
+PageController.prototype._updateMenuCookie = function(isClosed) {
   if (isClosed) {
     $.cookie("agilefantMenuClosed", null);
   }
   else {
     $.cookie("agilefantMenuClosed", true);
   }
-  $(window).resize();
-  return false;
+};
+
+/**
+ * Listen to all events from <code>ModelFactory</code>.
+ */
+PageController.prototype.pageListener = function(event) {
+  
 };
 
 

@@ -536,10 +536,12 @@ ModelFactory.prototype._removeObject = function(type, id) {
 /**
  * Listener function to be added to every model object.
  * <p>
- * Listens to <code>DynamicsEvents</code>.
+ * Listens to <code>DynamicsEvents</code> and propagates them
+ * to <code>PageController</code>.
  * 
  * @see DynamicsEvents.EditEvent
  * @see DynamicsEvents.DeleteEvent
+ * @see PageController#pageListener
  */
 ModelFactory.listener = function(event) {
   if (event instanceof DynamicsEvents.DeleteEvent) {
@@ -547,6 +549,8 @@ ModelFactory.listener = function(event) {
         ModelFactory.classNameToType[event.getObject().getPersistedClass()],
         event.getObject().getId());
   }
+  
+  PageController.getInstance().pageListener(event);
 };
 
 ModelFactory.prototype._retrieveLazily = function(type, id, callback, errorCallback) {

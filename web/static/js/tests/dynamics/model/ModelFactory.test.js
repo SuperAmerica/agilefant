@@ -10,8 +10,11 @@ $(document).ready(function() {
           id: 222,
           name: "Test Object"
       };
+      this.mockControl = new MockControl();
     },  
-    teardown: function() { }
+    teardown: function() {
+      this.mockControl.verify();
+    }
   });
   
   
@@ -318,6 +321,24 @@ $(document).ready(function() {
     }
   });
 
+  test("Listener - propagate to page controller", function() {
+    var original = PageController.prototype._init;
+    PageController.prototype._init = function() {};
+    window.pageController = this.mockControl.createMock(PageController);
+    
+    var ee = new DynamicsEvents.EditEvent(new IterationModel());
+    var de = new DynamicsEvents.DeleteEvent(new StoryModel());
+    
+    window.pageController.expects().pageListener(ee);
+    window.pageController.expects().pageListener(de);
+    
+    ModelFactory.listener(ee);
+    ModelFactory.listener(de);
+    
+    window.pageController = null;
+    PageController.prototype._init = original;
+  });
+  
   
   module("Dynamics: ModelFactory: constructs",{
     setup: function() {
@@ -459,6 +480,8 @@ $(document).ready(function() {
     
     ok(!this.instance.data.backlog[123], "The backlog does not exist in the data");
   });
+  
+
   
 });
 

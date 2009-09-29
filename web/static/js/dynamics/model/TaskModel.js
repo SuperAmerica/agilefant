@@ -414,7 +414,7 @@ TaskModel.prototype.setIterationToSave = function(iteration) {
 TaskModel.prototype.isWorkingOnTask = function(user) {
   var userId = user.getId();
   return $.inArray(userId, this.transientData.workingOnTaskIds) != -1;
-}
+};
 
 
 /**

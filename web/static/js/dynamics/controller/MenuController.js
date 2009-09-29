@@ -6,7 +6,7 @@
  * @constructor
  */
 var BacklogMenuController = function(element, toggleElement) {
-  this.init();
+  this.init(element, toggleElement);
 };
 
 BacklogMenuController.prototype.init = function(element, toggleElement) {

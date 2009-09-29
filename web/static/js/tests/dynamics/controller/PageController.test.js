@@ -93,5 +93,32 @@ $(document).ready(function() {
     
     wrapper.remove();
   });
+  
+  
+  test("Page listener", function() {
+    var refreshMenuCallCount = 0;
+    
+    window.pageController.refreshMenu = function() {
+      refreshMenuCallCount++;
+    };
+    
+    var editOnBacklog = new DynamicsEvents.EditEvent(new IterationModel());
+    var editOnStory = new DynamicsEvents.EditEvent(new StoryModel());
+    var deleteOnBacklog = new DynamicsEvents.DeleteEvent(new IterationModel());
+    var deleteOnStory = new DynamicsEvents.DeleteEvent(new StoryModel());
+    
+    // Should call refresh menu
+    window.pageController.pageListener(editOnBacklog);
+    window.pageController.pageListener(deleteOnBacklog);
+    window.pageController.pageListener(editOnBacklog);
+    
+    // Should not call refresh menu
+    window.pageController.pageListener(editOnStory);
+    window.pageController.pageListener(deleteOnStory);
+    
+    same(refreshMenuCallCount, 3, "Refresh menu called three times");
+    
+    window.pageController = null;
+  });
 });
 

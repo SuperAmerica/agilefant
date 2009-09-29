@@ -550,7 +550,9 @@ ModelFactory.listener = function(event) {
         event.getObject().getId());
   }
   
-  PageController.getInstance().pageListener(event);
+  if (PageController.getInstance()) {
+    PageController.getInstance().pageListener(event);
+  }
 };
 
 ModelFactory.prototype._retrieveLazily = function(type, id, callback, errorCallback) {

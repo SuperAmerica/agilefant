@@ -48,7 +48,7 @@ UserListContainer.prototype.reload = function() {
 UserListContainer.prototype._getUsersByEnabledStatus = function(enabled) {
   var returned = [];
   for (var i = 0; i < this.relations.user.length; i++) {
-    var user = this.relations.user[i]
+    var user = this.relations.user[i];
     if (user.isEnabled() === enabled) {
       returned.push(user);
     }

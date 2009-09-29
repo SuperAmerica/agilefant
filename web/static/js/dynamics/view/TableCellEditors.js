@@ -531,7 +531,7 @@ TableEditors.Autocomplete.prototype.createInitialDialog = function() {
 TableEditors.Autocomplete.prototype.save = function() {
     if (this.newValue) {
         this.options.set.call(this.model, this.newValue.keys,
-                this.newValue.data)
+                this.newValue.data);
     }
     
     this.close();
@@ -561,7 +561,7 @@ TableEditors.Autocomplete.prototype.setValue = function(keys, data) {
     this.newValue = {
         keys: keys,
         data: data
-    }
+    };
 
     this.save();
     this.updateEditorValue();

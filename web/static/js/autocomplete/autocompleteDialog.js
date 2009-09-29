@@ -20,7 +20,7 @@
 					function(val) { me.selectCallback(val); };
 			}
 			else {
-			  autocompleteParams.selectCallback = function() { me.select(); }
+			  autocompleteParams.selectCallback = function() { me.select(); };
 			}
 			
 			var buttons = {
@@ -31,7 +31,7 @@
 			
 
 			if (! this.options.required) {
-			    buttons["Cancel"] = function() {
+			    buttons.Cancel = function() {
 			        me._cancel();
 			    };
 			}

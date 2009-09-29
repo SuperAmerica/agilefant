@@ -91,9 +91,16 @@ PageController.prototype._updateMenuCookie = function(isClosed) {
 
 /**
  * Listen to all events from <code>ModelFactory</code>.
+ * <p>
+ * Reloads menu if catches an <code>EditEvent</code> or <code>DeleteEvent</code>
+ * targeting a backlog.
  */
 PageController.prototype.pageListener = function(event) {
-  
+  if ((event instanceof DynamicsEvents.EditEvent ||
+      event instanceof DynamicsEvents.DeleteEvent) &&
+      event.getObject() instanceof BacklogModel) {
+    //this.refreshMenu();
+  }
 };
 
 

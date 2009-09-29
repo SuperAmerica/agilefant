@@ -37,4 +37,23 @@ $(document).ready(function() {
     ArrayUtils.remove();
   });
   
+  test("Compare arrays", function() {
+    var a1 = null;
+    var a2 = null;
+    ok(!ArrayUtils.compare(a1,a2), "null arrays");
+    a1 = [1];
+    ok(!ArrayUtils.compare(a1,a2), "second array null");
+    a2 = [1];
+    ok(ArrayUtils.compare(a1,a2), "equals, one element");
+    a1 = [1,2];
+    a2 = [1,2,3];
+    ok(!ArrayUtils.compare(a1,a2), "first array shorter");
+    a1 = [1,2,3];
+    a2 = [1,2];
+    ok(!ArrayUtils.compare(a1,a2), "second array shorter");
+    a1 = [1,2,3];
+    a2 = [1,2,3];
+    ok(ArrayUtils.compare(a1,a2), "equal, multiple elements");
+  });
+  
 });

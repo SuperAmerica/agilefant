@@ -132,6 +132,11 @@ AutocompleteSearch.prototype.clearInput = function() {
   this.cancelSelection();
 };
 
+AutocompleteSearch.prototype.setSearchBoxValue = function(val) {
+  this.searchInput.val(val);
+  this.cancelSelection();
+};
+
 AutocompleteSearch.prototype.timeoutUpdateMatches = function() {
   var me = this;
   if (this.timer) {

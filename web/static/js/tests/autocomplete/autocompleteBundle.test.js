@@ -173,7 +173,6 @@ $(document).ready(function() {
     };
     
     this.recentBox.expects().pushToRecent(tester);
-    this.searchBox.expects().clearInput();
     
     this.ac.selectItem(tester);
     

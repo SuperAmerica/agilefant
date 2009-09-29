@@ -65,3 +65,4 @@
 <script type="text/javascript" src="static/js/autocomplete/autocompleteDataProvider.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSingleDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/autocomplete/autocompleteInline.js?<ww:text name="struts.agilefantReleaseId" />"></script>

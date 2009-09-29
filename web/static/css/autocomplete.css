@@ -159,3 +159,14 @@
 .autocomplete-selectedItemsList li .autocomplete-selectedRemove:hover {
   color: #9aa8b3;
 }
+
+/*
+ * Changes for inline row in dialog
+ */
+.ui-dialog .autocomplete-inline-row {
+  overflow: visible;
+  height: 2.5em;
+}
+.ui-dialog .autocomplete-inline-row input {
+  margin: 0;
+}

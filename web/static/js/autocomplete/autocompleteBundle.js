@@ -44,6 +44,13 @@ var AutocompleteVars = {
  * @constructor
  */
 var Autocomplete = function(element, options) {
+  this._init(element, options);
+};
+
+/**
+ * Internal init function
+ */
+Autocomplete.prototype._init = function(element, options) {
   this.parent = element;
   this.items = [];
   this.leftPanel = $('<div/>').addClass(AutocompleteVars.cssClasses.leftPanel);
@@ -63,7 +70,7 @@ var Autocomplete = function(element, options) {
   this.dataProvider = null;
   this.selectedBox = new AutocompleteSelected(this);
   this.searchBox = new AutocompleteSearch(this);
-  this.recentBox = new AutocompleteRecent(this.recentContainer, this.options.dataType, this, {});
+  this.recentBox = new AutocompleteRecent(this.recentContainer, this.options.dataType, this, {});  
 };
 
 jQuery.fn.autocomplete = function(options) {
@@ -81,7 +88,9 @@ Autocomplete.prototype.initialize = function() {
   this.element = $('<div/>').addClass(AutocompleteVars.cssClasses.autocompleteElement)
     .appendTo(this.parent);
   
-  this.rightPanel.appendTo(this.element);
+  if (this.options.showRecent) {
+    this.rightPanel.appendTo(this.element);
+  }
   this.leftPanel.appendTo(this.element);
   this.dataProvider = AutocompleteDataProvider.getInstance();
   
@@ -136,11 +145,11 @@ Autocomplete.prototype.selectItem = function(item) {
   this.recentBox.pushToRecent(item);
   if (this.options.multiSelect) {
     this.selectedBox.addItem(item);
+    this.searchBox.clearInput();
   }
   else {
     this.options.selectCallback(item);
   }
-  this.searchBox.clearInput();
 };
 
 /**
@@ -154,6 +163,10 @@ Autocomplete.prototype.selectAndClose = function() {
 
 Autocomplete.prototype.getData = function() {
   this.items = this.dataProvider.get(this.options.dataType);
+};
+
+Autocomplete.prototype.setSearchBoxValue = function(val) {
+  this.searchBox.setSearchBoxValue(val);
 };
 
 Autocomplete.prototype.focusSearchField = function() {

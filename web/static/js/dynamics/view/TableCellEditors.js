@@ -285,7 +285,7 @@ TableEditors.SingleSelection.prototype._renderOptions = function() {
  */
 TableEditors.Date = function(row, cell, options) {
     this.element = $('<input type="text"/>').css('max-width', '10em').width(
-            "98%").appendTo(cell.getElement());
+            "80%").appendTo(cell.getElement());
 
     this.datepickerOpen = false;
     this.init(row, cell, options);
@@ -797,6 +797,50 @@ TableEditors.CurrentIteration.prototype.updateEditorValue = function() {
         this.inputElement.val(value);
     }
 };
+
+
+/**
+ * Inline autocomplete
+ */
+TableEditors.AutocompleteInline = function(row, cell, options) {
+  this.value = null;
+  this.init(row, cell, options);
+};
+TableEditors.AutocompleteInline.prototype = new TableEditors.CommonEditor();
+TableEditors.AutocompleteInline.prototype.init = function(row, cell, options) {
+  var me = this;
+  this.element = $('<div/>').appendTo(cell.getElement());
+  
+  // Add class for row to overflow
+  row.getElement().addClass('autocomplete-inline-row');
+  
+  // Call the superclass init
+  TableEditors.CommonEditor.prototype.init.call(this, row, cell, options);
+  
+  // Make it an autocomplete widget
+  this.element.autocompleteInline({
+    dataType: options.dataType,
+    callback: function(val) {
+      me.value = val;
+      options.set.call(me.model, val);
+    }
+  });
+};
+TableEditors.AutocompleteInline.prototype.isValid = function() {
+  if (this.options.required && !this.value) {
+    this.showError("Required field");
+    return false;
+  }
+  return true;
+};
+TableEditors.AutocompleteInline.prototype.save = function() {
+};
+TableEditors.AutocompleteInline.prototype.close = function() {
+  this.element.trigger("editorClosing");
+  this.hideError();
+  this.element.remove();
+};
+
 
 /**
  * 

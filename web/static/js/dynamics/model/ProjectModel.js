@@ -80,7 +80,7 @@ ProjectModel.prototype._saveData = function(id, changedData) {
   if (id) {
     data.projectId = id;    
   }
-  else {
+  else if (this.getParent()){
     url = "ajax/storeNewProject.action";
     data.productId = this.getParent().getId();
   }

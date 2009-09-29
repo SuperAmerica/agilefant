@@ -159,12 +159,7 @@ CreateDialog.Project = function() {
   this.model.setInTransaction(true);
   this.model.setStartDate(new Date().getTime());
   this.model.setEndDate(new Date().getTime());
-  
-  // WRONG
-  var mockProduct = new ProductModel();
-  mockProduct.setId(1);
-  this.model.setParent(mockProduct);
-  
+
   this.initFormConfig();
   this.init(CreateDialog.configurations.project);
 };
@@ -173,11 +168,12 @@ CreateDialog.Project.columnIndices = {
   name: 0,
   startDate: 1,
   endDate: 2,
-  description: 3
+  parent: 3,
+  description: 4
 };
 CreateDialog.Project.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
-    leftWidth: '20%',
+    leftWidth: '24%',
     rightWidth: '75%'
   });
   
@@ -217,6 +213,18 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       required: true,
       withTime: true,
       set: ProjectModel.prototype.setEndDate
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
+    title : "Parent",
+    get : CreateDialog.returnNull,
+    editable : true,
+    edit : {
+      editor : "AutocompleteInline",
+      dataType: "products",
+      required: true,
+      set: ProjectModel.prototype.setParent
     }
   });
   

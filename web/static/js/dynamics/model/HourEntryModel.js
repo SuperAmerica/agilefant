@@ -27,6 +27,20 @@ HourEntryModel.prototype._setData = function(newData) {
   this._copyFields(newData);
 };
 
+/**
+ * Convenience method for adding a spent effort entry to current user
+ * under the given object.
+ */
+HourEntryModel.logEffortForCurrentUser = function(targetObject, effort) {
+  var hourEntry = new HourEntryModel();
+  hourEntry.setInTransaction(true);
+  hourEntry.setUsers([], [PageController.getInstance().getCurrentUser()]);
+  hourEntry.setEffortSpent(effort);
+  hourEntry.setDate(new Date().asString());
+  hourEntry.setParent(targetObject);
+  hourEntry.commit();
+};
+
 HourEntryModel.prototype._saveData = function(id, changedData) {
   var data = this.serializeFields("hourEntry", changedData);
   var url = "";
@@ -56,10 +70,10 @@ HourEntryModel.prototype._saveData = function(id, changedData) {
     async: true,
     cache: false,
     data: data,
-    dataType: "json",
+    dataType: "text",
     success: function(data, status) {
       MessageDisplay.Ok("Effort entry saved");
-      me.setData(data);
+      //me.setData(data);
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving effort entry", xhr);
@@ -82,6 +96,10 @@ HourEntryModel.prototype.getDescription = function() {
 HourEntryModel.prototype.setDate = function(date) {
   this.currentData.date = date;
   this._commitIfNotInTransaction();
+};
+
+HourEntryModel.prototype.setEffortSpent = function(effortSpent) {
+  this.setMinutesSpent(ParserUtils.timeStrToMinutes(effortSpent));
 };
 
 HourEntryModel.prototype.setMinutesSpent = function(minutesSpent) {

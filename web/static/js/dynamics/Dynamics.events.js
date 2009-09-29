@@ -127,3 +127,38 @@ DynamicsEvents.TransactionEditEvent = function(origin) {
   this.object = origin;
 };
 DynamicsEvents.TransactionEditEvent.prototype = new DynamicsEvents.CommonEvent();
+
+
+/**
+ * Fired when editor value is invalid
+ * @see DynamicsEvents.ValidationInvalid
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.ValidationInvalid = function(editor, message) {
+  this.initialize();
+  this.type = "validationInvalid";
+  this.object = editor;
+  this.message = message;
+};
+DynamicsEvents.ValidationInvalid.prototype = new DynamicsEvents.CommonEvent();
+
+DynamicsEvents.ValidationInvalid.prototype.getMessage = function() {
+  return this.message;
+};
+
+/**
+ * Fired when editor value is valid
+ * @see DynamicsEvents.ValidationValid
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.ValidationValid = function(editor, message) {
+  this.initialize();
+  this.type = "validationValid";
+  this.object = editor;
+  this.message = message;
+};
+DynamicsEvents.ValidationValid.prototype = new DynamicsEvents.CommonEvent();
+
+DynamicsEvents.ValidationValid.prototype.getMessage = function() {
+  return this.message;
+};

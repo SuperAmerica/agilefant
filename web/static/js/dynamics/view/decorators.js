@@ -140,5 +140,8 @@ var DynamicsDecorators = {
       return "";
     }
     return "Is a child story of \"" + parentStory + '"';
+  },
+  empty: function() {
+    return "";
   }
 };

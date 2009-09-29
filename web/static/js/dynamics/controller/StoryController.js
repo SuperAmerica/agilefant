@@ -283,6 +283,9 @@ StoryController.prototype.storyActionFactory = function(view, model) {
     text : "Split",
     callback : StoryController.prototype.splitStory
   }, {
+    text: "Log effort",
+    callback: StoryController.prototype.openLogEffort
+  }, {
     text : "Delete",
     callback : StoryController.prototype.removeStory
   } ];
@@ -301,6 +304,15 @@ StoryController.prototype.acceptsDraggable = function(model) {
 StoryController.prototype.openLogEffort = function() {
   var dialog = CreateDialog.createById("createNewEffortEntry");
   dialog.getModel().setParent(this.model);
+};
+
+/**
+ * NOTE: this method will be called in the context of StoryModel!
+ * Thus this-variable contains a reference to the model object,
+ * NOT TO THIS CONTROLLER.
+ */
+StoryController.prototype.quickLogEffort = function(spentEffort) {
+  HourEntryModel.logEffortForCurrentUser(this, spentEffort);
 };
 
 /**

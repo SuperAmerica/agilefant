@@ -296,3 +296,7 @@ StoryModel.prototype.getParentStoryName = function() {
   return parentName;
 };
 
+StoryModel.prototype.getTotalEffortSpent = function() {
+  return "";
+};
+

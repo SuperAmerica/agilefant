@@ -16,7 +16,7 @@ DynamicsButtons.prototype.initialize = function() {
     var button = $('<button />').appendTo(me.parent.getElement());
     me.buttons.push(button);
     button.text(opt.text);
-    button.click(function() {
+    button.click(function(evt) {
       me._click(i);
       return false;
     });

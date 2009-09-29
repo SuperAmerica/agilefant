@@ -518,7 +518,7 @@ CreateDialog.EffortEntry = function() {
   this.model = new HourEntryModel();
   this.model.setInTransaction(true);
   this.model.setUsers([], [PageController.getInstance().getCurrentUser()]);
-  this.model.setDate(new Date().getTime());
+  this.model.setDate(new Date().asString());
   this.initFormConfig();
   this.init(CreateDialog.configurations.effortEntry);
 };
@@ -543,13 +543,14 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
     edit: {
       editor: "ExactEstimate",
       required: true,
-      set: HourEntryModel.prototype.setMinutesSpent
+      size: 8,
+      set: HourEntryModel.prototype.setEffortSpent
     }
   });
   config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.date,{
     title: "Date",
     editable: true,
-    get: CreateDialog.returnNull,
+    get: HourEntryModel.prototype.getDate,
     edit: {
       editor: "Date",
       required: true,

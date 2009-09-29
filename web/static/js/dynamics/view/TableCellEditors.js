@@ -119,7 +119,7 @@ TableEditors.CommonEditor.prototype._blurHandler = function(event) {
 
 TableEditors.CommonEditor.prototype._registerEvents = function() {
     var me = this;
-    this.element.keyup(function(event) {
+    this.element.keydown(function(event) {
         me._handleKeyEvent(event);
         return true;
     });
@@ -138,7 +138,7 @@ TableEditors.CommonEditor.prototype.saveRow = function() {
             new DynamicsEvents.StoreRequested(this));
 };
 TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
-    if (event.keyCode === 27 && !this.options.editRow) {
+  if (event.keyCode === 27 && !this.options.editRow) {
         event.stopPropagation();
         event.preventDefault();
         this.close();
@@ -407,8 +407,13 @@ TableEditors.Estimate.prototype.isValid = function() {
  * @base TableEditors.CommonEditor
  */
 TableEditors.ExactEstimate = function(row, cell, options) {
-    this.element = $('<input type="text"/>').width("98%").appendTo(
+    this.element = $('<input type="text"/>').appendTo(
             cell.getElement());
+    if(options.size) {
+      this.element.attr("size", options.size);
+    } else{
+      this.element.width("98%");
+    }
     this.init(row, cell, options);
 };
 TableEditors.ExactEstimate.prototype = new TableEditors.CommonEditor();

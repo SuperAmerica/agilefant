@@ -51,6 +51,11 @@ public interface TransferObjectBusiness {
     public List<AutocompleteDataNode> constructProductAutocompleteData();
     
     /**
+     * Get all projects in <code>AutoCompleteData</code> containers.
+     */
+    public List<AutocompleteDataNode> constructProjectAutocompleteData();
+    
+    /**
      * Get all backlogs in AutoCompleteData containers.
      */
     public List<AutocompleteDataNode> constructCurrentIterationAutocompleteData();

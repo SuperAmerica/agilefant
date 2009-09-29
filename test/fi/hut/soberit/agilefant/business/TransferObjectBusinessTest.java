@@ -40,6 +40,7 @@ public class TransferObjectBusinessTest {
     private TeamBusiness teamBusiness;
     private BacklogBusiness backlogBusiness;
     private ProductBusiness productBusiness;
+    private ProjectBusiness projectBusiness;
     private IterationBusiness iterationBusiness;
     
     Project project;
@@ -67,16 +68,19 @@ public class TransferObjectBusinessTest {
         productBusiness = createMock(ProductBusiness.class);
         transferObjectBusiness.setProductBusiness(productBusiness);
         
+        projectBusiness = createMock(ProjectBusiness.class);
+        transferObjectBusiness.setProjectBusiness(projectBusiness);
+        
         iterationBusiness = createMock(IterationBusiness.class);
         transferObjectBusiness.setIterationBusiness(iterationBusiness);
     }
     
     private void verifyAll() {
-        verify(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, iterationBusiness);
+        verify(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness);
     }
 
     private void replayAll() {
-        replay(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, iterationBusiness);
+        replay(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness);
     }
     
     
@@ -312,6 +316,38 @@ public class TransferObjectBusinessTest {
         assertEquals("Product > Iter 2", node.getName());
         assertEquals(node.getName(), node.getMatchedString());
         assertEquals(iterationUnderProduct, node.getOriginalObject());
+    }
+    
+    /**
+     * Project autocomplete data.
+     */
+    @Test
+    public void testGetProjectAutocompleteData() {
+        Product product = new Product();
+        product.setId(1);
+        product.setName("Product");
+        
+        Project project = new Project();
+        project.setId(7);
+        project.setParent(product);
+        project.setName("Project");
+        
+        expect(projectBusiness.retrieveAll()).andReturn(Arrays.asList(project));
+        
+        replayAll();
+        
+        List<AutocompleteDataNode> nodes = transferObjectBusiness
+                .constructProjectAutocompleteData();
+        
+        verifyAll();
+        
+        assertEquals(1, nodes.size());
+               
+        AutocompleteDataNode node = getDataNodeById(7, nodes);
+        assertEquals("Product > Project", node.getName());
+        assertEquals(node.getName(), node.getMatchedString());
+        assertEquals(project, node.getOriginalObject());
+
     }
 
     @Test

@@ -14,6 +14,9 @@ CreateDialog.configurations = {
     iteration: {
       title: "Create a new iteration"
     },
+    story: {
+      title: "Create a new story"
+    },
     user: {
       title: "Create a new user"
     },
@@ -30,6 +33,13 @@ CreateDialog.configurations = {
  */
 CreateDialog.returnNull = function() {
   return null;
+};
+
+/**
+ * Convenience method to return an empty string.
+ */
+CreateDialog.returnEmptyString = function() {
+  return "";
 };
 
 
@@ -250,32 +260,28 @@ CreateDialog.Iteration = function() {
   this.model.setInTransaction(true);
   this.model.setStartDate(new Date().getTime());
   this.model.setEndDate(new Date().getTime());
-  
-  // WRONG
-  var mockProject = new ProjectModel();
-  mockProject.setId(1);
-  this.model.setParent(mockProject);
-  
+ 
   this.initFormConfig();
   this.init(CreateDialog.configurations.iteration);
 };
 CreateDialog.Iteration.prototype = new CreateDialogClass();
 CreateDialog.Iteration.columnIndices = {
-  name: 0,
-  startDate: 1,
-  endDate: 2,
-  description: 3
+  name:       0,
+  startDate:  1,
+  endDate:    2,
+  parent:     3,
+  description:4
 };
 CreateDialog.Iteration.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
-    leftWidth: '20%',
+    leftWidth: '24%',
     rightWidth: '75%'
   });
   
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.name,{
     title: "Name",
     editable: true,
-    get: CreateDialog.returnNull,
+    get: CreateDialog.returnEmptyString,
     edit: {
       editor: "Text",
       required: true,
@@ -311,12 +317,106 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     }
   });
   
+  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.parent,{
+    title : "Parent",
+    get : CreateDialog.returnNull,
+    editable : true,
+    edit : {
+      editor : "AutocompleteInline",
+      dataType: "projects",
+      required: true,
+      set: IterationModel.prototype.setParent
+    }
+  });
+  
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.description, {
     title: "Description",
     get: CreateDialog.returnNull,
     edit: {
       editor: "Wysiwyg",
       set: IterationModel.prototype.setDescription
+    }
+  });
+  
+  this.formConfig = config;
+};
+
+/**
+ * Story creation dialog.
+ * @constructor
+ */
+CreateDialog.Story = function() {
+  // Create the mock model
+  this.model = new StoryModel();
+  this.model.setInTransaction(true);
+  
+  this.initFormConfig();
+  this.init(CreateDialog.configurations.story);
+};
+CreateDialog.Story.prototype = new CreateDialogClass();
+CreateDialog.Story.columnIndices = {
+  name:       0,
+  state:      1,
+  storyPoints:2,
+  backlog:    3,
+  description:4
+};
+CreateDialog.Story.prototype.initFormConfig = function() {
+  var config = new DynamicTableConfiguration({
+    leftWidth: '24%',
+    rightWidth: '75%'
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.name,{
+    title: "Name",
+    editable: true,
+    get: CreateDialog.returnEmptyString,
+    edit: {
+      editor: "Text",
+      required: true,
+      set: StoryModel.prototype.setName
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.state,{
+    title: "State",
+    editable: true,
+    get: StoryModel.prototype.getState,
+    edit: {
+      editor : "SingleSelection",
+      set : StoryModel.prototype.setState,
+      items : DynamicsDecorators.stateOptions
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.storyPoints,{
+    title: "Story points",
+    editable: true,
+    get: StoryModel.prototype.getStoryPoints,
+    edit: {
+      editor: "Number",
+      set: StoryModel.prototype.setStoryPoints
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.backlog,{
+    title : "Backlog",
+    get : CreateDialog.returnNull,
+    editable : true,
+    edit : {
+      editor : "AutocompleteInline",
+      dataType: "backlogs",
+      required: true,
+      set: StoryModel.prototype.setBacklog
+    }
+  });
+
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.description, {
+    title: "Description",
+    get: CreateDialog.returnNull,
+    edit: {
+      editor: "Wysiwyg",
+      set: StoryModel.prototype.setDescription
     }
   });
   
@@ -347,7 +447,7 @@ CreateDialog.User.columnIndices = {
 };
 CreateDialog.User.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
-    leftWidth: '20%',
+    leftWidth: '24%',
     rightWidth: '75%'
   });
   
@@ -406,31 +506,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
       required: true
     }
   });
-  /*  
-  config.addColumnConfiguration(CreateDialog.User.columnIndices.password2,{
-    title: "Confirm password",
-    editable: true,
-    get: function() { return ""; },
-    cssClass: "user-password2",
-    edit: {
-      editor: "Password",
-      set: UserModel.prototype.setPassword2,
-      bindToColumn: CreateDialog.User.columnIndices.password2
-    }
-  });
 
-  config.addColumnConfiguration(CreateDialog.User.columnIndices.teams,{
-    title: "Teams",
-    editable: true,
-    get: UserModel.prototype.getTeams,
-    edit: {
-      editor: "Autocomplete",
-      dataType: "teams",
-      required: true,
-      set: UserModel.prototype.setTeams
-    }
-  });
-  */
   this.formConfig = config;
 };
 
@@ -517,6 +593,8 @@ CreateDialog.idToClass = {
   "createNewProject": CreateDialog.Project,
   /** @member CreateDialog */
   "createNewIteration": CreateDialog.Iteration,
+  /** @member CreateDialog */
+  "createNewStory": CreateDialog.Story,
   /** @member CreateDialog */
   "createNewUser": CreateDialog.User,
   /** @member CreateDialog */

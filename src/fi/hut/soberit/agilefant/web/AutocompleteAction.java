@@ -46,6 +46,11 @@ public class AutocompleteAction extends ActionSupport {
         autocompleteData = transferObjectBusiness.constructProductAutocompleteData();
         return Action.SUCCESS;
     }
+    
+    public String projectData() {
+        autocompleteData = transferObjectBusiness.constructProjectAutocompleteData();
+        return Action.SUCCESS;
+    }
 
     public String currentIterationData() {
         autocompleteData = transferObjectBusiness.constructCurrentIterationAutocompleteData();

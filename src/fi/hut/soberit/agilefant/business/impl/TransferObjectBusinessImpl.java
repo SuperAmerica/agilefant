@@ -15,12 +15,14 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
+import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
@@ -43,6 +45,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     
     @Autowired
     private ProductBusiness productBusiness;
+    
+    @Autowired
+    private ProjectBusiness projectBusiness;
     
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
@@ -122,10 +127,33 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return autocompleteData;
     }
     
+
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public List<AutocompleteDataNode> constructBacklogAutocompleteData() {
         Collection<Backlog> allBacklogs = this.backlogBusiness.retrieveAll();
+        List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
+        return autocompleteData; 
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public List<AutocompleteDataNode> constructProductAutocompleteData() {
+        Collection<Product> allBacklogs = this.productBusiness.retrieveAll();
+        List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
+        return autocompleteData; 
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public List<AutocompleteDataNode> constructProjectAutocompleteData() {
+        Collection<Project> allBacklogs = this.projectBusiness.retrieveAll();
+        List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
+        return autocompleteData; 
+    }
+    
+    private List<AutocompleteDataNode> getBacklogDataRecurseNames(
+            Collection<? extends Backlog> allBacklogs) {
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
         for (Backlog blog : allBacklogs) {
             String name = recurseBacklogNameWithParents(blog);
@@ -135,7 +163,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             autocompleteData.add(node);
             node.setOriginalObject(blog);
         }
-        return autocompleteData; 
+        return autocompleteData;
     }
     
     private String recurseBacklogNameWithParents(Backlog blog) {
@@ -148,17 +176,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return name;
     }
     
-    @Transactional(readOnly = true)
-    public List<AutocompleteDataNode> constructProductAutocompleteData() {
-        List<AutocompleteDataNode> nodes = new ArrayList<AutocompleteDataNode>();
-        for (Product prod : this.productBusiness.retrieveAll()) {
-            AutocompleteDataNode node = new AutocompleteDataNode(Product.class,
-                    prod.getId(), prod.getName());
-            node.setOriginalObject(prod);
-            nodes.add(node);
-        }
-        return nodes;
-    }
+    
     
    
     @Transactional(readOnly = true)
@@ -279,5 +297,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
+    }
+
+    public void setProjectBusiness(ProjectBusiness projectBusiness) {
+        this.projectBusiness = projectBusiness;
     }
 }

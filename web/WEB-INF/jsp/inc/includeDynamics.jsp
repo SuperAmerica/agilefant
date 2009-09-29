@@ -18,7 +18,6 @@
 <script type="text/javascript" src="static/js/dynamics/view/Tabs.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Buttons.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/ConfirmationDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/view/CreateDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 
 <script type="text/javascript" src="static/js/dynamics/model/CommonModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
@@ -57,6 +56,7 @@
 <script type="text/javascript" src="static/js/dynamics/controller/StoryInfoDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/UserListController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/UserRowController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/CreateDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSelectedBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>

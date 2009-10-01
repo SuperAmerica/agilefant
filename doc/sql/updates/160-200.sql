@@ -4,6 +4,8 @@
 SET autocommit = 0;
 SET SESSION SQL_MODE='TRADITIONAL';
 
+SET @SCHEMA_NAME = 'agilefant';
+
 delimiter //
 
 CREATE PROCEDURE ExecDyn(IN sqlstr VARCHAR(1000))
@@ -32,7 +34,7 @@ BEGIN
     SELECT DISTINCT table_name,constraint_name
     FROM information_schema.key_column_usage
     WHERE referenced_table_name IS NOT NULL
-      AND table_schema='agilefant';
+      AND table_schema=@SCHEMA_NAME;
 
   DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET done = TRUE;
   OPEN cur;

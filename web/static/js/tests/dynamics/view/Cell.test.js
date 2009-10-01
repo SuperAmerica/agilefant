@@ -121,7 +121,7 @@ $(document).ready(function() {
 	   equals(getEditorCalled, 1, "Get Editor called once.");
 	   equals(fooEditorCalled, 1, "Editor constructor called once");
 	   
-	   
+	   TableEditors = editorsOld;
 	 });
 	 
    test("render with sub view", function() {

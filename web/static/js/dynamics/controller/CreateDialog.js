@@ -119,7 +119,7 @@ CreateDialogClass.prototype.initializeForm = function() {
  * @constructor
  */
 CreateDialog.Product = function() {
-  this.model = new ProductModel();
+  this.model = ModelFactory.createObject(ModelFactory.typeToClassName.product);
   this.initFormConfig();
   this.init(CreateDialog.configurations.product);
 };
@@ -165,7 +165,7 @@ CreateDialog.Product.prototype.initFormConfig = function() {
  */
 CreateDialog.Project = function() {
   // Create the mock model
-  this.model = new ProjectModel();
+  this.model = ModelFactory.createObject(ModelFactory.typeToClassName.project);
   this.model.setInTransaction(true);
   this.model.setStartDate(new Date().getTime());
   this.model.setEndDate(new Date().getTime());
@@ -256,7 +256,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
  */
 CreateDialog.Iteration = function() {
   // Create the mock model
-  this.model = new IterationModel();
+  this.model = ModelFactory.createObject(ModelFactory.typeToClassName.iteration);
   this.model.setInTransaction(true);
   this.model.setStartDate(new Date().getTime());
   this.model.setEndDate(new Date().getTime());
@@ -347,7 +347,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
  */
 CreateDialog.Story = function() {
   // Create the mock model
-  this.model = new StoryModel();
+  this.model = ModelFactory.createObject(ModelFactory.typeToClassName.story);
   this.model.setInTransaction(true);
   
   this.initFormConfig();
@@ -429,7 +429,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
  */
 CreateDialog.User = function() {
   // Create the mock model
-  this.model = new UserModel();
+  this.model = ModelFactory.createObject(ModelFactory.typeToClassName.user);
   this.model.setInTransaction(true);
   
   this.initFormConfig();
@@ -516,7 +516,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
  */
 CreateDialog.Team = function() {
   // Create the mock model
-  this.model = new TeamModel();
+  this.model = ModelFactory.createObject(ModelFactory.typeToClassName.team);
   this.model.setInTransaction(true);
   
   this.initFormConfig();
@@ -567,7 +567,7 @@ CreateDialog.Team.prototype.initFormConfig = function() {
  * @constructor
  */
 CreateDialog.EffortEntry = function() {
-  this.model = new HourEntryModel();
+  this.model = ModelFactory.createObject(ModelFactory.typeToClassName.hourEntry);
   this.model.setInTransaction(true);
   this.model.setUsers([], [PageController.getInstance().getCurrentUser()]);
   this.model.setDate(new Date().asString());

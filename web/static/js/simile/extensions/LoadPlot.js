@@ -19,12 +19,11 @@ Timeplot.AgilefantSummaryPlot.prototype.paint = function() {
           //current point
           var cx = this._timeGeometry.toScreen(times[t]);
           var cy = this._valueGeometry.toScreen(values[t]);
-          //next point
+          // next point
           var nx = this._timeGeometry.toScreen(times[t + 1]);
-          if(nx === undefined || isNaN(nx)) {
+          if (nx === undefined || isNaN(nx)) {
             break;
           }
-          //render steps
           if(cy > 0) {
             var L = this._plotInfo.AgilefantPlot.length;
             for(var i = 0; i < L; i++) {
@@ -93,7 +92,7 @@ Timeplot.AgilefantBacklogPlot.prototype.paint = function() {
           var cx = this._timeGeometry.toScreen(times[t]);
           var nx = this._timeGeometry.toScreen(times[t + 1]);
      
-          if(nx === undefined || isNaN(nx)) {
+          if (nx === undefined || isNaN(nx)) {
             break;
           }
           var cy = 0;

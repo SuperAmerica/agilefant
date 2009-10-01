@@ -149,6 +149,7 @@ CreateDialog.Product.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Product.columnIndices.description, {
     title: "Description",
     get: CreateDialog.returnNull,
+    editable: true,
     edit: {
       editor: "Wysiwyg",
       set: ProductModel.prototype.setDescription
@@ -241,6 +242,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.description, {
     title: "Description",
     get: CreateDialog.returnNull,
+    editable: true,
     edit: {
       editor: "Wysiwyg",
       set: ProjectModel.prototype.setDescription
@@ -332,6 +334,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.description, {
     title: "Description",
     get: CreateDialog.returnNull,
+    editable: true,
     edit: {
       editor: "Wysiwyg",
       set: IterationModel.prototype.setDescription
@@ -414,6 +417,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.description, {
     title: "Description",
     get: CreateDialog.returnNull,
+    editable: true,
     edit: {
       editor: "Wysiwyg",
       set: StoryModel.prototype.setDescription

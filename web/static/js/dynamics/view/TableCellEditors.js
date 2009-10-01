@@ -827,7 +827,6 @@ TableEditors.AutocompleteInline.prototype.init = function(row, cell, options) {
     dataType: options.dataType,
     callback: function(val) {
       me.value = val;
-      options.set.call(me.model, val);
     }
   });
 };
@@ -839,6 +838,10 @@ TableEditors.AutocompleteInline.prototype.isValid = function() {
   return true;
 };
 TableEditors.AutocompleteInline.prototype.save = function() {
+  if (this.isValid()) {
+    this.options.set.call(this.model, this.value);
+    this.close();
+  }
 };
 TableEditors.AutocompleteInline.prototype.close = function() {
   this.element.trigger("editorClosing");

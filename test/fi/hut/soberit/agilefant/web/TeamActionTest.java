@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +14,7 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.TeamBusiness;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Team;
 
 public class TeamActionTest {
@@ -60,5 +63,58 @@ public class TeamActionTest {
         assertEquals(teamList, teamAction.getTeamList());
         
         verifyAll();
+    }
+    
+    @Test
+    public void testRetrieve() {
+        teamAction.setTeamId(123);
+        expect(teamBusiness.retrieve(123)).andReturn(team2);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, teamAction.retrieve());
+        verifyAll();
+        
+        assertEquals(team2, teamAction.getTeam());
+    }
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testRetrieve_notFound() {
+        teamAction.setTeamId(-1);
+        expect(teamBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, teamAction.retrieve());
+        verifyAll();
+    }
+    
+    @Test
+    public void testStore() {
+        teamAction.setTeam(team1);
+        Team returned = new Team();
+        Set<Integer> userIds = new HashSet<Integer>(Arrays.asList(1,2,3));
+        teamAction.setUserIds(userIds);
+        teamAction.setUsersChanged(true);
+        expect(teamBusiness.storeTeam(team1, userIds)).andReturn(returned);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, teamAction.store());
+        verifyAll();
+        
+        assertEquals(returned, teamAction.getTeam());
+    }
+    
+    @Test
+    public void testStore_doNotChangeUsers() {
+        teamAction.setTeam(team1);
+        Team returned = new Team();
+        teamAction.setUserIds(new HashSet<Integer>(Arrays.asList(1,2,3)));
+        teamAction.setUsersChanged(false);
+        expect(teamBusiness.storeTeam(team1, null)).andReturn(returned);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, teamAction.store());
+        verifyAll();
+        
+        assertEquals(returned, teamAction.getTeam());
     }
 }

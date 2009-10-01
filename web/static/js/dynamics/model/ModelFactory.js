@@ -18,7 +18,8 @@ ModelFactory = function() {
     assignment: {},
     hourEntry: {},
     
-    user: {}
+    user: {},
+    team: {}
   };
 };
 
@@ -50,6 +51,7 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": "dailyWorkTask",
     
   "fi.hut.soberit.agilefant.model.User":         "user",
+  "fi.hut.soberit.agilefant.model.Team":         "team",
     
   "fi.hut.soberit.agilefant.model.Assignment":   "assignment",
   
@@ -82,6 +84,7 @@ ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": DailyWorkTaskModel,
     
     "fi.hut.soberit.agilefant.model.User":            UserModel,
+    "fi.hut.soberit.agilefant.model.Team":            TeamModel,
       
     "fi.hut.soberit.agilefant.model.Assignment":      AssignmentModel,
     
@@ -103,6 +106,7 @@ ModelFactory.typeToClassName = {
     task:       "fi.hut.soberit.agilefant.model.Task",
       
     user:       "fi.hut.soberit.agilefant.model.User",
+    team:       "fi.hut.soberit.agilefant.model.Team",
       
     assignment: "fi.hut.soberit.agilefant.model.Assignment",
     
@@ -138,6 +142,7 @@ ModelFactory.types = {
     
     /** @member ModelFactory */
     user:       "user",
+    team:       "team",
     
     hourEntry: "hourEntry",
     

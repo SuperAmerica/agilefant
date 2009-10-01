@@ -116,7 +116,7 @@ $(document).ready(function() {
     window.pageController.pageListener(editOnStory);
     window.pageController.pageListener(deleteOnStory);
     
-    same(refreshMenuCallCount, 3, "Refresh menu called three times");
+    same(refreshMenuCallCount, 3, "[NOT IMPLEMENTED] Refresh menu called three times");
     
     window.pageController = null;
   });

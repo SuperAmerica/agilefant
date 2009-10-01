@@ -445,7 +445,14 @@
       <result type="dispatcher">/WEB-INF/jsp/forms/createTeam.jsp</result>
     </action>
     
-    <action name="storeTeam" method="store" class="teamAction">   
+    <action name="storeNewTeam" method="store" class="teamAction">   
+      <result name="success" type="json">
+        <param name="target">team</param>
+      </result>
+    </action>
+    
+    <action name="storeTeam" method="store" class="teamAction">  
+      <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">
         <param name="target">team</param>
       </result>

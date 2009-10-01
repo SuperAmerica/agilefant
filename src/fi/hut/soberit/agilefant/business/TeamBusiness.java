@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.Set;
+
 import fi.hut.soberit.agilefant.model.Team;
 
 /**
@@ -10,8 +12,9 @@ import fi.hut.soberit.agilefant.model.Team;
  */
 public interface TeamBusiness extends GenericBusiness<Team> {
 
-    String retrieveJSON(int id);
-
-    String retrieveAllAsJSON();
+    /**
+     * Store or create a team.
+     */
+    Team storeTeam(Team team, Set<Integer> userIds);
 
 }

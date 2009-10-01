@@ -95,6 +95,16 @@ var DynamicsDecorators = {
     }
     return initials.join(", ");
   },
+  teamUserInitialsListDecorator: function(userList) {
+    if(!userList || !userList.length) {
+      return "(Select users)";
+    }
+    var initials = [];
+    for(var i = 0; i < userList.length; i++) {
+      initials.push(userList[i].getInitials());
+    }
+    return initials.join(", ");
+  },
   annotatedUserInitialsListDecorator: function(annotatedList) {
       if(!annotatedList || !annotatedList.length) {
           return "";

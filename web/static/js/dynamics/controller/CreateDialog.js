@@ -511,6 +511,58 @@ CreateDialog.User.prototype.initFormConfig = function() {
 };
 
 /**
+ * Team creation dialog.
+ * @constructor
+ */
+CreateDialog.Team = function() {
+  // Create the mock model
+  this.model = new TeamModel();
+  this.model.setInTransaction(true);
+  
+  this.initFormConfig();
+  this.init(CreateDialog.configurations.team);
+};
+CreateDialog.Team.prototype = new CreateDialogClass();
+CreateDialog.Team.columnIndices = {
+  name:      0,
+  users:     1
+};
+CreateDialog.Team.prototype.initFormConfig = function() {
+  var config = new DynamicTableConfiguration({
+    leftWidth: '24%',
+    rightWidth: '75%'
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Team.columnIndices.name,{
+    title: "Name",
+    editable: true,
+    get: TeamModel.prototype.getName,
+    edit: {
+      editor: "Text",
+      required: true,
+      set: TeamModel.prototype.setName
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Team.columnIndices.users, {
+    minWidth : 60,
+    autoScale : true,
+    title : "Users",
+    cssClass: "user-chooser",
+    headerTooltip : 'Users',
+    get : TeamModel.prototype.getUsers,
+    decorator: DynamicsDecorators.teamUserInitialsListDecorator,
+    editable : true,
+    edit : {
+      editor : "User",
+      set : TeamModel.prototype.setUsers
+    }
+  });
+
+  this.formConfig = config;
+};
+
+/**
  * Spent effort entry creation dialog.
  * @constructor
  */

@@ -1,298 +1,33 @@
-Agilefant 1.6 RC2
-RELEASE NOTES
-2.6.2009 
-
-INSTALLATION INSTRUCTIONS AND SYSTEM REQUIREMENTS
--------------------------------------------------
-http://www.agilefant.org/wiki/display/AEF/Installation+guide
-http://www.agilefant.org/wiki/display/AEF/System+requirements
+Agilefant 2.0 Alpha
+Release notes
+2009-10-01
+--
 
 
-Agilefant's key functionality includes
---------------------------------------
-Backlog management
-  + manage your development work using backlogs
-  + backlog items may have effort estimates, priorities, responsibles
-    and a list of to-dos
+This is an early alpha version of Agilefant 2.0. Alpha version is not recommended for production use and is rather intended for the curious. Use at your own risk!
 
-Product and business management
-  + group your backlog items using themes
-  + use product and business themes to link daily work to your long-term goals and strategy
-  + set planned sizes for future projects and iterations in terms of effort
-  + assign themes for future projects and iterations and set relative spending
-  + get a quick view of your product's roadmap
-  
-Project management
-  + assign users to projects
-  + set weekly baseline load for being involved in a project
-  + communicate the status of your project (red/yellow/green)
-  + get an overview of progress through burndown graph and metrics
-  
-Iteration management
-  + focus team efforts with stories
-  + get an overview of progress through burndown graph and metrics
-
-Resource management
-  + assign users to one or more teams
-  + set users' available weekly working hours
-  + set thresholds for evaluating users' workloads' feasibility
-  + enable/disable users
-
-Development portfolio management
-  + track the status and relative priorities of all ongoing projects
-  + see who are assigned to which projects
-  + see who are involved in projects they have NOT been assigned to
-  + adjust weekly baseline load from projects on an individual basis
-  + define project types
-  
-Daily work view
-  + see all the items assigned to someone across different iterations and projects
-  + get an overview of someone's total workload for the weeks ahead
-  + compare the total workload against set thresholds
-
-Timesheets
-  + log spent effort to projects and/or individual backlog items
-  + generate reports of spent effort
-
-CHANGES FROM AGILEFANT 1.6.1
-----------------------------
-+ Due to migrating to the new data model burndowns start from zero for iterations
-  created before version 1.3.7. This only effects the first data point. Otherwise
-  the burndown data shows up as before.
-
-CHANGES FROM AGILEFANT 1.5.5
-----------------------------
-+ Renovation of the iteration view (give us feedback at the forum!)
-+ Calendar view to daily work view for browsing spent effort
-+ Renamed Overhead as Baseline load
-+ Renamed existing project statuses green, yellow and red
-+ Added new project statuses grey and black
-+ Terminology changed to match the concepts in Scrum:
-      * Iteration goal =>Story
-      * Backlog item in products and projects => Story
-      * Backlog item in an iteration => Task
-+ Small UI and usability tweaks:
-      * Quick enter => save & close (instead of save)
-      * Improved interval selection in timesheets
-      * Improved displaying long backlog descriptions
-
-CHANGES FROM AGILEFANT 1.5.4
-----------------------------
-+ TODO's can be spliced into new backlog items
-+ timesheet report data can now be exported to Excel
-+ comments for logged effort can now be entered directly from the Progress tab
-+ item priority can now be adjusted directly from the Progress tab
-+ bugfix for: 0000037 and 0000036
-+ other small UI and usability tweaks
-
-CHANGES FROM AGILEFANT 1.5.3
-----------------------------
-+ backlog items can be created and effort logged from the daily work -page   
-+ UI improvements to timesheets, including easier backlog selection and 
-  hiding unnecessary report rows
-+ product, project and iteration backlog listings are faster
-+ bugfixes for following issues: 0000025, 0000029 and 0000028
-+ other internal enhancements
-
-CHANGES FROM AGILEFANT 1.5.2
-----------------------------
-+ Added business themes; these are created in the dev portfolio tab
-+ Page titles made more descriptive 
-+ Added reference id's for hyperlinking to objects in Agilefant
-+ Adding/editing project types is now done in the dev portfolio tab
-+ User interface improvements to theme handling 
-+ Bugfixes: 0000018, 0000012, 0000017, 0000005, 0000010, 0000016, 0000015 
-  ( see our bug tracker at http://www.agilefant.org/mantis/ )
+Agilefant 2.0 has its own blog for progress reports at http://www.agilefant.org/blog
 
 
-CHANGES FROM AGILEFANT 1.5.1
-----------------------------
-+ Tag themes while creating a backlog item
-+ Save & Close -buttons to BLIs
-+ Created date to BLI
-+ Creator info to BLI
-+ Roadmap default timescale to 1 year
-+ Delete button to edit theme tab
+Current status of the release:
 
-CHANGES FROM AGILEFANT 1.5
-----------------------------
-+ Themes can now be attached or removed for multiple BLIs at once.
-+ Nonactivated and not-selected themes not shown in BLI's Themes-tab
-+ Select all backlog items button added
-+ Bugfix: 404 page after clicking iteration goals in Daily Work
-+ Tiny Daily work view added for iFrame usage. See http://your.domain/agilefant/tinyDailyWork.action
+- Migration support to future Alpha releases is not guaranteed
 
-CHANGES FROM AGILEFANT 1.4.7
-----------------------------
-+ The new layout is now implemented across the system
-+ Themes can be assigned to iterations and projects
-+ Future projects and iterations have planned sizes
-+ Projects' status is now shown in the Development portfolio view
-+ Themes are shown in the product roadmap
+- Browser support:
+ * Firefox 3.0+ works
+ * Google Chrome and Safari should work fine
+ * IE8 works somehow
+ * Opera has not been tested
+ 
+- Many features are yet unfinished
+ * Daily Work view is only partially implemented
+ * Portfolio view is missing
+ * Product and project views
+ * Team support is limited
+ * Themes have been removed and are replaced with tags in the future
+ * Timesheets functionality is missing
+ * Lots of small and medium sized usability and stability issues
+   ~ e.g. password confirmation is missing
+ 
+- Java stack traces occasionally pop up. These are solely for debugging purposes.
 
-CHANGES FROM AGILEFANT 1.4.6
-----------------------------
-+ Project status can be set and visualized in the product roadmap
-+ New edit tab for themes and projects in the product view
-+ Themes and projects are now created with a handy dialog window
-+ Refined the project information box in the product view
-+ Personal overheads can be adjusted also from the project view
-
-CHANGES FROM AGILEFANT 1.4.5
------------------------------
-+ Themes can be edited, added and removed in the product page
-+ Product view shows theme metrics
-+ Themes are product-specific
-+ Improved interface for theme editing 
-+ Product roadmap added to the product page
-+ UTF-8 is now the default encoding, note the changes to server and database configuration
-
-CHANGES FROM AGILEFANT 1.4.4
------------------------------
-+ Themes can be added and removed and tagged to backlog items
-+ Burndown shows the predicted project/iteration velocity based on past progress
-+ Metrics added to iteration and project levels
-+ Renewing of tabs and menus
-
-CHANGES FROM AGILEFANT 1.4.3
------------------------------
-+ Burndown graphs now show scope changes
-+ Minor fixes
-
-CHANGES FROM AGILEFANT 1.4.2
------------------------------
-+ Spent effort can be logged for projects
-+ Timesheets tab for generating reports of spent effort
-+ Backlog item lists can be sorted by Spent Effort
-+ Effort can be logged directly from backlog lists
-+ Left-hand menu (list of backlogs) re-engineered to a tree
-+ Minor fixes and streamlining
-
-CHANGES FROM AGILEFANT 1.4.1
------------------------------
-+ Effort totals shown in the Iteration Goals -list
-+ Iteration Goals can be ranked for importance
-+ Effort logging improved
-+ Minor fixes
-
-CHANGES FROM AGILEFANT 1.4.0
------------------------------
-+ added BLI-level timesheet capability
-+ timesheet functionality can be disabled / enabled from the settings menu
-+ spent effort sums shown in BLI lists
-
-CHANGES FROM AGILEFANT 1.3.7
------------------------------
-+ burndown graph now displays the current day's progress in green
-+ added possibility to disable/enable users
-+ backlogs now show a clearer statusbar for the progress of backlog items and their subtasks
-+ dropdown selection added for each task's state to edit backlog item page
-+ minor fixes and streamlining
-
-CHANGES FROM AGILEFANT 1.3.6
------------------------------
-+ backlog pages were streamlined
-+ menu now shows upcoming projects and iterations differently
-
-CHANGES FROM AGILEFANT 1.3.5
------------------------------
-+ load table now shows iterations and projects separately
-+ mass changing iteration goal is now possible
-
-CHANGES FROM AGILEFANT 1.3.4
------------------------------
-+ overhead can be set for projects
-+ overhead can be fine tuned per user
-+ a very basic load information is shown in Daily Work
-+ load is calculated from overheads and effort left estimates
-+ original estimate can be reset for BLIs
-+ cleaned up the left-hand side product-project-iteration list
-+ multiple BLIs can be now manipulated simultaneously
-+ tasks can be ranked to a priority or execution order 
-
-CHANGES FROM AGILEFANT 1.3.3
-----------------------------
-+ users can now be allocated to teams
-+ a single backlog item can now have multiple users and teams assigned
-it (e.g. shows in everyone's Daily Work, workloads, etc.)
- + users can be dedicated to projects
-+ users that have not been dedicated to a project in  which they have
-assigned backlog items are displayed in red
-+ a red exclamation mark is shown next to the name of a project that
-has non-dedicated users assigned to their backlog items
-+ Project Portfolio view shows information of users' workloads and
-displays the number of unestimated backlog items
-
-CHANGES FROM AGILEFANT 1.3.2
-----------------------------
-+ Daily Work view refined
-+ Development Portfolio renamed to Project Portfolio and view refined
-+ Renamed backlog items' and tasks' status to state
-+ Added new state: pending (color: blue)
-+ Bulk prioritization of backlog items added
-+ Error messages refined
-+ Lots of small improvements on GUI
-+ Added missing delete confirmation dialogs
-
-CHANGES FROM AGILEFANT 1.3.1
-----------------------------
-+ Tasks can be transformed to backlog items
-+ Backlog item and task status colors were changed to more intuitive
-+ Added 'forgot my password' functionality 
-+ Added 'Save & Close' and 'Create & Close' buttons to Iteration Goal
-edit page
-+ Some task functionality removed for clarity: Effort estimate, 
-assignment and priority is now removed
-+ Added Development Portfolio view with project prioritizing feature
-+ Daily Work view added with 'Work in progress' and 'On going iterations'
-divisions, it's also possible to view other users Daily Work
-+ QuickEdit (i.e. drop-down form appears when status text is clicked) 
-for backlog item effort left and status is now available
-+ Added JMeter and JChav targets to ant build script. These are needed 
-for performance testing. More information about performance testing is 
-found from the wiki. TestUtility class added for testing purposes.
-
-CHANGES FROM AGILEFANT 1.2.2
-----------------------------
-+ Replaced the backlog Delete button with bulk delete option
-+ Work estimate now takes ',' and '.' as decimal separator regardless 
-of the locale settings. For example '30,5', and '30.5'.
-+ Added 'Save & Close' and 'Create & Close' -buttons to editBacklogItem 
-and editTask JSP-fragments.
-+ Added new default priority 'undefined' for backlog items and tasks.
-+ Default backlog item list sorting order changed. Orders the list by 
-backlog item priority. Items with 'Done'-status are moved to the end 
-of the list.
-+ Added coloured statusbar for backlog items without tasks
-+ 'Edit iteration' view default start and end date times are 6:00 and 
-18:00, respectively.
-+ Removed 'Watch this' checkbox from edit backlog-item  edit task view
-+ Backlog name cell size increased
-+ Changed 'Event history' to 'History' in 'Edit task' view
-+ Hided id from task history table
-
-CHANGES FROM AGILEFANT 1.2.1
-----------------------------
-+ Past and future projects & iterations are by default hidden in the
-left panel; all are displayed when the respective product is selected
-+ Several minor bugs fixed
-+ Some minor usability improvements done
-+ Agilefant is being developed and tested on Mozilla Firefox only
-
-CHANGES FROM AGILEFANT 1.2.0
-----------------------------
-+ Added xlan/xercses libraries (previously distributed with Tomcat)
-to the distribution package to further simplify the installation
-
-CHANGES FROM AGILEFANT 1.0
---------------------------
-+ Hour reporting, daily work and development portfolio views have
-been hidden
-due to immature functionality
-+ User interface is cleaner, simpler and unified through the system.
-+ Backlogs are now easily accessible through a hierarchical backlog
-list (the left panel)
-+ Data input and workflow have been streamlined
-+ Terminology has been unified and simplified
-+ Simple installation process using a WAR-file
-+ Initial adoption of the system is guided

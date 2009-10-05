@@ -452,9 +452,6 @@ TableEditors.Wysiwyg = function(row, cell, options) {
     var me = this;
     this.actualElement = $('<textarea></textarea>').appendTo(cell.getElement());
     this.actualElement.width("96%").height("240px");
-    this.actualElement.focus(function() {    
-      me._focusHandler();
-    });
     setUpWysiwyg(this.actualElement);
     this.element = this._getEditorWindow();
     this.init(row, cell, options);
@@ -494,7 +491,6 @@ TableEditors.Wysiwyg.prototype.close = function() {
     this.actualElement.trigger("editorClosing");
     this.actualElement.wysiwyg("remove");
     this.actualElement.remove();
-    $(window).unbind("click", this.blurFunc);
 };
 TableEditors.Wysiwyg.prototype._registerEvents = function() {
   var me = this;
@@ -502,13 +498,24 @@ TableEditors.Wysiwyg.prototype._registerEvents = function() {
       me._handleKeyEvent(event);
       return true;
   });
-  this.blurFunc = function() {
-      me._blurHandler();
-  };
-  $(window).click(this.blurFunc);
-  this.element.focus(function() {
+  var iframeElement = this.actualElement.wysiwyg("getFrame");
+  var frameWindow = iframeElement[0].contentWindow;
+  //jQuery doesn't allow binding event handlers for other 
+  //window objects than the main window
+  //also, events must be added manually, because design mode 
+  //prevents all events within the editor window
+  frameWindow.addEventListener("focus", function() {
+    if(!me.isFocused()) {
       me._focusHandler();
-  });
+    }
+    console.log("focus in");
+  }, true);
+  frameWindow.addEventListener("blur", function() {
+    if(me.isFocused()) {
+      me._blurHandler();
+    }
+    console.log("focus out");
+  }, true);
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
     if (event.keyCode === 27 && !this.options.editRow) {

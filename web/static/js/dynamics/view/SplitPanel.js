@@ -1,4 +1,4 @@
-var DynamicsSplitPanel = function(parentView) {
+var DynamicsSplitPanel = function DynamicsSplitPanel(parentView) {
   this.parentView = parentView;
   this.element = $('<div />').appendTo(this.parentView.getElement());
   this.subViewElements = {};

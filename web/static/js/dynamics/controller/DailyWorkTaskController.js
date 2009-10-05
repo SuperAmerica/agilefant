@@ -1,4 +1,4 @@
-DailyWorkTaskController = function(model, view, parentController) {
+var DailyWorkTaskController = function DailyWorkTaskController(model, view, parentController) {
     this.model = model;
     this.view = view;
     this.parentController = parentController;

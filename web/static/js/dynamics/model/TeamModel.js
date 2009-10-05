@@ -5,7 +5,7 @@
  * @base CommonModel
  * @see CommonModel#initialize
  */
-var TeamModel = function() {
+var TeamModel = function TeamModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Team";
   this.relations = {

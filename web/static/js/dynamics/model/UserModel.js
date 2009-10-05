@@ -5,7 +5,7 @@
  * @base CommonModel
  * @see CommonModel#initialize
  */
-var UserModel = function() {
+var UserModel = function UserModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.User";
   this.relations = {

@@ -5,7 +5,7 @@
  * @base CommonController
 
  */
-var UserListController = function(options) {
+var UserListController = function UserListController(options) {
   this.enabledUserListElement = options.enabledElement;
   this.disabledUserListElement = options.disabledElement;
   this.model = null;

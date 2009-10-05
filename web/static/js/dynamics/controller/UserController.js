@@ -4,7 +4,7 @@
  * @constructor
  * @base CommonController
  */
-var UserController = function(options) {
+var UserController = function UserController(options) {
   this.id = options.id;
   this.infoElement = options.userInfoElement;
   this.passwordElement = options.passwordElement;

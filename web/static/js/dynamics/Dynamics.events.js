@@ -11,7 +11,7 @@ var DynamicsEvents = {};
  * The abstract parent class for all Dynamics events
  * @constructor
  */
-DynamicsEvents.CommonEvent = function() {};
+DynamicsEvents.CommonEvent = function DynamicsEvents_CommonEvent() {};
 
 /**
  * Initialize the event.
@@ -44,7 +44,7 @@ DynamicsEvents.CommonEvent.prototype.getObject = function() {
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.EditEvent = function(object) {
+DynamicsEvents.EditEvent = function DynamicsEvents_EditEvent(object) {
   if (!object || !(object instanceof CommonModel)) {
     throw "Invalid argument";
   }
@@ -61,7 +61,7 @@ DynamicsEvents.EditEvent.prototype = new DynamicsEvents.CommonEvent();
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.DeleteEvent = function(object) {
+DynamicsEvents.DeleteEvent = function DynamicsEvents_DeleteEvent(object) {
   if (!object || !(object instanceof CommonModel)) {
     throw "Invalid argument";
   }
@@ -79,7 +79,7 @@ DynamicsEvents.DeleteEvent.prototype = new DynamicsEvents.CommonEvent();
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.RelationUpdatedEvent = function(object) {
+DynamicsEvents.RelationUpdatedEvent = function DynamicsEvents_RelationUpdatedEvent(object) {
   if (!object || !(object instanceof CommonModel)) {
     throw "Invalid argument";
   }
@@ -95,7 +95,7 @@ DynamicsEvents.RelationUpdatedEvent.prototype = new DynamicsEvents.CommonEvent()
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.StoreRequested = function(origin) {
+DynamicsEvents.StoreRequested = function DynamicsEvents_StoreRequestedEvent(origin) {
   this.initialize();
   this.type = "storeRequested";
   this.object = origin;
@@ -108,7 +108,7 @@ DynamicsEvents.StoreRequested.prototype = new DynamicsEvents.CommonEvent();
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.CancelEdit = function(origin) {
+DynamicsEvents.CancelEdit = function DynamicsEvents_CancelEdit(origin) {
   this.initialize();
   this.type = "cancelEdit";
   this.object = origin;
@@ -121,7 +121,7 @@ DynamicsEvents.CancelEdit.prototype = new DynamicsEvents.CommonEvent();
  * @see DynamicsEvents.EditEvent
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.TransactionEditEvent = function(origin) {
+DynamicsEvents.TransactionEditEvent = function DynamicsEvents_TransactionEditEvent(origin) {
   this.initialize();
   this.type = "transactionEdit";
   this.object = origin;
@@ -134,7 +134,7 @@ DynamicsEvents.TransactionEditEvent.prototype = new DynamicsEvents.CommonEvent()
  * @see DynamicsEvents.ValidationInvalid
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.ValidationInvalid = function(editor, message) {
+DynamicsEvents.ValidationInvalid = function DynamicsEvents_ValidationInvalid(editor, message) {
   this.initialize();
   this.type = "validationInvalid";
   this.object = editor;
@@ -151,7 +151,7 @@ DynamicsEvents.ValidationInvalid.prototype.getMessage = function() {
  * @see DynamicsEvents.ValidationValid
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.ValidationValid = function(editor, message) {
+DynamicsEvents.ValidationValid = function DynamicsEvents_ValidationValid(editor, message) {
   this.initialize();
   this.type = "validationValid";
   this.object = editor;

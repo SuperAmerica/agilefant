@@ -5,7 +5,7 @@
  * @see CommonModel
  * @constructor
  */
-ModelFactory = function() {
+ModelFactory = function ModelFactory() {
   this.rootObject = null;
   this.data = {
     backlog: {},

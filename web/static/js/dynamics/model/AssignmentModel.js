@@ -4,7 +4,7 @@
  * @constructor
  * @base CommonModel
  */
-var AssignmentModel = function() {
+var AssignmentModel = function AssignmentModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Assignment";
   this.relations = {

@@ -6,7 +6,7 @@
  * @param {Integer} id Iteration id.
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var IterationController = function(options) {
+var IterationController = function IterationController(options) {
   this.id = options.id;
   this.parentView = options.storyListElement;
   this.iterationInfoElement = options.backlogDetailElement;

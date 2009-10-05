@@ -9,7 +9,7 @@
  * @constructor
  * @see Autocomplete
  */
-var AutocompleteSelected = function(parent) {
+var AutocompleteSelected = function AutocompleteSelected(parent) {
   this.selectedList = null;
   this.selectedIds = [];
   this.items = [];

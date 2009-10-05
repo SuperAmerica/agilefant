@@ -8,7 +8,7 @@
  * @param {Array} newStories the stories that should be created
  * @return
  */
-var StorySplitContainer = function(originalStory, newStories, oldStories) {
+var StorySplitContainer = function StorySplitContainer(originalStory, newStories, oldStories) {
   this.originalStory = originalStory;
   this.newStories = newStories;
   this.oldStories = oldStories;

@@ -1,4 +1,4 @@
-var DynamicTableCaption = function(element, config, text, controller) {
+var DynamicTableCaption = function DynamicTableCaption(element, config, text, controller) {
   this.captionItems = {};
   this.config = config;
   this.element = element;

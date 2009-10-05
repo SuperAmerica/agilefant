@@ -1,4 +1,4 @@
-var TasksWithoutStoryController = function(model, view, iterationController) {
+var TasksWithoutStoryController = function TasksWithoutStoryController(model, view, iterationController) {
   this.model = model;
   this.view = view;
   this.parentController = iterationController;

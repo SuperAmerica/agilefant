@@ -1,4 +1,4 @@
-var DynamicTableToggleView = function(options, controller, parentView) {
+var DynamicTableToggleView = function DynamicTableToggleView(options, controller, parentView) {
   this.currentMode = DynamicTableToggleView.up;
   this.options = {
     collapse : function() {

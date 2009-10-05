@@ -4,7 +4,7 @@
  * @constructor
  * @base CommonModel
  */
-var UserListContainer = function() {
+var UserListContainer = function UserListContainer() {
   this.initialize();
   this.persistedClassName = "non.existent.UserList";
   this.relations = {

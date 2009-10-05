@@ -6,7 +6,7 @@
  * @param {Integer} id Project id.
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var ProjectController = function(options) {
+var ProjectController = function ProjectController(options) {
   this.id = options.id;
   this.parentView = options.storyListElement;
   this.projectDetailsElement = options.projectDetailsElement;

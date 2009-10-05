@@ -1,4 +1,4 @@
-var AssignmentController = function(model, view, backlogController) {
+var AssignmentController = function AssignmentController(model, view, backlogController) {
   this.model = model;
   this.view = view;
   this.parentController = backlogController;

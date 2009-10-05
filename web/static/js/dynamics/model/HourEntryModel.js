@@ -4,7 +4,7 @@
  * @constructor
  * @base CommonModel
  */
-var HourEntryModel = function() {
+var HourEntryModel = function HourEntryModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.HourEntry";
   this.relations = {

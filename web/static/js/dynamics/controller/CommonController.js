@@ -3,7 +3,7 @@
  * 
  * @constructor
  */
-var CommonController = function() {
+var CommonController = function CommonController() {
 
 };
 

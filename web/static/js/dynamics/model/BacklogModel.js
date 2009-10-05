@@ -3,7 +3,7 @@
  * @constructor
  * @base CommonModel
  */
-var BacklogModel = function() {};
+var BacklogModel = function BacklogModel() {};
 
 BacklogModel.prototype = new CommonModel();
 

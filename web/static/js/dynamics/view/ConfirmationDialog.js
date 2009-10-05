@@ -1,4 +1,4 @@
-var DynamicsConfirmationDialog = function(title, message, callback) {
+var DynamicsConfirmationDialog = function DynamicsConfirmationDialog(title, message, callback) {
   this.title = title;
   this.message = message;
   this.callback = callback;

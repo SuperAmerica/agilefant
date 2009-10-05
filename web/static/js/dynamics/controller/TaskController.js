@@ -1,4 +1,4 @@
-var TaskController = function(model, view, parentController) {
+var TaskController = function TaskController(model, view, parentController) {
   this.model = model;
   this.view = view;
   this.parentController = parentController;

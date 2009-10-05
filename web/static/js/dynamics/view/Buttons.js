@@ -1,4 +1,4 @@
-var DynamicsButtons = function(controller, options, parent) {
+var DynamicsButtons = function DynamicsButtons(controller, options, parent) {
   this.options = [];
   jQuery.extend(this.options, options);
   this.buttons = [];

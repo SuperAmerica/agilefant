@@ -43,7 +43,7 @@ var AutocompleteVars = {
  * @param options
  * @constructor
  */
-var Autocomplete = function(element, options) {
+var Autocomplete = function Autocomplete(element, options) {
   this._init(element, options);
 };
 

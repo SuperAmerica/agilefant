@@ -5,7 +5,7 @@
  * @param element the root element of the tree.
  * @constructor
  */
-var BacklogMenuController = function(element, toggleElement) {
+var BacklogMenuController = function BacklogMenuController(element, toggleElement) {
   this.init(element, toggleElement);
 };
 

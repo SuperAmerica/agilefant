@@ -5,7 +5,7 @@
  * @base CommonController
  * @param {Integer} id User id. 
  */
-var UserRowController = function(model, view, parentController) {
+var UserRowController = function UserRowController(model, view, parentController) {
   this.model = model;
   this.view = view;
   this.parentController = parentController;

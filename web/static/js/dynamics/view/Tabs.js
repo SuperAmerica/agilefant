@@ -1,4 +1,4 @@
-var DynamicsTabs = function(parent, options) {
+var DynamicsTabs = function DynamicsTabs(parent, options) {
   this.id = "dtab_" + new Date().getTime() + "_" + Math.floor(Math.random()*1000000);
   this.tabs = [];
   this.options = options;

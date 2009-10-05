@@ -2,7 +2,7 @@
  * @constructor
  * @param options
  */
-var DynamicTableColumnConfiguration = function(options) {
+var DynamicTableColumnConfiguration = function DynamicTableColumnConfiguration(options) {
 	this.options = {
 			width: null,
 			minWidth: 0,

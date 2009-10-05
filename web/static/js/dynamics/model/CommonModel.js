@@ -3,7 +3,7 @@
  * CommonModel is an abstract base class.
  * @constructor
  */
-var CommonModel = function() {};
+var CommonModel = function CommonModel() {};
 
 /**
  * Initialize the common components of all model classes.

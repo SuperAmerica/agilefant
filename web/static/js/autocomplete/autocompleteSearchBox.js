@@ -8,7 +8,7 @@
  * @see Autocomplete
  * @constructor
  */
-var AutocompleteSearch = function(bundle, options) {
+var AutocompleteSearch = function AutocompleteSearch(bundle, options) {
   // Elements
   this.element = null;
   this.searchInput = null;

@@ -5,7 +5,7 @@
  * @base BacklogModel
  * @see BacklogModel#initializeBacklogModel
  */
-var IterationModel = function() {
+var IterationModel = function IterationModel() {
   this.initializeBacklogModel();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Iteration";
   this.relations = {

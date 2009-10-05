@@ -6,7 +6,7 @@
  * @param {Integer} id Iteration id.
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var IterationRowController = function(model, view, backlogController) {
+var IterationRowController = function IterationRowController(model, view, backlogController) {
   this.model = model;
   this.view = view;
   this.parentController = backlogController;

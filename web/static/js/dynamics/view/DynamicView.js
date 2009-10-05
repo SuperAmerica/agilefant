@@ -5,7 +5,7 @@
  * displayed.
  * @constructor
  */
-var DynamicView = function() {
+var DynamicView = function DynamicView() {
 	
 };
 

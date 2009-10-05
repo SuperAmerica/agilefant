@@ -2,7 +2,7 @@
  * @base DynamicView
  * @constructor
  */
-var DynamicTable = function(controller, model, config, parentView) {
+var DynamicTable = function DynamicTable(controller, model, config, parentView) {
   this.init(controller, model, parentView);
   this.config = {};
   this.currentTableRows = [];

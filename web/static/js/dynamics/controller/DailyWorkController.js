@@ -1,4 +1,4 @@
-var DailyWorkController = function(options) {
+var DailyWorkController = function DailyWorkController(options) {
     this.id                      = options.id;
     this.myWorkListElement       = options.myWorkListElement;
     this.workQueueElement        = options.workQueueElement;

@@ -4,7 +4,7 @@
  * @param {StoryModel} story the story to be split
  * @constructor
  */
-var StorySplitDialog = function(story) {
+var StorySplitDialog = function StorySplitDialog(story) {
   var me = this;
   this.model = story;
   this.model.setInTransaction(true);

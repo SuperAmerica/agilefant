@@ -1,4 +1,4 @@
-var ViewPart = function() {
+var ViewPart = function ViewPart() {
   
 };
 ViewPart.prototype.getElement = function() {

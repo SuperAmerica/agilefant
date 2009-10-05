@@ -3,7 +3,7 @@
  * @param row
  * @param config
  */
-var DynamicTableCell = function(row, config) {
+var DynamicTableCell = function DynamicTableCell(row, config) {
 	this.config = config;
 	this.row = row;
 	this.subView = null;

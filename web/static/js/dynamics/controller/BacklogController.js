@@ -3,7 +3,7 @@
  * @base CommonController
  * @constructor
  */
-var BacklogController = function() {
+var BacklogController = function BacklogController() {
 
 };
 BacklogController.prototype = new CommonController();

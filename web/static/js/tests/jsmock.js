@@ -47,8 +47,16 @@ function MockControl() {
 
 MockControl.prototype = {
 
-  createMock: function(objectToMock) {
-    var mock = { calls: [], expects: function() {this.__recording = true; return this}, __recording: false};
+  createMock: function(objectToMock, name) {
+    var mock = { calls: [], expects: function() {this.__recording = true; return this}, __recording: false };
+    
+    if (name) {
+        mock.__name = name;
+    }
+    else {
+        mock.__name = objectToMock.name;
+    }
+    
     mock.expect = mock.expects;
     
     if(objectToMock != null) {
@@ -102,10 +110,18 @@ MockControl.prototype = {
     {
       discrepancy = this.__expectationMatcher.discrepancy();
       message = discrepancy.message;
-      method = discrepancy.behavior.method
+      method = discrepancy.behavior.method;
+      caller = discrepancy.behavior.caller;
       formattedArgs = ArgumentFormatter.format(discrepancy.behavior.methodArguments);
       this.__expectationMatcher.reset();
-      throw new Error(message + ": " + method + "(" + formattedArgs + ")"); 
+      
+      var callerString = "unknown mock";
+      
+      if (caller.__name) {
+          callerString = "mock " + caller.__name;
+      }
+
+      throw new Error(message + ": " + method + "(" + formattedArgs + ")" + " on " + callerString); 
     }
     else {
       this.__expectationMatcher.reset();

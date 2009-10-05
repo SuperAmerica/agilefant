@@ -5,7 +5,7 @@
  * Stores recent selections in a per-user cookie.
  * @constructor
  */
-var AutocompleteRecent = function(element, dataType, parent, opts) {
+var AutocompleteRecent = function AutocompleteRecent(element, dataType, parent, opts) {
   this.cookieName = "agilefant-autocomplete-" + dataType;
   this.recentlySelected = [];
   this.element = element;

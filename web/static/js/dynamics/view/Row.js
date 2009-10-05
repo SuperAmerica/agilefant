@@ -3,7 +3,7 @@
  * @base DynamicView
  * @param config
  */
-var DynamicTableRow = function(config) {
+var DynamicTableRow = function DynamicTableRow(config) {
   this.config = config;
   this.cells = [];
   this.cellIndex = {};

@@ -6,7 +6,7 @@ window.pageController = null;
  * 
  * @constructor
  */
-var PageController = function(currentUserJson) {
+var PageController = function PageController(currentUserJson) {
   if (currentUserJson) {
     this.currentUser = ModelFactory.updateObject(currentUserJson);
   }

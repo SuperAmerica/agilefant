@@ -6,7 +6,7 @@
  * Constructor for the singleton class AutocompleteDataProvider
  * @constructor
  */
-AutocompleteDataProvider = function() {};
+AutocompleteDataProvider = function AutocompleteDataProvider() {};
 
 AutocompleteDataProvider.vars = {
   urls: {

@@ -1,4 +1,4 @@
-var StoryController = function(model, view, backlogController) {
+var StoryController = function StoryController(model, view, backlogController) {
   this.model = model;
   this.view = view;
   this.parentController = backlogController;

@@ -1,4 +1,4 @@
-var DynamicTableRowActions = function(items, controller, model, parentView) {
+var DynamicTableRowActions = function DynamicTableRowActions(items, controller, model, parentView) {
   this.items = items;
   this.controller = controller;
   this.model = model;

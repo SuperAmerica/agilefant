@@ -12,7 +12,7 @@
  * @base CommonModel
  * @see CommonModel
  */
-var TaskModel = function() {
+var TaskModel = function TaskModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Task";
   this.relations = {

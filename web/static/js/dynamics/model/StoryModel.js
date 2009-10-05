@@ -6,7 +6,7 @@
  * @base CommonModel
  * @see CommonModel#initialize
  */
-var StoryModel = function() {
+var StoryModel = function StoryModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
   this.relations = {

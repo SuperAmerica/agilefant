@@ -5,7 +5,7 @@
  * @base CommonModel
  * @see CommonModel#initialize
  */
-var DailyWorkModel = function() {
+var DailyWorkModel = function DailyWorkModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.DailyWork";
   this.id = 1;

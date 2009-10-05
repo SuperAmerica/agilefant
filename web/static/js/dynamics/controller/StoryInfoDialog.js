@@ -4,7 +4,7 @@
  * @param {StoryModel} story the story to be split
  * @constructor
  */
-var StoryInfoDialog = function(story) {
+var StoryInfoDialog = function StoryInfoDialog(story) {
   var me = this;
   this.model = story;
  

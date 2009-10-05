@@ -6,7 +6,7 @@
  * @param {Integer} id Product id.
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var ProductController = function(options) {
+var ProductController = function ProductController(options) {
   this.id = options.id;
   this.parentView = options.storyListElement;
   this.productDetailsElement = options.productDetailsElement;

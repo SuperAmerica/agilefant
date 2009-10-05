@@ -1,6 +1,6 @@
 var TaskModelExtender = function() {};
 TaskModelExtender.prototype = new TaskModel();
-DailyWorkTaskModel = function() {
+DailyWorkTaskModel = function DailyWorkTaskModel() {
     TaskModel.call(this);
     
     this.initialize();

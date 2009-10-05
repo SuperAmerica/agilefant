@@ -498,8 +498,8 @@ TableEditors.Wysiwyg.prototype._registerEvents = function() {
       me._handleKeyEvent(event);
       return true;
   });
-  var iframeElement = this.actualElement.wysiwyg("getFrame");
-  var frameWindow = iframeElement[0].contentWindow;
+  var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
+  var frameWindow = iframeElement.contentWindow;
   //jQuery doesn't allow binding event handlers for other 
   //window objects than the main window
   //also, events must be added manually, because design mode 
@@ -508,13 +508,11 @@ TableEditors.Wysiwyg.prototype._registerEvents = function() {
     if(!me.isFocused()) {
       me._focusHandler();
     }
-    console.log("focus in");
   }, true);
   frameWindow.addEventListener("blur", function() {
     if(me.isFocused()) {
       me._blurHandler();
     }
-    console.log("focus out");
   }, true);
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {

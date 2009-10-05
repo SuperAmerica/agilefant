@@ -191,6 +191,10 @@
           var self = $.data(this, 'wysiwyg');
           self.element.remove();
         },
+        getFrame: function() {
+          var self = $.data(this, 'wysiwyg');
+          return self.editor;
+        },
         resetFrame: function() {
           var self = $.data(this, 'wysiwyg');
           self.reinitFrame();

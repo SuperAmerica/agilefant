@@ -87,13 +87,12 @@ $(document).ready(function() {
      this.cellConfig.expects().getCssClass().andReturn("");
      this.cellConfig.expects().isVisible().andReturn(true);
      this.cellConfig.expects().isDragHandle().andReturn(false);
-     this.cellConfig.expects().isEditable().andReturn(false);
-     this.cellConfig.expects().getDoubleClickCallback().andReturn(null);
      this.cellConfig.expects().getSubViewFactory().andReturn(null);
      this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
      this.cellConfig.expects().getEditableCallback().andReturn(function() { return true; });
-     
+
      this.mockRow.expects().getController().andReturn(window);
+     this.cellConfig.isEditable = function () { return true; };
      
      var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
 

@@ -4,7 +4,7 @@
  * @param {TaskModel} task the task to be split
  * @constructor
  */
-var TaskSplitDialog = function TaskSplitDialog(task) {
+var TaskSplitDialog = function TaskSplitDialog(task, onSuccessCallback) {
   var me = this;
   this.model = task;
   this.model.setInTransaction(true);
@@ -17,6 +17,8 @@ var TaskSplitDialog = function TaskSplitDialog(task) {
   this.oldModels = [];
   this.newModels = [];
   this.rows = [];
+  
+  this.onSuccessCallback = onSuccessCallback;
 };
 TaskSplitDialog.prototype = new CommonController();
 
@@ -167,7 +169,7 @@ TaskSplitDialog.prototype.isFormDataValid = function() {
  */
 TaskSplitDialog.prototype.saveTasks = function() {
   var tsc = new TaskSplitContainer(this.model, this.newModels, this.oldModels);
-  tsc.commit();
+  tsc.commit(this.onSuccessCallback);
 };
 
 TaskSplitDialog.prototype.rowCancelFactory = function(view, model) {

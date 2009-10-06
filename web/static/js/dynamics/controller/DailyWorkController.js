@@ -96,7 +96,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         options.appendTailer = true;
 
         sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWorkQueueRank);
-        actionColumnFactory = DailyWorkTaskController.prototype.queueTaskActionColumnFactory;
+        actionColumnFactory = DailyWorkTaskController.prototype.queuedTaskActionColumnFactory;
     }
     else {
         options.caption = "Tasks assigned to me";
@@ -341,6 +341,10 @@ DailyWorkController.prototype.onCreateNewTask = function(event) {
         task.removeListener(this.newTaskListener);
         this.model.reload();
     }
+};
+
+DailyWorkController.prototype.reload = function() {
+    this.model.reload();
 };
 
 DailyWorkController.prototype.initializeConfigs = function() {

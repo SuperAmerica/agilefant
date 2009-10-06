@@ -716,19 +716,6 @@ TableEditors.User.prototype.autocompleteOptions = {
     title : "Select users"
 };
 
-TableEditors.Teams = function(row, cell, options) {
-  if (arguments.length > 0) {
-      TableEditors.Teams.superclass.init.call(this, row, cell, options);
-  }
-};
-TableEditors.Teams.prototype = new TableEditors.Autocomplete();
-TableEditors.Teams.superclass = TableEditors.Autocomplete.prototype;
-TableEditors.Teams.prototype.autocompleteOptions = {
-  dataType : "teams",
-  title : "Select teams"
-};
-
-
 TableEditors.Backlog = function(row, cell, options) {
     if (arguments.length > 0) {
         TableEditors.Backlog.superclass.init.call(this, row, cell, options);

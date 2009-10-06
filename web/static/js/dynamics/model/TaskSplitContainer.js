@@ -18,7 +18,7 @@ var TaskSplitContainer = function TaskSplitContainer(originalTask, newTasks) {
 /**
  * Transmit the changes.
  */
-TaskSplitContainer.prototype.commit = function() {
+TaskSplitContainer.prototype.commit = function(onSuccessCallback) {
   var data = this.serializeData();
   var me = this;
   jQuery.ajax({
@@ -28,8 +28,12 @@ TaskSplitContainer.prototype.commit = function() {
     data: data,
     cache: false,
     async: true,
-    success: function(data,status) {
+    success: function(data, status) {
       MessageDisplay.Ok("Task split successfully");
+      
+      if (onSuccessCallback) {
+          onSuccessCallback();
+      }
       me.originalTask.getParent().reload();
     },
     error: function(xhr, status, error) {

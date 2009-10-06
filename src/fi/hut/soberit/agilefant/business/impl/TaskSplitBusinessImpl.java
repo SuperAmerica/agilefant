@@ -50,6 +50,7 @@ public class TaskSplitBusinessImpl implements TaskSplitBusiness {
             int newId = (Integer)taskDAO.create(task);
             task = taskDAO.get(newId);
             taskBusiness.rankUnderTask(task, original);
+            taskDAO.store(task);
         }
     }
 

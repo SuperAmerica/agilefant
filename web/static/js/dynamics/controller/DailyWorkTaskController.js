@@ -74,10 +74,11 @@ DailyWorkTaskController.prototype.cssClassResolver = function() {
 };
 
 DailyWorkTaskController.prototype.createSplitTask = function() {
-    var dialog = new TaskSplitDialog(this.model);
-//
-//    
-//    this.parentController.createSplitTask(this.model);
+    var parentController = this.parentController;
+    var dialog = new TaskSplitDialog(this.model, function() {
+        var controller = parentController;
+        controller.reload();
+    });
 };
 
 DailyWorkTaskController.prototype.queuedTaskActionColumnFactory = function(view, model) {
@@ -114,7 +115,8 @@ DailyWorkTaskController.prototype.queuedTaskActionColumnFactory = function(view,
 };
 
 DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(view, model) {
-    var actionItems = [ {
+    var actionItems = [ 
+      {
         text: "Details",
         callback : TaskController.prototype.openDetails
       }, {

@@ -21,10 +21,11 @@ public interface UserBusiness extends GenericBusiness<User> {
      * Store a user and return the persisted object.
      * <p>
      * Changes the password if (password1 != null) and (password1 == password2)
-     * 
+     * @param teamIds TODO
+     * @param passwordConfirm TODO
      * @return the newly persisted user
      */
-    User storeUser(User data, String password);
+    User storeUser(User data, Set<Integer> teamIds, String password, String passwordConfirm);
 
     /**
      * Check if user is creator of any stories.

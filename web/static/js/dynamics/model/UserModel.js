@@ -58,6 +58,15 @@ UserModel.prototype._saveData = function(id, changedData) {
   
   if (this.currentData.password1) {
     data.password1 = this.currentData.password1;
+    
+    // TODO: CHANGE FOR PASSWORD CONFIRM 
+    data.password2 = this.currentData.password1;
+  }
+  
+  if (changedData.teamsChanged) {
+    jQuery.extend(data, {teamIds: changedData.teamIds, teamsChanged: true});
+    delete changedData.teamIds;
+    delete changedData.teamsChanged;
   }
   
   jQuery.extend(data, this.serializeFields("user", changedData));
@@ -185,10 +194,16 @@ UserModel.prototype.getTeams = function() {
   return this.relations.team;
 };
 
-UserModel.prototype.setTeams = function(teams) {
-  return;
+UserModel.prototype.setTeams = function(teamIds, teamJson) {
+  if (teamJson) {
+    $.each(teamJson, function(k,v) {
+      ModelFactory.updateObject(v);    
+    });
+  }
+  this.currentData.teamIds = teamIds;
+  this.currentData.teamsChanged = true;
+  this._commitIfNotInTransaction();
 };
-
 
 UserModel.prototype.getWeekEffort = function() {
   return this.currentData.weekEffort;

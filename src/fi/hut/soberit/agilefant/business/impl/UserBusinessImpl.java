@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Holiday;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 
@@ -33,11 +36,31 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
 
     private StoryDAO storyDAO;
     private UserDAO userDAO;
+    
+    private TeamBusiness teamBusiness;
 
     public UserBusinessImpl() {
         super(User.class);
     }
     
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
+        this.genericDAO = userDAO;
+        this.userDAO = userDAO;
+    }
+
+    @Autowired
+    public void setStoryDAO(StoryDAO storyDAO) {
+        this.storyDAO = storyDAO;
+    }
+
+    @Autowired
+    public void setTeamBusiness(TeamBusiness teamBusiness) {
+        this.teamBusiness = teamBusiness;
+    }
+    
+    
+
     @Transactional(readOnly = true)
     public User retrieveByLoginName(String loginName) {
         return userDAO.getByLoginName(loginName);
@@ -59,14 +82,26 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     }
     
     @Transactional
-    public User storeUser(User data, String password) {
-        User returned = null;
+    public User storeUser(User data, Set<Integer> teamIds, String password, String passwordConfirm) {
         
-        if (password != null && !password.equalsIgnoreCase("")) {
-            String md5hash = SecurityUtil.MD5(password);
-            data.setPassword(md5hash);
+        changePassword(data, password, passwordConfirm);
+        changeTeams(data, teamIds);
+        
+        return storeOrCreate(data);
+    }
+
+    private void changeTeams(User data, Set<Integer> teamIds) {
+        if (teamIds != null) {
+            Collection<Team> teams = new HashSet<Team>();
+            for (Integer tid : teamIds) {
+                teams.add(teamBusiness.retrieve(tid));
+            }
+            data.setTeams(teams);
         }
-        
+    }
+
+    private User storeOrCreate(User data) {
+        User returned;
         if (data.getId() == 0) {
             int newId = (Integer)userDAO.create(data);
             returned = userDAO.get(newId);
@@ -75,8 +110,20 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
             userDAO.store(data);
             returned = data;
         }
-        
         return returned;
+    }
+
+    private void changePassword(User data, String password,
+            String passwordConfirm) {
+        if (password != null) {
+            if (!password.equals(passwordConfirm)) {
+                throw new IllegalArgumentException("Passwords don't match");
+            }
+            else if (!password.equalsIgnoreCase("")) {
+                String md5hash = SecurityUtil.MD5(password);
+                data.setPassword(md5hash);    
+            }
+        }
     }
     
     public boolean isDayUserHoliday(DateTime date, User user) {
@@ -109,16 +156,7 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         return worktime;
     }
 
-    @Autowired
-    public void setUserDAO(UserDAO userDAO) {
-        this.genericDAO = userDAO;
-        this.userDAO = userDAO;
-    }
 
-    @Autowired
-    public void setStoryDAO(StoryDAO storyDAO) {
-        this.storyDAO = storyDAO;
-    }
 
     public void disableUser(int id) {
         User user = userDAO.get(id);

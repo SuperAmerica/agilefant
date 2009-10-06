@@ -160,10 +160,9 @@ UserController.prototype._initUserInfoConfig = function() {
     title: "Teams",
     get: UserModel.prototype.getTeams,
     decorator: DynamicsDecorators.teamListDecorator,
-    editable: false,
+    editable: true,
     edit: {
-      editor: "Autocomplete",
-      type: "teams",
+      editor: "Teams",
       set: UserModel.prototype.setTeams
     }
   });

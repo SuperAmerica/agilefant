@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -32,8 +34,12 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
     private User user;
     
     private String password1;
+    private String password2;
 
     private Collection<User> users = new ArrayList<User>();
+    
+    private Set<Integer> teamIds = new HashSet<Integer>();
+    private boolean teamsChanged = false;
     
     @Autowired
     private UserBusiness userBusiness;
@@ -67,7 +73,11 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
     }
     
     public String store() {
-        user = userBusiness.storeUser(user, password1);
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        user = userBusiness.storeUser(user, teams, password1, password2);
         return Action.SUCCESS;
     }
     
@@ -124,5 +134,21 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
 
     public void setPassword1(String password1) {
         this.password1 = password1;
+    }
+    
+    public void setPassword2(String password2) {
+        this.password2 = password2;
+    }
+
+    public Set<Integer> getTeamIds() {
+        return teamIds;
+    }
+
+    public void setTeamIds(Set<Integer> teamIds) {
+        this.teamIds = teamIds;
+    }
+
+    public void setTeamsChanged(boolean teamsChanged) {
+        this.teamsChanged = teamsChanged;
     }
 }

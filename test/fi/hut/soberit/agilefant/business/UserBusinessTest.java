@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,6 +20,7 @@ import org.junit.Test;
 import fi.hut.soberit.agilefant.business.impl.UserBusinessImpl;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Holiday;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 
 public class UserBusinessTest {
@@ -26,18 +28,23 @@ public class UserBusinessTest {
     UserBusinessImpl userBusiness = new UserBusinessImpl();
     UserDAO userDAO;
     
+    TeamBusiness teamBusiness;
+    
     @Before
     public void setUp() {
         userDAO = createMock(UserDAO.class);
         userBusiness.setUserDAO(userDAO);
+        
+        teamBusiness = createMock(TeamBusiness.class);
+        userBusiness.setTeamBusiness(teamBusiness);
     }
 
     private void verifyAll() {
-        verify(userDAO);
+        verify(userDAO, teamBusiness);
     }
 
     private void replayAll() {
-        replay(userDAO);
+        replay(userDAO, teamBusiness);
     }
     
     @Test
@@ -117,7 +124,7 @@ public class UserBusinessTest {
         expect(userDAO.create(user)).andReturn(1756);
         expect(userDAO.get(1756)).andReturn(user);
         replayAll();
-        User actual = userBusiness.storeUser(user, "teemu");
+        User actual = userBusiness.storeUser(user, null, "teemu", "teemu");
         verifyAll();
         
         assertEquals("Teemu Teekkari", actual.getFullName());
@@ -131,10 +138,15 @@ public class UserBusinessTest {
         
         userDAO.store(dataItem);
         replayAll();
-        User actual = userBusiness.storeUser(dataItem, null);
+        User actual = userBusiness.storeUser(dataItem, null, null, null);
         verifyAll();
         
         assertEquals("password string", actual.getPassword());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testStore_unmatchedPassword() {
+        userBusiness.storeUser(new User(), null, "Foo", "Incorrect");
     }
     
     @Test
@@ -145,7 +157,7 @@ public class UserBusinessTest {
         
         userDAO.store(dataItem);
         replayAll();
-        User actual = userBusiness.storeUser(dataItem, "");
+        User actual = userBusiness.storeUser(dataItem, null, "", "");
         verifyAll();
         
         assertEquals("password string", actual.getPassword());
@@ -162,10 +174,51 @@ public class UserBusinessTest {
         
         userDAO.store(user);
         replayAll();
-        User actual = userBusiness.storeUser(user, password);
+        User actual = userBusiness.storeUser(user, null, password, password);
         verifyAll();
         
         assertEquals(md5hash, actual.getPassword());
+    }
+    
+    @Test
+    public void testStore_changeTeams() {
+        User user = new User();
+        user.setId(123);
+        
+        Set<Integer> teamIds = new HashSet<Integer>(Arrays.asList(1,7));
+        Team first = new Team();
+        first.setId(1);
+        Team second = new Team();
+        second.setId(7);
+        
+        
+        expect(teamBusiness.retrieve(1)).andReturn(first);
+        expect(teamBusiness.retrieve(7)).andReturn(second);
+        userDAO.store(user);
+        
+        replayAll();
+        User actual = userBusiness.storeUser(user, teamIds, null, null);
+        verifyAll();
+        
+        Collection<Team> teams = actual.getTeams();
+        assertTrue(teams.contains(first));
+        assertTrue(teams.contains(second));
+    }
+    
+    @Test
+    public void testStore_clearTeams() {
+        User user = new User();
+        user.setId(123);
+        user.setTeams(new ArrayList<Team>(Arrays.asList(new Team())));
+              
+        userDAO.store(user);
+        
+        replayAll();
+        User actual = userBusiness.storeUser(user, new HashSet<Integer>(), null, null);
+        verifyAll();
+        
+        Collection<Team> teams = actual.getTeams();
+        assertEquals(0, teams.size());
     }
     
     @Test

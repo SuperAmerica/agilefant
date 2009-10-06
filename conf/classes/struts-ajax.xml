@@ -419,6 +419,7 @@
       <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">
         <param name="target">user</param>
+        <param name="patterns">+teams</param>
       </result>
     </action>
     

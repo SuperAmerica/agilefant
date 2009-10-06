@@ -134,6 +134,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             AutocompleteDataNode curNode = new AutocompleteDataNode(Team.class,
                     team.getId(), team.getName(), userIds);
             curNode.setMatchedString(team.getName());
+            curNode.setOriginalObject(team);
             autocompleteData.add(curNode);
         }
         return autocompleteData;

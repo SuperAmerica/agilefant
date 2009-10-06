@@ -230,6 +230,7 @@ public class TransferObjectBusinessTest {
         assertEquals("daa", actual.get(0).getName());
         assertEquals("daa", actual.get(0).getMatchedString());
         assertEquals("fi.hut.soberit.agilefant.model.Team", actual.get(0).getBaseClassName());
+        assertSame(team, actual.get(0).getOriginalObject());
         assertEquals(2, actual.get(0).getIdList().size());
         verifyAll();
     }
@@ -254,6 +255,7 @@ public class TransferObjectBusinessTest {
         assertEquals("daa", actual.get(0).getName());
         assertEquals("daa", actual.get(0).getMatchedString());
         assertEquals("fi.hut.soberit.agilefant.model.Team", actual.get(0).getBaseClassName());
+        assertSame(team, actual.get(0).getOriginalObject());
         assertNull(actual.get(0).getIdList());
         verifyAll();
     }

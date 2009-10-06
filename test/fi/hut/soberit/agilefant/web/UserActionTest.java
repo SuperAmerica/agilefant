@@ -5,6 +5,8 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -108,11 +110,38 @@ public class UserActionTest {
     public void testStore() {
         User returned = new User();
         userAction.setUser(user);
+        userAction.setTeamIds(new HashSet<Integer>(Arrays.asList(1,2,3)));
+        userAction.setTeamsChanged(false);
+        
+        /* 
+         * Should actually be same, or error is thrown.
+         * Used for testing purposes.
+         */
         userAction.setPassword1("new password");
-        expect(userBusiness.storeUser(user, "new password")).andReturn(returned);
+        userAction.setPassword2("new password 2");
+        expect(userBusiness.storeUser(user, null, "new password", "new password 2")).andReturn(returned);
+        
         replayAll();
         assertEquals(Action.SUCCESS, userAction.store());
         verifyAll();
+        
+        assertEquals(returned, userAction.getUser());
+    }
+    
+    @Test
+    public void testStore_changeTeams() {
+        User returned = new User();
+        userAction.setUser(user);
+        Set<Integer> teamIds = new HashSet<Integer>(Arrays.asList(1,2,3));
+        userAction.setTeamIds(teamIds);
+        userAction.setTeamsChanged(true);
+
+        expect(userBusiness.storeUser(user, teamIds, null, null)).andReturn(returned);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, userAction.store());
+        verifyAll();
+        
         assertEquals(returned, userAction.getUser());
     }
     

@@ -112,7 +112,6 @@ ProjectModel.prototype.reload = function() {
     "ajax/projectData.action",
     {projectId: me.getId()},
     function(data,status) {
-      MessageDisplay.Ok("Project reloaded successfully");
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
     }

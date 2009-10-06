@@ -86,6 +86,18 @@ UserModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+UserModel.prototype.reload = function() {
+  var me = this;
+  jQuery.getJSON(
+    "ajax/retrieveUser.action",
+    {userId: me.getId()},
+    function(data,status) {
+      me.setData(data);
+      me.callListeners(new DynamicsEvents.EditEvent(me));
+    }
+  );
+};
+
 /*
  * GETTERS AND SETTERS
  */

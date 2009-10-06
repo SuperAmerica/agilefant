@@ -7,7 +7,6 @@ TableEditors.getEditorClassByName = function(name) {
 };
 TableEditors.isDialog = function(name) {
     var dialogs = [ "User", "Backlog" ];
-    // "CurrentIteration",
     return jQuery.inArray(name, dialogs) !== -1;
 };
 /**
@@ -569,8 +568,7 @@ TableEditors.Autocomplete.prototype.save = function() {
     this.close();
 };
 
-TableEditors.Autocomplete.prototype._registerEvents = function() {
-};
+TableEditors.Autocomplete.prototype._registerEvents = function() { };
 TableEditors.Autocomplete.prototype.getSelectedKeys = function() {
     return [];
 };
@@ -661,11 +659,11 @@ TableEditors.AutocompleteSingle.prototype.save = function() {
 TableEditors.AutocompleteSingle.prototype.openDialog = function() {
     var me = this;
 
-    this.autocomplete = $(window).autocompleteDialog( {
+    this.autocomplete = $(window).autocompleteSingleDialog( {
         dataType : this.autocompleteOptions.dataType,
-        callback : function(keys, items) {
+        callback : function(itemId) {
             me.inputElement.get(0).focus();
-            me.setRealValue(keys, items);
+            me.setRealValue(itemId);
             me.dialogOpening = false;
         },
         cancel : function() {
@@ -691,7 +689,7 @@ TableEditors.AutocompleteSingle.prototype.getInitialSelection = function() {
     return [];
 };
 
-TableEditors.AutocompleteSingle.prototype.setRealValue = function(keys, data) {
+TableEditors.AutocompleteSingle.prototype.setRealValue = function(value) {
 };
 
 TableEditors.AutocompleteSingle.prototype.setEditorValue = function(value) {
@@ -738,55 +736,31 @@ TableEditors.Backlog = function(row, cell, options) {
 };
 TableEditors.Backlog.prototype = new TableEditors.AutocompleteSingle();
 TableEditors.Backlog.superclass = TableEditors.AutocompleteSingle.prototype;
-TableEditors.Backlog.prototype.setRealValue = function(keys, data) {
-    iterationId = keys[0];
+TableEditors.Backlog.prototype.setRealValue = function(value) {
+    iterationId = value;
 
-    var iterationObject = null;
-    if (data) {
-        iterationObject = data[0];
-    }
+    var me = this;
+    var model = this.model;
 
-    if (!iterationObject) {
-        var me = this;
-        var model = this.model;
-
-        ModelFactory.getOrRetrieveObject("iteration", iterationId, 
-                function(type, id, object) {
-            me.setEditorValue({ 
-                name: object.getName(), 
-                backlogId: object.getId(), 
-                storyId: null, 
-                taskId: model.getId()
-            });
-            me.setValue(object);
-            
-            if (! me.options.editRow) {
-                me.save();
-            }
-            
-            if (me.errorChangeListener) {
-                me.errorChangeListener();
-            }
-        });
-    } else {
-        this.setEditorValue({ 
-            name: iterationObject.getName(), 
-            backlogId: iterationObject.getId(), 
+    ModelFactory.getOrRetrieveObject("iteration", iterationId, function(type, id, object) {
+        me.setEditorValue({ 
+            name: object.getName(), 
+            backlogId: object.getId(), 
             storyId: null, 
-            taskId: this.model.getId()
+            taskId: model.getId()
         });
-        this.setValue(object);
+        me.setValue(object);
         
-        if (! this.options.editRow) {
-            this.save();
+        if (! me.options.editRow) {
+            me.save();
         }
         
-        
-        if (this.errorChangeListener) {
-            this.errorChangeListener();
+        if (me.errorChangeListener) {
+            me.errorChangeListener();
         }
-    }
+    });
 };
+
 TableEditors.Backlog.prototype.autocompleteOptions = {
     dataType : "backlog",
     title    : "Select backlog"

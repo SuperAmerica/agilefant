@@ -92,8 +92,16 @@ TaskModel.prototype._saveData = function(id, changedData) {
     if(this.relations.backlog instanceof BacklogModel) {
       data.iterationId = this.relations.backlog.getId();
     }
-    if(this.relations.story instanceof StoryModel) {
+    else if (this.relations.story instanceof StoryModel) {
       data.storyId = this.relations.story.getId();
+    }
+    // set story from id only
+    else if (changedData.storyId) {
+      data.storyId = changedData.storyId;
+    }
+    // set iteration from backlog id only
+    else if (changedData.backlogId) {
+      data.iterationId = changedData.backlogId;
     }
   }
   
@@ -194,7 +202,6 @@ TaskModel.prototype.getIteration = function() {
     if (! parent) {
         return null;
     }
-    
     else if (parent instanceof StoryModel) {
         return parent.getIteration();
     }

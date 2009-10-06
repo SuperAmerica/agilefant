@@ -75,11 +75,17 @@ DailyWorkTaskModel.prototype.getContext = function() {
     };
 };
 
+DailyWorkTaskModel.prototype.setContextFromContextObject = function(context) {
+    this.currentData.contextName   = context.name;
+    this.currentData.parentStoryId = context.parentStoryId;
+    this.currentData.backlogId     = context.backlogId;
+};
+
 DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
     var me = this;
 
     if (moveUnder && moveUnder !== me.getDailyWork()) {
-        MessageDisplay.Error("An UI error occured while ranking the task.");
+        MessageDisplay.Error("An UI error occured while ranking the task in the queue.");
         return;
     }
 
@@ -106,7 +112,7 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
             me.getDailyWork().reload();
         },
         error: function(xhr, status) {
-            MessageDisplay.Error("An error occured while ranking the task.", xhr);
+            MessageDisplay.Error("An error occured while ranking the task in queue.", xhr);
         }
     });
 };
@@ -124,11 +130,11 @@ DailyWorkTaskModel.prototype.removeFromDailyWork = function(successCallback) {
             userId: me.getDailyWork().getUser().getId()
         },
         success: function(data,status) {
-          MessageDisplay.Ok("Task removed from this week's tasks");
+          MessageDisplay.Ok("Task removed from work queue");
           me.getDailyWork().reload();
         },
         error: function(xhr,status) {
-          MessageDisplay.Error("Error removing task from this week's tasks.", xhr);
+          MessageDisplay.Error("Error removing task from work queue.", xhr);
         }
     });
 

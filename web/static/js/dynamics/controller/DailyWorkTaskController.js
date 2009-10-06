@@ -73,12 +73,23 @@ DailyWorkTaskController.prototype.cssClassResolver = function() {
   return [];
 };
 
-DailyWorkTaskController.prototype.actionColumnFactory = function(view, model) {
+DailyWorkTaskController.prototype.createSplitTask = function() {
+    var dialog = new TaskSplitDialog(this.model);
+//
+//    
+//    this.parentController.createSplitTask(this.model);
+};
+
+DailyWorkTaskController.prototype.queuedTaskActionColumnFactory = function(view, model) {
     var items = [
      {
          text: "Details",
          callback : TaskController.prototype.openDetails
-     }, 
+     },
+     {
+         text : "Split",
+         callback : DailyWorkTaskController.prototype.createSplitTask
+     },
      {
          text : "Remove from this list",
          callback : DailyWorkTaskController.prototype.removeTaskFromDailyWork
@@ -99,5 +110,37 @@ DailyWorkTaskController.prototype.actionColumnFactory = function(view, model) {
      ];
     var actionView = new DynamicTableRowActions(items, this, this.model,
             view);
+    return actionView;
+};
+
+DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(view, model) {
+    var actionItems = [ {
+        text: "Details",
+        callback : TaskController.prototype.openDetails
+      }, {
+          text : "Split",
+          callback : DailyWorkTaskController.prototype.createSplitTask
+      }, {
+        text : "Edit",
+        callback : TaskController.prototype.editTask,
+        enabled : function () { return ! this.model.isInTransaction(); }
+      }, {
+        text : "Append to my work queue",
+        callback : TaskController.prototype.addToMyWorkQueue,
+        enabled : TaskController.prototype.addToQueueEnabled
+      }, {
+        text : "Remove from work queue",
+        callback : TaskController.prototype.removeFromMyWorkQueue,
+        enabled : TaskController.prototype.removeFromQueueEnabled
+      }, {
+        text : "Delete",
+        callback : TaskController.prototype.removeTask
+      }, {
+        text : "Reset original estimate",
+        callback : TaskController.prototype.resetOriginalEstimate
+      }
+   ];
+    var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+       view);
     return actionView;
 };

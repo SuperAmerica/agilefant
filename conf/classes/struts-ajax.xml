@@ -321,6 +321,12 @@
       </result>
     </action>
     
+    <action name="splitTask" method="split" class="taskSplitAction">
+      <interceptor-ref name="prefetchStack" />
+      <result name="success" type="json">
+      </result>
+    </action>
+    
     <action name="storyContents" method="storyContents" class="storyAction">
       <result name="success" type="json">
         <param name="target">storyContents</param>

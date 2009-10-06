@@ -96,12 +96,12 @@ DailyWorkController.prototype.createConfig = function(configType) {
         options.appendTailer = true;
 
         sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWorkQueueRank);
-        actionColumnFactory = DailyWorkTaskController.prototype.actionColumnFactory;
+        actionColumnFactory = DailyWorkTaskController.prototype.queueTaskActionColumnFactory;
     }
     else {
         options.caption = "Tasks assigned to me";
         options.dataSource = DailyWorkModel.prototype.getMyWorks;
-        actionColumnFactory = TaskController.prototype.actionColumnFactory;
+        actionColumnFactory = DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory;
 
         options.tableDroppable = true;
         options.alwaysDrop = true;
@@ -283,7 +283,6 @@ DailyWorkController.prototype.createConfig = function(configType) {
             set : TaskModel.prototype.setDescription
         }
     });
-
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.buttons, {
         fullWidth : true,
         visible : false,
@@ -295,15 +294,15 @@ DailyWorkController.prototype.createConfig = function(configType) {
 };
 
 DailyWorkController.prototype.createTask = function() {
-    var mockModel = ModelFactory.createObject(ModelFactory.types.dailyWorkTask);
+    var newTask = ModelFactory.createObject(ModelFactory.types.dailyWorkTask);
     
-    mockModel.setDailyWork(this.model);
+    newTask.setDailyWork(this.model);
     // the user in question must have been loaded, and it is!
-    mockModel.addResponsible(this.model.getUserId());
-    mockModel.addListener(this.newTaskListener);
+    newTask.addResponsible(this.model.getUserId());
+    newTask.addListener(this.newTaskListener);
     
-    var controller = new DailyWorkTaskController(mockModel, null, this);
-    var row = this.myWorkListView.createRow(controller, mockModel, "top");
+    var controller = new DailyWorkTaskController(newTask, null, this);
+    var row = this.myWorkListView.createRow(controller, newTask, "top");
 
     controller.view = row;
     row.autoCreateCells([DailyWorkTaskController.columnIndices.actions, DailyWorkTaskController.columnIndices.data]);
@@ -311,7 +310,29 @@ DailyWorkController.prototype.createTask = function() {
     row.render();
 
     controller.editTask();
-    row.getCell(DailyWorkTaskController.columnIndices.data).hide();
+//  row.getCell(DailyWorkTaskController.columnIndices.data).hide();
+};
+
+DailyWorkController.prototype.createSplitTask = function(taskToCopy) {
+    var newTask = ModelFactory.createObject(ModelFactory.types.dailyWorkTask);
+    
+    newTask.setDailyWork(this.model);
+    
+    // the user in question must have been loaded, and it is!
+    $.each(taskToCopy.getResponsibles(), function (k, v) {
+        newTask.addResponsible(v.getId());
+    });
+    newTask.addListener(this.newTaskListener);
+    newTask.setContextFromContextObject(taskToCopy.getContext());
+    
+    var controller = new DailyWorkTaskController(newTask, null, this);
+    var row = this.myWorkListView.createRow(controller, newTask, "top");
+
+    controller.view = row;
+    row.autoCreateCells([DailyWorkTaskController.columnIndices.actions, DailyWorkTaskController.columnIndices.data]);
+    
+    row.render();
+    controller.editTask();
 };
 
 DailyWorkController.prototype.onCreateNewTask = function(event) {

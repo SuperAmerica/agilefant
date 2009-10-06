@@ -36,7 +36,7 @@ UserRowController.columnIndices = {
  */
 UserRowController.prototype.userActionFactory = function(view, model) {
   var actionItems = [ {
-    text : "Edit",
+    text : "Open user's page",
     callback : UserRowController.prototype.editUser
   }, {
     text : "Change password",
@@ -129,9 +129,7 @@ UserRowController.prototype.showDetails = function() {
 
 
 UserRowController.prototype.editUser = function() {
-  this.model.setInTransaction(true);
-  this.view.getCell(UserRowController.columnIndices.buttons).show();
-  this.view.editRow();
+  window.location = "editUser.action?userId=" + this.model.getId();
 };
 
 UserRowController.prototype.cancelEdit = function() {

@@ -149,7 +149,7 @@
     <action name="retrieveProduct" method="retrieve" class="productAction">
       <result name="success" type="json">
         <param name="target">product</param>
-        <param name="patterns">+stories, +projects</param>
+        <param name="patterns">+stories, +stories.responsibles, +projects</param>
       </result>
     </action>
     
@@ -410,6 +410,7 @@
     <action name="retrieveUser" method="retrieve" class="userAction">
       <result name="success" type="json">
         <param name="target">user</param>
+        <param name="patterns">+teams</param>
       </result>
     </action>
     
@@ -507,6 +508,12 @@
 			<param name="patterns">-class</param>
 		</result>
 	</action>
+	<action name="teamChooserData" class="autocompleteAction" method="teamData">
+    <result name="success" type="json">
+      <param name="target">autocompleteData</param>
+      <param name="patterns">-class</param>
+    </result>
+  </action>
 	<action name="backlogChooserData" class="autocompleteAction" method="backlogData">
 		<result name="success" type="json">
 			<param name="target">autocompleteData</param>
@@ -519,12 +526,7 @@
       <param name="patterns">-class</param>
     </result>
   </action>
-  <action name="projectChooserData" class="autocompleteAction" method="projectData">
-    <result name="success" type="json">
-      <param name="target">autocompleteData</param>
-      <param name="patterns">-class</param>
-    </result>
-  </action>
+  
 	<action name="currentIterationChooserData" class="autocompleteAction"
 		method="currentIterationData">
 		<result name="success" type="json">

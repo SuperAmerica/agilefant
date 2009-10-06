@@ -44,8 +44,9 @@ public interface TransferObjectBusiness {
     
     /**
      * Get all teams in AutoCompleteData containers.
+     * @param listUserIds Add user ids as idList.
      */
-    public List<AutocompleteDataNode> constructTeamAutocompleteData();
+    public List<AutocompleteDataNode> constructTeamAutocompleteData(boolean listUserIds);
     
     /**
      * Get all backlogs in AutoCompleteData containers.

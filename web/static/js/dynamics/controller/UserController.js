@@ -7,7 +7,6 @@
 var UserController = function UserController(options) {
   this.id = options.id;
   this.infoElement = options.userInfoElement;
-  this.passwordElement = options.passwordElement;
   this.userSettingsElement = options.userSettingsElement;
   this.init();
   this.initConfigs();
@@ -32,12 +31,7 @@ UserController.prototype._renderTables = function()  {
       this, this.model, this.userInfoConfig,
       this.infoElement);
   this.infoView.render();
-  /*
-  this.passwordView = new DynamicVerticalTable(
-      this, this.model, this.passwordViewConfig,
-      this.passwordElement);
-  this.passwordView.render();
-  */
+
   this.settingsView = new DynamicVerticalTable(
       this, this.model, this.settingsViewConfig,
       this.userSettingsElement);
@@ -76,7 +70,6 @@ UserController.prototype.changePassword = function() {
  */
 UserController.prototype.initConfigs = function() {
   this._initUserInfoConfig();
-  this._initPasswordConfig();
   this._initSettingsConfig();
 };
 
@@ -85,7 +78,8 @@ UserController.columnIndices = {
   loginName:  1,
   initials:   2,
   email:      3,
-  weekEffort: 4
+  weekEffort: 4,
+  teams:      5
 };
 
 UserController.prototype._initUserInfoConfig = function() {
@@ -162,49 +156,22 @@ UserController.prototype._initUserInfoConfig = function() {
     }
   });
   
+  config.addColumnConfiguration(UserController.columnIndices.teams, {
+    title: "Teams",
+    get: UserModel.prototype.getTeams,
+    decorator: DynamicsDecorators.teamListDecorator,
+    editable: false,
+    edit: {
+      editor: "Autocomplete",
+      type: "teams",
+      set: UserModel.prototype.setTeams
+    }
+  });
+  
   this.userInfoConfig = config;
 };
 
 
-
-/**
- * Initialize configuration for password changing.
- */
-UserController.prototype._initPasswordConfig = function() {
-  var config = new DynamicTableConfiguration( {
-    leftWidth: '20%',
-    rightWidth: '79%',
-    cssClass: "ui-widget-content ui-corner-all",
-    caption: "Change password",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    }
-  });
-  
-  
-  /*
-  config.addColumnConfiguration(0, {
-    title : "Password",
-    get : function() { return ""; },
-    editable : true,
-    edit : {
-      editor : "Text",
-      required: true
-    }
-  });
-  
-  config.addColumnConfiguration(1, {
-    title : "Confirm password",
-    get : function() { return ""; },
-    editable : true,
-    edit : {
-      editor : "Text",
-      required: true
-    }
-  });
-  */
-  this.passwordViewConfig = config;
-};
 
 /**
  * Initialize configuration for settings changing.

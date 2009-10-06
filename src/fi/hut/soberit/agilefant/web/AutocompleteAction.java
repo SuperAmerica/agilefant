@@ -30,10 +30,15 @@ public class AutocompleteAction extends ActionSupport {
     public String userTeamData() {
         autocompleteData = new ArrayList<AutocompleteDataNode>();
         autocompleteData.addAll(transferObjectBusiness.constructUserAutocompleteData());
-        autocompleteData.addAll(transferObjectBusiness.constructTeamAutocompleteData());
+        autocompleteData.addAll(transferObjectBusiness.constructTeamAutocompleteData(true));
         
         Collections.sort(autocompleteData, new PropertyComparator("name", true, true));
         
+        return Action.SUCCESS;
+    }
+    
+    public String teamData() {
+        autocompleteData = transferObjectBusiness.constructTeamAutocompleteData(false);
         return Action.SUCCESS;
     }
     

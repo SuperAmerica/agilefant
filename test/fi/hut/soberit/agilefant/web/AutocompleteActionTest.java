@@ -45,7 +45,7 @@ public class AutocompleteActionTest {
     public void testUserTeamData() {
         
         expect(toBusiness.constructUserAutocompleteData()).andReturn(Arrays.asList(node));
-        expect(toBusiness.constructTeamAutocompleteData()).andReturn(Arrays.asList(node));
+        expect(toBusiness.constructTeamAutocompleteData(true)).andReturn(Arrays.asList(node));
         
         replayAll();
         autocompleteAction.userTeamData();
@@ -87,6 +87,16 @@ public class AutocompleteActionTest {
         verifyAll();
         
         assertEquals(list, autocompleteAction.getAutocompleteData());
+    }
+    
+    @Test
+    public void testTeamData() {
+        expect(toBusiness.constructTeamAutocompleteData(false)).andReturn(Arrays.asList(node));
+        
+        replayAll();
+        autocompleteAction.teamData();
+        assertEquals(1, autocompleteAction.getAutocompleteData().size());
+        verifyAll();
     }
 
     @Test

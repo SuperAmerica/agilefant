@@ -11,6 +11,7 @@ AutocompleteDataProvider = function AutocompleteDataProvider() {};
 AutocompleteDataProvider.vars = {
   urls: {
     "usersAndTeams":     { url: "ajax/userChooserData.action"                  },
+    "teams":             { url: "ajax/userChooserData.action"                  },
     "backlogs":          { url: "ajax/backlogChooserData.action"               },
     "currentIterations": { url: "ajax/currentIterationChooserData.action"      },
     "products":          { url: "ajax/productChooserData.action"               },

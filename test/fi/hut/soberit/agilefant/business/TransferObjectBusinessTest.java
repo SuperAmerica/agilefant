@@ -211,7 +211,7 @@ public class TransferObjectBusinessTest {
     }
     
     @Test
-    public void testConstructTeamAutocompleteData() {
+    public void testConstructTeamAutocompleteData_withUserIds() {
         User user1 = new User();
         User user2 = new User();
         Team team = new Team();
@@ -224,13 +224,37 @@ public class TransferObjectBusinessTest {
         expect(teamBusiness.retrieveAll()).andReturn(Arrays.asList(team));
         
         replayAll();
-        List<AutocompleteDataNode> actual = this.transferObjectBusiness.constructTeamAutocompleteData();
+        List<AutocompleteDataNode> actual = this.transferObjectBusiness.constructTeamAutocompleteData(true);
         assertEquals(1, actual.size());
         assertEquals(1, (int)actual.get(0).getId());
         assertEquals("daa", actual.get(0).getName());
         assertEquals("daa", actual.get(0).getMatchedString());
         assertEquals("fi.hut.soberit.agilefant.model.Team", actual.get(0).getBaseClassName());
         assertEquals(2, actual.get(0).getIdList().size());
+        verifyAll();
+    }
+    
+    @Test
+    public void testConstructTeamAutocompleteData_withoutUserIds() {
+        User user1 = new User();
+        User user2 = new User();
+        Team team = new Team();
+        user1.setId(1);
+        user2.setId(2);
+        team.setName("daa");
+        team.setId(1);
+        team.setUsers(Arrays.asList(user1,user2));
+        
+        expect(teamBusiness.retrieveAll()).andReturn(Arrays.asList(team));
+        
+        replayAll();
+        List<AutocompleteDataNode> actual = this.transferObjectBusiness.constructTeamAutocompleteData(false);
+        assertEquals(1, actual.size());
+        assertEquals(1, (int)actual.get(0).getId());
+        assertEquals("daa", actual.get(0).getName());
+        assertEquals("daa", actual.get(0).getMatchedString());
+        assertEquals("fi.hut.soberit.agilefant.model.Team", actual.get(0).getBaseClassName());
+        assertNull(actual.get(0).getIdList());
         verifyAll();
     }
 

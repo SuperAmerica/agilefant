@@ -105,6 +105,19 @@ var DynamicsDecorators = {
     }
     return initials.join(", ");
   },
+  teamListDecorator: function(teamList) {
+    if (!teamList || !teamList.length) {
+      return "(No teams)";
+    }
+    var names = [];
+    for (var i = 0; i < teamList.length; i++) {
+      names.push(teamList[i].getName());
+    }
+    names.sort(function(a,b) {
+      return (a.toLowerCase() > b.toLowerCase());
+    });
+    return names.join(", ");
+  },
   annotatedUserInitialsListDecorator: function(annotatedList) {
       if(!annotatedList || !annotatedList.length) {
           return "";

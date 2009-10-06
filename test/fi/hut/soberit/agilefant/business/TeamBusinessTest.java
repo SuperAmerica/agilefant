@@ -25,10 +25,10 @@ public class TeamBusinessTest {
     public void setUp_dependencies() {
         teamBusiness = new TeamBusinessImpl();
         
-        teamDAO = createStrictMock(TeamDAO.class);
+        teamDAO = createMock(TeamDAO.class);
         teamBusiness.setTeamDAO(teamDAO);
         
-        userBusiness = createStrictMock(UserBusiness.class);
+        userBusiness = createMock(UserBusiness.class);
         teamBusiness.setUserBusiness(userBusiness);
     }
 

@@ -11,7 +11,8 @@ var UserModel = function UserModel() {
   this.relations = {
     task: [],
     story: [],
-    assignment: []
+    assignment: [],
+    team: []
   };
   this.currentData = {
     initials: "",
@@ -29,6 +30,7 @@ var UserModel = function UserModel() {
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Story":         "story",
       "fi.hut.soberit.agilefant.model.Task":          "task",
+      "fi.hut.soberit.agilefant.model.Team":          "team",
       "fi.hut.soberit.agilefant.model.Assignment":    "assignment"
   };
 };
@@ -37,6 +39,11 @@ UserModel.prototype = new CommonModel();
 
 UserModel.prototype._setData = function(newData) {
   this.id = newData.id;
+  
+  if (newData.teams) {
+    this._updateRelations(ModelFactory.types.team, newData.teams);
+  }
+  
 };
 
 
@@ -161,6 +168,15 @@ UserModel.prototype.setPassword2 = function(password) {
   this.currentData.password2 = password;
   this._commitIfNotInTransaction();
 };
+
+UserModel.prototype.getTeams = function() {
+  return this.relations.team;
+};
+
+UserModel.prototype.setTeams = function(teams) {
+  return;
+};
+
 
 UserModel.prototype.getWeekEffort = function() {
   return this.currentData.weekEffort;

@@ -120,15 +120,19 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
-    public List<AutocompleteDataNode> constructTeamAutocompleteData() {
+    public List<AutocompleteDataNode> constructTeamAutocompleteData(boolean listUserIds) {
         Collection<Team> allTeams = this.teamBusiness.retrieveAll();
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
         for(Team team : allTeams) {
-            Set<Integer> userIds = new HashSet<Integer>();
-            for(User user : team.getUsers()) {
-                userIds.add(user.getId());
+            Set<Integer> userIds = null;
+            if (listUserIds) {
+                userIds = new HashSet<Integer>();
+                for(User user : team.getUsers()) {
+                    userIds.add(user.getId());
+                }
             }
-            AutocompleteDataNode curNode = new AutocompleteDataNode(Team.class, team.getId(), team.getName(), userIds);
+            AutocompleteDataNode curNode = new AutocompleteDataNode(Team.class,
+                    team.getId(), team.getName(), userIds);
             curNode.setMatchedString(team.getName());
             autocompleteData.add(curNode);
         }

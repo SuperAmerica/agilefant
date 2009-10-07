@@ -102,7 +102,6 @@
 	<target name="sync-dbs" depends="create-ddl" description="Synchronise agilefant and aeftest databases">
 		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/drop-create-databases.sql" url="${hibernate.connection.url}" userid="agilefant" password="agilefant" />
 		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="${hibernate.connection.url}" userid="agilefant" password="agilefant" />
-		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="jdbc:mysql://localhost:3306/aeftest?autoReconnect=true" userid="agilefant" password="agilefant" />
 		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/insert-users.sql" url="${hibernate.connection.url}" userid="agilefant" password="agilefant" />
 	</target>
 
@@ -199,12 +198,14 @@
 		</hibernatetool>
 	</target>
 
+	<!--
 	<target name="drop-create-test-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
 			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
 			<hbm2ddl drop="true" export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
 		</hibernatetool>
 	</target>
+	-->
 
 	<target name="update-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
@@ -213,12 +214,14 @@
 		</hibernatetool>
 	</target>
 
+	<!--
 	<target name="update-test-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
 			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
 			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true" />
 		</hibernatetool>
 	</target>
+	-->
 
 
 	<target name="webapp" depends="make-jar" description="Builds webapp">
@@ -246,11 +249,13 @@
 		</copy>
 	</target>
 
+	<!--
 	<target name="quick-ui-deploy" depends="init" description="Quickly deploys all jsp to server">
 		<copy todir="${deploy.dir.local}/WEB-INF/jsp/">
 			<fileset dir="${webapp.root}/WEB-INF/jsp/" />
 		</copy>
 	</target>
+	-->
 
 	<target name="deploy-local-web" depends="webapp, concat_javascript" description="Deploys web app to local server without reloading webapp">
 		<mkdir dir="${deploy.dir.local}" />
@@ -278,26 +283,29 @@
 		<delete dir="${test.reports.dir}" />
 	</target>
 
+	<!--
 	<target name="set-original-db" depends="init" description="Updates the database, with default values from the XML file">
 		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
 			<classpath refid="compile.classpath" />
 			<operation type="CLEAN_INSERT" src="${testdata.dir}/testData.xml" format="xml" />
 		</dbunit>
 	</target>
-
+	-->
+<!--
 	<target name="export-db" depends="init" description="Exports the database into an XML file">
 		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
 			<export dest="${build.test}/exportedData.xml" format="xml" />
 		</dbunit>
 	</target>
-
+	-->
+<!--
 	<target name="count-loc">
 		<exec executable="/bin/sh">
 			<arg value="${basedir}/tools/count-loc.sh" />
 		</exec>
 	</target>
-
-	<target name="generate-javadocs" depends="init" description="Generates Javadocs from source code">
+-->
+	<target name="javadoc" depends="init" description="Generates Javadocs from source code">
 		<!-- TODO: Generate docs for taglibs -->
 		<mkdir dir="${javadoc.dir}" />
 		<javadoc classpathref="compile.classpath" destdir="${javadoc.dir}" access="private">
@@ -308,8 +316,9 @@
 		</javadoc>
 	</target>
 
+	<!--
 	<target name="run-jdepend" depends="compile" description="Runs JDepend">
-		<!-- 
+		 
 		<mkdir dir="${jdepend.dir}" />
 
 		<jdepend format="xml"
@@ -320,8 +329,9 @@
 		</jdepend>
 		<style basedir="${jdepend.dir}" destdir="${jdepend.dir}"
 			includes="jdepend-report.xml" style="${ant.home}/etc/jdepend.xsl" />
-		 -->
+		 
 	</target>
+	-->
 
 	<target name="war" depends="webapp">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
@@ -330,17 +340,6 @@
 	<target name="production-war" depends="compress-js">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
-
-	<!-- 
-	<target name="release"
-		depends="clean, war, generate-javadocs, doccheck, run-jdepend, drop-create-test-db, emma, test-reports">
-		<mkdir dir="${release.dir}" />
-		<mkdir dir="${release.dir}/doc" />
-		<copy file="${warFile}" todir="${release.dir}" />
-		<copy todir="${release.dir}/doc">
-			<fileset dir="${doc.dir}" />
-		</copy>
-	</target>  -->
 
 	<target name="release" depends="clean, production-war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />

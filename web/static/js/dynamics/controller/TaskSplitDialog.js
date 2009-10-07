@@ -84,10 +84,6 @@ TaskSplitDialog.prototype._transactionEditListener = function(event) {
  * The callback for the 'Save' button.
  */
 TaskSplitDialog.prototype._save = function() {
-  if (this.newModels.length < 1) {
-    MessageDisplay.Warning("Create some tasks first");
-    return;
-  }
   if (this.isFormDataValid()) {
     this.saveTasks();
     this.close();
@@ -286,12 +282,11 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
 
 TaskSplitDialog.columnIndices = {
     name: 0,
-    effortLeft: 1,
-    originalEstimate: 2,
-    state: 3,
-    responsibles: 4,
-    cancel: 5,
-    description: 6
+    originalEstimate: 1,
+    state: 2,
+    responsibles: 3,
+    cancel: 4,
+    description: 5
 };
 
 TaskSplitDialog.prototype._initTaskListConfig = function() {
@@ -330,22 +325,7 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(TaskSplitDialog.columnIndices.effortLeft, {
-    minWidth : 40,
-    autoScale : true,
-    cssClass : 'projecttask-row',
-    title : "EL",
-    headerTooltip : 'Effort left in hours',
-    get : TaskModel.prototype.getEffortLeft,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
-    editable : true,
-    edit : {
-      editor : "ExactEstimate",
-      decorator: DynamicsDecorators.exactEstimateEditDecorator,
-      set : TaskModel.prototype.setEffortLeft
-    }
-  });
-  
+
   config.addColumnConfiguration(TaskSplitDialog.columnIndices.originalEstimate, {
       minWidth : 40,
       autoScale : true,
@@ -363,7 +343,7 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
   });
   
   config.addColumnConfiguration(TaskSplitDialog.columnIndices.state, {
-    minWidth : 70,
+    minWidth : 80,
     autoScale : true,
     cssClass : 'projecttask-row',
     title : "State",
@@ -379,7 +359,7 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
   });
   
   config.addColumnConfiguration(TaskSplitDialog.columnIndices.responsibles, {
-     minWidth : 60,
+     minWidth : 100,
      autoScale : true,
      cssClass : 'task-row',
      title : "Responsibles",

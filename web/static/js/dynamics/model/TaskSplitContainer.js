@@ -59,6 +59,12 @@ TaskSplitContainer.prototype.serializeData = function() {
     var taskData = task.serializeFields(fieldPrefix, task.getChangedData());
     
     jQuery.extend(data, taskData);
+
+    var responsibles = task.getResponsibles();
+    var fieldName = fieldPrefix + ".responsibles[";
+    for (var j = 0; j < responsibles.length; j ++) {
+      data[fieldName + j + "]"] = responsibles[j].getId();
+    }
   }
   
   return data;

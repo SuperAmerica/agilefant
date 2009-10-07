@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.TaskSplitBusinessImpl;
-import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
@@ -18,8 +17,6 @@ import fi.hut.soberit.agilefant.model.User;
 
 public class TaskSplitBusinessTest {
     TaskSplitBusinessImpl testable;
-
-    TaskDAO taskDAO;
 
     TaskBusiness taskBusiness;
 
@@ -37,9 +34,6 @@ public class TaskSplitBusinessTest {
     @Before
     public void setUp_dependencies() {
         testable = new TaskSplitBusinessImpl();
-
-        taskDAO = createStrictMock(TaskDAO.class);
-        testable.setTaskDAO(taskDAO);
 
         taskBusiness = createStrictMock(TaskBusiness.class);
         testable.setTaskBusiness(taskBusiness);
@@ -71,11 +65,11 @@ public class TaskSplitBusinessTest {
     }
 
     private void verifyAll() {
-        verify(taskDAO, taskBusiness);
+        verify(taskBusiness);
     }
 
     private void replayAll() {
-        replay(taskDAO, taskBusiness);
+        replay(taskBusiness);
     }
 
     @Test
@@ -103,28 +97,19 @@ public class TaskSplitBusinessTest {
     }
 
     private void createChildTasks(Integer storyId, Integer iterationId) {
-        expect(taskBusiness.create(newTasks.get(0))).andReturn(3);
-        expect(taskDAO.get(3)).andReturn(createdTasks.get(0));
-        expect(taskBusiness.rankToBottom(createdTasks.get(0), storyId, iterationId))
+        expect(taskBusiness.storeTask(newTasks.get(0), iterationId, storyId, null))
             .andReturn(createdTasks.get(0));
-        taskDAO.store(createdTasks.get(0));
         expect(taskBusiness.rankUnderTask(createdTasks.get(0), originalTask))
             .andReturn(createdTasks.get(0));
-        taskDAO.store(createdTasks.get(0));
         
-        expect(taskBusiness.create(newTasks.get(1))).andReturn(4);
-        expect(taskDAO.get(4)).andReturn(createdTasks.get(1));
-        expect(taskBusiness.rankToBottom(createdTasks.get(1), storyId, iterationId))
+        expect(taskBusiness.storeTask(newTasks.get(1), iterationId, storyId, null))
             .andReturn(createdTasks.get(1));
-        taskDAO.store(createdTasks.get(1));
         expect(taskBusiness.rankUnderTask(createdTasks.get(1), originalTask))
             .andReturn(createdTasks.get(1));
-        taskDAO.store(createdTasks.get(1));
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testSplitTask_emptyList() {
-        testable.splitTask(new Task(), new ArrayList<Task>());
+    public void testSplitTask_successWithEmptyList() {
+        testable.splitTask(originalTask, new ArrayList<Task>());
     }
 
     @Test(expected = IllegalArgumentException.class)

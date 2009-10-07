@@ -17,7 +17,7 @@ var TaskSplitDialog = function TaskSplitDialog(task, onSuccessCallback) {
   this.oldModels = [];
   this.newModels = [];
   this.rows = [];
-  
+  this.originalResponsibles = this.model.getResponsibles().slice();
   this.onSuccessCallback = onSuccessCallback;
 };
 TaskSplitDialog.prototype = new CommonController();
@@ -140,6 +140,11 @@ TaskSplitDialog.prototype.createTask = function() {
   this.newModels.push(mockModel);
   var controller = new TaskController(mockModel, null, this);
   var row = this.tasksView.createRow(controller, mockModel, "top");
+
+  $.each(this.originalResponsibles, function (k, v) {
+    mockModel.addResponsible(v.getId());
+  });
+  
   controller.view = row;
   row.autoCreateCells([TaskSplitDialog.columnIndices.description]);
   row.render();
@@ -260,6 +265,22 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
     }
   });
   
+  config.addColumnConfiguration(5, {
+     minWidth : 60,
+     autoScale : true,
+     cssClass : 'task-row',
+     title : "Responsibles",
+     headerTooltip : 'Task responsibles',
+     get : TaskModel.prototype.getResponsibles,
+     getView : TaskModel.prototype.getAnnotatedResponsibles,
+     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
+     editable : true,
+     edit : {
+       editor : "User",
+       set : TaskModel.prototype.setResponsibles
+     }
+  });
+  
   this.taskInfoConfig = config;
 };
 
@@ -268,8 +289,9 @@ TaskSplitDialog.columnIndices = {
     effortLeft: 1,
     originalEstimate: 2,
     state: 3,
-    cancel: 4,
-    description: 5
+    responsibles: 4,
+    cancel: 5,
+    description: 6
 };
 
 TaskSplitDialog.prototype._initTaskListConfig = function() {
@@ -354,6 +376,22 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
       set : TaskModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }
+  });
+  
+  config.addColumnConfiguration(TaskSplitDialog.columnIndices.responsibles, {
+     minWidth : 60,
+     autoScale : true,
+     cssClass : 'task-row',
+     title : "Responsibles",
+     headerTooltip : 'Task responsibles',
+     get : TaskModel.prototype.getResponsibles,
+     getView : TaskModel.prototype.getAnnotatedResponsibles,
+     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
+     editable : true,
+     edit : {
+       editor : "User",
+       set : TaskModel.prototype.setResponsibles
+     }
   });
   
   config.addColumnConfiguration(TaskSplitDialog.columnIndices.cancel, {

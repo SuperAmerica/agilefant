@@ -27,6 +27,9 @@ var DynamicsDecorators = {
     return '<div class="taskState taskState'+stateClass[state]+'">'+text+'</div>';
   },
   exactEstimateDecorator: function(value) {
+    if (typeof (value) === 'string') {
+      return value;
+    }
     if(value === null || value === undefined) {
       return "&mdash;";
     } else if(value === 0) {
@@ -36,6 +39,9 @@ var DynamicsDecorators = {
     }
   },
   exactEstimateEditDecorator: function(value) {
+    if (typeof (value) === 'string') {
+      return value;
+    }
     if (!value) {
       return "";
     }

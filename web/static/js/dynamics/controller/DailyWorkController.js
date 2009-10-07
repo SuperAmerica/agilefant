@@ -310,29 +310,7 @@ DailyWorkController.prototype.createTask = function() {
     row.render();
 
     controller.editTask();
-//  row.getCell(DailyWorkTaskController.columnIndices.data).hide();
-};
-
-DailyWorkController.prototype.createSplitTask = function(taskToCopy) {
-    var newTask = ModelFactory.createObject(ModelFactory.types.dailyWorkTask);
-    
-    newTask.setDailyWork(this.model);
-    
-    // the user in question must have been loaded, and it is!
-    $.each(taskToCopy.getResponsibles(), function (k, v) {
-        newTask.addResponsible(v.getId());
-    });
-    newTask.addListener(this.newTaskListener);
-    newTask.setContextFromContextObject(taskToCopy.getContext());
-    
-    var controller = new DailyWorkTaskController(newTask, null, this);
-    var row = this.myWorkListView.createRow(controller, newTask, "top");
-
-    controller.view = row;
-    row.autoCreateCells([DailyWorkTaskController.columnIndices.actions, DailyWorkTaskController.columnIndices.data]);
-    
-    row.render();
-    controller.editTask();
+    row.getCell(DailyWorkTaskController.columnIndices.data).hide();
 };
 
 DailyWorkController.prototype.onCreateNewTask = function(event) {

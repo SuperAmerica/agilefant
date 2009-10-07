@@ -83,7 +83,7 @@ public class TaskSplitBusinessTest {
         originalTask.setIteration(iteration);
         originalTask.setStory(null);
         
-        createChildTasks();
+        createChildTasks(null, 3);
         
         replayAll();
         testable.splitTask(originalTask, newTasks);
@@ -95,23 +95,31 @@ public class TaskSplitBusinessTest {
         originalTask.setIteration(null);
         originalTask.setStory(parentStory);
 
-        createChildTasks();
+        createChildTasks(5, null);
         
         replayAll();
         testable.splitTask(originalTask, newTasks);
         verifyAll();
     }
 
-    private void createChildTasks() {
-        expect(taskDAO.create(newTasks.get(1))).andReturn(4);
+    private void createChildTasks(Integer storyId, Integer iterationId) {
+        expect(taskBusiness.create(newTasks.get(0))).andReturn(3);
+        expect(taskDAO.get(3)).andReturn(createdTasks.get(0));
+        expect(taskBusiness.rankToBottom(createdTasks.get(0), storyId, iterationId))
+            .andReturn(createdTasks.get(0));
+        taskDAO.store(createdTasks.get(0));
+        expect(taskBusiness.rankUnderTask(createdTasks.get(0), originalTask))
+            .andReturn(createdTasks.get(0));
+        taskDAO.store(createdTasks.get(0));
+        
+        expect(taskBusiness.create(newTasks.get(1))).andReturn(4);
         expect(taskDAO.get(4)).andReturn(createdTasks.get(1));
+        expect(taskBusiness.rankToBottom(createdTasks.get(1), storyId, iterationId))
+            .andReturn(createdTasks.get(1));
+        taskDAO.store(createdTasks.get(1));
         expect(taskBusiness.rankUnderTask(createdTasks.get(1), originalTask))
             .andReturn(createdTasks.get(1));
-        
-        expect(taskDAO.create(newTasks.get(0))).andReturn(3);
-        expect(taskDAO.get(3)).andReturn(createdTasks.get(0));
-        expect(taskBusiness.rankUnderTask(createdTasks.get(0), originalTask))
-            .andReturn(createdTasks.get(1));
+        taskDAO.store(createdTasks.get(1));
     }
 
     @Test(expected = IllegalArgumentException.class)

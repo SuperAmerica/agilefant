@@ -37,18 +37,29 @@ public class TaskSplitBusinessImpl implements TaskSplitBusiness {
     }
 
     private void persistNewTasks(Task original, Collection<Task> newTasks) {
-        ArrayList<Task> reversed = new ArrayList<Task>(newTasks);
-        Collections.reverse(reversed);
-
-        for (Task task : reversed) {
+        Integer parentStoryId     = null;
+        if (original.getStory() != null) {
+            parentStoryId = original.getStory().getId();
+        }
+        
+        Integer parentIterationId = null;
+        if (original.getIteration() != null) {
+            parentIterationId = original.getIteration().getId();
+        }
+        
+        for (Task task : newTasks) {
             task.setIteration(original.getIteration());
             task.setStory(original.getStory());
 
             //copy responsible from the parent story
             task.getResponsibles().addAll(original.getResponsibles());
             
-            int newId = (Integer)taskDAO.create(task);
+            int newId = taskBusiness.create(task);
             task = taskDAO.get(newId);
+            
+            taskBusiness.rankToBottom(task, parentStoryId, parentIterationId);
+            taskDAO.store(task);
+            
             taskBusiness.rankUnderTask(task, original);
             taskDAO.store(task);
         }

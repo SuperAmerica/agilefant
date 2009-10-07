@@ -3,10 +3,12 @@ package fi.hut.soberit.agilefant.util;
 import java.util.Map;
 
 import org.apache.struts2.util.StrutsTypeConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import fi.hut.soberit.agilefant.business.UserBusiness;
 
 public class UserConverter extends StrutsTypeConverter {
+    @Autowired
     private UserBusiness userBusiness;
 
     @SuppressWarnings("unchecked")

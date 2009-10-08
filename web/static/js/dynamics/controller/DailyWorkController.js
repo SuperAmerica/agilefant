@@ -196,7 +196,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         editable : true,
         sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getState),
         edit : {
-            editor : "SingleSelection",
+            editor : "Selection",
             set : TaskModel.prototype.setState,
             items : DynamicsDecorators.stateOptions
         }

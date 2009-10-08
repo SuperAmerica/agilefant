@@ -193,7 +193,7 @@ UserController.prototype._initSettingsConfig = function() {
     editable: true,
     decorator: DynamicsDecorators.enabledDisabledColorDecorator,
     edit: {
-      editor: "SingleSelection",
+      editor: "Selection",
       items: DynamicsDecorators.enabledDisabledOptions,
       set: UserModel.prototype.setAutoassignToTasks
     }

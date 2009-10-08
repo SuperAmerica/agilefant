@@ -157,7 +157,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : TaskModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }
@@ -352,7 +352,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }

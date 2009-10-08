@@ -237,7 +237,7 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable: true,
     edit: {
-      editor: "SingleSelection",
+      editor: "Selection",
       items: DynamicsDecorators.stateOptions,
       set: StoryModel.prototype.setState
     }
@@ -314,7 +314,7 @@ StorySplitDialog.prototype._initStoryListConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }

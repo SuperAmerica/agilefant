@@ -389,7 +389,7 @@ StoryController.prototype.storyPointsEditable = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : TaskModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }

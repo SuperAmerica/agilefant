@@ -255,7 +255,7 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable: true,
     edit: {
-      editor: "SingleSelection",
+      editor: "Selection",
       items: DynamicsDecorators.stateOptions,
       set: TaskModel.prototype.setState
     }
@@ -352,7 +352,7 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : TaskModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }

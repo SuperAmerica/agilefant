@@ -212,7 +212,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }
@@ -318,7 +318,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     defaultSortColumn: false,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : ProjectModel.prototype.setStatus,
       items : DynamicsDecorators.projectStates
     }

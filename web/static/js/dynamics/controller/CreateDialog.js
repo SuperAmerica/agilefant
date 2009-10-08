@@ -386,7 +386,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     editable: true,
     get: StoryModel.prototype.getState,
     edit: {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }

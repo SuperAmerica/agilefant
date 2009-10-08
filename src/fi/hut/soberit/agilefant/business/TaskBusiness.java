@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.Set;
-
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -13,7 +11,7 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * @param storyId the parent story's id, or zero if none.
      * @return the newly stored task
      */
-    public Task storeTask(Task task, Integer iterationId, Integer storyId, Set<Integer> userIds);
+    public Task storeTask(Task task, Integer iterationId, Integer storyId); //, Set<Integer> userIds);
     
     public Task resetOriginalEstimate(int taskId);
 
@@ -74,5 +72,4 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * Adds the given user to the set of responsibles for task
      */
     public void addResponsible(Task task, User user);
-
 }

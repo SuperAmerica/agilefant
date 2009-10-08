@@ -101,12 +101,12 @@ public class TaskBusinessTest {
     
     @Test(expected = IllegalArgumentException.class)
     public void testStoreTask_storyAndIterationGiven() {
-        taskBusiness.storeTask(task, iteration.getId(), story.getId(), null);
+        taskBusiness.storeTask(task, iteration.getId(), story.getId());
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testStoreTask_nullTask() {
-        taskBusiness.storeTask(null, iteration.getId(), null, null);
+        taskBusiness.storeTask(null, iteration.getId(), null);
     }
     
     @Test
@@ -122,7 +122,7 @@ public class TaskBusinessTest {
         
         replayAll();
         
-        Task actualTask = taskBusiness.storeTask(task, iteration.getId(), null, null);
+        Task actualTask = taskBusiness.storeTask(task, iteration.getId(), null);
         
         assertEquals(iteration, actualTask.getIteration());
         assertEquals(23, actualTask.getRank());
@@ -146,7 +146,7 @@ public class TaskBusinessTest {
         
         replayAll();
         
-        Task actualTask = taskBusiness.storeTask(task, null, story.getId(), null);
+        Task actualTask = taskBusiness.storeTask(task, null, story.getId());
 
         assertEquals(story, actualTask.getStory());
         assertEquals(223, actualTask.getRank());
@@ -164,7 +164,7 @@ public class TaskBusinessTest {
         replayAll();
         
         Task actualTask =
-            taskBusiness.storeTask(task, iteration.getId(), null, null);
+            taskBusiness.storeTask(task, iteration.getId(), null);
         
         assertEquals(task.getId(), actualTask.getId());
         
@@ -182,7 +182,7 @@ public class TaskBusinessTest {
         
         replayAll();
         
-        taskBusiness.storeTask(task, iteration.getId(), null, null);
+        taskBusiness.storeTask(task, iteration.getId(), null);
         
         verifyAll();
     }
@@ -198,7 +198,7 @@ public class TaskBusinessTest {
         
         replayAll();
         
-        Task actualTask = taskBusiness.storeTask(task, null, story.getId(), null);
+        Task actualTask = taskBusiness.storeTask(task, null, story.getId());
         
         assertEquals(new ExactEstimate(120).getMinorUnits(), actualTask.getOriginalEstimate().getMinorUnits());
         assertEquals(new ExactEstimate(120).getMinorUnits(), actualTask.getEffortLeft().getMinorUnits());
@@ -217,7 +217,7 @@ public class TaskBusinessTest {
         
         replayAll();
         
-        Task actualTask = taskBusiness.storeTask(task, null, story.getId(), null);
+        Task actualTask = taskBusiness.storeTask(task, null, story.getId());
         
         assertEquals(new ExactEstimate(90).getMinorUnits(), actualTask.getOriginalEstimate().getMinorUnits());
         assertEquals(new ExactEstimate(90).getMinorUnits(), actualTask.getEffortLeft().getMinorUnits());
@@ -228,25 +228,13 @@ public class TaskBusinessTest {
     @Test
     public void testStoreTask_responsibles() {
         task.setId(123515);
-        User user1 = new User();
-        user1.setId(3);
-        User user2 = new User();
-        user2.setId(8);
-        Set<Integer> userIdsSet = new HashSet<Integer>();
-        userIdsSet.add(user1.getId());
-        userIdsSet.add(user2.getId());
         
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
-        expect(userBusiness.retrieveIfExists(user1.getId())).andReturn(user1);
-        expect(userBusiness.retrieveIfExists(user2.getId())).andReturn(user2);
-        
         replayAll();
         
-        taskBusiness.storeTask(task, null, story.getId(), userIdsSet);
-        
-        assertEquals(userIdsSet.size(), task.getResponsibles().size());
-        
+        taskBusiness.storeTask(task, null, story.getId());
+                
         verifyAll();
     }
     
@@ -256,7 +244,7 @@ public class TaskBusinessTest {
             .andThrow(new ObjectNotFoundException("Iteration not found"));
         replayAll();
         
-        taskBusiness.storeTask(task, 0, null, null);
+        taskBusiness.storeTask(task, 0, null);
         
         verifyAll();
     }
@@ -267,7 +255,7 @@ public class TaskBusinessTest {
             .andThrow(new ObjectNotFoundException("Story not found"));
         replayAll();
         
-        taskBusiness.storeTask(task, null, 0, null);
+        taskBusiness.storeTask(task, null, 0);
         
         verifyAll();
     }

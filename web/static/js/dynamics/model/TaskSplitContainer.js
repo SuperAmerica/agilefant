@@ -48,24 +48,25 @@ TaskSplitContainer.prototype.commit = function(onSuccessCallback) {
 TaskSplitContainer.prototype.serializeData = function() {
 
   var originalChangedData = this.originalTask.getChangedData();
-  var data = this.originalTask.serializeFields("original", originalChangedData);
+  var data = { };
   
+  data.original = originalChangedData;
   data.originalTaskId = this.originalTask.getId();
-  
+
+  var newTaskArray = [];
   for (var i = 0; i < this.newTasks.length; i++) {
-    var task = this.newTasks[i];
-    var fieldPrefix = "newTasks[" + i + "]";
+    var taskData = this.newTasks[i].getChangedData();
+    var responsibleUids = [];
+    var responsibles = this.newTasks[i].getResponsibles();
 
-    var taskData = task.serializeFields(fieldPrefix, task.getChangedData());
-    
-    jQuery.extend(data, taskData);
-
-    var responsibles = task.getResponsibles();
-    var fieldName = fieldPrefix + ".responsibles[";
     for (var j = 0; j < responsibles.length; j ++) {
-      data[fieldName + j + "]"] = responsibles[j].getId();
+      responsibleUids.push(responsibles[j].getId());
     }
+    
+    taskData.responsibles = responsibleUids;
+    newTaskArray.push(taskData);
   }
+  data.newTasks = newTaskArray;
   
-  return data;
+  return HttpParamSerializer.serialize(data);
 };

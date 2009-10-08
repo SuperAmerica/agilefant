@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,6 +20,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 
 public class TaskActionTest {
@@ -27,6 +29,8 @@ public class TaskActionTest {
     private TaskBusiness taskBusiness;
     private TransferObjectBusiness transferObjectBusiness;
     private Task task;
+    private User user1;
+    private User user2;
     
     @Before
     public void setUp_dependencies() {
@@ -35,6 +39,10 @@ public class TaskActionTest {
         
         taskBusiness = createMock(TaskBusiness.class);
         taskAction.setTaskBusiness(taskBusiness);
+        user1 = new User();
+        user1.setId(1);
+        user2 = new User();
+        user2.setId(2);
     }
     
     private void replayAll() {
@@ -51,6 +59,7 @@ public class TaskActionTest {
         task.setId(444);
         taskAction.setTask(task);
         taskAction.setTaskId(task.getId());
+        task.setResponsibles(Arrays.asList(user1));
     }
     
     private void expectPopulateJsonData() {
@@ -93,8 +102,8 @@ public class TaskActionTest {
     public void testAjaxStoreTask_newTask() {
         taskAction.setStoryId(null);
         taskAction.setIterationId(2);
-        taskAction.setUsersChanged(true);
-        expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
+
+        expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
         expectPopulateJsonData();
         replayAll();
@@ -107,9 +116,8 @@ public class TaskActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testAjaxStoreTask_error() {
         taskAction.setIterationId(2);
-        taskAction.setUsersChanged(true);
         
-        expect(taskBusiness.storeTask(task, 2, null, taskAction.getUserIds()))
+        expect(taskBusiness.storeTask(task, 2, null))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
         replayAll();
         
@@ -119,12 +127,11 @@ public class TaskActionTest {
     }
     
     @Test
-    public void testStoreTask_dontUpdateUsers() {
-        taskAction.setUsersChanged(false);
+    public void testStoreTask_clearUsers() {
+        taskAction.setUsersCleared(true);
         taskAction.setIterationId(2);
-        taskAction.setUserIds(new HashSet<Integer>(Arrays.asList(1,2,3)));
         
-        expect(taskBusiness.storeTask(task, 2, null, null))
+        expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
         
         expectPopulateJsonData();
@@ -132,16 +139,16 @@ public class TaskActionTest {
         replayAll();
         taskAction.store();
         verifyAll();
+        
+        assertEquals(0, task.getResponsibles().size());
     }
     
     @Test
     public void testStoreTask_updateUsers() {
-        taskAction.setUsersChanged(true);
         taskAction.setIterationId(2);
-        Set<Integer> userIds = new HashSet<Integer>(Arrays.asList(1,2,3));
-        taskAction.setUserIds(userIds);
+        task.setResponsibles(Arrays.asList(user1, user2));
         
-        expect(taskBusiness.storeTask(task, 2, null, userIds))
+        expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
         
         expectPopulateJsonData();

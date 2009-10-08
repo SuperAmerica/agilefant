@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 
 @Component("taskAction")
 @Scope("prototype")
@@ -37,9 +40,9 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     
     private Integer iterationId;
     private Integer storyId;
+    private boolean usersCleared = false;
 
-    private Set<Integer> userIds = new HashSet<Integer>();
-    private boolean usersChanged = false;
+    private List<User> oldResponsibles;
 
     // CRUD
     public String create() {
@@ -48,11 +51,22 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     public String store() {
-        Set<Integer> users = null;
-        if (usersChanged) {
-            users = userIds;
+        System.out.println("In store");
+        if (! usersCleared && oldResponsibles != null) {
+            System.out.println("In store2");
+            // set the users again to original value.
+            if (task.getResponsibles().size() == 0) {
+                System.out.println("In store4");
+                task.setResponsibles(oldResponsibles);
+            }
         }
-        task = taskBusiness.storeTask(task, iterationId, storyId, users);
+        else if (usersCleared) {
+            System.out.println("In store3");
+            task.setResponsibles(new ArrayList<User>());
+        }
+        
+        System.out.println("Storing...");
+        task = taskBusiness.storeTask(task, iterationId, storyId);
         populateJsonData();
         return Action.SUCCESS;
     }
@@ -90,7 +104,6 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         Task rankUnder = taskBusiness.retrieveIfExists(rankUnderId);
         
         task = taskBusiness.rankAndMove(task, rankUnder, storyId, iterationId);
-//        task = taskBusiness.rankUnderTask(task, rankUnder);
         
         return Action.SUCCESS;
     }
@@ -103,6 +116,8 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     
     public void initializePrefetchedData(int objectId) {
         task = taskBusiness.retrieve(objectId);
+        oldResponsibles = task.getResponsibles();
+        task.setResponsibles(new ArrayList<User>());
     }
     
       
@@ -119,14 +134,6 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         this.taskBusiness = taskBusiness;
     }
 
-    public Set<Integer> getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(Set<Integer> userIds) {
-        this.userIds = userIds;
-    }
-    
     public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
@@ -144,12 +151,12 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         this.storyId = storyId;
     }
 
-    public boolean isUsersChanged() {
-        return usersChanged;
+    public boolean isUsersCleared() {
+        return usersCleared;
     }
 
-    public void setUsersChanged(boolean usersChanged) {
-        this.usersChanged = usersChanged;
+    public void setUsersCleared(boolean usersCleared) {
+        this.usersCleared = usersCleared;
     }
 
     public void setRankUnderId(int rankUnderId) {

@@ -34,6 +34,6 @@ $(document).ready(function() {
     
     task.addResponsible(223);
     
-    same(1, task.currentData.userIds.length, "User id list length correct");
+    same(1, task.currentData.responsibles.length, "User id list length correct");
   });
 });

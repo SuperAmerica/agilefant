@@ -67,14 +67,13 @@ TaskModel.prototype._saveData = function(id, changedData) {
   var url = "ajax/storeTask.action";
   var data = {};
   
-  if (changedData.usersChanged) {
-    jQuery.extend(data, {userIds: changedData.userIds, usersChanged: true});
-    delete changedData.userIds;
-    delete changedData.usersChanged;
-  }
-  jQuery.extend(data, this.serializeFields("task", changedData));
-  // Add the id
+  data.task = changedData; 
 
+  if (changedData.usersCleared) {
+    delete changedData.usersCleared;
+    data.usersCleared = true;
+  }
+  
   if (id) {
     data.taskId = id;
 
@@ -104,6 +103,8 @@ TaskModel.prototype._saveData = function(id, changedData) {
       data.iterationId = changedData.backlogId;
     }
   }
+  
+  data = HttpParamSerializer.serialize(data); 
   
   jQuery.ajax({
     type: "POST",
@@ -373,9 +374,9 @@ TaskModel.prototype.getStory = function() {
 };
 
 TaskModel.prototype.getResponsibles = function() {
-  if (this.currentData.userIds) {
+  if (this.currentData.responsibles) {
     var users = [];
-    $.each(this.currentData.userIds, function(k, id) {
+    $.each(this.currentData.responsibles, function(k, id) {
       users.push(ModelFactory.getObject(ModelFactory.types.user, id));
     });
     return users;
@@ -402,8 +403,8 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
       ModelFactory.updateObject(v);    
     });
   }
-  this.currentData.userIds = userIds;
-  this.currentData.usersChanged = true;
+  this.currentData.responsibles = userIds;
+  this.currentData.usersCleared = userIds.length == 0;
   this._commitIfNotInTransaction();
 };
 
@@ -429,12 +430,12 @@ TaskModel.prototype.isWorkingOnTask = function(user) {
  * Does not commit the change.
  */
 TaskModel.prototype.addResponsible = function(userId) {
-  if (this.currentData.userIds) {
-    this.currentData.userIds.push(userId);
+  if (this.currentData.responsibles) {
+    this.currentData.responsibles.push(userId);
   }
   else {
-    this.currentData.userIds = [userId];
+    this.currentData.responsibles = [userId];
   }
   
-  this.currentData.usersChanged = true;
+  this.currentData.usersCleared = false;
 };

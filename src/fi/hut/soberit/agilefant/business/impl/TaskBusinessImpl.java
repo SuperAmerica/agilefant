@@ -64,7 +64,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     
     /** {@inheritDoc} */
-    public Task storeTask(Task task, Integer iterationId, Integer storyId, Set<Integer> userIds) {
+    public Task storeTask(Task task, Integer iterationId, Integer storyId) {//, Set<Integer> userIds) {
         Task storedTask = null;
         
         if (task == null) {
@@ -78,7 +78,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
                
         updateEffortLeftAndOriginalEstimate(task);
         
-        populateUserData(task, userIds);
+//        populateUserData(task, userIds);
         
         if (task.getId() == 0) {
             int newTaskId = this.create(task);
@@ -208,20 +208,20 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
      * <p>
      * Will skip not found users.
      */
-    private void populateUserData(Task task, Set<Integer> userIds) {
-        if (userIds == null) return;
-        Set<User> userSet = new HashSet<User>();
-        
-        for (Integer userId : userIds) {
-            User user = userBusiness.retrieveIfExists(userId);
-            if (user != null) {
-                userSet.add(user);
-            }
-        }
-        
-        task.getResponsibles().clear();
-        task.getResponsibles().addAll(userSet);
-    }
+//    private void populateUserData(Task task, Set<Integer> userIds) {
+//        if (userIds == null) return;
+//        Set<User> userSet = new HashSet<User>();
+//        
+//        for (Integer userId : userIds) {
+//            User user = userBusiness.retrieveIfExists(userId);
+//            if (user != null) {
+//                userSet.add(user);
+//            }
+//        }
+//        
+//        task.getResponsibles().clear();
+//        task.getResponsibles().addAll(userSet);
+//    }
 
     public Task resetOriginalEstimate(int taskId) {
         Task task = retrieve(taskId);

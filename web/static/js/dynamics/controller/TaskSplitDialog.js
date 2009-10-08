@@ -264,7 +264,6 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
   config.addColumnConfiguration(5, {
      minWidth : 60,
      autoScale : true,
-     cssClass : 'task-row',
      title : "Responsibles",
      headerTooltip : 'Task responsibles',
      get : TaskModel.prototype.getResponsibles,
@@ -361,7 +360,7 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
   config.addColumnConfiguration(TaskSplitDialog.columnIndices.responsibles, {
      minWidth : 100,
      autoScale : true,
-     cssClass : 'task-row',
+     cssClass : 'projecttask-row',
      title : "Responsibles",
      headerTooltip : 'Task responsibles',
      get : TaskModel.prototype.getResponsibles,

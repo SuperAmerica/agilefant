@@ -28,6 +28,7 @@ DynamicTableRow.prototype.initialize = function() {
   this.element.bind("DynamicsBlur", function() {
     me.hasFocus = false;
   });
+  this.validationManager = new DynamicsValidationManager(this.element, this.config);
 };
 
 DynamicTableRow.prototype.registerEventHandlers = function(config) {

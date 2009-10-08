@@ -63,7 +63,10 @@ TableEditors.CommonEditor.prototype._requestCancel = function() {
   this.close();
 };
 TableEditors.CommonEditor.prototype._requestSave = function() {
-  this.close();
+  //for testing
+  if(this._runValidation()) {
+    this.close();
+  }
 };
 
 TableEditors.CommonEditor.prototype.setEditorValue = function() {};
@@ -90,17 +93,18 @@ TableEditors.CommonEditor.prototype._bindKeyEvents = function(element) {
   });*/
 };
 
-TableEditors.CommonEditor.prototype._onChange = function() {
+TableEditors.CommonEditor.prototype._runValidation = function() {
   var valid = this._validate();
   if (!valid) {
-    // TODO: Trigger DynamicsEvents.InvalidValue
+    this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this, this.errorMessages)]);
   }
   else {
     if (!this.previousValueValid) {
-      // TODO: Trigger DynamicsEvents.ValidValue
+      this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this)]);    
     }
   }
   this.previousValueValid = valid;
+  return valid;
 };
 
 TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {

@@ -45,15 +45,15 @@ $(document).ready(function() {
     ok(editorClosingEvent, "EditorClosing event fired");
   });
   
-  test("CommonEditor on change", function() {
+  test("CommonEditor run validation", function() {
     var editor = new TableEditors.CommonEditor();
     
     var validateCalled = false;
     editor._validate = function() {
       validateCalled = true;
     };
-    
-    editor._onChange($('<div/>'), new CommonModel(), {});
+    editor.element = $('<div />');
+    editor._runValidation();
     
     ok(validateCalled, "Validation called");
   });

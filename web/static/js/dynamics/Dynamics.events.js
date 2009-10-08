@@ -133,17 +133,19 @@ DynamicsEvents.TransactionEditEvent.prototype = new DynamicsEvents.CommonEvent()
  * Fired when editor value is invalid
  * @see DynamicsEvents.ValidationInvalid
  * @base DynamicsEvents.CommonEvent
+ * @param editor Sender
+ * @param messages arrays of validation error messages
  */
-DynamicsEvents.ValidationInvalid = function DynamicsEvents_ValidationInvalid(editor, message) {
+DynamicsEvents.ValidationInvalid = function DynamicsEvents_ValidationInvalid(editor, messages) {
   this.initialize();
   this.type = "validationInvalid";
   this.object = editor;
-  this.message = message;
+  this.messages = messages;
 };
 DynamicsEvents.ValidationInvalid.prototype = new DynamicsEvents.CommonEvent();
 
-DynamicsEvents.ValidationInvalid.prototype.getMessage = function() {
-  return this.message;
+DynamicsEvents.ValidationInvalid.prototype.getMessages = function() {
+  return this.messages;
 };
 
 /**
@@ -151,14 +153,10 @@ DynamicsEvents.ValidationInvalid.prototype.getMessage = function() {
  * @see DynamicsEvents.ValidationValid
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.ValidationValid = function DynamicsEvents_ValidationValid(editor, message) {
+DynamicsEvents.ValidationValid = function DynamicsEvents_ValidationValid(editor) {
   this.initialize();
   this.type = "validationValid";
   this.object = editor;
-  this.message = message;
 };
 DynamicsEvents.ValidationValid.prototype = new DynamicsEvents.CommonEvent();
 
-DynamicsEvents.ValidationValid.prototype.getMessage = function() {
-  return this.message;
-};

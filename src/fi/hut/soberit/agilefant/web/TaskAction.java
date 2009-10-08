@@ -51,21 +51,16 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     public String store() {
-        System.out.println("In store");
         if (! usersCleared && oldResponsibles != null) {
-            System.out.println("In store2");
             // set the users again to original value.
             if (task.getResponsibles().size() == 0) {
-                System.out.println("In store4");
                 task.setResponsibles(oldResponsibles);
             }
         }
         else if (usersCleared) {
-            System.out.println("In store3");
             task.setResponsibles(new ArrayList<User>());
         }
         
-        System.out.println("Storing...");
         task = taskBusiness.storeTask(task, iterationId, storyId);
         populateJsonData();
         return Action.SUCCESS;

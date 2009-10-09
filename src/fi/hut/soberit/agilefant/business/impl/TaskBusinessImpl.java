@@ -13,7 +13,6 @@ import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
-import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
@@ -35,9 +34,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     @Autowired
     private StoryBusiness storyBusiness;
-    
-    @Autowired
-    private UserBusiness userBusiness;
 
     @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
@@ -329,10 +325,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
-    }
-   
-    public void setUserBusiness(UserBusiness userBusiness) {
-        this.userBusiness = userBusiness;
     }
 
     public void setIterationHistoryEntryBusiness(

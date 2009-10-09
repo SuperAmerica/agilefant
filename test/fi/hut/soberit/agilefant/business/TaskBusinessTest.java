@@ -37,7 +37,6 @@ public class TaskBusinessTest {
     private IterationBusiness iterationBusiness;
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness; 
     private StoryBusiness storyBusiness;
-    private UserBusiness userBusiness;
     private TaskDAO taskDAO;
     private RankingBusiness rankingBusiness;
     
@@ -58,9 +57,6 @@ public class TaskBusinessTest {
         storyBusiness = createStrictMock(StoryBusiness.class);
         taskBusiness.setStoryBusiness(storyBusiness);
         
-        userBusiness = createMock(UserBusiness.class);
-        taskBusiness.setUserBusiness(userBusiness);
-        
         iterationHistoryEntryBusiness = createStrictMock(IterationHistoryEntryBusiness.class);
         taskBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
         
@@ -72,11 +68,11 @@ public class TaskBusinessTest {
     }
     
     private void replayAll() {
-        replay(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
+        replay(taskDAO, iterationBusiness, storyBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
     }
     
     private void verifyAll() {
-        verify(taskDAO, iterationBusiness, storyBusiness, userBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
+        verify(taskDAO, iterationBusiness, storyBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
     }
     
     @Before

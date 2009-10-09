@@ -124,6 +124,13 @@ TaskController.prototype.openDetails = function() {
   alert("Not implemented.");
 };
 
+TaskController.prototype.createSplitTask = function() {
+    var parentController = this.parentController;
+    var dialog = new TaskSplitDialog(this.model, function() {
+        parentController.model.reload();
+    });
+};
+
 TaskController.prototype.actionColumnFactory = function(view, model) {
   var actionItems = [ {
     text: "Details",
@@ -132,6 +139,9 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     text : "Edit",
     callback : TaskController.prototype.editTask,
     enabled : function () { return ! this.model.isInTransaction(); }
+  }, {
+      text : "Split",
+      callback : TaskController.prototype.createSplitTask
   }, {
     text : "Append to my work queue",
     callback : TaskController.prototype.addToMyWorkQueue,

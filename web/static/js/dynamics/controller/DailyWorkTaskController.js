@@ -73,14 +73,6 @@ DailyWorkTaskController.prototype.cssClassResolver = function() {
   return [];
 };
 
-DailyWorkTaskController.prototype.createSplitTask = function() {
-    var parentController = this.parentController;
-    var dialog = new TaskSplitDialog(this.model, function() {
-        var controller = parentController;
-        controller.reload();
-    });
-};
-
 DailyWorkTaskController.prototype.queuedTaskActionColumnFactory = function(view, model) {
     var items = [
      {
@@ -120,12 +112,12 @@ DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(vie
         text: "Details",
         callback : TaskController.prototype.openDetails
       }, {
-          text : "Split",
-          callback : DailyWorkTaskController.prototype.createSplitTask
-      }, {
         text : "Edit",
         callback : TaskController.prototype.editTask,
         enabled : function () { return ! this.model.isInTransaction(); }
+      }, {
+          text : "Split",
+          callback : TaskController.prototype.createSplitTask
       }, {
         text : "Append to my work queue",
         callback : TaskController.prototype.addToMyWorkQueue,

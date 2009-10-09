@@ -1,9 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -40,9 +38,12 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     
     private Integer iterationId;
     private Integer storyId;
-    private boolean usersCleared = false;
+    private boolean    responsiblesChanged = false;
+    public void setResponsiblesChanged(boolean responsiblesChanged) {
+        this.responsiblesChanged = responsiblesChanged;
+    }
 
-    private List<User> oldResponsibles;
+    private List<User> newResponsibles = new ArrayList<User>();
 
     // CRUD
     public String create() {
@@ -51,14 +52,8 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     public String store() {
-        if (! usersCleared && oldResponsibles != null) {
-            // set the users again to original value.
-            if (task.getResponsibles().size() == 0) {
-                task.setResponsibles(oldResponsibles);
-            }
-        }
-        else if (usersCleared) {
-            task.setResponsibles(new ArrayList<User>());
+        if (responsiblesChanged) {
+            task.setResponsibles(newResponsibles);
         }
         
         task = taskBusiness.storeTask(task, iterationId, storyId);
@@ -108,11 +103,8 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
         
     // Prefetching
-    
     public void initializePrefetchedData(int objectId) {
         task = taskBusiness.retrieve(objectId);
-        oldResponsibles = task.getResponsibles();
-        task.setResponsibles(new ArrayList<User>());
     }
     
       
@@ -145,13 +137,13 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     public void setStoryId(Integer storyId) {
         this.storyId = storyId;
     }
-
-    public boolean isUsersCleared() {
-        return usersCleared;
+    
+    public List<User> getNewResponsibles() {
+        return this.newResponsibles;
     }
 
-    public void setUsersCleared(boolean usersCleared) {
-        this.usersCleared = usersCleared;
+    public void setNewResponsibles(List<User> newResponsibles) {
+        this.newResponsibles = new ArrayList<User>(newResponsibles);
     }
 
     public void setRankUnderId(int rankUnderId) {

@@ -69,9 +69,11 @@ TaskModel.prototype._saveData = function(id, changedData) {
   
   data.task = changedData; 
 
-  if (changedData.usersCleared) {
-    delete changedData.usersCleared;
-    data.usersCleared = true;
+  if (changedData.responsiblesChanged) {
+    data.responsiblesChanged = true;
+    data.newResponsibles     = changedData.responsibles;
+    delete changedData.responsiblesChanged;
+    delete changedData.responsibles;
   }
   
   if (id) {
@@ -404,7 +406,7 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
     });
   }
   this.currentData.responsibles = userIds;
-  this.currentData.usersCleared = userIds.length == 0;
+  this.currentData.responsiblesChanged = true;
   this._commitIfNotInTransaction();
 };
 
@@ -437,5 +439,5 @@ TaskModel.prototype.addResponsible = function(userId) {
     this.currentData.responsibles = [userId];
   }
   
-  this.currentData.usersCleared = false;
+  this.currentData.responsiblesChanged = true;
 };

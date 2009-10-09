@@ -3,10 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
@@ -29,8 +26,8 @@ public class TaskActionTest {
     private TaskBusiness taskBusiness;
     private TransferObjectBusiness transferObjectBusiness;
     private Task task;
-    private User user1;
     private User user2;
+    private User user1;
     
     @Before
     public void setUp_dependencies() {
@@ -39,8 +36,10 @@ public class TaskActionTest {
         
         taskBusiness = createMock(TaskBusiness.class);
         taskAction.setTaskBusiness(taskBusiness);
+        
         user1 = new User();
         user1.setId(1);
+        
         user2 = new User();
         user2.setId(2);
     }
@@ -59,7 +58,6 @@ public class TaskActionTest {
         task.setId(444);
         taskAction.setTask(task);
         taskAction.setTaskId(task.getId());
-        task.setResponsibles(Arrays.asList(user1));
     }
     
     private void expectPopulateJsonData() {
@@ -102,7 +100,7 @@ public class TaskActionTest {
     public void testAjaxStoreTask_newTask() {
         taskAction.setStoryId(null);
         taskAction.setIterationId(2);
-
+        taskAction.setResponsiblesChanged(true);
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
         expectPopulateJsonData();
@@ -116,6 +114,7 @@ public class TaskActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testAjaxStoreTask_error() {
         taskAction.setIterationId(2);
+        taskAction.setResponsiblesChanged(true);
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
@@ -127,9 +126,10 @@ public class TaskActionTest {
     }
     
     @Test
-    public void testStoreTask_clearUsers() {
-        taskAction.setUsersCleared(true);
+    public void testStoreTask_dontUpdateUsers() {
+        taskAction.setResponsiblesChanged(false);
         taskAction.setIterationId(2);
+        taskAction.setNewResponsibles(Arrays.asList(user1, user2));
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
@@ -145,8 +145,9 @@ public class TaskActionTest {
     
     @Test
     public void testStoreTask_updateUsers() {
+        taskAction.setResponsiblesChanged(true);
         taskAction.setIterationId(2);
-        task.setResponsibles(Arrays.asList(user1, user2));
+        taskAction.setNewResponsibles(Arrays.asList(user1, user2));
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
@@ -156,6 +157,8 @@ public class TaskActionTest {
         replayAll();
         taskAction.store();
         verifyAll();
+        
+        assertEquals(2, task.getResponsibles().size());
     }
     
     /*

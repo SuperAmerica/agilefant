@@ -8,6 +8,8 @@
  *
  * Date: 2009-02-19 17:34:21 -0500 (Thu, 19 Feb 2009)
  * Revision: 6246
+ * 
+ * Changes incorporated from the jQuery nightly 8.10.2009
  */
 (function(){
 
@@ -2440,9 +2442,10 @@ jQuery.event = {
 
 		// For whatever reason, IE has trouble passing the window object
 		// around, causing it to be cloned in the process
-		if ( elem.setInterval && elem != window )
+	  // team agilefant: window may be a frame window
+		if ( elem.setInterval && ( elem !== window && !elem.frameElement ) ) 
 			elem = window;
-
+			
 		// Make sure that the function being executed has a unique ID
 		if ( !handler.guid )
 			handler.guid = this.guid++;

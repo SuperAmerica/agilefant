@@ -59,14 +59,11 @@ TableEditors.CommonEditor.prototype.close = function() {
 };
 
 TableEditors.CommonEditor.prototype._requestCancel = function() {
-  // WRONG, should call ValidationManager
-  this.close();
+  this.element.trigger("cancelRequested", [this]);
 };
 TableEditors.CommonEditor.prototype._requestSave = function() {
-  //for testing
-  if(this._runValidation()) {
-    this.close();
-  }
+  this._runValidation();
+  this.element.trigger("storeRequested", [this]);
 };
 
 TableEditors.CommonEditor.prototype.setEditorValue = function() {};
@@ -76,6 +73,11 @@ TableEditors.CommonEditor.prototype.addErrorMessage = function(message) {
 TableEditors.CommonEditor.prototype._validate = function() {
   return true;
 };
+
+TableEditors.CommonEditor.prototype.isFocused = function() {
+  return this.focused;
+};
+
 /**
  * Change event listener.
  */
@@ -84,23 +86,29 @@ TableEditors.CommonEditor.prototype._bindKeyEvents = function(element) {
   element.keydown(function(event) {
     me._handleKeyEvent(event);
     return true;
-  });/*
-  this.element.blur(function(event) {
-    me._blurHandler(event);
   });
-  this.element.focus(function() {
-    me._focusHandler();
-  });*/
+  element.blur(function(event) {
+    me.element.trigger("DynamicsBlur");
+    me._runValidation();
+    me.focused = false;
+  });
+  element.focus(function() {
+    me.element.trigger("DynamicsFocus");
+    me.focused = true;
+  });
 };
 
 TableEditors.CommonEditor.prototype._runValidation = function() {
+  this.errorMessages = [];
+  console.log("run validation");
   var valid = this._validate();
+  console.log("valid : " + valid);
   if (!valid) {
-    this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this, this.errorMessages)]);
+    this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this.options.fieldName, this.errorMessages)]);
   }
   else {
     if (!this.previousValueValid) {
-      this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this)]);    
+      this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this.options.fieldName)]);    
     }
   }
   this.previousValueValid = valid;
@@ -438,6 +446,9 @@ TableEditors.Date.prototype._validate = function() {
   }
   var value = jQuery.trim(this.textField.val());
   var valid = pattern.test(value);
+  if(!valid) {
+    this.addErrorMessage(errorMessage);
+  }
   return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
 };
 
@@ -555,19 +566,26 @@ TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
   var me = this;
   this.actualElement = $('<textarea></textarea>').appendTo(element);
   this.actualElement.width(this.options.width).height(this.options.height);
-  setUpWysiwyg(this.actualElement);
+  this.actualElement.wysiwyg();
   this.wysiwyg = this._getEditorWindow();
   
   this.actualElement.trigger("editorOpening");
   this.actualElement.addClass("tableSortListener");
+  this.resetEditor();
   this.actualElement.bind("tableSorted", function() {
     if (!me.isFocused()) {
       me.actualElement.wysiwyg("resetFrame");
       me.wysiwyg = me._getEditorWindow();
-      me._registerEvents();
+      me.resetEditor();
       me.actualElement.focus();
     }
   });
+  
+};
+TableEditors.Wysiwyg.prototype.resetEditor = function() {
+  var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
+  var frameWindow = $(iframeElement.contentWindow);
+  this._bindKeyEvents(frameWindow);
 };
 
 TableEditors.Wysiwyg.prototype._getEditorWindow = function() {
@@ -580,9 +598,6 @@ TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
   this.actualElement.wysiwyg("setValue", value);
 };
 
-TableEditors.Wysiwyg.prototype.getEditorValue = function() {
-  return this.actualElement.val();
-};
 
 TableEditors.Wysiwyg.prototype.focus = function() {
   this.actualElement.focus();
@@ -593,29 +608,6 @@ TableEditors.Wysiwyg.prototype.close = function() {
   this.actualElement.trigger("editorClosing");
   this.actualElement.wysiwyg("remove");
   this.actualElement.remove();
-};
-TableEditors.Wysiwyg.prototype._registerEvents = function() {
-  var me = this;
-  this.wysiwyg.keydown(function(event) {
-    me._handleKeyEvent(event);
-    return true;
-  });
-  var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
-  var frameWindow = iframeElement.contentWindow;
-  // jQuery doesn't allow binding event handlers for other
-  // window objects than the main window
-  // also, events must be added manually, because design mode
-  // prevents all events within the editor window
-  frameWindow.addEventListener("focus", function() {
-    if (!me.isFocused()) {
-      me._focusHandler();
-    }
-  }, true);
-  frameWindow.addEventListener("blur", function() {
-    if (me.isFocused()) {
-      me._blurHandler();
-    }
-  }, true);
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
   if (event.keyCode === 27 && !this.options.editRow) {

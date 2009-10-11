@@ -540,7 +540,7 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
     this.header.show();
   }
   row.init(controller, model, this);
-  row.registerEventHandlers(this.config);
+  row.registerValidationManager(this.config);
   
   var rowCssCallback = this.config.getCssClassResolver();
   if (rowCssCallback) {
@@ -654,6 +654,7 @@ var DynamicVerticalTable = function(controller, model, config, parentView) {
   this.config = config;
   this.rows = [];
   this.initialize();
+  this.validationManager = new DynamicsValidationManager(this.element, this.config, this.getModel(), this.getController());
 };
 DynamicVerticalTable.prototype = new DynamicView();
 

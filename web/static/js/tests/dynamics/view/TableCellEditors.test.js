@@ -1,4 +1,22 @@
 $(document).ready(function() {
+  function testBlurAndFocus(editor, element, editorElement) {
+    var blurCaptured = 0;
+    var focusCaptured = 0;
+    element.bind("DynamicsFocus", function() {
+      focusCaptured++;
+    });
+    element.bind("DynamicsBlur", function() {
+      blurCaptured++;
+    });
+    editorElement.focus();
+    equals(focusCaptured, 1, "DynamicsFocus fired");
+    ok(editor.isFocused(), "Editor remembers focused state");
+    
+    editorElement.blur();
+    equals(blurCaptured, 1, "Dynamics blur fired");
+    ok(!editor.isFocused(), "Editor remembers focus state");
+  }
+  
   module("Dynamics: DynamicCellEditors", {
     setup : function() {
       this.mockControl = new MockControl();
@@ -6,10 +24,11 @@ $(document).ready(function() {
       };
       this.mockableCell.prototype = DynamicTableCell.prototype;
       this.cell = this.mockControl.createMock(this.mockableCell);
-      this.elementMock = this.mockControl.createMock(jQuery);
+      this.element = $('<div />').appendTo(document.body);
     },
     teardown : function() {
       this.mockControl.verify();
+      this.element.remove();
     }
   });
   
@@ -160,6 +179,12 @@ $(document).ready(function() {
     TableEditors.CommonEditor.prototype.init = originalCommon;
   });
   
+  test("TextEditor - events", function() {
+    var editor = new TableEditors.Text(this.element, null, {});
+    var input = this.element.find("input");
+    testBlurAndFocus(editor, this.element, input);
+  });
+  
   
   /*
    * DATE EDITOR
@@ -220,6 +245,12 @@ $(document).ready(function() {
     
     ok(!TableEditors.Date.prototype._validate.call(context), "2001-1-1 1:1 invalid");
     ok(!TableEditors.Date.prototype._validate.call(context), "2001-10-10 xx:yy invalid");
+  });
+  
+  test("Date - events", function() {
+    var editor = new TableEditors.Date(this.element, null, {});
+    var input = this.element.find("input");
+    testBlurAndFocus(editor, this.element, input);
   });
   
   
@@ -283,6 +314,11 @@ $(document).ready(function() {
     
     same(errorMessageCount, 6, "Six error messages");
   });
+  test("Email - events", function() {
+    var editor = new TableEditors.Email(this.element, null, {});
+    var input = this.element.find("input");
+    testBlurAndFocus(editor, this.element, input);
+  });
   
   
   test("Number validation", function() {
@@ -333,28 +369,24 @@ $(document).ready(function() {
     
     same(errorMessageCount, 6, "Six error messages");
   });
-  
-  /*
-  test("register events", function() {
-    var testable = new TableEditors.CommonEditor();
-    testable.cell = this.cell;
-    testable.element = this.elementMock;
-    testable.options = {};
-    
-    this.elementMock.expects().keydown(TypeOf.isA(Function)).andReturn(this.elementMock);
-    this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
-    this.elementMock.expects().focus(TypeOf.isA(Function)).andReturn(this.elementMock);
-//    this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
-    testable._registerEvents();
-    
-    this.elementMock.expects().keydown(TypeOf.isA(Function));
-    this.elementMock.expects().blur(TypeOf.isA(Function)).andReturn(this.elementMock);
-    this.elementMock.expects().focus(TypeOf.isA(Function)).andReturn(this.elementMock);
-    testable.options = {editRow: true};
-    testable._registerEvents();
-    ok(true, "Events registered"); //verify only mock calls
+  test("Number - events", function() {
+    var editor = new TableEditors.Number(this.element, null, {});
+    var input = this.element.find("input");
+    testBlurAndFocus(editor, this.element, input);
   });
   
+  
+  /**
+   * WYSIWYG EDITOR
+   */
+  
+  test("Wysiwyg - events", function() {
+    var editor = new TableEditors.Wysiwyg(this.element, null, {});
+    var input = $(this.element.find("iframe")[0].contentWindow);
+    testBlurAndFocus(editor, this.element, input);
+  });
+  
+  /*
   test("handle events", function() {
     var testObj = this.mockControl.createMock(TableEditors.CommonEditor);
     testObj.options = {};

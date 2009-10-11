@@ -143,6 +143,7 @@ DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
   }
   
   var editorName = editorOptions.editor;
+  editorOptions.fieldName = this.config.getTitle();
   
   var EditorClass = TableEditors.getEditorClassByName(editorName);
   if(EditorClass && this.config.getEditableCallback().call(this.row.getController())) {

@@ -28,17 +28,10 @@ DynamicTableRow.prototype.initialize = function() {
   this.element.bind("DynamicsBlur", function() {
     me.hasFocus = false;
   });
-  this.validationManager = new DynamicsValidationManager(this.element, this.config);
 };
 
-DynamicTableRow.prototype.registerEventHandlers = function(config) {
-  var me = this;
-  this.element.bind("storeRequested", function() {
-    config.getSaveRowCallback().call(me.getController());
-  });
-  this.element.bind("cancelEdit", function() {
-    config.getCancelEditRowCallback().call(me.getController());
-  });
+DynamicTableRow.prototype.registerValidationManager = function(config) {
+  this.validationManager = new DynamicsValidationManager(this.element, this.config, this.model, config);
 };
 
 DynamicTableRow.prototype.isFocused = function() {

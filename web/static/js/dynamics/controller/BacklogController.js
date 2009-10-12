@@ -35,7 +35,6 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
       {
         rowControllerFactory : BacklogController.prototype.assignmentControllerFactory,
         dataSource : BacklogModel.prototype.getAssignments,
-        saveRowCallback : BacklogController.prototype.saveAssigment,
         caption : "Assignees"
       });
 

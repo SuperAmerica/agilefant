@@ -31,9 +31,9 @@ var DynamicTableColumnConfiguration = function DynamicTableColumnConfiguration(o
 				items: null,
 				set: function() {},
 				editor: null,
-				buttons: null,
-				required: false,
-				minlength: null
+				buttons: null
+				//required: false,
+				//minlength: null
 			}
 	};
 	$.extend(this.options,options);
@@ -173,10 +173,10 @@ var DynamicTableConfiguration = function(options) {
 			alwaysDrop: false,
 			caption: null,
 			captionStyles: null,
-			saveRowCallback: function() {},
-			cancelEditRowCallback: function() {},
+			closeRowCallback: CommonController.prototype.closeRowEdit,
 			sortCallback: null,
 			editableCallback: function() { return true; },
+	    validators: [ ],
 			sortOptions: {
 			  items: "> div.dynamicTableDataRow",
 	      handle: "div." + DynamicTable.cssClasses.dragHandle
@@ -186,11 +186,8 @@ var DynamicTableConfiguration = function(options) {
 	jQuery.extend(this.captionConfig, this.options.captionConfig);
 };
 
-DynamicTableConfiguration.prototype.getSaveRowCallback = function() {
-  return this.options.saveRowCallback;
-};
-DynamicTableConfiguration.prototype.getCancelEditRowCallback = function() {
-  return this.options.cancelEditRowCallback;
+DynamicTableConfiguration.prototype.getCloseRowCallback = function() {
+  return this.options.closeRowCallback;
 };
 DynamicTableConfiguration.prototype.getRowControllerFactory = function() {
 	return this.options.rowControllerFactory;

@@ -84,7 +84,6 @@ TeamModel.prototype.getName = function() {
 
 TeamModel.prototype.setName = function(name) {
   this.currentData.name = name;
-  this._commitIfNotInTransaction();
 };
 
 TeamModel.prototype.getUsers = function() {
@@ -106,6 +105,5 @@ TeamModel.prototype.setUsers = function(userIds, userJson) {
   }
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
-  this._commitIfNotInTransaction();
 };
 

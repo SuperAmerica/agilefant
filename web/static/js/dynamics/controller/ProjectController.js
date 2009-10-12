@@ -235,7 +235,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var ongoingConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getOngoingIterations,
-    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Ongoing Iterations",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -259,7 +258,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var pastConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getPastIterations,
-    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Past Iterations",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -277,7 +275,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var futureConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getFutureIterations,
-    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Future Iterations",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -405,7 +402,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
     dataSource : ProjectModel.prototype.getStories,
-    saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     sortOptions: {
       items: "> div.dynamicTableDataRow",

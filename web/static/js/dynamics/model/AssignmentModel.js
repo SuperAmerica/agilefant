@@ -84,12 +84,10 @@ AssignmentModel.prototype.getAvailability = function() {
 
 AssignmentModel.prototype.setPersonalLoad = function(personalLoad) {
   this.currentData.personalLoad = personalLoad;
-  this._commitIfNotInTransaction();
 };
 
 AssignmentModel.prototype.setAvailability = function(availability) {
   this.currentData.availability = availability;
-  this._commitIfNotInTransaction();
 };
 
 AssignmentModel.prototype.getUser = function() {

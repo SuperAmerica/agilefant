@@ -3,6 +3,7 @@ var StoryController = function StoryController(model, view, backlogController) {
   this.view = view;
   this.parentController = backlogController;
   this.init();
+  this.autohideColumns = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons, StoryController.columnIndices.tasksData ]; 
 };
 
 StoryController.columnIndices = {
@@ -33,15 +34,6 @@ StoryController.prototype.removeStory = function() {
   });
 };
 
-/**
- * 
- */
-StoryController.prototype.editStory = function() {
-  this.model.setInTransaction(true);
-  this.view.getCell(StoryController.columnIndices.description).show();
-  this.view.getCell(StoryController.columnIndices.buttons).show();
-  this.view.editRow();
-};
 
 StoryController.prototype.editDescription = function() {
   var descriptionCell = this.view.getCell(StoryController.columnIndices.description);
@@ -57,34 +49,6 @@ StoryController.prototype.editDescription = function() {
   });
 };
 
-StoryController.prototype.saveStory = function() {
-  var createNewStory = !this.model.getId();
-  if(this.view.saveRowEdit()) {
-    this.model.commit();
-  }
-  else {
-    return;
-  }
-  if(createNewStory) {
-    this.view.remove();
-    return;
-  }
-  this.view.getCell(StoryController.columnIndices.description).hide();
-  this.view.getCell(StoryController.columnIndices.buttons).hide();
-};
-
-StoryController.prototype.cancelEdit = function() {
-  var createNewStory = !this.model.getId();
-  if(createNewStory) {
-    this.view.remove();
-    return;
-  }
-  this.model.setInTransaction(false);
-  this.view.closeRowEdit();
-  this.view.getCell(StoryController.columnIndices.description).hide();
-  this.view.getCell(StoryController.columnIndices.buttons).hide();
-  this.model.rollback();
-};
 /**
  * 
  */
@@ -259,13 +223,6 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
   return this.toggleView;
 };
 
-StoryController.prototype.storyButtonFactory = function(view, model) {
-  return new DynamicsButtons(this,[{text: 'Save', callback: StoryController.prototype.saveStory},
-                                   {text: 'Cancel', callback: StoryController.prototype.cancelEdit}
-                                   ] ,view);
-};
-
-
 /**
  * 
  */
@@ -275,7 +232,7 @@ StoryController.prototype.storyActionFactory = function(view, model) {
     callback : StoryController.prototype.openDetails
   },{
     text : "Edit",
-    callback : StoryController.prototype.editStory
+    callback : CommonController.prototype.openRowEdit
   }, {
     text : "Move",
     callback : StoryController.prototype.moveStory
@@ -337,7 +294,6 @@ StoryController.prototype.storyPointsEditable = function() {
     cssClass: "dynamicTable-sortable-tasklist",
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
     dataSource : StoryModel.prototype.getTasks,
-    saveRowCallback: TaskController.prototype.saveTask,
     caption: "Tasks",
     sortCallback: TaskController.prototype.sortAndMoveTask,
     cssClass: "corner-border",
@@ -474,7 +430,7 @@ StoryController.prototype.storyPointsEditable = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'task-row',
-    subViewFactory : TaskController.prototype.taskButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(TaskController.columnIndices.data, {
     fullWidth : true,

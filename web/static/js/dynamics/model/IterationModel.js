@@ -157,7 +157,6 @@ IterationModel.prototype.getName = function() {
 
 IterationModel.prototype.setName = function(name) {
   this.currentData.name = name;
-  this._commitIfNotInTransaction();
 };
 
 IterationModel.prototype.getDescription = function() {
@@ -166,7 +165,6 @@ IterationModel.prototype.getDescription = function() {
 
 IterationModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
-  this._commitIfNotInTransaction();
 };
 
 IterationModel.prototype.getParent = function() {
@@ -186,7 +184,6 @@ IterationModel.prototype.getStartDate = function() {
 
 IterationModel.prototype.setStartDate = function(startDate) {
   this.currentData.startDate = startDate;
-  this._commitIfNotInTransaction();
 };
 
 IterationModel.prototype.getEndDate = function() {
@@ -195,7 +192,6 @@ IterationModel.prototype.getEndDate = function() {
 
 IterationModel.prototype.setEndDate = function(endDate) {
   this.currentData.endDate = endDate;
-  this._commitIfNotInTransaction();
 };
 
 IterationModel.prototype.getBacklogSize = function() {
@@ -204,7 +200,6 @@ IterationModel.prototype.getBacklogSize = function() {
 
 IterationModel.prototype.setBacklogSize = function(backlogSize) {
   this.currentData.backlogSize = backlogSize;
-  this._commitIfNotInTransaction();
 };
 
 IterationModel.prototype.getBaselineLoad = function() {
@@ -213,5 +208,4 @@ IterationModel.prototype.getBaselineLoad = function() {
 
 IterationModel.prototype.setBaselineLoad = function(baselineLoad) {
   this.currentData.baselineLoad = baselineLoad;
-  this._commitIfNotInTransaction();
 };

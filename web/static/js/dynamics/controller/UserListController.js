@@ -64,7 +64,6 @@ UserListController.prototype.initConfig = function() {
     caption: "Enabled users",
     dataSource: UserListContainer.prototype.getEnabledUsers,
     rowControllerFactory: UserListController.prototype.userControllerFactory,
-    saveRowCallback: UserRowController.prototype.saveUser,
     cssClass: "ui-widget-content ui-corner-all",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -81,7 +80,6 @@ UserListController.prototype.initConfig = function() {
     caption: "Disabled users",
     dataSource: UserListContainer.prototype.getDisabledUsers,
     rowControllerFactory: UserListController.prototype.userControllerFactory,
-    saveRowCallback: UserRowController.prototype.saveUser,
     cssClass: "ui-widget-content ui-corner-all",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"

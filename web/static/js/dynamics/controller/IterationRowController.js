@@ -11,6 +11,7 @@ var IterationRowController = function IterationRowController(model, view, backlo
   this.view = view;
   this.parentController = backlogController;
   this.init();
+  this.autohideColumns = [ IterationRowController.columnIndices.description, IterationRowController.columnIndices.buttons, IterationRowController.columnIndices.storiesData ];
 };
 IterationRowController.prototype = new BacklogController();
 
@@ -35,11 +36,8 @@ IterationRowController.columnIndices = {
 IterationRowController.prototype.iterationActionFactory = function(view, model) {
   var actionItems = [ {
     text : "Edit",
-    callback : IterationRowController.prototype.editIteration
-  }/*, {
-    text : "Move",
-    callback : IterationRowController.prototype.moveIteration
-  }*/, {
+    callback : CommonController.prototype.openRowEdit
+  }, {
     text : "Delete",
     callback : IterationRowController.prototype.removeIteration
   } ];
@@ -57,13 +55,6 @@ IterationRowController.prototype.storyControllerFactory = function(view, model) 
 IterationRowController.prototype.rowContentsFactory = function(view, model) { 
   this.storyListView = new DynamicTable(this, this.model, IterationRowController.storyListConfig, view); 
   return this.storyListView;
-};
-
-
-IterationRowController.prototype.iterationButtonFactory = function(view, model) {
-  return new DynamicsButtons(this,[{text: 'Save', callback: IterationRowController.prototype.saveIteration},
-                                   {text: 'Cancel', callback: IterationRowController.prototype.cancelEdit}
-                                   ] ,view);
 };
 
 /**
@@ -103,43 +94,6 @@ IterationRowController.prototype.hideDetails = function() {
 };
 
 
-IterationRowController.prototype.editIteration = function() {
-  this.model.setInTransaction(true);
-  this.view.getCell(IterationRowController.columnIndices.description).show();
-  this.view.getCell(IterationRowController.columnIndices.buttons).show();
-  this.view.editRow();
-};
-
-IterationRowController.prototype.saveIteration = function() {
-  var createNew = !this.model.getId();
-  if(this.view.saveRowEdit()) {
-    this.model.commit();
-  }
-  else {
-    return;
-  }
-  if(createNew) {
-    this.view.remove();
-    return;
-  }
-  this.view.getCell(IterationRowController.columnIndices.description).hide();
-  this.view.getCell(IterationRowController.columnIndices.buttons).hide();
-};
-
-
-IterationRowController.prototype.cancelEdit = function() {
-  var createNew = !this.model.getId();
-  if(createNew) {
-    this.view.remove();
-    return;
-  }
-  this.model.setInTransaction(false);
-  this.view.closeRowEdit();
-  this.view.getCell(IterationRowController.columnIndices.description).hide();
-  this.view.getCell(IterationRowController.columnIndices.buttons).hide();
-  this.model.rollback();
-};
-
 IterationRowController.prototype.acceptsDroppable = function(model) {
   return (model instanceof StoryModel);
 };
@@ -163,7 +117,6 @@ IterationRowController.prototype.createStory = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : IterationRowController.prototype.storyControllerFactory,
     dataSource : IterationModel.prototype.getStories,
-    saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
     cssClass: "dynamictable-iteration-storylist",
@@ -275,7 +228,7 @@ IterationRowController.prototype.createStory = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'story-data',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   IterationRowController.storyListConfig = config;
 })();

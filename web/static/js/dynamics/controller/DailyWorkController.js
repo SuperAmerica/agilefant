@@ -287,7 +287,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         fullWidth : true,
         visible : false,
         cssClass : 'task-row',
-        subViewFactory : TaskController.prototype.taskButtonFactory
+        subViewFactory : DynamicsButtons.prototype.commonButtonFactory
     });
     
     return config;

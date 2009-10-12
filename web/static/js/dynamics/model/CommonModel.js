@@ -18,7 +18,6 @@ CommonModel.prototype.initialize = function() {
   this.persistedData = {};
   this.transientData = {};
   this.classNameToRelation = {};
-  this.inTransaction = false;
 };
 
 
@@ -60,9 +59,7 @@ CommonModel.prototype._copyFields = function(newData) {
       data[ownField] = newData[field];
     }
   }
-  if (!this.inTransaction) {
-    jQuery.extend(this.currentData, data);
-  }
+  jQuery.extend(this.currentData, data);
   jQuery.extend(this.persistedData, data);
 };
 
@@ -261,7 +258,6 @@ CommonModel.prototype.callListeners = function(event) {
  * Loops through the fields and submits the changed ones.
  */
 CommonModel.prototype.commit = function() {
-  this.inTransaction = false;
   var changedData = this.getChangedData();
   this._saveData(this.getId(), changedData);
 };
@@ -282,20 +278,6 @@ CommonModel.prototype.getChangedData = function() {
     }
   }
   return changedData;
-};
-
-/**
- * Internal function for committing the changes, if not in transaction mode.
- * <p>
- * Used by model objects' setters.
- */
-CommonModel.prototype._commitIfNotInTransaction = function() {
-  if (!this.inTransaction) {
-    this.commit();
-  }
-  else {
-    this.callListeners(new DynamicsEvents.TransactionEditEvent(this));
-  }
 };
 
 /**
@@ -353,14 +335,6 @@ CommonModel.prototype.getId = function() {
 };
 CommonModel.prototype.setId = function(id) {
   this.id = id;
-};
-
-
-CommonModel.prototype.isInTransaction = function() {
-  return this.inTransaction;
-};
-CommonModel.prototype.setInTransaction = function(val) {
-  this.inTransaction = val;
 };
 
 CommonModel.prototype.serializeFields = function(prefix, changedData) {

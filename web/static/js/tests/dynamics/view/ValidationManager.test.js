@@ -8,7 +8,7 @@ $(document).ready(function() {
     }
   });
   test("is valid - field error", function() {
-    var validationManager = new DynamicsValidationManager(this.element, null);
+    var validationManager = new DynamicsValidationManager(this.element, { options: { validators: [] }});
     equals(validationManager.isValid(), true, "field validation works");
     var sender = "field";
     var dynEvent = new DynamicsEvents.ValidationInvalid(sender, ["Invalid value"]);
@@ -24,7 +24,9 @@ $(document).ready(function() {
       return false;
     };
     var options = {
-        validators: [validatorfunc]
+      options: {
+          validators: [validatorfunc]
+      }
     };
     var validationManager = new DynamicsValidationManager(this.element, options, model);
     equals(validationManager.isValid(), false, "field validation works");
@@ -100,7 +102,9 @@ $(document).ready(function() {
       }
     };
     var options = {
+      options: {
         validators: [validatorfunc]
+      }
     };
     var validationManager = new DynamicsValidationManager(this.element, options, model);
     validationManager.isValid();

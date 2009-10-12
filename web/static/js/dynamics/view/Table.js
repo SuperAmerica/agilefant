@@ -709,14 +709,6 @@ DynamicVerticalTable.prototype.openFullEdit = function() {
   this._applyToAllRows(DynamicTableRow.prototype.editRow, []);
 };
 
-DynamicVerticalTable.prototype.isFullEditValid = function() {
-  return this._applyToAllRows(DynamicTableRow.prototype.isRowValid, []);
-};
-
-DynamicVerticalTable.prototype.saveFullEdit = function() {
-  return this._applyToAllRows(DynamicTableRow.prototype.saveRowEdit, []);
-};
-
 DynamicVerticalTable.prototype._applyToAllRows = function(command, args) {
   var retVal = true;
   for (var i = 0; i < this.rows.length; i++) {
@@ -731,4 +723,8 @@ DynamicVerticalTable.prototype.onEdit = function() {
 };
 DynamicVerticalTable.prototype.onDelete = function() {
   this.container.remove();
+};
+
+DynamicVerticalTable.prototype.getValidationManager = function() {
+  return this.validationManager;
 };

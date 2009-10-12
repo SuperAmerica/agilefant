@@ -145,7 +145,6 @@ ProductController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProductController.prototype.storyControllerFactory,
     dataSource : ProductModel.prototype.getStories,
-    saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
     captionConfig: {
@@ -292,7 +291,6 @@ ProductController.prototype.initializeProjectListConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProductController.prototype.projectRowControllerFactory,
     dataSource : ProductModel.prototype.getProjects,
-    saveRowCallback: ProjectRowController.prototype.saveProject,
     caption : "Projects",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"

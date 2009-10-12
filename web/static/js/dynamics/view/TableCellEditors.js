@@ -100,9 +100,7 @@ TableEditors.CommonEditor.prototype._bindKeyEvents = function(element) {
 
 TableEditors.CommonEditor.prototype._runValidation = function() {
   this.errorMessages = [];
-  console.log("run validation");
   var valid = this._validate();
-  console.log("valid : " + valid);
   if (!valid) {
     this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this.options.fieldName, this.errorMessages)]);
   }
@@ -121,12 +119,12 @@ TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
     event.preventDefault();
     this._requestCancel();
     return false;
-  } else if (event.keyCode === 13 && !this.options.editRow) {
+  } else if (event.keyCode === 13) {
     event.stopPropagation();
     event.preventDefault();
     this._requestSave();
     return false;
-  } /*else if (event.keyCode === 13 && this.options.editRow) {
+  }/*else if (event.keyCode === 13 && this.options.editRow) {
     event.stopPropagation();
     event.preventDefault();
     this.saveRow();
@@ -386,7 +384,14 @@ TableEditors.Date.defaultOptions = {
    * Whether the editor should include time in HH:MM.
    * Default: true
    * @member TableEditors.Date */
-  withTime: true
+  withTime: true,
+  
+  /**
+   * The input element's width.
+   * Default: 80%
+   * @member TableEditors.Date
+   */
+  size: "80%"
 };
 /**
  * Initializes a Date selector.

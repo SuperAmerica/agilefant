@@ -32,3 +32,9 @@ DynamicsButtons.prototype._click = function(index) {
   var target = this.options[index].callback;
   target.call(this.controller);
 };
+
+DynamicsButtons.commonButtonFactory = function(view, model) {
+  return new DynamicsButtons(this,[{text: 'Save', callback: function() { view.getElement().trigger("storeRequested");}},
+                                   {text: 'Cancel', callback: function() { view.getElement().trigger("cancelRequested");}}
+                                   ] ,view);
+};

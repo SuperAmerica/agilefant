@@ -7,7 +7,6 @@
 var StorySplitDialog = function StorySplitDialog(story) {
   var me = this;
   this.model = story;
-  this.model.setInTransaction(true);
   this.init();
   this.initDialog();
   this.initConfigs();
@@ -115,16 +114,13 @@ StorySplitDialog.prototype.close = function() {
 
 StorySplitDialog.prototype._removeListeners = function() {
   this.model.removeListener(this.editListener);
-  this.model.setInTransaction(false);
   for (var i = 0; i < this.oldModels.length; i++) {
     var model = this.oldModels[i];
     model.removeListener(this.editListener);
-    model.setInTransaction(false);
   }
 };
 
 StorySplitDialog.prototype.storyControllerFactory = function(view, model) {
-  model.setInTransaction(true);
   model.addListener(this.editListener);
   this.rows.push(view);
   this.oldModels.push(model);
@@ -135,7 +131,6 @@ StorySplitDialog.prototype.storyControllerFactory = function(view, model) {
 
 StorySplitDialog.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
-  mockModel.setInTransaction(true);
   this.newModels.push(mockModel);
   var controller = new StoryController(mockModel, null, this);
   var row = this.storiesView.createRow(controller, mockModel, "top");

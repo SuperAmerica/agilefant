@@ -9,6 +9,7 @@ var CommonController = function CommonController() {
 
 CommonController.prototype.init = function() {
   this.childControllers = {};
+  this.autohideCells = [];
 };
 
 /**
@@ -56,3 +57,29 @@ CommonController.prototype.callChildcontrollers = function(type,
     }
   }
 };
+
+
+/**
+ * Opens the row for editing
+ */
+CommonController.prototype.openRowEdit = function() {
+  for (var i = 0; i < this.autohideCells.length; i++) {
+    this.view.getCell(this.autohideCells[i]).show();
+  }
+};
+
+
+/**
+ * Closes the edited row.
+ */
+CommonController.prototype.closeRowEdit = function() {
+  if(!this.model.getId()) {
+    this.view.remove();
+    return;
+  }
+  for (var i = 0; i < this.autohideCells.length; i++) {
+    this.view.getCell(this.autohideCells[i]).hide();
+  }
+};
+
+

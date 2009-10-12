@@ -31,7 +31,11 @@ DynamicTableRow.prototype.initialize = function() {
 };
 
 DynamicTableRow.prototype.registerValidationManager = function(config) {
-  this.validationManager = new DynamicsValidationManager(this.element, this.config, this.model, config);
+  this.validationManager = new DynamicsValidationManager(this.element, config, this.model, this.controller);
+};
+
+DynamicTableRow.prototype.getValidationManager = function() {
+  return this.validationManager;
 };
 
 DynamicTableRow.prototype.isFocused = function() {
@@ -163,15 +167,4 @@ DynamicTableRow.prototype.isEditable = function() {
   return this.parentView.config.getEditableCallback().call(this.getController());
 };
 
-DynamicTableRow.prototype.saveRowEdit = function() {
-  var isValid = this.isRowValid();
-  if (isValid) {
-    return this._applyToAllCells(DynamicTableCell.prototype.saveEditorValue, []);
-  }
-  return false;
-};
-
-DynamicTableRow.prototype.isRowValid = function() {
-  return this._applyToAllCells(DynamicTableCell.prototype.isEditorValueValid, []);
-};
 

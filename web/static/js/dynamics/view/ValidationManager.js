@@ -1,6 +1,5 @@
 var DynamicsValidationManager = function DynamicsValidationManager(element, configuration, model, controller) {
   var config = {
-      validators: []
   };
   jQuery.extend(config, configuration);
   this.messages = {};
@@ -32,8 +31,8 @@ DynamicsValidationManager.prototype.clear = function() {
 
 DynamicsValidationManager.prototype._runCompositeValidations = function() {
   var errors = [];
-  for(var i = 0; i < this.configuration.validators.length; i++) {
-    var validatorFunc = this.configuration.validators[i];
+  for(var i = 0; i < this.configuration.options.validators.length; i++) {
+    var validatorFunc = this.configuration.options.validators[i];
     try {
       validatorFunc.call(this.model);
     } catch(error) {
@@ -58,16 +57,20 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
       me.clear();
     }
   });
-  this.element.bind("storeRequested", function(editor) {
+  this.element.bind("storeRequested", function(event, editor) {
     if(me.isValid()) {
-      me.configuration.getSaveRowCallback().call(me.controller);
+      me.model.commit();
+      me.configuration.getCloseRowCallback().call(me.controller);
       editor.close();
     }
+    return false;
   });
-  this.element.bind("cancelEdit", function(editor) {
+  this.element.bind("cancelEdit", function(event, editor) {
+    me.model.rollback();
     me.clear();
-    me.configuration.getCancelEditRowCallback().call(me.controller);
+    me.configuration.getCloseRowCallback().call(me.controller);
     editor.close();
+    return false;
   });
 };
 

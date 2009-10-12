@@ -33,7 +33,6 @@ HourEntryModel.prototype._setData = function(newData) {
  */
 HourEntryModel.logEffortForCurrentUser = function(targetObject, effort) {
   var hourEntry = new HourEntryModel();
-  hourEntry.setInTransaction(true);
   hourEntry.setUsers([], [PageController.getInstance().getCurrentUser()]);
   hourEntry.setEffortSpent(effort);
   hourEntry.setDate(new Date().asString());
@@ -95,7 +94,6 @@ HourEntryModel.prototype.getDescription = function() {
 
 HourEntryModel.prototype.setDate = function(date) {
   this.currentData.date = date;
-  this._commitIfNotInTransaction();
 };
 
 HourEntryModel.prototype.setEffortSpent = function(effortSpent) {
@@ -104,12 +102,10 @@ HourEntryModel.prototype.setEffortSpent = function(effortSpent) {
 
 HourEntryModel.prototype.setMinutesSpent = function(minutesSpent) {
   this.currentData.minutesSpent = minutesSpent;
-  this._commitIfNotInTransaction();
 };
 
 HourEntryModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
-  this._commitIfNotInTransaction();
 };
 
 //for creating multiple entries

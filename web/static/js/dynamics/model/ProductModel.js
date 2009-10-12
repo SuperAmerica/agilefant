@@ -112,7 +112,6 @@ ProductModel.prototype.getDescription = function() {
 };
 ProductModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
-  this._commitIfNotInTransaction();
 };
 
 ProductModel.prototype.getIterations = function() {
@@ -124,7 +123,6 @@ ProductModel.prototype.getName = function() {
 };
 ProductModel.prototype.setName = function(name) {
   this.currentData.name = name;
-  this._commitIfNotInTransaction();
 };
 
 ProductModel.prototype.getProjects = function() {

@@ -326,7 +326,6 @@ TaskModel.prototype.getDescription = function() {
 
 TaskModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
-  this._commitIfNotInTransaction();
 };
 
 TaskModel.prototype.getEffortLeft = function() {
@@ -335,7 +334,6 @@ TaskModel.prototype.getEffortLeft = function() {
 
 TaskModel.prototype.setEffortLeft = function(effortLeft) {
   this.currentData.effortLeft = effortLeft;
-  this._commitIfNotInTransaction();
 };
 
 TaskModel.prototype.getName = function() {
@@ -344,7 +342,6 @@ TaskModel.prototype.getName = function() {
 
 TaskModel.prototype.setName = function(name) {
   this.currentData.name = name;
-  this._commitIfNotInTransaction();
 };
 
 TaskModel.prototype.getOriginalEstimate = function() {
@@ -353,7 +350,6 @@ TaskModel.prototype.getOriginalEstimate = function() {
 
 TaskModel.prototype.setOriginalEstimate = function(originalEstimate) {
   this.currentData.originalEstimate = originalEstimate;
-  this._commitIfNotInTransaction();
 };
 
 TaskModel.prototype.getRank = function() {
@@ -365,7 +361,6 @@ TaskModel.prototype.getState = function() {
 };
 TaskModel.prototype.setState = function(state) {
   this.currentData.state = state;
-  this._commitIfNotInTransaction();
 };
 
 TaskModel.prototype.getStory = function() {
@@ -404,15 +399,13 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
   }
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
-  this._commitIfNotInTransaction();
 };
 
 TaskModel.prototype.setIterationToSave = function(iteration) {
   this.setIteration(iteration);
 
   this.currentData.iterationChanged = true;
-  this._commitIfNotInTransaction();
-  
+ 
   if (this.getDailyWork) {
     this.getDailyWork().reload();
   }

@@ -66,6 +66,9 @@ $(document).ready(function() {
   
   test("CommonEditor run validation", function() {
     var editor = new TableEditors.CommonEditor();
+    editor.options = {
+        fieldName: "Foo"
+    };
     
     var validateCalled = false;
     editor._validate = function() {
@@ -193,7 +196,7 @@ $(document).ready(function() {
   
   test("Date edit validation", function() {
     var mockElement = this.mockControl.createMock(jQuery, "Mock element");
-    var context = {textField: mockElement};
+    var context = { textField: mockElement, addErrorMessage: function() {} };
     context.options = { withTime: false };
     
     mockElement.expects().val().andReturn("");
@@ -227,7 +230,7 @@ $(document).ready(function() {
   
   test("Date edit validation with time", function() {
     var mockElement = this.mockControl.createMock(jQuery, "Mock element");
-    var context = {textField: mockElement};
+    var context = {textField: mockElement, addErrorMessage: function() {}};
     
     mockElement.expects().val().andReturn("2001-01-01 01:01");
     mockElement.expects().val().andReturn("2001-01-01 01:01");

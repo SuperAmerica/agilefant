@@ -16,6 +16,9 @@ var ValidationMessages = {
   },
   exactEstimate: {
     invalid: "Incorrect format"
+  },
+  password: {
+    empty: "Password is empty"
   }
 };
 
@@ -35,6 +38,7 @@ TableEditors.getEditorClassByName = function(name) {
 /**
  * Common constructor for all <code>TableEditors</code>
  * @constructor
+ * @member TableEditors
  */
 TableEditors.CommonEditor = function() {};
 TableEditors.CommonEditor.defaultOptions = {
@@ -102,6 +106,9 @@ TableEditors.CommonEditor.prototype._bindFieldEvents = function(element) {
     return true;
   });
   element.blur(function(event) {
+    if (me._validate()) {
+      me.options.set.call(me.model, me.getEditorValue());
+    }
     me.element.trigger("DynamicsBlur");
     me.focused = false;
   });
@@ -153,6 +160,7 @@ TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
  * Abstract common constructor for all single line text input editors.
  * @constructor
  * @base TableEditors.CommonEditor
+ * @member TableEditors
  */
 TableEditors.TextFieldEditor = function() {};
 TableEditors.TextFieldEditor.prototype = new TableEditors.CommonEditor();
@@ -263,8 +271,6 @@ TableEditors.Text.prototype.init = function(element, model, options) {
 TableEditors.Text.prototype._validate = function() {
   return TableEditors.TextFieldEditor.prototype._validate.call(this);
 };
-
-
 
 /**
  * Email input.
@@ -584,6 +590,57 @@ TableEditors.Date.prototype._validate = function() {
   }
   return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
 };
+
+/*
+ * PASSWORD INPUT
+ */
+/**
+ * Password input
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.Password = function(element, model, options) {
+  this.init(element, model, options);
+};
+TableEditors.Password.prototype = new TableEditors.CommonEditor();
+/**
+ * Default options for <code>TableEditors.Password</code>
+ */
+TableEditors.Password.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: true
+   * @member TableEditors.Password */
+  required: true
+};
+/**
+ * Initializes a TextFieldEditor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Password.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Password.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+  
+  this.textField = $('<input type="password" />').appendTo(this.element);
+  this._bindFieldEvents(this.textField);
+};
+
+TableEditors.Password.prototype.getEditorValue = function() {
+  return this.textField.val();
+};
+
+TableEditors.Password.prototype._validate = function() {
+  var valid = true;
+  if (this.options.required && !this.textField.val()) {
+    valid = false;
+    this.addErrorMessage(ValidationMessages.password.empty);
+  }
+  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
+};
+
 
 
 /*

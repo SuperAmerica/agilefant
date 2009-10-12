@@ -34,7 +34,7 @@ DynamicsValidationManager.prototype._runCompositeValidations = function() {
   for(var i = 0; i < this.configuration.options.validators.length; i++) {
     var validatorFunc = this.configuration.options.validators[i];
     try {
-      validatorFunc.call(this.model);
+      validatorFunc(this.model);
     } catch(error) {
       errors.push(error);
     }

@@ -448,7 +448,13 @@ CreateDialog.User.columnIndices = {
 CreateDialog.User.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    validators: [ function(model) {
+      if (model.getPassword1() === model.getPassword2()) {
+        return true;
+      }
+      throw "Passwords don't match";
+    }]
   });
   
   config.addColumnConfiguration(CreateDialog.User.columnIndices.name,{
@@ -498,11 +504,21 @@ CreateDialog.User.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.User.columnIndices.password1,{
     title: "Password",
     editable: true,
-    get: function() { return ""; },
-    cssClass: "user-password1",
+    get: UserModel.prototype.getPassword1,
     edit: {
       editor: "Password",
       set: UserModel.prototype.setPassword1,
+      required: true
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.User.columnIndices.password2,{
+    title: "Confirm password",
+    editable: true,
+    get: UserModel.prototype.getPassword2,
+    edit: {
+      editor: "Password",
+      set: UserModel.prototype.setPassword2,
       required: true
     }
   });

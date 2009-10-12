@@ -18,8 +18,8 @@ $(document).ready(function() {
   
   test("is valid - composite error", function() {
     var model = {};
-    var validatorfunc = function() {
-      equals(this, model);
+    var validatorfunc = function(actual) {
+      equals(actual, model);
       throw "Invalid composite";
       return false;
     };

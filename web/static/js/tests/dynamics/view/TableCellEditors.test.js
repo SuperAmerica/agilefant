@@ -258,6 +258,32 @@ $(document).ready(function() {
   });
   
   
+  
+  test("Password edit validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery, "Mock element");
+    var context = {textField: mockElement, addErrorMessage: function() {}};
+    
+    context.options = { required: true };
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("pass1");
+
+    ok(!TableEditors.Password.prototype._validate.call(context), "'' invalid");
+    ok(TableEditors.Password.prototype._validate.call(context), "'pass1' valid");
+  });
+  
+ 
+  test("Password - events", function() {
+    var editor = new TableEditors.Password(this.element, null, {});
+    var input = this.element.find("input");
+    testBlurAndFocus(editor, this.element, input);
+  });
+  
+  
+  /*
+   * SELECTION EDITOR
+   */
+  
+  
   test("SelectionEditor - setEditorValue", function() {
     var parent = $('<div/>');
     var opts = {

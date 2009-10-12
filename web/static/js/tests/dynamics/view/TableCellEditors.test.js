@@ -145,6 +145,7 @@ $(document).ready(function() {
     same(errorMessageCount, 1, "One error message added");
   });
   
+  
 
   
   /*
@@ -281,6 +282,22 @@ $(document).ready(function() {
     same(selected.val(), "fubar", "'fubar' selected");
   });
   
+  test("Selection - events", function() {
+    var editor = new TableEditors.Selection(this.element, null, {});
+    var input = this.element.find("select");
+    testBlurAndFocus(editor, this.element, input);
+    
+    var saveCallCount = 0;
+    this.element.bind("saveRequested", function() {
+      saveCallCount++;
+    });
+    
+    input.change();
+       
+    setTimeout(function() {
+      equals(saveCallCount, 1, "SaveRequested event fired once");
+    }, 1);
+  });
   
   
   test("Email validation", function() {
@@ -379,6 +396,125 @@ $(document).ready(function() {
   });
   
   
+  test("Exact estimate edit validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery);
+    var context = {textField: mockElement, addErrorMessage: function() {} };
+    context.showError = function() {};
+    
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("15min");
+    mockElement.expects().val().andReturn("15min");
+    mockElement.expects().val().andReturn("1h");
+    mockElement.expects().val().andReturn("1h");
+    mockElement.expects().val().andReturn("1h 15min");
+    mockElement.expects().val().andReturn("1h 15min");
+    mockElement.expects().val().andReturn("1.5h");
+    mockElement.expects().val().andReturn("1.5h");
+    mockElement.expects().val().andReturn("1.5");
+    mockElement.expects().val().andReturn("1.5");
+    mockElement.expects().val().andReturn("1.2h 10min");
+    mockElement.expects().val().andReturn("1.2h 10min");
+    mockElement.expects().val().andReturn("10min 1h");
+    mockElement.expects().val().andReturn("10min 1h");
+    mockElement.expects().val().andReturn("10x 15min");
+    mockElement.expects().val().andReturn("10x 15min");
+    mockElement.expects().val().andReturn("-15min");
+    mockElement.expects().val().andReturn("-15min");
+    
+    mockElement.expects().val().andReturn("-15min");
+    mockElement.expects().val().andReturn("-15min");
+    mockElement.expects().val().andReturn("-1h");
+    mockElement.expects().val().andReturn("-1h");
+    mockElement.expects().val().andReturn("-1h 15min");
+    mockElement.expects().val().andReturn("-1h 15min");
+    mockElement.expects().val().andReturn("-1.5h");
+    mockElement.expects().val().andReturn("-1.5h");
+    mockElement.expects().val().andReturn("-1.5");
+    mockElement.expects().val().andReturn("-1.5");
+    mockElement.expects().val().andReturn("-");
+    mockElement.expects().val().andReturn("-");
+    
+    context.options = {required: false};
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "Not required and empty");
+    context.options = {required: true};
+    ok(!TableEditors.ExactEstimate.prototype._validate.call(context), "Required and empty");
+
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "15min");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "1h");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "1h 15min");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "1.5h");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "1.5");
+    
+    ok(!TableEditors.ExactEstimate.prototype._validate.call(context), "1.2h 10min");
+    ok(!TableEditors.ExactEstimate.prototype._validate.call(context), "10mn 1h");
+    ok(!TableEditors.ExactEstimate.prototype._validate.call(context), "10x 15min");
+    
+    ok(!TableEditors.ExactEstimate.prototype._validate.call(context), "-15min (no negatives)");
+    
+    context.options.acceptNegative = true;
+    
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "-15min");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "-1h");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "-1h 15min");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "-1.5h");
+    ok(TableEditors.ExactEstimate.prototype._validate.call(context), "-1.5");
+    
+    ok(!TableEditors.ExactEstimate.prototype._validate.call(context), "-");
+  });
+  
+  test("ExactEstimate - events", function() {
+    var editor = new TableEditors.ExactEstimate(this.element, null, {});
+    var input = this.element.find("input");
+    testBlurAndFocus(editor, this.element, input);
+  });
+  
+  test("Estimate validation", function() {
+    var mockElement = this.mockControl.createMock(jQuery);
+    var errorMessageCount = 0;
+    var context = {
+      textField: mockElement,
+      options: {},
+      addErrorMessage: function() {
+        errorMessageCount++;
+      }
+    };
+    
+
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("  ");
+    mockElement.expects().val().andReturn("  ");
+    mockElement.expects().val().andReturn("a");
+    mockElement.expects().val().andReturn("a");
+    
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("");
+    mockElement.expects().val().andReturn("  ");
+    mockElement.expects().val().andReturn("  ");
+    
+    context.options = { required: false };
+    ok(TableEditors.Estimate.prototype._validate.call(context), "Valid (not required): ''");
+    
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): '  '");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): 'a'");
+    
+    context.options = { required: true };
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: ''");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: '  '");
+        
+    same(errorMessageCount, 4, "Six error messages");
+  });
+  
+  test("Estimate - events", function() {
+    var editor = new TableEditors.Number(this.element, null, {});
+    var input = this.element.find("input");
+    testBlurAndFocus(editor, this.element, input);
+  });
+  
+  
   /**
    * WYSIWYG EDITOR
    */
@@ -388,6 +524,9 @@ $(document).ready(function() {
     var input = $(this.element.find("iframe")[0].contentWindow);
     testBlurAndFocus(editor, this.element, input);
   });
+  
+  
+  
   
   /*
   test("handle events", function() {
@@ -501,56 +640,7 @@ $(document).ready(function() {
   });
   */
 
-  /*
-  test("Exact estimate edit validation", function() {
-    var mockElement = this.mockControl.createMock(jQuery);
-    var context = {element: mockElement};
-    context.showError = function() {};
-    
-    mockElement.expects().val().andReturn(" ");
-    mockElement.expects().val().andReturn(" ");
-    mockElement.expects().val().andReturn("15min");
-    mockElement.expects().val().andReturn("1h");
-    mockElement.expects().val().andReturn("1h 15min");
-    mockElement.expects().val().andReturn("1.5h");
-    mockElement.expects().val().andReturn("1.5");
-    mockElement.expects().val().andReturn("1.2h 10min");
-    mockElement.expects().val().andReturn("10min 1h");
-    mockElement.expects().val().andReturn("10x 15min");
-    
-    mockElement.expects().val().andReturn("-15min");
-    mockElement.expects().val().andReturn("-1h");
-    mockElement.expects().val().andReturn("-1h 15min");
-    mockElement.expects().val().andReturn("-1.5h");
-    mockElement.expects().val().andReturn("-1.5");
-    
-    context.options = {required: false};
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "Not required and empty");
-    context.options = {required: true};
-    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "Required and empty");
-
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "15min");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1h");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1h 15min");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1.5h");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "1.5");
-    
-    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "1.2h 10min");
-    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "10mn 1h");
-    ok(!TableEditors.ExactEstimate.prototype.isValid.call(context), "10x 15min");
-    
-    context.options.acceptNegative = true;
-    
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-15min");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1h");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1h 15min");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1.5h");
-    ok(TableEditors.ExactEstimate.prototype.isValid.call(context), "-1.5");
-    
-
-  });
-  
   
 
-  */
+  
 });

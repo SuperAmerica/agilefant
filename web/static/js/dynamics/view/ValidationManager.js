@@ -65,7 +65,7 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
     }
     return false;
   });
-  this.element.bind("cancelEdit", function(event, editor) {
+  this.element.bind("cancelRequested", function(event, editor) {
     me.model.rollback();
     me.clear();
     me.configuration.getCloseRowCallback().call(me.controller);

@@ -205,7 +205,6 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     edit : {
       editor : "Date",
       decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
       withTime: true,
       set: ProjectModel.prototype.setStartDate
     }
@@ -219,12 +218,11 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     edit : {
       editor : "Date",
       decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
       withTime: true,
       set: ProjectModel.prototype.setEndDate
     }
   });
-  
+  /*
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
     title : "Parent",
     get : CreateDialog.returnNull,
@@ -245,7 +243,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       editor: "Wysiwyg",
       set: ProjectModel.prototype.setDescription
     }
-  });
+  });*/
   
   this.formConfig = config;
 };

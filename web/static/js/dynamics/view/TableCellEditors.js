@@ -13,6 +13,9 @@ var ValidationMessages = {
     isNotInteger: "Please enter an integer",
     mustBeGreater: "Value must be greater or equal than ",
     mustBeLower: "Value must be lower or equal than ",
+  },
+  exactEstimate: {
+    invalid: "Incorrect format"
   }
 };
 
@@ -62,11 +65,22 @@ TableEditors.CommonEditor.prototype._requestCancel = function() {
   this.element.trigger("cancelRequested", [this]);
 };
 TableEditors.CommonEditor.prototype._requestSave = function() {
-  this._runValidation();
-  this.element.trigger("storeRequested", [this]);
+  if (this._runValidation()) {
+    this.options.set.call(this.model, this.getEditorValue());
+    this.element.trigger("storeRequested", [this]);
+  }
 };
 
-TableEditors.CommonEditor.prototype.setEditorValue = function() {};
+/**
+ * 
+ */
+TableEditors.CommonEditor.prototype.getEditorValue = function() {
+  throw "Abstract method called: getEditorValue";
+};
+TableEditors.CommonEditor.prototype.setEditorValue = function() {
+  
+};
+
 TableEditors.CommonEditor.prototype.addErrorMessage = function(message) {
   this.errorMessages.push(message);
 };
@@ -81,7 +95,7 @@ TableEditors.CommonEditor.prototype.isFocused = function() {
 /**
  * Change event listener.
  */
-TableEditors.CommonEditor.prototype._bindKeyEvents = function(element) {
+TableEditors.CommonEditor.prototype._bindFieldEvents = function(element) {
   var me = this;
   element.keydown(function(event) {
     me._handleKeyEvent(event);
@@ -89,7 +103,6 @@ TableEditors.CommonEditor.prototype._bindKeyEvents = function(element) {
   });
   element.blur(function(event) {
     me.element.trigger("DynamicsBlur");
-    me._runValidation();
     me.focused = false;
   });
   element.focus(function() {
@@ -114,7 +127,7 @@ TableEditors.CommonEditor.prototype._runValidation = function() {
 };
 
 TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
-  if (event.keyCode === 27 && !this.options.editRow) {
+  if (event.keyCode === 27) {
     event.stopPropagation();
     event.preventDefault();
     this._requestCancel();
@@ -169,7 +182,7 @@ TableEditors.TextFieldEditor.prototype.init = function(element, model, options) 
   TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
   
   this.textField = $('<input type="text"/>').appendTo(this.element).width(this.options.size);
-  this._bindKeyEvents(this.textField);
+  this._bindFieldEvents(this.textField);
 };
 
 /**
@@ -193,6 +206,12 @@ TableEditors.TextFieldEditor.prototype.setEditorValue = function(value) {
     value = this.options.decorator(value);
   }
   this.textField.val(value);
+};
+/**
+ * Get the text field editor's value.
+ */
+TableEditors.TextFieldEditor.prototype.getEditorValue = function() {
+  return this.textField.val();
 };
 
 
@@ -322,7 +341,7 @@ TableEditors.Number.defaultOptions = {
    * Default: null
    * @member TableEditors.Number
    */
-  maxValue: null,
+  maxValue: null
 };
 /**
  * Initializes a Number editor.
@@ -362,6 +381,109 @@ TableEditors.Number.prototype._validate = function() {
 
 
 
+/**
+ * Estimate input.
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.Estimate = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+};
+TableEditors.Estimate.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.Estimate</code>
+ */
+TableEditors.Estimate.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.Estimate */
+  required: false
+};
+/**
+ * Initializes a Estimate editor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Estimate.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Estimate.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.Estimate.prototype._validate = function() {
+  var valid = true;
+  var value = this.textField.val();
+  
+  var isInt = (value.toString().search(/^[0-9]*$/) == 0);
+  var intValue = parseInt(value, 10);
+  
+  if (!isInt) {
+    this.addErrorMessage(ValidationMessages.number.isNotInteger);
+    valid = false;
+  }
+  
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
+
+/**
+ * ExactEstimate input.
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.ExactEstimate = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+};
+TableEditors.ExactEstimate.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.ExactEstimate</code>
+ */
+TableEditors.ExactEstimate.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.ExactEstimate */
+  required: false
+};
+/**
+ * Initializes a ExactEstimate editor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.ExactEstimate.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.ExactEstimate.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.ExactEstimate.prototype._validate = function() {
+  var valid = true;
+  var value = jQuery.trim(this.textField.val());
+  
+  if (this.options.acceptNegative) {
+      var minusTest = /^\-[0-9]/;
+      if (value.match(minusTest)) {
+          value = value.substr(1);
+      }
+  }
+  var majorOnly = /^[0-9]+h?$/; // 10h
+  var minorOnly = /^([1-9]|[1-5]\d)min$/; // 10min
+  var majorAndMinor = /^[ ]*[0-9]+h[ ]+[0-9]+min$/;
+  var shortFormat = /^[0-9]+\.[0-9]+h?$/;
+  var valid = (value.match(majorOnly) || value.match(minorOnly)
+          || value.match(majorAndMinor) || value.match(shortFormat)
+          || !value);
+  if (!valid) {
+      this.addErrorMessage(ValidationMessages.exactEstimate.invalid);
+  }
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
 
 
 /**
@@ -372,6 +494,7 @@ TableEditors.Number.prototype._validate = function() {
  */
 TableEditors.Date = function(element, model, options) {
   this.init(element, model, options);
+  this.setEditorValue();
 };
 TableEditors.Date.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -439,6 +562,11 @@ TableEditors.Date.prototype.init = function(element, model, options) {
   });
 };
 
+TableEditors.Date.prototype.close = function() {
+  this.element.find('img').remove();
+  TableEditors.TextFieldEditor.prototype.close.call(this);
+};
+
 TableEditors.Date.prototype._validate = function() {
   var pattern;
   var errorMessage = "";
@@ -503,13 +631,32 @@ TableEditors.Selection.prototype.init = function(element, model, options) {
   TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
   
   this.selectBox = $('<select/>').appendTo(this.element).width(this.options.size);
+  
   var me = this;
   var value = this.options.get.call(this.model);
   jQuery.each(this.options.items, function(key, val) {
     var el = $('<option/>').val(key).text(val).appendTo(me.selectBox);
   });
+  
+  this._bindFieldEvents(this.selectBox);
 };
 
+TableEditors.Selection.prototype._bindFieldEvents = function(field) {
+  var me = this;
+  field.change(function() {
+    me._requestSave();
+  });
+  TableEditors.CommonEditor.prototype._bindFieldEvents.call(this, field);
+};
+
+TableEditors.Selection.prototype.close = function() {
+  this.selectBox.remove();
+  TableEditors.CommonEditor.prototype.close.call(this);
+};
+
+TableEditors.Selection.prototype.getEditorValue = function() {
+  return this.selectBox.val();
+};
 TableEditors.Selection.prototype.setEditorValue = function(value) {
   if (!value) {
     value = this.options.get.call(this.model);
@@ -590,7 +737,7 @@ TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
 TableEditors.Wysiwyg.prototype.resetEditor = function() {
   var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
   var frameWindow = $(iframeElement.contentWindow);
-  this._bindKeyEvents(frameWindow);
+  this._bindFieldEvents(frameWindow);
 };
 
 TableEditors.Wysiwyg.prototype._getEditorWindow = function() {

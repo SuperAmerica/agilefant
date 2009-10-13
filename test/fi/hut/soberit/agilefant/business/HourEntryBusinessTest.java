@@ -25,6 +25,8 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
@@ -37,6 +39,7 @@ public class HourEntryBusinessTest {
     private HourEntryDAO hourEntryDAO;
     private StoryBusiness storyBusiness;
     private UserBusiness userBusiness;
+    private TaskBusiness taskBusiness;
     
     private Collection<User> targetUsers;
     private Set<Integer> targetUserIds;
@@ -56,7 +59,10 @@ public class HourEntryBusinessTest {
         
         storyBusiness = createMock(StoryBusiness.class);
         hourEntryBusiness.setStoryBusiness(storyBusiness);
-                
+        
+        taskBusiness = createMock(TaskBusiness.class);
+        hourEntryBusiness.setTaskBusiness(taskBusiness);
+        
         userBusiness = createMock(UserBusiness.class);
         hourEntryBusiness.setUserBusiness(userBusiness);
         
@@ -71,11 +77,11 @@ public class HourEntryBusinessTest {
     }
     
     private void replayAll() {
-        replay(hourEntryDAO, backlogHourEntryDAO, storyBusiness, userBusiness);
+        replay(hourEntryDAO, backlogHourEntryDAO, storyBusiness, taskBusiness, userBusiness);
     }
     
     private void verifyAll() {
-        verify(hourEntryDAO, backlogHourEntryDAO, storyBusiness, userBusiness);
+        verify(hourEntryDAO, backlogHourEntryDAO, storyBusiness, taskBusiness, userBusiness);
     }
     
     @Test
@@ -293,9 +299,55 @@ public class HourEntryBusinessTest {
     
     @Test
     public void testLogTaskEffort() {
+        HourEntry effortEntry = new HourEntry();
+        effortEntry.setDate(new DateTime());
+        effortEntry.setDescription("daadaa");
+        effortEntry.setMinutesSpent(10L);
+        
+        Task parent = new Task();
+        
+        expect(taskBusiness.retrieve(1)).andReturn(parent);
+        expect(userBusiness.retrieveMultiple(targetUserIds)).andReturn(targetUsers);
+
+        Capture<TaskHourEntry> storedEntry = new Capture<TaskHourEntry>();
+        expect(hourEntryDAO.create(EasyMock.capture(storedEntry))).andReturn(1);
+        
         replayAll();
+        hourEntryBusiness.logTaskEffort(1, effortEntry, targetUserIds);
         verifyAll();
+        TaskHourEntry actual = (TaskHourEntry)storedEntry.getValue();
+        assertEquals(parent, actual.getTask());
+        compareHe(effortEntry, actual);
     }
+    
+    @Test(expected=ObjectNotFoundException.class)
+    public void testLogTaskEffort_invalidStory() {
+        HourEntry effortEntry = new HourEntry();
+                
+        expect(taskBusiness.retrieve(1)).andThrow(new ObjectNotFoundException());
+        
+        replayAll();
+        hourEntryBusiness.logTaskEffort(1, effortEntry, targetUserIds);
+        verifyAll();
+
+    }
+    
+    @Test(expected=ObjectNotFoundException.class)
+    public void testLogTaskEffort_invalidUser() {
+        HourEntry effortEntry = new HourEntry();
+        
+        Task parent = new Task();
+        
+        expect(taskBusiness.retrieve(1)).andReturn(parent);
+        expect(userBusiness.retrieveMultiple(targetUserIds)).andThrow(new ObjectNotFoundException());
+        
+        replayAll();
+        hourEntryBusiness.logTaskEffort(1, effortEntry, targetUserIds);
+        verifyAll();
+
+    }
+    
+    
     @Test
     public void testLogBacklogEffort() {
         replayAll();

@@ -164,3 +164,10 @@ TaskController.prototype.isEditable = function () {
   return ! this.model.isInTransaction(); 
 };
 
+TaskController.prototype.openQuickLogEffort = function(model, view) {
+  view.openEditor(false, null, true);
+};
+
+TaskController.prototype.quickLogEffort = function (spentEffort) {
+  HourEntryModel.logEffortForCurrentUser(this, spentEffort);
+};

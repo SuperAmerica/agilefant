@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.BacklogHourEntryDAO;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
@@ -29,6 +30,8 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
@@ -41,6 +44,8 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
 
     @Autowired
     private StoryBusiness storyBusiness;
+    @Autowired
+    private TaskBusiness taskBusiness;
     @Autowired
     private UserBusiness userBusiness;
   
@@ -83,8 +88,16 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     @Transactional
     public void logTaskEffort(int taskId, HourEntry effortEntry,
             Set<Integer> userIds) {
-        // TODO Auto-generated method stub
+        Task task = this.taskBusiness.retrieve(taskId);
+        Collection<User> targetUsers = this.userBusiness.retrieveMultiple(userIds);
         
+        for (User targetUser : targetUsers) {
+            TaskHourEntry taskEntry = new TaskHourEntry();
+            taskEntry.setTask(task);
+            taskEntry.setUser(targetUser);
+            validateAndCopyFields(taskEntry, effortEntry);
+            this.hourEntryDAO.create(taskEntry);
+        }
     }
     
     private void validateAndCopyFields(HourEntry target, HourEntry source) {
@@ -212,6 +225,10 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
 
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
+    }
+    
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
     }
   
 }

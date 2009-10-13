@@ -98,4 +98,17 @@ public class HourEntryActionTest {
         hourEntryAction.logStoryEffort();
         verifyAll();
     }
+    
+    @Test
+    public void testLogTaskEffort() {
+        HourEntry effortEntry = new HourEntry();
+        Set<Integer> userIds = new HashSet<Integer>();
+        hourEntryBusiness.logTaskEffort(1, effortEntry, userIds);
+        replayAll();
+        hourEntryAction.setParentObjectId(1);
+        hourEntryAction.setHourEntry(effortEntry);
+        hourEntryAction.setUserIds(userIds);
+        hourEntryAction.logTaskEffort();
+        verifyAll();
+    }
 }

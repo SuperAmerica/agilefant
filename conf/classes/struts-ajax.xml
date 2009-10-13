@@ -549,6 +549,11 @@
 	   <param name="status">200</param>
 	 </result>
 	</action>
+	<action name="logTaskEffort" class="hourEntryAction" method="logTaskEffort">
+	 <result name="success" type="httpheader">
+	   <param name="status">200</param>
+	 </result>
+	</action>
 	<!-- /timesheets -->
   </package>
   

@@ -68,7 +68,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     }
     
     public String logTaskEffort() {
-        //TODO: implement!
+        this.hourEntryBusiness.logTaskEffort(this.parentObjectId, this.hourEntry, this.userIds);
         return Action.SUCCESS;
     }
 

@@ -260,7 +260,14 @@ DailyWorkController.prototype.createConfig = function(configType) {
             title : "ES",
             headerTooltip : 'Effort spent',
             get : TaskModel.prototype.getEffortSpent,
-            decorator: DynamicsDecorators.exactEstimateDecorator
+            decorator: DynamicsDecorators.exactEstimateDecorator,
+            editable : false,
+            onDoubleClick: TaskController.prototype.openQuickLogEffort,
+            edit : {
+              editor : "ExactEstimate",
+              decorator: DynamicsDecorators.empty,
+              set : TaskController.prototype.quickLogEffort
+        	}
         });
     }
 

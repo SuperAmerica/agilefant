@@ -80,7 +80,7 @@ $(document).ready(function() {
 	   var editorOpt = {
          editor: "foo"
      };
-	    this.cellConfig.expects().hasDelayedRender().andReturn(false);
+	   this.cellConfig.expects().hasDelayedRender().andReturn(false);
 	   this.cellConfig.expects().getWidth().andReturn(null);
      this.cellConfig.expects().getMinWidth().andReturn(null);
      this.cellConfig.expects().isFullWidth().andReturn(true);
@@ -89,9 +89,13 @@ $(document).ready(function() {
      this.cellConfig.expects().isDragHandle().andReturn(false);
      this.cellConfig.expects().getSubViewFactory().andReturn(null);
      this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
+     this.cellConfig.expects().getTitle().andReturn("Cell");
      this.cellConfig.expects().getEditableCallback().andReturn(function() { return true; });
-
+     
+     var expectedModel = new CommonModel();
+     
      this.mockRow.expects().getController().andReturn(window);
+     this.mockRow.expects().getModel().andReturn(expectedModel);
      this.cellConfig.isEditable = function () { return true; };
      
      var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
@@ -100,11 +104,11 @@ $(document).ready(function() {
 	   TableEditors = {};
 
 	   var fooEditorCalled = 0;
-	   TableEditors.foo = function(row, cell, conf) {
+	   TableEditors.foo = function(element, model, options) {
 	     fooEditorCalled++;
-	     same(row, me.mockRow, "Correct row passed to editor"); 
-	     same(conf, editorOpt, "Correct configuration passed");
-	     same(cell, testable, "Correct cell passed");
+	     equals(model, expectedModel, "Correct model passed");
+	     same(options, editorOpt, "Correct configuration passed");
+	     same(element, testable.getElement(), "Correct cell passed");
 	   };
 	   
      var getEditorCalled = 0;

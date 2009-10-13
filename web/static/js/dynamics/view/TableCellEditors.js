@@ -1062,3 +1062,55 @@ TableEditors.Autocomplete.prototype.init = function(element, model, options) {
 };
 
 
+
+/**
+ * Inline autocomplete
+ * 
+ * TODO: This is ugly - rewrite the whole Inline Autocomplete
+ * @constructor
+ */
+TableEditors.AutocompleteInline = function(element, model, options) {
+  this.init(element, model, options);
+};
+TableEditors.AutocompleteInline.prototype = new TableEditors.CommonEditor();
+TableEditors.AutocompleteInline.defaultOptions = {
+  dataType: "",
+  required: true
+};
+TableEditors.AutocompleteInline.prototype.init = function(element, model, options) { 
+  var opts = {};
+  jQuery.extend(opts, TableEditors.AutocompleteInline.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+  
+  this.autocompleteElement = $('<div />').appendTo(this.element);
+  
+  // Make it an autocomplete widget
+  var me = this;
+  this.autocompleteElement.autocompleteInline({
+    dataType: this.options.dataType,
+    callback: function(item) { me._selectCallback(item); }
+  });
+};
+TableEditors.AutocompleteInline.prototype._selectCallback = function(selected) {
+  var item = selected;
+  if (selected.originalObject) {
+    item = ModelFactory.updateObject(selected.originalObject);
+  }
+  this.selected = item;
+  this.options.set.call(this.model, item);
+  this._requestSave();
+};
+TableEditors.AutocompleteInline.prototype.close = function() {
+  TableEditors.CommonEditor.prototype.close.call(this);
+};
+TableEditors.AutocompleteInline.prototype._validate = function() {
+  var valid = true;
+  if (this.options.required && !this.selected) {
+    valid = false;
+    this.addErrorMessage(ValidationMessages.autocomplete.required);
+  }
+  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
+};
+
+

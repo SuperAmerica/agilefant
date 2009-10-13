@@ -175,9 +175,9 @@ CreateDialog.Project = function() {
 CreateDialog.Project.prototype = new CreateDialogClass();
 CreateDialog.Project.columnIndices = {
   name: 0,
-  startDate: 1,
-  endDate: 2,
-  parent: 3,
+  parent: 1,
+  startDate: 2,
+  endDate: 3,
   description: 4
 };
 CreateDialog.Project.prototype.initFormConfig = function() {
@@ -195,6 +195,19 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       editor: "Text",
       required: true,
       set: ProjectModel.prototype.setName
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
+    title : "Parent",
+    get : ProjectModel.prototype.getParent,
+    cssClass: "autocompleteInline-dialog-fix",
+    editable : true,
+    edit : {
+      editor : "AutocompleteInline",
+      dataType: "products",
+      required: true,
+      set: ProjectModel.prototype.setParent
     }
   });
     
@@ -223,18 +236,6 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       set: ProjectModel.prototype.setEndDate
     }
   });
-  /*
-  config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
-    title : "Parent",
-    get : CreateDialog.returnNull,
-    editable : true,
-    edit : {
-      editor : "AutocompleteInline",
-      dataType: "products",
-      required: true,
-      set: ProjectModel.prototype.setParent
-    }
-  });
   
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.description, {
     title: "Description",
@@ -242,9 +243,10 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     editable: true,
     edit: {
       editor: "Wysiwyg",
-      set: ProjectModel.prototype.setDescription
+      set: IterationModel.prototype.setDescription
     }
-  });*/
+  });
+  
   
   this.formConfig = config;
 };
@@ -266,9 +268,9 @@ CreateDialog.Iteration = function() {
 CreateDialog.Iteration.prototype = new CreateDialogClass();
 CreateDialog.Iteration.columnIndices = {
   name:       0,
-  startDate:  1,
-  endDate:    2,
-  parent:     3,
+  parent:     1,
+  startDate:  2,
+  endDate:    3,
   description:4
 };
 CreateDialog.Iteration.prototype.initFormConfig = function() {
@@ -285,6 +287,19 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
       editor: "Text",
       required: true,
       set: IterationModel.prototype.setName
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.parent,{
+    title : "Parent",
+    get : CreateDialog.returnNull,
+    cssClass: "autocompleteInline-dialog-fix",
+    editable : true,
+    edit : {
+      editor : "AutocompleteInline",
+      dataType: "projects",
+      required: true,
+      set: IterationModel.prototype.setParent
     }
   });
     
@@ -315,18 +330,8 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
       set: IterationModel.prototype.setEndDate
     }
   });
-  
-  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.parent,{
-    title : "Parent",
-    get : CreateDialog.returnNull,
-    editable : true,
-    edit : {
-      editor : "AutocompleteInline",
-      dataType: "projects",
-      required: true,
-      set: IterationModel.prototype.setParent
-    }
-  });
+
+
   
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.description, {
     title: "Description",
@@ -356,9 +361,9 @@ CreateDialog.Story = function() {
 CreateDialog.Story.prototype = new CreateDialogClass();
 CreateDialog.Story.columnIndices = {
   name:       0,
-  state:      1,
-  storyPoints:2,
-  backlog:    3,
+  backlog:    1,
+  state:      2,
+  storyPoints:3,
   description:4
 };
 CreateDialog.Story.prototype.initFormConfig = function() {
@@ -375,6 +380,19 @@ CreateDialog.Story.prototype.initFormConfig = function() {
       editor: "Text",
       required: true,
       set: StoryModel.prototype.setName
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.backlog,{
+    title : "Backlog",
+    get : CreateDialog.returnNull,
+    editable : true,
+    cssClass: "autocompleteInline-dialog-fix",
+    edit : {
+      editor : "AutocompleteInline",
+      dataType: "backlogs",
+      required: true,
+      set: StoryModel.prototype.setBacklog
     }
   });
   
@@ -395,19 +413,8 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     get: StoryModel.prototype.getStoryPoints,
     edit: {
       editor: "Number",
+      required: false,
       set: StoryModel.prototype.setStoryPoints
-    }
-  });
-  
-  config.addColumnConfiguration(CreateDialog.Story.columnIndices.backlog,{
-    title : "Backlog",
-    get : CreateDialog.returnNull,
-    editable : true,
-    edit : {
-      editor : "AutocompleteInline",
-      dataType: "backlogs",
-      required: true,
-      set: StoryModel.prototype.setBacklog
     }
   });
 

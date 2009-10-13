@@ -203,3 +203,32 @@ div#footerText label {
 #my-work-div {
   min-width: 750px;
 }
+
+
+
+/**
+ * AUTOCOMPLETE LAYOUT HACKS
+ */
+.autocompleteInline-dialog-fix {
+  padding-bottom: 1000em;  
+}
+
+.autocompleteInline-dialog-fix > div {
+  height: 25px;
+}
+ 
+.autocompleteInline-dialog-fix .autocomplete {
+  position: absolute;
+}
+
+.autocompleteInline-dialog-fix input {
+  margin-left: 0 !important;
+  width: 15em !important
+}
+
+.autocompleteInline-dialog-fix .autocomplete-suggestionList {
+  width: 80% !important;
+}
+
+
+ 

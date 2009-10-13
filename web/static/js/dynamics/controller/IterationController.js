@@ -93,7 +93,6 @@ IterationController.prototype.createStory = function() {
 IterationController.prototype.initializeTaskListConfig = function() {
   var config = new DynamicTableConfiguration({
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
-    saveRowCallback: TaskController.prototype.saveTask,
     dataSource: IterationModel.prototype.getTasks,
     caption: "Tasks without story",
     captionConfig: {
@@ -157,7 +156,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : TaskModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }
@@ -262,7 +261,6 @@ IterationController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : IterationController.prototype.storyControllerFactory,
     dataSource : IterationModel.prototype.getStories,
-    saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
     captionConfig: {
@@ -352,7 +350,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }

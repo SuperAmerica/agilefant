@@ -79,9 +79,7 @@ CreateDialogClass.prototype.initFormConfig = function() {
 };
 
 CreateDialogClass.prototype._ok = function() {
-  var isValid = this.view.isFullEditValid();
-  if (this.view.isFullEditValid()) {
-    this.view.saveFullEdit();
+  if (this.view.getValidationManager().isValid()) {
     this.model.commit();
     this.close();
   }
@@ -109,7 +107,7 @@ CreateDialogClass.prototype.initializeForm = function() {
       this.model,
       this.formConfig,
       this.formArea);
-  this.model.setInTransaction(true);
+  
   this.view.openFullEdit();
 };
 
@@ -167,7 +165,7 @@ CreateDialog.Product.prototype.initFormConfig = function() {
 CreateDialog.Project = function() {
   // Create the mock model
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.project);
-  this.model.setInTransaction(true);
+  
   this.model.setStartDate(new Date().getTime());
   this.model.setEndDate(new Date().getTime());
 
@@ -185,7 +183,8 @@ CreateDialog.Project.columnIndices = {
 CreateDialog.Project.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.name,{
@@ -207,7 +206,6 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     edit : {
       editor : "Date",
       decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
       withTime: true,
       set: ProjectModel.prototype.setStartDate
     }
@@ -221,12 +219,11 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     edit : {
       editor : "Date",
       decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
       withTime: true,
       set: ProjectModel.prototype.setEndDate
     }
   });
-  
+  /*
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
     title : "Parent",
     get : CreateDialog.returnNull,
@@ -247,7 +244,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       editor: "Wysiwyg",
       set: ProjectModel.prototype.setDescription
     }
-  });
+  });*/
   
   this.formConfig = config;
 };
@@ -259,7 +256,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
 CreateDialog.Iteration = function() {
   // Create the mock model
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.iteration);
-  this.model.setInTransaction(true);
+  
   this.model.setStartDate(new Date().getTime());
   this.model.setEndDate(new Date().getTime());
  
@@ -351,7 +348,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
 CreateDialog.Story = function() {
   // Create the mock model
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.story);
-  this.model.setInTransaction(true);
+  
   
   this.initFormConfig();
   this.init(CreateDialog.configurations.story);
@@ -386,7 +383,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     editable: true,
     get: StoryModel.prototype.getState,
     edit: {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }
@@ -434,7 +431,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
 CreateDialog.User = function() {
   // Create the mock model
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.user);
-  this.model.setInTransaction(true);
+  
   
   this.initFormConfig();
   this.init(CreateDialog.configurations.user);
@@ -452,7 +449,13 @@ CreateDialog.User.columnIndices = {
 CreateDialog.User.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    validators: [ function(model) {
+      if (model.getPassword1() === model.getPassword2()) {
+        return true;
+      }
+      throw "Passwords don't match";
+    }]
   });
   
   config.addColumnConfiguration(CreateDialog.User.columnIndices.name,{
@@ -502,11 +505,21 @@ CreateDialog.User.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.User.columnIndices.password1,{
     title: "Password",
     editable: true,
-    get: function() { return ""; },
-    cssClass: "user-password1",
+    get: UserModel.prototype.getPassword1,
     edit: {
       editor: "Password",
       set: UserModel.prototype.setPassword1,
+      required: true
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.User.columnIndices.password2,{
+    title: "Confirm password",
+    editable: true,
+    get: UserModel.prototype.getPassword2,
+    edit: {
+      editor: "Password",
+      set: UserModel.prototype.setPassword2,
       required: true
     }
   });
@@ -521,7 +534,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
 CreateDialog.Team = function() {
   // Create the mock model
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.team);
-  this.model.setInTransaction(true);
+  
   
   this.initFormConfig();
   this.init(CreateDialog.configurations.team);
@@ -572,7 +585,7 @@ CreateDialog.Team.prototype.initFormConfig = function() {
  */
 CreateDialog.EffortEntry = function() {
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.hourEntry);
-  this.model.setInTransaction(true);
+  
   this.model.setUsers([], [PageController.getInstance().getCurrentUser()]);
   this.model.setDate(new Date().asString());
   this.initFormConfig();

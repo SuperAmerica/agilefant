@@ -145,7 +145,6 @@ ProductController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProductController.prototype.storyControllerFactory,
     dataSource : ProductModel.prototype.getStories,
-    saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
     captionConfig: {
@@ -212,7 +211,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }
@@ -292,12 +291,12 @@ ProductController.prototype.initializeProjectListConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProductController.prototype.projectRowControllerFactory,
     dataSource : ProductModel.prototype.getProjects,
-    saveRowCallback: ProjectRowController.prototype.saveProject,
     caption : "Projects",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all"
+    cssClass: "ui-widget-content ui-corner-all",
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
 
   config.addCaptionItem( {
@@ -318,7 +317,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     defaultSortColumn: false,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : ProjectModel.prototype.setStatus,
       items : DynamicsDecorators.projectStates
     }

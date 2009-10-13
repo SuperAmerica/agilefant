@@ -90,7 +90,9 @@ UserController.prototype._initUserInfoConfig = function() {
     caption: "User info",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    }
+    },
+    validators: [ function() { MessageDisplay.Ok("Messu!"); } ]
+    
   });
   
   config.addCaptionItem({
@@ -193,7 +195,7 @@ UserController.prototype._initSettingsConfig = function() {
     editable: true,
     decorator: DynamicsDecorators.enabledDisabledColorDecorator,
     edit: {
-      editor: "SingleSelection",
+      editor: "Selection",
       items: DynamicsDecorators.enabledDisabledOptions,
       set: UserModel.prototype.setAutoassignToTasks
     }

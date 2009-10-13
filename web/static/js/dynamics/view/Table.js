@@ -540,7 +540,7 @@ DynamicTable.prototype._createRow = function(row, controller, model, position) {
     this.header.show();
   }
   row.init(controller, model, this);
-  row.registerEventHandlers(this.config);
+  row.registerValidationManager(this.config);
   
   var rowCssCallback = this.config.getCssClassResolver();
   if (rowCssCallback) {
@@ -654,6 +654,7 @@ var DynamicVerticalTable = function(controller, model, config, parentView) {
   this.config = config;
   this.rows = [];
   this.initialize();
+  this.validationManager = new DynamicsValidationManager(this.element, this.config, this.getModel(), this.getController());
 };
 DynamicVerticalTable.prototype = new DynamicView();
 
@@ -708,14 +709,6 @@ DynamicVerticalTable.prototype.openFullEdit = function() {
   this._applyToAllRows(DynamicTableRow.prototype.editRow, []);
 };
 
-DynamicVerticalTable.prototype.isFullEditValid = function() {
-  return this._applyToAllRows(DynamicTableRow.prototype.isRowValid, []);
-};
-
-DynamicVerticalTable.prototype.saveFullEdit = function() {
-  return this._applyToAllRows(DynamicTableRow.prototype.saveRowEdit, []);
-};
-
 DynamicVerticalTable.prototype._applyToAllRows = function(command, args) {
   var retVal = true;
   for (var i = 0; i < this.rows.length; i++) {
@@ -730,4 +723,8 @@ DynamicVerticalTable.prototype.onEdit = function() {
 };
 DynamicVerticalTable.prototype.onDelete = function() {
   this.container.remove();
+};
+
+DynamicVerticalTable.prototype.getValidationManager = function() {
+  return this.validationManager;
 };

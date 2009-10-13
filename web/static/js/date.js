@@ -508,4 +508,12 @@ Date.fullYearStart = '20';
 		//return ('0'+num).substring(-2); // doesn't work on IE :(
 	};
 	
+	Date.prototype.before = function(anotherDate) {
+	  return (this.getTime() < anotherDate.getTime());
+	}
+	
+	Date.prototype.after = function(anotherDate) {
+    return (this.getTime() > anotherDate.getTime());
+  }
+	
 })();;

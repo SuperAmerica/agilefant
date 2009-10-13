@@ -113,8 +113,7 @@ DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(vie
         callback : TaskController.prototype.openDetails
       }, {
         text : "Edit",
-        callback : TaskController.prototype.editTask,
-        enabled : function () { return ! this.model.isInTransaction(); }
+        callback : TaskController.prototype.editTask
       }, {
           text : "Split",
           callback : TaskController.prototype.createSplitTask

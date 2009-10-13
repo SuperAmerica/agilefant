@@ -1,3 +1,35 @@
+
+/**
+ * Validation messages.
+ */
+var ValidationMessages = {
+  textField: {
+    required: "Required field"
+  },
+  email: {
+    notValid: "Email not in correct form: abc@def.com"
+  },
+  number: {
+    isNotInteger: "Please enter an integer",
+    mustBeGreater: "Value must be greater or equal than ",
+    mustBeLower: "Value must be lower or equal than "
+  },
+  estimate: {
+    incalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
+  },
+  exactEstimate: {
+    invalid: "Incorrect format"
+  },
+  password: {
+    empty: "Password is empty"
+  }
+};
+
+
+/**
+ * Table cell editors for Agilefant Dynamics library.
+ * <code>CommonEditor</code> is the base class for all cell editors.
+ */
 var TableEditors = {};
 TableEditors.getEditorClassByName = function(name) {
     if (TableEditors[name]) {
@@ -5,867 +37,953 @@ TableEditors.getEditorClassByName = function(name) {
     }
     return null;
 };
-TableEditors.isDialog = function(name) {
-    var dialogs = [ "User", "Backlog" ];
-    return jQuery.inArray(name, dialogs) !== -1;
-};
-/**
- * @
- * @constructor
- */
-TableEditors.CommonEditor = function() {
-};
-TableEditors.CommonEditor.prototype.isFocused = function() {
-    return this.hasFocus;
-};
-TableEditors.CommonEditor.prototype.init = function(row, cell, options) {
-    this.hasFocus = false;
-    this.options = options;
-    this.cell = cell;
-    this.row = row;
-    this.model = row.getModel();
-    this._registerEvents();
-    this.setEditorValue();
-    this.errorMessageVisible = false;
-    this.element.trigger("editorOpening");
-    if (!this.options.editRow) {
-        this.focus();
-    }
-};
 
 /**
- * Save editor value if editor content is valid
+ * Common constructor for all <code>TableEditors</code>
+ * @constructor
+ * @member TableEditors
  */
-TableEditors.CommonEditor.prototype.save = function() {
-    if (this.isValid() && this.element) {
-        this.options.set.call(this.model, this.getEditorValue());
-        this.close();
-    }
+TableEditors.CommonEditor = function() {};
+TableEditors.CommonEditor.defaultOptions = {
+    get: function() {},
+    set: function() {}
 };
+TableEditors.CommonEditor.prototype.init = function(element, model, options) {
+  this.element = element;
+  this.model   = model;
+  
+  this.options = {};
+  jQuery.extend(this.options, TableEditors.CommonEditor.defaultOptions);
+  jQuery.extend(this.options, options);
+  
+  this.errorMessages = [];
+  this.previousValueValid = false;
+  
+  this.element.trigger("editorOpening");
+};
+/**
+ * Close the editor.
+ */
 TableEditors.CommonEditor.prototype.close = function() {
-    this.element.trigger("editorClosing");
-    this.hideError();
-    this.element.remove();
+  this.element.trigger("editorClosing");
 };
 
-TableEditors.CommonEditor.prototype.showError = function(message) {
-    if (this.errorMessageVisible) {
-        return;
-    }
-    var me = this;
-    this.element.addClass(DynamicTable.cssClasses.fieldError);
-    this.errorChangeListener = function() {
-        if (me.isValid()) {
-            me.hideError();
-        }
-    };
-    this.element.keyup(this.errorChangeListener);
-    this.errorMessageVisible = true;
-    
-    var width = 0;
-    if (this.inputElement) {
-        width = this.inputElement.width();
-    }
-    else {
-        width = this.element.width();
-    }
-    
-    if (message) {
-        this.errorMessage = $('<div />').appendTo(this.cell.getElement()).css( {
-            "position" : 'relative',
-            "z-index" : '800'
-        }).addClass(DynamicTable.cssClasses.validationErrorContainer);
-        $('<div />').addClass(DynamicTable.cssClasses.validationError)
-                .appendTo(this.errorMessage).css("position", "relative").text(
-                        message).width(width);
-    }
+TableEditors.CommonEditor.prototype._requestCancel = function() {
+  this.element.trigger("cancelRequested", [this]);
+};
+TableEditors.CommonEditor.prototype._requestSave = function() {
+  this.element.trigger("storeRequested", [this]);
 };
 
-TableEditors.CommonEditor.prototype.hideError = function() {
-    if (this.inputElement) {
-        this.inputElement.removeClass(DynamicTable.cssClasses.fieldError);
-        this.inputElement.unbind("change", this.errorChangeListener);
-    } else if (this.element) {
-        this.element.removeClass(DynamicTable.cssClasses.fieldError);
-        this.element.unbind("change", this.errorChangeListener);
-    }
-    this.errorMessageVisible = false;
-    if (this.errorMessage) {
-        this.errorMessage.remove();
-    }
+/**
+ * 
+ */
+TableEditors.CommonEditor.prototype.getEditorValue = function() {};
+TableEditors.CommonEditor.prototype.setEditorValue = function() {};
+
+TableEditors.CommonEditor.prototype.addErrorMessage = function(message) {
+  this.errorMessages.push(message);
+};
+TableEditors.CommonEditor.prototype._validate = function() {
+  return true;
 };
 
-TableEditors.CommonEditor.prototype.focus = function() {
-    this.element.focus();
+TableEditors.CommonEditor.prototype.isFocused = function() {
+  return this.focused;
 };
 
-TableEditors.CommonEditor.prototype.isValid = function() {
+/**
+ * Change event listener.
+ */
+TableEditors.CommonEditor.prototype._registerEditField = function(element) {
+  var me = this;
+  element.keydown(function(event) {
+    me._handleKeyEvent(event);
     return true;
-};
-// bind events to the cell object as this.element may contain iframes,
-// which are in different document context
-TableEditors.CommonEditor.prototype._focusHandler = function() {
-    this.hasFocus = true;
-    this.cell.getElement().trigger("DynamicsFocus");
-};
-TableEditors.CommonEditor.prototype._blurHandler = function(event) {
-    if (!this.options.editRow) {
-        this._handleBlurEvent(event);
+  });
+  element.blur(function(event) {
+    if (me._validate()) {
+      me.options.set.call(me.model, me.getEditorValue());
     }
-    this.hasFocus = false;
-    this.cell.getElement().trigger("DynamicsBlur");
+    me.element.trigger("DynamicsBlur");
+    me.focused = false;
+  });
+  element.focus(function() {
+    me.element.trigger("DynamicsFocus");
+    me.focused = true;
+  });
+  
+  element.data("editor", this).addClass("dynamics-editor-element");
 };
 
-TableEditors.CommonEditor.prototype._registerEvents = function() {
-    var me = this;
-    this.element.keydown(function(event) {
-        me._handleKeyEvent(event);
-        return true;
-    });
-    this.element.blur(function(event) {
-        me._blurHandler(event);
-    });
-    this.element.focus(function() {
-        me._focusHandler();
-    });
+/**
+ * Execute field value validators.
+ * Does not run composite validations.
+ */
+TableEditors.CommonEditor.prototype.runValidation = function() {
+  this.errorMessages = [];
+  var valid = this._validate();
+  if (!valid) {
+    this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this.options.fieldName, this.errorMessages)]);
+  }
+  else {
+    if (!this.previousValueValid) {
+      this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this.options.fieldName)]);    
+    }
+    this.options.set.call(this.model, this.getEditorValue());
+  }
+  this.previousValueValid = valid;
+  return valid;
 };
-TableEditors.CommonEditor.prototype._handleBlurEvent = function(event) {
-    this.save();
-};
-TableEditors.CommonEditor.prototype.saveRow = function() {
-    this.cell.getElement().trigger("storeRequested",
-            new DynamicsEvents.StoreRequested(this));
-};
+
 TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
-  if (event.keyCode === 27 && !this.options.editRow) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.close();
-        return false;
-    } else if (event.keyCode === 13 && !this.options.editRow) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.save();
-        return false;
-    } else if (event.keyCode === 13 && this.options.editRow) {
-        event.stopPropagation();
-        event.preventDefault();
-        this.saveRow();
-        return false;
-    }
-};
-TableEditors.CommonEditor.prototype.setEditorValue = function(value) {
-    if (!value) {
-        value = this.options.get.call(this.model);
-    }
-    if (this.options.decorator) {
-        value = this.options.decorator(value);
-    }
-    this.element.val(value);
+  if (event.keyCode === 27) {
+    event.stopPropagation();
+    event.preventDefault();
+    this._requestCancel();
+    return false;
+  } else if (event.keyCode === 13) {
+    event.stopPropagation();
+    event.preventDefault();
+    this._requestSave();
+    return false;
+  }/*else if (event.keyCode === 13 && this.options.editRow) {
+    event.stopPropagation();
+    event.preventDefault();
+    this.saveRow();
+    return false;
+  }*/
 };
 
-TableEditors.CommonEditor.prototype.getEditorValue = function() {
-    return this.element.val();
+/*
+ * TEXT FIELD EDITORS
+ */
+
+/**
+ * Abstract common constructor for all single line text input editors.
+ * @constructor
+ * @base TableEditors.CommonEditor
+ * @member TableEditors
+ */
+TableEditors.TextFieldEditor = function() {};
+TableEditors.TextFieldEditor.prototype = new TableEditors.CommonEditor();
+/**
+ * Default options for <code>TableEditors.TextFieldEditor</code>
+ */
+TableEditors.TextFieldEditor.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.TextFieldEditor */
+  required: false,
+  /**
+   * The css width of the input element.
+   * Default: 95%
+   * @member TableEditors.TextFieldEditor */
+  size: '95%',
+  
+  /**
+   * The type of the <code>&lt;input&gt;</code> element.
+   * Default: "text"
+   * @memer TableEditors.TextFieldEditor
+   */
+  fieldType: "text"
+};
+/**
+ * Initializes a TextFieldEditor.
+ * Will call TableEditors.CommonEditor.init.
+ */
+TableEditors.TextFieldEditor.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.TextFieldEditor.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+  
+  this.textField = $('<input type="' + this.options.fieldType + '"/>')
+    .appendTo(this.element).width(this.options.size);
+  this._registerEditField(this.textField);
 };
 
 /**
+ * Close the TextFieldEditor and remove its input elements.
+ */
+TableEditors.TextFieldEditor.prototype.close = function() {
+  this.textField.remove();
+  TableEditors.CommonEditor.prototype.close.call(this);
+};
+
+/**
+ * Sets the new value or uses <code>options.get</code> if the parameter
+ * <code>value</code> is <code>undefined</code>.
+ * @param {Object} value the value to set
+ */
+TableEditors.TextFieldEditor.prototype.setEditorValue = function(value) {
+  if (!value) {
+    value = this.options.get.call(this.model);
+  }
+  if (this.options.decorator) {
+    value = this.options.decorator(value);
+  }
+  this.textField.val(value);
+};
+/**
+ * Get the text field editor's value.
+ */
+TableEditors.TextFieldEditor.prototype.getEditorValue = function() {
+  return this.textField.val();
+};
+
+
+TableEditors.TextFieldEditor.prototype._validate = function() {
+  var valid = true;
+  var value = jQuery.trim(this.textField.val());
+  
+  if (this.options.required) {
+    if (!value || value.length === 0) {
+      valid = false;
+      this.addErrorMessage(ValidationMessages.textField.required);
+    }
+  }
+  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
+};
+
+/**
+ * Basic text input.
  * 
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.Text = function(row, cell, options) {
-    this.element = $('<input type="text"/>').width("98%").appendTo(
-            cell.getElement());
-    this.init(row, cell, options);
+TableEditors.Text = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
 };
-TableEditors.Text.prototype = new TableEditors.CommonEditor();
-TableEditors.Text.prototype.isValid = function() {
-    var requiredLength = 0;
-    if (this.options.minlength) {
-        requiredLength = this.options.minlength;
-    } else if (this.options.required) {
-        requiredLength = 1;
-    }
-    var valid = this.element.val().length >= requiredLength;
-    if (!valid) {
-        this.showError("Minimum length for the field is " + requiredLength);
-    }
-    return valid;
+TableEditors.Text.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.Text</code>
+ */
+TableEditors.Text.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.Text */
+  required: false
+};
+/**
+ * Initializes a TextFieldEditor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Text.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Text.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.Text.prototype._validate = function() {
+  return TableEditors.TextFieldEditor.prototype._validate.call(this);
 };
 
 /**
+ * Email input.
  * 
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.Number = function(row, cell, options) {
-    this.element = $('<input type="text"/>').width("98%").appendTo(
-            cell.getElement());
-    this.init(row, cell, options);
+TableEditors.Email = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
 };
-
-TableEditors.Number.prototype = new TableEditors.CommonEditor();
-TableEditors.Number.prototype.isValid = function() {
-    var value = this.element.val();
-    if (this.options.required && value !== 0 && !value) {
-        this.showError("Required field.");
-        return false;
-    }
-    var intVal = parseInt(value, 10);
-    if (value !== 0 && !value) {
-        this.showError("Value must be an integer.");
-        return false;
-    }
-    if ((this.options.minVal || this.options.minVal === 0)
-            && this.options.minVal > intVal) {
-        this.showError("Value must be greater than " + this.options.minVal);
-        return false;
-    }
-    if ((this.options.maxVal || this.options.maxVal === 0)
-            && this.options.maxVal < intVal) {
-        this.showError("Value must be smaller than " + this.options.maxVal);
-        return false;
-    }
-    return true;
-};
-
+TableEditors.Email.prototype = new TableEditors.TextFieldEditor();
 /**
- * @constructor
- * @base TableEditors.CommonEditor
+ * Default options for <code>TableEditors.Email</code>
  */
-TableEditors.Email = function(row, cell, options) {
-    this.element = $('<input type="text"/>').width("98%").appendTo(
-            cell.getElement());
-    this.init(row, cell, options);
+TableEditors.Email.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: true
+   * @member TableEditors.Email */
+  required: true
 };
-TableEditors.Email.prototype = new TableEditors.CommonEditor();
-TableEditors.Email.prototype.isValid = function() {
-    var emailRegEx = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-    if (!this.element.val().match(emailRegEx)) {
-        this.showError("Email address not valid");
-        return false;
-    }
-    return true;
+/**
+ * Initializes a TextFieldEditor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Email.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Email.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.Email.prototype._validate = function() {
+  var valid = true;
+  var emailRegEx = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  if (!this.textField.val().match(emailRegEx)) {
+      valid = false;
+      this.addErrorMessage(ValidationMessages.email.notValid);
+  }
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
 };
 
 /**
+ * Number input.
  * 
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.SingleSelection = function(row, cell, options) {
-    this.element = $('<select />').width("98%").appendTo(cell.getElement());
-    this.init(row, cell, options);
-    this._renderOptions();
-    if (!this.options.editRow) {
-        var me = this;
-        this.element.change(function(event) {
-            me._handleBlurEvent(event);
-        });
-    }
+TableEditors.Number = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
 };
-
-TableEditors.SingleSelection.prototype = new TableEditors.CommonEditor();
-
-TableEditors.SingleSelection.prototype._renderOptions = function() {
-    var me = this;
-    var selected = this.options.get.call(this.model);
-    var items = this.options.items;
-    jQuery.each(items, function(key, val) {
-        var el = $('<option />').val(key).text(val).appendTo(me.element);
-        if (key === selected) {
-            el.attr("selected", "selected");
-        }
-    });
+TableEditors.Number.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.Number</code>
+ */
+TableEditors.Number.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: true
+   * @member TableEditors.Number */
+  required: true,
+  
+  /**
+   * Minimum value of the field.
+   * Default: null
+   * @member TableEditors.Number
+   */
+  minValue: null,
+  
+  /**
+   * Maximum value of the field.
+   * Default: null
+   * @member TableEditors.Number
+   */
+  maxValue: null
 };
 /**
+ * Initializes a Number editor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Number.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Number.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.Number.prototype._validate = function() {
+  var valid = true;
+  var value = jQuery.trim(this.textField.val());
+  
+  var isInt = (value.toString().search(/^[0-9]*$/) === 0);
+  var intValue = parseInt(value, 10);
+  
+  if (!isInt) {
+    this.addErrorMessage(ValidationMessages.number.isNotInteger);
+    valid = false;
+  }
+  
+  if (this.options.minValue !== null && isInt && this.options.minValue > intValue) {
+    this.addErrorMessage(ValidationMessages.number.mustBeGreater + this.options.minValue);
+    valid = false;
+  }
+  
+  if (this.options.maxValue !== null && isInt && this.options.maxValue < intValue) {
+    this.addErrorMessage(ValidationMessages.number.mustBeLower + this.options.maxValue);
+    valid = false;
+  }
+  
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
+
+
+/**
+ * Estimate input.
+ * 
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.Date = function(row, cell, options) {
-    this.element = $('<input type="text"/>').css('max-width', '10em').width(
-            "80%").appendTo(cell.getElement());
-
-    this.datepickerOpen = false;
-    this.init(row, cell, options);
-
-    var me = this;
-
-    this.element.datepicker( {
-        dateFormat : 'yy-mm-dd',
-        numberOfMonths : 3,
-        showButtonPanel : true,
-        beforeShow : function() {
-            me.datepickerOpen = true;
-            pattern = /(\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
-            var index = me.element.val().search(pattern);
-            me.oldHoursAndMinutes = me.element.val().substr(index, 5);
-        },
-        onSelect : function() {
-            var newValue = me.element.val();
-            if (me.options.withTime) {
-                newValue = me.element.val() + " " + me.oldHoursAndMinutes;
-            }
-            me.element.val(newValue);
-            me.element.focus();
-        },
-        onClose : function() {
-            me.datepickerOpen = false;
-        },
-        buttonImage : 'static/img/calendar.gif',
-        buttonImageOnly : true,
-        showOn : 'button',
-        constrainInput : false
-    });
-
+TableEditors.Estimate = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
 };
-TableEditors.Date.prototype = new TableEditors.CommonEditor();
-TableEditors.Date.prototype._mouseEvent = function(event) {
-    if (this.datepickerOpen || this.element.get(0) === event.target
-            || $(event.target).parents('.ui-datepicker').length > 0) {
-        return;
-    }
-    this.save();
+TableEditors.Estimate.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.Estimate</code>
+ */
+TableEditors.Estimate.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.Estimate */
+  required: false
 };
-TableEditors.Date.prototype._registerEvents = function() {
-    var me = this;
-    this.element.keyup(function(event) {
-        me._handleKeyEvent(event);
-        return true;
-    });
-    if (!this.options.editRow) {
-        this._clickCb = function(event) {
-            me._mouseEvent(event);
-        };
-        $(window).click(this._clickCb);
-    }
-    this.element.focus(function() {
-        this.cus = true;
-    }).blur(function() {
-        this.cus = false;
-    });
+/**
+ * Initializes a Estimate editor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Estimate.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Estimate.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
 };
+
+TableEditors.Estimate.prototype._validate = function() {
+  var valid = true;
+  var value = jQuery.trim(this.textField.val());
+  
+  var format = new RegExp("^([0-9]*)(pt|points)?$");
+  
+  if (!format.test(value)) {
+    valid = false;
+    this.addErrorMessage(ValidationMessages.estimate.invalid);
+  }
+  
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
+
+/**
+ * ExactEstimate input.
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.ExactEstimate = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+};
+TableEditors.ExactEstimate.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.ExactEstimate</code>
+ */
+TableEditors.ExactEstimate.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.ExactEstimate */
+  required: false
+};
+/**
+ * Initializes a ExactEstimate editor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.ExactEstimate.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.ExactEstimate.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.ExactEstimate.prototype._validate = function() {
+  var value = jQuery.trim(this.textField.val());
+  
+  if (this.options.acceptNegative) {
+      var minusTest = /^\-[0-9]/;
+      if (value.match(minusTest)) {
+          value = value.substr(1);
+      }
+  }
+  var majorOnly = /^[0-9]+h?$/; // 10h
+  var minorOnly = /^([1-9]|[1-5]\d)min$/; // 10min
+  var majorAndMinor = /^[ ]*[0-9]+h[ ]+[0-9]+min$/;
+  var shortFormat = /^[0-9]+\.[0-9]+h?$/;
+  
+  var valid = (value.match(majorOnly) || value.match(minorOnly)
+          || value.match(majorAndMinor) || value.match(shortFormat)
+          || !value);
+  if (!valid) {
+      this.addErrorMessage(ValidationMessages.exactEstimate.invalid);
+  }
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
+
+
+/**
+ * Date selector.
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.Date = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+};
+TableEditors.Date.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.Date</code>.
+ * 
+ * Date is always required
+ */
+TableEditors.Date.defaultOptions = {
+  /**
+   * Whether the editor should include time in HH:MM.
+   * Default: true
+   * @member TableEditors.Date */
+  withTime: true,
+  
+  /**
+   * The input element's width.
+   * Default: 80%
+   * @member TableEditors.Date
+   */
+  size: "80%"
+};
+/**
+ * Initializes a Date selector.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Date.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Date.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+  
+  this.datepickerOpen = false;
+  var me = this;
+  
+  this.textField.datepicker( {
+      dateFormat : 'yy-mm-dd',
+      numberOfMonths : 3,
+      showButtonPanel : true,
+      beforeShow : function() {
+          me.datepickerOpen = true;
+          pattern = /(\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
+          var index = me.textField.val().search(pattern);
+          if (index === -1) {
+            me.oldHoursAndMinutes = '12:00';
+          }
+          else {
+            me.oldHoursAndMinutes = me.textField.val().substr(index, 5);
+          }
+      },
+      onSelect : function() {
+          var newValue = me.textField.val();
+          if (me.options.withTime) {
+              newValue = me.textField.val() + " " + me.oldHoursAndMinutes;
+          }
+          me.textField.val(newValue);
+          me.textField.focus();
+      },
+      onClose : function() {
+          me.datepickerOpen = false;
+      },
+      buttonImage : 'static/img/calendar.gif',
+      buttonImageOnly : true,
+      showOn : 'button',
+      constrainInput : false
+  });
+};
+
 TableEditors.Date.prototype.close = function() {
-    this.element.trigger("editorClosing");
-    this.hideError();
-    this.element.datepicker('destroy');
-    $(window).unbind('click', this._clickCb);
-    this.element.remove();
-};
-TableEditors.Date.prototype.isValid = function() {
-    var pattern;
-    var errorMessage = "";
-    if (this.options.withTime) {
-        pattern = /^\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1]) (\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
-        errorMessage = "Invalid format (yyy.mm.dd hh:mm)";
-    } else {
-        pattern = /^\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1])$/;
-        errorMessage = "Invalid format (yyy.mm.dd)";
-    }
-    var value = jQuery.trim(this.element.val());
-    if (this.options.required && !value) {
-        this.showError("Required field");
-        return false;
-    } else if (!this.options.required && !value) {
-        return true;
-    }
-    var valid = value.match(pattern);
-    if (!valid) {
-        this.showError(errorMessage);
-    }
-    return valid;
+  this.element.find('img').remove();
+  TableEditors.TextFieldEditor.prototype.close.call(this);
 };
 
+TableEditors.Date.prototype._validate = function() {
+  var pattern;
+  var errorMessage = "";
+  if (this.options.withTime) {
+      pattern = new RegExp("^\\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1]) ([0-1][0-9]|2[0-3]):([0-5][0-9])$");
+      errorMessage = "Invalid format (yyy.mm.dd hh:mm)";
+  } else {
+      pattern = new RegExp("^\\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1])$");
+      errorMessage = "Invalid format (yyy.mm.dd)";
+  }
+  var value = jQuery.trim(this.textField.val());
+  var valid = pattern.test(value);
+  if(!valid) {
+    this.addErrorMessage(errorMessage);
+  }
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
+/*
+ * PASSWORD INPUT
+ */
 /**
+ * Password input
+ * 
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.Estimate = function(row, cell, options) {
-    this.element = $('<input type="text"/>').width("98%").appendTo(
-            cell.getElement());
-    this.init(row, cell, options);
+TableEditors.Password = function(element, model, options) {
+  this.init(element, model, options);
 };
-TableEditors.Estimate.prototype = new TableEditors.CommonEditor();
-
-TableEditors.Estimate.prototype.isValid = function() {
-    var value = jQuery.trim(this.element.val());
-    if (this.options.required && value.length === 0) {
-        return false;
-    } else if (!this.options.required && value.length === 0) {
-        return true;
-    }
-    if (!value.match(/^\d+/)) {
-        this.showError("Invalid format (e.g. 10 or 10pt)");
-        return false;
-    }
-    return true;
-};
-
+TableEditors.Password.prototype = new TableEditors.TextFieldEditor();
 /**
+ * Default options for <code>TableEditors.Password</code>
+ */
+TableEditors.Password.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: true
+   * @member TableEditors.Password */
+  required: true,
+  
+  /**
+   * The type of the <code>&lt;input&gt;</code> element.
+   * Default: "password"
+   * @member TableEditors.Password
+   */
+  fieldType: "password"
+};
+/**
+ * Initializes a TextFieldEditor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.Password.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Password.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.Password.prototype.getEditorValue = function() {
+  return this.textField.val();
+};
+
+TableEditors.Password.prototype._validate = function() {
+  return TableEditors.TextFieldEditor.prototype._validate.call(this);
+};
+
+
+
+/*
+ * DROP DOWN SELECTION
+ */
+/**
+ * Abstract common constructor for all <code>select</code> editors.
  * @constructor
  * @base TableEditors.CommonEditor
  */
-TableEditors.ExactEstimate = function(row, cell, options) {
-    this.element = $('<input type="text"/>').appendTo(
-            cell.getElement());
-    if(options.size) {
-      this.element.attr("size", options.size);
-    } else{
-      this.element.width("98%");
-    }
-    this.init(row, cell, options);
+TableEditors.Selection = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
 };
-TableEditors.ExactEstimate.prototype = new TableEditors.CommonEditor();
+TableEditors.Selection.prototype = new TableEditors.CommonEditor();
+/**
+ * Default options for <code>TableEditors.Selection</code>
+ */
+TableEditors.Selection.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.Selection */
+  required: false,
+  /**
+   * The css width of the input element.
+   * Default: 95%
+   * @member TableEditors.Selection */
+  size: '95%',
+  /**
+   * The items of the selection.
+   * Default: {}
+   * @member TableEditors.Selection
+   */
+  items: {}
+};
+/**
+ * Initializes a Selection.
+ * Will call TableEditors.CommonEditor.init.
+ */
+TableEditors.Selection.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Selection.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+  
+  this.selectBox = $('<select/>').appendTo(this.element).width(this.options.size);
+  
+  var me = this;
+  var value = this.options.get.call(this.model);
+  jQuery.each(this.options.items, function(key, val) {
+    var el = $('<option/>').val(key).text(val).appendTo(me.selectBox);
+  });
+  
+  this._registerEditField(this.selectBox);
+};
 
-TableEditors.ExactEstimate.prototype.isValid = function() {
-    var value = jQuery.trim(this.element.val());
-    if (this.options.required && !value) {
-        return false;
-    } else if (!this.options.required && !value) {
-        return true;
-    }
-    if (this.options.acceptNegative) {
-        var minusTest = /^[ ]*\-/;
-        if (value.match(minusTest)) {
-            value = value.replace(minusTest, "");
-        }
-    }
-    var majorOnly = /^[0-9]+h?$/; // 10h
-    var minorOnly = /^([1-9]|[1-5]\d)min$/; // 10min
-    var majorAndMinor = /^[ ]*[0-9]+h[ ]+[0-9]+min$/;
-    var shortFormat = /^[0-9]+\.[0-9]+h?$/;
-    var valid = (value.match(majorOnly) || value.match(minorOnly)
-            || value.match(majorAndMinor) || value.match(shortFormat));
-    if (!valid) {
-        this.showError("Invalid value (eg. 10h or 10h 30min or 1.5h");
-    }
-    return valid;
+TableEditors.Selection.prototype._registerEditField = function(field) {
+  var me = this;
+  field.change(function() {
+    me._requestSave();
+  });
+  TableEditors.CommonEditor.prototype._registerEditField.call(this, field);
 };
+
+TableEditors.Selection.prototype.close = function() {
+  this.selectBox.remove();
+  TableEditors.CommonEditor.prototype.close.call(this);
+};
+
+TableEditors.Selection.prototype.getEditorValue = function() {
+  return this.selectBox.val();
+};
+TableEditors.Selection.prototype.setEditorValue = function(value) {
+  if (!value) {
+    value = this.options.get.call(this.model);
+  }
+  jQuery.each(this.selectBox.children(), function(k,v) {
+    var elem = $(v);
+    var val = v.value;
+    if (val === value) {
+      elem.attr("selected","selected");
+    }
+  });
+};
+
+TableEditors.Selection.prototype._validate = function() {
+  var valid = true;
+  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
+};
+
+
+
+
+
+/*
+ * WYSIWYG
+ */
 
 /**
+ * Wysiwyg editor.
  * @constructor
  * @base TableEditors.CommonEditor
  */
-
-TableEditors.Wysiwyg = function(row, cell, options) {
-    var me = this;
-    this.actualElement = $('<textarea></textarea>').appendTo(cell.getElement());
-    this.actualElement.width("96%").height("240px");
-    setUpWysiwyg(this.actualElement);
-    this.element = this._getEditorWindow();
-    this.init(row, cell, options);
-    this.actualElement.trigger("editorOpening");
-    this.actualElement.addClass("tableSortListener");
-    this.actualElement.bind("tableSorted", function() {
-        if (!me.isFocused()) {
-            me.actualElement.wysiwyg("resetFrame");
-            me.element = me._getEditorWindow();
-            me._registerEvents();
-            me.actualElement.focus();
-        }
-    });
+TableEditors.Wysiwyg = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
 };
 TableEditors.Wysiwyg.prototype = new TableEditors.CommonEditor();
+TableEditors.Wysiwyg.defaultOptions = {
+  /**
+   * The width of the element.
+   * Default: 96%
+   * @member TableEditors.Wysiwyg */
+  width: "96%",
+  /**
+   * The height of the element.
+   * Default: 240
+   * @member TableEditors.Wysiwyg */
+  height: "240"
+};
+/**
+ * Initialize a Wysiwyg editor
+ */
+TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Wysiwyg.defaultOptions);
+  jQuery.extend(opts, options);
+  
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+  
+  var me = this;
+  this.actualElement = $('<textarea></textarea>').appendTo(element);
+  this.actualElement.width(this.options.width).height(this.options.height);
+  this.actualElement.wysiwyg();
+  this.wysiwyg = this._getEditorWindow();
+  
+  this.actualElement.trigger("editorOpening");
+  this.actualElement.addClass("tableSortListener");
+  this.resetEditor();
+  this.actualElement.bind("tableSorted", function() {
+    if (!me.isFocused()) {
+      me.actualElement.wysiwyg("resetFrame");
+      me.wysiwyg = me._getEditorWindow();
+      me.resetEditor();
+      me.actualElement.focus();
+    }
+  });
+  
+};
+TableEditors.Wysiwyg.prototype.resetEditor = function() {
+  var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
+  var frameWindow = $(iframeElement.contentWindow);
+  this._registerEditField(frameWindow);
+};
 
 TableEditors.Wysiwyg.prototype._getEditorWindow = function() {
   return $(this.actualElement.wysiwyg("getDocument"));
 };
 TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
-    if (!value) {
-        value = this.options.get.call(this.model);
-    }
-    this.actualElement.wysiwyg("setValue", value);
+  if (!value) {
+    value = this.options.get.call(this.model);
+  }
+  this.actualElement.wysiwyg("setValue", value);
 };
-
 TableEditors.Wysiwyg.prototype.getEditorValue = function() {
-    return this.actualElement.val();
+  return this.actualElement.wysiwyg("getValue");
 };
 
 TableEditors.Wysiwyg.prototype.focus = function() {
-    this.actualElement.focus();
+  this.actualElement.focus();
 };
 
 TableEditors.Wysiwyg.prototype.close = function() {
-    this.element = null;
-    this.actualElement.trigger("editorClosing");
-    this.actualElement.wysiwyg("remove");
-    this.actualElement.remove();
-};
-TableEditors.Wysiwyg.prototype._registerEvents = function() {
-  var me = this;
-  this.element.keydown(function(event) {
-      me._handleKeyEvent(event);
-      return true;
-  });
-  var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
-  var frameWindow = iframeElement.contentWindow;
-  //jQuery doesn't allow binding event handlers for other 
-  //window objects than the main window
-  //also, events must be added manually, because design mode 
-  //prevents all events within the editor window
-  frameWindow.addEventListener("focus", function() {
-    if(!me.isFocused()) {
-      me._focusHandler();
-    }
-  }, true);
-  frameWindow.addEventListener("blur", function() {
-    if(me.isFocused()) {
-      me._blurHandler();
-    }
-  }, true);
+  this.wysiwyg = null;
+  this.actualElement.trigger("editorClosing");
+  this.actualElement.wysiwyg("remove");
+  this.actualElement.remove();
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
-    if (event.keyCode === 27 && !this.options.editRow) {
-        this.close();
-    }
-};
-
-/**
- * @constructor
- * @base TableEditors.CommonEditor
- */
-TableEditors.Autocomplete = function(row, cell, options) {
-    if (arguments.length > 0) {
-        this.init(row, cell, options);
-    }
-};
-
-TableEditors.Autocomplete.prototype = new TableEditors.CommonEditor();
-TableEditors.Autocomplete.superclass = TableEditors.CommonEditor.prototype;
-
-TableEditors.Autocomplete.prototype.init = function(row, cell, options) {
-    this.element = cell.getElement();
-    this.dialogOpening = false;
-    this.newValue = null;
-
-    TableEditors.Autocomplete.superclass.init.call(this, row, cell, options);
-
-    this.createInitialDialog();
-};
-TableEditors.Autocomplete.prototype.createInitialDialog = function() {
-    var me = this;
-
-    this.autocomplete = $(window).autocompleteDialog( {
-        dataType : this.autocompleteOptions.dataType,
-        callback : function(keys, items) {
-            me.setValue(keys, items);
-        },
-        cancel : function() {
-            me.close();
-        },
-        title : this.autocompleteOptions.title,
-        selected : me.getInitialSelection(),
-        multiSelect : true
-    });
-};
-
-TableEditors.Autocomplete.prototype.save = function() {
-    if (this.newValue) {
-        this.options.set.call(this.model, this.newValue.keys,
-                this.newValue.data);
-    }
-    
+  if (event.keyCode === 27 && !this.options.editRow) {
     this.close();
+  }
 };
 
-TableEditors.Autocomplete.prototype._registerEvents = function() { };
-TableEditors.Autocomplete.prototype.getSelectedKeys = function() {
-    return [];
-};
-TableEditors.Autocomplete.prototype.close = function() {
-    this.hideError();
-    this.cell.render();
-    this.cell.getElement().trigger("editorClosing");
-};
-TableEditors.Autocomplete.prototype.getInitialSelection = function() {
-    var modelObjects = this.options.get.call(this.model);
 
-    var modelIds = [];
-    for ( var i = 0; i < modelObjects.length; i++) {
-        modelIds.push(modelObjects[i].getId());
-    }
+/*
+ * DIALOG EDITORS
+ */
 
-    return modelIds;
-};
-TableEditors.Autocomplete.prototype.setValue = function(keys, data) {
-    this.newValue = {
-        keys: keys,
-        data: data
-    };
-
-    this.save();
-    this.updateEditorValue();
-};
-
-TableEditors.Autocomplete.prototype.autocompleteOptions = {
-    dataType : null,
-    caption  : null
-};
-
-TableEditors.Autocomplete.prototype.updateEditorValue = function() { /* empty */ };
-
-TableEditors.AutocompleteSingle = function(row, cell, options) {
-    if (arguments.length > 0) {
-        this.init(row, cell, options);
-    }
-};
-TableEditors.AutocompleteSingle.prototype = new TableEditors.Autocomplete();
-TableEditors.AutocompleteSingle.superclass = TableEditors.Autocomplete.prototype;
-TableEditors.AutocompleteSingle.prototype.createInitialDialog = function() { };
-TableEditors.AutocompleteSingle.prototype.setValue = function(newValueObject) {
-    this.newValueObject = newValueObject;
-    this.updateEditorValue();
-};
-TableEditors.AutocompleteSingle.prototype.init = function(row, cell, options) {
-    this.inputElement = $('<input readonly="readonly" type="text"/>').
-        width("98%").appendTo(cell.getElement());
-
-    this.value = null;
+/**
+ * Base class for all editors that open dialogs.
+ * @constructor
+ * @member TableEditors
+ */
+TableEditors.DialogEditor = function() {};
+TableEditors.DialogEditor.prototype = new TableEditors.CommonEditor();
+/**
+ * Default options for the DialogEditor class.
+ */
+TableEditors.DialogEditor.defaultOptions = {
+    /**
+     * Whether the opened dialog should be modal or not.
+     * Default: true
+     * @member TableEditors.DialogEditor
+     */
+    modal: true,
     
-    if (options.editRow) {
-        var me = this;
-        var open = function() {
-            if (!me.dialogOpening) {
-                me.dialogOpening = true;
-                me.openDialog();
-            }
-        };
-
-        this.inputElement.click(open).focus(open);
-    }
-
-    TableEditors.AutocompleteSingle.superclass.init.call(this, row, cell,
-            options);
-
-    if (this.options.editRow) {
-        this.element.trigger("editorOpening");
-    } else {
-        this.openDialog();
-    }
-};
-
-TableEditors.AutocompleteSingle.prototype.save = function() {
-    if (this.isValid() && this.newValueObject) {
-        this.options.set.call(this.model, this.newValueObject);
-        this.newValueObject = null;
-        
-        this.close();
-    }
-    else if (! this.newValueObject) {
-        this.close();
-    }
-};
-
-TableEditors.AutocompleteSingle.prototype.openDialog = function() {
-    var me = this;
-
-    this.autocomplete = $(window).autocompleteSingleDialog( {
-        dataType : this.autocompleteOptions.dataType,
-        callback : function(itemId) {
-            me.inputElement.get(0).focus();
-            me.setRealValue(itemId);
-            me.dialogOpening = false;
-        },
-        cancel : function() {
-            me.inputElement.get(0).focus();
-            if (! me.options.editRow) {
-                me.close();
-            }
-            me.dialogOpening = false;
-        },
-        title : this.autocompleteOptions.title,
-        selected : me.getInitialSelection(),
-        multiSelect : false
-    });
-};
-
-TableEditors.AutocompleteSingle.prototype.close = function() {
-    this.hideError();
-    this.inputElement.remove();
-    this.cell.getElement().trigger("editorClosing");
-};
-
-TableEditors.AutocompleteSingle.prototype.getInitialSelection = function() {
-    return [];
-};
-
-TableEditors.AutocompleteSingle.prototype.setRealValue = function(value) {
-};
-
-TableEditors.AutocompleteSingle.prototype.setEditorValue = function(value) {
-    if (!value) {
-        value = this.options.get.call(this.model);
-    }
-    this.value = value;
+    /**
+     * Whether the dialog should be shown on editor open.
+     * Default: false
+     * @member TableEditors.DialogEditor
+     */
+    autoShow: true,
     
-    if (this.options.decorator) {
-        value = this.options.decorator(value);
-    }
-    this.inputElement.val(value);
+    /**
+     * Extended options for the jQuery ui dialog.
+     * Accepts jQuery.dialog options.
+     * These will be overridden by the other given options,
+     * e.g. <code>autoShow.</code>
+     * Default: {}
+     */
+    extendedDialogOptions: {}
 };
 
-TableEditors.User = function(row, cell, options) {
-    if (arguments.length > 0) {
-        TableEditors.User.superclass.init.call(this, row, cell, options);
-    }
+/**
+ * Initialize a <code>DialogEditor</code>
+ */
+TableEditors.DialogEditor.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.DialogEditor.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+
+  if (this.options.autoShow) {
+    this._openDialog();
+  }
 };
-TableEditors.User.prototype = new TableEditors.Autocomplete();
-TableEditors.User.superclass = TableEditors.Autocomplete.prototype;
-TableEditors.User.prototype.autocompleteOptions = {
-    dataType : "usersAndTeams",
-    title : "Select users"
+TableEditors.DialogEditor.prototype._openDialog = function() {
+  var me = this;
+  var dialogOptions = {};
+  // These override the extendedDialogOptions
+  var opts = {
+      autoOpen:   this.options.autoShow,
+      modal:      this.options.modal,
+      buttons:    {
+        'Ok':     function() { me._ok(); },
+        'Cancel': function() { me._cancel(); }
+      }
+  };
+  jQuery.extend(dialogOptions, this.options.extendedDialogOptions);
+  jQuery.extend(dialogOptions, opts);
+  this.dialog = $('<div/>').dialog(dialogOptions);
 };
 
-TableEditors.Backlog = function(row, cell, options) {
-    if (arguments.length > 0) {
-        TableEditors.Backlog.superclass.init.call(this, row, cell, options);
-    }
-};
-TableEditors.Backlog.prototype = new TableEditors.AutocompleteSingle();
-TableEditors.Backlog.superclass = TableEditors.AutocompleteSingle.prototype;
-TableEditors.Backlog.prototype.setRealValue = function(value) {
-    iterationId = value;
-
-    var me = this;
-    var model = this.model;
-
-    ModelFactory.getOrRetrieveObject("iteration", iterationId, function(type, id, object) {
-        me.setEditorValue({ 
-            name: object.getName(), 
-            backlogId: object.getId(), 
-            storyId: null, 
-            taskId: model.getId()
-        });
-        me.setValue(object);
-        
-        if (! me.options.editRow) {
-            me.save();
-        }
-        
-        if (me.errorChangeListener) {
-            me.errorChangeListener();
-        }
-    });
+TableEditors.DialogEditor.prototype._closeDialog = function() {
+  if (this.dialog) {
+    this.dialog.dialog('destroy');
+    this.dialog.remove();
+    this.dialog = null;
+  }
 };
 
-TableEditors.Backlog.prototype.autocompleteOptions = {
-    dataType : "backlog",
-    title    : "Select backlog"
+TableEditors.DialogEditor.prototype._ok = function() {
+  MessageDisplay.Ok("Ok clicked");
+  this._closeDialog();
 };
-TableEditors.CurrentIteration = function(row, cell, options) {
-    if (arguments.length > 0) {
-        TableEditors.Backlog.superclass.init.call(this, row, cell, options);
-    }
-};
-TableEditors.CurrentIteration.prototype = new TableEditors.Backlog();
-TableEditors.CurrentIteration.superclass = TableEditors.Backlog.prototype;
-TableEditors.CurrentIteration.prototype.autocompleteOptions = {
-    dataType : "currentIterations",
-    title    : "Select iteration",
-    required : true
+TableEditors.DialogEditor.prototype._cancel = function() {
+  MessageDisplay.Ok("Cancel clicked");
+  this._closeDialog();
 };
 
-TableEditors.CurrentIteration.prototype.isValid = function() {
-    var contextObj = this.value;
-    if (!this.options.required || (contextObj && contextObj.backlogId)) {
-        return true;
-    }
-
-    this.inputElement.addClass(DynamicTable.cssClasses.fieldError);
-    this.showError("Required field");
-    
-    var me = this;
-    this.errorChangeListener = function() {
-        if (me.isValid()) {
-            me.hideError();
-        }
-    };
-
-    return false;
+TableEditors.DialogEditor.prototype.close = function() {
+  TableEditors.CommonEditor.prototype.close.call(this);
 };
 
-TableEditors.CurrentIteration.prototype.getInitialSelection = function() {
-    var contextObject = this.options.get.call(this.model);
-    if (contextObject) {
-        return [ contextObject.iterationId ];
-    }
-    return [];
-};
-
-TableEditors.CurrentIteration.prototype.updateEditorValue = function() {
-    var modelObject = this.newValueObject;
-    if (modelObject) {
-        this.inputElement.val(modelObject.getName());
-    }
-    else {
-        var value = this.value;
-        value = this.options.decorator.call(this.model, value);
-        this.inputElement.val(value);
-    }
-};
 
 
 /**
- * Inline autocomplete
+ * Dialog editor for Autocomplete module
+ * @constructor
  */
-TableEditors.AutocompleteInline = function(row, cell, options) {
-  this.value = null;
-  this.init(row, cell, options);
+TableEditors.AutocompleteEditor = function() {
+  
 };
-TableEditors.AutocompleteInline.prototype = new TableEditors.CommonEditor();
-TableEditors.AutocompleteInline.prototype.init = function(row, cell, options) {
-  var me = this;
-  this.element = $('<div/>').appendTo(cell.getElement());
+TableEditors.AutocompleteEditor.prototype = new TableEditors.DialogEditor();
+
+TableEditors.AutocompleteEditor.defaultOptions = {
+    /**
+     * Data type for the autocomplete editor.
+     * Default: ""
+     * @see AutocompleteDataProvider
+     */
+    dataType: ""
+};
+/**
+ * Initialize an Autocomplete dialog editor.
+ */
+TableEditors.AutocompleteEditor.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.AutocompleteEditor.defaultOptions);
+  jQuery.extend(opts, options);
   
-  // Add class for row to overflow
-  row.getElement().addClass('autocomplete-inline-row');
+  TableEditors.DialogEditor.prototype.init.call(this, element, model, opts);
   
-  // Call the superclass init
-  TableEditors.CommonEditor.prototype.init.call(this, row, cell, options);
-  
-  // Make it an autocomplete widget
-  this.element.autocompleteInline({
-    dataType: options.dataType,
-    callback: function(val) {
-      me.value = val;
-    }
+  this.autocomplete = $('<div/>').appendTo(this.dialog);
+  this.autocomplete.autocomplete({
+    dataType: this.options.dataType
   });
 };
-TableEditors.AutocompleteInline.prototype.isValid = function() {
-  if (this.options.required && !this.value) {
-    this.showError("Required field");
-    return false;
-  }
-  return true;
-};
-TableEditors.AutocompleteInline.prototype.save = function() {
-  if (this.isValid()) {
-    this.options.set.call(this.model, this.value);
-    this.close();
-  }
-};
-TableEditors.AutocompleteInline.prototype.close = function() {
-  this.element.trigger("editorClosing");
-  this.hideError();
-  this.element.remove();
-};
 
 
 /**
- * 
- * @constructor
- * @base TableEditors.CommonEditor
+ * User selector editor.
  */
-TableEditors.Password = function(row, cell, options) { 
-  this.element = $('<input type="password"/>').width("30%").appendTo(cell.getElement());
-  this.init(row, cell, options);
+TableEditors.User = function(element, model, options) {
+  this.init(element, model, options);
 };
-TableEditors.Password.prototype = new TableEditors.CommonEditor();
-TableEditors.Password.prototype.isValid = function() {
-  if (this.options.required && this.element.val().length < 1) {
-    this.showError("Required field");
-    return false;
-  }
-  return true;
+TableEditors.User.prototype = new TableEditors.AutocompleteEditor();
+TableEditors.User.defaultOptions = {
+    /**
+     * Data type for the autocomplete editor.
+     * Default: ""
+     * @see AutocompleteDataProvider
+     */
+    dataType: "usersAndTeams"
 };
-
+/**
+ * Initialize an Autocomplete dialog editor.
+ */
+TableEditors.User.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.User.defaultOptions);
+  jQuery.extend(opts, options);
+  
+  TableEditors.AutocompleteEditor.prototype.init.call(this, element, model, opts);
+};

@@ -2,6 +2,8 @@ var TaskController = function TaskController(model, view, parentController) {
   this.model = model;
   this.view = view;
   this.parentController = parentController;
+  this.init();
+  this.autohideColumns = [ TaskController.columnIndices.description, TaskController.columnIndices.buttons ];
 };
 
 TaskController.columnIndices = {
@@ -21,30 +23,6 @@ TaskController.columnIndices = {
 
 TaskController.prototype = new CommonController();
 
-/**
- * 
- */
-TaskController.prototype.editTask = function() {
-  this.model.setInTransaction(true);
-  this.view.getCell(TaskController.columnIndices.description).show();
-  this.view.getCell(TaskController.columnIndices.buttons).show();
-  this.view.editRow();
-};
-
-TaskController.prototype.saveTask = function() {
-  var createNewTask = !this.model.getId();
-  if(this.view.saveRowEdit()) {
-    this.model.commit();
-  }
-  else {
-    return;
-  }
-  if(createNewTask) {
-    this.view.remove();
-    return;
-  }
-  this.view.getCell(TaskController.columnIndices.buttons).hide();
-};
 
 TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
   var previousRow = newPos - 1;
@@ -62,17 +40,6 @@ TaskController.prototype.moveTask = function(targetModel) {
   this.model.rankUnder(-1, targetModel);
 };
 
-TaskController.prototype.cancelEdit = function() {
-  var createNewTask = !this.model.getId();
-  if(createNewTask) {
-    this.view.remove();
-    return;
-  }
-  this.model.setInTransaction(false);
-  this.view.closeRowEdit();
-  this.view.getCell(TaskController.columnIndices.buttons).hide();
-  this.model.rollback();
-};
 
 TaskController.prototype.toggleFactory = function(view, model) {
   var options = {
@@ -98,12 +65,6 @@ TaskController.prototype.removeTask = function() {
     me.parentController.removeChildController("task", this);
     me.model.remove();
   });
-};
-
-TaskController.prototype.taskButtonFactory = function(view, model) {
-  return new DynamicsButtons(this,[{text: 'Save', callback: TaskController.prototype.saveTask},
-                                   {text: 'Cancel', callback: TaskController.prototype.cancelEdit}
-                                    ] ,view);
 };
 
 TaskController.prototype.showDetails = function() {
@@ -137,8 +98,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     callback : TaskController.prototype.openDetails
   }, {
     text : "Edit",
-    callback : TaskController.prototype.editTask,
-    enabled : function () { return ! this.model.isInTransaction(); }
+    callback : TaskController.prototype.editTask
   }, {
       text : "Split",
       callback : TaskController.prototype.createSplitTask

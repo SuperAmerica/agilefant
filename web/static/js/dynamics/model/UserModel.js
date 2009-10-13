@@ -124,7 +124,6 @@ UserModel.prototype.isAutoassignToTasksAsString = function() {
 
 UserModel.prototype.setAutoassignToTasks = function(assign) {
   this.currentData.autoassignToTasks = assign;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getEmail = function() {
@@ -133,7 +132,6 @@ UserModel.prototype.getEmail = function() {
 
 UserModel.prototype.setEmail = function(email) {
   this.currentData.email = email;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.isEnabled = function() {
@@ -142,7 +140,6 @@ UserModel.prototype.isEnabled = function() {
 
 UserModel.prototype.setEnabled = function(enabled) {
   this.currentData.enabled = enabled;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getFullName = function() {
@@ -151,7 +148,6 @@ UserModel.prototype.getFullName = function() {
 
 UserModel.prototype.setFullName = function(fullName) {
   this.currentData.fullName = fullName;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getInitials = function() {
@@ -160,7 +156,6 @@ UserModel.prototype.getInitials = function() {
 
 UserModel.prototype.setInitials = function(initials) {
   this.currentData.initials = initials;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getLoginName = function() {
@@ -169,7 +164,6 @@ UserModel.prototype.getLoginName = function() {
 
 UserModel.prototype.setLoginName = function(loginName) {
   this.currentData.loginName = loginName;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getPassword1 = function() {
@@ -178,7 +172,6 @@ UserModel.prototype.getPassword1 = function() {
 
 UserModel.prototype.setPassword1 = function(password) {
   this.currentData.password1 = password;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getPassword2 = function() {
@@ -187,7 +180,6 @@ UserModel.prototype.getPassword2 = function() {
 
 UserModel.prototype.setPassword2 = function(password) {
   this.currentData.password2 = password;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getTeams = function() {
@@ -202,7 +194,6 @@ UserModel.prototype.setTeams = function(teamIds, teamJson) {
   }
   this.currentData.teamIds = teamIds;
   this.currentData.teamsChanged = true;
-  this._commitIfNotInTransaction();
 };
 
 UserModel.prototype.getWeekEffort = function() {
@@ -211,7 +202,6 @@ UserModel.prototype.getWeekEffort = function() {
 
 UserModel.prototype.setWeekEffort = function(weekEffort) {
   this.currentData.weekEffort = weekEffort;
-  this._commitIfNotInTransaction();
 };
 
 

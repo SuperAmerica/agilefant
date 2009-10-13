@@ -213,7 +213,6 @@ StoryModel.prototype.getDescription = function() {
 };
 StoryModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
-  this._commitIfNotInTransaction();
 };
 
 StoryModel.prototype.getName = function() {
@@ -221,7 +220,6 @@ StoryModel.prototype.getName = function() {
 };
 StoryModel.prototype.setName = function(name) {
   this.currentData.name = name;
-  this._commitIfNotInTransaction();
 };
 
 StoryModel.prototype.getParent = function() {
@@ -234,7 +232,6 @@ StoryModel.prototype.getRank = function() {
 };
 StoryModel.prototype.setRank = function(newRank) {
   this.currentData.rank = newRank;
-  this._commitIfNotInTransaction();
 };
 
 
@@ -256,7 +253,6 @@ StoryModel.prototype.setResponsibles = function(userIds, userJson) {
   }
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
-  this._commitIfNotInTransaction();
 };
 
 
@@ -265,7 +261,6 @@ StoryModel.prototype.getState = function() {
 };
 StoryModel.prototype.setState = function(state) {
   this.currentData.state = state;
-  this._commitIfNotInTransaction();
 };
 
 
@@ -274,7 +269,6 @@ StoryModel.prototype.getStoryPoints = function() {
 };
 StoryModel.prototype.setStoryPoints = function(storyPoints) {
   this.currentData.storyPoints = storyPoints;
-  this._commitIfNotInTransaction();
 };
 
 

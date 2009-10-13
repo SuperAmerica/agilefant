@@ -22,7 +22,6 @@ $(document).ready(function() {
     ok(this.commonModel.relations, "Relations field added");
     ok(this.commonModel.currentData, "Current data field added");
     ok(this.commonModel.persistedData, "Persisted data field added");
-    ok(this.commonModel.inTransaction === false, "The model is not in transaction mode");
     same(this.commonModel.getId(), null, "Id is null");
   });
   
@@ -84,33 +83,33 @@ $(document).ready(function() {
     same(this.commonModel.currentData.anotherField, "Another value", "Field not overwritten");
   });
   
-  /**
-   * Should not overwrite <code>currentData</code>
-   */
-  test("Copy fields in transaction", function() {
-    var newData = {
-        name: "Name with no meaning",
-        desc: "Emptiness"
-    };
-    var origData = {
-      name: "Original name",
-      desc: "Original desc"
-    };
-    this.commonModel.currentData = {};
-    this.commonModel.persistedData = {};
-    this.commonModel.copiedFields = {
-        "name": "name",
-        "desc": "desc"
-    };
-    jQuery.extend(this.commonModel.currentData, origData);
-    jQuery.extend(this.commonModel.persistedData, origData);
-    
-    this.commonModel.setInTransaction(true);
-    this.commonModel._copyFields(newData);
-    
-    same(this.commonModel.persistedData, newData, "Persisted data changed");
-    same(this.commonModel.currentData, origData, "Current data stayed the same");
-  })
+//  /**
+//   * Should not overwrite <code>currentData</code>
+//   */
+//  test("Copy fields in transaction", function() {
+//    var newData = {
+//        name: "Name with no meaning",
+//        desc: "Emptiness"
+//    };
+//    var origData = {
+//      name: "Original name",
+//      desc: "Original desc"
+//    };
+//    this.commonModel.currentData = {};
+//    this.commonModel.persistedData = {};
+//    this.commonModel.copiedFields = {
+//        "name": "name",
+//        "desc": "desc"
+//    };
+//    jQuery.extend(this.commonModel.currentData, origData);
+//    jQuery.extend(this.commonModel.persistedData, origData);
+//    
+//    this.commonModel.setInTransaction(true);
+//    this.commonModel._copyFields(newData);
+//    
+//    same(this.commonModel.persistedData, newData, "Persisted data changed");
+//    same(this.commonModel.currentData, origData, "Current data stayed the same");
+//  })
   
   
   
@@ -318,25 +317,6 @@ $(document).ready(function() {
     this.commonModel.commit();
     
     same(saveDataCallCount, 1, "Data saving is called");
-    ok(!this.commonModel.inTransaction, "The transaction is cleared");
-  });
-  
-  
-  test("Commit if not in transaction", function() {
-    var commitCount = 0;
-    this.commonModel.commit = function() {
-      commitCount++;
-    };
-    
-    // Should not commit
-    this.commonModel.inTransaction = true;
-    this.commonModel._commitIfNotInTransaction();
-    same(commitCount, 0, "The model in transaction was not committed");
-    
-    // Should commit
-    this.commonModel.inTransaction = false;
-    this.commonModel._commitIfNotInTransaction();
-    same(commitCount, 1, "The model not in transaction was committed");
   });
   
   

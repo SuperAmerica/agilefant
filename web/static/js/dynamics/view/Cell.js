@@ -143,13 +143,11 @@ DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
   }
   
   var editorName = editorOptions.editor;
-  if(editRow && TableEditors.isDialog(editorName)) {
-    return false;
-  }
+  editorOptions.fieldName = this.config.getTitle();
   
   var EditorClass = TableEditors.getEditorClassByName(editorName);
   if(EditorClass && this.config.getEditableCallback().call(this.row.getController())) {
-    this.editor = new EditorClass(this.row, this, editorOptions);
+    this.editor = new EditorClass(this.getElement(), this.row.getModel(), editorOptions);
     this.closeEditorCb = onClose;
     return true;
   }
@@ -167,25 +165,6 @@ DynamicTableCell.prototype.closeEditor = function() {
   }
 };
 
-/**
- * Save and close table cell editor
- * Editor will not close if editor contents is invalid.
- * 
- * @return boolean
- */
-DynamicTableCell.prototype.saveEditorValue = function() {
-  if(this.editor) {
-    this.editor.save();
-  }
-  return true;
-};
-
-DynamicTableCell.prototype.isEditorValueValid = function() {
-  if(this.editor) {
-    return this.editor.isValid();
-  }
-  return true;
-};
 
 DynamicTableCell.prototype.editorClosing = function() {
   this.cellContents.show();

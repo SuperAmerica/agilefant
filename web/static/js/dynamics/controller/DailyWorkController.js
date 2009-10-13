@@ -196,7 +196,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         editable : true,
         sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getState),
         edit : {
-            editor : "SingleSelection",
+            editor : "Selection",
             set : TaskModel.prototype.setState,
             items : DynamicsDecorators.stateOptions
         }
@@ -287,7 +287,7 @@ DailyWorkController.prototype.createConfig = function(configType) {
         fullWidth : true,
         visible : false,
         cssClass : 'task-row',
-        subViewFactory : TaskController.prototype.taskButtonFactory
+        subViewFactory : DynamicsButtons.prototype.commonButtonFactory
     });
     
     return config;

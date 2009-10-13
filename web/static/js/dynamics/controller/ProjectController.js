@@ -155,7 +155,8 @@ ProjectController.prototype.projectActionFactory = function(view, model) {
 ProjectController.prototype.initializeProjectDetailsConfig = function() {
   var config = new DynamicTableConfiguration( {
     leftWidth: '20%',
-    rightWidth: '79%'
+    rightWidth: '79%',
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   config.addColumnConfiguration(0, {
     title : "Name",
@@ -235,7 +236,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var ongoingConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getOngoingIterations,
-    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Ongoing Iterations",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -245,7 +245,8 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
-    }
+    },
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(ongoingConfig);
   ongoingConfig.addCaptionItem( {
@@ -259,7 +260,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var pastConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getPastIterations,
-    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Past Iterations",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -269,7 +269,8 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
-    }
+    },
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(pastConfig);
   this.pastIterationListConfig = pastConfig;
@@ -277,7 +278,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var futureConfig = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getFutureIterations,
-    saveRowCallback: IterationRowController.prototype.saveIteration,
     caption : "Future Iterations",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -287,7 +287,8 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
-    }
+    },
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(futureConfig);
   this.futureIterationListConfig = futureConfig;
@@ -405,7 +406,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
     dataSource : ProjectModel.prototype.getStories,
-    saveRowCallback: StoryController.prototype.saveStory,
     sortCallback: StoryController.prototype.rankStory,
     sortOptions: {
       items: "> div.dynamicTableDataRow",
@@ -484,7 +484,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
-      editor : "SingleSelection",
+      editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
     }

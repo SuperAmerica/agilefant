@@ -361,7 +361,9 @@ StoryController.prototype.storyPointsEditable = function() {
     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : TaskModel.prototype.setResponsibles
     }
   });

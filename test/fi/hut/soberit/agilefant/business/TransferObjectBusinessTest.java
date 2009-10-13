@@ -423,9 +423,11 @@ public class TransferObjectBusinessTest {
         assertEquals(2, nodes.size());
         AutocompleteDataNode node = getDataNodeById(333, nodes);
         assertEquals("Product > Project > Iter 1", node.getName());
+        assertEquals(iterationUnderProject, node.getOriginalObject());
         
         node = getDataNodeById(615, nodes);
         assertEquals("Product > Iter 2", node.getName());
+        assertEquals(iterationUnderProduct, node.getOriginalObject());
     }
 
     

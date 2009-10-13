@@ -179,7 +179,9 @@ DailyWorkController.prototype.createConfig = function(configType) {
         sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
         edit : {
             decorator : DynamicsDecorators.plainContextDecorator,
-            editor : "CurrentIteration",
+            editor : "AutocompleteSingle",
+            dataType: "currentIterations",
+            dialogTitle: "Select iteration",
             set : TaskModel.prototype.setIterationToSave,
             required: true
         }
@@ -213,7 +215,9 @@ DailyWorkController.prototype.createConfig = function(configType) {
         decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
         editable : true,
         edit : {
-            editor : "User",
+            editor : "Autocomplete",
+            dialogTitle: "Select users",
+            dataType: "usersAndTeams",
             set : TaskModel.prototype.setResponsibles
         }
     });

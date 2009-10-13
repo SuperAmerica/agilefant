@@ -151,6 +151,6 @@ TaskController.prototype.originalEstimateEditable = function() {
 };
 
 TaskController.prototype.isEditable = function () {
-  return ! this.model.isInTransaction(); 
+  return true;
 };
 

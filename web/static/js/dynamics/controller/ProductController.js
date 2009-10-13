@@ -226,7 +226,9 @@ ProductController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : StoryModel.prototype.setResponsibles
     }
   });

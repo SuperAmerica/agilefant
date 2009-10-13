@@ -272,8 +272,10 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
      decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
      editable : true,
      edit : {
-       editor : "User",
-       set : TaskModel.prototype.setResponsibles
+        editor : "Autocomplete",
+        dialogTitle: "Select users",
+        dataType: "usersAndTeams",
+        set : TaskModel.prototype.setResponsibles
      }
   });
   
@@ -369,7 +371,9 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
      decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
      editable : true,
      edit : {
-       editor : "User",
+       editor : "Autocomplete",
+       dialogTitle: "Select users",
+       dataType: "usersAndTeams",
        set : TaskModel.prototype.setResponsibles
      }
   });

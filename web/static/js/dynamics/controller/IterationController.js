@@ -172,7 +172,9 @@ IterationController.prototype.initializeTaskListConfig = function() {
     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : TaskModel.prototype.setResponsibles
     }
   });
@@ -365,7 +367,9 @@ IterationController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : StoryModel.prototype.setResponsibles
     }
   });

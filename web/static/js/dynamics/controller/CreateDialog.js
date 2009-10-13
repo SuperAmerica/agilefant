@@ -571,7 +571,9 @@ CreateDialog.Team.prototype.initFormConfig = function() {
     decorator: DynamicsDecorators.teamUserInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : TeamModel.prototype.setUsers
     }
   });
@@ -633,7 +635,9 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
     get: HourEntryModel.prototype.getUsers,
     decorator: DynamicsDecorators.userInitialsListDecorator,
     edit: {
-      editor: "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       required: true,
       set: HourEntryModel.prototype.setUsers
     }

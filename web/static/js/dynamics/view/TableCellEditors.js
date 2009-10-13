@@ -866,13 +866,11 @@ TableEditors.DialogEditor.defaultOptions = {
     autoShow: true,
     
     /**
-     * Extended options for the jQuery ui dialog.
-     * Accepts jQuery.dialog options.
-     * These will be overridden by the other given options,
-     * e.g. <code>autoShow.</code>
-     * Default: {}
+     * Dialog title
+     * Default: "(Insert title here)"
+     * @member TableEditors.DialogEditor
      */
-    extendedDialogOptions: {}
+    dialogTitle: "(Insert title here)"
 };
 
 /**
@@ -890,19 +888,20 @@ TableEditors.DialogEditor.prototype.init = function(element, model, options) {
 };
 TableEditors.DialogEditor.prototype._openDialog = function() {
   var me = this;
-  var dialogOptions = {};
   // These override the extendedDialogOptions
-  var opts = {
+  var options = {
       autoOpen:   this.options.autoShow,
       modal:      this.options.modal,
       buttons:    {
         'Ok':     function() { me._ok(); },
         'Cancel': function() { me._cancel(); }
-      }
+      },
+      close:      function() { me._cancel(); },
+      width:      500,
+      minHeight:  300,
+      title:      this.options.dialogTitle
   };
-  jQuery.extend(dialogOptions, this.options.extendedDialogOptions);
-  jQuery.extend(dialogOptions, opts);
-  this.dialog = $('<div/>').dialog(dialogOptions);
+  this.dialog = $('<div/>').dialog(options);
 };
 
 TableEditors.DialogEditor.prototype._closeDialog = function() {
@@ -914,15 +913,17 @@ TableEditors.DialogEditor.prototype._closeDialog = function() {
 };
 
 TableEditors.DialogEditor.prototype._ok = function() {
-  MessageDisplay.Ok("Ok clicked");
-  this._closeDialog();
+  this.options.set.apply(this.model, this.getEditorValue());
+  this._requestSave();
+  this.close();
 };
 TableEditors.DialogEditor.prototype._cancel = function() {
-  MessageDisplay.Ok("Cancel clicked");
-  this._closeDialog();
+  this._requestCancel();
+  this.close();
 };
 
 TableEditors.DialogEditor.prototype.close = function() {
+  this._closeDialog();
   TableEditors.CommonEditor.prototype.close.call(this);
 };
 
@@ -932,58 +933,132 @@ TableEditors.DialogEditor.prototype.close = function() {
  * Dialog editor for Autocomplete module
  * @constructor
  */
-TableEditors.AutocompleteEditor = function() {
-  
-};
-TableEditors.AutocompleteEditor.prototype = new TableEditors.DialogEditor();
+TableEditors.AutocompleteDialog = function() {};
+TableEditors.AutocompleteDialog.prototype = new TableEditors.DialogEditor();
 
-TableEditors.AutocompleteEditor.defaultOptions = {
-    /**
-     * Data type for the autocomplete editor.
-     * Default: ""
-     * @see AutocompleteDataProvider
-     */
-    dataType: ""
+TableEditors.AutocompleteDialog.defaultOptions = {
+  /**
+   * Data type for the autocomplete editor.
+   * 
+   * Default: ""
+   * @see AutocompleteDataProvider
+   * @member TableEditors.AutocompleteDialog
+   */
+  dataType: "",
+  /**
+   * Whether the Autocomplete should be multiple selection or not.
+   * 
+   * Default: true
+   * @member TableEditors.AutocompleteDialog
+   */
+  multiSelect: true,
+  
+  /**
+   * Select callback to be supplied to Autocomplete.
+   * 
+   * Default: null 
+   * @member TableEditors.AutocompleteDialog
+   */
+  selectCallback: null 
 };
 /**
  * Initialize an Autocomplete dialog editor.
  */
-TableEditors.AutocompleteEditor.prototype.init = function(element, model, options) {
+TableEditors.AutocompleteDialog.prototype.init = function(element, model, options) {
   var opts = {};
-  jQuery.extend(opts, TableEditors.AutocompleteEditor.defaultOptions);
+  jQuery.extend(opts, TableEditors.AutocompleteDialog.defaultOptions);
   jQuery.extend(opts, options);
   
   TableEditors.DialogEditor.prototype.init.call(this, element, model, opts);
   
-  this.autocomplete = $('<div/>').appendTo(this.dialog);
-  this.autocomplete.autocomplete({
-    dataType: this.options.dataType
-  });
+  var autocompleteParams = {
+    dataType:       this.options.dataType,
+    preSelected:    [],
+    multiSelect:    this.options.multiSelect,
+    selectCallback: this.options.selectCallback
+  };
+  
+  this.autocompleteElement = $('<div/>').appendTo(this.dialog);
+  this.autocomplete = new Autocomplete(this.autocompleteElement, autocompleteParams);
+  this.autocomplete.initialize();
+  
+  this.setEditorValue();
+};
+
+/**
+ * Get current editor value
+ */
+TableEditors.AutocompleteDialog.prototype.getEditorValue = function() {
+  var ids   = this.autocomplete.getSelectedIds();
+  var items = this.autocomplete.getSelectedItems();
+  return [ids, items];
+};
+
+/**
+ * Set the preselected models of the editor.
+ */
+TableEditors.AutocompleteDialog.prototype.setEditorValue = function() {
+  var preSelectedModels = this.options.get.call(this.model);
+  var preSelectedIds = [];
+  for (var i = 0; i < preSelectedModels.length; i++) {
+    preSelectedIds.push(preSelectedModels[i].getId());
+  }
+  this.autocomplete.setSelected(preSelectedIds);
 };
 
 
+
 /**
- * User selector editor.
+ * Single select Autocomplete
  */
-TableEditors.User = function(element, model, options) {
+TableEditors.AutocompleteSingle = function(element, model, options) {
   this.init(element, model, options);
 };
-TableEditors.User.prototype = new TableEditors.AutocompleteEditor();
-TableEditors.User.defaultOptions = {
-    /**
-     * Data type for the autocomplete editor.
-     * Default: ""
-     * @see AutocompleteDataProvider
-     */
-    dataType: "usersAndTeams"
-};
+TableEditors.AutocompleteSingle.prototype = new TableEditors.AutocompleteDialog();
+TableEditors.AutocompleteSingle.defaultOptions = {};
 /**
- * Initialize an Autocomplete dialog editor.
+ * Initialize a single select Autocomplete.
  */
-TableEditors.User.prototype.init = function(element, model, options) {
+TableEditors.AutocompleteSingle.prototype.init = function(element, model, options) {
   var opts = {};
-  jQuery.extend(opts, TableEditors.User.defaultOptions);
+  jQuery.extend(opts, TableEditors.AutocompleteDialog.defaultOptions);
   jQuery.extend(opts, options);
   
-  TableEditors.AutocompleteEditor.prototype.init.call(this, element, model, opts);
+  opts.multiSelect = false;
+  
+  var me = this;
+  opts.selectCallback = function(item) { me._selectCallback(item); };
+  
+  TableEditors.AutocompleteDialog.prototype.init.call(this, element, model, opts);
 };
+TableEditors.AutocompleteSingle.prototype._selectCallback = function(selected) {
+  var item = selected;
+  if (selected.originalObject) {
+    item = ModelFactory.updateObject(selected.originalObject);
+  }
+  this.options.set.call(this.model, item);
+  this._requestSave();
+  this.close();
+};
+
+/**
+ * Multi select Autocomplete.
+ */
+TableEditors.Autocomplete = function(element, model, options) {
+  this.init(element, model, options);
+};
+TableEditors.Autocomplete.prototype = new TableEditors.AutocompleteDialog();
+TableEditors.Autocomplete.defaultOptions = {};
+/**
+ * Initialize a single select Autocomplete.
+ */
+TableEditors.Autocomplete.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Autocomplete.defaultOptions);
+  jQuery.extend(opts, options);
+  opts.multiSelect = true;
+  
+  TableEditors.AutocompleteDialog.prototype.init.call(this, element, model, opts);
+};
+
+

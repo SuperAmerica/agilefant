@@ -12,7 +12,10 @@ var ValidationMessages = {
   number: {
     isNotInteger: "Please enter an integer",
     mustBeGreater: "Value must be greater or equal than ",
-    mustBeLower: "Value must be lower or equal than ",
+    mustBeLower: "Value must be lower or equal than "
+  },
+  estimate: {
+    incalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
   },
   exactEstimate: {
     invalid: "Incorrect format"
@@ -69,21 +72,14 @@ TableEditors.CommonEditor.prototype._requestCancel = function() {
   this.element.trigger("cancelRequested", [this]);
 };
 TableEditors.CommonEditor.prototype._requestSave = function() {
-  if (this._runValidation()) {
-    this.options.set.call(this.model, this.getEditorValue());
-    this.element.trigger("storeRequested", [this]);
-  }
+  this.element.trigger("storeRequested", [this]);
 };
 
 /**
  * 
  */
-TableEditors.CommonEditor.prototype.getEditorValue = function() {
-  throw "Abstract method called: getEditorValue";
-};
-TableEditors.CommonEditor.prototype.setEditorValue = function() {
-  
-};
+TableEditors.CommonEditor.prototype.getEditorValue = function() {};
+TableEditors.CommonEditor.prototype.setEditorValue = function() {};
 
 TableEditors.CommonEditor.prototype.addErrorMessage = function(message) {
   this.errorMessages.push(message);
@@ -99,7 +95,7 @@ TableEditors.CommonEditor.prototype.isFocused = function() {
 /**
  * Change event listener.
  */
-TableEditors.CommonEditor.prototype._bindFieldEvents = function(element) {
+TableEditors.CommonEditor.prototype._registerEditField = function(element) {
   var me = this;
   element.keydown(function(event) {
     me._handleKeyEvent(event);
@@ -116,9 +112,15 @@ TableEditors.CommonEditor.prototype._bindFieldEvents = function(element) {
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });
+  
+  element.data("editor", this).addClass("dynamics-editor-element");
 };
 
-TableEditors.CommonEditor.prototype._runValidation = function() {
+/**
+ * Execute field value validators.
+ * Does not run composite validations.
+ */
+TableEditors.CommonEditor.prototype.runValidation = function() {
   this.errorMessages = [];
   var valid = this._validate();
   if (!valid) {
@@ -128,6 +130,7 @@ TableEditors.CommonEditor.prototype._runValidation = function() {
     if (!this.previousValueValid) {
       this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this.options.fieldName)]);    
     }
+    this.options.set.call(this.model, this.getEditorValue());
   }
   this.previousValueValid = valid;
   return valid;
@@ -177,7 +180,14 @@ TableEditors.TextFieldEditor.defaultOptions = {
    * The css width of the input element.
    * Default: 95%
    * @member TableEditors.TextFieldEditor */
-  size: '95%'
+  size: '95%',
+  
+  /**
+   * The type of the <code>&lt;input&gt;</code> element.
+   * Default: "text"
+   * @memer TableEditors.TextFieldEditor
+   */
+  fieldType: "text"
 };
 /**
  * Initializes a TextFieldEditor.
@@ -189,8 +199,9 @@ TableEditors.TextFieldEditor.prototype.init = function(element, model, options) 
   jQuery.extend(opts, options);
   TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
   
-  this.textField = $('<input type="text"/>').appendTo(this.element).width(this.options.size);
-  this._bindFieldEvents(this.textField);
+  this.textField = $('<input type="' + this.options.fieldType + '"/>')
+    .appendTo(this.element).width(this.options.size);
+  this._registerEditField(this.textField);
 };
 
 /**
@@ -225,7 +236,7 @@ TableEditors.TextFieldEditor.prototype.getEditorValue = function() {
 
 TableEditors.TextFieldEditor.prototype._validate = function() {
   var valid = true;
-  var value = this.textField.val();
+  var value = jQuery.trim(this.textField.val());
   
   if (this.options.required) {
     if (!value || value.length === 0) {
@@ -362,9 +373,9 @@ TableEditors.Number.prototype.init = function(element, model, options) {
 
 TableEditors.Number.prototype._validate = function() {
   var valid = true;
-  var value = this.textField.val();
+  var value = jQuery.trim(this.textField.val());
   
-  var isInt = (value.toString().search(/^[0-9]*$/) == 0);
+  var isInt = (value.toString().search(/^[0-9]*$/) === 0);
   var intValue = parseInt(value, 10);
   
   if (!isInt) {
@@ -421,14 +432,13 @@ TableEditors.Estimate.prototype.init = function(element, model, options) {
 
 TableEditors.Estimate.prototype._validate = function() {
   var valid = true;
-  var value = this.textField.val();
+  var value = jQuery.trim(this.textField.val());
   
-  var isInt = (value.toString().search(/^[0-9]*$/) == 0);
-  var intValue = parseInt(value, 10);
+  var format = new RegExp("^([0-9]*)(pt|points)?$");
   
-  if (!isInt) {
-    this.addErrorMessage(ValidationMessages.number.isNotInteger);
+  if (!format.test(value)) {
     valid = false;
+    this.addErrorMessage(ValidationMessages.estimate.invalid);
   }
   
   return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
@@ -468,7 +478,6 @@ TableEditors.ExactEstimate.prototype.init = function(element, model, options) {
 };
 
 TableEditors.ExactEstimate.prototype._validate = function() {
-  var valid = true;
   var value = jQuery.trim(this.textField.val());
   
   if (this.options.acceptNegative) {
@@ -481,6 +490,7 @@ TableEditors.ExactEstimate.prototype._validate = function() {
   var minorOnly = /^([1-9]|[1-5]\d)min$/; // 10min
   var majorAndMinor = /^[ ]*[0-9]+h[ ]+[0-9]+min$/;
   var shortFormat = /^[0-9]+\.[0-9]+h?$/;
+  
   var valid = (value.match(majorOnly) || value.match(minorOnly)
           || value.match(majorAndMinor) || value.match(shortFormat)
           || !value);
@@ -603,7 +613,7 @@ TableEditors.Date.prototype._validate = function() {
 TableEditors.Password = function(element, model, options) {
   this.init(element, model, options);
 };
-TableEditors.Password.prototype = new TableEditors.CommonEditor();
+TableEditors.Password.prototype = new TableEditors.TextFieldEditor();
 /**
  * Default options for <code>TableEditors.Password</code>
  */
@@ -612,7 +622,14 @@ TableEditors.Password.defaultOptions = {
    * Whether the field is required or not.
    * Default: true
    * @member TableEditors.Password */
-  required: true
+  required: true,
+  
+  /**
+   * The type of the <code>&lt;input&gt;</code> element.
+   * Default: "password"
+   * @member TableEditors.Password
+   */
+  fieldType: "password"
 };
 /**
  * Initializes a TextFieldEditor.
@@ -622,10 +639,7 @@ TableEditors.Password.prototype.init = function(element, model, options) {
   var opts = {};
   jQuery.extend(opts, TableEditors.Password.defaultOptions);
   jQuery.extend(opts, options);
-  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
-  
-  this.textField = $('<input type="password" />').appendTo(this.element);
-  this._bindFieldEvents(this.textField);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
 };
 
 TableEditors.Password.prototype.getEditorValue = function() {
@@ -633,12 +647,7 @@ TableEditors.Password.prototype.getEditorValue = function() {
 };
 
 TableEditors.Password.prototype._validate = function() {
-  var valid = true;
-  if (this.options.required && !this.textField.val()) {
-    valid = false;
-    this.addErrorMessage(ValidationMessages.password.empty);
-  }
-  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
+  return TableEditors.TextFieldEditor.prototype._validate.call(this);
 };
 
 
@@ -695,15 +704,15 @@ TableEditors.Selection.prototype.init = function(element, model, options) {
     var el = $('<option/>').val(key).text(val).appendTo(me.selectBox);
   });
   
-  this._bindFieldEvents(this.selectBox);
+  this._registerEditField(this.selectBox);
 };
 
-TableEditors.Selection.prototype._bindFieldEvents = function(field) {
+TableEditors.Selection.prototype._registerEditField = function(field) {
   var me = this;
   field.change(function() {
     me._requestSave();
   });
-  TableEditors.CommonEditor.prototype._bindFieldEvents.call(this, field);
+  TableEditors.CommonEditor.prototype._registerEditField.call(this, field);
 };
 
 TableEditors.Selection.prototype.close = function() {
@@ -794,7 +803,7 @@ TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
 TableEditors.Wysiwyg.prototype.resetEditor = function() {
   var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
   var frameWindow = $(iframeElement.contentWindow);
-  this._bindFieldEvents(frameWindow);
+  this._registerEditField(frameWindow);
 };
 
 TableEditors.Wysiwyg.prototype._getEditorWindow = function() {
@@ -806,7 +815,9 @@ TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
   }
   this.actualElement.wysiwyg("setValue", value);
 };
-
+TableEditors.Wysiwyg.prototype.getEditorValue = function() {
+  return this.actualElement.wysiwyg("getValue");
+};
 
 TableEditors.Wysiwyg.prototype.focus = function() {
   this.actualElement.focus();
@@ -822,4 +833,157 @@ TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
   if (event.keyCode === 27 && !this.options.editRow) {
     this.close();
   }
+};
+
+
+/*
+ * DIALOG EDITORS
+ */
+
+/**
+ * Base class for all editors that open dialogs.
+ * @constructor
+ * @member TableEditors
+ */
+TableEditors.DialogEditor = function() {};
+TableEditors.DialogEditor.prototype = new TableEditors.CommonEditor();
+/**
+ * Default options for the DialogEditor class.
+ */
+TableEditors.DialogEditor.defaultOptions = {
+    /**
+     * Whether the opened dialog should be modal or not.
+     * Default: true
+     * @member TableEditors.DialogEditor
+     */
+    modal: true,
+    
+    /**
+     * Whether the dialog should be shown on editor open.
+     * Default: false
+     * @member TableEditors.DialogEditor
+     */
+    autoShow: true,
+    
+    /**
+     * Extended options for the jQuery ui dialog.
+     * Accepts jQuery.dialog options.
+     * These will be overridden by the other given options,
+     * e.g. <code>autoShow.</code>
+     * Default: {}
+     */
+    extendedDialogOptions: {}
+};
+
+/**
+ * Initialize a <code>DialogEditor</code>
+ */
+TableEditors.DialogEditor.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.DialogEditor.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+
+  if (this.options.autoShow) {
+    this._openDialog();
+  }
+};
+TableEditors.DialogEditor.prototype._openDialog = function() {
+  var me = this;
+  var dialogOptions = {};
+  // These override the extendedDialogOptions
+  var opts = {
+      autoOpen:   this.options.autoShow,
+      modal:      this.options.modal,
+      buttons:    {
+        'Ok':     function() { me._ok(); },
+        'Cancel': function() { me._cancel(); }
+      }
+  };
+  jQuery.extend(dialogOptions, this.options.extendedDialogOptions);
+  jQuery.extend(dialogOptions, opts);
+  this.dialog = $('<div/>').dialog(dialogOptions);
+};
+
+TableEditors.DialogEditor.prototype._closeDialog = function() {
+  if (this.dialog) {
+    this.dialog.dialog('destroy');
+    this.dialog.remove();
+    this.dialog = null;
+  }
+};
+
+TableEditors.DialogEditor.prototype._ok = function() {
+  MessageDisplay.Ok("Ok clicked");
+  this._closeDialog();
+};
+TableEditors.DialogEditor.prototype._cancel = function() {
+  MessageDisplay.Ok("Cancel clicked");
+  this._closeDialog();
+};
+
+TableEditors.DialogEditor.prototype.close = function() {
+  TableEditors.CommonEditor.prototype.close.call(this);
+};
+
+
+
+/**
+ * Dialog editor for Autocomplete module
+ * @constructor
+ */
+TableEditors.AutocompleteEditor = function() {
+  
+};
+TableEditors.AutocompleteEditor.prototype = new TableEditors.DialogEditor();
+
+TableEditors.AutocompleteEditor.defaultOptions = {
+    /**
+     * Data type for the autocomplete editor.
+     * Default: ""
+     * @see AutocompleteDataProvider
+     */
+    dataType: ""
+};
+/**
+ * Initialize an Autocomplete dialog editor.
+ */
+TableEditors.AutocompleteEditor.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.AutocompleteEditor.defaultOptions);
+  jQuery.extend(opts, options);
+  
+  TableEditors.DialogEditor.prototype.init.call(this, element, model, opts);
+  
+  this.autocomplete = $('<div/>').appendTo(this.dialog);
+  this.autocomplete.autocomplete({
+    dataType: this.options.dataType
+  });
+};
+
+
+/**
+ * User selector editor.
+ */
+TableEditors.User = function(element, model, options) {
+  this.init(element, model, options);
+};
+TableEditors.User.prototype = new TableEditors.AutocompleteEditor();
+TableEditors.User.defaultOptions = {
+    /**
+     * Data type for the autocomplete editor.
+     * Default: ""
+     * @see AutocompleteDataProvider
+     */
+    dataType: "usersAndTeams"
+};
+/**
+ * Initialize an Autocomplete dialog editor.
+ */
+TableEditors.User.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.User.defaultOptions);
+  jQuery.extend(opts, options);
+  
+  TableEditors.AutocompleteEditor.prototype.init.call(this, element, model, opts);
 };

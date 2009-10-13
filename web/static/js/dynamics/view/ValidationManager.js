@@ -13,6 +13,7 @@ var DynamicsValidationManager = function DynamicsValidationManager(element, conf
 };
 
 DynamicsValidationManager.prototype.isValid = function() {
+  this._runFieldValidators();
   this._runCompositeValidations();
   if(this.activeMessages !== 0) {
     return false;
@@ -31,19 +32,25 @@ DynamicsValidationManager.prototype.clear = function() {
 
 DynamicsValidationManager.prototype._runCompositeValidations = function() {
   var errors = [];
-  for(var i = 0; i < this.configuration.options.validators.length; i++) {
+  for ( var i = 0; i < this.configuration.options.validators.length; i++) {
     var validatorFunc = this.configuration.options.validators[i];
     try {
       validatorFunc(this.model);
-    } catch(error) {
+    } catch (error) {
       errors.push(error);
     }
   }
-  if(errors.length > 0) {
+  if (errors.length > 0) {
     this._addValidationErrors(errors, "___compositeValidators___");
   } else {
     this._removeErrorMessage("___compositeValidators___");
   }
+};
+
+DynamicsValidationManager.prototype._runFieldValidators = function() {
+  this.element.find('.dynamics-editor-element').each(function() {
+    $(this).data("editor").runValidation();
+  });
 };
 
 DynamicsValidationManager.prototype._reqisterEvents = function() {

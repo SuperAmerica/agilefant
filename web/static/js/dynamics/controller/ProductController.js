@@ -295,7 +295,8 @@ ProductController.prototype.initializeProjectListConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all"
+    cssClass: "ui-widget-content ui-corner-all",
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
 
   config.addCaptionItem( {

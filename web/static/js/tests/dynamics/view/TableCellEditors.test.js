@@ -15,6 +15,8 @@ $(document).ready(function() {
     editorElement.blur();
     equals(blurCaptured, 1, "Dynamics blur fired");
     ok(!editor.isFocused(), "Editor remembers focus state");
+    
+    ok(editorElement.hasClass('dynamics-editor-element'), "Editor has class: dynamics-editor-element");
   }
   
   module("Dynamics: DynamicCellEditors", {
@@ -66,18 +68,43 @@ $(document).ready(function() {
   
   test("CommonEditor run validation", function() {
     var editor = new TableEditors.CommonEditor();
+    var setterCallCount = 0;
     editor.options = {
-        fieldName: "Foo"
+        fieldName: "Foo",
+        set: function() {
+          setterCallCount++;
+        }
     };
     
-    var validateCalled = false;
+    editor.element = this.element; 
+    
+    var invalidCount = 0;
+    this.element.bind("validationInvalid", function(event, dynamicsEvent) {
+      ok(dynamicsEvent instanceof DynamicsEvents.ValidationInvalid, "Event type correct");
+      invalidCount++;
+    });
+    var validCount = 0;
+    this.element.bind("validationValid", function(event, dynamicsEvent) {
+      ok(dynamicsEvent instanceof DynamicsEvents.ValidationValid, "Event type correct");
+      validCount++;
+    });
+    
+    var valid = true;
+    var validateCallCount = 0;
     editor._validate = function() {
-      validateCalled = true;
+      validateCallCount++;
+      return valid;
     };
-    editor.element = $('<div />');
-    editor._runValidation();
     
-    ok(validateCalled, "Validation called");
+    valid = true;
+    editor.runValidation();
+    equals(setterCallCount, 1, "Setter function called");
+    
+    valid = false;
+    editor.runValidation();
+    equals(setterCallCount, 1, "Setter function not called");
+    
+    equals(validateCallCount, 2, "Validation called");
   });
   
   
@@ -164,6 +191,7 @@ $(document).ready(function() {
       field: "value",
       size:  "95%",
       required: false,
+      fieldType: "text"
     };
     
     var initCalled = false;
@@ -373,7 +401,7 @@ $(document).ready(function() {
     var context = {
       textField: mockElement,
       options: {},
-      addErrorMessage: function() {
+      addErrorMessage: function(message) {
         errorMessageCount++;
       }
     };
@@ -400,8 +428,7 @@ $(document).ready(function() {
     
     context.options = { required: false };
     ok(TableEditors.Number.prototype._validate.call(context), "Valid (not required): ''");
-    
-    ok(!TableEditors.Number.prototype._validate.call(context), "Invalid (not required): '  '");
+    ok(TableEditors.Number.prototype._validate.call(context), "Valid (not required): '  '");
     ok(!TableEditors.Number.prototype._validate.call(context), "Invalid (not required): 'a'");
     
     context.options = { required: true };
@@ -413,7 +440,7 @@ $(document).ready(function() {
     ok(TableEditors.Number.prototype._validate.call(context), "Valid: '2'");
     ok(!TableEditors.Number.prototype._validate.call(context), "Invalid: '10'");
     
-    same(errorMessageCount, 6, "Six error messages");
+    same(errorMessageCount, 5, "Five error messages");
   });
   test("Number - events", function() {
     var editor = new TableEditors.Number(this.element, null, {});
@@ -497,41 +524,80 @@ $(document).ready(function() {
     testBlurAndFocus(editor, this.element, input);
   });
   
-  test("Estimate validation", function() {
+//  test("Estimate validation", function() {
+//    var mockElement = this.mockControl.createMock(jQuery);
+//    var errorMessageCount = 0;
+//    var context = {
+//      textField: mockElement,
+//      options: {},
+//      addErrorMessage: function() {
+//        errorMessageCount++;
+//      }
+//    };
+//    
+//
+//    mockElement.expects().val().andReturn("");
+//    mockElement.expects().val().andReturn("");
+//    mockElement.expects().val().andReturn("  ");
+//    mockElement.expects().val().andReturn("  ");
+//    mockElement.expects().val().andReturn("a");
+//    mockElement.expects().val().andReturn("a");
+//    
+//    mockElement.expects().val().andReturn("");
+//    mockElement.expects().val().andReturn("");
+//    mockElement.expects().val().andReturn("  ");
+//    mockElement.expects().val().andReturn("  ");
+//    
+//    context.options = { required: false };
+//    ok(TableEditors.Estimate.prototype._validate.call(context), "Valid (not required): ''");
+//    
+//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): '  '");
+//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): 'a'");
+//    
+//    context.options = { required: true };
+//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: ''");
+//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: '  '");
+//        
+//    same(errorMessageCount, 4, "Six error messages");
+//  });
+  
+  
+  test("Estimate edit validation", function() {
     var mockElement = this.mockControl.createMock(jQuery);
-    var errorMessageCount = 0;
-    var context = {
-      textField: mockElement,
-      options: {},
-      addErrorMessage: function() {
-        errorMessageCount++;
-      }
-    };
+    var context = {textField: mockElement, addErrorMessage: function() {}};
+    context.showError = function() {};
     
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn(" ");
+    mockElement.expects().val().andReturn("10")
+    mockElement.expects().val().andReturn("10")
+    mockElement.expects().val().andReturn("0");
+    mockElement.expects().val().andReturn("0");
+    mockElement.expects().val().andReturn("0pt");
+    mockElement.expects().val().andReturn("0pt");
+    mockElement.expects().val().andReturn("0points");
+    mockElement.expects().val().andReturn("0points");
+    mockElement.expects().val().andReturn("692pt");
+    mockElement.expects().val().andReturn("692pt");
+    mockElement.expects().val().andReturn("aae");
+    mockElement.expects().val().andReturn("aae");
+    mockElement.expects().val().andReturn("xpt");
+    mockElement.expects().val().andReturn("xpt");
+    
+    context.options = {required: false};
+    ok(TableEditors.Estimate.prototype._validate.call(context), "Not required and empty");
 
-    mockElement.expects().val().andReturn("");
-    mockElement.expects().val().andReturn("");
-    mockElement.expects().val().andReturn("  ");
-    mockElement.expects().val().andReturn("  ");
-    mockElement.expects().val().andReturn("a");
-    mockElement.expects().val().andReturn("a");
-    
-    mockElement.expects().val().andReturn("");
-    mockElement.expects().val().andReturn("");
-    mockElement.expects().val().andReturn("  ");
-    mockElement.expects().val().andReturn("  ");
-    
-    context.options = { required: false };
-    ok(TableEditors.Estimate.prototype._validate.call(context), "Valid (not required): ''");
-    
-    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): '  '");
-    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): 'a'");
-    
-    context.options = { required: true };
-    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: ''");
-    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: '  '");
-        
-    same(errorMessageCount, 4, "Six error messages");
+    context.options = {required: true};
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "Required and empty");
+    ok(TableEditors.Estimate.prototype._validate.call(context), "10");
+    ok(TableEditors.Estimate.prototype._validate.call(context), "0");
+    ok(TableEditors.Estimate.prototype._validate.call(context), "0pt");
+    ok(TableEditors.Estimate.prototype._validate.call(context), "0points");
+    ok(TableEditors.Estimate.prototype._validate.call(context), "692pt");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "invalid");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "invalid");
   });
   
   test("Estimate - events", function() {
@@ -634,39 +700,56 @@ $(document).ready(function() {
     ok(!TableEditors.Text.prototype.isValid.call(context), "Too short string with min length and required");
     
   });
-  
-  test("Estimate edit validation", function() {
-    var mockElement = this.mockControl.createMock(jQuery);
-    var context = {element: mockElement};
-    context.showError = function() {};
-    
-    mockElement.expects().val().andReturn(" ");
-    mockElement.expects().val().andReturn(" ");
-    mockElement.expects().val().andReturn("10")
-    mockElement.expects().val().andReturn("0");
-    mockElement.expects().val().andReturn("0pt");
-    mockElement.expects().val().andReturn("0points");
-    mockElement.expects().val().andReturn("692pt");
-    mockElement.expects().val().andReturn("aae");
-    mockElement.expects().val().andReturn("xpt");
-    
-    
-    context.options = {required: false};
-    ok(TableEditors.Estimate.prototype.isValid.call(context), "Not required and empty");
-
-    context.options = {required: true};
-    ok(!TableEditors.Estimate.prototype.isValid.call(context), "Required and empty");
-    ok(TableEditors.Estimate.prototype.isValid.call(context), "10");
-    ok(TableEditors.Estimate.prototype.isValid.call(context), "0");
-    ok(TableEditors.Estimate.prototype.isValid.call(context), "0pt");
-    ok(TableEditors.Estimate.prototype.isValid.call(context), "0points");
-    ok(TableEditors.Estimate.prototype.isValid.call(context), "692pt");
-    ok(!TableEditors.Estimate.prototype.isValid.call(context), "invalid");
-    ok(!TableEditors.Estimate.prototype.isValid.call(context), "invalid");
-  });
   */
 
   
 
+
+  
+  /*
+   * For general testing purposes
+   */
+  var ExtendedDialog = function(element, model, options) {
+    this.init(element, model, options);
+  };
+  ExtendedDialog.prototype = new TableEditors.DialogEditor();
+
+  test("DialogEditor: Initialize and close a dialog editor - autoShow true", function() {
+    var element = $('<div/>');
+    
+    var dialogEditor = new ExtendedDialog(element, new CommonModel(), { autoShow: true });
+    var actualDialog = $(document.body).find('div.ui-dialog-content').get(0);
+    equals(dialogEditor.dialog.get(0), actualDialog, "Dialog element matches");
+    
+    dialogEditor._closeDialog();
+    actualDialog = $(document.body).find('div.ui-dialog-content').get(0);
+    ok(!dialogEditor.dialog, "Dialog removed from editor");
+    ok(!actualDialog, "Dialog removed from DOM");
+  });
+  
+  test("DialogEditor: initialize - autoshow false", function() {
+    var element = $('<div/>');
+    
+    var dialogEditor = new ExtendedDialog(element, new CommonModel(), { autoShow: false});
+    
+    // Dialog should not exist
+    var actualDialog = $(document.body).find('div.ui-dialog-content').get(0);
+    ok(!actualDialog, "Dialog not created");
+    
+    // Dialog should exist
+    dialogEditor._openDialog();
+    actualDialog = $(document.body).find('div.ui-dialog-content').get(0);
+    equals(dialogEditor.dialog.get(0), actualDialog, "Dialog element matches");
+    
+    dialogEditor._closeDialog();
+    actualDialog = $(document.body).find('div.ui-dialog-content').get(0);
+    ok(!dialogEditor.dialog, "Dialog removed from editor");
+    ok(!actualDialog, "Dialog removed from DOM");
+  });
+  
+  test("DialogEditor - events", function() {
+    
+  });
+  
   
 });

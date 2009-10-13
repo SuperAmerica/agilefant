@@ -1,15 +1,28 @@
 $(document).ready(function() {
   module("Validation Manager", {
     setup: function() {
+      this.mockControl = new MockControl();
       this.element = $('<div />').appendTo(document.body).hide();
     },
     teardown: function() {
       this.element.remove();
+      this.mockControl.verify();
     }
   });
   test("is valid - field error", function() {
+    
+    
+    var fakeEditor = this.mockControl.createMock(TableEditors.CommonEditor);
+    var fakeEditorElement = $('<div/>').addClass('dynamics-editor-element')
+                    .data("editor", fakeEditor)
+                    .appendTo(this.element);
+    
+    fakeEditor.expects().runValidation();
+    fakeEditor.expects().runValidation();
+    
     var validationManager = new DynamicsValidationManager(this.element, { options: { validators: [] }});
     equals(validationManager.isValid(), true, "field validation works");
+    
     var sender = "field";
     var dynEvent = new DynamicsEvents.ValidationInvalid(sender, ["Invalid value"]);
     this.element.trigger("validationInvalid", [dynEvent]);

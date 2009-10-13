@@ -183,7 +183,8 @@ CreateDialog.Project.columnIndices = {
 CreateDialog.Project.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.name,{

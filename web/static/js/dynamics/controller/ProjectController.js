@@ -155,7 +155,8 @@ ProjectController.prototype.projectActionFactory = function(view, model) {
 ProjectController.prototype.initializeProjectDetailsConfig = function() {
   var config = new DynamicTableConfiguration( {
     leftWidth: '20%',
-    rightWidth: '79%'
+    rightWidth: '79%',
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   config.addColumnConfiguration(0, {
     title : "Name",
@@ -244,7 +245,8 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
-    }
+    },
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(ongoingConfig);
   ongoingConfig.addCaptionItem( {
@@ -267,7 +269,8 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
-    }
+    },
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(pastConfig);
   this.pastIterationListConfig = pastConfig;
@@ -284,7 +287,8 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
-    }
+    },
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(futureConfig);
   this.futureIterationListConfig = futureConfig;

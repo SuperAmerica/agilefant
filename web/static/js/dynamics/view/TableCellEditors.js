@@ -65,6 +65,7 @@ TableEditors.CommonEditor.prototype.init = function(element, model, options) {
  * Close the editor.
  */
 TableEditors.CommonEditor.prototype.close = function() {
+  this.element.removeClass('dynamics-validation-invalid');
   this.element.trigger("editorClosing");
 };
 
@@ -102,9 +103,7 @@ TableEditors.CommonEditor.prototype._registerEditField = function(element) {
     return true;
   });
   element.blur(function(event) {
-    if (me._validate()) {
-      me.options.set.call(me.model, me.getEditorValue());
-    }
+    me.runValidation();
     me.element.trigger("DynamicsBlur");
     me.focused = false;
   });
@@ -125,12 +124,14 @@ TableEditors.CommonEditor.prototype.runValidation = function() {
   var valid = this._validate();
   if (!valid) {
     this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this.options.fieldName, this.errorMessages)]);
+    this.element.addClass('dynamics-validation-invalid');
   }
   else {
     if (!this.previousValueValid) {
       this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this.options.fieldName)]);    
     }
     this.options.set.call(this.model, this.getEditorValue());
+    this.element.removeClass('dynamics-validation-invalid');
   }
   this.previousValueValid = valid;
   return valid;

@@ -514,3 +514,27 @@ strong.user-initials-next-assigned {
 .dynamictable .dynamictable-row a.daily-work-task-context:hover {
   color: #e50 !important;
 }
+
+
+/*
+ * VALIDATION ERRORS
+ */
+ul.dynamics-error-container {
+  width: 80%;
+  margin: 0.4em 0 0.2em;
+  padding: 0.3em 0 0.3em 2em;
+  background-color: #fcc;
+  color: #a33;
+  list-style-type: disc;
+  
+  border-width: 3px;
+  border-color: #c55;
+  border-style: solid;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.dynamics-validation-invalid input, .dynamics-validation-invalid select {
+  border: 1px solid #c55;
+  background-color: #fcc;
+}

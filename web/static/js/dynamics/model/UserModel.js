@@ -37,13 +37,23 @@ var UserModel = function UserModel() {
 
 UserModel.prototype = new CommonModel();
 
+
+UserModel.Validators = {
+  passwordValidator: function(model) {
+    if (model.getPassword1() !== model.getPassword2()) {
+      throw "Passwords don't match";
+    }
+  }
+};
+
+
+
 UserModel.prototype._setData = function(newData) {
   this.id = newData.id;
   
   if (newData.teams) {
     this._updateRelations(ModelFactory.types.team, newData.teams);
   }
-  
 };
 
 
@@ -58,9 +68,11 @@ UserModel.prototype._saveData = function(id, changedData) {
   
   if (this.currentData.password1) {
     data.password1 = this.currentData.password1;
+    data.password2 = this.currentData.password2;
     
-    // TODO: CHANGE FOR PASSWORD CONFIRM 
-    data.password2 = this.currentData.password1;
+    // For security reasons
+    delete this.currentData.password1;
+    delete this.currentData.password2;
   }
   
   if (changedData.teamsChanged) {

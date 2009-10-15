@@ -130,7 +130,8 @@ CreateDialog.Product.columnIndices = {
 CreateDialog.Product.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.Product.columnIndices.name,{
@@ -184,7 +185,8 @@ CreateDialog.Project.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
-    validators: [ BacklogModel.Validators.dateValidator ]
+    validators: [ BacklogModel.Validators.dateValidator ],
+    closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.name,{
@@ -276,7 +278,8 @@ CreateDialog.Iteration.columnIndices = {
 CreateDialog.Iteration.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.name,{
@@ -369,7 +372,8 @@ CreateDialog.Story.columnIndices = {
 CreateDialog.Story.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.name,{
@@ -457,12 +461,8 @@ CreateDialog.User.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
-    validators: [ function(model) {
-      if (model.getPassword1() === model.getPassword2()) {
-        return true;
-      }
-      throw "Passwords don't match";
-    }]
+    validators: [ UserModel.Validators.passwordValidator ],
+    closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.User.columnIndices.name,{
@@ -554,7 +554,8 @@ CreateDialog.Team.columnIndices = {
 CreateDialog.Team.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.Team.columnIndices.name,{
@@ -611,7 +612,8 @@ CreateDialog.EffortEntry.columnIndices = {
 CreateDialog.EffortEntry.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
-    rightWidth: '75%'
+    rightWidth: '75%',
+    closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.effortSpent,{

@@ -83,7 +83,7 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
 
 DynamicsValidationManager.prototype._createErrorContainer = function() {
   if(!this.errorContainer) {
-    this.errorContainer = $('<ul />').prependTo(this.element);
+    this.errorContainer = $('<ul />').addClass('dynamics-error-container').prependTo(this.element);
   }
 };
 

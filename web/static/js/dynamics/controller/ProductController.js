@@ -279,7 +279,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'productstory-data',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
 
   this.storyListConfig = config;
@@ -399,7 +399,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'productstory-data',
-    subViewFactory : ProjectRowController.prototype.projectButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
 
   this.projectListConfig = config;

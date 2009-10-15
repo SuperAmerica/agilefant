@@ -385,7 +385,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-row',
-    subViewFactory : IterationRowController.prototype.iterationButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.storiesData, {
     fullWidth : true,
@@ -552,7 +552,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-data',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
 
   this.storyListConfig = config;

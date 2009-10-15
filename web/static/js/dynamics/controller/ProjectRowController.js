@@ -11,7 +11,7 @@ var ProjectRowController = function ProjectRowController(model, view, backlogCon
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.autohideColumns = [ ProjectRowController.columnIndices.description, ProjectRowController.columnIndices.buttons ];
+  this.autohideCells = [ ProjectRowController.columnIndices.description, ProjectRowController.columnIndices.buttons ];
 };
 ProjectRowController.prototype = new BacklogController();
 

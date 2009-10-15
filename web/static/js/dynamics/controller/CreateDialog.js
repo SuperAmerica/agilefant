@@ -205,7 +205,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     get : ProjectModel.prototype.getParent,
     editable : true,
     edit : {
-      editor : "AutocompleteInline",
+      editor : "AutocompleteSingle",
       dataType: "products",
       required: true,
       set: ProjectModel.prototype.setParent
@@ -297,7 +297,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     get : CreateDialog.returnNull,
     editable : true,
     edit : {
-      editor : "AutocompleteInline",
+      editor : "AutocompleteSingle",
       dataType: "projects",
       required: true,
       set: IterationModel.prototype.setParent
@@ -390,7 +390,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     get : CreateDialog.returnNull,
     editable : true,
     edit : {
-      editor : "AutocompleteInline",
+      editor : "AutocompleteSingle",
       dataType: "backlogs",
       required: true,
       set: StoryModel.prototype.setBacklog

@@ -243,7 +243,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'task-row',
-    subViewFactory : TaskController.prototype.taskButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(TaskController.columnIndices.data, {
     fullWidth : true,
@@ -428,7 +428,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'story-row',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(StoryController.columnIndices.tasksData, {
     fullWidth : true,

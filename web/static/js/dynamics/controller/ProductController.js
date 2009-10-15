@@ -80,7 +80,6 @@ ProductController.prototype.paint = function() {
  */
 ProductController.prototype.createProject = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.project);
-  mockModel.setInTransaction(true);
   mockModel.setParent(this.model);
   mockModel.setStartDate(new Date().getTime());
   mockModel.setEndDate(new Date().getTime());
@@ -89,7 +88,7 @@ ProductController.prototype.createProject = function() {
   controller.view = row;
   row.autoCreateCells([ProjectRowController.columnIndices.actions]);
   row.render();
-  controller.editProject();
+  controller.openRowEdit();
 };
 
 
@@ -104,7 +103,7 @@ ProductController.prototype.createStory = function() {
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
-  controller.editStory();
+  controller.openRowEdit();
 };
 
 /**

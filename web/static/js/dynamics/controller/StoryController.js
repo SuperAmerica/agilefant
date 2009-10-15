@@ -194,7 +194,7 @@ StoryController.prototype.createTask = function() {
   controller.view = row;
   row.autoCreateCells([TaskController.columnIndices.actions, TaskController.columnIndices.data]);
   row.render();
-  controller.editTask();
+  controller.openRowEdit();
   row.getCell(TaskController.columnIndices.data).hide();
 };
 

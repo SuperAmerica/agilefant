@@ -86,7 +86,7 @@ IterationController.prototype.createStory = function() {
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
-  controller.editStory();
+  controller.openRowEdit();
   row.getCell(StoryController.columnIndices.tasksData).hide();
 };
 

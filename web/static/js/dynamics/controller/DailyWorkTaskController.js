@@ -9,6 +9,8 @@ var DailyWorkTaskController = function DailyWorkTaskController(model, view, pare
     };
     
     this.model.addListener(this.stateListener);
+    
+    this.autohideColumns = [ DailyWorkTaskController.columnIndices.buttons, DailyWorkTaskController.description ];
 };
 
 DailyWorkTaskController.prototype = new TaskController();

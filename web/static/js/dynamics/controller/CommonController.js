@@ -66,6 +66,7 @@ CommonController.prototype.openRowEdit = function() {
   for (var i = 0; i < this.autohideCells.length; i++) {
     this.view.getCell(this.autohideCells[i]).show();
   }
+  this.view.openFullEdit();
 };
 
 

@@ -203,7 +203,6 @@ CreateDialog.Project.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
     title : "Parent",
     get : ProjectModel.prototype.getParent,
-    cssClass: "autocompleteInline-dialog-fix",
     editable : true,
     edit : {
       editor : "AutocompleteInline",
@@ -296,7 +295,6 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.parent,{
     title : "Parent",
     get : CreateDialog.returnNull,
-    cssClass: "autocompleteInline-dialog-fix",
     editable : true,
     edit : {
       editor : "AutocompleteInline",
@@ -391,7 +389,6 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     title : "Backlog",
     get : CreateDialog.returnNull,
     editable : true,
-    cssClass: "autocompleteInline-dialog-fix",
     edit : {
       editor : "AutocompleteInline",
       dataType: "backlogs",

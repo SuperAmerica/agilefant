@@ -313,7 +313,7 @@ DailyWorkController.prototype.createTask = function() {
 
     row.render();
 
-    controller.editTask();
+    controller.openRowEdit();
     row.getCell(DailyWorkTaskController.columnIndices.data).hide();
 };
 

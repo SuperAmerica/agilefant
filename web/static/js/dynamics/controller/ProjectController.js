@@ -104,7 +104,6 @@ ProjectController.prototype.paint = function() {
  */
 ProjectController.prototype.createIteration = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.iteration);
-  mockModel.setInTransaction(true);
   mockModel.setParent(this.model);
   mockModel.setStartDate(new Date().getTime());
   mockModel.setEndDate(new Date().getTime());
@@ -113,7 +112,7 @@ ProjectController.prototype.createIteration = function() {
   controller.view = row;
   row.autoCreateCells([IterationRowController.columnIndices.actions]);
   row.render();
-  controller.editIteration();
+  controller.openRowEdit();
 };
 
 /**
@@ -127,7 +126,7 @@ ProjectController.prototype.createStory = function() {
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
-  controller.editStory();
+  controller.openRowEdit();
 };
 
 /**

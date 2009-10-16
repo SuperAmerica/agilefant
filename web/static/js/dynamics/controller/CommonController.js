@@ -64,7 +64,11 @@ CommonController.prototype.callChildcontrollers = function(type,
  */
 CommonController.prototype.openRowEdit = function() {
   for (var i = 0; i < this.autohideCells.length; i++) {
-    this.view.getCell(this.autohideCells[i]).show();
+    var num = this.autohideCells[i];
+    var cell = this.view.getCell(num);
+    if (cell) {
+      cell.show();
+    }
   }
   this.view.openFullEdit();
 };
@@ -79,8 +83,13 @@ CommonController.prototype.closeRowEdit = function() {
     return;
   }
   for (var i = 0; i < this.autohideCells.length; i++) {
-    this.view.getCell(this.autohideCells[i]).hide();
+    var num = this.autohideCells[i];
+    var cell = this.view.getCell(num);
+    if (cell) {
+      cell.hide();
+    }
   }
+  this.view.closeRowEdit();
 };
 
 

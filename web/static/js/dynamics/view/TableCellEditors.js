@@ -15,7 +15,7 @@ var ValidationMessages = {
     mustBeLower: "Value must be lower or equal than "
   },
   estimate: {
-    incalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
+    invalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
   },
   exactEstimate: {
     invalid: "Incorrect format"
@@ -93,9 +93,17 @@ TableEditors.CommonEditor.prototype.close = function() {
 TableEditors.CommonEditor.prototype._requestCancel = function() {
   this.element.trigger("cancelRequested", [this]);
 };
-TableEditors.CommonEditor.prototype._requestSave = function() {
+TableEditors.CommonEditor.prototype._requestCancelIfNotInRowEdit = function() {
   if (!this.options.editRow) {
-    this.element.trigger("storeRequested", [this]);
+    this._requestCancel();
+  }
+};
+TableEditors.CommonEditor.prototype._requestSave = function() {
+  this.element.trigger("storeRequested", [this]);
+};
+TableEditors.CommonEditor.prototype._requestSaveIfNotInRowEdit = function() {
+  if (!this.options.editRow) {
+    this._requestSave();
   }
 };
 
@@ -734,7 +742,7 @@ TableEditors.Selection.prototype.init = function(element, model, options) {
 TableEditors.Selection.prototype._registerEditField = function(field) {
   var me = this;
   field.change(function() {
-    me._requestSave();
+    me._requestSaveIfNotInRowEdit();
   });
   TableEditors.CommonEditor.prototype._registerEditField.call(this, field);
 };
@@ -938,12 +946,12 @@ TableEditors.DialogEditor.prototype._closeDialog = function() {
 
 TableEditors.DialogEditor.prototype._ok = function() {
   this.options.set.apply(this.model, this.getEditorValue());
-  this._requestSave();
-  this.close();
+  this._requestSaveIfNotInRowEdit();
+  this._closeDialog();
 };
 TableEditors.DialogEditor.prototype._cancel = function() {
-  this._requestCancel();
-  this.close();
+  this._requestCancelIfNotInRowEdit();
+  this._closeDialog();
 };
 
 TableEditors.DialogEditor.prototype.close = function() {
@@ -1084,6 +1092,7 @@ TableEditors.Autocomplete.prototype.init = function(element, model, options) {
   
   TableEditors.AutocompleteDialog.prototype.init.call(this, element, model, opts);
 };
+
 
 //
 //

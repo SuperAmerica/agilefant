@@ -101,7 +101,8 @@ CreateDialogClass.prototype.getModel = function() {
  * Create the fields for the dialog.
  */
 CreateDialogClass.prototype.initializeForm = function() {
-  this.formArea = $('<div/>').appendTo(this.element);
+  this.form = $('<form/>').appendTo(this.element);
+  this.formArea = $('<div/>').appendTo(this.form);
   this.view = new DynamicVerticalTable(
       this,
       this.model,

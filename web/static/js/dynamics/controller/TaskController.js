@@ -100,8 +100,11 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     text : "Edit",
     callback : CommonController.prototype.openRowEdit
   }, {
-      text : "Split",
-      callback : TaskController.prototype.createSplitTask
+    text : "Split",
+    callback : TaskController.prototype.createSplitTask
+  }, {
+	text: "Log effort",
+	callback: TaskController.prototype.openLogEffort
   }, {
     text : "Append to my work queue",
     callback : TaskController.prototype.addToMyWorkQueue,
@@ -170,4 +173,9 @@ TaskController.prototype.openQuickLogEffort = function(model, view) {
 
 TaskController.prototype.quickLogEffort = function (spentEffort) {
   HourEntryModel.logEffortForCurrentUser(this, spentEffort);
+};
+
+TaskController.prototype.openLogEffort = function() {
+  var dialog = CreateDialog.createById("createNewEffortEntry");
+  dialog.getModel().setParent(this.model);
 };

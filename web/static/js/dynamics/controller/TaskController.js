@@ -3,7 +3,7 @@ var TaskController = function TaskController(model, view, parentController) {
   this.view = view;
   this.parentController = parentController;
   this.init();
-  this.autohideCells = [ TaskController.columnIndices.description, TaskController.columnIndices.buttons ];
+  this.autohideCells = [ TaskController.columnIndices.buttons ];
 };
 
 TaskController.columnIndices = {

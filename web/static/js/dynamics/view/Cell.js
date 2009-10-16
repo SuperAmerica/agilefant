@@ -26,15 +26,23 @@ DynamicTableCell.prototype.initialize = function() {
 	var me = this;
   this.element = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
 	this.cellContents = $('<span />').appendTo(this.element);
+	
+	var elementCss = {
+	    "width": "auto",
+	    "clear": "none"
+	};
 	if (this.config.getWidth()) {
-		this.element.css("width", this.config.getWidth());
+		elementCss.width = this.config.getWidth();
 	}
 	if (this.config.getMinWidth()) {
-		this.element.attr("min-width", this.config.getMinWidth() + "px");
-	}
+    this.element.attr("min-width", this.config.getMinWidth() + "px");
+  }
 	if (this.config.isFullWidth()) {
-		this.element.css("clear", "left");
+	  elementCss.clear = "left";
 	}
+	this.element.css(elementCss);
+	
+	
 	if (this.config.getCssClass()) {
 		this.element.addClass(this.config.getCssClass());
 	}

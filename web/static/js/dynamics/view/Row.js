@@ -163,7 +163,7 @@ DynamicTableRow.prototype.openFullEdit = function() {
 };
 
 DynamicTableRow.prototype.closeRowEdit = function() {
-  this._applyToAllCells(DynamicTableCell.prototype.closeEditor);
+  this._applyToAllCells(DynamicTableCell.prototype.closeEditor, []);
 };
 
 DynamicTableRow.prototype.isEditable = function() {

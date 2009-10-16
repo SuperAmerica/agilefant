@@ -98,7 +98,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     callback : TaskController.prototype.openDetails
   }, {
     text : "Edit",
-    callback : TaskController.prototype.editTask
+    callback : CommonController.prototype.openRowEdit
   }, {
       text : "Split",
       callback : TaskController.prototype.createSplitTask

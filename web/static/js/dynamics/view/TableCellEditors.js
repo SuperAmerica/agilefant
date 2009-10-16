@@ -848,7 +848,7 @@ TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
   this.actualElement.wysiwyg("setValue", value);
 };
 TableEditors.Wysiwyg.prototype.getEditorValue = function() {
-  return this.actualElement.wysiwyg("getValue");
+  return this.actualElement.val();
 };
 
 TableEditors.Wysiwyg.prototype.focus = function() {

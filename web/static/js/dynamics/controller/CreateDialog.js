@@ -207,6 +207,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
+      dialogTitle: "Select parent product",
       dataType: "products",
       required: true,
       set: ProjectModel.prototype.setParent
@@ -299,6 +300,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
+      dialogTitle: "Select parent backlog",
       dataType: "projects",
       required: true,
       set: IterationModel.prototype.setParent
@@ -392,6 +394,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
+      dialogTitle: "Select parent backlog",
       dataType: "backlogs",
       required: true,
       set: StoryModel.prototype.setBacklog

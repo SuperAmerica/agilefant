@@ -11,7 +11,7 @@ var IterationRowController = function IterationRowController(model, view, backlo
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.autohideColumns = [ IterationRowController.columnIndices.description, IterationRowController.columnIndices.buttons, IterationRowController.columnIndices.storiesData ];
+  this.autohideCells = [ IterationRowController.columnIndices.description, IterationRowController.columnIndices.buttons, IterationRowController.columnIndices.storiesData ];
 };
 IterationRowController.prototype = new BacklogController();
 
@@ -201,7 +201,9 @@ IterationRowController.prototype.createStory = function() {
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : StoryModel.prototype.setResponsibles
     }
   });

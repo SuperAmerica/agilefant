@@ -104,7 +104,6 @@ ProjectController.prototype.paint = function() {
  */
 ProjectController.prototype.createIteration = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.iteration);
-  mockModel.setInTransaction(true);
   mockModel.setParent(this.model);
   mockModel.setStartDate(new Date().getTime());
   mockModel.setEndDate(new Date().getTime());
@@ -113,7 +112,7 @@ ProjectController.prototype.createIteration = function() {
   controller.view = row;
   row.autoCreateCells([IterationRowController.columnIndices.actions]);
   row.render();
-  controller.editIteration();
+  controller.openRowEdit();
 };
 
 /**
@@ -127,7 +126,7 @@ ProjectController.prototype.createStory = function() {
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
-  controller.editStory();
+  controller.openRowEdit();
 };
 
 /**
@@ -386,7 +385,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-row',
-    subViewFactory : IterationRowController.prototype.iterationButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.storiesData, {
     fullWidth : true,
@@ -499,7 +498,9 @@ ProjectController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : StoryModel.prototype.setResponsibles
     }
   });
@@ -551,7 +552,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-data',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
 
   this.storyListConfig = config;

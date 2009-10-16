@@ -158,6 +158,10 @@ DynamicTableRow.prototype.editRow = function() {
   this._applyToAllCells(DynamicTableCell.prototype.openEditor, [ true ]);
 };
 
+DynamicTableRow.prototype.openFullEdit = function() {
+  this.editRow();
+};
+
 DynamicTableRow.prototype.closeRowEdit = function() {
   this._applyToAllCells(DynamicTableCell.prototype.closeEditor);
 };

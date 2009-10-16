@@ -80,7 +80,6 @@ ProductController.prototype.paint = function() {
  */
 ProductController.prototype.createProject = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.project);
-  mockModel.setInTransaction(true);
   mockModel.setParent(this.model);
   mockModel.setStartDate(new Date().getTime());
   mockModel.setEndDate(new Date().getTime());
@@ -89,7 +88,7 @@ ProductController.prototype.createProject = function() {
   controller.view = row;
   row.autoCreateCells([ProjectRowController.columnIndices.actions]);
   row.render();
-  controller.editProject();
+  controller.openRowEdit();
 };
 
 
@@ -104,7 +103,7 @@ ProductController.prototype.createStory = function() {
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
-  controller.editStory();
+  controller.openRowEdit();
 };
 
 /**
@@ -226,7 +225,9 @@ ProductController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : StoryModel.prototype.setResponsibles
     }
   });
@@ -278,7 +279,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'productstory-data',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
 
   this.storyListConfig = config;
@@ -398,7 +399,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'productstory-data',
-    subViewFactory : ProjectRowController.prototype.projectButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
 
   this.projectListConfig = config;

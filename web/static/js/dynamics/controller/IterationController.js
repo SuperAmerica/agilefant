@@ -86,7 +86,7 @@ IterationController.prototype.createStory = function() {
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
-  controller.editStory();
+  controller.openRowEdit();
   row.getCell(StoryController.columnIndices.tasksData).hide();
 };
 
@@ -172,7 +172,9 @@ IterationController.prototype.initializeTaskListConfig = function() {
     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : TaskModel.prototype.setResponsibles
     }
   });
@@ -247,7 +249,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'task-row',
-    subViewFactory : TaskController.prototype.taskButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(TaskController.columnIndices.data, {
     fullWidth : true,
@@ -371,7 +373,9 @@ IterationController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : StoryModel.prototype.setResponsibles
     }
   });
@@ -430,7 +434,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     cssClass : 'story-row',
-    subViewFactory : StoryController.prototype.storyButtonFactory
+    subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(StoryController.columnIndices.tasksData, {
     fullWidth : true,

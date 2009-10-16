@@ -216,6 +216,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             String name = recurseBacklogNameWithParents(blog);
             AutocompleteDataNode node = new AutocompleteDataNode(Backlog.class,
                     blog.getId(), name);
+            node.setOriginalObject(blog);
             autocompleteData.add(node);
         }
         return autocompleteData; 

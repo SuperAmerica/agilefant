@@ -43,7 +43,8 @@ UserController.prototype._renderTables = function()  {
  * Callback for changing password.
  */
 UserController.prototype.changePassword = function() {
-  var model = this.model;
+  var passwordChange = new ChangePasswordDialog(this.model);
+  /*var model = this.model;
   var element = $('<div/>').appendTo(document.body);
   $('<div/>').text("Change password of " + model.getFullName()).appendTo(element);
   
@@ -62,7 +63,7 @@ UserController.prototype.changePassword = function() {
         element.remove();
       }
     }
-  });
+  });*/
 };
 
 /**

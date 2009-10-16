@@ -3,7 +3,7 @@ var StoryController = function StoryController(model, view, backlogController) {
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.autohideColumns = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons, StoryController.columnIndices.tasksData ]; 
+  this.autohideCells = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons, StoryController.columnIndices.tasksData ]; 
 };
 
 StoryController.columnIndices = {
@@ -194,7 +194,7 @@ StoryController.prototype.createTask = function() {
   controller.view = row;
   row.autoCreateCells([TaskController.columnIndices.actions, TaskController.columnIndices.data]);
   row.render();
-  controller.editTask();
+  controller.openRowEdit();
   row.getCell(TaskController.columnIndices.data).hide();
 };
 
@@ -361,7 +361,9 @@ StoryController.prototype.storyPointsEditable = function() {
     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
     editable : true,
     edit : {
-      editor : "User",
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
       set : TaskModel.prototype.setResponsibles
     }
   });

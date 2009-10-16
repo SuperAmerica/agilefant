@@ -533,6 +533,12 @@
       <param name="patterns">-class</param>
     </result>
   </action>
+  <action name="projectChooserData" class="autocompleteAction" method="projectData">
+    <result name="success" type="json">
+      <param name="target">autocompleteData</param>
+      <param name="patterns">-class</param>
+    </result>
+  </action>
   
 	<action name="currentIterationChooserData" class="autocompleteAction"
 		method="currentIterationData">

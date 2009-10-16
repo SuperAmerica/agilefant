@@ -3,7 +3,7 @@ var TaskController = function TaskController(model, view, parentController) {
   this.view = view;
   this.parentController = parentController;
   this.init();
-  this.autohideColumns = [ TaskController.columnIndices.description, TaskController.columnIndices.buttons ];
+  this.autohideCells = [ TaskController.columnIndices.description, TaskController.columnIndices.buttons ];
 };
 
 TaskController.columnIndices = {
@@ -161,7 +161,7 @@ TaskController.prototype.originalEstimateEditable = function() {
 };
 
 TaskController.prototype.isEditable = function () {
-  return ! this.model.isInTransaction(); 
+  return true;
 };
 
 TaskController.prototype.openQuickLogEffort = function(model, view) {

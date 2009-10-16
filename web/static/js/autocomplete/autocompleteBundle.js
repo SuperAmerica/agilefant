@@ -119,9 +119,8 @@ Autocomplete.prototype._initializeMultiSelect = function() {
   
   this.searchBox.initialize(this.searchBoxContainer);
   this.selectedBox.initialize(this.selectedBoxContainer);
-  for(var i = 0; i < this.options.preSelected.length; i++) { 
-    this.selectedBox.addItemById(this.options.preSelected[i]);
-  }
+  
+  this.setSelected(this.options.preSelected);
 };
 
 Autocomplete.prototype._initializeSingleSelect = function() {
@@ -140,6 +139,11 @@ Autocomplete.prototype._initializeRecent = function() {
   }
 };
 
+Autocomplete.prototype.setSelected = function(selected) {
+  for(var i = 0; i < selected.length; i++) { 
+    this.selectedBox.addItemById(selected[i]);
+  }
+};
 
 Autocomplete.prototype.selectItem = function(item) {
   this.recentBox.pushToRecent(item);

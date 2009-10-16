@@ -45,8 +45,29 @@ TableEditors.getEditorClassByName = function(name) {
  */
 TableEditors.CommonEditor = function() {};
 TableEditors.CommonEditor.defaultOptions = {
+    /**
+     * The getter function of the model.
+     * 
+     * Default: function() {}
+     * Will be called in the model object's context.
+     * @member TableEditors.CommonEditor
+     */
     get: function() {},
-    set: function() {}
+    /**
+     * The setter function of the model.
+     * 
+     * Default: function() {}
+     * Will be called in the model object's context.
+     * @member TableEditors.CommonEditor
+     */
+    set: function() {},
+    /**
+     * Should the editor be opened in row edit mode or not.
+     * 
+     * Default: false
+     * @member TableEditors.CommonEditor
+     */
+    editRow: false
 };
 TableEditors.CommonEditor.prototype.init = function(element, model, options) {
   this.element = element;
@@ -73,7 +94,9 @@ TableEditors.CommonEditor.prototype._requestCancel = function() {
   this.element.trigger("cancelRequested", [this]);
 };
 TableEditors.CommonEditor.prototype._requestSave = function() {
-  this.element.trigger("storeRequested", [this]);
+  if (!this.options.editRow) {
+    this.element.trigger("storeRequested", [this]);
+  }
 };
 
 /**

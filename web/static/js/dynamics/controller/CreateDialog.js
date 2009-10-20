@@ -138,7 +138,7 @@ CreateDialog.Product.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Product.columnIndices.name,{
     title: "Name",
     editable: true,
-    get: CreateDialog.returnNull,
+    get: ProductModel.prototype.getName,
     edit: {
       editor: "Text",
       required: true,
@@ -148,7 +148,7 @@ CreateDialog.Product.prototype.initFormConfig = function() {
   
   config.addColumnConfiguration(CreateDialog.Product.columnIndices.description, {
     title: "Description",
-    get: CreateDialog.returnNull,
+    get: ProductModel.prototype.getDescription,
     editable: true,
     edit: {
       editor: "Wysiwyg",
@@ -186,14 +186,14 @@ CreateDialog.Project.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
-    validators: [ BacklogModel.Validators.dateValidator ],
+    validators: [ BacklogModel.Validators.dateValidator, BacklogModel.Validators.parentValidator ],
     closeRowCallback: CreateDialogClass.prototype.close
   });
   
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.name,{
     title: "Name",
     editable: true,
-    get: CreateDialog.returnNull,
+    get: ProjectModel.prototype.getName,
     edit: {
       editor: "Text",
       required: true,
@@ -204,6 +204,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
     title : "Parent",
     get : ProjectModel.prototype.getParent,
+    decorator: DynamicsDecorators.plainContextDecorator,
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
@@ -242,11 +243,11 @@ CreateDialog.Project.prototype.initFormConfig = function() {
   
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.description, {
     title: "Description",
-    get: CreateDialog.returnNull,
+    get: ProjectModel.prototype.getDescription,
     editable: true,
     edit: {
       editor: "Wysiwyg",
-      set: IterationModel.prototype.setDescription
+      set: ProjectModel.prototype.setDescription
     }
   });
   
@@ -280,7 +281,8 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
-    closeRowCallback: CreateDialogClass.prototype.close
+    closeRowCallback: CreateDialogClass.prototype.close,
+    validators: [ BacklogModel.Validators.dateValidator, BacklogModel.Validators.parentValidator ]
   });
   
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.name,{
@@ -296,7 +298,8 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
   
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.parent,{
     title : "Parent",
-    get : CreateDialog.returnNull,
+    get: IterationModel.prototype.getParent,
+    decorator: DynamicsDecorators.plainContextDecorator,
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
@@ -339,7 +342,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
   
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.description, {
     title: "Description",
-    get: CreateDialog.returnNull,
+    get: IterationModel.prototype.getDescription,
     editable: true,
     edit: {
       editor: "Wysiwyg",
@@ -374,7 +377,8 @@ CreateDialog.Story.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
-    closeRowCallback: CreateDialogClass.prototype.close
+    closeRowCallback: CreateDialogClass.prototype.close,
+    validators: [ StoryModel.Validators.backlogValidator ]
   });
   
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.name,{
@@ -390,7 +394,8 @@ CreateDialog.Story.prototype.initFormConfig = function() {
   
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.backlog,{
     title : "Backlog",
-    get : CreateDialog.returnNull,
+    get : StoryModel.prototype.getBacklog,
+    decorator: DynamicsDecorators.plainContextDecorator,
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
@@ -425,7 +430,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
 
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.description, {
     title: "Description",
-    get: CreateDialog.returnNull,
+    get: StoryModel.prototype.getDescription,
     editable: true,
     edit: {
       editor: "Wysiwyg",

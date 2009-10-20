@@ -112,6 +112,33 @@ $(document).ready(function() {
     ModelFactory.updateObject = origUpdateObject;
   });
 
+  
+  
+  module("Dynamics: StoryModel validation", {
+    setup: function() {
+      this.mockControl = new MockControl();
+      this.model = this.mockControl.createMock(IterationModel);
+    },
+    teardown: function() {
+      this.mockControl.verify();
+    }
+  });
+   
+  test("Backlog validation", function() {
+    this.model.expects().getParent().andReturn(null);
+    try {
+      StoryModel.Validators.backlogValidator(this.model)
+      ok(false, "No error thrown");
+    }
+    catch (e) {
+      same(e, "Please select a parent backlog", "Correct error message");
+    }
+    
+    this.model.expects().getParent().andReturn(new BacklogModel());
+    StoryModel.Validators.backlogValidator(this.model);
+  });
+  
+  
 });
 
 var storyExpectedData = {

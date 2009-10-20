@@ -10,7 +10,7 @@ var StoryModel = function StoryModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
   this.relations = {
-    backlog: {},
+    backlog: null,
     task: [],
     hourEntry: [],
     user: [],
@@ -36,6 +36,14 @@ var StoryModel = function StoryModel() {
 };
 
 StoryModel.prototype = new CommonModel();
+
+StoryModel.Validators = {
+  backlogValidator: function(model) {
+    if (!model.getBacklog()) {
+      throw "Please select a parent backlog";
+    }
+  }
+};
 
 /**
  * Internal function to parse data.

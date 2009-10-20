@@ -21,6 +21,11 @@ BacklogModel.Validators = {
     if (start.after(end)) {
       throw "Start date must be before end date";
     }
+  },
+  parentValidator: function(model) {
+    if (!model.getParent()) {
+      throw "Please select a parent backlog";
+    }
   }
 };
 

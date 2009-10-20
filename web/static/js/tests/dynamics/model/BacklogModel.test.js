@@ -58,4 +58,18 @@ $(document).ready(function() {
     }
     
   });
+  
+  test("Parent validation", function() {
+    this.model.expects().getParent().andReturn(null);
+    try {
+      BacklogModel.Validators.parentValidator(this.model)
+      ok(false, "No error thrown");
+    }
+    catch (e) {
+      same(e, "Please select a parent backlog", "Correct error message");
+    }
+    
+    this.model.expects().getParent().andReturn(new BacklogModel());
+    BacklogModel.Validators.parentValidator(this.model);
+  });
 });

@@ -620,6 +620,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
 
 TableEditors.Date.prototype.close = function() {
   this.element.find('img').remove();
+  this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
 };
 
@@ -1039,6 +1040,9 @@ TableEditors.AutocompleteDialog.prototype.getEditorValue = function() {
  */
 TableEditors.AutocompleteDialog.prototype.setEditorValue = function() {
   var preSelectedModels = this.options.get.call(this.model);
+  if (!preSelectedModels) {
+    return;
+  }
   var preSelectedIds = [];
   for (var i = 0; i < preSelectedModels.length; i++) {
     preSelectedIds.push(preSelectedModels[i].getId());
@@ -1079,7 +1083,7 @@ TableEditors.AutocompleteSingle.prototype._selectCallback = function(selected) {
     item = ModelFactory.updateObject(selected.originalObject);
   }
   this.options.set.call(this.model, item);
-  this._requestSave();
+  this._requestSaveIfNotInRowEdit();
   this.close();
 };
 

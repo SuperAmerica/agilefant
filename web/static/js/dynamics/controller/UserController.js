@@ -92,8 +92,8 @@ UserController.prototype._initUserInfoConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    validators: [ function() { MessageDisplay.Ok("Messu!"); } ]
-    
+    validators: [  ],
+    closeRowCallback: null
   });
   
   config.addCaptionItem({

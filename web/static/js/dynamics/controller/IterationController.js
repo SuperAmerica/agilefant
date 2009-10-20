@@ -452,7 +452,9 @@ IterationController.prototype.initializeStoryConfig = function() {
 IterationController.prototype.initIterationInfoConfig = function() {
   var config = new DynamicTableConfiguration( {
     leftWidth: '20%',
-    rightWidth: '79%'
+    rightWidth: '79%',
+    closeRowCallback: null,
+    validators: [ BacklogModel.Validators.dateValidator ]
   });
   config.addColumnConfiguration(0, {
     title : "Name",

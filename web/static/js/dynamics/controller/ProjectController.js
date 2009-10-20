@@ -155,6 +155,7 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
   var config = new DynamicTableConfiguration( {
     leftWidth: '20%',
     rightWidth: '79%',
+    closeRowCallback: null,
     validators: [ BacklogModel.Validators.dateValidator ]
   });
   config.addColumnConfiguration(0, {

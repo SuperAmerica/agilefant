@@ -112,7 +112,8 @@ ProductController.prototype.createStory = function() {
 ProductController.prototype.initializeProductDetailsConfig = function() {
   var config = new DynamicTableConfiguration( {
     leftWidth: '20%',
-    rightWidth: '79%'
+    rightWidth: '79%',
+    closeRowCallback: null
   });
   config.addColumnConfiguration(0, {
     title : "Name",

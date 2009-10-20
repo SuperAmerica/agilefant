@@ -2,15 +2,21 @@ $(document).ready(function() {
   module("Validation Manager", {
     setup: function() {
       this.mockControl = new MockControl();
-      this.element = $('<div />').appendTo(document.body).hide();
+      this.elementParent = $('<div/>').appendTo(document.body);
+      this.element = $('<div />').appendTo(this.elementParent).hide();
     },
     teardown: function() {
       this.element.remove();
+      this.elementParent.remove();
       this.mockControl.verify();
     }
   });
   test("is valid - field error", function() {
     
+    var bubbledToParent = false;
+    this.elementParent.bind("validationInvalid", function() {
+      bubbledToParent = true;
+    });
     
     var fakeEditor = this.mockControl.createMock(TableEditors.CommonEditor);
     var fakeEditorElement = $('<div/>').addClass('dynamics-editor-element')
@@ -27,9 +33,15 @@ $(document).ready(function() {
     var dynEvent = new DynamicsEvents.ValidationInvalid(sender, ["Invalid value"]);
     this.element.trigger("validationInvalid", [dynEvent]);
     equals(validationManager.isValid(), false, "field validation works");
+    
+    ok(!bubbledToParent, "Event should not bubble to parent");
   });
   
   test("is valid - composite error", function() {
+    var bubbledToParent = false;
+    this.elementParent.bind("validationInvalid", function() {
+      bubbledToParent = true;
+    });
     var model = {};
     var validatorfunc = function(actual) {
       equals(actual, model);
@@ -43,14 +55,19 @@ $(document).ready(function() {
     };
     var validationManager = new DynamicsValidationManager(this.element, options, model);
     equals(validationManager.isValid(), false, "field validation works");
-
+    ok(!bubbledToParent, "Event should not bubble to parent");
   });
   
   test("is valid -  ok", function() {
+    var bubbledToParent = false;
+    this.elementParent.bind("validationInvalid", function() {
+      bubbledToParent = true;
+    });
     var validationManager = new DynamicsValidationManager(this.element, null);
     var sender = "field";
     var dynEvent = new DynamicsEvents.ValidationInvalid(sender, ["Invalid value"]);
     this.element.trigger("validationInvalid", [dynEvent]);
+    ok(!bubbledToParent, "Event should not bubble to parent");
   });
   
   test("clear", function() {

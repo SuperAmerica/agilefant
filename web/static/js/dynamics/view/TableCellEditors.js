@@ -157,6 +157,7 @@ TableEditors.CommonEditor.prototype._registerEditField = function(element) {
     me.focused = false;
   });
   element.focus(function() {
+    var a = me;
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });

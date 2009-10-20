@@ -57,6 +57,7 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
   var me = this;
   this.element.bind("validationInvalid", function(event, dynamicsEventObj) {
     me._addValidationErrors(dynamicsEventObj.getMessages(), dynamicsEventObj.getObject(), dynamicsEventObj.getObject());
+    return false;
   });
   this.element.bind("validationValid", function(event, dynamicsEventObj) {
     me._removeErrorMessage(dynamicsEventObj.getObject());

@@ -227,6 +227,7 @@ $(document).ready(function() {
     var initCalled = false;
     TableEditors.CommonEditor.prototype.init = function(element, model, options) {
       this.options = options;
+      this.element = element;
       same(element, elem, "Passed element matches");
       same(expected, model, "Passed model matches");
       same(options, expectedOpts, "Passed options match");
@@ -791,6 +792,8 @@ $(document).ready(function() {
     
     var dialogEditor = new TableEditors.DialogEditor();
     dialogEditor.init(element, new CommonModel(), {});
+    
+    dialogEditor.close();
     
     ok(transactionEditEvent, "Transaction edit event fired");
     element.remove();

@@ -138,20 +138,22 @@ DynamicTableCell.prototype.setValue = function(value) {
  * @return boolean
  */
 DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
+  var editorOptions = this.config.getEditOptions();
+  var editorName = editorOptions.editor;
+  editorOptions.fieldName = this.config.getTitle();
+  
   if(this.editor) {
     return true; 
   }
-  if(!forceOpen && !this.config.isEditable()) {
+  if((!forceOpen && !this.config.isEditable()) ||
+      (editRow && !TableEditors.openOnRowEdit(editorName)) ) {
     return;
   }
-
-  var editorOptions = this.config.getEditOptions();
-  if(editRow) {
-    editorOptions = jQuery.extend({editRow: true}, editorOptions);
+  
+  if(editRow || this.row.isInRowEdit()) {
+    editorOptions.editRow = true;
   }
   
-  var editorName = editorOptions.editor;
-  editorOptions.fieldName = this.config.getTitle();
   
   var EditorClass = TableEditors.getEditorClassByName(editorName);
   if(EditorClass && this.config.getEditableCallback().call(this.row.getController())) {

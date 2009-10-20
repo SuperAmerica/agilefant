@@ -8,7 +8,7 @@
  */
 var ProductController = function ProductController(options) {
   this.id = options.id;
-  this.parentView = options.storyListElement;
+  this.storyListElement = options.storyListElement;
   this.productDetailsElement = options.productDetailsElement;
   this.projectListElement = options.projectListElement;
   this.iterationListElement = options.iterationListElement;
@@ -39,7 +39,7 @@ ProductController.prototype.projectRowControllerFactory = function(view, model) 
 
 ProductController.prototype.paintStoryList = function() {
   this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
-      this.parentView);
+      this.storyListElement);
   this.storyListView.render();
 };
 

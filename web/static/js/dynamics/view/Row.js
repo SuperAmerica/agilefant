@@ -10,6 +10,7 @@ var DynamicTableRow = function DynamicTableRow(config) {
   this.initialize();
   this.dynamicCssClasses = [];
   this.cssClassResolver = null;
+  this.inRowEdit = false;
 };
 
 DynamicTableRow.prototype = new DynamicView();
@@ -154,7 +155,12 @@ DynamicTableRow.prototype._applyToAllCells = function(command, args) {
   return retVal;
 };
 
+DynamicTableRow.prototype.isInRowEdit = function() {
+  return this.inRowEdit;
+};
+
 DynamicTableRow.prototype.editRow = function() {
+  this.inRowEdit = true;
   this._applyToAllCells(DynamicTableCell.prototype.openEditor, [ true ]);
 };
 
@@ -163,6 +169,7 @@ DynamicTableRow.prototype.openFullEdit = function() {
 };
 
 DynamicTableRow.prototype.closeRowEdit = function() {
+  this.inRowEdit = false;
   this._applyToAllCells(DynamicTableCell.prototype.closeEditor, []);
 };
 

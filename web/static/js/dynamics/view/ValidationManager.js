@@ -67,7 +67,10 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
   this.element.bind("storeRequested", function(event, editor) {
     if(me.isValid()) {
       me.model.commit();
-      me.configuration.getCloseRowCallback().call(me.controller);
+      var closeRowCallback = me.configuration.getCloseRowCallback();
+      if (closeRowCallback) {
+        closeRowCallback.call(me.controller);
+      }
       editor.close();
     }
     return false;
@@ -75,7 +78,10 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
   this.element.bind("cancelRequested", function(event, editor) {
     me.model.rollback();
     me.clear();
-    me.configuration.getCloseRowCallback().call(me.controller);
+    var closeRowCallback = me.configuration.getCloseRowCallback();
+    if (closeRowCallback) {
+      closeRowCallback.call(me.controller);
+    }
     editor.close();
     return false;
   });

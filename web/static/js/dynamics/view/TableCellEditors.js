@@ -38,6 +38,14 @@ TableEditors.getEditorClassByName = function(name) {
     return null;
 };
 
+TableEditors.openOnRowEdit = function(name) {
+  var EditorClass = TableEditors.getEditorClassByName(name);
+  if (EditorClass.prototype instanceof TableEditors.DialogEditor) {
+    return false;
+  }
+  return true;
+};
+
 /**
  * Common constructor for all <code>TableEditors</code>
  * @constructor
@@ -892,7 +900,7 @@ TableEditors.DialogEditor.defaultOptions = {
     
     /**
      * Whether the dialog should be shown on editor open.
-     * Default: false
+     * Default: true
      * @member TableEditors.DialogEditor
      */
     autoShow: true,
@@ -947,11 +955,11 @@ TableEditors.DialogEditor.prototype._closeDialog = function() {
 TableEditors.DialogEditor.prototype._ok = function() {
   this.options.set.apply(this.model, this.getEditorValue());
   this._requestSaveIfNotInRowEdit();
-  this._closeDialog();
+  this.close();
 };
 TableEditors.DialogEditor.prototype._cancel = function() {
   this._requestCancelIfNotInRowEdit();
-  this._closeDialog();
+  this.close();
 };
 
 TableEditors.DialogEditor.prototype.close = function() {
@@ -1037,6 +1045,8 @@ TableEditors.AutocompleteDialog.prototype.setEditorValue = function() {
   }
   this.autocomplete.setSelected(preSelectedIds);
 };
+
+
 
 
 

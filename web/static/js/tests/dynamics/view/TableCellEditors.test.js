@@ -34,6 +34,36 @@ $(document).ready(function() {
     }
   });
   
+  
+  test("Open on row edit test", function() {
+    // Normal get function
+    ok(!TableEditors.openOnRowEdit("Autocomplete"), "Autocomplete editor should not open");
+    ok(TableEditors.openOnRowEdit("Text"), "Text editor should not open");
+    
+    var originalGetter = TableEditors.getEditorClassByName;
+    
+    // Extended dialog
+    var ExtendedDialogEditor = function() {};
+    ExtendedDialogEditor.prototype = new TableEditors.DialogEditor();
+    
+    // Extended text field
+    var ExtendedTextEditor = function() {};
+    ExtendedTextEditor.prototype = new TableEditors.TextFieldEditor();
+    
+    TableEditors.getEditorClassByName = function(name) {
+      if (name === "Dialog") {
+        return ExtendedDialogEditor;
+      }
+      return ExtendedTextEditor;
+    };
+    
+    // Other editors
+    ok(!TableEditors.openOnRowEdit("Dialog"), "Dialog editor should not open");
+    ok(TableEditors.openOnRowEdit("TextField"), "Text field editor should not open");
+    
+    TableEditors.getEditorClassByName = originalGetter;
+  });
+  
   test("CommonEditor init", function() {
     var elem = $('<div/>').appendTo(document.body);
     

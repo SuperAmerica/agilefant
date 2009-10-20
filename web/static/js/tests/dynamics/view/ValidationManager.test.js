@@ -106,6 +106,104 @@ $(document).ready(function() {
 
   });
   
+  test("Catch store requested event", function() {
+    var mockModel = this.mockControl.createMock(TaskModel);
+    var mockController = this.mockControl.createMock(TaskController);
+    var mockEditor = this.mockControl.createMock(TableEditors.CommonEditor);
+    
+    var closeCalled = false;
+    var passCorrectCallback = true;
+    var config = {
+      options: {
+        validators: []
+      },
+      _close: function() {
+        equals(this, mockController, "Controller context matches");
+        closeCalled = true;
+      },
+      getCloseRowCallback: function() {
+        closeCalled = false;
+        if (passCorrectCallback) {
+          return config._close;
+        }
+        return;
+      }
+    };
+    
+    var validationManager = new DynamicsValidationManager(this.element, config, mockModel, mockController);
+    
+    
+    // Close row callback supplied
+    mockModel.expects().commit();
+    mockEditor.expects().close();
+    this.element.trigger("storeRequested", [ mockEditor ]);
+    ok(closeCalled, "Close row callback called");
+
+    // Close row callback not supplied
+    mockModel.expects().commit();
+    mockEditor.expects().close();
+    closeCalled = false;
+    passCorrectCallback = false;
+    this.element.trigger("storeRequested", [ mockEditor ]);
+    ok(!closeCalled, "Close row callback not called");
+    
+    // Invalid validation
+    closeCalled = false;
+    passCorrectCallback = false;
+    validationManager.isValid = function() { return false; };
+    this.element.trigger("storeRequested", [ mockEditor ]);
+    ok(!closeCalled, "Close row callback not called");
+  });
+  
+  
+  test("Catch cancel requested event", function() {
+    var mockModel = this.mockControl.createMock(TaskModel);
+    var mockController = this.mockControl.createMock(TaskController);
+    var mockEditor = this.mockControl.createMock(TableEditors.CommonEditor);
+    
+    var closeCalled = false;
+    var passCorrectCallback = true;
+    var config = {
+      options: {
+        validators: []
+      },
+      _close: function() {
+        equals(this, mockController, "Controller context matches");
+        closeCalled = true;
+      },
+      getCloseRowCallback: function() {
+        closeCalled = false;
+        if (passCorrectCallback) {
+          return config._close;
+        }
+        return;
+      }
+    };
+    
+    var validationManager = new DynamicsValidationManager(this.element, config, mockModel, mockController);
+    
+    var errorsCleared = 0;
+    validationManager.clear = function() {
+      errorsCleared++;
+    };
+    
+    // Close row callback supplied
+    mockModel.expects().rollback();
+    mockEditor.expects().close();
+    this.element.trigger("cancelRequested", [ mockEditor ]);
+    ok(closeCalled, "Close row callback called");
+    equals(errorsCleared, 1, "Errors cleared");
+    
+    // Close row callback not supplied
+    mockModel.expects().rollback();
+    mockEditor.expects().close();
+    closeCalled = false;
+    passCorrectCallback = false;
+    this.element.trigger("cancelRequested", [ mockEditor ]);
+    ok(!closeCalled, "Close row callback not called");
+    equals(errorsCleared, 2, "Errors cleared");
+  });
+  
   test("multiple composite runs", function() {
     var model = {};
     var isValid = false;

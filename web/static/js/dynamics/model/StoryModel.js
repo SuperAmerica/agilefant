@@ -67,6 +67,9 @@ StoryModel.prototype._setData = function(newData) {
   if(newData.parent) {
     this.relations.parent = ModelFactory.updateObject(newData.parent);
   }
+  if(newData.metrics) {
+    this.metrics = newData.metrics;
+  }
 };
 
 /**
@@ -299,6 +302,12 @@ StoryModel.prototype.getParentStoryName = function() {
 };
 
 StoryModel.prototype.getTotalEffortSpent = function() {
-  return "";
+  return this.metrics.effortSpent;
+};
+StoryModel.prototype.getTotalEffortLeft = function() {
+  return this.metrics.effortLeft;
+};
+StoryModel.prototype.getTotalOriginalEstimate = function() {
+  return this.metrics.originalEstimate;
 };
 

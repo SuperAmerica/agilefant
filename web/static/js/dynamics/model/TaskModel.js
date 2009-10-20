@@ -28,7 +28,8 @@ var TaskModel = function TaskModel() {
     "description": "description",
     "effortLeft": "effortLeft",
     "originalEstimate": "originalEstimate",
-    "rank": "rank"
+    "rank": "rank",
+    "effortSpent": "effortSpent"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
@@ -433,4 +434,9 @@ TaskModel.prototype.addResponsible = function(userId) {
   }
   
   this.currentData.responsiblesChanged = true;
+};
+
+
+TaskModel.prototype.getEffortSpent = function() {
+  return this.currentData.effortSpent;
 };

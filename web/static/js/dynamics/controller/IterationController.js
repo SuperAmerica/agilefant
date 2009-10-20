@@ -385,6 +385,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     cssClass : 'story-row',
     title : "EL",
     headerTooltip : 'Total task effort left',
+    decorator: DynamicsDecorators.exactEstimateDecorator,
     get : StoryModel.prototype.getTotalEffortLeft
   });
   config.addColumnConfiguration(StoryController.columnIndices.oe, {
@@ -393,6 +394,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     cssClass : 'story-row',
     title : "OE",
     headerTooltip : 'Total task original estimate',
+    decorator: DynamicsDecorators.exactEstimateDecorator,
     get : StoryModel.prototype.getTotalOriginalEstimate
   });
   if (Configuration.isTimesheetsEnabled()) {
@@ -402,6 +404,7 @@ IterationController.prototype.initializeStoryConfig = function() {
       cssClass : 'story-row',
       title : "ES",
       headerTooltip : 'Total task effort spent',
+      decorator: DynamicsDecorators.exactEstimateDecorator,
       get : StoryModel.prototype.getTotalEffortSpent,
       editable : false,
       onDoubleClick: StoryController.prototype.openQuickLogEffort,
@@ -441,7 +444,8 @@ IterationController.prototype.initializeStoryConfig = function() {
     visible : false,
     cssClass : 'story-data',
     targetCell: StoryController.columnIndices.tasksData,
-    subViewFactory : StoryController.prototype.storyContentsFactory
+    subViewFactory : StoryController.prototype.storyContentsFactory,
+    delayedRender: true
   });
   this.storyListConfig = config;
 };

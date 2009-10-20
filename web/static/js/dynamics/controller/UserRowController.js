@@ -39,9 +39,6 @@ UserRowController.prototype.userActionFactory = function(view, model) {
     text : "Open user's page",
     callback : UserRowController.prototype.editUser
   }, {
-    text : "Change password",
-    callback : UserRowController.prototype.changePassword
-  }, {
     text : "Enable",
     callback : UserRowController.prototype.enableUser,
     enabled: UserRowController.prototype.showEnableAction

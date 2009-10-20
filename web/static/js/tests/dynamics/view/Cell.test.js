@@ -141,6 +141,45 @@ $(document).ready(function() {
 	   TableEditors = editorsOld;
 	 });
 	 
+	 
+	 test("Catch TransactionEditEvent", function() {
+     this.cellConfig.expects().hasDelayedRender().andReturn(false);
+     this.cellConfig.expects().getWidth().andReturn(null);
+     this.cellConfig.expects().getMinWidth().andReturn(null);
+     this.cellConfig.expects().isFullWidth().andReturn(true);
+     this.cellConfig.expects().getCssClass().andReturn("");
+     this.cellConfig.expects().isVisible().andReturn(true);
+     this.cellConfig.expects().isDragHandle().andReturn(false);
+     this.cellConfig.expects().isEditable().andReturn(true);
+     this.cellConfig.expects().getSubViewFactory().andReturn(null);
+     
+     var testable = new DynamicTableCell(this.mockRow, this.cellConfig);
+     
+     var parent = $('<div/>').attr('id','parent').appendTo(document.body);
+     testable.element.appendTo(parent);
+
+     // Should not bubble to parent
+     var bubbledToParent = false;
+     parent.bind("transactionEditEvent", function() {
+       bubbledToParent = true;
+     });
+         
+     // Should call the render method - whatever it does
+     var renderCalled = false;
+     testable.render = function() {
+       renderCalled = true;
+     };
+     
+     // Fire the event
+     testable.element.trigger("transactionEditEvent");
+
+     
+     ok(!bubbledToParent, "Transaction edit event should not be passed on to parent element");
+     ok(renderCalled, "Cell render called");
+     
+     parent.remove();
+	 });
+	 
    test("render with sub view", function() {
      var me = this;
      this.cellConfig.expects().hasDelayedRender().andReturn(false);

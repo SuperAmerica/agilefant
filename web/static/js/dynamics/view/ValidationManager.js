@@ -71,7 +71,9 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
       if (closeRowCallback) {
         closeRowCallback.call(me.controller);
       }
-      editor.close();
+      if (editor) {
+        editor.close();
+      }
     }
     return false;
   });
@@ -82,7 +84,9 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
     if (closeRowCallback) {
       closeRowCallback.call(me.controller);
     }
-    editor.close();
+    if (editor) {
+      editor.close();
+    }
     return false;
   });
 };

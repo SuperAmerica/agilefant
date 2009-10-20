@@ -80,6 +80,12 @@ var DynamicsDecorators = {
     }
     return value.name;
   },
+  backlogSelectDecorator: function(backlog) {
+    if (!backlog) {
+      return "(no backlog selected)";
+    }
+    return backlog.getName();
+  },
   dateDecorator: function(value) {
     if(!value) {
       return "";

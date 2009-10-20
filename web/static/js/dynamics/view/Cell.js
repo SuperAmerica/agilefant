@@ -83,6 +83,10 @@ DynamicTableCell.prototype._registerEventHandlers = function() {
     me.editorOpening();
     return false;
   });
+  this.element.bind("transactionEditEvent", function(event) {
+    me.onTransactionEdit();
+    return false;
+  });
 };
 DynamicTableCell.prototype.getElement = function() {
 	return this.element;
@@ -192,4 +196,8 @@ DynamicTableCell.prototype.isFocused = function() {
     return this.editor.isFocused();
   }
   return false;
+};
+
+DynamicTableCell.prototype.onTransactionEdit = function() {
+  this.render();
 };

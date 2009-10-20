@@ -204,7 +204,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
     title : "Parent",
     get : ProjectModel.prototype.getParent,
-    decorator: DynamicsDecorators.plainContextDecorator,
+    decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
@@ -299,7 +299,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.parent,{
     title : "Parent",
     get: IterationModel.prototype.getParent,
-    decorator: DynamicsDecorators.plainContextDecorator,
+    decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
     edit : {
       editor : "AutocompleteSingle",
@@ -395,7 +395,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.backlog,{
     title : "Backlog",
     get : StoryModel.prototype.getBacklog,
-    decorator: DynamicsDecorators.plainContextDecorator,
+    decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
     edit : {
       editor : "AutocompleteSingle",

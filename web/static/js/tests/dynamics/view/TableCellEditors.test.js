@@ -778,7 +778,22 @@ $(document).ready(function() {
   });
   
   test("DialogEditor - events", function() {
+    ok(false, "No written tests");
+  });
+  
+  test("DialogEditor - close", function() {
     
+    var transactionEditEvent = false;
+    var element = $('<div/>').appendTo(document.body);
+    element.bind("transactionEditEvent", function() {
+      transactionEditEvent = true;
+    });
+    
+    var dialogEditor = new TableEditors.DialogEditor();
+    dialogEditor.init(element, new CommonModel(), {});
+    
+    ok(transactionEditEvent, "Transaction edit event fired");
+    element.remove();
   });
   
   

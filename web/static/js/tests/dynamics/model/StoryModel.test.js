@@ -117,7 +117,7 @@ $(document).ready(function() {
   module("Dynamics: StoryModel validation", {
     setup: function() {
       this.mockControl = new MockControl();
-      this.model = this.mockControl.createMock(IterationModel);
+      this.model = this.mockControl.createMock(StoryModel);
     },
     teardown: function() {
       this.mockControl.verify();
@@ -125,7 +125,7 @@ $(document).ready(function() {
   });
    
   test("Backlog validation", function() {
-    this.model.expects().getParent().andReturn(null);
+    this.model.expects().getBacklog().andReturn(null);
     try {
       StoryModel.Validators.backlogValidator(this.model)
       ok(false, "No error thrown");
@@ -134,7 +134,7 @@ $(document).ready(function() {
       same(e, "Please select a parent backlog", "Correct error message");
     }
     
-    this.model.expects().getParent().andReturn(new BacklogModel());
+    this.model.expects().getBacklog().andReturn(new BacklogModel());
     StoryModel.Validators.backlogValidator(this.model);
   });
   

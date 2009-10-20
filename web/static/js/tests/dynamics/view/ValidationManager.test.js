@@ -131,7 +131,7 @@ $(document).ready(function() {
     };
     
     var validationManager = new DynamicsValidationManager(this.element, config, mockModel, mockController);
-    
+    validationManager.isValid = function() { return true; };
     
     // Close row callback supplied
     mockModel.expects().commit();
@@ -139,6 +139,10 @@ $(document).ready(function() {
     this.element.trigger("storeRequested", [ mockEditor ]);
     ok(closeCalled, "Close row callback called");
 
+    // No editor supplied
+    mockModel.expects().commit();
+    this.element.trigger("storeRequested");
+    
     // Close row callback not supplied
     mockModel.expects().commit();
     mockEditor.expects().close();
@@ -194,6 +198,11 @@ $(document).ready(function() {
     ok(closeCalled, "Close row callback called");
     equals(errorsCleared, 1, "Errors cleared");
     
+    // No editor supplied
+    mockModel.expects().rollback();
+    this.element.trigger("cancelRequested", [ ]);
+    equals(errorsCleared, 2, "Errors cleared");
+    
     // Close row callback not supplied
     mockModel.expects().rollback();
     mockEditor.expects().close();
@@ -201,7 +210,7 @@ $(document).ready(function() {
     passCorrectCallback = false;
     this.element.trigger("cancelRequested", [ mockEditor ]);
     ok(!closeCalled, "Close row callback not called");
-    equals(errorsCleared, 2, "Errors cleared");
+    equals(errorsCleared, 3, "Errors cleared");
   });
   
   test("multiple composite runs", function() {

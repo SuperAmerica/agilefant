@@ -115,6 +115,10 @@ TableEditors.CommonEditor.prototype._requestSaveIfNotInRowEdit = function() {
   }
 };
 
+TableEditors.CommonEditor.prototype._fireTransactionEditEvent = function() {
+  this.element.trigger("transactionEditEvent");
+};
+
 /**
  * 
  */
@@ -965,6 +969,7 @@ TableEditors.DialogEditor.prototype._cancel = function() {
 
 TableEditors.DialogEditor.prototype.close = function() {
   this._closeDialog();
+  this._fireTransactionEditEvent();
   TableEditors.CommonEditor.prototype.close.call(this);
 };
 

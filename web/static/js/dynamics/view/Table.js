@@ -512,16 +512,21 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
 /**
  * Create a new row
  */
-DynamicTable.prototype.createRow = function(controller, model, position) {
+DynamicTable.prototype.createRow = function(controller, model, position, where) {
   var row = new DynamicTableRow(this.config.getColumns());
-  this._createRow(row, controller, model, position);
+  this._createRow(row, controller, model, position, where);
   this.render();
   return row;
 };
 
-DynamicTable.prototype._createRow = function(row, controller, model, position) {
+DynamicTable.prototype._createRow = function(row, controller, model, position, where) {
   if (position === "top") {
-    this.upperRows.splice(0, 0, row);
+      if (where == "last") {
+          this.upperRows.splice(this.upperRows.length, 0, row);
+      }
+      else {
+          this.upperRows.splice(0, 0, row);
+      }
   } else if (position === "bottom") {
     this.bottomRows.push(row);
   } else {

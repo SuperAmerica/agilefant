@@ -7,17 +7,14 @@
 var TaskSplitDialog = function TaskSplitDialog(task, onSuccessCallback) {
   var me = this;
   this.model = task;
-  this.model.setInTransaction(true);
   this.init();
   this.initDialog();
   this.initConfigs();
   this.render();
   this.editListener = function(event) { me._transactionEditListener(event); };
   this.model.addListener(this.editListener);
-  this.oldModels = [];
   this.newModels = [];
   this.rows = [];
-  this.originalResponsibles = this.model.getResponsibles().slice();
   this.onSuccessCallback = onSuccessCallback;
 };
 TaskSplitDialog.prototype = new CommonController();
@@ -80,14 +77,25 @@ TaskSplitDialog.prototype._transactionEditListener = function(event) {
   }
 };
 
+TaskSplitDialog.prototype.areAllRowsValid = function() {
+    var success = this.taskInfoView.getValidationManager().isValid();
+    
+    var rows = this.tasksView.upperRows;
+    for (var i = 0; i < rows.length; i ++) {
+        success = rows[i].getValidationManager().isValid() && success;
+    }
+    
+    return success;
+};
+
 /**
  * The callback for the 'Save' button.
  */
 TaskSplitDialog.prototype._save = function() {
-  if (this.isFormDataValid()) {
-    this.saveTasks();
-    this.close();
-  }
+    if (this.areAllRowsValid()) {
+        this.saveTasks();
+        this.close();
+    }
 };
 
 /**
@@ -95,9 +103,6 @@ TaskSplitDialog.prototype._save = function() {
  */
 TaskSplitDialog.prototype._cancel = function() {
   this.model.rollback();
-  $.each(this.oldModels, function(k,v) {
-    v.rollback();
-  });
   this.tasksView.remove();
   this.close();
 };
@@ -112,19 +117,11 @@ TaskSplitDialog.prototype.close = function() {
 
 TaskSplitDialog.prototype._removeListeners = function() {
   this.model.removeListener(this.editListener);
-  this.model.setInTransaction(false);
-  for (var i = 0; i < this.oldModels.length; i++) {
-    var model = this.oldModels[i];
-    model.removeListener(this.editListener);
-    model.setInTransaction(false);
-  }
 };
 
 TaskSplitDialog.prototype.taskControllerFactory = function(view, model) {
-  model.setInTransaction(true);
   model.addListener(this.editListener);
   this.rows.push(view);
-  this.oldModels.push(model);
   var taskController = new TaskController(model, view, this);
   this.addChildController("task", taskController);
   return taskController;
@@ -132,12 +129,11 @@ TaskSplitDialog.prototype.taskControllerFactory = function(view, model) {
 
 TaskSplitDialog.prototype.createTask = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.task);
-  mockModel.setInTransaction(true);
   this.newModels.push(mockModel);
   var controller = new TaskController(mockModel, null, this);
-  var row = this.tasksView.createRow(controller, mockModel, "top");
+  var row = this.tasksView.createRow(controller, mockModel, "top", "last");
 
-  $.each(this.originalResponsibles, function (k, v) {
+  $.each(this.model.getResponsibles(), function (k, v) {
     mockModel.addResponsible(v.getId());
   });
   
@@ -146,30 +142,14 @@ TaskSplitDialog.prototype.createTask = function() {
   row.render();
   row.editRow();
   this.rows.push(row);
-  $(window).resize();
-};
-
-/**
- * Check input validity.
- */
-TaskSplitDialog.prototype.isFormDataValid = function() {
-  var retVal = true;
-  for (var i = 0; i < this.rows.length; i++) {
-    retVal = retVal && this.rows[i].isRowValid(); 
-  }
-  if (retVal) {
-    for (i = 0; i < this.rows.length; i++) {
-      this.rows[i].saveRowEdit();
-    }
-  }
-  return retVal;
+//  $(window).resize();
 };
 
 /**
  * Serialize and save the data.
  */
 TaskSplitDialog.prototype.saveTasks = function() {
-  var tsc = new TaskSplitContainer(this.model, this.newModels, this.oldModels);
+  var tsc = new TaskSplitContainer(this.model, this.newModels);
   tsc.commit(this.onSuccessCallback);
 };
 

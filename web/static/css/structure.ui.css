@@ -196,14 +196,32 @@ div#footerText label {
   min-width: 750px;  
 }
 
-#work-queue-div {
-  min-width: 750px;
+#work-queue-container {
+	position: relative;
 }
+
+.details-expanded #work-queue-div {
+  width: 75%;
+}
+
+.details-contracted #work-queue-div {
+  width: auto;
+}
+
+.details-expanded #work-queue-details-div {
+  width: 24%;
+  float: right;
+}
+
+#details-container {
+    padding: 0.2em;
+}
+
+.details-contracted #work-queue-details-div {
+  display: none;
+}
+
 
 #my-work-div {
   min-width: 750px;
 }
-
-
-
- 

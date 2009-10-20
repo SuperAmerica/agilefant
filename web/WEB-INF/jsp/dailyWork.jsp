@@ -34,7 +34,19 @@ $(document).ready(function() {
 });
 </script>
 
+<div id="work-queue-all-container" class="details-expanded">
+<div id="work-queue-container">
+<div id="work-queue-details-div" class="ui-widget-content ui-corner-all">
+<div id="details-container">
+<div class="dynamictable-caption-block dynamictable-caption ui-widget-header ui-corner-all">
+<div>Details</div>
+</div>
+<div>Details go here...</div>
+</div>
+</div>
 <div id="work-queue-div"></div>
+</div>
+</div>
 <div id="story-list-div"></div>
 <div id="task-list-div"></div>
 

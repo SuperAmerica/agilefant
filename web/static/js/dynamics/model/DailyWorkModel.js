@@ -11,7 +11,9 @@ var DailyWorkModel = function DailyWorkModel() {
   this.id = 1;
   this.relations = {
       user:    null,
-      dailyWorkTask: [   ]
+      dailyWorkTask: [   ],
+      story:         [   ],
+      task:          [   ]
   };
 
   this.copiedFields = {
@@ -20,7 +22,11 @@ var DailyWorkModel = function DailyWorkModel() {
 
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": "dailyWorkTask",
-      "fi.hut.soberit.agilefant.model.User":               "user"
+      "fi.hut.soberit.agilefant.model.User":               "user",
+      "fi.hut.soberit.agilefant.transfer.StoryTO":         "story",
+      "fi.hut.soberit.agilefant.model.Story":              "story",
+      "fi.hut.soberit.agilefant.transfer.TaskTO":          "task",
+      "fi.hut.soberit.agilefant.model.Task":               "task"
   };
 };
 
@@ -46,32 +52,33 @@ DailyWorkModel.prototype._setData = function(newData) {
         this._updateRelations(ModelFactory.types.dailyWorkTask, newData.assignedTasks);
     }
 
+    if (newData.assignedWork) {
+        var stories = newData.assignedWork.stories;
+        if (stories != undefined) {
+            this._updateRelations(ModelFactory.types.story, stories);
+        }
+        
+        var tasks = newData.assignedWork.tasksWithoutStory;
+        if (tasks != undefined) {
+            this._updateRelations(ModelFactory.types.task, tasks);
+        }
+    }
+
     if (newData.user) {
       this._updateRelations(ModelFactory.types.user, newData.user);
     }
 };
 
-DailyWorkModel.prototype.getMyWorks = function() {
-    return this._getChildrenByTaskClass(["ASSIGNED", "NEXT_ASSIGNED"]);
-};
-
-DailyWorkModel.prototype.getWorkQueueItems = function() {
-    return this._getChildrenByTaskClass(["NEXT", "NEXT_ASSIGNED"]);
-};
-
-DailyWorkModel.prototype.getAllTasks = function() {
+DailyWorkModel.prototype.getQueueTasks = function() {
     return this.relations.dailyWorkTask;
 };
 
-DailyWorkModel.prototype._getChildrenByTaskClass = function(taskClasses) {
-    var returnedTasks = [];
-    var children = this.getAllTasks();
-    for (var i = 0; i < children.length; i++) {
-        if ($.inArray(children[i].getTaskClass(), taskClasses) != -1) {
-            returnedTasks.push(children[i]);
-        }
-    }
-    return returnedTasks;
+DailyWorkModel.prototype.getTasksWithoutStory = function() {
+    return this.relations.task;
+};
+
+DailyWorkModel.prototype.getStories = function() {
+    return this.relations.story;
 };
 
 DailyWorkModel.prototype.getUserId = function() {

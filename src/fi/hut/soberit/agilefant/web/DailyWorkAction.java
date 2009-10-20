@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.util.UserComparator;
 
@@ -43,12 +44,14 @@ public class DailyWorkAction extends ActionSupport {
     private int  userId;
     private User user; 
 
-    private List<User> enabledUsers        = new ArrayList<User>();
-    private Collection<DailyWorkTaskTO> assignedTasks = new ArrayList<DailyWorkTaskTO>();
+    private List<User> enabledUsers                 = new ArrayList<User>();
+    private Collection<DailyWorkTaskTO> queuedTasks = new ArrayList<DailyWorkTaskTO>();
+    private AssignedWorkTO assignedWork;
 
     private int  taskId;
     private int  rankUnderId;
     private Task task;
+
     
     /**
      * Retrieve for JSON data.
@@ -69,8 +72,9 @@ public class DailyWorkAction extends ActionSupport {
         enabledUsers.addAll(userBusiness.getEnabledUsers());
         Collections.sort(enabledUsers, new UserComparator());
 
-        assignedTasks = dailyWorkBusiness.getAllCurrentTasksForUser(user);
-
+        queuedTasks = dailyWorkBusiness.getQueuedTasksForUser(user);
+        assignedWork = dailyWorkBusiness.getAssignedWorkFor(user);
+        
         return Action.SUCCESS;
     }
 
@@ -143,7 +147,7 @@ public class DailyWorkAction extends ActionSupport {
     }
 
     public Collection<DailyWorkTaskTO> getAssignedTasks() {
-        return assignedTasks;
+        return queuedTasks;
     }
     
     public User getUser() {
@@ -184,5 +188,9 @@ public class DailyWorkAction extends ActionSupport {
 
     public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;
+    }
+
+    public AssignedWorkTO getAssignedWork() {
+        return assignedWork;
     }
 }

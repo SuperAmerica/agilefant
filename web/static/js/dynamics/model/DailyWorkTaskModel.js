@@ -84,7 +84,7 @@ DailyWorkTaskModel.prototype.setContextFromContextObject = function(context) {
 DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
     var me = this;
 
-    if (moveUnder && moveUnder !== me.getDailyWork()) {
+    if (! moveUnder) {
         MessageDisplay.Error("An UI error occured while ranking the task in the queue.");
         return;
     }
@@ -92,7 +92,7 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
     var data = {
         taskId:      me.getId(),
         rankUnderId: rankUnderId,
-        userId:      me.getDailyWork().getUser().getId()
+        userId:      moveUnder.getUser().getId()
     };
 
     jQuery.ajax({
@@ -102,14 +102,14 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
         data: data,
         success: function(data, status) {
             MessageDisplay.Ok("Task ordered successfully.");
-            var oldParent = me.getDailyWork();
-            // me.setData(data);
-            oldParent.reload();
-            if (oldParent !== moveUnder) {
-                moveUnder.reload();
+            
+            moveUnder.reload();
+            if (me.getDailyWork) {
+                var oldParent = me.getDailyWork();
+                if (oldParent != moveUnder) {
+                    oldParent.reload();
+                }
             }
-
-            me.getDailyWork().reload();
         },
         error: function(xhr, status) {
             MessageDisplay.Error("An error occured while ranking the task in queue.", xhr);

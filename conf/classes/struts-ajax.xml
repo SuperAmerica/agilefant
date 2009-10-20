@@ -254,7 +254,7 @@
             
     <action name="dailyWorkData" class="dailyWorkAction" method="retrieve">
       <result name="success" type="json">
-      	<param name="patterns">+assignedTasks, +assignedTasks.responsibles, +nextTasks, +nextTasks.responsibles, +*.workingOnTask, +user, -locale</param>
+      	<param name="patterns">+assignedTasks, +assignedTasks.responsibles, +assignedWork, +assignedWork.stories, +assignedWork.stories.tasks, +assignedWork.tasksWithoutStory, +*.workingOnTask, +*.responsibles, +user, -locale</param>
       </result>
     </action>
     

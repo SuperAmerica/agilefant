@@ -28,13 +28,15 @@ $(document).ready(function() {
         id: '${userId}', 
         type: 'current',
         workQueueElement: $("#work-queue-div"),
-        myWorkListElement: $("#my-work-div")
+        storyListElement: $("#story-list-div"),
+        taskListElement: $("#task-list-div")
     });
 });
 </script>
 
 <div id="work-queue-div"></div>
-<div id="my-work-div"></div>
+<div id="story-list-div"></div>
+<div id="task-list-div"></div>
 
 </c:when>
 <c:otherwise>

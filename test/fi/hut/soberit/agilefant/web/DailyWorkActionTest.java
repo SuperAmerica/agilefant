@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 
@@ -72,10 +73,8 @@ public class DailyWorkActionTest {
         testable.setUserId(1);
 
         Collection<DailyWorkTaskTO> returnedList  = Arrays.asList(
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.ASSIGNED, -1), 
             new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 1), 
             new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 2), 
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.ASSIGNED, -1), 
             new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 4)
         );
 
@@ -85,9 +84,12 @@ public class DailyWorkActionTest {
 
         expect(userBusiness.retrieve(1)).andReturn(user);
         expect(userBusiness.getEnabledUsers()).andReturn(users);
-        expect(dailyWorkBusiness.getAllCurrentTasksForUser(user))
+        expect(dailyWorkBusiness.getQueuedTasksForUser(user))
             .andReturn(returnedList);
 
+        expect(dailyWorkBusiness.getAssignedWorkFor(user))
+            .andReturn(new AssignedWorkTO());
+        
         replayAll();
 
         assertEquals(Action.SUCCESS, testable.retrieve());

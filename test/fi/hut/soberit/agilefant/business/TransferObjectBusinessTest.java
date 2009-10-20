@@ -25,6 +25,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
@@ -551,5 +552,31 @@ public class TransferObjectBusinessTest {
         assertEquals(4, transferObj.getBacklogId());
         assertEquals(5, transferObj.getId());
         assertEquals(TaskClass.ASSIGNED, transferObj.getTaskClass());
+    };
+
+    @Test
+    public void testCreateAssignedWorkTO() {
+        Iteration iteration = new Iteration();
+        iteration.setId(7);
+
+        Story story = new Story();
+        story.setId(8);
+        
+        Task task = new Task();
+        task.setId(5);
+        task.setStory(story);
+        
+        Task task2 = new Task();
+        task2.setId(6);
+        task2.setIteration(iteration);
+        
+        AssignedWorkTO assigned = transferObjectBusiness.constructAssignedWorkTO(Arrays.asList(new Task[] {
+            task, task2
+        }));
+        
+        assertEquals(assigned.getStories().get(0).getId(), story.getId());
+        assertEquals(1, assigned.getStories().size());
+        assertEquals(assigned.getTasksWithoutStory().get(0).getId(), task2.getId());
+        assertEquals(1, assigned.getTasksWithoutStory().size());
     };
 }

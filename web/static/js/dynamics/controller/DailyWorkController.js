@@ -1,6 +1,7 @@
 var DailyWorkController = function DailyWorkController(options) {
     this.id                      = options.id;
-    this.myWorkListElement       = options.myWorkListElement;
+    this.storyListElement        = options.storyListElement;
+    this.taskListElement         = options.taskListElement;
     this.workQueueElement        = options.workQueueElement;
 
     this.init();
@@ -17,32 +18,44 @@ DailyWorkController.prototype = new CommonController();
 
 DailyWorkController.prototype.paint = function() {
     var me = this;
-    
+
     ModelFactory.initializeFor(
         ModelFactory.initializeForTypes.dailyWork,
         this.id, 
         function(model) {
             me.model = model;
-            me.createTaskLists();
+            me.createLists();
         }
     );
 };
 
-DailyWorkController.prototype.createTaskLists = function() {
-    this.createMyWorkList();
+DailyWorkController.prototype.createLists = function() {
     this.createWorkQueue();
+    this.createStoryList();
+    this.createTaskList();
 };
 
-DailyWorkController.prototype.createMyWorkList = function() {
-    this.myWorkListView = new DynamicTable(
+DailyWorkController.prototype.createStoryList = function() {
+    this.storyListView = new DynamicTable(
         this, 
         this.model, 
-        this.myWorkListConfig,
-        this.myWorkListElement
+        this.storyListConfig,
+        this.storyListElement
     );
 
-    this.myWorkListView.dailyWorkViewType = "myWork";
-    this.myWorkListView.render();
+    this.storyListView.render();
+    IterationController.prototype.showTasks.call(this);
+};
+
+DailyWorkController.prototype.createTaskList = function() {
+    this.taskListView = new DynamicTable(
+        this, 
+        this.model, 
+        this.taskListConfig,
+        this.taskListElement
+    );
+
+    this.taskListView.render();
 };
 
 DailyWorkController.prototype.createWorkQueue = function() {
@@ -69,7 +82,7 @@ DailyWorkController.prototype.dailyWorkTaskControllerFactory = function(view, mo
     return taskController;
 };
 
-DailyWorkController.prototype.createConfig = function(configType) {
+DailyWorkController.prototype.initializeQueueConfig = function() {
     var options = {};
     var actionColumnFactory = null;
     var sortCallback = null;
@@ -77,68 +90,36 @@ DailyWorkController.prototype.createConfig = function(configType) {
     options.captionConfig = {
         cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     };
-    options.cssClass = "ui-widget-content ui-corner-all";
-    
-    if (configType == 'next') {
-        options.caption = "My work queue";
-        options.dataSource = DailyWorkModel.prototype.getWorkQueueItems;
+    options.cssClass = "ui-widget-content ui-corner-all dynamicTable-sortable-tasklist";
+    options.caption = "My work queue";
+    options.dataSource = DailyWorkModel.prototype.getQueueTasks;
 
-        options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory;
-        options.sortCallback = DailyWorkTaskController.prototype.sortAndMoveDailyTask;
-        options.sortOptions = {
-                items: "> .dynamicTableDataRow",
-                handle: "." + DynamicTable.cssClasses.dragHandle,
-                // keep the tasks within this control
-                containment: this.workQueueElement,
-                axis: 'y'
-        };
-        
-        options.appendTailer = true;
+    options.rowControllerFactory = DailyWorkController.prototype.dailyWorkTaskControllerFactory;
+    options.sortCallback = DailyWorkTaskController.prototype.sortAndMoveDailyTask;
+    options.sortOptions = {
+            items: "> .dynamicTableDataRow",
+            handle: "." + DynamicTable.cssClasses.dragHandle,
+            // keep the tasks within this control
+            // containment: this.workQueueElement,
+            // axis: 'y'
+    };
 
-        sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWorkQueueRank);
-        actionColumnFactory = DailyWorkTaskController.prototype.queuedTaskActionColumnFactory;
-    }
-    else {
-        options.caption = "Tasks assigned to me";
-        options.dataSource = DailyWorkModel.prototype.getMyWorks;
-        actionColumnFactory = DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory;
+    options.appendTailer = true;
 
-        options.tableDroppable = true;
-        options.alwaysDrop = true;
-        options.dropOptions = {
-            accepts: function(model) {
-                return (model instanceof DailyWorkTaskModel);
-            },
-            callback: function() {
-            }
-        };
-        
-        options.cssClassResolver = DailyWorkTaskController.prototype.cssClassResolver;
-        options.rowControllerFactory = DailyWorkController.prototype.taskControllerFactory;
-        options.sortCallback = DailyWorkTaskController.prototype.addAndRankDailyTask;
-        options.sortOptions = {
-                items: "> .dynamicTableDataRow",
-                handle: "." + DynamicTable.cssClasses.dragHandle,
-                // -sortable-tasklist
-                connectWith: ".dynamictable > .ui-sortable",
-                helper: 'clone',
-                cancel: '.daily-work-next-assigned > .task-row'
-        };
-
-        sortCallback = DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank);
-    }
+    sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWorkQueueRank);
+    actionColumnFactory = DailyWorkTaskController.prototype.queuedTaskActionColumnFactory;
     options.editableCallback = TaskController.prototype.isEditable;
     
     var config = new DynamicTableConfiguration(options);
 
-    if (configType != "next") {
-        config.addCaptionItem({
-            name : "createTask",
-            text : "Create task",
-            cssClass : "create",
-            callback : DailyWorkController.prototype.createTask
-         });
-    }
+//    if (configType != "next") {
+//        config.addCaptionItem({
+//            name : "createTask",
+//            text : "Create task",
+//            cssClass : "create",
+//            callback : DailyWorkController.prototype.createTask
+//         });
+//    }
 
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.prio, {
         minWidth : 24,
@@ -304,6 +285,361 @@ DailyWorkController.prototype.createConfig = function(configType) {
     return config;
 };
 
+DailyWorkController.prototype.initializeTaskListConfig = function() {
+    var config = new DynamicTableConfiguration({
+        rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
+        dataSource: DailyWorkModel.prototype.getTasksWithoutStory,
+        caption: "Assigned tasks without stories",
+        captionConfig: {
+            cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+        },
+        cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all",
+        tableDroppable: true,
+        alwaysDrop: true,
+        dropOptions: {
+            accepts: function(model) {
+                return false;
+                return (model instanceof DailyWorkTaskModel);
+            },
+            callback: function() {
+            }
+        },
+        sortOptions: {
+            items: "> .dynamicTableDataRow",
+            handle: "." + DynamicTable.cssClasses.dragHandle,
+            connectWith: ".dynamictable > .ui-sortable",
+            helper: 'clone',
+            cancel: '.daily-work-next-assigned > .task-row'
+        },
+        sortCallback: function(view, model, newPos) {
+            if (view.getParentView() == view.getParentView().getController().workQueueView) {
+                TaskController.prototype.sortAndMoveTask.call(this, view, model, newPos);
+            }
+        }
+    });
+    
+    config.addColumnConfiguration(TaskController.columnIndices.prio, {
+        minWidth : 24,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "#",
+        headerTooltip : 'Priority',
+        sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
+        defaultSortColumn: true,
+        subViewFactory: TaskController.prototype.toggleFactory
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.name, {
+        minWidth : 200,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "Name",
+        headerTooltip : 'Task name',
+        get : TaskModel.prototype.getName,
+        editable : true,
+        dragHandle: true,
+        edit : {
+        editor : "Text",
+        set : TaskModel.prototype.setName,
+        required: true
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.state, {
+        minWidth : 60,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "State",
+        headerTooltip : 'Task state',
+        get : TaskModel.prototype.getState,
+        decorator: DynamicsDecorators.stateColorDecorator,
+        editable : true,
+        edit : {
+        editor : "Selection",
+        set : TaskModel.prototype.setState,
+        items : DynamicsDecorators.stateOptions
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.responsibles, {
+        minWidth : 60,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "Responsibles",
+        headerTooltip : 'Task responsibles',
+        get : TaskModel.prototype.getResponsibles,
+        getView : TaskModel.prototype.getAnnotatedResponsibles,
+        decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
+        editable : true,
+        edit : {
+        editor : "Autocomplete",
+        dialogTitle: "Select users",
+        dataType: "usersAndTeams",
+        set : TaskModel.prototype.setResponsibles
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.el, {
+        minWidth : 30,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "EL",
+        headerTooltip : 'Effort left',
+        get : TaskModel.prototype.getEffortLeft,
+        decorator: DynamicsDecorators.exactEstimateDecorator,
+        editable : true,
+        editableCallback: TaskController.prototype.effortLeftEditable,
+        edit : {
+        editor : "ExactEstimate",
+        decorator: DynamicsDecorators.exactEstimateEditDecorator,
+        set : TaskModel.prototype.setEffortLeft
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.oe, {
+        minWidth : 30,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "OE",
+        headerTooltip : 'Original estimate',
+        get : TaskModel.prototype.getOriginalEstimate,
+        decorator: DynamicsDecorators.exactEstimateDecorator,
+        editable : true,
+        editableCallback: TaskController.prototype.originalEstimateEditable,
+        edit : {
+        editor : "ExactEstimate",
+        decorator: DynamicsDecorators.exactEstimateEditDecorator,
+        set : TaskModel.prototype.setOriginalEstimate
+    }
+    });
+    if (Configuration.isTimesheetsEnabled()) {
+        config.addColumnConfiguration(TaskController.columnIndices.es, {
+            minWidth : 30,
+            autoScale : true,
+            cssClass : 'task-row',
+            title : "ES",
+            headerTooltip : 'Effort spent',
+            get : TaskModel.prototype.getEffortSpent,
+            editable : false,
+            onDoubleClick: TaskController.prototype.openQuickLogEffort,
+            edit : {
+            editor : "ExactEstimate",
+            decorator: DynamicsDecorators.empty,
+            set : TaskController.prototype.quickLogEffort
+        }
+        });
+    }
+    config.addColumnConfiguration(TaskController.columnIndices.actions, {
+        minWidth : 35,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "Edit",
+        subViewFactory: TaskController.prototype.actionColumnFactory
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.description, {
+        fullWidth : true,
+        get : TaskModel.prototype.getDescription,
+        cssClass : 'task-data',
+        visible : false,
+        editable : true,
+        edit : {
+        editor : "Wysiwyg",
+        set : TaskModel.prototype.setDescription
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.buttons, {
+        fullWidth : true,
+        visible : false,
+        cssClass : 'task-row',
+        subViewFactory : DynamicsButtons.commonButtonFactory
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.data, {
+        fullWidth : true,
+        visible : false,
+        cssClass : 'task-data',
+        visible : false
+    });
+
+    return config;
+};
+
+/**
+ * Initialize configuration for story lists.
+ */
+DailyWorkController.prototype.initializeStoryConfig = function() {
+    var config = new DynamicTableConfiguration({
+        rowControllerFactory : IterationController.prototype.storyControllerFactory,
+        dataSource :  DailyWorkModel.prototype.getStories,
+        caption : "Assigned tasks in stories",
+        captionConfig: {
+            cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+        },
+        cssClass: "ui-widget-content ui-corner-all",
+        rowDroppable: true,
+        dropOptions: {
+            callback:  TaskController.prototype.moveTask,
+            accepts:  StoryController.prototype.acceptsDraggable
+        }
+    });
+
+    config.addCaptionItem( {
+        name : "showTasks",
+        text : "Show tasks",
+        connectWith : "hideTasks",
+        cssClass : "hide",
+        visible: false,
+        callback : IterationController.prototype.showTasks
+    });
+
+    config.addCaptionItem( {
+        name : "hideTasks",
+        text : "Hide tasks",
+        visible : true,
+        connectWith : "showTasks",
+        cssClass : "show",
+        callback : IterationController.prototype.hideTasks
+    });
+
+    config.addColumnConfiguration(StoryController.columnIndices.priority, {
+        minWidth : 24,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "#",
+        headerTooltip : 'Priority',
+        sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
+        defaultSortColumn: true,
+        subViewFactory : StoryController.prototype.taskToggleFactory
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.name, {
+        minWidth : 280,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "Name",
+        headerTooltip : 'Story name',
+        get : StoryModel.prototype.getName,
+        sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
+        defaultSortColumn: true,
+        editable : true,
+        dragHandle: true,
+        edit : {
+        editor : "Text",
+        set : StoryModel.prototype.setName,
+        required: true
+    }
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.points, {
+        minWidth : 50,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "Points",
+        headerTooltip : 'Estimate in story points',
+        get : StoryModel.prototype.getStoryPoints,
+        sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+        editable : true,
+        editableCallback: StoryController.prototype.storyPointsEditable,
+        edit : {
+        editor : "Estimate",
+        set : StoryModel.prototype.setStoryPoints
+    }
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.state, {
+        minWidth : 70,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "State",
+        headerTooltip : 'Story state',
+        get : StoryModel.prototype.getState,
+        decorator: DynamicsDecorators.stateColorDecorator,
+        editable : true,
+        edit : {
+        editor : "Selection",
+        set : StoryModel.prototype.setState,
+        items : DynamicsDecorators.stateOptions
+    }
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
+        minWidth : 60,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "Responsibles",
+        headerTooltip : 'Story responsibles',
+        get : StoryModel.prototype.getResponsibles,
+        decorator: DynamicsDecorators.userInitialsListDecorator,
+        editable : true,
+        edit : {
+        editor : "Autocomplete",
+        dialogTitle: "Select users",
+        dataType: "usersAndTeams",
+        set : StoryModel.prototype.setResponsibles
+    }
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.el, {
+        minWidth : 30,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "EL",
+        headerTooltip : 'Total task effort left',
+        get : StoryModel.prototype.getTotalEffortLeft
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.oe, {
+        minWidth : 30,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "OE",
+        headerTooltip : 'Total task original estimate',
+        get : StoryModel.prototype.getTotalOriginalEstimate
+    });
+    if (Configuration.isTimesheetsEnabled()) {
+        config.addColumnConfiguration(StoryController.columnIndices.es, {
+            minWidth : 30,
+            autoScale : true,
+            cssClass : 'story-row',
+            title : "ES",
+            headerTooltip : 'Total task effort spent',
+            get : StoryModel.prototype.getTotalEffortSpent,
+            editable : false,
+            onDoubleClick: StoryController.prototype.openQuickLogEffort,
+            edit : {
+            editor : "ExactEstimate",
+            decorator: DynamicsDecorators.empty,
+            set : StoryController.prototype.quickLogEffort
+        }
+        });
+    }
+    config.addColumnConfiguration(StoryController.columnIndices.actions, {
+        minWidth : 26,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "Edit",
+        subViewFactory : StoryController.prototype.storyActionFactory
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.description, {
+        fullWidth : true,
+        visible : false,
+        get : StoryModel.prototype.getDescription,
+        cssClass : 'story-row',
+        editable : true,
+        edit : {
+        editor : "Wysiwyg",
+        set : StoryModel.prototype.setDescription
+    }
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.buttons, {
+        fullWidth : true,
+        visible : false,
+        cssClass : 'story-row',
+        subViewFactory : DynamicsButtons.commonButtonFactory
+    });
+    config.addColumnConfiguration(StoryController.columnIndices.tasksData, {
+        fullWidth : true,
+        visible : false,
+        cssClass : 'story-data',
+        targetCell: StoryController.columnIndices.tasksData,
+        subViewFactory : StoryController.prototype.storyContentsFactory
+    });
+    return config;
+};
+
+// intercept requests to sort tasks
+DailyWorkController.prototype.rankTaskUnder = function (taskModel, rankUnderId) {
+    DailyWorkTaskModel.prototype.rankDailyUnder.call(taskModel, rankUnderId, this.model); 
+};
+
 DailyWorkController.prototype.createTask = function() {
     var newTask = ModelFactory.createObject(ModelFactory.types.dailyWorkTask);
     
@@ -337,6 +673,7 @@ DailyWorkController.prototype.reload = function() {
 };
 
 DailyWorkController.prototype.initializeConfigs = function() {
-    this.myWorkListConfig = this.createConfig('current'); 
-    this.workQueueConfig  = this.createConfig('next'); 
+    this.workQueueConfig  = this.initializeQueueConfig();
+    this.taskListConfig   = this.initializeTaskListConfig();
+    this.storyListConfig  = this.initializeStoryConfig();
 };

@@ -25,14 +25,23 @@ TaskController.prototype = new CommonController();
 
 
 TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
-  var previousRow = newPos - 1;
-  var targetModel = view.getParentView().getModel();
+  var previousRow      = newPos - 1;
+  var targetModel      = view.getParentView().getModel();
+  var targetController = view.getParentView().getController();
+  var previousTaskId   = -1;
+  var previousTask     = null;
+  
   if (view.getParentView().getDataRowAt(previousRow)) {
     previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
-    model.rankUnder(previousTask.getId(), targetModel);
+    previousTaskId = previousTask.getId();
+  }
+
+  // Intercept ranking requests for certain controllers
+  if (targetController.rankTaskUnder) {
+    targetController.rankTaskUnder(model, previousTaskId);
   }
   else {
-    model.rankUnder(-1, targetModel);
+    model.rankUnder(previousTaskId, targetModel);
   }
 };
 

@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +30,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
@@ -86,7 +88,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task) {
         TaskTO taskTO = new TaskTO(task);
-        taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));       
+        taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
         return taskTO;
     }
     
@@ -283,6 +285,40 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         }
         
         return toReturn;
+    }
+    
+    public AssignedWorkTO constructAssignedWorkTO(Collection<Task> tasks) {
+        AssignedWorkTO returned = new AssignedWorkTO();
+        
+        Set<Story> stories = new HashSet<Story>();
+        List<Task> tasksWithoutStory = new ArrayList<Task>();
+        
+        for (Task task: tasks) {
+            Story story = task.getStory();
+            if (task.getStory() != null) {
+                if (stories.contains(story)) {
+                    continue;
+                }
+                
+                StoryTO to = constructStoryTO(story);
+                Set<Task> storyTasks = to.getTasks();
+                Set<Task> taskTos = new HashSet<Task>();
+                
+                for (Task t: storyTasks) {
+                    taskTos.add(constructTaskTO(t));
+                }
+                
+                to.setTasks(taskTos);
+                stories.add(to);
+            }
+            else {
+                tasksWithoutStory.add(constructTaskTO(task));
+            }
+        }
+        
+        returned.setTasksWithoutStory(tasksWithoutStory);
+        returned.setStories(new ArrayList<Story>(stories));
+        return returned;
     }
     
     /*

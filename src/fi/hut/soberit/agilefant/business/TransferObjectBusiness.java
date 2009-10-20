@@ -8,6 +8,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
@@ -82,4 +83,9 @@ public interface TransferObjectBusiness {
      * Constructs a new daily work task transfer object for queue entry
      */
     public DailyWorkTaskTO constructQueuedDailyWorkTaskTO(WhatsNextEntry task);
+
+    /**
+     * Constructs a new assigned work transfer object for the given tasks
+     */
+    public AssignedWorkTO constructAssignedWorkTO(Collection<Task> tasks);
 }

@@ -7,6 +7,7 @@ import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public interface DailyWorkBusiness {
@@ -19,13 +20,7 @@ public interface DailyWorkBusiness {
     /**
      * Retrieves the rank ordered list of next tasks for user
      */
-    public Collection<DailyWorkTaskTO> getNextTasksForUser(User user);
-
-    /**
-     * Retrieves the list of tasks assigned
-     * to the user.
-     */
-    public Collection<DailyWorkTaskTO> getAllCurrentTasksForUser(User user);
+    public Collection<DailyWorkTaskTO> getQueuedTasksForUser(User user);
     
     /**
      * @param user the user whose daily work we are ranking
@@ -62,9 +57,18 @@ public interface DailyWorkBusiness {
      */
     public void removeTaskFromWorkQueues(Task task);
 
+    /**
+     * Retrieves all assigned and current work for the given user, in proper format
+     * @param user
+     * @return
+     */
+    public AssignedWorkTO getAssignedWorkFor(User user);
+
+    
     public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness);
     public void setTaskDAO(TaskDAO dao);
     public void setWhatsNextEntryDAO(WhatsNextEntryDAO whatsNextEntryDAO);
     public void setTaskBusiness(TaskBusiness taskBusiness);
     public void setRankingBusiness(RankingBusiness rankingBusiness);
+
 }

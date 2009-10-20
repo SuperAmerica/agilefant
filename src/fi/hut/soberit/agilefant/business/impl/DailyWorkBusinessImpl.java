@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -21,6 +20,7 @@ import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 @Service("dailyWorkBusiness")
@@ -72,7 +72,7 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         return returned;
     }
 
-    public Collection<DailyWorkTaskTO> getNextTasksForUser(User user) {
+    public Collection<DailyWorkTaskTO> getQueuedTasksForUser(User user) {
         Collection<WhatsNextEntry> entries = whatsNextEntryDAO.getWhatsNextEntriesFor(user);
         Collection<DailyWorkTaskTO> returned = new ArrayList<DailyWorkTaskTO>();
         
@@ -82,23 +82,6 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         }
         
         return returned;
-    }
-    
-    public Collection<DailyWorkTaskTO> getAllCurrentTasksForUser(User user) {
-        Collection<DailyWorkTaskTO> tasks = getNextTasksForUser(user);
-        HashSet<Long> usedIds = new HashSet<Long>();
-        for (DailyWorkTaskTO task: tasks) {
-            usedIds.add((long)task.getId());
-        }
-        
-        for (DailyWorkTaskTO task: getCurrentTasksForUser(user)) {
-            if (usedIds.contains((long)task.getId())) {
-                continue;
-            }
-            
-            tasks.add(task);
-        }
-        return tasks;
     }
 
     @Transactional
@@ -180,5 +163,15 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
 
     public void removeTaskFromWorkQueues(Task task) {
         whatsNextEntryDAO.removeAllByTask(task);
+    }
+
+    public AssignedWorkTO getAssignedWorkFor(User user) {
+        DateTime now = new DateTime();
+        DateTime dayStart = now.withMillisOfDay(0);
+        DateTime dayEnd   = dayStart.plusDays(1);
+        Interval interval = new Interval(dayStart, dayEnd);
+        
+        Collection<Task> tasks = taskDAO.getAllIterationAndStoryTasks(user, interval);
+        return transferObjectBusiness.constructAssignedWorkTO(tasks);
     }
 }

@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -22,8 +21,8 @@ import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
-import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 
 public class DailyWorkBusinessTest {
     private DailyWorkBusiness testable;
@@ -100,59 +99,23 @@ public class DailyWorkBusinessTest {
     }
 
     @Test
-    public void testGetAllCurrentTasksForUser() {
+    public void testGetCurrentTasksForUser() {
         ArrayList<Task> tasks = new ArrayList<Task>();
-        tasks.addAll(Arrays.asList(task1, task2));
+        tasks.addAll(Arrays.asList(task1, task2, task3));
 
-        WhatsNextEntry entry1 = new WhatsNextEntry();
-        entry1.setTask(task2);
-        entry1.setUser(user);
-        entry1.setRank(2);
-        
-        WhatsNextEntry entry2 = new WhatsNextEntry();
-        entry2.setTask(task3);
-        entry2.setUser(user);
-        entry2.setRank(1);
-        
-        
-        ArrayList<WhatsNextEntry> entries = new ArrayList<WhatsNextEntry>();
-        entries.add(entry1);
-        entries.add(entry2);
-        
         Capture<Interval> interval = new Capture<Interval>();
         expect(taskDAO.getAllIterationAndStoryTasks(EasyMock.eq(user), 
                 EasyMock.and(EasyMock.capture(interval), EasyMock.isA(Interval.class)))).andReturn(tasks);
 
-        expect(whatsNextEntryDAO.getWhatsNextEntriesFor(user)).andReturn(entries);
-        
-        DailyWorkTaskTO entry1TO = new DailyWorkTaskTO(entry1.getTask());
-        entry1TO.setTaskClass(TaskClass.NEXT);
-        DailyWorkTaskTO entry2TO = new DailyWorkTaskTO(entry2.getTask());
-        entry2TO.setTaskClass(TaskClass.NEXT);
-        DailyWorkTaskTO entry3TO = new DailyWorkTaskTO(task1);
-        entry3TO.setTaskClass(TaskClass.ASSIGNED);
-        DailyWorkTaskTO entry4TO = new DailyWorkTaskTO(task2);
-        entry4TO.setTaskClass(TaskClass.ASSIGNED);
-        
-        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry1)).andReturn(entry1TO);
-        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry2)).andReturn(entry2TO);
-        expect(transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task1)).andReturn(entry3TO);
-        expect(transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task2)).andReturn(entry4TO);
+        AssignedWorkTO assignedWork = new AssignedWorkTO();
+        expect(transferObjectBusiness.constructAssignedWorkTO(tasks)).andReturn(assignedWork);
 
         replayAll();
-        Collection<DailyWorkTaskTO> returned = testable.getAllCurrentTasksForUser(user);
+        AssignedWorkTO returned = testable.getAssignedWorkFor(user);
         verifyAll();
+        
+        assertSame(assignedWork, returned);
 
-        assertEquals(3, returned.size());
-        
-        int numberOfNext = 0;
-        for (DailyWorkTaskTO to: returned) {
-            if (to.getTaskClass() == DailyWorkTaskTO.TaskClass.NEXT) {
-                numberOfNext ++;
-            }
-        }
-        assertEquals(2, numberOfNext);
-        
         assertTrue(interval.hasCaptured());
         Interval intervalValue = interval.getValue();
         assertNotNull(intervalValue);

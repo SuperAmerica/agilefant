@@ -98,6 +98,12 @@ TableEditors.CommonEditor.prototype.close = function() {
   this.element.trigger("editorClosing");
 };
 
+/**
+ * Focus the primary edit field of the editor.
+ * Does nothing, meant to be overridden by subclasses.
+ */
+TableEditors.CommonEditor.prototype.focus = function() {};
+
 TableEditors.CommonEditor.prototype._requestCancel = function() {
   this.element.trigger("cancelRequested", [this]);
 };
@@ -257,6 +263,13 @@ TableEditors.TextFieldEditor.prototype.close = function() {
 };
 
 /**
+ * Focuses the text field.
+ */
+TableEditors.TextFieldEditor.prototype.focus = function() {
+  this.textField.focus();
+};
+
+/**
  * Sets the new value or uses <code>options.get</code> if the parameter
  * <code>value</code> is <code>undefined</code>.
  * @param {Object} value the value to set
@@ -300,6 +313,7 @@ TableEditors.TextFieldEditor.prototype._validate = function() {
 TableEditors.Text = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
+  this.focus();
 };
 TableEditors.Text.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -336,6 +350,7 @@ TableEditors.Text.prototype._validate = function() {
 TableEditors.Email = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
+  this.focus();
 };
 TableEditors.Email.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -378,6 +393,7 @@ TableEditors.Email.prototype._validate = function() {
 TableEditors.Number = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
+  this.focus();
 };
 TableEditors.Number.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -451,6 +467,7 @@ TableEditors.Number.prototype._validate = function() {
 TableEditors.Estimate = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
+  this.focus();
 };
 TableEditors.Estimate.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -498,6 +515,7 @@ TableEditors.Estimate.prototype._validate = function() {
 TableEditors.ExactEstimate = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
+  this.focus();
 };
 TableEditors.ExactEstimate.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -555,6 +573,7 @@ TableEditors.ExactEstimate.prototype._validate = function() {
 TableEditors.Date = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
+  this.focus();
 };
 TableEditors.Date.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -657,6 +676,7 @@ TableEditors.Date.prototype._validate = function() {
  */
 TableEditors.Password = function(element, model, options) {
   this.init(element, model, options);
+  this.focus();
 };
 TableEditors.Password.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -708,6 +728,7 @@ TableEditors.Password.prototype._validate = function() {
 TableEditors.Selection = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
+  this.focus();
 };
 TableEditors.Selection.prototype = new TableEditors.CommonEditor();
 /**
@@ -758,6 +779,10 @@ TableEditors.Selection.prototype._registerEditField = function(field) {
     me._requestSaveIfNotInRowEdit();
   });
   TableEditors.CommonEditor.prototype._registerEditField.call(this, field);
+};
+
+TableEditors.Selection.prototype.focus = function() {
+  this.selectBox.focus();
 };
 
 TableEditors.Selection.prototype.close = function() {

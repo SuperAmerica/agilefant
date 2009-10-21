@@ -69,6 +69,8 @@ StoryModel.prototype._setData = function(newData) {
   }
   if(newData.metrics) {
     this.metrics = newData.metrics;
+  } else if(!this.metrics) {
+    this.metrics = {};
   }
 };
 

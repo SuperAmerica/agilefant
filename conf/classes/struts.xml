@@ -191,6 +191,11 @@
 		</action>
 		<!-- /Daily work -->
 
+	<!-- Daily work context info -->
+	<action name="dailyWorkContextInfo" class="dailyWorkContextInfoAction" method="retrieve">
+		<result type="dispatcher">/WEB-INF/jsp/dailyWorkContextInfo.jsp</result>
+	</action>
+	<!-- /Daily work -->
 
 		<action name="drawProjectBurnup" method="getProjectBurnup" class="chartAction">
 			<result name="success" type="stream">

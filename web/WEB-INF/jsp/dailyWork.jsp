@@ -41,7 +41,7 @@ $(document).ready(function() {
 <div class="dynamictable-caption-block dynamictable-caption ui-widget-header ui-corner-all">
 <div>Details</div>
 </div>
-<div>Details go here...</div>
+<div id="details-pane"></div>
 </div>
 </div>
 <div id="work-queue-div"></div>

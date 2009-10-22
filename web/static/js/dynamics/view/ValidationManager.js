@@ -67,7 +67,9 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
   });
   this.element.bind("storeRequested", function(event, editor) {
     if(me.isValid()) {
-      me.model.commit();
+      if ( !me.configuration.options.preventCommit ) {
+        me.model.commit();
+      }
       var closeRowCallback = me.configuration.getCloseRowCallback();
       if (closeRowCallback) {
         closeRowCallback.call(me.controller);

@@ -18,6 +18,8 @@ BacklogMenuController.prototype.init = function(element, toggleElement) {
 
 BacklogMenuController.prototype.initTree = function() {
   this.element.dynatree({
+    keyboard: false,
+    autoFocus: false,
     onClick: function(dtnode, event) {
       if ($(event.target).hasClass("ui-dynatree-title")) {
         window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;

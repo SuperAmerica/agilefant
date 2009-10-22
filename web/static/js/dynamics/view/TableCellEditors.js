@@ -181,6 +181,7 @@ TableEditors.CommonEditor.prototype.runValidation = function() {
       this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this.options.fieldName)]);    
     }
     this.options.set.call(this.model, this.getEditorValue());
+    this.element.trigger("transactionEditEvent");
     this.element.removeClass('dynamics-validation-invalid');
   }
   this.previousValueValid = valid;
@@ -1114,6 +1115,8 @@ TableEditors.AutocompleteSingle.prototype._selectCallback = function(selected) {
     item = ModelFactory.updateObject(selected.originalObject);
   }
   this.options.set.call(this.model, item);
+  this.element.trigger("transactionEditEvent");
+  
   this._requestSaveIfNotInRowEdit();
   this.close();
 };

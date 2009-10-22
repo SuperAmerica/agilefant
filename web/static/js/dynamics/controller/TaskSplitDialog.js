@@ -250,6 +250,7 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
      getView : TaskModel.prototype.getAnnotatedResponsibles,
      decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
      editable : true,
+     openOnRowEdit: false,
      edit : {
         editor : "Autocomplete",
         dialogTitle: "Select users",
@@ -349,6 +350,7 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
      getView : TaskModel.prototype.getAnnotatedResponsibles,
      decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
      editable : true,
+     openOnRowEdit: false,
      edit : {
        editor : "Autocomplete",
        dialogTitle: "Select users",

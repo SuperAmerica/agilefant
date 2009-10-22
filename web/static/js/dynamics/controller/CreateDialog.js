@@ -206,6 +206,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     get : ProjectModel.prototype.getParent,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "AutocompleteSingle",
       dialogTitle: "Select parent product",
@@ -301,6 +302,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     get: IterationModel.prototype.getParent,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "AutocompleteSingle",
       dialogTitle: "Select parent backlog",
@@ -397,6 +399,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     get : StoryModel.prototype.getBacklog,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "AutocompleteSingle",
       dialogTitle: "Select parent backlog",
@@ -584,6 +587,7 @@ CreateDialog.Team.prototype.initFormConfig = function() {
     get : TeamModel.prototype.getUsers,
     decorator: DynamicsDecorators.teamUserInitialsListDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "Autocomplete",
       dialogTitle: "Select users",
@@ -649,6 +653,7 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
     editable: true,
     get: HourEntryModel.prototype.getUsers,
     decorator: DynamicsDecorators.userInitialsListDecorator,
+    openOnRowEdit: false,
     edit: {
       editor : "Autocomplete",
       dialogTitle: "Select users",

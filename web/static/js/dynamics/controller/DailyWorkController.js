@@ -158,6 +158,7 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
         decorator: DynamicsDecorators.contextDecorator,
         editable : true,
         sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
+        openOnRowEdit: false,
         edit : {
             decorator : DynamicsDecorators.plainContextDecorator,
             editor : "AutocompleteSingle",
@@ -195,6 +196,7 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
         getView : TaskModel.prototype.getAnnotatedResponsibles,
         decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
         editable : true,
+        openOnRowEdit: false,
         edit : {
             editor : "Autocomplete",
             dialogTitle: "Select users",
@@ -368,6 +370,7 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
         getView : TaskModel.prototype.getAnnotatedResponsibles,
         decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
         editable : true,
+        openOnRowEdit: false,
         edit : {
         editor : "Autocomplete",
         dialogTitle: "Select users",
@@ -561,6 +564,7 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         get : StoryModel.prototype.getResponsibles,
         decorator: DynamicsDecorators.userInitialsListDecorator,
         editable : true,
+        openOnRowEdit: false,
         edit : {
         editor : "Autocomplete",
         dialogTitle: "Select users",

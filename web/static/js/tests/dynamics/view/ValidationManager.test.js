@@ -160,6 +160,12 @@ $(document).ready(function() {
     mockModel.expects().commit();
     this.element.trigger("storeRequested");
     
+    // Prevent commit
+    config.options.preventCommit = true;
+    mockEditor.expects().close();
+    this.element.trigger("storeRequested", [ mockEditor ]);
+    config.options.preventCommit = false;
+    
     // Close row callback not supplied
     mockModel.expects().commit();
     mockEditor.expects().close();

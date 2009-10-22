@@ -171,6 +171,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     getView : TaskModel.prototype.getAnnotatedResponsibles,
     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "Autocomplete",
       dialogTitle: "Select users",
@@ -372,6 +373,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getResponsibles,
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "Autocomplete",
       dialogTitle: "Select users",

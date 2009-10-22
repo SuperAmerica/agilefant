@@ -361,6 +361,7 @@ StoryController.prototype.storyPointsEditable = function() {
     getView : TaskModel.prototype.getAnnotatedResponsibles,
     decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "Autocomplete",
       dialogTitle: "Select users",

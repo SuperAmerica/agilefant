@@ -26,6 +26,7 @@ var DynamicTableColumnConfiguration = function DynamicTableColumnConfiguration(o
 			editableCallback: function() { return true; },
 			draggableOnly: false,
 			cssClassResolver: null,
+			openOnRowEdit: true,
 			edit: {
 				decorator: null,
 				items: null,
@@ -95,6 +96,9 @@ DynamicTableColumnConfiguration.prototype.setDefaultSortColumn = function(defaul
 };
 DynamicTableColumnConfiguration.prototype.isEditable = function() {
 	return this.options.editable;
+};
+DynamicTableColumnConfiguration.prototype.isOpenOnRowEdit = function() {
+  return this.options.openOnRowEdit;
 };
 DynamicTableColumnConfiguration.prototype.isSortable = function() {
 	return this.options.sortCallback !== null;
@@ -177,6 +181,7 @@ var DynamicTableConfiguration = function(options) {
 			sortCallback: null,
 			editableCallback: function() { return true; },
 	    validators: [ ],
+	    preventCommit: false,
 			sortOptions: {
 			  items: "> div.dynamicTableDataRow",
 	      handle: "div." + DynamicTable.cssClasses.dragHandle

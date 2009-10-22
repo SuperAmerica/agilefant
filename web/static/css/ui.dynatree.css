@@ -1,3 +1,9 @@
+/**
+ * CHANGES:
+ *
+ * 091022 Reko: commented out span.ui-dynatree-active a
+ */
+
 #dynatreeRoot {
   overflow: hidden;  
 }
@@ -278,8 +284,10 @@ span.ui-dynatree-selected a
 
 span.ui-dynatree-active a
 {
+  /*
 	background-color: #3169C6 !important;
-	color: white !important; /* @ IE6 */
+	color: white !important; // @ IE6
+	*/
 }
 
 /******************************************************************************* 

@@ -149,8 +149,8 @@ DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
   if(this.editor) {
     return true; 
   }
-  if((!forceOpen && !this.config.isEditable()) ||
-      (editRow && !TableEditors.openOnRowEdit(editorName)) ) {
+
+  if( (!forceOpen && !this.config.isEditable()) || (editRow && !this.config.isOpenOnRowEdit()) ) {
     return;
   }
   

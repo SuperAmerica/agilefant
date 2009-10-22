@@ -26,6 +26,7 @@ StorySplitDialog.prototype = new CommonController();
 StorySplitDialog.prototype.initDialog = function() {
   var me = this;
   this.element = $('<div/>').appendTo(document.body);
+  this.form = $('<form/>').submit(function() { return false; }).appendTo(this.element);
   this.element.dialog({
     width: 750,
     position: 'top',
@@ -40,15 +41,15 @@ StorySplitDialog.prototype.initDialog = function() {
     }
   });
   
-  this.storyInfoElement = $('<div/>').addClass('story-info').appendTo(this.element);
-  this.storyListElement = $('<div/>').addClass('story-split-list').appendTo(this.element);
+  this.storyInfoElement = $('<div/>').addClass('story-info').appendTo(this.form);
+  this.storyListElement = $('<div/>').addClass('story-split-list').appendTo(this.form);
 };
 
 /**
  * Render the contents.
  */
 StorySplitDialog.prototype.render = function() {
-  this.storyInfoView = new DynamicVerticalTable(
+  this.view = new DynamicVerticalTable(
       this,
       this.model,
       this.storyInfoConfig,
@@ -68,7 +69,7 @@ StorySplitDialog.prototype.render = function() {
 StorySplitDialog.prototype._transactionEditListener = function(event) {
   if (event instanceof DynamicsEvents.TransactionEditEvent) {
     if (event.getObject() === this.model) {
-      this.storyInfoView.render();
+      this.view.render();
     }
     else {
       jQuery.each(this.rows, function(k,v) {
@@ -146,16 +147,12 @@ StorySplitDialog.prototype.createStory = function() {
  * Check input validity.
  */
 StorySplitDialog.prototype.isFormDataValid = function() {
-  var retVal = true;
+  var valid = this.view.getValidationManager().isValid();
+  
   for (var i = 0; i < this.rows.length; i++) {
-    retVal = retVal && this.rows[i].isRowValid(); 
+    valid = this.rows[i].getValidationManager().isValid() && valid;
   }
-  if (retVal) {
-    for (i = 0; i < this.rows.length; i++) {
-      this.rows[i].saveRowEdit();
-    }
-  }
-  return retVal;
+  return valid;
 };
 
 /**
@@ -197,13 +194,16 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
     rightWidth: '75%',
-    cssClass: "ui-widget-content ui-corner-all"
+    cssClass: "ui-widget-content ui-corner-all",
+    preventCommit: true,
+    closeRowCallback: null
   });
   
   config.addColumnConfiguration(0, {
     title: 'Name',
     get: StoryModel.prototype.getName,
     editable: true,
+    openOnRowEdit: false,
     edit: {
       editor: "Text",
       required: true,
@@ -220,6 +220,7 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     title: 'Points',
     get: StoryModel.prototype.getStoryPoints,
     editable: true,
+    openOnRowEdit: false,
     edit: {
       editor: "Number",
       set: StoryModel.prototype.setStoryPoints
@@ -231,6 +232,7 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     get: StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
     editable: true,
+    openOnRowEdit: false,
     edit: {
       editor: "Selection",
       items: DynamicsDecorators.stateOptions,
@@ -259,7 +261,9 @@ StorySplitDialog.prototype._initStoryListConfig = function() {
       caption: "Child stories",
       cssClass: "ui-widget-content ui-corner-all",
       rowControllerFactory: StorySplitDialog.prototype.storyControllerFactory,
-      dataSource: StoryModel.prototype.getChildren
+      dataSource: StoryModel.prototype.getChildren,
+      preventCommit: true,
+      closeRowCallback: null
   };
   var config = new DynamicTableConfiguration(opts);
   

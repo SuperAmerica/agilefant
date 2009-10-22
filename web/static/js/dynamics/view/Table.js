@@ -387,10 +387,10 @@ DynamicTable.prototype.render = function() {
   if(!ArrayUtils.compare(tableRows, this.currentTableRows)) { //row order has changed
     this.currentTableRows = tableRows;
     this._hardRender(this.currentTableRows);
+    this.element.find("textarea.tableSortListener").trigger("tableSorted");
   } else { //row order hasn't changed
     this._softRender();
   }
-  this.element.find("textarea.tableSortListener").trigger("tableSorted");
   this._appendTailerIfExists();
   if (this.rowCount() === 0) {
     this.header.hide();

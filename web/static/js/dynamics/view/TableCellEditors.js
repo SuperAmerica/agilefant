@@ -867,10 +867,11 @@ TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
       me.actualElement.wysiwyg("resetFrame");
       me.wysiwyg = me._getEditorWindow();
       me.resetEditor();
-      me.actualElement.focus();
+      me.setEditorValue();
+//      me.actualElement.focus();
     }
   });
-  
+  this.actualElement.show();
 };
 TableEditors.Wysiwyg.prototype.resetEditor = function() {
   var iframeElement = this.actualElement.wysiwyg("getFrame")[0];
@@ -885,6 +886,7 @@ TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
   if (!value) {
     value = this.options.get.call(this.model);
   }
+  this.actualElement.get(0).innerHTML = value;
   this.actualElement.wysiwyg("setValue", value);
 };
 TableEditors.Wysiwyg.prototype.getEditorValue = function() {

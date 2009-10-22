@@ -28,6 +28,7 @@ $(document).ready(function() {
         id: '${userId}', 
         type: 'current',
         workQueueElement: $("#work-queue-div"),
+        workQueueContainer: $("#work-queue-all-container"),
         storyListElement: $("#story-list-div"),
         taskListElement: $("#task-list-div"),
         detailsElement: $("#details-pane")
@@ -35,7 +36,7 @@ $(document).ready(function() {
 });
 </script>
 
-<div id="work-queue-all-container" class="details-expanded">
+<div id="work-queue-all-container" class="details-contracted">
 <div id="work-queue-container">
 <div id="work-queue-details-div" class="ui-widget-content ui-corner-all">
 <div id="details-container">

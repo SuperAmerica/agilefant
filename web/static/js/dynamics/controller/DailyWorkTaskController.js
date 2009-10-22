@@ -10,7 +10,7 @@ var DailyWorkTaskController = function DailyWorkTaskController(model, view, pare
     
     this.model.addListener(this.stateListener);
     
-    this.autohideCells = [ DailyWorkTaskController.columnIndices.buttons, DailyWorkTaskController.description ];
+    this.autohideCells = [ DailyWorkTaskController.columnIndices.buttons, DailyWorkTaskController.columnIndices.description ];
 };
 
 DailyWorkTaskController.prototype = new TaskController();
@@ -22,7 +22,21 @@ DailyWorkTaskController.prototype.actualStateListener = function(event) {
     }
 };
 
-DailyWorkTaskController.columnIndices = TaskController.columnIndices;
+DailyWorkTaskController.columnIndices = {
+    prio: 0,
+    name: 1,
+    context: 2,
+    state: 3,
+    responsibles: 4,
+    el: 5,
+    oe: 6,
+    es: 7,
+    actions: 8,
+    description: 9,
+    buttons: 10,
+    data: 11
+};
+
 
 DailyWorkTaskController.prototype.sortAndMoveDailyTask = function(view, model, newPos) {
   var previousRow = newPos - 1;
@@ -79,7 +93,7 @@ DailyWorkTaskController.prototype.queuedTaskActionColumnFactory = function(view,
     var items = [
      {
          text: "Details",
-         callback : TaskController.prototype.openDetails
+         callback : DailyWorkTaskController.prototype.openDetails
      },
      {
          text : "Split",
@@ -138,4 +152,8 @@ DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(vie
     var actionView = new DynamicTableRowActions(actionItems, this, this.model,
        view);
     return actionView;
+};
+
+DailyWorkTaskController.prototype.openDetails = function() {
+    this.parentController.openDetails(this.model);
 };

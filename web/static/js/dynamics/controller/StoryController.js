@@ -108,12 +108,16 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
   });
   var infoContents = new DynamicVerticalTable(this, this.model, config, info);
   var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
-  this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig,
-      tasks);
+  
+  this.createTaskListView(tasks);
   this.contentsPanels.addPanel(infoContents);
   this.contentsPanels.addPanel(this.taskListView);
   return this.contentsPanels;
 };
+
+StoryController.prototype.createTaskListView = function(panel) {
+    this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig, panel);
+}
 
 /**
  * 

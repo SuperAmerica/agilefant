@@ -871,7 +871,6 @@ TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
 //      me.actualElement.focus();
     }
   });
-  this.actualElement.show();
 };
 TableEditors.Wysiwyg.prototype.resetEditor = function() {
   var iframeElement = this.actualElement.wysiwyg("getFrame")[0];

@@ -152,12 +152,11 @@ TableEditors.CommonEditor.prototype._registerEditField = function(element) {
     return true;
   });
   element.blur(function(event) {
-    me.runValidation();
+    me._requestSaveIfNotInRowEdit();
     me.element.trigger("DynamicsBlur");
     me.focused = false;
   });
   element.focus(function() {
-    var a = me;
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });
@@ -901,6 +900,13 @@ TableEditors.Wysiwyg.prototype.close = function() {
   this.actualElement.trigger("editorClosing");
   this.actualElement.wysiwyg("remove");
   this.actualElement.remove();
+};
+/**
+ * Change event listener.
+ */
+TableEditors.Wysiwyg.prototype._registerEditField = function(element) {
+  this.actualElement.wysiwyg("getFrame").data("editor", this).addClass("dynamics-editor-element");
+  TableEditors.CommonEditor.prototype._registerEditField.call(this, element);
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
   if (event.keyCode === 27 && !this.options.editRow) {

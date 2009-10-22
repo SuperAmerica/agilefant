@@ -17,6 +17,7 @@ var StoryModel = function StoryModel() {
     story: [],
     parent: null
   };
+  this.metrics = {};
   this.copiedFields = {
     "name": "name",
     "description": "description",
@@ -69,8 +70,6 @@ StoryModel.prototype._setData = function(newData) {
   }
   if(newData.metrics) {
     this.metrics = newData.metrics;
-  } else if(!this.metrics) {
-    this.metrics = {};
   }
 };
 

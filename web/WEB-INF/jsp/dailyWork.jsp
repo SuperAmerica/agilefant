@@ -1,5 +1,5 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-
+<link rel="stylesheet" href="static/css/dailywork.css" type="text/css"/>
 
 <struct:htmlWrapper navi="dailyWork">
 
@@ -15,7 +15,7 @@
 <%@ include file="./inc/_userLoad.jsp" %>
 
 <c:choose>
-<c:when test="${!(empty assignedTasks) or !(empty nextTasks)}" >
+<c:when test="${!(empty assignedTasks) or !(empty assignedWork.stories) or !(empty assignedWork.tasksWithoutStory)}" >
 
 <script type="text/javascript">
 
@@ -29,7 +29,8 @@ $(document).ready(function() {
         type: 'current',
         workQueueElement: $("#work-queue-div"),
         storyListElement: $("#story-list-div"),
-        taskListElement: $("#task-list-div")
+        taskListElement: $("#task-list-div"),
+        detailsElement: $("#details-pane")
     });
 });
 </script>

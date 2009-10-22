@@ -1,0 +1,21 @@
+#details-pane h1 {
+    font-style: normal;
+    font-size: 14pt;
+    margin-top: 0.2em;
+    margin-bottom: 0.2em;
+}
+
+#details-pane h2 {
+    font-style: normal;
+    font-size: 11pt;
+    margin-top: 0.1em;
+    margin-bottom: 0.1em;
+}
+
+#details-pane ul {
+    list-style-type: square;
+}
+
+#details-pane {
+    padding: 0.4em;
+}

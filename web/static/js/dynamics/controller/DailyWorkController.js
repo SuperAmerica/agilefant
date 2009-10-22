@@ -3,6 +3,7 @@ var DailyWorkController = function DailyWorkController(options) {
     this.storyListElement        = options.storyListElement;
     this.taskListElement         = options.taskListElement;
     this.workQueueElement        = options.workQueueElement;
+    this.detailsElement          = options.detailsElement;
 
     this.init();
     this.initializeConfigs();
@@ -12,6 +13,8 @@ var DailyWorkController = function DailyWorkController(options) {
     this.newTaskListener = function (event) {
         me.onCreateNewTask(event);
     };
+    
+    this.retrieveTaskDetails({ getId: function() { return 5746; } });
 };
 
 DailyWorkController.prototype = new CommonController();
@@ -28,6 +31,25 @@ DailyWorkController.prototype.paint = function() {
         }
     );
 };
+
+DailyWorkController.prototype.retrieveTaskDetails = function(task) {
+    var me = this;
+    jQuery.get(
+         "ajax/dailyWorkContextInfo.action",
+         { taskId: task.getId() },
+         function(data, status) {
+             me.setDetailHtml(data);
+         }
+    );
+};
+
+DailyWorkController.prototype.setDetailHtml = function(text) {
+    this.detailsElement.html(text);
+};
+
+DailyWorkController.prototype.resetDetailHtml = function(text) {
+    this.setDetailHtml("");
+}
 
 DailyWorkController.prototype.createLists = function() {
     this.createWorkQueue();
@@ -112,15 +134,6 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
     
     var config = new DynamicTableConfiguration(options);
 
-//    if (configType != "next") {
-//        config.addCaptionItem({
-//            name : "createTask",
-//            text : "Create task",
-//            cssClass : "create",
-//            callback : DailyWorkController.prototype.createTask
-//         });
-//    }
-
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.prio, {
         minWidth : 24,
         autoScale : true,
@@ -148,26 +161,48 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
         }
     });
 
-    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.context, {
-        minWidth : 120,
-        autoScale : true,
-        cssClass : 'task-row',
-        title : 'Context',
-        headerTooltip : 'Task context',
-        get  : DailyWorkTaskModel.prototype.getContext,
-        decorator: DynamicsDecorators.contextDecorator,
-        editable : true,
-        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
-        openOnRowEdit: false,
-        edit : {
-            decorator : DynamicsDecorators.plainContextDecorator,
-            editor : "AutocompleteSingle",
-            dataType: "currentIterations",
-            dialogTitle: "Select iteration",
-            set : TaskModel.prototype.setIterationToSave,
-            required: true
-        }
-    });
+//<<<<<<< .mine
+////    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.context, {
+////        minWidth : 120,
+////        autoScale : true,
+////        cssClass : 'task-row',
+////        title : 'Context',
+////        headerTooltip : 'Task context',
+////        get  : DailyWorkTaskModel.prototype.getContext,
+////        decorator: DynamicsDecorators.contextDecorator,
+////        editable : true,
+////        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
+////        edit : {
+////            decorator : DynamicsDecorators.plainContextDecorator,
+////            editor : "AutocompleteSingle",
+////            dataType: "currentIterations",
+////            dialogTitle: "Select iteration",
+////            set : TaskModel.prototype.setIterationToSave,
+////            required: true
+////        }
+////    });
+//=======
+//    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.context, {
+//        minWidth : 120,
+//        autoScale : true,
+//        cssClass : 'task-row',
+//        title : 'Context',
+//        headerTooltip : 'Task context',
+//        get  : DailyWorkTaskModel.prototype.getContext,
+//        decorator: DynamicsDecorators.contextDecorator,
+//        editable : true,
+//        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
+//        openOnRowEdit: false,
+//        edit : {
+//            decorator : DynamicsDecorators.plainContextDecorator,
+//            editor : "AutocompleteSingle",
+//            dataType: "currentIterations",
+//            dialogTitle: "Select iteration",
+//            set : TaskModel.prototype.setIterationToSave,
+//            required: true
+//        }
+//    });
+//>>>>>>> .r3249
 
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.state, {
         minWidth : 60,
@@ -263,6 +298,14 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
         autoScale : true,
         cssClass : 'task-row',
         title : "Edit",
+        subViewFactory: actionColumnFactory
+    });
+
+    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.actions, {
+        minWidth : 35,
+        autoScale : true,
+        cssClass : 'task-row',
+        title : "Details",
         subViewFactory: actionColumnFactory
     });
 

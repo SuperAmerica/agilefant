@@ -896,7 +896,6 @@ TableEditors.Wysiwyg.prototype.focus = function() {
 };
 
 TableEditors.Wysiwyg.prototype.close = function() {
-  this.wysiwyg = null;
   this.actualElement.trigger("editorClosing");
   this.actualElement.wysiwyg("remove");
   this.actualElement.remove();

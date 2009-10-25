@@ -66,6 +66,7 @@
 <script type="text/javascript" src="static/js/dynamics/controller/UserListController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/UserRowController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/CreateDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/TaskInfoDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSelectedBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>

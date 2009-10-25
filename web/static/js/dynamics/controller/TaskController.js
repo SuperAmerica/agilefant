@@ -91,7 +91,7 @@ TaskController.prototype.hideDetails = function() {
 };
 
 TaskController.prototype.openDetails = function() {
-  alert("Not implemented.");
+  var details = new TaskInfoDialog(this.model);
 };
 
 TaskController.prototype.createSplitTask = function() {

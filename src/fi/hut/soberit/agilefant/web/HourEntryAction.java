@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -11,7 +13,10 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.model.HourEntry;
 
 @Component("hourEntryAction")
@@ -25,6 +30,27 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
     private Set<Integer> userIds = new HashSet<Integer>();
+    @Autowired
+    private StoryBusiness storyBusiness;
+    @Autowired
+    private TaskBusiness taskBusiness;
+    @Autowired
+    private BacklogBusiness backlogBusiness;
+    
+    private List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+    
+    public String retrieveTaskHourEntries() {
+        this.hourEntries.addAll(taskBusiness.retrieve(parentObjectId).getHourEntries());
+        return Action.SUCCESS;
+    }
+    public String retrieveStoryHourEntries() {
+        this.hourEntries.addAll(storyBusiness.retrieve(parentObjectId).getHourEntries());
+        return Action.SUCCESS;
+    }
+    public String retrieveBacklogHourEntries() {
+        this.hourEntries.addAll(backlogBusiness.retrieve(parentObjectId).getHourEntries());
+        return Action.SUCCESS;
+    }
     
     /**
      * {@inheritDoc}
@@ -102,6 +128,21 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
 
     public void setParentObjectId(int parentObjectId) {
         this.parentObjectId = parentObjectId;
+    }
+    
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
+    }
+    
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
+    }
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
+    }
+    
+    public List<HourEntry> getHourEntries() {
+        return hourEntries;
     }
 
 }

@@ -560,6 +560,21 @@
 	   <param name="status">200</param>
 	 </result>
 	</action>
+	<action name="retrieveTaskHourEntries" class="hourEntryAction" method="retrieveTaskHourEntries">
+    <result name="success" type="json">
+      <param name="target">hourEntries</param>
+    </result>
+	</action>
+	<action name="retrieveStoryHourEntries" class="hourEntryAction" method="retrieveStoryHourEntries">
+    <result name="success" type="json">
+      <param name="target">hourEntries</param>
+    </result>
+	</action>
+	<action name="retrieveBacklogHourEntries" class="hourEntryAction" method="retrieveBacklogHourEntries">
+    <result name="success" type="json">
+      <param name="target">hourEntries</param>
+    </result>
+	</action>
 	<!-- /timesheets -->
   </package>
   

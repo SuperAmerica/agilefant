@@ -11,7 +11,7 @@ var HourEntryModel = function HourEntryModel() {
     backlog: {},
     story: {},
     task: {},
-    user: {}
+    user: null
   };
   
   this.copiedFields = {
@@ -25,6 +25,9 @@ HourEntryModel.prototype = new CommonModel();
 HourEntryModel.prototype._setData = function(newData) {
   this.id = newData.id;
   this._copyFields(newData);
+  if (newData.user) {
+    this.relations.user = ModelFactory.updateObject(newData.user);
+  }
 };
 
 /**
@@ -106,6 +109,9 @@ HourEntryModel.prototype.setMinutesSpent = function(minutesSpent) {
 
 HourEntryModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
+};
+HourEntryModel.prototype.getUser = function() {
+  return this.relations.user;
 };
 
 //for creating multiple entries

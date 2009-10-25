@@ -51,7 +51,6 @@ public class HourEntry {
     private String description;
 
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-    @JSON(include = false)
     public DateTime getDate() {
         return this.date;
     }

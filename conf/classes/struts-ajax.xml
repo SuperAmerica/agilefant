@@ -550,6 +550,11 @@
 	<!-- /Utility actions -->
 	
 	<!-- timesheets -->
+	<action name="logBacklogEffort" class="hourEntryAction" method="logBacklogEffort">
+	 <result name="success" type="httpheader">
+	   <param name="status">200</param>
+	 </result>
+	</action>
 	<action name="logStoryEffort" class="hourEntryAction" method="logStoryEffort">
 	 <result name="success" type="httpheader">
 	   <param name="status">200</param>

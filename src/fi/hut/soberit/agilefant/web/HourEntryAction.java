@@ -106,6 +106,11 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
         return Action.SUCCESS;
     }
 
+    public String logBacklogEffort() {
+        this.hourEntryBusiness.logBacklogEffort(this.parentObjectId, this.hourEntry, this.userIds);
+        return Action.SUCCESS;
+    }
+
     public int getHourEntryId() {
         return hourEntryId;
     }

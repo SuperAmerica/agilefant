@@ -47,8 +47,13 @@ $(document).ready(function() {
       smallBurndownElement: null,
       burndownElement: null,
       assigmentListElement: $("#backlogAssignees"),
-      hourEntryListElement: null,
+      hourEntryListElement: $("#backlogSpentEffort"),
       taskListElement: $("#tasksWithoutStory")
+  });
+  $("#backlogInfo").bind('tabsselect', function(event, ui) {
+    if (ui.index == 2) {
+      controller.selectSpentEffortTab();
+    }
   });
 });
 </script>

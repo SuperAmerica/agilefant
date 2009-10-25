@@ -17,6 +17,19 @@ BacklogController.prototype.paintSpentEffortList = function() {
 
 };
 
+BacklogController.prototype.selectSpentEffortTab = function() {
+  if (this.hourEntryListElement) {
+    if (this.hourEntryListController) {
+      this.hourEntryListController.reload();
+    } else {
+      this.hourEntryListController = new HourEntryListController({
+        parentModel: this.model,
+        hourEntryListElement: this.hourEntryListElement
+      });
+    }
+  }
+};
+
 BacklogController.prototype.addAssignees = function() {
   var me = this;
   $(window).autocompleteDialog({

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
@@ -48,6 +49,8 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     private TaskBusiness taskBusiness;
     @Autowired
     private UserBusiness userBusiness;
+    @Autowired
+    private BacklogBusiness backlogBusiness;
   
     @Autowired
     private BacklogHourEntryDAO backlogHourEntryDAO;
@@ -65,8 +68,17 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     @Transactional
     public void logBacklogEffort(int backlogId, HourEntry effortEntry,
             Set<Integer> userIds) {
-        // TODO Auto-generated method stub
+        Backlog backlog = this.backlogBusiness.retrieve(backlogId);
         
+        Collection<User> targetUsers = this.userBusiness.retrieveMultiple(userIds);
+        
+        for(User targetUser : targetUsers) {
+            BacklogHourEntry backlogEntry = new BacklogHourEntry();
+            backlogEntry.setBacklog(backlog);
+            backlogEntry.setUser(targetUser);
+            validateAndCopyFields(backlogEntry, effortEntry);
+            this.hourEntryDAO.create(backlogEntry);
+        }
     }
 
     @Transactional
@@ -230,5 +242,8 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
     }
-  
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
+    }
+
 }

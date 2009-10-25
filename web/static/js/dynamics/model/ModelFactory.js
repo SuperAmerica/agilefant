@@ -56,7 +56,7 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.Assignment":   "assignment",
   
   "fi.hut.soberit.agilefant.model.HourEntry":       "hourEntry",
-  "fi.hut.soberit.agilefant.model.BackogHourEntry": "hourEntry",
+  "fi.hut.soberit.agilefant.model.BacklogHourEntry": "hourEntry",
   "fi.hut.soberit.agilefant.model.StoryHourEntry":  "hourEntry",
   "fi.hut.soberit.agilefant.model.TaskHourEntry":   "hourEntry"
 };
@@ -89,7 +89,7 @@ ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.model.Assignment":      AssignmentModel,
     
     "fi.hut.soberit.agilefant.model.HourEntry":       HourEntryModel,
-    "fi.hut.soberit.agilefant.model.BackogHourEntry": HourEntryModel,
+    "fi.hut.soberit.agilefant.model.BacklogHourEntry": HourEntryModel,
     "fi.hut.soberit.agilefant.model.StoryHourEntry":  HourEntryModel,
     "fi.hut.soberit.agilefant.model.TaskHourEntry":   HourEntryModel
 };

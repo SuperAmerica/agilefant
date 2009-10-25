@@ -12,6 +12,7 @@ var IterationController = function IterationController(options) {
   this.iterationInfoElement = options.backlogDetailElement;
   this.assigmentListElement = options.assigmentListElement;
   this.taskListElement = options.taskListElement;
+  this.hourEntryListElement = options.hourEntryListElement;
   this.init();
   this.initAssigneeConfiguration();
   this.initSpentEffortConfiguration();

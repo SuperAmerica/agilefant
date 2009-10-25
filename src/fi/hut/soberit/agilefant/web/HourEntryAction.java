@@ -39,6 +39,14 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     
     private List<HourEntry> hourEntries = new ArrayList<HourEntry>();
     
+    public String storeEffortEntry() {
+        HourEntry persistedHourEntry = hourEntryBusiness.retrieve(hourEntryId);
+        persistedHourEntry.setMinutesSpent(hourEntry.getMinutesSpent());
+        persistedHourEntry.setDescription(hourEntry.getDescription());
+        hourEntryBusiness.store(persistedHourEntry);
+        return Action.SUCCESS;
+    }
+    
     public String retrieveTaskHourEntries() {
         this.hourEntries.addAll(taskBusiness.retrieve(parentObjectId).getHourEntries());
         return Action.SUCCESS;

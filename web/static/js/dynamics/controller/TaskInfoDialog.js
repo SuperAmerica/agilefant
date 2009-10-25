@@ -46,22 +46,24 @@ TaskInfoDialog.prototype.render = function() {
   this.renderHistoryTab();
   this.renderSpentEffortTab();
   this.tabsElement.tabs();
+  var selected = this.tabsElement.tabs('option', 'selected')
+  this.selectTab(selected);
   var me = this;
   this.tabsElement.bind('tabsselect', function(event, ui) {
-    if (ui.index == 2) {
-      me.selectSpentEffortTab(event, ui);
-    }
+    me.selectTab(ui.index);
   });
 };
 
-TaskInfoDialog.prototype.selectSpentEffortTab = function(event, ui) {
-  if (this.hourEntryListController) {
-    this.hourEntryListController.reload();
-  } else {
-    this.hourEntryListController = new HourEntryListController({
-      parentModel: this.model,
-      hourEntryListElement: this.spentEffortTabElement
-    });
+TaskInfoDialog.prototype.selectTab = function(index) {
+  if (index == 2) {
+    if (this.hourEntryListController) {
+      this.hourEntryListController.reload();
+    } else {
+      this.hourEntryListController = new HourEntryListController({
+        parentModel: this.model,
+        hourEntryListElement: this.spentEffortTabElement
+      });
+    }
   }
 };
 

@@ -560,6 +560,11 @@
 	   <param name="status">200</param>
 	 </result>
 	</action>
+	<action name="storeEffortEntry" class="hourEntryAction" method="storeEffortEntry">
+	 <result name="success" type="httpheader">
+	   <param name="status">200</param>
+	 </result>
+	</action>
 	<action name="retrieveTaskHourEntries" class="hourEntryAction" method="retrieveTaskHourEntries">
     <result name="success" type="json">
       <param name="target">hourEntries</param>

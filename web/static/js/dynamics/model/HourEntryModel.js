@@ -47,7 +47,7 @@ HourEntryModel.prototype._saveData = function(id, changedData) {
   var data = this.serializeFields("hourEntry", changedData);
   var url = "";
   if(id) {
-    data.id = id;
+    data.hourEntryId = id;
     url = "ajax/storeEffortEntry.action";
   } else if(this.relations.backlog instanceof BacklogModel) {
     url = "ajax/logBacklogEffort.action";
@@ -112,6 +112,9 @@ HourEntryModel.prototype.setDescription = function(description) {
 };
 HourEntryModel.prototype.getUser = function() {
   return this.relations.user;
+};
+HourEntryModel.prototype.setUser = function(user) {
+  this.relations.user = user;
 };
 
 //for creating multiple entries

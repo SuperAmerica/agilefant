@@ -39,12 +39,9 @@ AutocompleteDataProvider.getInstance = function() {
  * @see Autocomplete
  * @see AutocompleteDataProvider.vars.urls
  */
-AutocompleteDataProvider.prototype.get = function(dataType) {
+AutocompleteDataProvider.prototype.get = function(dataType, params) {
   var urlInfo = AutocompleteDataProvider.vars.urls[dataType];
-  var params = {};
-  if (urlInfo.params) {
-      params = urlInfo.params;
-  }
+  var urlParams = params;
   
   return this._fetchData(urlInfo.url, params);
 };
@@ -61,12 +58,14 @@ AutocompleteDataProvider.prototype.filterIdLists = function(items) {
 };
 AutocompleteDataProvider.prototype._fetchData = function(url, params) {
   var returnedData = null;
+  var data = {};
+  jQuery.extend(data, params);
   jQuery.ajax({
     async: false,
     url: url,
     cache: false,
     dataType: "json",
-    data: params,
+    data: data,
     type: "post",
     success: function(data,status) {
       returnedData = data;

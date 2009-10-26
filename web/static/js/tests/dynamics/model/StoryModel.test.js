@@ -150,16 +150,16 @@ var storyExpectedData = {
 };
 
 var storyInjectedData = {
-  "backlog" : {
-    "backlogSize" : 198,
-    "baselineLoad" : null,
-    "class" : "fi.hut.soberit.agilefant.model.Iteration",
-    "description" : "Initial storyload = 65p<br>Scoped out = 0p<br>Estimated dev effort = 124h<br>Actual dev effort = 71,9h<br>Velocity = 65p<br>Average dev effort per story point (P) = 1,1h/p<br>Sprint Acceleration (v2/t2 - v1/t1) / (v2/t2) = 23,0%<br>&nbsp; (v = velocity; t = spent effort)<br>Development Acceleration 1-((P2-P1)/P2) = 27,3%<br> ",
-    "endDate" : 1244624400000,
-    "id" : 538,
-    "name" : "Sprint 2",
-    "startDate" : 1244019600000
-  },
+//  "backlog" : {
+//    "backlogSize" : 198,
+//    "baselineLoad" : null,
+//    "class" : "fi.hut.soberit.agilefant.model.Iteration",
+//    "description" : "Initial storyload = 65p<br>Scoped out = 0p<br>Estimated dev effort = 124h<br>Actual dev effort = 71,9h<br>Velocity = 65p<br>Average dev effort per story point (P) = 1,1h/p<br>Sprint Acceleration (v2/t2 - v1/t1) / (v2/t2) = 23,0%<br>&nbsp; (v = velocity; t = spent effort)<br>Development Acceleration 1-((P2-P1)/P2) = 27,3%<br> ",
+//    "endDate" : 1244624400000,
+//    "id" : 538,
+//    "name" : "Sprint 2",
+//    "startDate" : 1244019600000
+//  },
   "class" : "fi.hut.soberit.agilefant.transfer.StoryTO",
   "createdDate" : null,
   "creator" : null,

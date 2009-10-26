@@ -23,6 +23,8 @@ public class AutocompleteAction extends ActionSupport {
     
     private List<AutocompleteDataNode> autocompleteData = null;
     
+    private Integer backlogId;
+    
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
     
@@ -43,7 +45,7 @@ public class AutocompleteAction extends ActionSupport {
     }
     
     public String backlogData() {
-        autocompleteData = transferObjectBusiness.constructBacklogAutocompleteData();
+        autocompleteData = transferObjectBusiness.constructBacklogAutocompleteData(backlogId);
         return Action.SUCCESS;
     }
     
@@ -69,6 +71,10 @@ public class AutocompleteAction extends ActionSupport {
 
     public List<AutocompleteDataNode> getAutocompleteData() {
         return autocompleteData;
+    }
+
+    public void setBacklogId(Integer backlogId) {
+        this.backlogId = backlogId;
     }
 
 }

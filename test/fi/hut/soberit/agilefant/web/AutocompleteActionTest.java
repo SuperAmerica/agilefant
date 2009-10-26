@@ -55,8 +55,9 @@ public class AutocompleteActionTest {
     
     @Test
     public void testBacklogData() {
+        autocompleteAction.setBacklogId(123);
         List<AutocompleteDataNode> list = Arrays.asList(node, node);
-        expect(toBusiness.constructBacklogAutocompleteData()).andReturn(list);
+        expect(toBusiness.constructBacklogAutocompleteData(123)).andReturn(list);
         
         replayAll();
         assertEquals(Action.SUCCESS, autocompleteAction.backlogData());

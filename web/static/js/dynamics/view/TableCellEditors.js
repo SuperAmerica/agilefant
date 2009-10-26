@@ -1038,7 +1038,15 @@ TableEditors.AutocompleteDialog.defaultOptions = {
    * Default: null 
    * @member TableEditors.AutocompleteDialog
    */
-  selectCallback: null 
+  selectCallback: null,
+  
+  /**
+   * Parameters passed to <code>AutocompleteDataprovider</code>
+   * 
+   * Default: {}
+   * @member TableEditors.AutocompleteDialog 
+   */
+  params: {}
 };
 /**
  * Initialize an Autocomplete dialog editor.
@@ -1052,6 +1060,7 @@ TableEditors.AutocompleteDialog.prototype.init = function(element, model, option
   
   var autocompleteParams = {
     dataType:       this.options.dataType,
+    params:         this.options.params,
     preSelected:    [],
     multiSelect:    this.options.multiSelect,
     selectCallback: this.options.selectCallback

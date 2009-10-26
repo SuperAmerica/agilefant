@@ -51,8 +51,12 @@ public interface TransferObjectBusiness {
     
     /**
      * Get all backlogs in AutoCompleteData containers.
+     * 
+     * Use <code>backlogId</code> to filter out other products' child backlogs.
+     *   
+     * @param backlogId Filter backlogs by parent product of the backlog with id <code>backlogId</code>
      */
-    public List<AutocompleteDataNode> constructBacklogAutocompleteData();
+    public List<AutocompleteDataNode> constructBacklogAutocompleteData(Integer backlogId);
     
     /**
      * Get all products in <code>AutoCompleteData</code> containers.

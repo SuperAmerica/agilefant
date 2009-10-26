@@ -144,8 +144,19 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
-    public List<AutocompleteDataNode> constructBacklogAutocompleteData() {
+    public List<AutocompleteDataNode> constructBacklogAutocompleteData(Integer backlogId) {
         Collection<Backlog> allBacklogs = this.backlogBusiness.retrieveAll();
+        if (backlogId != null) {
+            Collection<Backlog> filteredBacklogs = new ArrayList<Backlog>();
+            Backlog original = this.backlogBusiness.retrieve(backlogId);
+            Product filterBy = this.backlogBusiness.getParentProduct(original);
+            for (Backlog backlog : allBacklogs) {
+                if (this.backlogBusiness.getParentProduct(backlog) == filterBy) {
+                    filteredBacklogs.add(backlog);
+                }
+            }
+            allBacklogs = filteredBacklogs;
+        }
         List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
         return autocompleteData; 
     }

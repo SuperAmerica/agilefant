@@ -61,6 +61,7 @@ Autocomplete.prototype._init = function(element, options) {
   this.options = {
       multiSelect: true,
       dataType: "",
+      params: {},
       preSelected: [],
       visibleSuggestions: 5,
       showRecent: true
@@ -166,7 +167,7 @@ Autocomplete.prototype.selectAndClose = function() {
 };
 
 Autocomplete.prototype.getData = function() {
-  this.items = this.dataProvider.get(this.options.dataType);
+  this.items = this.dataProvider.get(this.options.dataType, this.options.params);
 };
 
 Autocomplete.prototype.setSearchBoxValue = function(val) {

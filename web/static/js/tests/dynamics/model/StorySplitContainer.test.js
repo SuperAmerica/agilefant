@@ -58,7 +58,7 @@ $(document).ready(function() {
     third.expects().getChangedData().andReturn(changed);
     third.expects().serializeFields("oldStories[0]", changed).andReturn(serialized);
     
-    var ssc = new StorySplitContainer(origStory, [first, second], [third]);
+    var ssc = new StorySplitContainer(origStory, [first, second], [third], true);
     
     same(ssc.serializeData(), expectedSerialized, "Data serialized correctly");
   });
@@ -67,6 +67,7 @@ $(document).ready(function() {
 var expectedSerialized = {
   "originalStoryId":           313,
   "original.name":             "Modified name",
+  "moveOriginalStory":         true,
   "newStories[0].name":        "First split",
   "newStories[0].storyPoints": 2,
   "newStories[0].state":       "BLOCKED",

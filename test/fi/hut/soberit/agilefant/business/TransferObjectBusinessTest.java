@@ -331,7 +331,7 @@ public class TransferObjectBusinessTest {
         replayAll();
         
         List<AutocompleteDataNode> nodes = transferObjectBusiness
-                .constructBacklogAutocompleteData();
+                .constructBacklogAutocompleteData(null);
         
         verifyAll();
         
@@ -356,6 +356,51 @@ public class TransferObjectBusinessTest {
         assertEquals("Product > Iter 2", node.getName());
         assertEquals(node.getName(), node.getMatchedString());
         assertEquals(iterationUnderProduct, node.getOriginalObject());
+    }
+    
+    @Test
+    public void testGetBacklogAutocompleteData_filterByBacklog() {
+        Product product = new Product();
+        product.setId(1);
+        product.setName("Product");
+        
+        Product product2 = new Product();
+        product2.setId(123);
+        product2.setName("Wrong");
+        
+        Backlog project = new Project();
+        project.setId(7);
+        project.setParent(product);
+        project.setName("Project");
+        
+        expect(backlogBusiness.retrieveAll()).andReturn(Arrays.asList(product, project, product2));
+
+        expect(backlogBusiness.retrieve(7)).andReturn(project);
+        expect(backlogBusiness.getParentProduct(project)).andReturn(product);
+        
+        expect(backlogBusiness.getParentProduct(product)).andReturn(product);
+        expect(backlogBusiness.getParentProduct(project)).andReturn(product);
+        expect(backlogBusiness.getParentProduct(product2)).andReturn(product2);
+        
+        replayAll();
+        
+        // Supply the projcet id
+        List<AutocompleteDataNode> nodes = transferObjectBusiness
+                .constructBacklogAutocompleteData(7);
+        
+        verifyAll();
+        
+        assertEquals(2, nodes.size());
+        
+        AutocompleteDataNode node = getDataNodeById(1, nodes);
+        assertEquals(Backlog.class.getCanonicalName(), node.getBaseClassName());
+        assertEquals("Product", node.getName());
+        assertEquals(product, node.getOriginalObject());
+        
+        node = getDataNodeById(7, nodes);
+        assertEquals("Product > Project", node.getName());
+        assertEquals(node.getName(), node.getMatchedString());
+        assertEquals(project, node.getOriginalObject());
     }
     
     /**

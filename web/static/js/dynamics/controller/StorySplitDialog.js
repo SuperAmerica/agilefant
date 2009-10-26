@@ -339,6 +339,8 @@ StorySplitDialog.prototype._initStoryListConfig = function() {
     edit : {
       editor : "AutocompleteSingle",
       dataType: "backlogs",
+      params: { backlogId: this.model.getBacklog().getId() },
+      dialogTitle: "Select backlog",
       set : StoryModel.prototype.setBacklogForSplitting
     }
   });

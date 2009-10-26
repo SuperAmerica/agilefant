@@ -74,7 +74,7 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
       if (closeRowCallback) {
         closeRowCallback.call(me.controller);
       }
-      if (editor) {
+      else if (editor) {
         editor.close();
       }
     }

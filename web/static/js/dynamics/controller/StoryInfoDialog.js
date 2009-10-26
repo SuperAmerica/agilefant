@@ -43,6 +43,15 @@ StoryInfoDialog.prototype.render = function() {
   if(Configuration.isTimesheetsEnabled()) {
     this.spentEffortElement = this.tabs.add("Spent effort");
   }
+  
+  var me = this;
+  jQuery.get("ajax/getStoryHierarchy.action",
+      { "storyId": this.model.getId() },
+      function(data, status) {
+        me.infoElement.append(data);
+      },
+      "html"
+      );
 };
 
 /**

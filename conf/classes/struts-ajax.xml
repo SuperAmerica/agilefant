@@ -524,7 +524,6 @@
       <param name="patterns">-class</param>
     </result>
   </action>
-  
 	<action name="currentIterationChooserData" class="autocompleteAction"
 		method="currentIterationData">
 		<result name="success" type="json">
@@ -533,6 +532,14 @@
 		</result>
 	</action>
 	<!-- /Utility actions -->
+	
+	
+	<!-- Story hierarchy -->
+	<action name="getStoryHierarchy" class="storyHierarchyAction" method="recurseHierarchyAsList">
+    <result type="dispatcher">/WEB-INF/jsp/inc/storyHierarchy.jsp</result>
+	</action>
+	
+	<!-- /Story hierarchy -->
 	
 	<!-- timesheets -->
 	<action name="logBacklogEffort" class="hourEntryAction" method="logBacklogEffort">

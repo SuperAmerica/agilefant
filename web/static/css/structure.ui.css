@@ -178,6 +178,13 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
   color: #E17009 !important;  
 }
 
+/**
+ * JQUERY TABS FIXES
+ */
+.ui-tabs-nav {
+  height: 23px !important;  
+}
+
 
 /**
  * FOOTER STYLES

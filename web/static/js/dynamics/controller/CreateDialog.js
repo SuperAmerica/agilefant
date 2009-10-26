@@ -665,7 +665,8 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
   
   config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.comment, {
     title: "Comment",
-    get: CreateDialog.returnNull,
+    get: HourEntryModel.prototype.getDescription,
+    editable: true,
     edit: {
       editor: "Text",
       set: HourEntryModel.prototype.setDescription

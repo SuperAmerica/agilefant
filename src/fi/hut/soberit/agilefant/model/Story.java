@@ -38,7 +38,7 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
     private StoryState state = StoryState.NOT_STARTED;
     private int rank = 0;
     private Story parent;
-    private Set<Story> children;
+    private Set<Story> children = new HashSet<Story>();
     
     private Set<User> responsibles = new HashSet<User>();
     private Set<Task> tasks = new HashSet<Task>();

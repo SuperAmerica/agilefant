@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 
 /**
@@ -84,4 +85,13 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
                 SignedExactEstimate.ZERO, 100);
     }
 
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public Product getParentProduct(Backlog backlog) {
+        Backlog parent = backlog;
+        while (!(parent instanceof Product)) {
+            parent = parent.getParent();
+        }
+        return (Product)parent;
+    }
 }

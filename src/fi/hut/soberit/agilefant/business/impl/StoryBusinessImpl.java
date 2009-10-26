@@ -232,6 +232,21 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     @Transactional
     public void moveStoryToBacklog(Story story, Backlog backlog) {
         Backlog oldBacklog = story.getBacklog();
+        
+        /* Check for moving to other product */
+        if (story.getChildren().size() > 0) {
+            if (backlogBusiness.getParentProduct(oldBacklog) !=
+                    backlogBusiness.getParentProduct(backlog)) {
+                throw new OperationNotPermittedException("Can't move a story with children to another product");
+           }
+        }
+        if (story.getParent() != null) {
+            if (backlogBusiness.getParentProduct(story.getParent().getBacklog()) !=
+                backlogBusiness.getParentProduct(backlog)) {
+                story.setParent(null);
+           }
+        }
+        
         oldBacklog.getStories().remove(story);
         story.setBacklog(backlog);
         backlog.getStories().add(story);

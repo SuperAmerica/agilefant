@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Product;
 
 /**
  * This description contains generic information on <code>Business</code>
@@ -47,5 +48,9 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
     int calculateStoryPointSum(int backlogId);
     
     public void addAssignees(int backlogId, Set<Integer> userIds);
-    
+
+    /**
+     * Recurse the backlog's parent product.
+     */
+    public Product getParentProduct(Backlog backlog);
 }

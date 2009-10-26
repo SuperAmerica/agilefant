@@ -245,6 +245,98 @@ public class StoryBusinessTest {
         assertEquals(124, movable.getRank());
     }
     
+    @Test(expected = OperationNotPermittedException.class)
+    public void testMoveStoryToBacklog_withChildrenToAnotherProduct() {
+        Product oldParent = new Product();
+        Backlog oldBacklog = new Project();
+        oldBacklog.setId(8482);
+        oldBacklog.setParent(oldParent);
+        
+        Product newBacklog = new Product();
+        newBacklog.setId(1904);
+        
+        Story movable = new Story();
+        movable.setBacklog(oldBacklog);
+        
+        movable.setChildren(new HashSet<Story>(Arrays.asList(new Story(), new Story())));
+
+        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(oldParent);
+        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(newBacklog);
+        replayAll();
+        storyBusiness.moveStoryToBacklog(movable, newBacklog);
+        verifyAll();
+    }
+    
+    @Test
+    public void testMoveStoryToBacklog_withChildrenToSameProduct() {
+        Product newBacklog = new Product();
+        newBacklog.setId(1904);
+        
+        Backlog oldBacklog = new Iteration();
+        oldBacklog.setId(8482);
+        Project project = new Project();
+        project.setParent(new Product());
+        oldBacklog.setParent(newBacklog);
+        
+        
+        Story movable = new Story();
+        movable.setBacklog(oldBacklog);
+        
+        movable.setChildren(new HashSet<Story>(Arrays.asList(new Story(), new Story())));
+
+        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(newBacklog);
+        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(newBacklog);
+        
+        storyDAO.store(isA(Story.class));
+        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
+        expect(storyDAO.getLastStoryInRank(newBacklog)).andReturn(new Story());
+        
+        blheBusiness.updateHistory(oldBacklog.getId());
+        blheBusiness.updateHistory(newBacklog.getId());
+        
+        iheBusiness.updateIterationHistory(oldBacklog.getId());
+        
+        replayAll();
+        storyBusiness.moveStoryToBacklog(movable, newBacklog);
+        verifyAll();
+    }
+    
+    @Test
+    public void testMoveStoryToBacklog_parentStoryUnderDifferentProduct() {
+        Product newBacklog = new Product();
+        newBacklog.setId(1904);
+        
+        Backlog oldBacklog = new Iteration();
+        oldBacklog.setId(8482);
+        Project project = new Project();
+        project.setParent(new Product());
+        
+        Story parentStory = new Story();
+        parentStory.setBacklog(oldBacklog);
+        
+        Story movable = new Story();
+        movable.setBacklog(oldBacklog);
+        
+        movable.setParent(parentStory);
+
+        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(new Product());
+        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(newBacklog);
+        
+        storyDAO.store(isA(Story.class));
+        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
+        expect(storyDAO.getLastStoryInRank(newBacklog)).andReturn(new Story());
+        
+        blheBusiness.updateHistory(oldBacklog.getId());
+        blheBusiness.updateHistory(newBacklog.getId());
+        
+        iheBusiness.updateIterationHistory(oldBacklog.getId());
+        
+        replayAll();
+        storyBusiness.moveStoryToBacklog(movable, newBacklog);
+        verifyAll();
+        
+        assertNull(movable.getParent());
+    }
     
     
     private void store_createMockStoryBusiness() {       

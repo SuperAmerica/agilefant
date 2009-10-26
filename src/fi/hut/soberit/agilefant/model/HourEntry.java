@@ -15,8 +15,6 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
-import flexjson.JSON;
-
 /**
  * Hibernate entity bean which represents an hour entry.
  * 

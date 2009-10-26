@@ -11,7 +11,7 @@ var IterationRowController = function IterationRowController(model, view, backlo
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.autohideCells = [ IterationRowController.columnIndices.description, IterationRowController.columnIndices.buttons, IterationRowController.columnIndices.storiesData ];
+  this.autohideCells = [ IterationRowController.columnIndices.description, IterationRowController.columnIndices.buttons ];
 };
 IterationRowController.prototype = new BacklogController();
 

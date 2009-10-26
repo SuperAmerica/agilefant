@@ -3,7 +3,7 @@ var StoryController = function StoryController(model, view, backlogController) {
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.autohideCells = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons, StoryController.columnIndices.tasksData ]; 
+  this.autohideCells = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons ]; 
 };
 
 StoryController.columnIndices = {

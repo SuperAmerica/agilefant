@@ -1,7 +1,9 @@
 <%@ include file="./inc/_taglibs.jsp" %>
-<link rel="stylesheet" href="static/css/dailywork.css" type="text/css"/>
 
 <struct:htmlWrapper navi="dailyWork">
+
+<link rel="stylesheet" href="static/css/dailywork.css" type="text/css"/>
+
 
 <c:set var="currentAction" value="dailyWork" scope="session" />
 <c:set var="dailyWorkUserId" value="${userId}" scope="session" />
@@ -36,10 +38,10 @@ $(document).ready(function() {
 });
 </script>
 
-<div id="work-queue-all-container" class="details-contracted">
+<div id="work-queue-all-container" class="details-contracted structure-main-block">
 <div id="work-queue-container">
 <div id="work-queue-details-div" class="ui-widget-content ui-corner-all">
-<div id="details-container">
+<div id="details-container" >
 <div class="dynamictable-caption-block dynamictable-caption ui-widget-header ui-corner-all">
 <div>Details</div>
 </div>
@@ -49,8 +51,8 @@ $(document).ready(function() {
 <div id="work-queue-div"></div>
 </div>
 </div>
-<div id="story-list-div"></div>
-<div id="task-list-div"></div>
+<div id="story-list-div" class="structure-main-block"></div>
+<div id="task-list-div" class="structure-main-block"></div>
 
 </c:when>
 <c:otherwise>

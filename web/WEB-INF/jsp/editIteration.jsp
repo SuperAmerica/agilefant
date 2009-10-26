@@ -10,7 +10,7 @@
     var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 </script>
 
-<div class="backlogInfo" id="backlogInfo">
+<div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
@@ -58,9 +58,9 @@ $(document).ready(function() {
 });
 </script>
 
-<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="stories" class="structure-main-block">&nbsp;</div></form>
 
-<form onsubmit="return false;"><div id="tasksWithoutStory" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="tasksWithoutStory" class="structure-main-block">&nbsp;</div></form>
 
 
 

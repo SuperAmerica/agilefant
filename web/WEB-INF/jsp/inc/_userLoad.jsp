@@ -71,7 +71,7 @@ $(window).resize(function() {
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeline.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/init-load.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/load-plot.js"></script>
-<div id="dailyWorkTabsContainer">
+<div id="dailyWorkTabsContainer" class="structure-main-block">
 	<div id="dailyWorkTabs">
 		<ul id="dwTabs" style="display: none; height: 23px;">
 			<li><a href="#smallLoadTable"><span>Load</span></a></li>

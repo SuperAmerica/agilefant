@@ -3,7 +3,7 @@
 <struct:htmlWrapper navi="backlog">
 <jsp:body>
 
-<div class="backlogInfo" id="backlogInfo">
+<div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
@@ -41,13 +41,13 @@ $(document).ready(function() {
 });
 </script>
 
-<form onsubmit="return false;"><div id="stories" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="stories" class="structure-main-block">&nbsp;</div></form>
 
-<form onsubmit="return false;"><div id="ongoingIterations" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="ongoingIterations" class="structure-main-block">&nbsp;</div></form>
 
-<form onsubmit="return false;"><div id="futureIterations" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="futureIterations" class="structure-main-block">&nbsp;</div></form>
 
-<form onsubmit="return false;"><div id="pastIterations" style="min-width: 800px; width: 98%;">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="pastIterations" class="structure-main-block">&nbsp;</div></form>
 
 
 

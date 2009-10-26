@@ -19,11 +19,11 @@ $(document).ready(function() {
 });
 </script>
 
-<div id="userInfoDiv" style="min-width: 750px"> </div>
+<div id="userInfoDiv" class="structure-main-block"> </div>
 
-<div id="changePasswordDiv" style="min-width: 750px"> </div>
+<div id="changePasswordDiv" class="structure-main-block"> </div>
 
-<div id="userSpecificSettingsDiv" style="min-width: 750px"> </div>
+<div id="userSpecificSettingsDiv" class="structure-main-block"> </div>
 
 </jsp:body>
 </struct:htmlWrapper>

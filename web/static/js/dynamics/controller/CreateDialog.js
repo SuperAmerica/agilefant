@@ -633,7 +633,7 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
     edit: {
       editor: "ExactEstimate",
       required: true,
-      size: 8,
+      size: "8em",
       set: HourEntryModel.prototype.setEffortSpent
     }
   });

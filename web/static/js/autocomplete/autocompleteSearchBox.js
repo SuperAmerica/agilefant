@@ -198,7 +198,7 @@ AutocompleteSearch.prototype.renderSuggestionList = function() {
   }
   
   $.each(this.matchedItems, function(k,item) {
-    var listItem = $('<li/>').appendTo(me.suggestionList);
+    var listItem = $('<li/>').attr('title',item.name).appendTo(me.suggestionList);
     var icon = $('<span/>').appendTo(listItem);
     me.addSuggestionListItemIcon(icon, item.baseClassName);
     var text = $('<span/>').text(item.name).appendTo(listItem);

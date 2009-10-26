@@ -70,7 +70,6 @@ DailyWorkController.prototype.createStoryList = function() {
     );
 
     this.storyListView.render();
-    IterationController.prototype.showTasks.call(this);
 };
 
 DailyWorkController.prototype.createTaskList = function() {

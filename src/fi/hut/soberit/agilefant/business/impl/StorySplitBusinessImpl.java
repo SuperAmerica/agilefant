@@ -67,19 +67,14 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
 
     private void persistChildStories(Story original,
             Collection<Story> newStories) {
-        Story lastStoryInRank = this.storyDAO.getLastStoryInRank(original
-                .getBacklog());
-        // there will always be "last story in rank" as the original story is in
-        // this backlog
-        int currentChildStoryRank = lastStoryInRank.getRank();
 
         for (Story story : newStories) {
             story.setParent(original);
-            story.setBacklog(original.getBacklog());
             //copy responsible from the parent story
             story.getResponsibles().addAll(original.getResponsibles());
-            story.setRank(++currentChildStoryRank);
             this.storyDAO.create(story);
+            this.storyBusiness.rankToBottom(story, story.getBacklog().getId());
+            this.storyDAO.store(story);
         }
     }
 

@@ -138,6 +138,7 @@ StorySplitDialog.prototype.storyControllerFactory = function(view, model) {
 StorySplitDialog.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
   this.newModels.push(mockModel);
+  mockModel.setBacklogForSplitting(this.model.getBacklog());
   var controller = new StoryController(mockModel, null, this);
   var row = this.storiesView.createRow(controller, mockModel, "top");
   controller.view = row;
@@ -252,8 +253,9 @@ StorySplitDialog.columnIndices = {
     name: 0,
     points: 1,
     state: 2,
-    cancel: 3,
-    description: 4
+    backlog: 3,
+    cancel: 4,
+    description: 5
 };
 
 StorySplitDialog.prototype._initStoryListConfig = function() {
@@ -321,6 +323,23 @@ StorySplitDialog.prototype._initStoryListConfig = function() {
       editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
+    }
+  });
+  
+  config.addColumnConfiguration(StorySplitDialog.columnIndices.backlog, {
+    minWidth : 70,
+    autoScale : true,
+    cssClass : 'projectstory-row',
+    title : "Backlog",
+    headerTooltip : "Story's backlog",
+    get : StoryModel.prototype.getBacklog,
+    editable : true,
+    decorator: DynamicsDecorators.backlogSelectDecorator,
+    openOnRowEdit: false,
+    edit : {
+      editor : "AutocompleteSingle",
+      dataType: "backlogs",
+      set : StoryModel.prototype.setBacklogForSplitting
     }
   });
   

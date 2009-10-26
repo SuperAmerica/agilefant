@@ -68,6 +68,9 @@ StoryModel.prototype._setData = function(newData) {
   if(newData.parent) {
     this.relations.parent = ModelFactory.updateObject(newData.parent);
   }
+  if(newData.backlog) {
+    this.setBacklog(ModelFactory.updateObject(newData.backlog));
+  }
   if(newData.metrics) {
     this.metrics = newData.metrics;
   }
@@ -217,6 +220,11 @@ StoryModel.prototype.getBacklog = function() {
 };
 StoryModel.prototype.setBacklog = function(backlog) {
   this.addRelation(backlog);
+};
+
+StoryModel.prototype.setBacklogForSplitting = function(backlog) {
+  this.setBacklog(backlog);
+  this.currentData.backlog = backlog.getId();
 };
 
 

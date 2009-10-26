@@ -13,7 +13,6 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.StorySplitBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryDAO;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -77,8 +76,12 @@ public class StorySplitBusinessTest {
         parentStory.getResponsibles().add(responsible);
 
         childStories = new ArrayList<Story>();
-        childStories.add(new Story());
-        childStories.add(new Story());
+        Story firstChild = new Story();
+        firstChild.setBacklog(product);
+        Story secondChild = new Story();
+        secondChild.setBacklog(product);
+        childStories.add(firstChild);
+        childStories.add(secondChild);
     }
 
     private void verifyAll() {
@@ -90,21 +93,25 @@ public class StorySplitBusinessTest {
     }
 
     private void childCreationExpects() {
-        expect(storyDAO.getLastStoryInRank(parentStory.getBacklog())).andReturn(parentStory);
+//        expect(storyDAO.getLastStoryInRank(parentStory.getBacklog())).andReturn(parentStory);
         expect(storyDAO.create(childStories.get(0))).andReturn(1);
+        expect(storyBusiness.rankToBottom(childStories.get(0), 1)).andReturn(childStories.get(1));
+        storyDAO.store(childStories.get(0));
+        
         expect(storyDAO.create(childStories.get(1))).andReturn(2);
+        expect(storyBusiness.rankToBottom(childStories.get(1), 1)).andReturn(childStories.get(1));
+        storyDAO.store(childStories.get(1));
     }
 
-    private void checkChildStories(Backlog backlog) {
+    private void checkChildStories() {
         for (Story child : childStories) {
             assertEquals(parentStory, child.getParent());
 
-            assertEquals(backlog, child.getBacklog());
-
             assertEquals(parentStory.getResponsibles(), child.getResponsibles());
         }
-        assertEquals(3, childStories.get(0).getRank());
-        assertEquals(4, childStories.get(1).getRank());
+        // Rank should be handled by rankToBottom
+//        assertEquals(3, childStories.get(0).getRank());
+//        assertEquals(4, childStories.get(1).getRank());
     }
 
     @Test
@@ -116,7 +123,7 @@ public class StorySplitBusinessTest {
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories, true);
         verifyAll();
-        checkChildStories(product);
+        checkChildStories();
     }
 
     @Test
@@ -128,7 +135,7 @@ public class StorySplitBusinessTest {
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories, true);
         verifyAll();
-        checkChildStories(iteration);
+        checkChildStories();
     }
 
     @Test
@@ -140,7 +147,7 @@ public class StorySplitBusinessTest {
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories, true);
         verifyAll();
-        checkChildStories(project);
+        checkChildStories();
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -166,7 +173,7 @@ public class StorySplitBusinessTest {
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories, false);
         verifyAll();
-        checkChildStories(iteration);
+        checkChildStories();
         assertSame(iteration, parentStory.getBacklog());
     }
 }

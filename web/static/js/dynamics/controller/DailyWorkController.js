@@ -313,7 +313,7 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
     var config = new DynamicTableConfiguration({
         rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
         dataSource: DailyWorkModel.prototype.getTasksWithoutStory,
-        caption: "Assigned tasks without stories",
+        caption: "Stories",
         captionConfig: {
             cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
         },
@@ -497,9 +497,9 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
  */
 DailyWorkController.prototype.initializeStoryConfig = function() {
     var config = new DynamicTableConfiguration({
-        rowControllerFactory : IterationController.prototype.storyControllerFactory,
+        rowControllerFactory : DailyWorkController.prototype.dailyWorkStoryControllerFactory,
         dataSource :  DailyWorkModel.prototype.getStories,
-        caption : "Assigned tasks in stories",
+        caption : "Stories",
         captionConfig: {
             cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
         },
@@ -516,14 +516,14 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         text : "Show tasks",
         connectWith : "hideTasks",
         cssClass : "hide",
-        visible: false,
+        visible: true,
         callback : IterationController.prototype.showTasks
     });
 
     config.addCaptionItem( {
         name : "hideTasks",
         text : "Hide tasks",
-        visible : true,
+        visible : false,
         connectWith : "showTasks",
         cssClass : "show",
         callback : IterationController.prototype.hideTasks
@@ -711,11 +711,18 @@ var DailyWorkStoryController = function DailyWorkStoryController(model, view, ba
     this.model = model;
     this.view = view;
     this.parentController = backlogController;
+    this.areDoneTasksFiltered = true;
     this.init();
-    this.autohideCells = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons, StoryController.columnIndices.tasksData ]; 
+    this.autohideCells = [ 
+       StoryController.columnIndices.description, 
+       StoryController.columnIndices.buttons, 
+       StoryController.columnIndices.tasksData
+    ];
 };
+DailyWorkStoryController.prototype = new StoryController();
 
 DailyWorkStoryController.prototype.createTaskListView = function(panel) {
+    var controller = this;
     var config = new DynamicTableConfiguration( {
         cssClass: "dynamicTable-sortable-tasklist",
         rowControllerFactory : StoryController.prototype.taskControllerFactory,
@@ -728,6 +735,22 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
           handle: "." + DynamicTable.cssClasses.dragHandle,
           connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
         }
+      });
+      config.addCaptionItem( {
+        name : "showDone",
+        text : "Show done tasks",
+        cssClass : "showDone",
+        connectWith: "hideDone",
+        visible: true,
+        callback : DailyWorkStoryController.prototype.showDone
+      });
+      config.addCaptionItem( {
+        name : "hideDone",
+        text : "Hide done tasks",
+        cssClass : "hideDone",
+        connectWith: "showDone",
+        visible: false,
+        callback : DailyWorkStoryController.prototype.hideDone
       });
       config.addCaptionItem( {
         name : "createTask",
@@ -874,8 +897,50 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
         visible : false
       });
 
-    this.taskListView = new DynamicTable(this, this.model, taskListConfig, panel);
-}
+    this.taskListView = new DynamicTable(this, this.model, config, panel);
+    this.filterDone(true);
+};
+
+DailyWorkStoryController.prototype.showDone = function(view, model) {
+    this.filterDone(false);
+};
+
+DailyWorkStoryController.prototype.hideDone = function(view, model) {
+    this.filterDone(true);
+};
+
+DailyWorkStoryController.prototype.filterDone = function(state) {
+    if (this.areDoneTasksfiltered == state) {
+        return;
+    }
+
+    if (state) {
+        this.taskListView.setFilter(DailyWorkStoryController.filterDoneTasks);
+    }
+    else {
+        this.taskListView.setFilter(null);
+    }
+
+    this.areDoneTasksFiltered = state;
+    this.taskListView.render();
+};
+
+DailyWorkStoryController.filterDoneTasks = function(tasks) {
+    var returnedTasks = [];
+    for (var i = 0; i < tasks.length; i++) {
+        if (tasks[i].getState() != "DONE") {
+            returnedTasks.push(tasks[i]);
+        }
+    }
+
+    return returnedTasks;
+};
+
+DailyWorkController.prototype.dailyWorkStoryControllerFactory = function(view, model) {
+    var storyController = new DailyWorkStoryController(model, view, this);
+    this.addChildController("story", storyController);
+    return storyController;
+};
 
 DailyWorkController.prototype.initializeConfigs = function() {
     this.workQueueConfig  = this.initializeQueueConfig();

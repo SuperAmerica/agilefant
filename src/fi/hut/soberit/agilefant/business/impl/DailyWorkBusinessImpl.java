@@ -14,9 +14,11 @@ import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Rankable;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
@@ -27,6 +29,7 @@ import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 @Transactional
 public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     private TaskDAO taskDAO;
+    private StoryDAO storyDAO;
     private WhatsNextEntryDAO whatsNextEntryDAO;
     private RankingBusiness rankingBusiness;
     private TaskBusiness taskBusiness;
@@ -35,6 +38,11 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     @Autowired
     public void setTaskDAO(TaskDAO taskDAO) {
         this.taskDAO = taskDAO;
+    }
+
+    @Autowired
+    public void setStoryDAO(StoryDAO storyDAO) {
+        this.storyDAO = storyDAO;
     }
 
     @Autowired
@@ -172,6 +180,8 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         Interval interval = new Interval(dayStart, dayEnd);
         
         Collection<Task> tasks = taskDAO.getAllIterationAndStoryTasks(user, interval);
-        return transferObjectBusiness.constructAssignedWorkTO(tasks);
+        Collection<Story> stories = storyDAO.getAllIterationStoriesByResponsibleAndInterval(user, interval);
+        
+        return transferObjectBusiness.constructAssignedWorkTO(tasks, stories);
     }
 }

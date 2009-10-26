@@ -90,6 +90,7 @@ public interface TransferObjectBusiness {
 
     /**
      * Constructs a new assigned work transfer object for the given tasks
+     * @param stories 
      */
-    public AssignedWorkTO constructAssignedWorkTO(Collection<Task> tasks);
+    public AssignedWorkTO constructAssignedWorkTO(Collection<Task> tasks, Collection<Story> stories);
 }

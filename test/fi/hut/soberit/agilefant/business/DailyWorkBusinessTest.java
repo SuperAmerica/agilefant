@@ -14,10 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.DailyWorkBusinessImpl;
+import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Rankable;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
@@ -39,6 +41,7 @@ public class DailyWorkBusinessTest {
 
     private Task task2;
 
+    private Story story;
 
     private User user;
 
@@ -49,6 +52,8 @@ public class DailyWorkBusinessTest {
     private WhatsNextEntry whatsNextEntry_forTask2AndUser;
 
     private TransferObjectBusiness transferObjectBusiness;
+
+    private StoryDAO storyDAO;
     
     @Before
     public void setUp() {
@@ -57,6 +62,9 @@ public class DailyWorkBusinessTest {
         taskDAO = createMock(TaskDAO.class);
         testable.setTaskDAO(taskDAO);
         
+        storyDAO = createMock(StoryDAO.class);
+        testable.setStoryDAO(storyDAO);
+
         whatsNextEntryDAO = createMock(WhatsNextEntryDAO.class);
         testable.setWhatsNextEntryDAO(whatsNextEntryDAO);
         
@@ -80,6 +88,9 @@ public class DailyWorkBusinessTest {
         task2.setId(2);
         task3 = new Task();
         task3.setId(3);
+        
+        story = new Story();
+        story.setId(4);
 
         whatsNextEntry_forTask1AndUser = new WhatsNextEntry();
         whatsNextEntry_forTask1AndUser.setUser(user);
@@ -91,24 +102,32 @@ public class DailyWorkBusinessTest {
     }
 
     private void replayAll() {
-        replay(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
+        replay(taskDAO, storyDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
     }
     
     private void verifyAll() {
-        verify(taskDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
+        verify(taskDAO, storyDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
     }
 
     @Test
-    public void testGetCurrentTasksForUser() {
+    public void testGetAssignedWorkFor() {
         ArrayList<Task> tasks = new ArrayList<Task>();
         tasks.addAll(Arrays.asList(task1, task2, task3));
+        
+        Story story = new Story();
+        ArrayList<Story> stories = new ArrayList<Story>();
+        stories.addAll(Arrays.asList(story));
 
         Capture<Interval> interval = new Capture<Interval>();
+        Capture<Interval> interval2 = new Capture<Interval>();
+        
         expect(taskDAO.getAllIterationAndStoryTasks(EasyMock.eq(user), 
                 EasyMock.and(EasyMock.capture(interval), EasyMock.isA(Interval.class)))).andReturn(tasks);
+        expect(storyDAO.getAllIterationStoriesByResponsibleAndInterval(EasyMock.eq(user), 
+                EasyMock.and(EasyMock.capture(interval2), EasyMock.isA(Interval.class)))).andReturn(stories);
 
         AssignedWorkTO assignedWork = new AssignedWorkTO();
-        expect(transferObjectBusiness.constructAssignedWorkTO(tasks)).andReturn(assignedWork);
+        expect(transferObjectBusiness.constructAssignedWorkTO(tasks, stories)).andReturn(assignedWork);
 
         replayAll();
         AssignedWorkTO returned = testable.getAssignedWorkFor(user);
@@ -117,8 +136,11 @@ public class DailyWorkBusinessTest {
         assertSame(assignedWork, returned);
 
         assertTrue(interval.hasCaptured());
+        assertTrue(interval2.hasCaptured());
         Interval intervalValue = interval.getValue();
+        Interval interval2Value = interval2.getValue();
         assertNotNull(intervalValue);
+        assertEquals(intervalValue, interval2Value);
 
         // race condition during midnight... ;) must contain today!
         assertTrue(intervalValue.containsNow());

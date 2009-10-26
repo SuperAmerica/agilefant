@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.Interval;
+
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
@@ -33,4 +35,6 @@ public interface StoryDAO extends GenericDAO<Story> {
     public Story getLastStoryInRank(Backlog parent);
     
     public Collection<Story> getStoriesWithRankBetween(Backlog parent, int lower, int upper);
+
+    public Collection<Story> getAllIterationStoriesByResponsibleAndInterval(User user, Interval interval);
 }

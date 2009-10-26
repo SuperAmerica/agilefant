@@ -297,10 +297,25 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return toReturn;
     }
     
-    public AssignedWorkTO constructAssignedWorkTO(Collection<Task> tasks) {
+    protected Story createStoryTOWithTaskTOs(Story story) {
+        StoryTO to = constructStoryTO(story);
+        Set<Task> storyTasks = to.getTasks();
+        Set<Task> taskTos = new HashSet<Task>();
+        
+        for (Task t: storyTasks) {
+            taskTos.add(constructTaskTO(t));
+        }
+        
+        to.setTasks(taskTos);
+
+        return to;
+    }
+    
+    public AssignedWorkTO constructAssignedWorkTO(Collection<Task> tasks, Collection<Story> assignedStories) {
         AssignedWorkTO returned = new AssignedWorkTO();
         
         Set<Story> stories = new HashSet<Story>();
+        List<Story> storyTOs = new ArrayList<Story>();
         List<Task> tasksWithoutStory = new ArrayList<Task>();
         
         for (Task task: tasks) {
@@ -310,24 +325,23 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
                     continue;
                 }
                 
-                StoryTO to = constructStoryTO(story);
-                Set<Task> storyTasks = to.getTasks();
-                Set<Task> taskTos = new HashSet<Task>();
-                
-                for (Task t: storyTasks) {
-                    taskTos.add(constructTaskTO(t));
-                }
-                
-                to.setTasks(taskTos);
-                stories.add(to);
+                stories.add(story);
+                storyTOs.add(createStoryTOWithTaskTOs(story));
             }
             else {
                 tasksWithoutStory.add(constructTaskTO(task));
             }
         }
         
+        for (Story story: assignedStories) {
+            if (! stories.contains(story)) {
+                stories.add(story);
+                storyTOs.add(createStoryTOWithTaskTOs(story));
+            }
+        }
+        
         returned.setTasksWithoutStory(tasksWithoutStory);
-        returned.setStories(new ArrayList<Story>(stories));
+        returned.setStories(storyTOs);
         return returned;
     }
     

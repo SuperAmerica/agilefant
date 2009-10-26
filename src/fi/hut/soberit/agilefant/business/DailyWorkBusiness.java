@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 
+import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Task;
@@ -70,5 +71,6 @@ public interface DailyWorkBusiness {
     public void setWhatsNextEntryDAO(WhatsNextEntryDAO whatsNextEntryDAO);
     public void setTaskBusiness(TaskBusiness taskBusiness);
     public void setRankingBusiness(RankingBusiness rankingBusiness);
+    public void setStoryDAO(StoryDAO storyDAO);
 
 }

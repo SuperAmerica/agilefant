@@ -606,6 +606,9 @@ public class TransferObjectBusinessTest {
 
         Story story = new Story();
         story.setId(8);
+
+        Story story2 = new Story();
+        story2.setId(10);
         
         Task task = new Task();
         task.setId(5);
@@ -615,12 +618,13 @@ public class TransferObjectBusinessTest {
         task2.setId(6);
         task2.setIteration(iteration);
         
-        AssignedWorkTO assigned = transferObjectBusiness.constructAssignedWorkTO(Arrays.asList(new Task[] {
-            task, task2
-        }));
+        AssignedWorkTO assigned = transferObjectBusiness.constructAssignedWorkTO(
+            Arrays.asList(task, task2),
+            Arrays.asList(story, story2)
+        );
         
         assertEquals(assigned.getStories().get(0).getId(), story.getId());
-        assertEquals(1, assigned.getStories().size());
+        assertEquals(2, assigned.getStories().size());
         assertEquals(assigned.getTasksWithoutStory().get(0).getId(), task2.getId());
         assertEquals(1, assigned.getTasksWithoutStory().size());
     };

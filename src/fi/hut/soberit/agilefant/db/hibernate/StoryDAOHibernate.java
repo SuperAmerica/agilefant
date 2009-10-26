@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,12 +14,14 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
@@ -153,5 +156,22 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         stories.add(Restrictions.eq("backlog", parent));
         stories.add(Restrictions.between("rank", lower, upper));
         return asCollection(stories);
+    }
+    
+    public Collection<Story> getAllIterationStoriesByResponsibleAndInterval(User user, Interval interval) {
+        ArrayList<Story> stories = new ArrayList<Story>();
+        
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.createCriteria("responsibles")
+            .add(Restrictions.idEq(user.getId()));
+        
+        Criteria iteration = crit.createCriteria("backlog");
+        IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
+        crit.add(Restrictions.ne("state", StoryState.DONE));
+
+        List<Story> dummy = asList(crit); 
+        stories.addAll(dummy);
+        
+        return stories;
     }
 }

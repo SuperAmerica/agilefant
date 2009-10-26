@@ -10,12 +10,10 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
@@ -36,23 +34,6 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         super(Task.class);
     }
 
-    private void addIterationIntervalLimit(Criteria crit, Interval interval) {
-        //search only from iterations
-        crit.add(Restrictions.eq("class", "Iteration"));
-        DateTime startDate = interval.getStart();
-        DateTime endDate = interval.getEnd();
-        //iteration may start during the interval
-        Criterion startDateLimit = Restrictions.between("startDate", startDate,
-                endDate);
-        //iteration end during the interval
-        Criterion endDateLimit = Restrictions.between("endDate", startDate,
-                endDate);
-        //interval may be within the iteration
-        Criterion overlaps = Restrictions.or(startDateLimit, endDateLimit);
-        Criterion withinIteration = Restrictions.and(Restrictions.le(
-                "startDate", startDate), Restrictions.ge("endDate", endDate));
-        crit.add(Restrictions.or(overlaps, withinIteration));
-    }
     public List<Task> getIterationTasksWithEffortLeft(User user,
             Interval interval) {
         Criteria crit = getCurrentSession().createCriteria(Task.class);
@@ -60,7 +41,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
                 .add(Restrictions.idEq(user.getId()));
         Criteria iteration = crit.createCriteria("iteration");
         iteration.setFetchMode("parent", FetchMode.SELECT);
-        this.addIterationIntervalLimit(iteration, interval);
+        IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
         crit.add(Restrictions.isNull("story"));
         crit.add(Restrictions.gt("effortLeft", ExactEstimate.ZERO));
         crit.setFetchMode("creator", FetchMode.SELECT);
@@ -74,7 +55,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
        
         Criteria iteration = crit.createCriteria("story").createCriteria("backlog");
         iteration.setFetchMode("parent",FetchMode.SELECT);
-        this.addIterationIntervalLimit(iteration, interval);
+        IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
         crit.add(Restrictions.gt("effortLeft", ExactEstimate.ZERO));
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
@@ -107,7 +88,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         crit.add(Restrictions.isEmpty("responsibles"));
         Criteria story = crit.createCriteria("story");
         story.createCriteria("responsibles").add(Restrictions.idEq(user.getId()));
-        this.addIterationIntervalLimit(story.createCriteria("backlog"), interval);
+        IterationDAOHelpers.addIterationIntervalLimit(story.createCriteria("backlog"), interval);
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }
@@ -121,7 +102,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         
         Criteria iteration = crit.createCriteria("iteration");
         iteration.setFetchMode("parent", FetchMode.SELECT);
-        this.addIterationIntervalLimit(iteration, interval);
+        IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
         crit.add(Restrictions.isNull("story"));
         crit.add(Restrictions.ne("state", TaskState.DONE));
         crit.setFetchMode("creator", FetchMode.SELECT);
@@ -136,7 +117,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
 
         Criteria storyIteration = crit.createCriteria("story").createCriteria("backlog");
         storyIteration.setFetchMode("parent",FetchMode.SELECT);
-        this.addIterationIntervalLimit(storyIteration, interval);
+        IterationDAOHelpers.addIterationIntervalLimit(storyIteration, interval);
         crit.setFetchMode("creator", FetchMode.SELECT);
         
         dummy = asList(crit);
@@ -154,7 +135,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         Criteria stories = iteration.createCriteria("stories");
         stories.add(Restrictions.isEmpty("responsibles"));
                 
-        this.addIterationIntervalLimit(iteration, interval);
+        IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
         
         Criteria tasks = stories.createCriteria("tasks","task");
         tasks.add(Restrictions.isEmpty("responsibles"));
@@ -181,7 +162,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         Criteria iteration = getCurrentSession().createCriteria(Iteration.class,"iter");
         iteration.createCriteria("assignments","assigments").createCriteria("user").add(Restrictions.idEq(user.getId()));     
                 
-        this.addIterationIntervalLimit(iteration, interval);
+        IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
         
         Criteria tasks = iteration.createCriteria("tasks","task");
         tasks.add(Restrictions.isEmpty("responsibles"));

@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 
 @ContextConfiguration
@@ -132,5 +135,37 @@ public class StoryDAOTest extends AbstractHibernateTests {
        assertEquals(22, iter.next().getId());
        assertEquals(23, iter.next().getId());
        assertEquals(24, iter.next().getId());
+   }
+   
+   @Test
+   public void testGetAllIterationStoriesByResponsibleAndInterval() {
+       executeClassSql();
+       DateTime start = new DateTime(2009,6,10,1,0,0,0);
+       Interval interval = new Interval(start, start.plusDays(5));
+       User user = new User();
+       user.setId(1);
+       Collection<Story> actual = this.storyDAO.getAllIterationStoriesByResponsibleAndInterval(user, interval);
+      
+       HashSet<Integer> actualIds = new HashSet<Integer>();
+       for (Story t: actual) {
+           actualIds.add(t.getId()); 
+       }
+       
+       HashSet<Integer> expectedIds = new HashSet<Integer>(
+           Arrays.asList(6,7)
+       );        
+       assertEquals(expectedIds, actualIds);
+   }
+       
+   @Test
+   public void testGetAllIterationStoriesByResponsibleAndInterval_user_hasNoAssigned() {
+       executeClassSql();
+       DateTime start = new DateTime(2009,6,10,1,0,0,0);
+       Interval interval = new Interval(start, start.plusDays(5));
+       User user = new User();
+       user.setId(3);
+      
+       Collection<Story> actual = this.storyDAO.getAllIterationStoriesByResponsibleAndInterval(user, interval);
+       assertEquals(0, actual.size());
    }
 }

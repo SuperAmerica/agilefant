@@ -32,8 +32,10 @@ public class StorySplitAction implements Preparable {
     
     private Collection<Story> oldStories = new ArrayList<Story>();
     
+    private boolean moveOriginalStory = false;
+    
     public String split() {
-        storySplitBusiness.splitStory(original, newStories, oldStories);
+        storySplitBusiness.splitStory(original, newStories, oldStories, moveOriginalStory);
         return Action.SUCCESS;
     }
     
@@ -83,6 +85,10 @@ public class StorySplitAction implements Preparable {
 
     public void setOldStories(Collection<Story> oldStories) {
         this.oldStories = oldStories;
+    }
+
+    public void setMoveOriginalStory(boolean moveOriginalStory) {
+        this.moveOriginalStory = moveOriginalStory;
     }
 
 }

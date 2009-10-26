@@ -114,7 +114,7 @@ public class StorySplitBusinessTest {
         backlogHistoryBusiness.updateHistory(1);
         storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories, oldStories);
+        testable.splitStory(parentStory, childStories, oldStories, true);
         verifyAll();
         checkChildStories(product);
     }
@@ -126,7 +126,7 @@ public class StorySplitBusinessTest {
         storyBusiness.moveStoryToBacklog(parentStory, product);
         storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories, oldStories);
+        testable.splitStory(parentStory, childStories, oldStories, true);
         verifyAll();
         checkChildStories(iteration);
     }
@@ -138,23 +138,35 @@ public class StorySplitBusinessTest {
         storyBusiness.moveStoryToBacklog(parentStory, product);
         storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories, oldStories);
+        testable.splitStory(parentStory, childStories, oldStories, true);
         verifyAll();
         checkChildStories(project);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSplitStory_emptyList() {
-        testable.splitStory(new Story(), new ArrayList<Story>(), oldStories);
+        testable.splitStory(new Story(), new ArrayList<Story>(), oldStories, true);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSplitStory_nullOriginal() {
-        testable.splitStory(null, Arrays.asList(new Story()), oldStories);
+        testable.splitStory(null, Arrays.asList(new Story()), oldStories, true);
     }
     
     @Test(expected = RuntimeException.class)
     public void testSplitStory_originalNotPersisted() {
-        testable.splitStory(new Story(), Arrays.asList(new Story()), oldStories);
+        testable.splitStory(new Story(), Arrays.asList(new Story()), oldStories, true);
+    }
+    
+    @Test
+    public void testSplitStory_dontChangeOriginalStoryBacklog() {
+        parentStory.setBacklog(iteration);
+        childCreationExpects();
+        storyBusiness.storeBatch(oldStories);
+        replayAll();
+        testable.splitStory(parentStory, childStories, oldStories, false);
+        verifyAll();
+        checkChildStories(iteration);
+        assertSame(iteration, parentStory.getBacklog());
     }
 }

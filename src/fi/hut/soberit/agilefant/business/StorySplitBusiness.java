@@ -11,9 +11,10 @@ public interface StorySplitBusiness {
      * 
      * @param original original story to split
      * @param newStories the new stories to create
+     * @param moveOriginalStory TODO
      * @return the split story
      */
-    public Story splitStory(Story original, Collection<Story> newStories, Collection<Story> oldChangedStories);
+    public Story splitStory(Story original, Collection<Story> newStories, Collection<Story> oldChangedStories, boolean moveOriginalStory);
     
     public Story getStory(int id);
 }

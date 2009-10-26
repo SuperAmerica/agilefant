@@ -42,6 +42,11 @@ StorySplitDialog.prototype.initDialog = function() {
   });
   
   this.storyInfoElement = $('<div/>').addClass('story-info').appendTo(this.form);
+  
+  this.checkBoxContainer = $('<div/>').addClass('checkbox-container').appendTo(this.form);
+  this.checkBox = $('<input type="checkbox" />').appendTo(this.checkBoxContainer);
+  $('<span/>').text('Move original story to product level').appendTo(this.checkBoxContainer);
+  
   this.storyListElement = $('<div/>').addClass('story-split-list').appendTo(this.form);
 };
 
@@ -159,7 +164,7 @@ StorySplitDialog.prototype.isFormDataValid = function() {
  * Serialize and save the data.
  */
 StorySplitDialog.prototype.saveStories = function() {
-  var ssc = new StorySplitContainer(this.model, this.newModels, this.oldModels);
+  var ssc = new StorySplitContainer(this.model, this.newModels, this.oldModels, this.checkBox.is(':checked'));
   ssc.commit();
 };
 

@@ -206,10 +206,6 @@
       </result>
     </action>
     
-    <action name="projectTabs" method="retrieve" class="projectAction">
-      <result type="dispatcher">/WEB-INF/jsp/tabs/projectTabs.jsp</result>
-    </action>
-    
     <action name="projectMetrics" class="projectAction" method="projectMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>
     </action>
@@ -264,9 +260,6 @@
       </result>
     </action>
     
-    <action name="iterationTabs" method="edit" class="iterationAction">
-      <result type="dispatcher">/WEB-INF/jsp/tabs/iterationTabs.jsp</result>
-    </action>
     <!-- /Iteration actions -->
 
 
@@ -435,10 +428,6 @@
       </result>
     </action>
     
-    <action name="userTabs" method="retrieve" class="userAction">
-      <result type="dispatcher">/WEB-INF/jsp/tabs/userTabs.jsp</result>
-    </action>
-    
     <action name="retrieveAllUsers" method="retrieveAll" class="userAction">
       <result name="success" type="json">
         <param name="target">users</param>
@@ -465,11 +454,7 @@
         <param name="target">team</param>
       </result>
     </action>
-    
-    <action name="teamTabs" method="retrieve" class="teamAction">
-      <result type="dispatcher">/WEB-INF/jsp/tabs/teamTabs.jsp</result>
-    </action>
-    
+       
     <action name="retrieveAllTeams" method="retrieveAll" class="teamAction">
       <result name="success" type="json">
         <param name="target">teamList</param>

@@ -220,6 +220,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
       title : "ES",
       headerTooltip : 'Effort spent',
       get : TaskModel.prototype.getEffortSpent,
+      decorator: DynamicsDecorators.exactEstimateDecorator,
       editable : false,
       onDoubleClick: TaskController.prototype.openQuickLogEffort,
       edit : {

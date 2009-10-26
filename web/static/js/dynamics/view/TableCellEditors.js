@@ -882,7 +882,7 @@ TableEditors.Wysiwyg.prototype._getEditorWindow = function() {
 };
 TableEditors.Wysiwyg.prototype.setEditorValue = function(value) {
   if (!value) {
-    value = this.options.get.call(this.model);
+    value = this.options.get.call(this.model) || "";
   }
   this.actualElement.get(0).innerHTML = value;
   this.actualElement.wysiwyg("setValue", value);

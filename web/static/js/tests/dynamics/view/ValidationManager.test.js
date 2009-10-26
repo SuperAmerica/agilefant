@@ -152,7 +152,6 @@ $(document).ready(function() {
     
     // Close row callback supplied
     mockModel.expects().commit();
-    mockEditor.expects().close();
     this.element.trigger("storeRequested", [ mockEditor ]);
     ok(closeCalled, "Close row callback called");
 
@@ -160,11 +159,13 @@ $(document).ready(function() {
     mockModel.expects().commit();
     this.element.trigger("storeRequested");
     
-    // Prevent commit
-    config.options.preventCommit = true;
-    mockEditor.expects().close();
+    // Prevent commit - calls the close row callback
+    validationManager.configuration.options.preventCommit = true;  
+//    mockEditor.expects().close();
     this.element.trigger("storeRequested", [ mockEditor ]);
     config.options.preventCommit = false;
+    ok(closeCalled, "Close row callback not called");
+
     
     // Close row callback not supplied
     mockModel.expects().commit();

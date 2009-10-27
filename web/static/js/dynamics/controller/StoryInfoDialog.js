@@ -69,6 +69,14 @@ StoryInfoDialog.prototype.selectTab = function(index) {
 
 StoryInfoDialog.prototype.renderInfoTab = function() {
   this.infoTabElement = $('<div id="storyinfo-1"></div>').appendTo(this.tabsElement);
+  var me = this;
+  jQuery.get("ajax/getStoryHierarchy.action",
+    { "storyId": this.model.getId() },
+    function(data, status) {
+      me.infoTabElement.append(data);
+    },
+    "html"
+  );
 };
 StoryInfoDialog.prototype.renderHistoryTab = function() {
   this.historyTabElement = $('<div id="storyinfo-2"></div>').appendTo(this.tabsElement);

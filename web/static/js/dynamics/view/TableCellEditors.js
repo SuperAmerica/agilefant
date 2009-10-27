@@ -496,7 +496,7 @@ TableEditors.Estimate.prototype._validate = function() {
   var valid = true;
   var value = jQuery.trim(this.textField.val());
   
-  var format = new RegExp("^([0-9]*)(pt|points)?$");
+  var format = new RegExp("^([0-9]*)$"); // Removed: (pt|points)?
   
   if (!format.test(value)) {
     valid = false;

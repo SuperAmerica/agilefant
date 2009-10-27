@@ -555,43 +555,7 @@ $(document).ready(function() {
     testBlurAndFocus(editor, this.element, input);
   });
   
-//  test("Estimate validation", function() {
-//    var mockElement = this.mockControl.createMock(jQuery);
-//    var errorMessageCount = 0;
-//    var context = {
-//      textField: mockElement,
-//      options: {},
-//      addErrorMessage: function() {
-//        errorMessageCount++;
-//      }
-//    };
-//    
-//
-//    mockElement.expects().val().andReturn("");
-//    mockElement.expects().val().andReturn("");
-//    mockElement.expects().val().andReturn("  ");
-//    mockElement.expects().val().andReturn("  ");
-//    mockElement.expects().val().andReturn("a");
-//    mockElement.expects().val().andReturn("a");
-//    
-//    mockElement.expects().val().andReturn("");
-//    mockElement.expects().val().andReturn("");
-//    mockElement.expects().val().andReturn("  ");
-//    mockElement.expects().val().andReturn("  ");
-//    
-//    context.options = { required: false };
-//    ok(TableEditors.Estimate.prototype._validate.call(context), "Valid (not required): ''");
-//    
-//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): '  '");
-//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid (not required): 'a'");
-//    
-//    context.options = { required: true };
-//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: ''");
-//    ok(!TableEditors.Estimate.prototype._validate.call(context), "Invalid: '  '");
-//        
-//    same(errorMessageCount, 4, "Six error messages");
-//  });
-  
+ 
   
   test("Estimate edit validation", function() {
     var mockElement = this.mockControl.createMock(jQuery);
@@ -622,13 +586,13 @@ $(document).ready(function() {
 
     context.options = {required: true};
     ok(!TableEditors.Estimate.prototype._validate.call(context), "Required and empty");
-    ok(TableEditors.Estimate.prototype._validate.call(context), "10");
-    ok(TableEditors.Estimate.prototype._validate.call(context), "0");
-    ok(TableEditors.Estimate.prototype._validate.call(context), "0pt");
-    ok(TableEditors.Estimate.prototype._validate.call(context), "0points");
-    ok(TableEditors.Estimate.prototype._validate.call(context), "692pt");
-    ok(!TableEditors.Estimate.prototype._validate.call(context), "invalid");
-    ok(!TableEditors.Estimate.prototype._validate.call(context), "invalid");
+    ok(TableEditors.Estimate.prototype._validate.call(context), "10 valid");
+    ok(TableEditors.Estimate.prototype._validate.call(context), "0 valid");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "0pt invalid");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "0points invalid");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "692pt invalid");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "aae invalid");
+    ok(!TableEditors.Estimate.prototype._validate.call(context), "xpt invalid");
   });
   
   test("Estimate - events", function() {

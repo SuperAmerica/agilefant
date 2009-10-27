@@ -629,7 +629,7 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
   config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.effortSpent,{
     title: "Effort Spent",
     editable: true,
-    get: HourEntryModel.prototype.getEffortSpent,
+    get: HourEntryModel.prototype.getMinutesSpent,
     edit: {
       editor: "ExactEstimate",
       required: true,

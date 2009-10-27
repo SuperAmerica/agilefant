@@ -65,6 +65,7 @@ UserListController.prototype.initConfig = function() {
     dataSource: UserListContainer.prototype.getEnabledUsers,
     rowControllerFactory: UserListController.prototype.userControllerFactory,
     cssClass: "ui-widget-content ui-corner-all",
+    validators: [ UserModel.Validators.loginNameValidator ],
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     } 
@@ -81,6 +82,7 @@ UserListController.prototype.initConfig = function() {
     dataSource: UserListContainer.prototype.getDisabledUsers,
     rowControllerFactory: UserListController.prototype.userControllerFactory,
     cssClass: "ui-widget-content ui-corner-all",
+    validators: [ UserModel.Validators.loginNameValidator ],
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     } 

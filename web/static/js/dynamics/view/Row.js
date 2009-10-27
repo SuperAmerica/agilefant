@@ -162,7 +162,6 @@ DynamicTableRow.prototype.isInRowEdit = function() {
 DynamicTableRow.prototype.editRow = function() {
   this.inRowEdit = true;
   this._applyToAllCells(DynamicTableCell.prototype.openEditor, [ true ]);
-  this.element.find('.dynamics-editor-element:eq(0)').data("editor").focus();
 };
 
 DynamicTableRow.prototype.openFullEdit = function() {
@@ -173,6 +172,10 @@ DynamicTableRow.prototype.openFullEdit = function() {
 DynamicTableRow.prototype.closeRowEdit = function() {
   this.inRowEdit = false;
   this._applyToAllCells(DynamicTableCell.prototype.closeEditor, []);
+  var editor = this.element.find('.dynamics-editor-element:eq(0)').data("editor");
+  if (editor) {
+    editor.focus();
+  }
 };
 
 DynamicTableRow.prototype.isEditable = function() {

@@ -68,16 +68,11 @@ TableEditors.CommonEditor.defaultOptions = {
      * Will be called in the model object's context.
      * @member TableEditors.CommonEditor
      */
-    set: function() {},
-    /**
-     * Should the editor be opened in row edit mode or not.
-     * 
-     * Default: false
-     * @member TableEditors.CommonEditor
-     */
-    editRow: false
+    set: function() {}
 };
 TableEditors.CommonEditor.prototype.init = function(element, model, options) {
+  this.editRow = false;
+  this.fieldName = "";
   this.element = element;
   this.model   = model;
   
@@ -108,7 +103,7 @@ TableEditors.CommonEditor.prototype._requestCancel = function() {
   this.element.trigger("cancelRequested", [this]);
 };
 TableEditors.CommonEditor.prototype._requestCancelIfNotInRowEdit = function() {
-  if (!this.options.editRow) {
+  if (!this.editRow) {
     this._requestCancel();
   }
 };
@@ -116,13 +111,27 @@ TableEditors.CommonEditor.prototype._requestSave = function() {
   this.element.trigger("storeRequested", [this]);
 };
 TableEditors.CommonEditor.prototype._requestSaveIfNotInRowEdit = function() {
-  if (!this.options.editRow) {
+  if (!this.editRow) {
     this._requestSave();
   }
 };
 
 TableEditors.CommonEditor.prototype._fireTransactionEditEvent = function() {
   this.element.trigger("transactionEditEvent");
+};
+
+/**
+ * Sets the editors full row edit state.
+ */
+TableEditors.CommonEditor.prototype.setInRowEdit = function(inRowEdit) {
+  this.editRow = inRowEdit;
+};
+
+/**
+ * Sets the fields name.
+ */
+TableEditors.CommonEditor.prototype.setFieldName = function(name) {
+  this.fieldName = name;
 };
 
 /**
@@ -172,12 +181,12 @@ TableEditors.CommonEditor.prototype.runValidation = function() {
   this.errorMessages = [];
   var valid = this._validate();
   if (!valid) {
-    this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this.options.fieldName, this.errorMessages)]);
+    this.element.trigger("validationInvalid", [new DynamicsEvents.ValidationInvalid(this.fieldName, this.errorMessages)]);
     this.element.addClass('dynamics-validation-invalid');
   }
   else {
     if (!this.previousValueValid) {
-      this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this.options.fieldName)]);    
+      this.element.trigger("validationValid", [new DynamicsEvents.ValidationValid(this.fieldName)]);    
     }
     this.options.set.call(this.model, this.getEditorValue());
     this.element.trigger("transactionEditEvent");
@@ -198,12 +207,7 @@ TableEditors.CommonEditor.prototype._handleKeyEvent = function(event) {
     event.preventDefault();
     this._requestSave();
     return false;
-  }/*else if (event.keyCode === 13 && this.options.editRow) {
-    event.stopPropagation();
-    event.preventDefault();
-    this.saveRow();
-    return false;
-  }*/
+  }
 };
 
 /*
@@ -908,7 +912,7 @@ TableEditors.Wysiwyg.prototype._registerEditField = function(element) {
   TableEditors.CommonEditor.prototype._registerEditField.call(this, element);
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
-  if (event.keyCode === 27 && !this.options.editRow) {
+  if (event.keyCode === 27 && !this.editRow) {
     this.close();
   }
 };
@@ -1155,58 +1159,4 @@ TableEditors.Autocomplete.prototype.init = function(element, model, options) {
   
   TableEditors.AutocompleteDialog.prototype.init.call(this, element, model, opts);
 };
-
-
-//
-//
-///**
-// * Inline autocomplete
-// * 
-// * TODO: This is ugly - rewrite the whole Inline Autocomplete
-// * @constructor
-// */
-//TableEditors.AutocompleteInline = function(element, model, options) {
-//  this.init(element, model, options);
-//};
-//TableEditors.AutocompleteInline.prototype = new TableEditors.CommonEditor();
-//TableEditors.AutocompleteInline.defaultOptions = {
-//  dataType: "",
-//  required: true
-//};
-//TableEditors.AutocompleteInline.prototype.init = function(element, model, options) { 
-//  var opts = {};
-//  jQuery.extend(opts, TableEditors.AutocompleteInline.defaultOptions);
-//  jQuery.extend(opts, options);
-//  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
-//  
-//  this.autocompleteElement = $('<div />').appendTo(this.element);
-//  
-//  // Make it an autocomplete widget
-//  var me = this;
-//  this.autocompleteElement.autocompleteInline({
-//    dataType: this.options.dataType,
-//    callback: function(item) { me._selectCallback(item); }
-//  });
-//};
-//TableEditors.AutocompleteInline.prototype._selectCallback = function(selected) {
-//  var item = selected;
-//  if (selected.originalObject) {
-//    item = ModelFactory.updateObject(selected.originalObject);
-//  }
-//  this.selected = item;
-//  this.options.set.call(this.model, item);
-//  this._requestSave();
-//};
-//TableEditors.AutocompleteInline.prototype.close = function() {
-//  TableEditors.CommonEditor.prototype.close.call(this);
-//};
-//TableEditors.AutocompleteInline.prototype._validate = function() {
-//  var valid = true;
-//  if (this.options.required && !this.selected) {
-//    valid = false;
-//    this.addErrorMessage(ValidationMessages.autocomplete.required);
-//  }
-//  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
-//};
-
 

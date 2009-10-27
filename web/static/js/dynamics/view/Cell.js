@@ -144,7 +144,7 @@ DynamicTableCell.prototype.setValue = function(value) {
 DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
   var editorOptions = this.config.getEditOptions();
   var editorName = editorOptions.editor;
-  editorOptions.fieldName = this.config.getTitle();
+  
   
   if(this.editor) {
     return true; 
@@ -154,15 +154,15 @@ DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
     return;
   }
   
-  if(editRow || this.row.isInRowEdit()) {
-    editorOptions.editRow = true;
-  }
-  
-  
   var EditorClass = TableEditors.getEditorClassByName(editorName);
   if(EditorClass && this.config.getEditableCallback().call(this.row.getController())) {
     this.editor = new EditorClass(this.getElement(), this.row.getModel(), editorOptions);
     this.closeEditorCb = onClose;
+    
+    this.editor.setFieldName(this.config.getTitle());
+    if(editRow || this.row.isInRowEdit()) {
+      this.editor.setInRowEdit(true);
+    }
     return true;
   }
   return false;

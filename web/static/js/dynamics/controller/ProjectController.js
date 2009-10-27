@@ -14,6 +14,7 @@ var ProjectController = function ProjectController(options) {
   this.ongoingIterationListElement = options.ongoingIterationListElement;
   this.pastIterationListElement = options.pastIterationListElement;
   this.futureIterationListElement = options.futureIterationListElement;
+  this.hourEntryListElement = options.hourEntryListElement;
   this.init();
   this.initializeProjectDetailsConfig();
   this.initAssigneeConfiguration();

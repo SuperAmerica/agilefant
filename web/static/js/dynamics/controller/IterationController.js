@@ -15,7 +15,6 @@ var IterationController = function IterationController(options) {
   this.hourEntryListElement = options.hourEntryListElement;
   this.init();
   this.initAssigneeConfiguration();
-  this.initSpentEffortConfiguration();
   this.initializeStoryConfig();
   this.initIterationInfoConfig();
   this.initializeTaskListConfig();
@@ -56,7 +55,6 @@ IterationController.prototype.paint = function() {
         me.model = model;
         me.paintIterationInfo();
         me.paintStoryList();
-        me.paintSpentEffortList();
         me.paintAssigneeList();
         me.paintTaskList();
       });

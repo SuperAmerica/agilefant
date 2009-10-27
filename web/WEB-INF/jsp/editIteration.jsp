@@ -20,7 +20,7 @@
   <li class=""><a href="#backlogSpentEffort"><span><img
     alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
   </c:if>
-  <li class=""><a href="#backlogSpentEffort"><span><img
+  <li class=""><a href="#backlogHistory"><span><img
     alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
 </ul>
 <div class="details" id="backlogDetails" style="overflow: auto;">
@@ -50,11 +50,13 @@ $(document).ready(function() {
       hourEntryListElement: $("#backlogSpentEffort"),
       taskListElement: $("#tasksWithoutStory")
   });
-  $("#backlogInfo").bind('tabsselect', function(event, ui) {
-    if (ui.index == 2) {
-      controller.selectSpentEffortTab();
-    }
-  });
+  if(Configuration.isTimesheetsEnabled()) {
+  	$("#backlogInfo").bind('tabsselect', function(event, ui) {
+	    if (ui.index == 2) {
+      	controller.selectSpentEffortTab();
+    	}
+  	});
+  }
 });
 </script>
 

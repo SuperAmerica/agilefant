@@ -13,6 +13,7 @@ var ProductController = function ProductController(options) {
   this.projectListElement = options.projectListElement;
   this.iterationListElement = options.iterationListElement;
   this.assigmentListElement = options.assigmentListElement;
+  this.hourEntryListElement = options.hourEntryListElement;
   this.init();
   this.initializeProductDetailsConfig();
   this.initializeProjectListConfig();

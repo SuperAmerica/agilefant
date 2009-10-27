@@ -13,9 +13,6 @@ BacklogController.prototype.paintAssigneeList = function() {
       this.assigmentListElement);
   this.assigneeListView.render();
 };
-BacklogController.prototype.paintSpentEffortList = function() {
-
-};
 
 BacklogController.prototype.selectSpentEffortTab = function() {
   if (this.hourEntryListElement) {
@@ -108,10 +105,6 @@ BacklogController.prototype.initAssigneeConfiguration = function() {
   });
   this.assigneeListConfiguration = config;
 };
-BacklogController.prototype.initSpentEffortConfiguration = function() {
-
-};
-
 BacklogController.prototype.deleteAssignmentButtonFactory = function(view, model) {
   return new DynamicsButtons(this, [{text: 'Delete', callback: AssignmentController.prototype.remove}] ,view);
 };

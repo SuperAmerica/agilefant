@@ -13,7 +13,7 @@
   <li class=""><a href="#backlogSpentEffort"><span><img
     alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
   </c:if>
-  <li class=""><a href="#backlogSpentEffort"><span><img
+  <li class=""><a href="#backlogHistory"><span><img
     alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
 </ul>
 
@@ -36,8 +36,16 @@ $(document).ready(function() {
     ongoingIterationListElement: $("#ongoingIterations"),
     pastIterationListElement: $("#pastIterations"),
     futureIterationListElement: $("#futureIterations"),
-    storyListElement: $('#stories')
+    storyListElement: $('#stories'),
+    hourEntryListElement: $("#backlogSpentEffort")
   });
+  if(Configuration.isTimesheetsEnabled()) {
+  	$("#backlogInfo").bind('tabsselect', function(event, ui) {
+	    if (ui.index == 2) {
+      	controller.selectSpentEffortTab();
+    	}
+  	});
+  }
 });
 </script>
 

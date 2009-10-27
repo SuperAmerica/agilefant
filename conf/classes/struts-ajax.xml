@@ -562,7 +562,8 @@
 	   <param name="status">200</param>
 	 </result>
 	</action>
-	<action name="storeEffortEntry" class="hourEntryAction" method="storeEffortEntry">
+	<action name="storeEffortEntry" class="hourEntryAction" method="store">
+   <interceptor-ref name="prefetchStack" />
 	 <result name="success" type="httpheader">
 	   <param name="status">200</param>
 	 </result>

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
+import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
@@ -21,9 +22,10 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 
 @Component("hourEntryAction")
 @Scope("prototype")
-public class HourEntryAction extends ActionSupport implements CRUDAction {
+public class HourEntryAction extends ActionSupport implements CRUDAction, Prefetching {
     private static final long serialVersionUID = -3817350069919875136L;
 
+    @PrefetchId
     private int hourEntryId;
     private int parentObjectId;
     private HourEntry hourEntry;
@@ -38,14 +40,6 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     private BacklogBusiness backlogBusiness;
     
     private List<HourEntry> hourEntries = new ArrayList<HourEntry>();
-    
-    public String storeEffortEntry() {
-        HourEntry persistedHourEntry = hourEntryBusiness.retrieve(hourEntryId);
-        persistedHourEntry.setMinutesSpent(hourEntry.getMinutesSpent());
-        persistedHourEntry.setDescription(hourEntry.getDescription());
-        hourEntryBusiness.store(persistedHourEntry);
-        return Action.SUCCESS;
-    }
     
     public String retrieveTaskHourEntries() {
         this.hourEntries.addAll(taskBusiness.retrieve(parentObjectId).getHourEntries());
@@ -156,6 +150,9 @@ public class HourEntryAction extends ActionSupport implements CRUDAction {
     
     public List<HourEntry> getHourEntries() {
         return hourEntries;
+    }
+    public void initializePrefetchedData(int objectId) {
+        this.hourEntry = hourEntryBusiness.retrieve(objectId);
     }
 
 }

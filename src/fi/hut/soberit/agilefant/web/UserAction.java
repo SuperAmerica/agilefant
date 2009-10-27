@@ -35,6 +35,9 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
     
     private String password1;
     private String password2;
+    
+    private String loginName;
+    private boolean valid;
 
     private Collection<User> users = new ArrayList<User>();
     
@@ -100,6 +103,11 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
         return Action.SUCCESS;
     }
     
+    public String checkUserName() {
+        valid = userBusiness.isLoginNameUnique(loginName);
+        return Action.SUCCESS;
+    }
+    
     
     public void initializePrefetchedData(int objectId) {
         user = userBusiness.retrieve(objectId);
@@ -150,5 +158,13 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
 
     public void setTeamsChanged(boolean teamsChanged) {
         this.teamsChanged = teamsChanged;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 }

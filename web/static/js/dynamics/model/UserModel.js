@@ -38,11 +38,34 @@ var UserModel = function UserModel() {
 UserModel.prototype = new CommonModel();
 
 
+/**
+ * Composite and complex validators for UserModel
+ * @member UserModel
+ */
 UserModel.Validators = {
+  /**
+   * Validates the password fields.
+   * 
+   * @member UserModel.Validators
+   */
   passwordValidator: function(model) {
     if (model.getPassword1() !== model.getPassword2()) {
       throw "Passwords don't match";
     }
+  },
+  /**
+   * Validates the login name to be unique.
+   * 
+   * Will submit an ajax request
+   * @member UserModel.Validators
+   */
+  loginNameValidator: function(model) {
+    if (!UserModel.Validators._ajaxCheckLoginName(model.getLoginName())) {
+      throw "Login name already in use";
+    }
+  },
+  _ajaxCheckLoginName: function(name) {
+    return false;
   }
 };
 

@@ -11,7 +11,19 @@ import fi.hut.soberit.agilefant.model.User;
  */
 public interface UserDAO extends GenericDAO<User> {
 
+    /**
+     * Get the user by login name.
+     * 
+     * Is case-sensitive.
+     */
     User getByLoginName(String loginName);
+    
+    /**
+     * Get the user by login name.
+     * 
+     * Ignores character case.
+     */
+    User getByLoginNameIgnoreCase(String loginName);
 
     /**
      * Get the users by their enabled status.

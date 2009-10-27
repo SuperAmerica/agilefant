@@ -62,4 +62,37 @@ $(document).ready(function() {
     _passwordValidate(this.model, false);
   });
   
+  
+  test("Login name validation", function() {
+    /*
+     * We expect that the AJAX connection works.
+     */
+    var ajaxCall = 0;
+    var originalAjax = UserModel.Validators._ajaxCheckLoginName;
+    UserModel.Validators._ajaxCheckLoginName = function(name) {
+      ajaxCall++;
+      return name.toLowerCase() !== "paavo";
+    };
+    
+    // Ok
+    this.model.expects().getLoginName().andReturn("petteri");
+    try {
+      UserModel.Validators.loginNameValidator(this.model);
+      ok(true, "Validation passed");
+    }
+    catch (e) {
+      ok(false, "Valid validation should not throw exception");
+    }
+
+    // Throws exception
+    this.model.expects().getLoginName().andReturn("paavo");
+    try {
+      UserModel.Validators.loginNameValidator(this.model);
+      ok(false, "Validation did not throw exception");
+    } catch (e) {
+      same(e, "Login name already in use", "Correct error message");
+    }
+    
+    UserModel.Validators._ajaxCheckLoginName = originalAjax;
+  });
 });

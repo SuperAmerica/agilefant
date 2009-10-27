@@ -231,4 +231,20 @@ public class UserBusinessTest {
         verifyAll();
         assertEquals(2, actual.size());
     }
+    
+    @Test
+    public void testIsLoginNameUnique() {
+        expect(userDAO.getByLoginNameIgnoreCase("paavo")).andReturn(new User());
+        replayAll();
+        assertFalse(userBusiness.isLoginNameUnique("paavo"));
+        verifyAll();
+    }
+    
+    @Test
+    public void testIsLoginNameUnique_isUnique() {
+        expect(userDAO.getByLoginNameIgnoreCase("mauno")).andReturn(null);
+        replayAll();
+        assertTrue(userBusiness.isLoginNameUnique("mauno"));
+        verifyAll();
+    }
 }

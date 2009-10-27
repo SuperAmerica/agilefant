@@ -44,26 +44,6 @@ UserController.prototype._renderTables = function()  {
  */
 UserController.prototype.changePassword = function() {
   var passwordChange = new ChangePasswordDialog(this.model);
-  /*var model = this.model;
-  var element = $('<div/>').appendTo(document.body);
-  $('<div/>').text("Change password of " + model.getFullName()).appendTo(element);
-  
-  var container = $('<div/>').text('New password: ').appendTo(element);
-  var input = $('<input type="password"/>').appendTo(container);
-  var dialog = element.dialog({
-    modal: true,
-    buttons: {
-      'Ok': function() {
-        model.setPassword1(input.val());
-        element.dialog('destroy');
-        element.remove();
-      },
-      'Cancel': function() {
-        element.dialog('destroy');
-        element.remove();
-      }
-    }
-  });*/
 };
 
 /**
@@ -165,7 +145,9 @@ UserController.prototype._initUserInfoConfig = function() {
     decorator: DynamicsDecorators.teamListDecorator,
     editable: true,
     edit: {
-      editor: "Teams",
+      editor: "Autocomplete",
+      dataType: "teams",
+      dialogTitle: "Select teams",
       set: UserModel.prototype.setTeams
     }
   });

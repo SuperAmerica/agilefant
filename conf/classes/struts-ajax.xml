@@ -413,7 +413,6 @@
       </result>
     </action>
     
-    
     <action name="storeUser" method="store" class="userAction">
       <interceptor-ref name="prefetchStack" />
       <result name="success" type="json">
@@ -431,6 +430,12 @@
     <action name="retrieveAllUsers" method="retrieveAll" class="userAction">
       <result name="success" type="json">
         <param name="target">users</param>
+      </result>
+    </action>
+    
+    <action name="isLoginNameUnique" method="checkLoginName" class="userAction">
+      <result name="success" type="json">
+        <param name="target">valid</param>
       </result>
     </action>
     <!-- /User actions -->

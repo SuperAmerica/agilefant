@@ -37,6 +37,8 @@ public interface UserBusiness extends GenericBusiness<User> {
 
     User retrieveByLoginName(String loginName);
 
+    public boolean isLoginNameUnique(String loginName);
+    
     /**
      * Get all enabled users.
      * 

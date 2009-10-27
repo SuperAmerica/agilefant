@@ -26,6 +26,13 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
         crit.add(Restrictions.eq("loginName", loginName));
         return firstResult(crit);
     }
+    
+    /** {@inheritDoc} */
+    public User getByLoginNameIgnoreCase(String loginName) {
+        Criteria crit = getCurrentSession().createCriteria(User.class);
+        crit.add(Restrictions.eq("loginName", loginName).ignoreCase());
+        return firstResult(crit);
+    }
 
     /** {@inheritDoc} */
     public List<User> listUsersByEnabledStatus(boolean enabled) {

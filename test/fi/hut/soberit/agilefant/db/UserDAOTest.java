@@ -27,8 +27,33 @@ public class UserDAOTest extends AbstractHibernateTests {
     }
     
     @Test
+    public void testGetByLoginName_ignoreCase() {
+        executeClassSql();
+        assertNull(userDAO.getByLoginName("User4"));
+    }
+    
+    @Test
     public void testGetByLoginName_notFound() {
+        executeClassSql();
         assertNull(userDAO.getByLoginName("usernotfound"));
+    }
+    
+    @Test
+    public void testGetByLoginNameIgnoreCase_sameCase() {
+        executeClassSql();
+        assertEquals(4, userDAO.getByLoginNameIgnoreCase("user4").getId());
+    }
+    
+    @Test
+    public void testGetByLoginNameIgnoreCase_caseInsensitive() {
+        executeClassSql();
+        assertEquals(4, userDAO.getByLoginNameIgnoreCase("User4").getId());
+    }
+    
+    @Test
+    public void testGetByLoginNameIgnoreCase_notFound() {
+        executeClassSql();
+        assertNull(userDAO.getByLoginNameIgnoreCase("usernotfound"));
     }
 
     @Test

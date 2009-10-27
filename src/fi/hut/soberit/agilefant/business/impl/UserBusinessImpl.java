@@ -67,6 +67,11 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     }
 
     @Transactional(readOnly = true)
+    public boolean isLoginNameUnique(String loginName) {
+        return userDAO.getByLoginNameIgnoreCase(loginName) == null;
+    }
+    
+    @Transactional(readOnly = true)
     public List<User> getDisabledUsers() {
         return userDAO.listUsersByEnabledStatus(false);
     }

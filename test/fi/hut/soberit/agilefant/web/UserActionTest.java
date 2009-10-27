@@ -155,11 +155,22 @@ public class UserActionTest {
     }
     
     @Test
-    public void testInitializePrefetchedData() {
-        expect(userBusiness.retrieve(user.getId())).andReturn(user);
+    public void testCheckUserName_userExists() {
+        userAction.setLoginName("paavo");
+        expect(userBusiness.isLoginNameUnique("paavo")).andReturn(false);
         replayAll();
-        userAction.initializePrefetchedData(user.getId());
+        assertEquals(Action.SUCCESS, userAction.checkUserName());
         verifyAll();
-        assertEquals(user, userAction.getUser());
+        assertFalse(userAction.isValid());
+    }
+    
+    @Test
+    public void testCheckUserName_userDoesNotExists() {
+        userAction.setLoginName("minna");
+        expect(userBusiness.isLoginNameUnique("minna")).andReturn(true);
+        replayAll();
+        assertEquals(Action.SUCCESS, userAction.checkUserName());
+        verifyAll();
+        assertTrue(userAction.isValid());
     }
 }

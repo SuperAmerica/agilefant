@@ -712,6 +712,7 @@ DynamicVerticalTable.prototype.render = function() {
 
 DynamicVerticalTable.prototype.openFullEdit = function() {
   this._applyToAllRows(DynamicTableRow.prototype.editRow, []);
+  this.element.find('.dynamics-editor-element:eq(0)').data("editor").focus();
 };
 
 DynamicVerticalTable.prototype.closeRowEdit = function() {

@@ -162,10 +162,12 @@ DynamicTableRow.prototype.isInRowEdit = function() {
 DynamicTableRow.prototype.editRow = function() {
   this.inRowEdit = true;
   this._applyToAllCells(DynamicTableCell.prototype.openEditor, [ true ]);
+  this.element.find('.dynamics-editor-element:eq(0)').data("editor").focus();
 };
 
 DynamicTableRow.prototype.openFullEdit = function() {
   this.editRow();
+  
 };
 
 DynamicTableRow.prototype.closeRowEdit = function() {

@@ -4,7 +4,7 @@ var DynamicsDecorators = {
       "STARTED" : "Started",
       "PENDING" : "Pending",
       "BLOCKED" : "Blocked",
-      "IMPLEMENTED" : "Implemented",
+      "IMPLEMENTED" : "Ready",
       "DONE" : "Done"
     },
   stateDecorator: function(val) {

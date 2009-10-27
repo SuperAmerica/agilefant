@@ -7,9 +7,15 @@ div.hierarchyContainer {
 }
 
 .hierarchyContainer ul {
+  line-height: 120%;
   list-style-image: url('../img/hierarchy_arrow.png');
 }
 
 .hierarchyContainer ul li {
+  color: #666;
+}
 
+.hierarchyContainer ul li.currentItem {
+  color: #000;
+  font-weight: bold;
 }

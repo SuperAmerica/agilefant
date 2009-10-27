@@ -51,9 +51,12 @@ public class StoryHierarchyActionTest {
         assertEquals(Action.SUCCESS, storyHierarchyAction.recurseHierarchyAsList());
         verifyAll();
         
-        assertEquals(2, storyHierarchyAction.getHierarchy().size());
+        assertEquals(3, storyHierarchyAction.getHierarchy().size());
         assertSame(ancestor, storyHierarchyAction.getHierarchy().get(0));
         assertSame(parent, storyHierarchyAction.getHierarchy().get(1));
+        assertSame(story, storyHierarchyAction.getHierarchy().get(2));
+        
+        assertSame(story, storyHierarchyAction.getStory());
     }
     
     @Test
@@ -67,7 +70,8 @@ public class StoryHierarchyActionTest {
         assertEquals(Action.SUCCESS, storyHierarchyAction.recurseHierarchyAsList());
         verifyAll();
         
-        assertEquals(0, storyHierarchyAction.getHierarchy().size());
+        assertEquals(1, storyHierarchyAction.getHierarchy().size());
+        assertSame(story, storyHierarchyAction.getHierarchy().get(0));
     }
     
     @Test(expected = ObjectNotFoundException.class)

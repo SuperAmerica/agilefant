@@ -22,15 +22,17 @@ public class StoryHierarchyAction extends ActionSupport {
     private StoryBusiness storyBusiness;
     
     private Integer storyId;
+    private Story story;
+    
     private List<Story> hierarchy = new ArrayList<Story>();
     
     public String recurseHierarchyAsList() {
-        Story story = storyBusiness.retrieve(storyId);
+        story = storyBusiness.retrieve(storyId);
         
-        story = story.getParent();
-        while (story != null) {
-            hierarchy.add(0, story);
-            story = story.getParent();
+        Story iterator = story;
+        while (iterator != null) {
+            hierarchy.add(0, iterator);
+            iterator = iterator.getParent();
         }
         return Action.SUCCESS;
     }
@@ -49,6 +51,10 @@ public class StoryHierarchyAction extends ActionSupport {
 
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
+    }
+
+    public Story getStory() {
+        return story;
     }
     
 }

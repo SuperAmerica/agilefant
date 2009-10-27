@@ -56,16 +56,34 @@ UserModel.Validators = {
   /**
    * Validates the login name to be unique.
    * 
-   * Will submit an ajax request
+   * Will submit an ajax request.
    * @member UserModel.Validators
    */
   loginNameValidator: function(model) {
-    if (!UserModel.Validators._ajaxCheckLoginName(model.getLoginName())) {
-      throw "Login name already in use";
+    var persisted = model.getPersistedData().loginName;
+    var current = model.getCurrentData().loginName;
+    console.log("Persisted: " + persisted + " Current: " + current);
+    if ( (persisted != current) &&
+        (!UserModel.Validators._ajaxCheckLoginName(current))) {
+        throw "Login name already in use";
     }
   },
   _ajaxCheckLoginName: function(name) {
-    return false;
+    var retval = true;
+    jQuery.ajax({
+      url: "ajax/isLoginNameUnique.action",
+      data: { loginName: name },
+      type: "POST",
+      dataType: "json",
+      async: false,
+      success: function(data,status) {
+        retval = data;
+      },
+      error: function(xhr,data,status) {
+        MessageDisplay.Error("Error loading data for login name validation", xhr);
+      }
+    });
+    return retval;
   }
 };
 

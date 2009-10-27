@@ -337,6 +337,21 @@ CommonModel.prototype.setId = function(id) {
   this.id = id;
 };
 
+/**
+ * Return the object's persisted data.
+ * Only for internal use.
+ */
+CommonModel.prototype.getPersistedData = function() {
+  return this.persistedData;
+};
+/**
+ * Return the object's current data.
+ * Only for internal use.
+ */
+CommonModel.prototype.getCurrentData = function() {
+  return this.currentData;
+};
+
 CommonModel.prototype.serializeFields = function(prefix, changedData) {
   var data = {};
   for (field in changedData) {

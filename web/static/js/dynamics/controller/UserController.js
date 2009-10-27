@@ -72,7 +72,7 @@ UserController.prototype._initUserInfoConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    validators: [  ],
+    validators: [ UserModel.Validators.loginNameValidator ],
     closeRowCallback: null
   });
   

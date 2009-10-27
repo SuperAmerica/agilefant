@@ -159,7 +159,7 @@ public class UserActionTest {
         userAction.setLoginName("paavo");
         expect(userBusiness.isLoginNameUnique("paavo")).andReturn(false);
         replayAll();
-        assertEquals(Action.SUCCESS, userAction.checkUserName());
+        assertEquals(Action.SUCCESS, userAction.checkLoginName());
         verifyAll();
         assertFalse(userAction.isValid());
     }
@@ -169,7 +169,7 @@ public class UserActionTest {
         userAction.setLoginName("minna");
         expect(userBusiness.isLoginNameUnique("minna")).andReturn(true);
         replayAll();
-        assertEquals(Action.SUCCESS, userAction.checkUserName());
+        assertEquals(Action.SUCCESS, userAction.checkLoginName());
         verifyAll();
         assertTrue(userAction.isValid());
     }

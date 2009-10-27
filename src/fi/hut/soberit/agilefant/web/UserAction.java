@@ -103,7 +103,7 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
         return Action.SUCCESS;
     }
     
-    public String checkUserName() {
+    public String checkLoginName() {
         valid = userBusiness.isLoginNameUnique(loginName);
         return Action.SUCCESS;
     }

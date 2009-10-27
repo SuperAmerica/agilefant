@@ -73,9 +73,18 @@ $(document).ready(function() {
       ajaxCall++;
       return name.toLowerCase() !== "paavo";
     };
+       
+    function expectLoginNames(model, persisted, current) {
+      model.expects().getPersistedData().andReturn({
+        loginName: persisted
+      });
+      model.expects().getCurrentData().andReturn({
+        loginName: current
+      });
+    };
     
-    // Ok
-    this.model.expects().getLoginName().andReturn("petteri");
+    // Should not call ajax, when login name does not change
+    expectLoginNames(this.model, "paavo", "paavo");
     try {
       UserModel.Validators.loginNameValidator(this.model);
       ok(true, "Validation passed");
@@ -83,15 +92,30 @@ $(document).ready(function() {
     catch (e) {
       ok(false, "Valid validation should not throw exception");
     }
+    same(ajaxCall, 0, "Ajax function not called");
+
+    
+    // Ok validation
+    expectLoginNames(this.model, "", "martti");
+    try {
+      UserModel.Validators.loginNameValidator(this.model);
+      ok(true, "Validation passed");
+    }
+    catch (e) {
+      ok(false, "Valid validation should not throw exception");
+    }
+    same(ajaxCall, 1, "Ajax function called");
+
 
     // Throws exception
-    this.model.expects().getLoginName().andReturn("paavo");
+    expectLoginNames(this.model, "", "paavo");
     try {
       UserModel.Validators.loginNameValidator(this.model);
       ok(false, "Validation did not throw exception");
     } catch (e) {
       same(e, "Login name already in use", "Correct error message");
     }
+    same(ajaxCall, 2, "Ajax function called");
     
     UserModel.Validators._ajaxCheckLoginName = originalAjax;
   });

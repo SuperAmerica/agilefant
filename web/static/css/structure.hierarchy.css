@@ -6,8 +6,12 @@ div.hierarchyContainer {
 
 }
 
+.hierarchyContainer h2 {
+    
+}
+
 .hierarchyContainer ul {
-  line-height: 120%;
+  line-height: 150%;
   list-style-image: url('../img/hierarchy_arrow.png');
 }
 

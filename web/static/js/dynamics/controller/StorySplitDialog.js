@@ -41,6 +41,8 @@ StorySplitDialog.prototype.initDialog = function() {
     }
   });
   
+  this.hierarchyElement = $('<div/>').addClass('ui-widget-content ui-corner-all').appendTo(this.form);
+  
   this.storyInfoElement = $('<div/>').addClass('story-info').appendTo(this.form);
   
   this.checkBoxContainer = $('<div/>').addClass('checkbox-container').appendTo(this.form);
@@ -54,6 +56,8 @@ StorySplitDialog.prototype.initDialog = function() {
  * Render the contents.
  */
 StorySplitDialog.prototype.render = function() {
+  this._renderHierarchy();
+  
   this.view = new DynamicVerticalTable(
       this,
       this.model,
@@ -65,6 +69,17 @@ StorySplitDialog.prototype.render = function() {
       this.model,
       this.storyListConfig,
       this.storyListElement);
+};
+
+StorySplitDialog.prototype._renderHierarchy = function() {
+  var me = this;
+  jQuery.get("ajax/getStoryHierarchy.action",
+      { "storyId": this.model.getId() },
+      function(data, status) {
+        me.hierarchyElement.append(data);
+      },
+      "html"
+      );
 };
 
 /**
@@ -217,12 +232,12 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(1, {
-    title: "Parent story",
-    get: StoryModel.prototype.getParentStoryName
-  });
+//  config.addColumnConfiguration(1, {
+//    title: "Parent story",
+//    get: StoryModel.prototype.getParentStoryName
+//  });
   
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(1, {
     title: 'Points',
     get: StoryModel.prototype.getStoryPoints,
     editable: true,
@@ -233,7 +248,7 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(2, {
     title: 'State',
     get: StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,

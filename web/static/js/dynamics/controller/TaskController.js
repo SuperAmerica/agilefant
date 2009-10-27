@@ -188,3 +188,4 @@ TaskController.prototype.openLogEffort = function() {
   var dialog = CreateDialog.createById("createNewEffortEntry");
   dialog.getModel().setParent(this.model);
 };
+

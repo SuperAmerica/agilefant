@@ -60,6 +60,10 @@ TaskModel.prototype._setData = function(newData) {
     
     this.transientData.workingOnTaskIds = workingOnTaskIds;
   }
+  
+  if (newData.iteration) {
+    this._updateRelations(ModelFactory.types.iteration, newData.iteration);
+  }
 };
 
 TaskModel.prototype._saveData = function(id, changedData) {
@@ -440,3 +444,22 @@ TaskModel.prototype.addResponsible = function(userId) {
 TaskModel.prototype.getEffortSpent = function() {
   return this.currentData.effortSpent;
 };
+
+TaskModel.prototype.getContext = function() {
+    if (this.relations.backlog) {
+        return {
+            name: this.relations.backlog.getName(),
+            storyId: 0,
+            backlogId: this.relations.backlog.getId(),
+            taskId: this.getId()
+        };
+    }
+    
+    return {
+        name: this.currentData.contextName,
+        storyId: this.currentData.parentStoryId,
+        backlogId: this.currentData.backlogId,
+        taskId: this.getId()
+    };
+};
+

@@ -258,14 +258,6 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
         subViewFactory: actionColumnFactory
     });
 
-//    config.addColumnConfiguration(DailyWorkTaskController.columnIndices.details, {
-//        minWidth : 35,
-//        autoScale : true,
-//        cssClass : 'task-row',
-//        title : "Details",
-//        subViewFactory: DailyWorkTaskController.prototype.detailsColumnFactory
-//    });
-
     config.addColumnConfiguration(DailyWorkTaskController.columnIndices.description, {
         fullWidth : true,
         get : TaskModel.prototype.getDescription,
@@ -321,6 +313,13 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
         }
     });
     
+    config.addCaptionItem({
+        name : "createTask",
+        text : "Create task",
+        cssClass : "create",
+        callback : DailyWorkController.prototype.createTask
+    });
+    
     config.addColumnConfiguration(TaskController.columnIndices.prio, {
         minWidth : 24,
         autoScale : true,
@@ -331,6 +330,7 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
         defaultSortColumn: true,
         subViewFactory: TaskController.prototype.toggleFactory
     });
+    
     config.addColumnConfiguration(TaskController.columnIndices.name, {
         minWidth : 200,
         autoScale : true,
@@ -541,6 +541,7 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         defaultSortColumn: true,
         subViewFactory : StoryController.prototype.taskToggleFactory
     });
+
     config.addColumnConfiguration(StoryController.columnIndices.name, {
         minWidth : 280,
         autoScale : true,
@@ -558,6 +559,20 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         required: true
     }
     });
+    
+    config.addColumnConfiguration(StoryController.columnIndices.context, {
+        minWidth : 120,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : 'Iteration',
+        headerTooltip : 'Story context',
+        get  : StoryModel.prototype.getBacklog,
+        decorator: DynamicsDecorators.iterationLinkDecorator,
+        editable : false,
+        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
+        openOnRowEdit: false,
+    });
+    
     config.addColumnConfiguration(StoryController.columnIndices.points, {
         minWidth : 50,
         autoScale : true,
@@ -667,7 +682,8 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         visible : false,
         cssClass : 'story-data',
         targetCell: StoryController.columnIndices.tasksData,
-        subViewFactory : StoryController.prototype.storyContentsFactory
+        subViewFactory : StoryController.prototype.storyContentsFactory,
+        delayedRender: true
     });
     return config;
 };
@@ -686,7 +702,7 @@ DailyWorkController.prototype.createTask = function() {
     newTask.addListener(this.newTaskListener);
     
     var controller = new DailyWorkTaskController(newTask, null, this);
-    var row = this.myWorkListView.createRow(controller, newTask, "top");
+    var row = this.taskListView.createRow(controller, newTask, "top");
 
     controller.view = row;
     row.autoCreateCells([DailyWorkTaskController.columnIndices.actions, DailyWorkTaskController.columnIndices.data]);

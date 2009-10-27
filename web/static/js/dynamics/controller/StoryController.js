@@ -9,9 +9,10 @@ var StoryController = function StoryController(model, view, backlogController) {
 StoryController.columnIndices = {
   priority : 0,
   name : 1,
-  points: 2,
-  state : 3,
-  responsibles : 4,
+  context: 2,
+  points: 3,
+  state : 4,
+  responsibles : 5,
   el : 6,
   oe : 7,
   es : 8,

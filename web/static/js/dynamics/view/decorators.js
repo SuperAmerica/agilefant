@@ -56,7 +56,7 @@ var DynamicsDecorators = {
     return date.asString();
   },
   contextDecorator: function(value) {
-    if (! value || ! value.backlogId) {
+    if (! value || (! value.backlogId && ! value.storyId)) {
         return "(not set)";
     }
     var uri = "";
@@ -74,8 +74,19 @@ var DynamicsDecorators = {
     
     return ('<a class="daily-work-task-context" href="' + uri + '">' + value.name + '</a>');
   },
+  iterationLinkDecorator: function(value) {
+    if (! value) {
+      return "(not set)";
+    }
+    var id = value.getId();
+    if (id) {
+      uri = "editBacklog.action?backlogId=" + id;
+    }
+      
+    return ('<a class="daily-work-story-context" href="' + uri + '">' + value.getName() + '</a>');
+  },
   plainContextDecorator: function(value) {
-    if (! value || ! value.backlogId) {
+    if (! value || (! value.backlogId && ! value.storyId)) {
       return "(not set)";
     }
     return value.name;

@@ -57,24 +57,6 @@ DailyWorkTaskModel.prototype.getWorkQueueRank = function() {
     return this.currentData.workQueueRank;
 };
 
-DailyWorkTaskModel.prototype.getContext = function() {
-    if (this.relations.backlog) {
-        return {
-            name: this.relations.backlog.getName(),
-            storyId: 0,
-            backlogId: this.relations.backlog.getId(),
-            taskId: this.getId()
-        };
-    }
-    
-    return {
-        name: this.currentData.contextName,
-        storyId: this.currentData.parentStoryId,
-        backlogId: this.currentData.backlogId,
-        taskId: this.getId()
-    };
-};
-
 DailyWorkTaskModel.prototype.setContextFromContextObject = function(context) {
     this.currentData.contextName   = context.name;
     this.currentData.parentStoryId = context.parentStoryId;

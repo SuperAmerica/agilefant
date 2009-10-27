@@ -454,12 +454,23 @@ TaskModel.prototype.getContext = function() {
             taskId: this.getId()
         };
     }
-    
-    return {
-        name: this.currentData.contextName,
-        storyId: this.currentData.parentStoryId,
-        backlogId: this.currentData.backlogId,
-        taskId: this.getId()
-    };
+
+    else if (this.currentData.parentStoryId) {
+        return {
+            name: this.currentData.contextName,
+            storyId: this.currentData.parentStoryId,
+            backlogId: this.currentData.backlogId,
+            taskId: this.getId()
+        };
+    }
+
+    else {
+        return {
+            name: this.relations.story.getName(),
+            storyId: this.relations.story.getId(),
+            backlogId: 0,
+            taskId: this.getId()
+        };
+    }
 };
 

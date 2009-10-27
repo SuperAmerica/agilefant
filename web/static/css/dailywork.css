@@ -63,3 +63,19 @@
 	width: 110px;
 	height: 85px;
 }
+
+.dynamictable .dynamictable-row a.daily-work-task-context  {
+	color: #1E5EEE !important;
+}
+
+.dynamictable .dynamictable-row a.daily-work-task-context:hover {
+  color: #e50 !important;
+}
+
+.dynamictable .dynamictable-row a.daily-work-story-context  {
+	color: #1E5EEE !important;
+}
+
+.dynamictable .dynamictable-row a.daily-work-story-context:hover {
+  color: #e50 !important;
+}

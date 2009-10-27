@@ -62,7 +62,6 @@ UserModel.Validators = {
   loginNameValidator: function(model) {
     var persisted = model.getPersistedData().loginName;
     var current = model.getCurrentData().loginName;
-    console.log("Persisted: " + persisted + " Current: " + current);
     if ( (persisted != current) &&
         (!UserModel.Validators._ajaxCheckLoginName(current))) {
         throw "Login name already in use";

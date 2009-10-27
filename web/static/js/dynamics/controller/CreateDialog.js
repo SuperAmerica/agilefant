@@ -91,10 +91,21 @@ CreateDialogClass.prototype._cancel = function() {
 
 CreateDialogClass.prototype.close = function() {
   this.element.dialog("destroy").remove();
+  if (this.closeCallback) {
+    this.closeCallback();
+  }
 };
 
 CreateDialogClass.prototype.getModel = function() {
   return this.model;
+};
+
+CreateDialogClass.prototype.getElement = function() {
+  return this.element;
+};
+
+CreateDialogClass.prototype.setCloseCallback = function(callback) {
+  this.closeCallback = callback;
 };
 
 /**

@@ -50,6 +50,10 @@ HourEntryListController.prototype.reload = function() {
 HourEntryListController.prototype.openLogEffort = function() {
   var dialog = CreateDialog.createById("createNewEffortEntry");
   dialog.getModel().setParent(this.parentModel);
+  var me = this;
+  dialog.setCloseCallback(function() {
+    me.reload();
+  });
 };
 
 /**

@@ -28,6 +28,7 @@ DynamicsValidationManager.prototype.clear = function() {
     this.errorContainer.remove();
   }
   this.errorContainer = null;
+  this.messages = {};
 };
 
 DynamicsValidationManager.prototype._runCompositeValidations = function() {

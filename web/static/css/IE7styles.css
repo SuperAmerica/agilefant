@@ -17,3 +17,10 @@ ul.dynamicsMessageContainer {
 ul.dynamicsMessageContainer li {
   float: none;
 }
+
+/**
+ * State styles
+ */
+.taskState {
+  border: 1px solid #ccc;
+}

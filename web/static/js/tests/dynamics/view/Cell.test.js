@@ -97,15 +97,14 @@ $(document).ready(function() {
      var expectedModel = new CommonModel();
      
      this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
-     this.cellConfig.expects().getTitle().andReturn("Cell");
+
      this.cellConfig.expects().isEditable().andReturn(true);
-     this.mockRow.expects().isInRowEdit().andReturn(false);
      this.cellConfig.expects().getEditableCallback().andReturn(function() { return true; });
-     
      this.mockRow.expects().getController().andReturn(window);
      this.mockRow.expects().getModel().andReturn(expectedModel);
-     this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
      this.cellConfig.expects().getTitle().andReturn("Cell");
+     this.mockRow.expects().isInRowEdit().andReturn(false);
+     this.cellConfig.expects().getEditOptions().andReturn(editorOpt);
 
      
      
@@ -124,6 +123,7 @@ $(document).ready(function() {
 	     same(options, editorOpt, "Correct configuration passed");
 	     same(element, testable.getElement(), "Correct cell passed");
 	   };
+	   TableEditors.foo.prototype.setFieldName = function() {};
 	   
      var getEditorCalled = 0;
      TableEditors.getEditorClassByName = function(editorName) {

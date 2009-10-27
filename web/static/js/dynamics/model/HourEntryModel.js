@@ -20,6 +20,18 @@ var HourEntryModel = function HourEntryModel() {
     "description": "description"
   };
 };
+
+HourEntryModel.dateComparator = function(value1, value2) {
+  if (value1.getDate() < value2.getDate()) {
+    return 1;
+  } else if (value1.getDate() > value2.getDate()) {
+    return -1;
+  } else {
+    return 0;
+  }
+};
+
+
 HourEntryModel.prototype = new CommonModel();
 
 HourEntryModel.prototype._setData = function(newData) {

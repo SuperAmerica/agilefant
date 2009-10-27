@@ -13,6 +13,7 @@ var HourEntryListController = function HourEntryListController(options) {
   this.initConfig();
   this.paint();
 };
+
 HourEntryListController.prototype = new CommonController();
 
 /**
@@ -46,18 +47,9 @@ HourEntryListController.prototype.reload = function() {
   this.model.reload();
 };
 
-HourEntryListController.prototype.addHourEntry = function() {
-  var mockModel = ModelFactory.createObject(ModelFactory.types.hourEntry);
-  mockModel.setParent(this.parentModel);
-  mockModel.setDate(new Date().asString());
-  mockModel.setUser(PageController.getInstance().getCurrentUser());
-  mockModel.setUsers([], [PageController.getInstance().getCurrentUser()]);
-  var controller = new HourEntryController(mockModel, null, this);
-  var row = this.hourEntryListView.createRow(controller, mockModel, "top");
-  controller.view = row;
-  row.autoCreateCells([HourEntryController.columnIndices.actions, HourEntryController.columnIndices.data]);
-  row.render();
-  controller.openRowEdit();
+HourEntryListController.prototype.openLogEffort = function() {
+  var dialog = CreateDialog.createById("createNewEffortEntry");
+  dialog.getModel().setParent(this.parentModel);
 };
 
 /**
@@ -73,15 +65,18 @@ HourEntryListController.prototype.initConfig = function() {
       });
   this.hourEntryListConfig.addCaptionItem( {
     name : "addHourentry",
-    text : "Add hour entry",
+    text : "Log effort",
     cssClass : "create",
-    callback : HourEntryListController.prototype.addHourEntry
+    callback : HourEntryListController.prototype.openLogEffort
   });
   this.hourEntryListConfig.addColumnConfiguration(HourEntryController.columnIndices.date, {
     minWidth : 120,
     autoScale : true,
     title : "Date",
-    get : HourEntryModel.prototype.getDate
+    get : HourEntryModel.prototype.getDate,
+    decorator: DynamicsDecorators.dateTimeDecorator,
+    sortCallback: HourEntryModel.dateComparator,
+    defaultSortColumn: true,
   });
   this.hourEntryListConfig.addColumnConfiguration(HourEntryController.columnIndices.user, {
     minWidth : 120,

@@ -43,8 +43,8 @@ DailyWorkController.prototype.openDetails = function(task) {
 };
 
 DailyWorkController.prototype.setDetailHtml = function(text) {
-    if (! this.workQueueContainer.hasClass("details-expanded")) {
-        this.workQueueContainer.addClass("details-expanded");
+    if (! this.workQueueContainer.hasClass ("details-expanded")) {
+        this.workQueueContainer.addClass   ("details-expanded");
         this.workQueueContainer.removeClass("details-contracted");
     }
 
@@ -53,7 +53,7 @@ DailyWorkController.prototype.setDetailHtml = function(text) {
 
 DailyWorkController.prototype.resetDetailHtml = function(text) {
     this.setDetailHtml("");
-}
+};
 
 DailyWorkController.prototype.createLists = function() {
     this.createWorkQueue();
@@ -123,7 +123,7 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
     options.sortCallback = DailyWorkTaskController.prototype.sortAndMoveDailyTask;
     options.sortOptions = {
             items: "> .dynamicTableDataRow",
-            handle: "." + DynamicTable.cssClasses.dragHandle,
+            handle: "." + DynamicTable.cssClasses.dragHandle
     };
 
     options.appendTailer = true;
@@ -225,10 +225,10 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
         editable : true,
         editableCallback: TaskController.prototype.originalEstimateEditable,
         edit : {
-        editor : "ExactEstimate",
-        decorator: DynamicsDecorators.exactEstimateEditDecorator,
-        set : TaskModel.prototype.setOriginalEstimate
-    }
+            editor : "ExactEstimate",
+            decorator: DynamicsDecorators.exactEstimateEditDecorator,
+            set : TaskModel.prototype.setOriginalEstimate
+        }
     });
 
     if (Configuration.isTimesheetsEnabled()) {
@@ -365,7 +365,8 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
             dialogTitle: "Select iteration",
             set : TaskModel.prototype.setIterationToSave,
             required: true
-        }
+        },
+        subViewFactory: DailyWorkTaskController.prototype.detailsViewFactory
     });
 
     config.addColumnConfiguration(TaskController.columnIndices.state, {
@@ -684,6 +685,7 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         targetCell: StoryController.columnIndices.tasksData,
         subViewFactory : StoryController.prototype.storyContentsFactory,
         delayedRender: true
+
     });
     return config;
 };

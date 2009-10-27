@@ -154,6 +154,11 @@ DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(vie
     return actionView;
 };
 
+DailyWorkTaskController.prototype.detailsViewFactory = function(view, model) {
+    var detailsView = new DetailsView(this, this.model, view);
+    return detailsView;
+};
+
 DailyWorkTaskController.prototype.openDetails = function() {
     this.parentController.openDetails(this.model);
 };

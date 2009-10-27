@@ -118,7 +118,7 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
 
 StoryController.prototype.createTaskListView = function(panel) {
     this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig, panel);
-}
+};
 
 /**
  * 

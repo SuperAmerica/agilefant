@@ -12,7 +12,8 @@ var UserModel = function UserModel() {
     task: [],
     story: [],
     assignment: [],
-    team: []
+    team: [],
+    hourEntry: []
   };
   this.currentData = {
     initials: "",
@@ -31,7 +32,8 @@ var UserModel = function UserModel() {
       "fi.hut.soberit.agilefant.model.Story":         "story",
       "fi.hut.soberit.agilefant.model.Task":          "task",
       "fi.hut.soberit.agilefant.model.Team":          "team",
-      "fi.hut.soberit.agilefant.model.Assignment":    "assignment"
+      "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
+      "fi.hut.soberit.agilefant.model.HourEntry":    "hourEntry"
   };
 };
 

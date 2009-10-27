@@ -99,11 +99,11 @@ HourEntryListController.prototype.initConfig = function() {
     }
   });
   this.hourEntryListConfig.addColumnConfiguration(HourEntryController.columnIndices.actions, {
-    minWidth : 35,
+    minWidth : 50,
     autoScale : true,
     cssClass : 'hourEntry-row',
     title : "Delete",
-    subViewFactory: HourEntryController.prototype.actionColumnFactory
+    subViewFactory: HourEntryController.prototype.deleteButtonFactory
   });
   this.hourEntryListConfig.addColumnConfiguration(HourEntryController.columnIndices.description, {
     minWidth : 200,

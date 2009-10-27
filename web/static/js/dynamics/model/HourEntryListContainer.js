@@ -31,6 +31,9 @@ HourEntryListContainer.prototype = new CommonModel();
 HourEntryListContainer.prototype._setData = function(newData) {
   if (newData) {
     this._updateRelations(ModelFactory.types.hourEntry, newData);
+    for (var i = 0; i < this.relations.hourEntry.length; i++) {
+    	this.relations.hourEntry[i].setHourEntryList(this);
+    }
   }
 };
 

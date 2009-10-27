@@ -583,6 +583,11 @@
       <param name="target">hourEntries</param>
     </result>
 	</action>
+	<action name="deleteHourEntry" class="hourEntryAction" method="delete">
+	 <result name="success" type="httpheader">
+	   <param name="status">200</param>
+	 </result>
+	</action>
 	<!-- /timesheets -->
   </package>
   

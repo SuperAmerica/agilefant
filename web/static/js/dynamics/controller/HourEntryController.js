@@ -25,12 +25,6 @@ HourEntryController.prototype.removeHourEntry = function() {
   });
 };
 
-HourEntryController.prototype.actionColumnFactory = function(view, model) {
-	  var actionItems = [{
-	    text : "Delete",
-	    callback : HourEntryController.prototype.removeHourEntry
-	  }];
-	  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
-	      view);
-	  return actionView;
+HourEntryController.prototype.deleteButtonFactory = function(view, model) {
+	return new DynamicsButtons(this, [{text: 'Delete', callback: HourEntryController.prototype.removeHourEntry}] ,view);
 	};

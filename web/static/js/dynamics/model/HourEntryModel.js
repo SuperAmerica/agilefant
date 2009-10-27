@@ -8,16 +8,21 @@ var HourEntryModel = function HourEntryModel() {
   this.initialize();
   this.persistedClassName = "fi.hut.soberit.agilefant.model.HourEntry";
   this.relations = {
-    backlog: {},
-    story: {},
-    task: {},
-    user: null
+    backlog: null,
+    story: null,
+    task: null,
+    user: null,
+    hourEntryList: null
   };
   
   this.copiedFields = {
     "date": "date",
     "minutesSpent": "minutesSpent",
     "description": "description"
+  };
+  this.classNameToRelation = {
+	"fi.hut.soberit.agilefant.model.User":       "user",
+		"non.existent.HourEntryList": "hourEntryList"
   };
 };
 
@@ -95,6 +100,27 @@ HourEntryModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+HourEntryModel.prototype._remove = function(successCallback) {
+	  var me = this;
+	  jQuery.ajax({
+	      type: "POST",
+	      url: "ajax/deleteHourEntry.action",
+	      async: true,
+	      cache: false,
+	      dataType: "text",
+	      data: {hourEntryId: me.getId()},
+	      success: function(data,status) {
+	        MessageDisplay.Ok("Hour entry removed");
+	        if (successCallback) {
+	          successCallback();
+	        }
+	      },
+	      error: function(xhr,status) {
+	        MessageDisplay.Error("Error deleting hour entry.", xhr);
+	      }
+	  });
+	};
+
 HourEntryModel.prototype.getDate = function() {
   return this.currentData.date;
 };
@@ -125,6 +151,9 @@ HourEntryModel.prototype.setDescription = function(description) {
 HourEntryModel.prototype.getUser = function() {
   return this.relations.user;
 };
+HourEntryModel.prototype.setHourEntryList = function(hourEntryList) {
+	this.relations.hourEntryList = hourEntryList;
+}
 HourEntryModel.prototype.setUser = function(user) {
   this.relations.user = user;
 };

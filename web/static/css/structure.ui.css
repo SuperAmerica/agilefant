@@ -90,10 +90,10 @@
 ul#createNewMenu {
   margin: 0;
   padding: 5px 0;
-  position: relative;
+  position: absolute;
   border: 1px solid #aaa;
   background: #eee;
-  top: 0.3em;
+  top: 2em;
   width: 9em;
   z-index: 300;
   overflow: hidden;

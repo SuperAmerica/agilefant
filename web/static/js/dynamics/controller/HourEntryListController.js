@@ -102,7 +102,8 @@ HourEntryListController.prototype.initConfig = function() {
     minWidth : 35,
     autoScale : true,
     cssClass : 'hourEntry-row',
-    title : "Delete"
+    title : "Delete",
+    subViewFactory: HourEntryController.prototype.actionColumnFactory
   });
   this.hourEntryListConfig.addColumnConfiguration(HourEntryController.columnIndices.description, {
     minWidth : 200,

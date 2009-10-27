@@ -17,10 +17,20 @@ HourEntryController.columnIndices = {
 
 HourEntryController.prototype = new CommonController();
 
-HourEntryController.prototype.removeTask = function() {
+HourEntryController.prototype.removeHourEntry = function() {
   var me = this;
   var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this hour entry?", function() {
     me.parentController.removeChildController("hourEntry", this);
     me.model.remove();
   });
 };
+
+HourEntryController.prototype.actionColumnFactory = function(view, model) {
+	  var actionItems = [{
+	    text : "Delete",
+	    callback : HourEntryController.prototype.removeHourEntry
+	  }];
+	  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+	      view);
+	  return actionView;
+	};

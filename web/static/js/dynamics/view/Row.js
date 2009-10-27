@@ -166,16 +166,15 @@ DynamicTableRow.prototype.editRow = function() {
 
 DynamicTableRow.prototype.openFullEdit = function() {
   this.editRow();
-  
+  var editor = this.element.find('.dynamics-editor-element:eq(0)').data("editor");
+  if (editor) {
+    editor.focus();
+  }
 };
 
 DynamicTableRow.prototype.closeRowEdit = function() {
   this.inRowEdit = false;
   this._applyToAllCells(DynamicTableCell.prototype.closeEditor, []);
-  var editor = this.element.find('.dynamics-editor-element:eq(0)').data("editor");
-  if (editor) {
-    editor.focus();
-  }
 };
 
 DynamicTableRow.prototype.isEditable = function() {

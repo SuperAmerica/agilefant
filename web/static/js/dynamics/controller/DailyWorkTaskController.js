@@ -25,8 +25,8 @@ DailyWorkTaskController.prototype.actualStateListener = function(event) {
 DailyWorkTaskController.columnIndices = {
     prio: 0,
     name: 1,
-    context: 2,
-    state: 3,
+    state: 2,
+    context: 3,
     responsibles: 4,
     el: 5,
     oe: 6,
@@ -157,8 +157,4 @@ DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(vie
 DailyWorkTaskController.prototype.detailsViewFactory = function(view, model) {
     var detailsView = new DetailsView(this, this.model, view);
     return detailsView;
-};
-
-DailyWorkTaskController.prototype.openDetails = function() {
-    this.parentController.openDetails(this.model);
 };

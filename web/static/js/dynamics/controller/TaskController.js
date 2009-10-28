@@ -9,8 +9,8 @@ var TaskController = function TaskController(model, view, parentController) {
 TaskController.columnIndices = {
     prio: 0,
     name: 1,
-    context: 2,
-    state: 3,
+    state: 2,
+    context: 3,
     responsibles: 4,
     el: 5,
     oe: 6,
@@ -189,3 +189,6 @@ TaskController.prototype.openLogEffort = function() {
   dialog.getModel().setParent(this.model);
 };
 
+TaskController.prototype.retrieveDetails = function(callback) {
+  this.model.retrieveDetails(callback);
+};

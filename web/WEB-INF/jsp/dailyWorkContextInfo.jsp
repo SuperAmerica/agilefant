@@ -4,11 +4,20 @@
 <div class="task-context">
 <h2>Task Context</h2>
 
-<div class="context">
-<span class="context-product"><c:out value="${iteration.parent.parent.name}"/></span> &mdash;
-<span class="context-project"><c:out value="${iteration.parent.name}"/></span> &mdash;
-<span class="context-iteration"><c:out value="${iteration.name}"/></span>
-</div>
+<ul class="context">
+    <li><a href="editProduct.action?productId=${iteration.parent.parent.id}"><span class="context-product"><c:out value="${iteration.parent.parent.name}"/></span></a>
+    <ul class="context">
+        <li><a href="editProject.action?projectId=${iteration.parent.id}"><span class="context-project"><c:out value="${iteration.parent.name}"/></span></a>
+    
+        <ul class="context">
+            <li>
+                <a href="editIteration.action?iterationId=${iteration.id}"><span class="context-iteration"><c:out value="${iteration.name}"/></span></a>
+            </li>
+        </ul>
+        </li>
+    </ul>
+    </li>
+</ul>
 
 <div class="iteration-burndown-container">
 <h2>Iteration burndown</h2>
@@ -19,7 +28,7 @@
 <h2>Story hierarchy</h2>
 <ul>
 <c:forEach items="${stories}" var="story">
-<li><c:out value="${story.name}"/></li>
+<li><a href="${story.link}"><c:out value="${story.name}"/></a></li>
 </c:forEach>
 </ul>
 </div>

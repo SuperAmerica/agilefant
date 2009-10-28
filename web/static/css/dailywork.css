@@ -1,27 +1,41 @@
-#details-pane h1 {
-    font-style: normal;
-    font-size: 14pt;
-    margin-top: 0.2em;
-    margin-bottom: 0.2em;
+.daily-work-details-inner h1 {
+	font-style: normal;
+	font-size: 14pt;
+	margin-top: 0.0em;
+	margin-bottom: 0.5em;
 }
 
-#details-pane h2 {
-    font-style: normal;
-    font-size: 11pt;
-    margin-top: 0.1em;
-    margin-bottom: 0.1em;
+.daily-work-details-inner h2 {
+	font-style: normal;
+	font-size: 11pt;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
 }
 
-#details-pane ul {
-    list-style-type: square;
+.daily-work-details-inner ul {
+	list-style-image: url(../img/hierarchy_arrow.png);
+	margin-left: 8px;
+	padding-left: 14px;
 }
 
-#details-pane {
-    padding: 0.4em;
+.daily-work-details-inner {
+	padding: 0.4em;
 }
- 
+
+.daily-work-details-inner h3 {
+	font-size: 10pt;
+}
+
+.daily-work-details-inner a {
+	color: #1E5EEE !important;
+}
+
+.daily-work-details-inner a:hover {
+	color: #e50 !important;
+}
+
 #dailyWorkTabsContainer {
-  min-width: 750px;  
+	min-width: 750px;
 }
 
 #work-queue-container {
@@ -29,30 +43,29 @@
 }
 
 .details-expanded #work-queue-div {
-  width: 75%;
+	width: 75%;
 }
 
 .details-contracted #work-queue-div {
-  width: auto;
+	width: auto;
 }
 
 .details-expanded #work-queue-details-div {
-  width: 24%;
-  float: right;
-  margin-bottom: 1em;
+	width: 24%;
+	float: right;
+	margin-bottom: 1em;
 }
 
 #details-container {
-    padding: 0.2em;
+	padding: 0.2em;
 }
 
 .details-contracted #work-queue-details-div {
-  display: none;
+	display: none;
 }
 
-
 #my-work-div {
-  min-width: 750px;
+	min-width: 750px;
 }
 
 #story-list-div {
@@ -64,18 +77,37 @@
 	height: 85px;
 }
 
-.dynamictable .dynamictable-row a.daily-work-task-context  {
+.dynamictable .dynamictable-row a.daily-work-task-context {
 	color: #1E5EEE !important;
 }
 
 .dynamictable .dynamictable-row a.daily-work-task-context:hover {
-  color: #e50 !important;
+	color: #e50 !important;
 }
 
-.dynamictable .dynamictable-row a.daily-work-story-context  {
+.dynamictable .dynamictable-row a.daily-work-story-context {
 	color: #1E5EEE !important;
 }
 
 .dynamictable .dynamictable-row a.daily-work-story-context:hover {
-  color: #e50 !important;
+	color: #e50 !important;
+}
+
+.daily-work-details-view {
+	-moz-background-clip: border;
+	-moz-background-inline-policy: continuous;
+	-moz-background-origin: padding;
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	background: #FFFFFF none repeat scroll 0 0;
+	border: 1px solid #AAAAAA;
+	margin: 0;
+	overflow: hidden;
+	padding: 5px 0;
+	position: absolute;
+	top: 2em;
+	width: 9em;
+	z-index: 300;
 }

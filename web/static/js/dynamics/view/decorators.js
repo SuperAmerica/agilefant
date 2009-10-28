@@ -74,6 +74,9 @@ var DynamicsDecorators = {
     
     return ('<a class="daily-work-task-context" href="' + uri + '">' + value.name + '</a>');
   },
+  hiddenDecorator: function(value) {
+    return '';
+  },
   iterationLinkDecorator: function(value) {
     if (! value) {
       return "(not set)";

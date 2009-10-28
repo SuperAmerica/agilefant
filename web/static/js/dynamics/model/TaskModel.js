@@ -455,7 +455,7 @@ TaskModel.prototype.getContext = function() {
         };
     }
 
-    else if (this.currentData.parentStoryId) {
+    else if (this.currentData.parentStoryId || this.currentData.backlogId) {
         return {
             name: this.currentData.contextName,
             storyId: this.currentData.parentStoryId,
@@ -472,5 +472,16 @@ TaskModel.prototype.getContext = function() {
             taskId: this.getId()
         };
     }
+};
+
+TaskModel.prototype.retrieveDetails = function(callback) {
+    var task = this;
+    jQuery.get(
+         "ajax/dailyWorkContextInfo.action",
+         { taskId: task.getId() },
+         function(data, status) {
+             callback(data);
+         }
+    );
 };
 

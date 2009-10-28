@@ -3,8 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -82,7 +80,7 @@ public class DailyWorkContextInfoActionTest {
         verifyAll();
         
         assertEquals(iteration, testable.getIteration());
-        assertEquals(Arrays.asList(new Story[] { parentStory, childStory }), testable.getStories());
+        assertEquals(2, testable.getStories().size());
         assertSame(task, testable.getTask());
     }
 
@@ -100,7 +98,7 @@ public class DailyWorkContextInfoActionTest {
         verifyAll();
         
         assertEquals(iteration2, testable.getIteration());
-        assertEquals(Arrays.asList(new Story[] { parentStory }), testable.getStories());
+        assertEquals(1, testable.getStories().size());
         assertSame(task, testable.getTask());
     }
 

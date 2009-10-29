@@ -63,7 +63,7 @@ public class DailyWorkContextInfoActionTest {
         
         assertSame(iteration, testable.getIteration());
         assertEquals(0, testable.getStories().size());
-        assertSame(task, testable.getTask());
+        assertSame(task, testable.getItem());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class DailyWorkContextInfoActionTest {
         
         assertEquals(iteration, testable.getIteration());
         assertEquals(2, testable.getStories().size());
-        assertSame(task, testable.getTask());
+        assertSame(task, testable.getItem());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class DailyWorkContextInfoActionTest {
         
         assertEquals(iteration2, testable.getIteration());
         assertEquals(1, testable.getStories().size());
-        assertSame(task, testable.getTask());
+        assertSame(task, testable.getItem());
     }
 
 }

@@ -142,7 +142,9 @@ TaskSplitDialog.prototype.createTask = function() {
   row.render();
   row.editRow();
   this.rows.push(row);
-//  $(window).resize();
+  
+  // commented due to apparent slowness
+  // $(window).resize();
 };
 
 /**
@@ -184,13 +186,16 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
     rightWidth: '75%',
-    cssClass: "ui-widget-content ui-corner-all"
+    cssClass: "ui-widget-content ui-corner-all",
+    preventCommit: true,
+    closeRowCallback: null
   });
   
   config.addColumnConfiguration(0, {
     title: 'Name',
     get: TaskModel.prototype.getName,
     editable: true,
+    openOnRowEdit: false,
     edit: {
       editor: "Text",
       required: true,
@@ -199,12 +204,14 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
   });
   
   config.addColumnConfiguration(1, {
+    openOnRowEdit: false,
     title: "Context",
     decorator: DynamicsDecorators.plainContextDecorator,
     get: DailyWorkTaskModel.prototype.getContext
   });
   
   config.addColumnConfiguration(2, {
+      openOnRowEdit: false,
       title : "Effort left",
       headerTooltip : 'Effort left in hours',
       get : TaskModel.prototype.getEffortLeft,
@@ -281,7 +288,9 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
       caption: "New tasks",
       cssClass: "ui-widget-content ui-corner-all",
       rowControllerFactory: TaskSplitDialog.prototype.taskControllerFactory,
-      dataSource: TaskModel.prototype.getChildren
+      dataSource: TaskModel.prototype.getChildren,
+      preventCommit: true,
+      closeRowCallback: null
   };
   var config = new DynamicTableConfiguration(opts);
   

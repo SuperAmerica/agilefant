@@ -320,3 +320,14 @@ StoryModel.prototype.getTotalOriginalEstimate = function() {
   return this.metrics.originalEstimate;
 };
 
+StoryModel.prototype.retrieveDetails = function(callback) {
+    var story = this;
+    jQuery.get(
+         "ajax/dailyWorkContextInfo.action",
+         { storyId: story.getId() },
+         function(data, status) {
+             callback(data);
+         }
+    );
+};
+

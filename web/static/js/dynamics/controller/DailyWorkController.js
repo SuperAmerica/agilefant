@@ -567,10 +567,11 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         title : 'Iteration',
         headerTooltip : 'Story context',
         get  : StoryModel.prototype.getBacklog,
-        decorator: DynamicsDecorators.iterationLinkDecorator,
+        decorator: DynamicsDecorators.hiddenDecorator,
         editable : false,
-        sortCallback: DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getContext),
+        sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getBacklog),
         openOnRowEdit: false,
+        subViewFactory: DailyWorkStoryController.prototype.detailsViewFactory
     });
     
     config.addColumnConfiguration(StoryController.columnIndices.points, {
@@ -954,6 +955,12 @@ DailyWorkStoryController.filterDoneTasks = function(tasks) {
 
     return returnedTasks;
 };
+
+DailyWorkStoryController.prototype.detailsViewFactory = function(view, model) {
+    var detailsView = new DetailsView(this, this.model, view);
+    return detailsView;
+};
+
 
 DailyWorkController.prototype.dailyWorkStoryControllerFactory = function(view, model) {
     var storyController = new DailyWorkStoryController(model, view, this);

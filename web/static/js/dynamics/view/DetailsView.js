@@ -15,8 +15,12 @@ DetailsView.prototype = new ViewPart();
 DetailsView.prototype.initialize = function() {
     var me = this;
 
-    var contextString = this.model.getContext().name;
-    
+    if (this.model.getContext) {
+        var contextString = this.model.getContext().name;
+    }
+    else {
+        var contextString = this.model.getBacklog().getName();
+    }
     this.link = $('<a href="#" class="daily-work-task-context">' + contextString + ' ▼</a>');
     this.link.appendTo(this.parentView.getElement());
     
@@ -80,7 +84,6 @@ DetailsView.prototype.open = function() {
         "position" : "absolute",
         "overflow" : "visible",
         "z-index" : "100",
-        "white-space" : "nowrap",
         "top" : off.top + 18,
         "left" : off.left + (width - viewWidth) / 2,
         "width": viewWidth,

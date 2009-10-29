@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
@@ -22,16 +24,35 @@ import fi.hut.soberit.agilefant.model.Task;
 @Scope("prototype")
 public class DailyWorkContextInfoAction extends ActionSupport {
     private static final long serialVersionUID = 2599224272717369900L;
-    private Task task;
+    private NamedObject item;
+    
     private int taskId;
+    private int storyId;
+    
     private Iteration iteration;
     private LinkedList<NamedObjectAndLinkPair> stories = new LinkedList<NamedObjectAndLinkPair>();
     
     @Autowired
     private TaskBusiness taskBusiness;
+
+    @Autowired
+    private StoryBusiness storyBusiness;
     
-    public String retrieve() {
-        task = taskBusiness.retrieve(taskId);
+    private void createStoryHierarchy(Story story) {
+        while (story != null) {
+            String storyLink = createStoryLink(story);
+            stories.addFirst(new NamedObjectAndLinkPair(story, storyLink));
+            
+            story = story.getParent();
+        }
+
+        if (stories.size() != 0) {
+            stories.getLast().setLink("#story-list-div");
+        }
+    }
+    
+    private void retrieveTask() {
+        Task task = taskBusiness.retrieve(taskId);
         
         iteration = task.getIteration();
         if (iteration == null) {
@@ -39,15 +60,27 @@ public class DailyWorkContextInfoAction extends ActionSupport {
         }
         
         Story story = task.getStory();
-        while (story != null) {
-            String storyLink = createStoryLink(story);
-            stories.addFirst(new NamedObjectAndLinkPair(story, storyLink));
-            
-            story = story.getParent();
-        }
+        createStoryHierarchy(story);
         
-        if (stories.size() != 0) {
-            stories.getLast().setLink("#story-list-div");
+        item = task;
+    }
+    
+    private void retrieveStory() {
+        Story story = storyBusiness.retrieve(storyId);
+        
+        iteration = (Iteration)story.getBacklog();
+        
+        createStoryHierarchy(story);
+        
+        item = story;
+    }
+    
+    public String retrieve() {
+        if (taskId != 0) {
+            retrieveTask();
+        }
+        else {
+            retrieveStory();
         }
         
         return Action.SUCCESS;
@@ -78,12 +111,17 @@ public class DailyWorkContextInfoAction extends ActionSupport {
         this.taskId = taskId;
     }
 
+    public void setStoryId(int storyId) {
+        this.storyId = storyId;
+    }
+    
+    
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
     }
     
-    public Task getTask() {
-        return task;
+    public NamedObject getItem() {
+        return item;
     }
     
     public Iteration getIteration() {

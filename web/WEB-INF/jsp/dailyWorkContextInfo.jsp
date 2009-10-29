@@ -1,8 +1,8 @@
 <%@ include file="./inc/_taglibs.jsp" %>
 <div>
-<h1 class="task-name">${task.name}</h1>
-<div class="task-context">
-<h2>Task Context</h2>
+<h1 class="item-name">${item.name}</h1>
+<div class="item-context">
+<h2>Context</h2>
 
 <ul class="context">
     <li><a href="editProduct.action?productId=${iteration.parent.parent.id}"><span class="context-product"><c:out value="${iteration.parent.parent.name}"/></span></a>

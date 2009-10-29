@@ -277,7 +277,18 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
-	<target name="replace_version_number">
+	<target name="replace_version_number" depends="webapp">
+	    <path id="svnant.libs.path">
+	      <fileset dir="${lib}/build">
+	        <include name="svnant.jar"/>
+	        <include name="svnClientAdapter.jar"/>
+	      </fileset>
+	    </path>
+
+	    <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.libs.path" />
+	    <svn javahl="false">
+	      <info target="." />
+	    </svn>
 		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
 		                         match="struts.agilefantVersionNumber = (.*)"
 		                         replace="struts.agilefantVersionNumber = \1 (r${svn.info.lastRev})"
@@ -287,8 +298,8 @@
 		                         replace="struts.agilefantVersionNumber = agilefant_revision_${svn.info.lastRev}"
 		                         byline="true"/>
 
-	</target>
-	<target name="debug-release-zip" depends="clean, compile, find_revision, concat_javascript, replace_version_number, war, create-ddl" description="Generates release directory">
+	</target>	
+	<target name="debug-release-zip" depends="clean, compile, concat_javascript, replace_version_number, war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />
 		<mkdir dir="${release.dir}/sql-updates" />
 		<copy file="${warFile}" todir="${release.dir}" />
@@ -426,20 +437,6 @@
 				<include name="*.js" />
 			</fileset>
 		</concat>
-	</target>
-
-	<target name="find_revision" description="Sets property 'svn.info.lastRev' to head svn revision">
-		<path id="svnant.libs.path">
-			<fileset dir="${lib}/build">
-				<include name="svnant.jar"/>
-				<include name="svnClientAdapter.jar"/>
-			</fileset>
-		</path>
-
-		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.libs.path" />
-		<svn javahl="false">
-			<info target="." />
-		</svn>
 	</target>
 
 </project>

@@ -48,37 +48,4 @@ public class BacklogHistoryEntryDAOHibernate extends
         List<Object[]> data = asList(crit);
         return ProjectBurnupData.createFromRawData(data);
     }
-
-    public BacklogHistoryEntry calculateForBacklog(int backlogId) {
-        Criteria crit = getCurrentSession().createCriteria(Story.class);
-        crit.createAlias("backlog", "backlog");
-        crit.createAlias("backlog.parent", "parentBacklog",
-                CriteriaSpecification.LEFT_JOIN);
-        crit.add(Restrictions.or(Restrictions.eq("backlog.id", backlogId),
-                Restrictions.eq("parentBacklog.id", backlogId)));
-        crit.setProjection(Projections.projectionList().add(
-                Projections.sum("storyPoints")).add(
-                Projections.groupProperty("state"), "state"));
-        List<Object[]> resultsByState = asList(crit);
-        long estimateSum = 0;
-        long doneSum = 0;
-        if (resultsByState != null) {
-            for (Object[] results : resultsByState) {
-                Integer stateEstimateSumInteger = (Integer) results[0];
-                int stateEstimateSum = (stateEstimateSumInteger == null) ? 0
-                        : stateEstimateSumInteger.intValue();
-                estimateSum += stateEstimateSum;
-                StoryState state = (StoryState) results[1];
-                if (state == StoryState.DONE) {
-                    doneSum += stateEstimateSum;
-                }
-            }
-        }
-        BacklogHistoryEntry entry = new BacklogHistoryEntry();
-        entry.setTimestamp(new DateTime());
-        entry.setEstimateSum(estimateSum);
-        entry.setDoneSum(doneSum);
-        return entry;
-    }
-
 }

@@ -65,6 +65,9 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
         }
     }
 
+    /**
+     * @TODO: update project histories!
+     */
     private void persistChildStories(Story original,
             Collection<Story> newStories) {
 

@@ -11,10 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.BacklogHistoryEntryDAO;
+import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Project;
 
 @Service("backlogHistoryEntryBusiness")
 public class BacklogHistoryEntryBusinessImpl extends
@@ -22,14 +24,15 @@ public class BacklogHistoryEntryBusinessImpl extends
         BacklogHistoryEntryBusiness {
 
     private BacklogHistoryEntryDAO backlogHistoryEntryDAO;
-      
+    private StoryHierarchyDAO storyHierarchyDAO;
+
     @Autowired
     private BacklogDAO backlogDAO;
 
     public BacklogHistoryEntryBusinessImpl() {
         super(BacklogHistoryEntry.class);
     }
-    
+
     @Autowired
     public void setBacklogHistoryEntryDAO(
             BacklogHistoryEntryDAO backlogHistoryEntryDAO) {
@@ -40,14 +43,21 @@ public class BacklogHistoryEntryBusinessImpl extends
     @Transactional
     public void updateHistory(int backlogId) {
         Backlog backlog = backlogDAO.get(backlogId);
+        Project project = null;
         if (backlog instanceof Iteration) {
-            backlog = backlog.getParent();
+            project = (Project) backlog.getParent();
         } else if (backlog instanceof Product) {
             return;
+        } else {
+            project = (Project) backlog;
         }
-        BacklogHistoryEntry entry = backlogHistoryEntryDAO
-                .calculateForBacklog(backlog.getId());
-        entry.setBacklog(backlog);
+
+        BacklogHistoryEntry entry = new BacklogHistoryEntry();
+        entry.setTimestamp(new DateTime());
+        entry.setDoneSum(storyHierarchyDAO.totalLeafDoneStoryPoints(project));
+        entry.setEstimateSum(storyHierarchyDAO.totalLeafStoryPoints(project));
+        entry.setRootSum(storyHierarchyDAO.totalRootStoryPoints(project));
+        entry.setBacklog(project);
         backlogHistoryEntryDAO.store(entry);
     }
 
@@ -65,6 +75,15 @@ public class BacklogHistoryEntryBusinessImpl extends
             result.add(entry);
         }
         return result;
+    }
+
+    @Autowired
+    public void setStoryHierarchyDAO(StoryHierarchyDAO storyHierarchyDAO) {
+        this.storyHierarchyDAO = storyHierarchyDAO;
+    }
+
+    public void setBacklogDAO(BacklogDAO backlogDAO) {
+        this.backlogDAO = backlogDAO;
     }
 
 }

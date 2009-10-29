@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,6 +21,8 @@ public class BacklogHistoryEntry {
     private long estimateSum;
 
     private long doneSum;
+    
+    private long rootSum;
 
     private DateTime timestamp;
 
@@ -65,6 +68,15 @@ public class BacklogHistoryEntry {
 
     public void setTimestamp(DateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public long getRootSum() {
+        return rootSum;
+    }
+
+    @Column(nullable=false)
+    public void setRootSum(long rootSum) {
+        this.rootSum = rootSum;
     }
 
 }

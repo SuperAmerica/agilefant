@@ -19,15 +19,6 @@ public class BacklogHistoryEntryDAOTest extends AbstractHibernateTests {
     private BacklogHistoryEntryDAO backlogHistoryEntryDAO;
     
     @Test
-    public void testCalculateForBacklog() {
-        executeClassSql();
-        BacklogHistoryEntry entry = backlogHistoryEntryDAO.calculateForBacklog(1);
-        assertEquals(25, entry.getEstimateSum());
-        assertEquals(5, entry.getDoneSum());
-        assertNull(entry.getBacklog());
-    }
-    
-    @Test
     public void testRetrieveBurnupData_duplicate() {
         executeClassSql();
         int count = 0;

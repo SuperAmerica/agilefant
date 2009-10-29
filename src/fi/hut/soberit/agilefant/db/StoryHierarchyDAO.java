@@ -25,4 +25,28 @@ public interface StoryHierarchyDAO {
      * @return list of leaf stories
      */
     public List<Story> retrieveProjectLeafStories(Project project);
+
+    /**
+     * Story point sum of product leaf stories.
+     * 
+     * @param project
+     * @return
+     */
+    public long totalLeafStoryPoints(Project project);
+
+    /**
+     * Story point sum of done product leaf stories.
+     * 
+     * @param project
+     * @return
+     */
+    public long totalLeafDoneStoryPoints(Project project);
+
+    /**
+     * Story point sum of product root stories.
+     * 
+     * @param project
+     * @return
+     */
+    public long totalRootStoryPoints(Project project);
 }

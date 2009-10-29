@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,13 +20,21 @@ import static org.junit.Assert.*;
 public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     @Autowired
     private StoryHierarchyDAO testable;
+    private Project project;
+    private Project emptyProject;
+    
+    @Before
+    public void setUp_data() {
+        project = new Project();
+        project.setId(2);
+        emptyProject = new Project();
+        emptyProject.setId(5);
+    }
     
     @Test
     public void testRetrieveProjectRootStories() {
         executeClassSql();
         Set<Integer> actualStoryIds = new HashSet<Integer>();
-        Project project = new Project();
-        project.setId(2);
         List<Story> actual = this.testable.retrieveProjectRootStories(project);
         assertEquals(4, actual.size());
         for(Story story : actual) {
@@ -42,8 +51,6 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     public void testRetrieveProjectLeafStories() {
         executeClassSql();
         Set<Integer> actualStoryIds = new HashSet<Integer>();
-        Project project = new Project();
-        project.setId(2);
         List<Story> actual = this.testable.retrieveProjectLeafStories(project);
         assertEquals(5, actual.size());
         for(Story story : actual) {
@@ -54,6 +61,51 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
        assertTrue(actualStoryIds.contains(32));
        assertTrue(actualStoryIds.contains(33));
        assertTrue(actualStoryIds.contains(34));
+    }
+    
+    @Test
+    public void testRetrieveProjectRootStories_empty() {
+        executeClassSql();
+        List<Story> actual = this.testable.retrieveProjectRootStories(emptyProject);
+        assertEquals(0, actual.size());
 
+    }
+    
+    @Test
+    public void testRetrieveProjectLeafStories_empty() {
+        executeClassSql();
+        List<Story> actual = this.testable.retrieveProjectLeafStories(emptyProject);
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    public void testTotalLeafStoryPoints() {
+        executeClassSql();
+        assertEquals(140l, this.testable.totalLeafStoryPoints(project));
+    }
+    @Test
+    public void testTotaDonelLeafStoryPoints() {
+        executeClassSql();
+        assertEquals(30l, this.testable.totalLeafDoneStoryPoints(project));
+    }
+    @Test
+    public void testTotalRootStoryPoints() {
+        executeClassSql();
+        assertEquals(120l, this.testable.totalRootStoryPoints(project));
+    }
+    @Test
+    public void testTotalLeafStoryPoints_empty() {
+        executeClassSql();
+        assertEquals(0l, this.testable.totalLeafStoryPoints(emptyProject));
+    }
+    @Test
+    public void testTotaDonelLeafStoryPoints_empty() {
+        executeClassSql();
+        assertEquals(0l, this.testable.totalLeafDoneStoryPoints(emptyProject));
+    }
+    @Test
+    public void testTotalRootStoryPoints_empty() {
+        executeClassSql();
+        assertEquals(0l, this.testable.totalRootStoryPoints(emptyProject));
     }
 }

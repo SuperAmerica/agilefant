@@ -5,7 +5,7 @@ import java.util.List;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
-public interface StoryHierarchyDAO extends GenericDAO<Story> {
+public interface StoryHierarchyDAO {
     /**
      * Fetch root stories that are attached to the given project or any of the
      * iterations under the project. Root story stands for story that either has

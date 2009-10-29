@@ -14,7 +14,7 @@ import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
-@Repository("storyDAO")
+@Repository("storyHierarchyDAO")
 public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         implements StoryHierarchyDAO {
 

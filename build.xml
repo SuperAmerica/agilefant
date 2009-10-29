@@ -295,7 +295,7 @@
 		                         byline="true"/>
 		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
 		                         match="struts.agilefantReleaseId = (.*)"
-		                         replace="struts.agilefantVersionNumber = agilefant_revision_${revision.max}"
+		                         replace="struts.agilefantReleaseId = agilefant_revision_${revision.max}"
 		                         byline="true"/>
 
 	</target>	

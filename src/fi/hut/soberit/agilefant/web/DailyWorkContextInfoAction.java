@@ -67,11 +67,8 @@ public class DailyWorkContextInfoAction extends ActionSupport {
     
     private void retrieveStory() {
         Story story = storyBusiness.retrieve(storyId);
-        
         iteration = (Iteration)story.getBacklog();
-        
         createStoryHierarchy(story);
-        
         item = story;
     }
     
@@ -86,7 +83,7 @@ public class DailyWorkContextInfoAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
-    private String createStoryLink(Story story) {
+    String createStoryLink(Story story) {
         String returnValue = "";
 
         Backlog backlog = story.getBacklog();
@@ -130,5 +127,9 @@ public class DailyWorkContextInfoAction extends ActionSupport {
     
     public Collection<NamedObjectAndLinkPair> getStories() {
         return stories;
+    }
+
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
     }
 }

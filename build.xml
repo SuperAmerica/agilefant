@@ -341,6 +341,22 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
+	<target name="debug-release-zip" depends="clean, concat_javascript, war, create-ddl" description="Generates release directory">
+		<mkdir dir="${release.dir}" />
+		<mkdir dir="${release.dir}/sql-updates" />
+		<copy file="${warFile}" todir="${release.dir}" />
+		<copy file="${basedir}/doc/License.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/sql/insert-users.sql" todir="${release.dir}" />
+		<copy file="${build.dir}/create-db.ddl" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Release_notes.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Summary_about_used_libraries.txt" todir="${release.dir}" />
+		<copy file="${basedir}/doc/Install.txt" todir="${release.dir}" />
+		<copy todir="${release.dir}/sql-updates">
+			<fileset dir="${basedir}/doc/sql/updates" />
+		</copy>
+		<zip destfile="${release.zip.dir}/agilefant.zip" basedir="${release.dir}" update="true" />
+	</target>
+	
 	<target name="release" depends="clean, production-war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />
 		<mkdir dir="${release.dir}/sql-updates" />

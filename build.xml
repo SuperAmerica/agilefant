@@ -6,7 +6,7 @@
 	<property file="conf/database-mysql5.properties" />
 
 	<!-- Clover parameters -->
-  <property name="clover.jar" location="${basedir}/lib/build/clover.jar" />
+	<property name="clover.jar" location="${basedir}/lib/build/clover.jar" />
 	<taskdef resource="cloverlib.xml" classpath="${clover.jar}" />
 
 
@@ -19,7 +19,7 @@
 		<mkdir dir="${build.test.classes.dir}" />
 
 		<path id="yuicompressor.classpath">
-      <fileset dir="${lib}/build">
+			<fileset dir="${lib}/build">
 				<include name="yuicompressor-*.jar"/>
 				<include name="YUIAnt.jar"/>
 			</fileset>
@@ -156,19 +156,19 @@
 	</target>
 
 	<target name="test-clover-xml-and-html-report" depends="clean,test-clover-enable,compile-tests,test">
-    <mkdir dir="${test.reports.clover}" />
-    <clover-report>
-      <current outfile="${test.reports.clover}/coverage.xml">
-        <format type="xml" />
-      </current>
-    </clover-report>
-    <clover-html-report outdir="${test.reports.clover}" title="Agilefant" />
-    <clover-clean />
+		<mkdir dir="${test.reports.clover}" />
+		<clover-report>
+			<current outfile="${test.reports.clover}/coverage.xml">
+				<format type="xml" />
+			</current>
+		</clover-report>
+		<clover-html-report outdir="${test.reports.clover}" title="Agilefant" />
+		<clover-clean />
 	</target>
-	
+
 	<target name="test-checkstyle-xmlreport" description="Generates a report of code convention violations.">
 		<mkdir dir="${test.reports.checkstyle}" />
-    <taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/build/checkstyle-all-4.3.jar" />
+		<taskdef resource="checkstyletask.properties" classpath="${basedir}/lib/build/checkstyle-all-4.3.jar" />
 		<checkstyle config="${test.conf.dir}/checkstyle/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
 			<formatter type="xml" tofile="${test.reports.checkstyle}/checkstyle_report.xml" />
 			<fileset dir="src" includes="**/*.java" />
@@ -198,14 +198,6 @@
 		</hibernatetool>
 	</target>
 
-	<!--
-	<target name="drop-create-test-db" depends="compile" description="Creates db using hibernate tools">
-		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl drop="true" export="${hbm2ddl.export}" outputfilename="create-db.ddl" />
-		</hibernatetool>
-	</target>
-	-->
 
 	<target name="update-db" depends="compile" description="Creates db using hibernate tools">
 		<hibernatetool destdir="${build.dir}">
@@ -213,15 +205,6 @@
 			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true" />
 		</hibernatetool>
 	</target>
-
-	<!--
-	<target name="update-test-db" depends="compile" description="Creates db using hibernate tools">
-		<hibernatetool destdir="${build.dir}">
-			<annotationconfiguration propertyfile="${conf.dir}/database-fortests-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
-			<hbm2ddl export="${hbm2ddl.export}" outputfilename="create-db.ddl" update="true" />
-		</hibernatetool>
-	</target>
-	-->
 
 
 	<target name="webapp" depends="make-jar" description="Builds webapp">
@@ -249,14 +232,6 @@
 		</copy>
 	</target>
 
-	<!--
-	<target name="quick-ui-deploy" depends="init" description="Quickly deploys all jsp to server">
-		<copy todir="${deploy.dir.local}/WEB-INF/jsp/">
-			<fileset dir="${webapp.root}/WEB-INF/jsp/" />
-		</copy>
-	</target>
-	-->
-
 	<target name="deploy-local-web" depends="webapp, concat_javascript" description="Deploys web app to local server without reloading webapp">
 		<mkdir dir="${deploy.dir.local}" />
 		<copy todir="${deploy.dir.local}">
@@ -283,28 +258,6 @@
 		<delete dir="${test.reports.dir}" />
 	</target>
 
-	<!--
-	<target name="set-original-db" depends="init" description="Updates the database, with default values from the XML file">
-		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
-			<classpath refid="compile.classpath" />
-			<operation type="CLEAN_INSERT" src="${testdata.dir}/testData.xml" format="xml" />
-		</dbunit>
-	</target>
-	-->
-<!--
-	<target name="export-db" depends="init" description="Exports the database into an XML file">
-		<dbunit driver="${hibernate.connection.driver_class}" url="${hibernate.connection.url}" userid="${hibernate.connection.username}" password="${hibernate.connection.password}">
-			<export dest="${build.test}/exportedData.xml" format="xml" />
-		</dbunit>
-	</target>
-	-->
-<!--
-	<target name="count-loc">
-		<exec executable="/bin/sh">
-			<arg value="${basedir}/tools/count-loc.sh" />
-		</exec>
-	</target>
--->
 	<target name="javadoc" depends="init" description="Generates Javadocs from source code">
 		<!-- TODO: Generate docs for taglibs -->
 		<mkdir dir="${javadoc.dir}" />
@@ -316,23 +269,6 @@
 		</javadoc>
 	</target>
 
-	<!--
-	<target name="run-jdepend" depends="compile" description="Runs JDepend">
-		 
-		<mkdir dir="${jdepend.dir}" />
-
-		<jdepend format="xml"
-			outputfile="${jdepend.dir}/jdepend-report.xml">
-			<classespath>
-				<pathelement location="${build.classes}" />
-			</classespath>
-		</jdepend>
-		<style basedir="${jdepend.dir}" destdir="${jdepend.dir}"
-			includes="jdepend-report.xml" style="${ant.home}/etc/jdepend.xsl" />
-		 
-	</target>
-	-->
-
 	<target name="war" depends="webapp">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
@@ -341,7 +277,18 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
-	<target name="debug-release-zip" depends="clean, concat_javascript, war, create-ddl" description="Generates release directory">
+	<target name="replace_version_number">
+		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
+		                         match="struts.agilefantVersionNumber = (.*)"
+		                         replace="struts.agilefantVersionNumber = \1 (r${svn.info.lastRev})"
+		                         byline="true"/>
+		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
+		                         match="struts.agilefantReleaseId = (.*)"
+		                         replace="struts.agilefantVersionNumber = agilefant_revision_${svn.info.lastRev}"
+		                         byline="true"/>
+
+	</target>
+	<target name="debug-release-zip" depends="clean, compile, find_revision, concat_javascript, replace_version_number, war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />
 		<mkdir dir="${release.dir}/sql-updates" />
 		<copy file="${warFile}" todir="${release.dir}" />
@@ -354,9 +301,9 @@
 		<copy todir="${release.dir}/sql-updates">
 			<fileset dir="${basedir}/doc/sql/updates" />
 		</copy>
-		<zip destfile="${release.zip.dir}/agilefant.zip" basedir="${release.dir}" update="true" />
+		<zip destfile="${release.zip.dir}/agilefant2_snapshot_r${svn.info.lastRev}.zip" basedir="${release.dir}" update="true" />
 	</target>
-	
+
 	<target name="release" depends="clean, production-war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />
 		<mkdir dir="${release.dir}/sql-updates" />
@@ -383,70 +330,6 @@
 		</javadoc>
 	</target>
 
-	<!-- Execute JMeter test plan -->
-	<!--<target name="test-jmeter" depends="init" description="Execute the JMeter test plan, recording the results to a file.">
-		<mkdir dir="${test.reports.jmeter}" />
-		<taskdef name="jmeter" classpath="${jmeter.install.dir}/extras/ant-jmeter.jar" classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask" />
-		<jmeter jmeterhome="${jmeter.install.dir}" testplan="${jmeter.testplan}" resultlog="${jmeter.result.file}">
-			<property name="jmeter.save.saveservice.output_format" value="xml" />
-		</jmeter>
-	</target>-->
-
-	<!-- Produce jChav report from JMeter results -->
-	<!--<target name="test-jchav" depends="init" description="Produce JChav report from the JMeter results">
-		<mkdir dir="${test.reports.jchav}" />
-		<taskdef name="jchav" classname="com.googlecode.jchav.ant.JChavTask">
-			<classpath>
-				<fileset dir="${jchav.libs.dir}/">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</taskdef>
-		<jchav srcdir="${jmeter.result.dir}" destdir="${jchav.result.dir}" reporttitle="Agilefant Example walk" />
-	</target>-->
-<!--
-	<target name="tomcat-start" description="Start Tomcat application">
-		<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
-			<classpath>
-				<fileset dir="lib/">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</taskdef>
-		<start url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
-	</target>
-
-	<target name="tomcat-stop" description="Stop Tomcat application">
-		<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
-			<classpath>
-				<fileset dir="lib/">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</taskdef>
-		<stop failonerror="no" url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
-	</target>
-	<target name="tomcat-undeploy" description="Deploy Tomcat application">
-		<taskdef name="undeploy" classname="org.apache.catalina.ant.UndeployTask">
-			<classpath>
-				<fileset dir="lib/">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</taskdef>
-		<undeploy url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" />
-	</target>
-	<target name="tomcat-deploy" depends="war" description="Deploy Tomcat application">
-		<taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
-			<classpath>
-				<fileset dir="lib/">
-					<include name="**/*.jar" />
-				</fileset>
-			</classpath>
-		</taskdef>
-		<deploy url="http://localhost:8080/manager" username="tomcat" password="m0t0rh0me" path="/agilefant" war="file:${warFile}" />
-	</target>
--->
 	<target name="compress-js" depends="webapp" description="Minifiy a set of files">
 		<taskdef name="yuicompress" classname="com.yahoo.platform.yui.compressor.YUICompressTask">
 			<classpath>
@@ -455,7 +338,7 @@
 		</taskdef>
 		<delete dir="${build.webapp}/static/js-packed/"/>
 		<mkdir dir="${build.webapp}/static/js-packed/" />
-<!--		
+		<!--		
 		<copy todir="${build.webapp}/static/js-packed/">
 			<fileset dir="${build.webapp}/static/js/" >
 				<include name="**/*jquery*.js"/>
@@ -467,7 +350,7 @@
 		<yuicompress linebreak="300" warn="false" munge="yes" preserveallsemicolons="true"
               outputfolder="${build.webapp}/static/js-packed/" >
 			<fileset dir="${build.webapp}/static/js/" >
-<!--				
+				<!--				
 				<exclude name="**/*jquery*.js"/>
 				<exclude name="**/*timeline*.js"/>
 				<exclude name="**/*simile*.js"/>
@@ -486,20 +369,20 @@
 	</target>
 
 	<target name="jsdoc" description="Generate JSDoc documentation" depends="webapp">
-    <taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit"
+		<taskdef name="jsdoctoolkit" classname="uk.co.darrenhurley.ant.tasks.JsDocToolkit"
       classpath="${lib}/build/jsdoctoolkit-ant-task-1.0.jar;${lib}/build/js4jsdoc.jar"/>
-		
+
 		<jsdoctoolkit jsdochome="${lib}/build/jsdoc-toolkit-2.3.0/" template="jsdoc" outputdir="${build.dir}/jsdoc"
 			verbose="true" includeundocumented="true">
 			<fileset dir="${build.webapp}/static/js/">
-		    <include name="autocomplete/*.js" />
+				<include name="autocomplete/*.js" />
 				<include name="dynamics/**/*.js" />
 				<include name="utils/*.js" />
-		  </fileset>
-	  </jsdoctoolkit>
+			</fileset>
+		</jsdoctoolkit>
 	</target>
-	
-	
+
+
 	<target name="jslint" description="javascript check" depends="webapp">
 		<taskdef name="jslint"
                  classname="net.happygiraffe.jslint.ant.JSLintTask"
@@ -516,33 +399,47 @@
 	</target>
 	<target name="concat_javascript" depends="webapp">
 		<concat destfile="${build.webapp}/static/js/simile-widgets.js">
-		  <filelist dir="${build.webapp}/static/js/simile/" files="init.js" />
-		  <filelist dir="${build.webapp}/static/js/simile/ajax/" files="platform.js, debug.js, dom.js, graphics.js, date-time.js, string.js, 
+			<filelist dir="${build.webapp}/static/js/simile/" files="init.js" />
+			<filelist dir="${build.webapp}/static/js/simile/ajax/" files="platform.js, debug.js, dom.js, graphics.js, date-time.js, string.js, 
 		  	html.js, data-structure.js, units.js, ajax.js, history.js, window-manager.js"/>
-	      <filelist dir="${build.webapp}/static/js/simile/timeline/" files="timeline.js, themes.js, ethers.js, event-utils.js, band.js, 
+			<filelist dir="${build.webapp}/static/js/simile/timeline/" files="timeline.js, themes.js, ethers.js, event-utils.js, band.js, 
 	      	sources.js, original-painter.js, detailed-painter.js, overview-painter.js, ether-painters.js, compact-painter.js, decorators.js, units.js, labellers.js"/>
-		  <filelist dir="${build.webapp}/static/js/simile/timeplot/" files="timeplot.js, plot.js, sources.js, geometry.js, color.js, math.js, 
+			<filelist dir="${build.webapp}/static/js/simile/timeplot/" files="timeplot.js, plot.js, sources.js, geometry.js, color.js, math.js, 
 		  	processor.js"/>
- <!--     <fileset dir="${build.webapp}/static/js/simile/extensions/">
+			<!--     <fileset dir="${build.webapp}/static/js/simile/extensions/">
         <include name="**/*.js" />
       </fileset>
       -->
 		</concat>
 		<concat destfile="${build.webapp}/static/js/dynamics/dynamicTable.js">
 			<fileset dir="${build.webapp}/static/js/dynamics/view/">
-				<include name="*.js" />	
+				<include name="*.js" />
 			</fileset>
 		</concat>
 		<concat destfile="${build.webapp}/static/js/dynamics/model.js">
 			<fileset dir="${build.webapp}/static/js/dynamics/model/">
-				<include name="*.js" />	
-			</fileset>		
+				<include name="*.js" />
+			</fileset>
 		</concat>
 		<concat destfile="${build.webapp}/static/js/dynamics/controller.js">
 			<fileset dir="${build.webapp}/static/js/dynamics/controller/">
-				<include name="*.js" />	
-			</fileset>		
+				<include name="*.js" />
+			</fileset>
 		</concat>
+	</target>
+
+	<target name="find_revision" description="Sets property 'svn.info.lastRev' to head svn revision">
+		<path id="svnant.libs.path">
+			<fileset dir="${lib}/build">
+				<include name="svnant.jar"/>
+				<include name="svnClientAdapter.jar"/>
+			</fileset>
+		</path>
+
+		<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.libs.path" />
+		<svn javahl="false">
+			<info target="." />
+		</svn>
 	</target>
 
 </project>

@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +13,13 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
@@ -30,6 +33,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private ProjectDAO projectDAO;
     private BacklogDAO backlogDAO;
     private ProductBusiness productBusiness;
+    private StoryHierarchyDAO storyHierarchyDAO;
+    
     private TransferObjectBusiness transferObjectBusiness;
 
     public ProjectBusinessImpl() {
@@ -57,6 +62,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         this.transferObjectBusiness = transferObjectBusiness;
     }
     
+    @Autowired
+    public void setStoryHierarchyDAO(StoryHierarchyDAO storyHierarchyDAO) {
+        this.storyHierarchyDAO = storyHierarchyDAO;
+    }
+
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public ProjectMetrics getProjectMetrics(Project project) {
@@ -148,5 +158,9 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
             project.getChildren().add(iter);
         }
         return project;
+    }
+
+    public List<Story> retrievetRootStories(Project project) {
+        return this.storyHierarchyDAO.retrieveProjectRootStories(project);
     }
 }

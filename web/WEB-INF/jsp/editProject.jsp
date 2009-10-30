@@ -46,10 +46,13 @@ $(document).ready(function() {
     	}
   	});
   }
+  $("#storyTree").load("ajax/getProjectStoryTree.action", {projectId: ${project.id}});
 });
 </script>
 
 <form onsubmit="return false;"><div id="stories" class="structure-main-block">&nbsp;</div></form>
+
+<div id="storyTree" class="structure-main-block">&nbsp;</div>
 
 <form onsubmit="return false;"><div id="ongoingIterations" class="structure-main-block">&nbsp;</div></form>
 

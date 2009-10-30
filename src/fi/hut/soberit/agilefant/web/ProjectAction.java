@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -10,6 +12,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 @Component("projectAction")
@@ -26,6 +29,8 @@ public class ProjectAction implements CRUDAction, Prefetching {
     private Project project;
     
     private ProjectMetrics projectMetrics;
+    
+    private List<Story> stories;
 
     @Autowired
     private ProjectBusiness projectBusiness;
@@ -51,6 +56,12 @@ public class ProjectAction implements CRUDAction, Prefetching {
 
     public String retrieve() {
         project = this.projectBusiness.retrieve(projectId);
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveRootStories() {
+        project = this.projectBusiness.retrieve(projectId);
+        stories = this.projectBusiness.retrievetRootStories(project);
         return Action.SUCCESS;
     }
     
@@ -96,5 +107,9 @@ public class ProjectAction implements CRUDAction, Prefetching {
 
     public void setProjectId(int projectId) {
         this.projectId = projectId;
+    }
+
+    public List<Story> getStories() {
+        return stories;
     }
 }

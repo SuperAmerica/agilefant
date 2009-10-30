@@ -663,3 +663,5 @@ alter table stories add index FK8FB06053F5E897CD (parent_id), add constraint FK8
 
 alter table users add column autoassignToTasks bit default 1;
 
+alter table history_backlogs add column rootSum bigint not null;
+

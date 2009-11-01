@@ -4,8 +4,8 @@
 
 <%@ attribute type="fi.hut.soberit.agilefant.model.Story"
   name="node"%>
-  <li>
-    <c:out value="${node.name}" />
+  <li storyid="${node.id}" storystate="${node.state}">
+    <div style="display: inline" class="taskState${node.state}" title="<c:out value="${node.name}" /> - <aef:text name="story.state.${node.state}" />"><c:out value="${node.name}" /></div>
     <c:if test="${node.children != null}">
     <ul>
       <c:forEach items="${node.children}" var="childStory">

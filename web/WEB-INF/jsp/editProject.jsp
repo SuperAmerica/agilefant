@@ -29,6 +29,7 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 
 $(document).ready(function() {
   $("#backlogInfo").tabs();
+  $("#releaseContents").tabs();
   var controller = new ProjectController({
     id: ${project.id},
     projectDetailsElement: $("#backlogDetails"),
@@ -47,19 +48,41 @@ $(document).ready(function() {
   	});
   }
   $("#storyTree").load("ajax/getProjectStoryTree.action", {projectId: ${project.id}});
+  $("#treeHideDone").change(function() {
+    var opt = $(this);
+    if(opt.is(":checked")) {
+      $("#storyTree [storystate=DONE]").hide();
+    } else {
+      $("#storyTree li").show();
+    }
+  });
 });
 </script>
 
-<form onsubmit="return false;"><div id="stories" class="structure-main-block">&nbsp;</div></form>
+<div style="margin-top: 3em;" class="structure-main-block" id="releaseContents">
+<ul class="backlogTabs">
+  <li class=""><a href="#stories"><span><img
+				alt="Edit" src="static/img/info.png" /> Stories</span></a></li>
+  <li class=""><a href="#storyTreeContainer"><span><img
+				alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
+  <li class=""><a href="#iterations"><span><img
+				alt="Edit" src="static/img/backlog.png" /> Iterations</span></a></li>
+</ul>
 
-<div id="storyTree" class="structure-main-block">&nbsp;</div>
+<form onsubmit="return false;">
+<div class="details" id="stories"></div>
+<div class="details" id="storyTreeContainer">
+  <input id="treeHideDone" type="checkbox"/>Hide done stories
+  <div id="storyTree">&nbsp;</div>
+</div>
+<div class="details" id="iterations">
+		<div id="ongoingIterations">&nbsp;</div>
+		<div id="futureIterations">&nbsp;</div>
+		<div id="pastIterations">&nbsp;</div>
+</div>
 
-<form onsubmit="return false;"><div id="ongoingIterations" class="structure-main-block">&nbsp;</div></form>
-
-<form onsubmit="return false;"><div id="futureIterations" class="structure-main-block">&nbsp;</div></form>
-
-<form onsubmit="return false;"><div id="pastIterations" class="structure-main-block">&nbsp;</div></form>
-
+</div>
+</form>
 
 
 

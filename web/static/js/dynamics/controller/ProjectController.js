@@ -238,10 +238,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getOngoingIterations,
     caption : "Ongoing Iterations",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    cssClass: "ui-widget-content ui-corner-all",
     rowDroppable: true,
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
@@ -262,10 +258,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getPastIterations,
     caption : "Past Iterations",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    cssClass: "ui-widget-content ui-corner-all",
     rowDroppable: true,
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
@@ -280,10 +272,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getFutureIterations,
     caption : "Future Iterations",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    cssClass: "ui-widget-content ui-corner-all",
     rowDroppable: true,
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
@@ -414,10 +402,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
       connectWith: "div.dynamictable-iteration-storylist > div.ui-sortable"
     },
     caption : "Stories",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    cssClass: "dynamictable-project-stories ui-widget-content ui-corner-all",
     tableDroppable: true,
     dropOptions: {
       accepts: function(model) {

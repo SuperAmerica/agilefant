@@ -343,6 +343,15 @@ li.dynamictable-captionaction {
   border: 1px solid rgba(0,0,0,0.3);
   font-size: 80%;
 }
+.inlineTaskState {
+  font-size: 80%;
+  border: 1px solid rgba(0,0,0,0.3);
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  padding: 0 0.5em;
+  display: inline;
+}
+
 .taskStateNOT_STARTED {
 	background-color: #dddddd;
 }

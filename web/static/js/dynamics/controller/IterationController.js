@@ -97,7 +97,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all",
+    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table",
     sortCallback: TaskController.prototype.sortAndMoveTask,
     sortOptions: {
       items: "> .dynamicTableDataRow",
@@ -275,7 +275,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all",
+    cssClass: "ui-widget-content ui-corner-all iteration-story-table",
     rowDroppable: true,
     dropOptions: {
       callback: TaskController.prototype.moveTask,
@@ -428,7 +428,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    cssClass : 'story-row',
+    
     editable : true,
     edit : {
       editor : "Wysiwyg",

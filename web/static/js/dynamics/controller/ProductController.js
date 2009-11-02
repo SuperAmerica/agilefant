@@ -151,7 +151,7 @@ ProductController.prototype.initializeStoryConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all"
+    cssClass: "ui-widget-content ui-corner-all product-story-table"
   });
 
   config.addCaptionItem( {
@@ -299,7 +299,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all",
+    cssClass: "ui-widget-content ui-corner-all product-project-table",
     validators: [ BacklogModel.Validators.dateValidator ]
   });
 

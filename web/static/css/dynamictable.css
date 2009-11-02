@@ -11,9 +11,8 @@
 .dynamictable-caption {
 	font-weight:bold;
 	height:19px;
-	padding:0 0 0 0.5em;
+	padding: 6px 0 0 0.5em;
 	font-size: 12pt;
-	padding-top: 6px;
 }
 
 .dynamictable-caption-block {
@@ -22,10 +21,18 @@
 }
 
 .dynamictable-row {
-	margin: 3px 0;
-	padding: 0;
-  width: 100%;
+	margin: 4px 1% 4px 1%;
+	padding: 2px 0 0 0;
+  width: 98%;
   overflow: hidden;
+  border: 1px solid #ccc;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+.dynamictable-vertical .dynamictable-row {
+  border: none;
+  background: transparent;  
 }
 
 .dynamictable .dynamictable-row .dynamictable-cell {
@@ -35,10 +42,11 @@
   display: block;
   width: auto;
   float: left;
-  margin: 0 0.2% -1000em 0;
-  padding: 0 0 1000.2em 0.2%;
+  margin: 0 0.2% -2000px 0;
+  padding: 0 0 2002px 0.2%;
   overflow: hidden;
   border: none;
+  background: transparent !important;
 }
 
 .dynamicTableRow-drag {
@@ -73,11 +81,15 @@
   width: 98%;
 }
 
-.dynamictable-header .dynamictable-cell {
+.dynamictable-header {
   font-weight: bold;
   background-color: #d6dde5 !important;
+  
+}
+.dynamictable-header .dynamictable-cell {
   padding-left: 4px;
 }
+
 .dynamictable-header .dynamictable-cell a, .dynamictable-header .dynamictable-cell span {
   white-space: nowrap;
 }
@@ -322,13 +334,14 @@ li.dynamictable-captionaction {
 
 .taskState {
 	display: block;
-	width: 80px;
+	width: 65px;
 	padding: 1px;
 	text-align: center;
 	-moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
   border: 1px solid rgba(0,0,0,0.3);
+  font-size: 80%;
 }
 .taskStateNOT_STARTED {
 	background-color: #dddddd;
@@ -398,6 +411,68 @@ li.dynamictable-captionaction {
   margin-left: 4%;
   margin-right: 4%;
 }
+
+
+
+
+
+/**
+ * Iteration page styles
+ */
+
+.iteration-story-table .dynamictable-row,
+.project-iteration-table .dynamictable-row {
+  background: #e9eeff;
+  border-color: rgb(180, 180, 204);  
+}
+.task-table {
+  background: white;  
+}
+.task-table .dynamictable-row {
+  background: #eee;  
+}
+.story-table {
+  background: white;  
+}
+
+
+
+/**
+ * Project page styles
+ */
+.project-story-table .dynamictable-row {
+  background-color: #edf;
+}
+.project-iteration-storylist {
+  background: white;
+  width: 95% !important;
+  margin-left: 5%;  
+}
+.project-iteration-storylist .dynamictable-row {
+  background-color: #eee;  
+}
+
+
+/**
+ * Product page styles
+ */
+.product-story-table .dynamictable-row {
+  background-color: #fec;
+}
+.product-project-table .dynamictable-row {
+  background-color: #edf;
+}
+  
+
+
+
+
+
+
+
+
+/*
+
 .dynamictable .dynamictable-row .projectstory-row {
   background-color: #edf;
 }
@@ -440,9 +515,6 @@ li.dynamictable-captionaction {
 .dynamictable .dynamictable-row .task-row {
 	background-color: #eee;
 }
-/* .dynamictable div.daily-work-next-assigned div.task-row {
-    background-color: #dfd;
-} */
 
 .dynamictable .dynamictable-row .task-data {
 	background-color: #fff;
@@ -454,7 +526,7 @@ li.dynamictable-captionaction {
   background-color: #fff;
 }
 
-
+*/
 .dynamictable .dynamictable-row .text-editor {
   cursor: text;  
 }
@@ -470,10 +542,20 @@ li.dynamictable-captionaction {
 .dynamictable-tasklist-cell {
   background-color: #eee;  
 }
-.dynamictable-iteration-storylist {
-  width: 95% !important;
-  margin-left: 5%;  
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 div.loadingStories { 
 	background-color:#EEEEEE;
@@ -494,7 +576,7 @@ div.corner-border {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border:1px solid #A6C9E2;
-	margin-left: -8px;
+	/* margin-left: -8px;*/
 }
 
 div.dynamictable-tailer {

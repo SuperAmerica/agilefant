@@ -243,6 +243,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
     },
+    cssClass: "project-iteration-table",
     validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(ongoingConfig);
@@ -263,6 +264,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
     },
+    cssClass: "project-iteration-table",
     validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(pastConfig);
@@ -277,6 +279,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
       accepts: IterationRowController.prototype.acceptsDroppable,
       callback: StoryController.prototype.moveStoryToBacklog
     },
+    cssClass: "project-iteration-table",
     validators: [ BacklogModel.Validators.dateValidator ]
   });
   this._iterationListColumnConfig(futureConfig);
@@ -401,6 +404,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: "div.dynamictable-iteration-storylist > div.ui-sortable"
     },
+    cssClass: "project-story-table",
     caption : "Stories",
     tableDroppable: true,
     dropOptions: {

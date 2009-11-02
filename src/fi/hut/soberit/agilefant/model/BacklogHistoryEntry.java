@@ -70,11 +70,11 @@ public class BacklogHistoryEntry {
         this.timestamp = timestamp;
     }
 
+    @Column(nullable=false)
     public long getRootSum() {
         return rootSum;
     }
-
-    @Column(nullable=false)
+    
     public void setRootSum(long rootSum) {
         this.rootSum = rootSum;
     }

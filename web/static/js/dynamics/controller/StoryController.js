@@ -302,7 +302,7 @@ StoryController.prototype.storyPointsEditable = function() {
     dataSource : StoryModel.prototype.getTasks,
     caption: "Tasks",
     sortCallback: TaskController.prototype.sortAndMoveTask,
-    cssClass: "corner-border",
+    cssClass: "corner-border task-table",
     sortOptions: {
       items: "> .dynamicTableDataRow",
       handle: "." + DynamicTable.cssClasses.dragHandle,

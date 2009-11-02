@@ -34,6 +34,7 @@ DynamicTable.cssClasses = {
   tableTailer : "dynamictable-tailer",
   tableCaption : "dynamictable-caption",
   table : "dynamictable",
+  verticalTable: "dynamictable dynamictable-vertical",
   notSortable : "dynamictable-notsortable",
   oddRow : "dynamictable-odd",
   evenRow : "dynamictable-even",
@@ -665,7 +666,7 @@ DynamicVerticalTable.prototype = new DynamicView();
 
 DynamicVerticalTable.prototype.initialize = function() {
   this.container = $("<div />").appendTo(this.getParentElement()).addClass(
-      DynamicTable.cssClasses.table);
+      DynamicTable.cssClasses.verticalTable);
   if (this.config.options.cssClass) {
     this.container.addClass(this.config.options.cssClass);
   }

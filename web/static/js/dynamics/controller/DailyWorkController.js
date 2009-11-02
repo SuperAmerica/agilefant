@@ -91,7 +91,7 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
     options.captionConfig = {
         cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     };
-    options.cssClass = "ui-widget-content ui-corner-all dynamicTable-sortable-tasklist";
+    options.cssClass = "ui-widget-content ui-corner-all dynamicTable-sortable-tasklist task-table";
     options.caption = "My work queue";
     options.dataSource = DailyWorkModel.prototype.getQueueTasks;
 

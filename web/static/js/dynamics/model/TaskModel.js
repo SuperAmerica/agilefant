@@ -42,6 +42,15 @@ var TaskModel = function TaskModel() {
 
 TaskModel.prototype = new CommonModel();
 
+TaskModel.Validators = {
+    backlogValidator: function(model) {
+        if (!model.getContext().backlogId) {
+            throw "Please select an iteration for the task";
+        }
+    }
+};
+
+
 TaskModel.prototype._setData = function(newData) {
   if (newData.id) {
     this.id = newData.id;

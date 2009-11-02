@@ -63,17 +63,18 @@ DetailsView.prototype.render = function() {
     else {
         var contextString = this.model.getBacklog().getName();
     }
-
+    
     $("span", this.element).remove();
+    var noProperContext = ! this.model.getId();
     if (! contextString) {
-        if (this.link) {
-            this.link.remove();
-            this.link = null;
-        }
-        this.element.append($("<span>(not set)</span>"));
-        return;
+        contextString = "(not set)";
+        noProperContext = true;
     }
     
+    if (noProperContext) {
+        this.element.append($("<span>" + contextString + "</span>"));
+        return;
+    }
 
     if (! this.link) {
         this.link = $('<a href="#" class="daily-work-task-context"></a>');
@@ -102,13 +103,15 @@ DetailsView.prototype.open = function() {
     
     var off = this.parentView.getElement().offset();
     var width = this.parentView.getElement().width();
+    
+    var top = this.link.offset().top + this.link.height();
     var viewWidth = 400;
     
     var viewCss = {
         "position" : "absolute",
         "overflow" : "visible",
         "z-index" : "100",
-        "top" : off.top + 18,
+        "top" : top,
         "left" : off.left + (width - viewWidth) / 2,
         "width": viewWidth,
         "min-height": 200,

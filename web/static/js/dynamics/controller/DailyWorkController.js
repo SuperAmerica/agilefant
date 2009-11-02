@@ -102,8 +102,6 @@ DailyWorkController.prototype.initializeQueueConfig = function() {
             handle: "." + DynamicTable.cssClasses.dragHandle
     };
 
-    options.appendTailer = true;
-
     sortCallback        = DynamicsComparators.valueComparatorFactory(DailyWorkTaskModel.prototype.getWorkQueueRank);
     actionColumnFactory = DailyWorkTaskController.prototype.queuedTaskActionColumnFactory;
     options.editableCallback = TaskController.prototype.isEditable;
@@ -286,7 +284,7 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
         captionConfig: {
             cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
         },
-        cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all",
+        cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table",
         tableDroppable: true,
         alwaysDrop: true,
         dropOptions: {
@@ -297,6 +295,7 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
             callback: function() {
             }
         },
+        validators: [ TaskModel.Validators.backlogValidator ],
         sortOptions: {
             items: "> .dynamicTableDataRow",
             handle: "." + DynamicTable.cssClasses.dragHandle,
@@ -507,7 +506,7 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         captionConfig: {
             cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
         },
-        cssClass: "ui-widget-content ui-corner-all",
+        cssClass: "ui-widget-content ui-corner-all dailywork-story-table",
         rowDroppable: true,
         dropOptions: {
             callback:  TaskController.prototype.moveTask,
@@ -545,7 +544,7 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
     });
 
     config.addColumnConfiguration(StoryController.columnIndices.name, {
-        minWidth : 280,
+        minWidth : 180,
         autoScale : true,
         cssClass : 'story-row',
         title : "Name",
@@ -560,20 +559,6 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         set : StoryModel.prototype.setName,
         required: true
     }
-    });
-    
-    config.addColumnConfiguration(StoryController.columnIndices.context, {
-        minWidth : 120,
-        autoScale : true,
-        cssClass : 'story-row',
-        title : 'Iteration',
-        headerTooltip : 'Story context',
-        get  : StoryModel.prototype.getBacklog,
-        decorator: DynamicsDecorators.hiddenDecorator,
-        editable : false,
-        sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getBacklog),
-        openOnRowEdit: false,
-        subViewFactory: DailyWorkStoryController.prototype.detailsViewFactory
     });
     
     config.addColumnConfiguration(StoryController.columnIndices.points, {
@@ -606,6 +591,21 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         items : DynamicsDecorators.stateOptions
     }
     });
+    
+    config.addColumnConfiguration(StoryController.columnIndices.context, {
+        minWidth : 120,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : 'Iteration',
+        headerTooltip : 'Story context',
+        get  : StoryModel.prototype.getBacklog,
+        decorator: DynamicsDecorators.hiddenDecorator,
+        editable : false,
+        sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getBacklog),
+        openOnRowEdit: false,
+        subViewFactory: DailyWorkStoryController.prototype.detailsViewFactory
+    });
+    
     config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
         minWidth : 60,
         autoScale : true,
@@ -750,42 +750,41 @@ DailyWorkStoryController.prototype = new StoryController();
 DailyWorkStoryController.prototype.createTaskListView = function(panel) {
     var controller = this;
     var config = new DynamicTableConfiguration( {
-        cssClass: "dynamicTable-sortable-tasklist",
+        cssClass: "dynamicTable-sortable-tasklist task-table corner-border",
         rowControllerFactory : StoryController.prototype.taskControllerFactory,
         dataSource : StoryModel.prototype.getTasks,
         caption: "Tasks",
         sortCallback: TaskController.prototype.sortAndMoveTask,
-        cssClass: "corner-border",
         sortOptions: {
           items: "> .dynamicTableDataRow",
           handle: "." + DynamicTable.cssClasses.dragHandle,
           connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
-        }
-      });
-      config.addCaptionItem( {
+        },
+    });
+    config.addCaptionItem( {
         name : "showDone",
         text : "Show done tasks",
         cssClass : "showDone",
         connectWith: "hideDone",
         visible: true,
         callback : DailyWorkStoryController.prototype.showDone
-      });
-      config.addCaptionItem( {
+    });
+    config.addCaptionItem( {
         name : "hideDone",
         text : "Hide done tasks",
         cssClass : "hideDone",
         connectWith: "showDone",
         visible: false,
         callback : DailyWorkStoryController.prototype.hideDone
-      });
-      config.addCaptionItem( {
+    });
+    config.addCaptionItem( {
         name : "createTask",
         text : "Create task",
         cssClass : "createTask",
         visible: true,
         callback : StoryController.prototype.createTask
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.prio, {
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.prio, {
         minWidth : 24,
         autoScale : true,
         cssClass : 'task-row',
@@ -794,8 +793,8 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
         sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
         defaultSortColumn: true,
         subViewFactory: TaskController.prototype.toggleFactory
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.name, {
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.name, {
         minWidth : 180,
         autoScale : true,
         cssClass : 'task-row',
@@ -805,12 +804,12 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
         editable : true,
         dragHandle: true,
         edit : {
-          editor : "Text",
-          set : TaskModel.prototype.setName,
-          required: true
-        }
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.state, {
+        editor : "Text",
+        set : TaskModel.prototype.setName,
+        required: true
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.state, {
         minWidth : 80,
         autoScale : true,
         cssClass : 'task-row',
@@ -820,12 +819,12 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
         decorator: DynamicsDecorators.stateColorDecorator,
         editable : true,
         edit : {
-          editor : "Selection",
-          set : TaskModel.prototype.setState,
-          items : DynamicsDecorators.stateOptions
-        }
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.responsibles, {
+        editor : "Selection",
+        set : TaskModel.prototype.setState,
+        items : DynamicsDecorators.stateOptions
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.responsibles, {
         minWidth : 60,
         autoScale : true,
         cssClass : 'task-row',
@@ -837,13 +836,13 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
         editable : true,
         openOnRowEdit: false,
         edit : {
-          editor : "Autocomplete",
-          dialogTitle: "Select users",
-          dataType: "usersAndTeams",
-          set : TaskModel.prototype.setResponsibles
-        }
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.el, {
+        editor : "Autocomplete",
+        dialogTitle: "Select users",
+        dataType: "usersAndTeams",
+        set : TaskModel.prototype.setResponsibles
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.el, {
         minWidth : 30,
         autoScale : true,
         cssClass : 'task-row',
@@ -854,12 +853,12 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
         editable : true,
         editableCallback: TaskController.prototype.effortLeftEditable,
         edit : {
-          editor : "ExactEstimate",
-          decorator: DynamicsDecorators.exactEstimateEditDecorator,
-          set : TaskModel.prototype.setEffortLeft
-        }
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.oe, {
+        editor : "ExactEstimate",
+        decorator: DynamicsDecorators.exactEstimateEditDecorator,
+        set : TaskModel.prototype.setEffortLeft
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.oe, {
         minWidth : 30,
         autoScale : true,
         cssClass : 'task-row',
@@ -870,14 +869,14 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
         editable : true,
         editableCallback: TaskController.prototype.originalEstimateEditable,
         edit : {
-          editor : "ExactEstimate",
-          decorator: DynamicsDecorators.exactEstimateEditDecorator,
-          set : TaskModel.prototype.setOriginalEstimate
-        }
-      });
-      
-      if (Configuration.isTimesheetsEnabled()) {
-          config.addColumnConfiguration(TaskController.columnIndices.es, {
+        editor : "ExactEstimate",
+        decorator: DynamicsDecorators.exactEstimateEditDecorator,
+        set : TaskModel.prototype.setOriginalEstimate
+    }
+    });
+
+    if (Configuration.isTimesheetsEnabled()) {
+        config.addColumnConfiguration(TaskController.columnIndices.es, {
             minWidth : 30,
             autoScale : true,
             cssClass : 'task-row',
@@ -888,41 +887,41 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
             editable : false,
             onDoubleClick: TaskController.prototype.openQuickLogEffort,
             edit : {
-              editor : "ExactEstimate",
-              decorator: DynamicsDecorators.empty,
-              set : TaskController.prototype.quickLogEffort
-            }
-          });
-      }
-      config.addColumnConfiguration(TaskController.columnIndices.actions, {
+            editor : "ExactEstimate",
+            decorator: DynamicsDecorators.empty,
+            set : TaskController.prototype.quickLogEffort
+        }
+        });
+    }
+    config.addColumnConfiguration(TaskController.columnIndices.actions, {
         minWidth : 35,
         autoScale : true,
         cssClass : 'task-row',
         title : "Edit",
         subViewFactory: TaskController.prototype.actionColumnFactory
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.description, {
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.description, {
         fullWidth : true,
         get : TaskModel.prototype.getDescription,
         cssClass : 'task-data text-editor',
         visible : false,
         editable : true,
         edit : {
-          editor : "Wysiwyg",
-          set : TaskModel.prototype.setDescription
-        }
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.buttons, {
+        editor : "Wysiwyg",
+        set : TaskModel.prototype.setDescription
+    }
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.buttons, {
         fullWidth : true,
         visible : false,
         cssClass : 'task-row',
         subViewFactory : DynamicsButtons.commonButtonFactory
-      });
-      config.addColumnConfiguration(TaskController.columnIndices.data, {
+    });
+    config.addColumnConfiguration(TaskController.columnIndices.data, {
         fullWidth : true,
         cssClass : 'task-data',
         visible : false
-      });
+    });
 
     this.taskListView = new DynamicTable(this, this.model, config, panel);
     this.filterDone(true);

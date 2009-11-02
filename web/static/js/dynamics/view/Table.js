@@ -94,10 +94,6 @@ DynamicTable.prototype.initialize = function() {
         .getController());
   this._renderHeader();
   
-  if (this.config.options.appendTailer) {
-      this._createTailer();
-  }
-  
   this._bindEvents();
   if(this.config.isTableDroppable()) {
     me._registerDropFor(this.container);
@@ -344,13 +340,6 @@ DynamicTable.prototype._renderHeader = function() {
   }
 };
 
-DynamicTable.prototype._createTailer = function() {
-    this.tailer = $('<div />').appendTo(this.element).addClass(
-        DynamicTable.cssClasses.tableTailer).addClass(
-        DynamicTable.cssClasses.tableRow);
-};
-
-
 DynamicTable.prototype._filter = function(data) {
   if(this.currentFilter) {
     data = this.currentFilter(data);
@@ -392,7 +381,6 @@ DynamicTable.prototype.render = function() {
   } else { //row order hasn't changed
     this._softRender();
   }
-  this._appendTailerIfExists();
   if (this.rowCount() === 0) {
     this.header.hide();
   } else {
@@ -429,12 +417,6 @@ DynamicTable.prototype._renderHeaderColumn = function(index) {
 
 DynamicTable.prototype.setFilter = function(filter) {
   this.currentFilter = filter;
-};
-
-DynamicTable.prototype._appendTailerIfExists = function () {
-    if (this.tailer !== null) {
-        this.element.append(this.tailer);
-    }
 };
 
 /**

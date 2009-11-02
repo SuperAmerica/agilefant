@@ -97,7 +97,7 @@ public class DailyWorkContextInfoAction extends ActionSupport {
         else if (backlog instanceof Project){
             returnValue = "editProject.action?projectId=" + backlog.getId();
         }
-        else if (backlog instanceof Product) {
+        else {
             returnValue = "editProduct.action?productId=" + backlog.getId();
         }
         

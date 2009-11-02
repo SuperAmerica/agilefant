@@ -260,7 +260,7 @@ public class DailyWorkBusinessTest {
     
     @Test(expected=IllegalArgumentException.class)
     public void testRankUnderTaskOnWhatsNext_withNullEntry() {
-        testable.rankToBottomOnWhatsNext(null);
+        testable.rankUnderTaskOnWhatsNext(null, new WhatsNextEntry());
     }
     
     @Test

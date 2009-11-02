@@ -22,9 +22,6 @@ public class NamedObjectAndLinkPair {
     }
 
     public String getName() {
-        if (name == null) {
-            return "";
-        }
         return name;
     }
 

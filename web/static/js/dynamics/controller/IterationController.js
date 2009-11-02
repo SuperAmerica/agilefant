@@ -489,7 +489,7 @@ IterationController.prototype.initIterationInfoConfig = function() {
     title : "End Date",
     get : IterationModel.prototype.getEndDate,
     decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,:()
+    editable : true,
     edit : {
       editor : "Date",
       decorator: DynamicsDecorators.dateTimeDecorator,

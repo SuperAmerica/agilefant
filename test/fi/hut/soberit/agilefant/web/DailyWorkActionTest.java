@@ -34,7 +34,7 @@ public class DailyWorkActionTest {
     private TaskBusiness taskBusiness;
     private TransferObjectBusiness transferObjectBusiness;
 
-    protected int LOGGED_IN_USER = 2;
+    protected int LOGGED_IN_USER = 456;
     
     @SuppressWarnings("serial")
     @Before
@@ -42,7 +42,7 @@ public class DailyWorkActionTest {
         testable = new DailyWorkAction() {
             @Override
             protected int getLoggedInUserId() {
-                return LOGGED_IN_USER ;
+                return LOGGED_IN_USER;
             }
         };
         
@@ -69,8 +69,9 @@ public class DailyWorkActionTest {
     
     @Test
     public void testRetrieve() {
+        final int USER_ID = 42;
         User user = new User(); 
-        testable.setUserId(1);
+        testable.setUserId(USER_ID);
 
         Collection<DailyWorkTaskTO> returnedList  = Arrays.asList(
             new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 1), 
@@ -82,13 +83,14 @@ public class DailyWorkActionTest {
         User u1 = users.get(0);
         User u2 = users.get(1);
 
-        expect(userBusiness.retrieve(1)).andReturn(user);
+        expect(userBusiness.retrieve(USER_ID)).andReturn(user);
         expect(userBusiness.getEnabledUsers()).andReturn(users);
         expect(dailyWorkBusiness.getQueuedTasksForUser(user))
             .andReturn(returnedList);
 
+        AssignedWorkTO assignedWork = new AssignedWorkTO();
         expect(dailyWorkBusiness.getAssignedWorkFor(user))
-            .andReturn(new AssignedWorkTO());
+            .andReturn(assignedWork);
         
         replayAll();
 
@@ -102,6 +104,10 @@ public class DailyWorkActionTest {
         assertEquals(usersReturned.size(), 2);
         assertTrue(usersReturned.contains(u1));
         assertTrue(usersReturned.contains(u2));
+        
+        assertEquals(user, testable.getUser());
+        assertEquals(USER_ID, testable.getUserId());
+        assertSame(assignedWork, testable.getAssignedWork());
     }
 
     @Test(expected=ObjectNotFoundException.class)

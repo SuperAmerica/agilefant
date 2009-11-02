@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -27,7 +28,7 @@ import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public class DailyWorkBusinessTest {
-    private DailyWorkBusiness testable;
+    private DailyWorkBusinessImpl testable;
     
     private TaskDAO taskDAO;
     private WhatsNextEntryDAO whatsNextEntryDAO;
@@ -153,6 +154,26 @@ public class DailyWorkBusinessTest {
     }
     
     @Test
+    public void testGetQueuedTasksForUser() {
+        expect(whatsNextEntryDAO.getWhatsNextEntriesFor(user)).andReturn(
+                Arrays.asList(whatsNextEntry_forTask1AndUser, whatsNextEntry_forTask2AndUser));
+
+        DailyWorkTaskTO dwtto1 = new DailyWorkTaskTO(task1);
+        DailyWorkTaskTO dwtto2 = new DailyWorkTaskTO(task2);
+        
+        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(whatsNextEntry_forTask1AndUser)).andReturn(dwtto1);
+        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(whatsNextEntry_forTask2AndUser)).andReturn(dwtto2);
+        
+        replayAll();
+        
+        Collection<DailyWorkTaskTO> returned = testable.getQueuedTasksForUser(user);
+
+        verifyAll();
+        
+        assertEquals(Arrays.asList(dwtto1, dwtto2), returned);
+    }
+    
+    @Test
     public void testRankToBottomOnWhatsNext() {
         expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(whatsNextEntry_forTask1AndUser);
         expect(whatsNextEntryDAO.getLastTaskInRank(user)).andReturn(whatsNextEntry_forTask2AndUser);
@@ -181,7 +202,7 @@ public class DailyWorkBusinessTest {
     }
     
     @Test
-    public void testRankUnder_addEntry() {
+    public void testRankUnder_addEntry_upperTaskNotNull() {
         expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(null);
 
         Capture<WhatsNextEntry> entryCapture    = new Capture<WhatsNextEntry>();
@@ -237,6 +258,31 @@ public class DailyWorkBusinessTest {
         verifyAll();
     }
     
+    @Test(expected=IllegalArgumentException.class)
+    public void testRankUnderTaskOnWhatsNext_withNullEntry() {
+        testable.rankToBottomOnWhatsNext(null);
+    }
+    
+    @Test
+    public void testRankUnder_existingEntry_rankToTop() {
+        expect(whatsNextEntryDAO.getWhatsNextEntryFor(user, task1)).andReturn(whatsNextEntry_forTask1AndUser);
+        
+        rankingBusiness.rankUnder(
+            isA(Rankable.class), 
+            eq((Rankable)null),
+            isA(RankUnderDelegate.class)
+        );
+
+        DailyWorkTaskTO dwtto1 = new DailyWorkTaskTO(task1);
+        expect(transferObjectBusiness.constructQueuedDailyWorkTaskTO(whatsNextEntry_forTask1AndUser)).andReturn(dwtto1);
+        replayAll();
+
+        DailyWorkTaskTO returnedTO = testable.rankUnderTaskOnWhatsNext(user, task1, null);
+
+        verifyAll();
+        assertSame(dwtto1, returnedTO);
+    }
+
     @Test
     public void testRemoveTaskFromWorkQueues() {
         whatsNextEntryDAO.removeAllByTask(task1);

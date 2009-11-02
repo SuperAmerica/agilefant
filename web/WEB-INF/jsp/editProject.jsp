@@ -34,9 +34,7 @@ $(document).ready(function() {
     id: ${project.id},
     projectDetailsElement: $("#backlogDetails"),
     assigmentListElement: $("#backlogAssignees"),
-    ongoingIterationListElement: $("#ongoingIterations"),
-    pastIterationListElement: $("#pastIterations"),
-    futureIterationListElement: $("#futureIterations"),
+    iterationListElement: $("#iterations"),
     storyListElement: $('#stories'),
     hourEntryListElement: $("#backlogSpentEffort")
   });
@@ -70,19 +68,17 @@ $(document).ready(function() {
 </ul>
 
 <form onsubmit="return false;">
-<div class="details" id="stories"></div>
-<div class="details" id="storyTreeContainer">
-  <input id="treeHideDone" type="checkbox"/>Hide done stories
-  <div id="storyTree">&nbsp;</div>
-</div>
-<div class="details" id="iterations">
-		<div id="ongoingIterations">&nbsp;</div>
-		<div id="futureIterations">&nbsp;</div>
-		<div id="pastIterations">&nbsp;</div>
-</div>
+  <div class="details" id="stories"></div>
+  <div class="details" id="storyTreeContainer">
+    <input id="treeHideDone" type="checkbox"/>Hide done stories
+    <div id="storyTree">&nbsp;</div>
+  </div>
+  <div class="details" id="iterations">
+  		<div id="iterations">&nbsp;</div>
+  </div>
+</form>
 
 </div>
-</form>
 
 
 

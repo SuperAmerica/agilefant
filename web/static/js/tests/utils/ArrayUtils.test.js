@@ -56,4 +56,41 @@ $(document).ready(function() {
     ok(ArrayUtils.compare(a1,a2), "equal, multiple elements");
   });
   
+  
+  test("Compare objects", function() {
+    var a = null;
+    var b = null;
+    
+    // Undefined or null
+    ok(ArrayUtils.compareObjects(), "undefined objects");
+    ok(ArrayUtils.compareObjects(a,b), "null objects");
+    ok(!ArrayUtils.compareObjects(a,{ name: "Foo"}), "other one null");
+    
+    
+    // Equal objects
+    a = { name: "Foo" };
+    b = { name: "Foo" };
+    ok(ArrayUtils.compareObjects(a,b), "String fields");
+    
+    // Not equal objects
+    a = { name: "Foo" };
+    b = { name: "Bar" };
+    ok(!ArrayUtils.compareObjects(a,b), "Not equal fields");
+    
+    // Not equal objects
+    a = { name: "Foo", desc: "Faa" };
+    b = { name: "Foo" };
+    ok(!ArrayUtils.compareObjects(a,b), "Other has more fields");
+  });
+  
+  
+  test("Get object fields", function() {
+    var obj = {};
+    var fields = [];
+    same(ArrayUtils._getObjectFields(obj), fields, "Matches");
+    
+    obj = { name: "Name" };
+    fields = [ "name" ];
+    same(ArrayUtils._getObjectFields(obj), fields, "Matches");
+  });
 });

@@ -39,6 +39,7 @@ $(document).ready(function() {
     var copyFieldsCallCount = 0;
     this.commonModel._copyFields = function() {
       copyFieldsCallCount++;
+      return true;
     };
     
     var data = {
@@ -69,8 +70,8 @@ $(document).ready(function() {
         "name":   "name",
         "desc":   "description"
     };
-    
-    this.commonModel._copyFields(newData);
+     
+    ok((this.commonModel._copyFields(newData) === true), "Copy fields function returns true if values changed");
     
     same(this.commonModel.currentData.name, "Foo field name", "Name copied");
     same(this.commonModel.currentData.description, "Foo bar description", "Description copied");
@@ -81,6 +82,23 @@ $(document).ready(function() {
     ok(!this.commonModel.persistedData.fooValue, "Field fooValue not copied");
     
     same(this.commonModel.currentData.anotherField, "Another value", "Field not overwritten");
+  });
+  
+  test("Copy fields - don't change data", function() {
+    var newData = {
+        name: "Foo field name"
+    };
+    this.commonModel.currentData = {
+        name: "Foo field"
+    };
+    this.commonModel.persistedData = {
+        name: "Foo field name"
+    };
+    this.commonModel.copiedFields = {
+        "name":   "name"
+    };
+    
+    ok((this.commonModel._copyFields(newData) === false), "Copy fields function returns false if values not changed");
   });
   
 //  /**

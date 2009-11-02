@@ -11,10 +11,9 @@ var ProjectController = function ProjectController(options) {
   this.parentView = options.storyListElement;
   this.projectDetailsElement = options.projectDetailsElement;
   this.assigmentListElement = options.assigmentListElement;
-  this.ongoingIterationListElement = options.ongoingIterationListElement;
-  this.pastIterationListElement = options.pastIterationListElement;
-  this.futureIterationListElement = options.futureIterationListElement;
+  this.iterationListElement = options.iterationListElement;
   this.hourEntryListElement = options.hourEntryListElement;
+
   this.init();
   this.initializeProjectDetailsConfig();
   this.initAssigneeConfiguration();
@@ -65,22 +64,10 @@ ProjectController.prototype.paintProjectDetails = function() {
   this.projectDetailsView.render();
 };
 
-ProjectController.prototype.paintOngoingIterationList = function() {
-  this.ongoingIterationsView = new DynamicTable(this, this.model, this.ongoingIterationListConfig,
-      this.ongoingIterationListElement);
-  this.ongoingIterationsView.render();
-};
-
-ProjectController.prototype.paintPastIterationList = function() {
-  this.pastIterationsView = new DynamicTable(this, this.model, this.pastIterationListConfig,
-      this.pastIterationListElement);
-  this.pastIterationsView.render();
-};
-
-ProjectController.prototype.paintFutureIterationList = function() {
-  this.futureIterationsView = new DynamicTable(this, this.model, this.futureIterationListConfig,
-      this.futureIterationListElement);
-  this.futureIterationsView.render();
+ProjectController.prototype.paintIterationList = function() {
+  this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
+      this.iterationListElement);
+  this.iterationsView.render();
 };
 
 /**
@@ -94,9 +81,7 @@ ProjectController.prototype.paint = function() {
         me.paintProjectDetails();
         me.paintAssigneeList();
         me.paintStoryList();
-        me.paintOngoingIterationList();
-        me.paintPastIterationList();
-        me.paintFutureIterationList();
+        me.paintIterationList();
       });
 };
 
@@ -109,7 +94,7 @@ ProjectController.prototype.createIteration = function() {
   mockModel.setStartDate(new Date().getTime());
   mockModel.setEndDate(new Date().getTime());
   var controller = new IterationRowController(mockModel, null, this);
-  var row = this.ongoingIterationsView.createRow(controller, mockModel, "top");
+  var row = this.iterationsView.createRow(controller, mockModel, "top");
   controller.view = row;
   row.autoCreateCells([IterationRowController.columnIndices.actions]);
   row.render();
@@ -234,10 +219,10 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
  * Initialize configuration for iteration lists.
  */
 ProjectController.prototype.initializeIterationListConfig = function() {
-  var ongoingConfig = new DynamicTableConfiguration( {
+  var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
-    dataSource : ProjectModel.prototype.getOngoingIterations,
-    caption : "Ongoing Iterations",
+    dataSource : ProjectModel.prototype.getIterations,
+    caption : "Iterations",
     rowDroppable: true,
     dropOptions: {
       accepts: IterationRowController.prototype.acceptsDroppable,
@@ -246,44 +231,14 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     cssClass: "project-iteration-table",
     validators: [ BacklogModel.Validators.dateValidator ]
   });
-  this._iterationListColumnConfig(ongoingConfig);
-  ongoingConfig.addCaptionItem( {
+  this._iterationListColumnConfig(config);
+  config.addCaptionItem( {
     name : "createIteration",
     text : "Create iteration",
     cssClass : "create",
     callback : ProjectController.prototype.createIteration
   });
-  this.ongoingIterationListConfig = ongoingConfig;
-  
-  var pastConfig = new DynamicTableConfiguration( {
-    rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
-    dataSource : ProjectModel.prototype.getPastIterations,
-    caption : "Past Iterations",
-    rowDroppable: true,
-    dropOptions: {
-      accepts: IterationRowController.prototype.acceptsDroppable,
-      callback: StoryController.prototype.moveStoryToBacklog
-    },
-    cssClass: "project-iteration-table",
-    validators: [ BacklogModel.Validators.dateValidator ]
-  });
-  this._iterationListColumnConfig(pastConfig);
-  this.pastIterationListConfig = pastConfig;
-  
-  var futureConfig = new DynamicTableConfiguration( {
-    rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
-    dataSource : ProjectModel.prototype.getFutureIterations,
-    caption : "Future Iterations",
-    rowDroppable: true,
-    dropOptions: {
-      accepts: IterationRowController.prototype.acceptsDroppable,
-      callback: StoryController.prototype.moveStoryToBacklog
-    },
-    cssClass: "project-iteration-table",
-    validators: [ BacklogModel.Validators.dateValidator ]
-  });
-  this._iterationListColumnConfig(futureConfig);
-  this.futureIterationListConfig = futureConfig;
+  this.iterationListConfig = config;
 };
 
 
@@ -292,7 +247,6 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.expand, {
     minWidth : 16,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "",
     headerTooltip : 'Expand/collapse',
     defaultSortColumn: false,
@@ -302,12 +256,11 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "Name",
     headerTooltip : 'Iteration name',
     get : IterationModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getName),
-    defaultSortColumn: true,
+    defaultSortColumn: false,
     editable : true,
     dragHandle: true,
     edit : {
@@ -319,7 +272,6 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.startDate, {
     minWidth : 80,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "Start date",
     headerTooltip : 'Start date',
     get : IterationModel.prototype.getStartDate,
@@ -339,13 +291,12 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.endDate, {
     minWidth : 80,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "End date",
     headerTooltip : 'End date',
     get : IterationModel.prototype.getEndDate,
     sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getEndDate),
     decorator: DynamicsDecorators.dateTimeDecorator,
-    defaultSortColumn: true,
+    defaultSortColumn: false,
     editable : true,
     dragHandle: true,
     edit : {
@@ -359,7 +310,6 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "Edit",
     subViewFactory : IterationRowController.prototype.iterationActionFactory
   });
@@ -367,7 +317,6 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     fullWidth : true,
     visible : false,
     get : IterationModel.prototype.getDescription,
-    cssClass : 'projectstory-row',
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -377,13 +326,11 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.buttons, {
     fullWidth : true,
     visible : false,
-    cssClass : 'projectstory-row',
     subViewFactory : DynamicsButtons.commonButtonFactory
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.storiesData, {
     fullWidth : true,
     visible : false,
-    cssClass : 'story-data',
     subViewFactory : IterationRowController.prototype.rowContentsFactory,
     delayedRender: true
   });
@@ -398,21 +345,8 @@ ProjectController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
     dataSource : ProjectModel.prototype.getLeafStories,
-    sortCallback: StoryController.prototype.rankStory,
-    sortOptions: {
-      items: "> div.dynamicTableDataRow",
-      handle: "." + DynamicTable.cssClasses.dragHandle,
-      connectWith: "div.dynamictable-iteration-storylist > div.ui-sortable"
-    },
     cssClass: "project-story-table",
-    caption : "Stories",
-    tableDroppable: true,
-    dropOptions: {
-      accepts: function(model) {
-        return (model instanceof StoryModel);
-      },
-      callback: StoryController.prototype.moveStoryToBacklog
-    }
+    caption : "Leaf stories"
   });
 
   config.addCaptionItem( {
@@ -441,7 +375,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
     editable : true,
-    dragHandle: true,
     edit : {
       editor : "Text",
       set : StoryModel.prototype.setName,
@@ -495,32 +428,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.el, {
-    minWidth : 30,
-    autoScale : true,
-    cssClass : 'projectstory-row',
-    title : "EL",
-    headerTooltip : 'Total task effort left',
-    get : StoryModel.prototype.getTotalEffortLeft
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.oe, {
-    minWidth : 30,
-    autoScale : true,
-    cssClass : 'projectstory-row',
-    title : "OE",
-    headerTooltip : 'Total task original estimate',
-    get : StoryModel.prototype.getTotalOriginalEstimate
-  });
-  if (Configuration.isTimesheetsEnabled()) {
-    config.addColumnConfiguration(StoryController.columnIndices.es, {
-      minWidth : 30,
-      autoScale : true,
-      cssClass : 'projectstory-row',
-      title : "ES",
-      headerTooltip : 'Total task effort spent',
-      get : StoryModel.prototype.getTotalEffortSpent
-    });
-  }
   config.addColumnConfiguration(StoryController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,

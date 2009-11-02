@@ -35,8 +35,9 @@ CommonModel.prototype.reload = function() {
  */
 CommonModel.prototype.setData = function(newData) {  
   this._setData(newData);
-  this._copyFields(newData);
-  this.callListeners(new DynamicsEvents.EditEvent(this));
+  if (this._copyFields(newData)) {
+    this.callListeners(new DynamicsEvents.EditEvent(this));
+  }
   this.relationEvents();
 };
 
@@ -60,7 +61,11 @@ CommonModel.prototype._copyFields = function(newData) {
     }
   }
   jQuery.extend(this.currentData, data);
-  jQuery.extend(this.persistedData, data);
+  if (!ArrayUtils.compareObjects(this.currentData, this.persistedData)) {
+    jQuery.extend(this.persistedData, data);
+    return true;
+  }
+  return false;
 };
 
 CommonModel.prototype._updateRelations = function(type, newData) {

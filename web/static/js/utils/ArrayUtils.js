@@ -39,3 +39,49 @@ ArrayUtils.compare = function(array1, array2) {
   }
   return true;
 };
+
+/**
+ * Compare two objects.
+ *
+ * Note! Will not work if fields are not flat, i.e. there are arrays or
+ * objects nested in the fields.
+ *
+ * @return true, if all objects' fields are equal
+ */
+ArrayUtils.compareObjects = function(obj1, obj2) {
+  // Check sanity
+  if (!obj1 && !obj2) {
+    return true;
+  }
+  else if (!obj1 || !obj2) {
+    return false;
+  }
+  
+  // Get fields
+  var fields1 = ArrayUtils._getObjectFields(obj1);
+  var fields2 = ArrayUtils._getObjectFields(obj2);
+  
+  // If fields are not equal, return false
+  if (!ArrayUtils.compare(fields1, fields2)) {
+    return false;
+  }
+  
+  // Check fields
+  for (var i = 0; i < fields1.length; i++) {
+    if (obj1[fields1[i]] !== obj2[fields1[i]]) {
+      return false;
+    }
+  }
+  
+  return true;
+};
+
+ArrayUtils._getObjectFields = function(obj) {
+  var fields = [];
+  for (field in obj) {
+    if (obj.hasOwnProperty(field)) {
+      fields.push(field);
+    }
+  }
+  return fields;
+};

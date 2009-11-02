@@ -212,6 +212,7 @@ public class ProjectBusinessTest {
         proj.getChildren().addAll(Arrays.asList(pastIteration, currentIteration, futureIteration));
         
         expect(projectDAO.get(111)).andReturn(proj);
+        expect(transferObjectBusiness.constructProjectTO(proj)).andReturn(new ProjectTO(proj));
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
             .andReturn(ScheduleStatus.PAST).times(3);
         replayAll();

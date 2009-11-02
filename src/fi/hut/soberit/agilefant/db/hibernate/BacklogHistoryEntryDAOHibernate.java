@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.BacklogHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
-import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.util.ProjectBurnupData;
 
 @Repository("backlogHistoryEntryDAO")

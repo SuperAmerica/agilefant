@@ -397,7 +397,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
 ProjectController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
-    dataSource : ProjectModel.prototype.getStories,
+    dataSource : ProjectModel.prototype.getLeafStories,
     sortCallback: StoryController.prototype.rankStory,
     sortOptions: {
       items: "> div.dynamicTableDataRow",

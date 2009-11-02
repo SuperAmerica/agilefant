@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -33,6 +34,7 @@ import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -62,6 +64,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     @Autowired
     private IterationBusiness iterationBusiness;
+    
+    @Autowired
+    private StoryHierarchyBusiness storyHierarchyBusiness;
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
@@ -101,6 +106,16 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     public IterationTO constructIterationTO(Iteration iteration) {
         IterationTO returned = new IterationTO(iteration);
         returned.setScheduleStatus(this.getBacklogScheduleStatus(iteration));
+        return returned;
+    }
+    
+    @Transactional(readOnly = true)
+    public ProjectTO constructProjectTO(Project project) {
+        ProjectTO returned = new ProjectTO(project);
+        returned.setScheduleStatus(this.getBacklogScheduleStatus(project));
+        
+        returned.setLeafStories(storyHierarchyBusiness
+                .retrieveProjectLeafStories(project));
         return returned;
     }
     
@@ -375,5 +390,10 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
+    }
+
+    public void setStoryHierarchyBusiness(
+            StoryHierarchyBusiness storyHierarchyBusiness) {
+        this.storyHierarchyBusiness = storyHierarchyBusiness;
     }
 }

@@ -150,7 +150,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Transactional(readOnly = true)
     public ProjectTO getProjectData(int projectId) {
         Project original = this.retrieve(projectId);
-        ProjectTO project = new ProjectTO(original);
+        ProjectTO project = transferObjectBusiness.constructProjectTO(original);
         project.setChildren(new ArrayList<Backlog>());
         for (Backlog backlog : original.getChildren()) {
             IterationTO iter = new IterationTO((Iteration)backlog);

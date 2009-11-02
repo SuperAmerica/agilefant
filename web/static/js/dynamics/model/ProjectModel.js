@@ -32,6 +32,9 @@ var ProjectModel = function ProjectModel() {
       "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
       "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
   };
+  
+  
+  this.leafStories = [];
 };
 
 ProjectModel.prototype = new BacklogModel();
@@ -43,6 +46,7 @@ ProjectModel.prototype = new BacklogModel();
  */
 ProjectModel.prototype._setData = function(newData) {
   var data = {};
+  var me = this;
   
   // Set the id
   this.id = newData.id;
@@ -53,6 +57,14 @@ ProjectModel.prototype._setData = function(newData) {
   // Set stories
   if (newData.stories) {
     this._updateRelations(ModelFactory.types.story, newData.stories);
+  }
+  
+  // Leaf stories
+  if (newData.leafStories) {
+    this.leafStories = [];
+    $.each(newData.leafStories, function(k,v) {
+      me.leafStories.push(ModelFactory.updateObject(v));
+    });
   }
   
   // Set iterations
@@ -214,6 +226,10 @@ ProjectModel.prototype.setEndDate = function(endDate) {
 
 ProjectModel.prototype.getIterations = function() {
   return this.relations.iteration;
+};
+
+ProjectModel.prototype.getLeafStories = function() {
+  return this.leafStories;
 };
 
 ProjectModel.prototype.getName = function() {

@@ -29,6 +29,7 @@ import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -44,6 +45,7 @@ public class TransferObjectBusinessTest {
     private ProductBusiness productBusiness;
     private ProjectBusiness projectBusiness;
     private IterationBusiness iterationBusiness;
+    private StoryHierarchyBusiness storyHierarchyBusiness;
     
     Project project;
     Iteration iteration;
@@ -75,14 +77,17 @@ public class TransferObjectBusinessTest {
         
         iterationBusiness = createMock(IterationBusiness.class);
         transferObjectBusiness.setIterationBusiness(iterationBusiness);
+        
+        storyHierarchyBusiness = createMock(StoryHierarchyBusiness.class);
+        transferObjectBusiness.setStoryHierarchyBusiness(storyHierarchyBusiness);
     }
     
     private void verifyAll() {
-        verify(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness);
+        verify(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
     }
 
     private void replayAll() {
-        replay(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness);
+        replay(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
     }
     
     
@@ -188,6 +193,26 @@ public class TransferObjectBusinessTest {
         IterationTO actual = transferObjectBusiness.constructIterationTO(past);
         verifyAll();
         assertEquals(ScheduleStatus.PAST, actual.getScheduleStatus());
+    }
+    
+    @Test
+    public void constructProjectTO() {
+        Project past = new Project();
+        past.setStartDate(new DateTime().minusMonths(2));
+        past.setEndDate(new DateTime().minusMonths(1));
+        
+        List<Story> stories = new ArrayList<Story>(Arrays.asList(new Story(), new Story()));
+        
+        expect(storyHierarchyBusiness.retrieveProjectLeafStories(past))
+            .andReturn(stories);
+        
+        replayAll();
+        ProjectTO actual = transferObjectBusiness.constructProjectTO(past);
+        verifyAll();
+        
+        assertEquals(ScheduleStatus.PAST, actual.getScheduleStatus());
+        assertTrue(actual.getLeafStories().containsAll(stories));
+        assertEquals(2, actual.getLeafStories().size());
     }
     
     

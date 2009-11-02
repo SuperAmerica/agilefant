@@ -494,11 +494,16 @@ DynamicTable.prototype._renderFromDataSource = function(dataArray) {
   }
 
   // check if some rows have been removed
+  var toRemove = [];
   for (i = 0; i < this.middleRows.length; i++) {
     model = this.middleRows[i].getModel();
     if (jQuery.inArray(model.getHashCode(), newHashes) === -1) {
-      this.middleRows[i].remove();
+      toRemove.push(this.middleRows[i]);
     }
+  }
+
+  for (i = 0; i < toRemove.length; i++) {
+    toRemove[i].remove();
   }
 
   // add new rows

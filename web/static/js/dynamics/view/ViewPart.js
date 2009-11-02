@@ -1,6 +1,9 @@
 var ViewPart = function ViewPart() {
   
 };
+ViewPart.prototype.renderAlways = function() {
+  return false;
+};
 ViewPart.prototype.getElement = function() {
   return this.element;
 };

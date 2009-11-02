@@ -65,21 +65,6 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         this.transferObjectBusiness = transferObjectBusiness;
     }
 
-    public Collection<DailyWorkTaskTO> getCurrentTasksForUser(User user) {
-        DateTime now = new DateTime();
-        DateTime dayStart = now.withMillisOfDay(0);
-        DateTime dayEnd   = dayStart.plusDays(1);
-        Interval interval = new Interval(dayStart, dayEnd);
-        
-        ArrayList<DailyWorkTaskTO> returned = new ArrayList<DailyWorkTaskTO>();
-        for (Task task: taskDAO.getAllIterationAndStoryTasks(user, interval)) {
-            DailyWorkTaskTO transferObj = transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task);
-            returned.add(transferObj);
-        }
-        
-        return returned;
-    }
-
     public Collection<DailyWorkTaskTO> getQueuedTasksForUser(User user) {
         Collection<WhatsNextEntry> entries = whatsNextEntryDAO.getWhatsNextEntriesFor(user);
         Collection<DailyWorkTaskTO> returned = new ArrayList<DailyWorkTaskTO>();

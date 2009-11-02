@@ -13,12 +13,6 @@ import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
 
 public interface DailyWorkBusiness {
     /**
-     * Retrieves the list of tasks assigned
-     * to the user.
-     */
-    public Collection<DailyWorkTaskTO> getCurrentTasksForUser(User user);
-    
-    /**
      * Retrieves the rank ordered list of next tasks for user
      */
     public Collection<DailyWorkTaskTO> getQueuedTasksForUser(User user);

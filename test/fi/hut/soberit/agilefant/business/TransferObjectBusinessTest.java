@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.easymock.EasyMock;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public class TransferObjectBusinessTest {
 
@@ -47,13 +49,14 @@ public class TransferObjectBusinessTest {
     private IterationBusiness iterationBusiness;
     private StoryHierarchyBusiness storyHierarchyBusiness;
     
-    Project project;
+    Project   project;
     Iteration iteration;
-    Story story1;
+    Story     story1;
     Story story2;
     Task task;
     User assignedUser;
     User notAssignedUser;
+    private StoryBusiness storyBusiness;
 
     @Before
     public void setUp_dependencies() {
@@ -77,17 +80,20 @@ public class TransferObjectBusinessTest {
         
         iterationBusiness = createMock(IterationBusiness.class);
         transferObjectBusiness.setIterationBusiness(iterationBusiness);
+
+        storyBusiness = createMock(StoryBusiness.class);
+        transferObjectBusiness.setStoryBusiness(storyBusiness);
         
         storyHierarchyBusiness = createMock(StoryHierarchyBusiness.class);
         transferObjectBusiness.setStoryHierarchyBusiness(storyHierarchyBusiness);
     }
     
     private void verifyAll() {
-        verify(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
+        verify(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
     }
 
     private void replayAll() {
-        replay(hourEntryBusiness, userBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
+        replay(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
     }
     
     
@@ -604,26 +610,7 @@ public class TransferObjectBusinessTest {
         assertEquals(TaskClass.NEXT_ASSIGNED, transferObj.getTaskClass());
     };
 
-    @Test
-    public void testCreateUnqueueudDailyWorkTaskTO_withIterationTask() {
-        Task task = new Task();
-        task.setId(5);
-        
-        Iteration iteration = new Iteration();
-        iteration.setName("iter");
-        iteration.setId(4);
-        
-        task.setIteration(iteration);
-
-        DailyWorkTaskTO transferObj = transferObjectBusiness.constructUnqueuedDailyWorkTaskTO(task);
-        assertEquals("iter", transferObj.getContextName());
-        assertEquals(-1, transferObj.getWorkQueueRank());
-        assertEquals(0, transferObj.getParentStoryId());
-        assertEquals(4, transferObj.getBacklogId());
-        assertEquals(5, transferObj.getId());
-        assertEquals(TaskClass.ASSIGNED, transferObj.getTaskClass());
-    };
-
+    @SuppressWarnings("unchecked")
     @Test
     public void testCreateAssignedWorkTO() {
         Iteration iteration = new Iteration();
@@ -643,10 +630,16 @@ public class TransferObjectBusinessTest {
         task2.setId(6);
         task2.setIteration(iteration);
         
+        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics());;
+        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics());
+        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
+
+        replayAll();
         AssignedWorkTO assigned = transferObjectBusiness.constructAssignedWorkTO(
             Arrays.asList(task, task2),
             Arrays.asList(story, story2)
         );
+        verifyAll();
         
         assertEquals(assigned.getStories().get(0).getId(), story.getId());
         assertEquals(2, assigned.getStories().size());

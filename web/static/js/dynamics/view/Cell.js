@@ -115,7 +115,7 @@ DynamicTableCell.prototype.render = function() {
 	var getter = this.config.getViewGetter();
 	var decorator = this.config.getDecorator();
 	var value = "";
-  if (this.subView && !this.cellRenderComplete) {
+  if (this.subView && (!this.cellRenderComplete || this.subView.renderAlways())) {
     this.subView.render(); 
   }
   this.cellRenderComplete = true;

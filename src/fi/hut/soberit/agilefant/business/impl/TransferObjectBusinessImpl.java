@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
@@ -66,6 +67,9 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     private IterationBusiness iterationBusiness;
     
     @Autowired
+    private StoryBusiness storyBusiness;
+    
+    @Autowired
     private StoryHierarchyBusiness storyHierarchyBusiness;
     
     /** {@inheritDoc} */
@@ -88,11 +92,15 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return iterationStories;
     }
     
+    private void fillInEffortSpent(TaskTO taskTO) {
+        taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
+    }
+    
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public TaskTO constructTaskTO(Task task) {
         TaskTO taskTO = new TaskTO(task);
-        taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
+        fillInEffortSpent(taskTO);
         return taskTO;
     }
     
@@ -281,24 +289,13 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         transferObj.setParentStoryId(parentStoryId);
     }
     
-    @Transactional(readOnly = true)
-    public DailyWorkTaskTO constructUnqueuedDailyWorkTaskTO(Task task) {
-        DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
-        
-        fillInDailyWorkItemContextData(toReturn);
-
-        toReturn.setWorkQueueRank(-1);
-        toReturn.setTaskClass(TaskClass.ASSIGNED);
-
-        return toReturn;
-    }
-    
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public DailyWorkTaskTO constructQueuedDailyWorkTaskTO(WhatsNextEntry entry) {
         Task task = entry.getTask();
         DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
         fillInDailyWorkItemContextData(toReturn);
+        fillInEffortSpent(toReturn);
         toReturn.setWorkQueueRank(entry.getRank());
 
         Collection<User> responsibles = toReturn.getResponsibles();
@@ -323,6 +320,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         
         to.setTasks(taskTos);
 
+        to.setMetrics(storyBusiness.calculateMetrics(to));
         return to;
     }
     
@@ -390,6 +388,10 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setProjectBusiness(ProjectBusiness projectBusiness) {
         this.projectBusiness = projectBusiness;
+    }
+
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
     }
 
     public void setStoryHierarchyBusiness(

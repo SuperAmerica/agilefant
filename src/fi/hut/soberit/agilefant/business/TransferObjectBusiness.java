@@ -86,11 +86,6 @@ public interface TransferObjectBusiness {
     public ScheduleStatus getBacklogScheduleStatus(Backlog backlog);
     
     /**
-     * Constructs a new daily work task transfer object
-     */
-    public DailyWorkTaskTO constructUnqueuedDailyWorkTaskTO(Task task);
-
-    /**
      * Constructs a new daily work task transfer object for queue entry
      */
     public DailyWorkTaskTO constructQueuedDailyWorkTaskTO(WhatsNextEntry task);

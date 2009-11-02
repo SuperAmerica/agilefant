@@ -148,9 +148,6 @@ public class IterationBusinessTest {
         expect(transferObjectBusiness.constructTaskTO(task))
                 .andReturn(taskTO);
 
-        expect(hourEntryBusiness.calculateSum(taskTO.getHourEntries()))
-                .andReturn(Long.valueOf(0));
-
         replayAll();
 
         IterationTO actualIterationData = iterationBusiness

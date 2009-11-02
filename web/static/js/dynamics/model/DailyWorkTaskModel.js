@@ -25,7 +25,8 @@ DailyWorkTaskModel = function DailyWorkTaskModel() {
       "workQueueRank":      "workQueueRank",
       "parentStoryId":      "parentStoryId",
       "backlogId":          "backlogId",
-      "contextName":        "contextName"
+      "contextName":        "contextName",
+      "effortSpent":        "effortSpent"
     };
 
     this.classNameToRelation = {

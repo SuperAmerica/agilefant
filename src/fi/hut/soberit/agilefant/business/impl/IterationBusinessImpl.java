@@ -110,8 +110,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
         for (Task task : tasksWithoutStory) {
             TaskTO taskTO = transferObjectBusiness.constructTaskTO(task);
-            taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO
-                    .getHourEntries()));
             iterationTO.getTasks().add(taskTO);
         }
 

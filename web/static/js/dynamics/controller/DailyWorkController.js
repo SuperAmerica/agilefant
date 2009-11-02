@@ -411,22 +411,24 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
         set : TaskModel.prototype.setOriginalEstimate
     }
     });
+    
     if (Configuration.isTimesheetsEnabled()) {
         config.addColumnConfiguration(TaskController.columnIndices.es, {
-            minWidth : 30,
-            autoScale : true,
-            cssClass : 'task-row',
-            title : "ES",
-            headerTooltip : 'Effort spent',
-            get : TaskModel.prototype.getEffortSpent,
-            editable : false,
-            onDoubleClick: TaskController.prototype.openQuickLogEffort,
-            edit : {
+          minWidth : 30,
+          autoScale : true,
+          cssClass : 'task-row',
+          title : "ES",
+          headerTooltip : 'Effort spent',
+          get : TaskModel.prototype.getEffortSpent,
+          decorator: DynamicsDecorators.exactEstimateDecorator,
+          editable : false,
+          onDoubleClick: TaskController.prototype.openQuickLogEffort,
+          edit : {
             editor : "ExactEstimate",
             decorator: DynamicsDecorators.empty,
             set : TaskController.prototype.quickLogEffort
-        }
-        });
+          }
+      });
     }
     
     config.addColumnConfiguration(TaskController.columnIndices.context, {
@@ -621,40 +623,44 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         set : StoryModel.prototype.setResponsibles
     }
     });
-//    config.addColumnConfiguration(StoryController.columnIndices.el, {
-//        minWidth : 30,
-//        autoScale : true,
-//        cssClass : 'story-row',
-//        title : "EL",
-//        headerTooltip : 'Total task effort left',
-//        get : StoryModel.prototype.getTotalEffortLeft
-//    });
-//    config.addColumnConfiguration(StoryController.columnIndices.oe, {
-//        minWidth : 30,
-//        autoScale : true,
-//        cssClass : 'story-row',
-//        title : "OE",
-//        headerTooltip : 'Total task original estimate',
-//        get : StoryModel.prototype.getTotalOriginalEstimate
-//    });
-//    if (Configuration.isTimesheetsEnabled()) {
-//        config.addColumnConfiguration(StoryController.columnIndices.es, {
-//            minWidth : 30,
-//            autoScale : true,
-//            cssClass : 'story-row',
-//            title : "ES",
-//            headerTooltip : 'Total task effort spent',
-//            get : StoryModel.prototype.getTotalEffortSpent,
-//            editable : false,
-//            onDoubleClick: StoryController.prototype.openQuickLogEffort,
-//            edit : {
-//            editor : "ExactEstimate",
-//            decorator: DynamicsDecorators.empty,
-//            set : StoryController.prototype.quickLogEffort
-//        }
-//        });
-//    }
-    config.addColumnConfiguration(StoryController.columnIndices.actions, {
+    config.addColumnConfiguration(StoryController.columnIndices.el, {
+        minWidth : 30,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "EL",
+        headerTooltip : 'Total task effort left',
+        decorator: DynamicsDecorators.exactEstimateDecorator,
+        get : StoryModel.prototype.getTotalEffortLeft
+      });
+      config.addColumnConfiguration(StoryController.columnIndices.oe, {
+        minWidth : 30,
+        autoScale : true,
+        cssClass : 'story-row',
+        title : "OE",
+        headerTooltip : 'Total task original estimate',
+        decorator: DynamicsDecorators.exactEstimateDecorator,
+        get : StoryModel.prototype.getTotalOriginalEstimate
+      });
+      if (Configuration.isTimesheetsEnabled()) {
+        config.addColumnConfiguration(StoryController.columnIndices.es, {
+          minWidth : 30,
+          autoScale : true,
+          cssClass : 'story-row',
+          title : "ES",
+          headerTooltip : 'Total task effort spent',
+          decorator: DynamicsDecorators.exactEstimateDecorator,
+          get : StoryModel.prototype.getTotalEffortSpent,
+          editable : false,
+          onDoubleClick: StoryController.prototype.openQuickLogEffort,
+          edit : {
+            editor : "ExactEstimate",
+            decorator: DynamicsDecorators.empty,
+            set : StoryController.prototype.quickLogEffort
+          }
+        });
+      }
+
+      config.addColumnConfiguration(StoryController.columnIndices.actions, {
         minWidth : 26,
         autoScale : true,
         cssClass : 'story-row',
@@ -869,23 +875,24 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
           set : TaskModel.prototype.setOriginalEstimate
         }
       });
+      
       if (Configuration.isTimesheetsEnabled()) {
-        config.addColumnConfiguration(TaskController.columnIndices.es, {
-          minWidth : 30,
-          autoScale : true,
-          cssClass : 'task-row',
-          title : "ES",
-          headerTooltip : 'Effort spent',
-          get : TaskModel.prototype.getEffortSpent,
-          decorator: DynamicsDecorators.exactEstimateDecorator,
-          editable : false,
-          onDoubleClick: TaskController.prototype.openQuickLogEffort,
-          edit : {
-            editor : "ExactEstimate",
-            decorator: DynamicsDecorators.empty,
-            set : TaskController.prototype.quickLogEffort
-          }
-        });
+          config.addColumnConfiguration(TaskController.columnIndices.es, {
+            minWidth : 30,
+            autoScale : true,
+            cssClass : 'task-row',
+            title : "ES",
+            headerTooltip : 'Effort spent',
+            get : TaskModel.prototype.getEffortSpent,
+            decorator: DynamicsDecorators.exactEstimateDecorator,
+            editable : false,
+            onDoubleClick: TaskController.prototype.openQuickLogEffort,
+            edit : {
+              editor : "ExactEstimate",
+              decorator: DynamicsDecorators.empty,
+              set : TaskController.prototype.quickLogEffort
+            }
+          });
       }
       config.addColumnConfiguration(TaskController.columnIndices.actions, {
         minWidth : 35,

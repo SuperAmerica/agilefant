@@ -464,10 +464,19 @@ TaskModel.prototype.getContext = function() {
         };
     }
 
-    else {
+    else if (this.relations.story) {
         return {
             name: this.relations.story.getName(),
             storyId: this.relations.story.getId(),
+            backlogId: 0,
+            taskId: this.getId()
+        };
+    }
+    
+    else {
+        return {
+            name: undefined,
+            storyId: undefined,
             backlogId: 0,
             taskId: this.getId()
         };

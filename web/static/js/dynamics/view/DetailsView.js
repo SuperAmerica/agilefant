@@ -6,31 +6,24 @@ var DetailsView = function DetailsViewLink(controller, model, parentView) {
 
     this.initialize();
 };
-    
+
 DetailsView.prototype = new ViewPart();
 
-/**
- * @private
- */
+DetailsView.prototype.renderAlways = function() {
+    return true;
+};
+
 DetailsView.prototype.initialize = function() {
     var me = this;
 
-    if (this.model.getContext) {
-        var contextString = this.model.getContext().name;
-    }
-    else {
-        var contextString = this.model.getBacklog().getName();
-    }
-    this.link = $('<a href="#" class="daily-work-task-context">' + contextString + ' ▼</a>');
-    this.link.appendTo(this.parentView.getElement());
-    
+    this.element = this.parentView.getElement();
     this.toggleViewListener = function(event) {
         if (me.dialogOpen) {
             me.close();
         } else {
             me.open();
         }
-
+    
         event.stopPropagation();
         return false;
     };
@@ -57,8 +50,39 @@ DetailsView.prototype.initialize = function() {
         };
     };
 
-    this.link.click(this.toggleViewListener);
-    this.element = this.parentView.getElement();
+    this.render();
+};
+
+/**
+ * @private
+ */
+DetailsView.prototype.render = function() {
+    if (this.model.getContext) {
+        var contextString = this.model.getContext().name;
+    }
+    else {
+        var contextString = this.model.getBacklog().getName();
+    }
+
+    $("span", this.element).remove();
+    if (! contextString) {
+        if (this.link) {
+            this.link.remove();
+            this.link = null;
+        }
+        this.element.append($("<span>(not set)</span>"));
+        return;
+    }
+    
+
+    if (! this.link) {
+        this.link = $('<a href="#" class="daily-work-task-context"></a>');
+        this.link.appendTo(this.element);
+    
+        this.link.click(this.toggleViewListener);
+    };
+    
+    this.link.text(contextString + ' ▼');
 };
 
 /**

@@ -157,11 +157,13 @@ $(document).ready(function() {
       [
        {
          id: 555,
-         "class": "fi.hut.soberit.agilefant.model.Story"
+         "class": "fi.hut.soberit.agilefant.model.Story",
+         "name":  "Story"
        },
        {
          id: 667,
-         "class": "fi.hut.soberit.agilefant.model.Story"
+         "class": "fi.hut.soberit.agilefant.model.Story",
+         "name":  "Other story"
        }
        ];
     

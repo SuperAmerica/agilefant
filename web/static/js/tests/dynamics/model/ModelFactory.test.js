@@ -469,7 +469,8 @@ $(document).ready(function() {
   test("Listener remove test", function() {
     var iterData = {
         id: 123,
-        "class": "fi.hut.soberit.agilefant.model.Iteration"
+        "class": "fi.hut.soberit.agilefant.model.Iteration",
+        name: "Foo"
     };
     window.pageController = {};
     var pageListenerCallCount = 0;

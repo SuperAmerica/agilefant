@@ -33,6 +33,10 @@ public class DailyWorkTaskTO extends TaskTO {
         this.workQueueRank = workQueueRank;
     }
 
+    /**
+     * Soon to be deprecated
+     * @param clazz
+     */
     public void setTaskClass(TaskClass clazz) {
         this.taskClass = clazz;
     }

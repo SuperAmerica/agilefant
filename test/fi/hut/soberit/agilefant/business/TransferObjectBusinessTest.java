@@ -415,7 +415,7 @@ public class TransferObjectBusinessTest {
         
         replayAll();
         
-        // Supply the projcet id
+        // Supply the project id
         List<AutocompleteDataNode> nodes = transferObjectBusiness
                 .constructBacklogAutocompleteData(7);
         
@@ -610,21 +610,50 @@ public class TransferObjectBusinessTest {
         assertEquals(TaskClass.NEXT_ASSIGNED, transferObj.getTaskClass());
     };
 
+    public void testCreateQueueudDailyWorkTaskTO_withIterationTask() {
+        Task task = new Task();
+
+        WhatsNextEntry entry = new WhatsNextEntry();
+        task.setId(5);
+        
+        Iteration iteration = new Iteration();
+        iteration.setName("iter");
+        iteration.setId(4);
+        
+        task.setIteration(iteration);
+
+        DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
+        assertEquals("iter", transferObj.getContextName());
+        assertEquals(2, transferObj.getWorkQueueRank());
+        assertEquals(3, transferObj.getParentStoryId());
+        assertEquals(4, transferObj.getBacklogId());
+        assertEquals(5, transferObj.getId());
+        
+        
+        assertEquals(TaskClass.NEXT_ASSIGNED, transferObj.getTaskClass());
+    };
+
     @SuppressWarnings("unchecked")
     @Test
     public void testCreateAssignedWorkTO() {
         Iteration iteration = new Iteration();
         iteration.setId(7);
 
-        Story story = new Story();
-        story.setId(8);
+        Story story1 = new Story();
+        story1.setId(8);
 
         Story story2 = new Story();
         story2.setId(10);
         
-        Task task = new Task();
-        task.setId(5);
-        task.setStory(story);
+        Task task1 = new Task();
+        task1.setId(5);
+        task1.setStory(story1);
+        
+        Task task3 = new Task();
+        task3.setId(42);
+        task3.setStory(story1);
+        
+        story1.setTasks(new HashSet<Task>(Arrays.asList(task1, task3)));
         
         Task task2 = new Task();
         task2.setId(6);
@@ -633,17 +662,27 @@ public class TransferObjectBusinessTest {
         expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics());;
         expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics());
         expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
+        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
+        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
 
         replayAll();
         AssignedWorkTO assigned = transferObjectBusiness.constructAssignedWorkTO(
-            Arrays.asList(task, task2),
-            Arrays.asList(story, story2)
+            Arrays.asList(task1, task2, task3),
+            Arrays.asList(story2)
         );
         verifyAll();
         
-        assertEquals(assigned.getStories().get(0).getId(), story.getId());
+        assertEquals(story1.getId(), assigned.getStories().get(0).getId());
+        // story1 pulled via task1
+        assertEquals(story2.getId(), assigned.getStories().get(1).getId());
+
         assertEquals(2, assigned.getStories().size());
-        assertEquals(assigned.getTasksWithoutStory().get(0).getId(), task2.getId());
+
         assertEquals(1, assigned.getTasksWithoutStory().size());
+        assertEquals(task2.getId(), assigned.getTasksWithoutStory().get(0).getId());
+        
+        // stories populated with taskTOs! Both tasks in the story 1
+        assertEquals(2, assigned.getStories().get(0).getTasks().size());
+        assertTrue(assigned.getStories().get(0).getTasks().iterator().next() instanceof TaskTO);
     };
 }

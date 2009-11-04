@@ -270,18 +270,15 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         if (story != null) {
             parentStoryId = story.getId();
 
+            // the story must have a backlog.
             backlog = story.getBacklog();
-            if (backlog != null) {
-                contextName  = "" + String.valueOf(backlog.getName()) + " > " + String.valueOf(story.getName());
-                backlogId = backlog.getId();
-            }
+            contextName  = "" + String.valueOf(backlog.getName()) + " > " + String.valueOf(story.getName());
+            backlogId = backlog.getId();
         }
         else {
             backlog = transferObj.getIteration();
-            if (backlog != null) {
-                contextName  = "" + String.valueOf(backlog.getName());
-                backlogId = backlog.getId();
-            }
+            contextName  = "" + String.valueOf(backlog.getName());
+            backlogId = backlog.getId();
         }
         
         transferObj.setBacklogId(backlogId);
@@ -297,15 +294,8 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         fillInDailyWorkItemContextData(toReturn);
         fillInEffortSpent(toReturn);
         toReturn.setWorkQueueRank(entry.getRank());
+        toReturn.setTaskClass(TaskClass.NEXT_ASSIGNED);
 
-        Collection<User> responsibles = toReturn.getResponsibles();
-        if (responsibles != null && responsibles.contains(entry.getUser())) {
-            toReturn.setTaskClass(TaskClass.NEXT_ASSIGNED);
-        }
-        else {
-            toReturn.setTaskClass(TaskClass.NEXT);
-        }
-        
         return toReturn;
     }
     

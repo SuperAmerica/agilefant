@@ -610,11 +610,14 @@ public class TransferObjectBusinessTest {
         assertEquals(TaskClass.NEXT_ASSIGNED, transferObj.getTaskClass());
     };
 
+    @Test
     public void testCreateQueueudDailyWorkTaskTO_withIterationTask() {
         Task task = new Task();
 
         WhatsNextEntry entry = new WhatsNextEntry();
         task.setId(5);
+        entry.setRank(5);
+        entry.setTask(task);
         
         Iteration iteration = new Iteration();
         iteration.setName("iter");
@@ -624,8 +627,8 @@ public class TransferObjectBusinessTest {
 
         DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
         assertEquals("iter", transferObj.getContextName());
-        assertEquals(2, transferObj.getWorkQueueRank());
-        assertEquals(3, transferObj.getParentStoryId());
+        assertEquals(5, transferObj.getWorkQueueRank());
+        assertEquals(0, transferObj.getParentStoryId());
         assertEquals(4, transferObj.getBacklogId());
         assertEquals(5, transferObj.getId());
         

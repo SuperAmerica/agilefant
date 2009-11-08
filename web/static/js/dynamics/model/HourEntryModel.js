@@ -63,6 +63,7 @@ HourEntryModel.logEffortForCurrentUser = function(targetObject, effort) {
 HourEntryModel.prototype._saveData = function(id, changedData) {
   var data = this.serializeFields("hourEntry", changedData);
   var url = "";
+  var me = this;
   if(id) {
     data.hourEntryId = id;
     url = "ajax/storeEffortEntry.action";
@@ -92,6 +93,9 @@ HourEntryModel.prototype._saveData = function(id, changedData) {
     dataType: "text",
     success: function(data, status) {
       MessageDisplay.Ok("Effort entry saved");
+      if (me.relations.hourEntryList) {
+        me.relations.hourEntryList.reload();
+      }
       //me.setData(data);
     },
     error: function(xhr, status, error) {

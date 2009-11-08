@@ -39,6 +39,8 @@ HourEntryListContainer.prototype._setData = function(newData) {
 
 HourEntryListContainer.prototype.reload = function() {
   this.fillData();
+  this.relationChanged = true;
+  this.relationEvents();
 };
 
 HourEntryListContainer.prototype.fillData = function(callback) {

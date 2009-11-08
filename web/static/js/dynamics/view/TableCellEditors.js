@@ -14,9 +14,6 @@ var ValidationMessages = {
     mustBeGreater: "Value must be greater or equal than ",
     mustBeLower: "Value must be lower or equal than "
   },
-  autocomplete: {
-    required: "At least one must be selected"
-  },
   estimate: {
     invalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
   },
@@ -1160,20 +1157,6 @@ TableEditors.Autocomplete.prototype.init = function(element, model, options) {
   jQuery.extend(opts, options);
   opts.multiSelect = true;
   
-  element.data("editor", this).addClass("dynamics-editor-element");
-  
   TableEditors.AutocompleteDialog.prototype.init.call(this, element, model, opts);
-};
-
-TableEditors.Autocomplete.prototype._validate = function() {
-  var valid = true;
-  
-  if (this.options.required) {
-    if (this.autocomplete.getSelectedIds().length === 0) {
-      valid = false;
-      this.addErrorMessage(ValidationMessages.autocomplete.required);
-    }
-  }
-  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
 };
 

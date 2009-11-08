@@ -634,7 +634,8 @@ CreateDialog.EffortEntry.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
     rightWidth: '75%',
-    closeRowCallback: CreateDialogClass.prototype.close
+    closeRowCallback: CreateDialogClass.prototype.close,
+    validators: [HourEntryModel.Validators.usersValidator]
   });
   
   config.addColumnConfiguration(CreateDialog.EffortEntry.columnIndices.effortSpent,{

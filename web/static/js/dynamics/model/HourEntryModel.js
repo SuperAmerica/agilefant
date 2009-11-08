@@ -26,6 +26,14 @@ var HourEntryModel = function HourEntryModel() {
   };
 };
 
+HourEntryModel.Validators = {
+    usersValidator: function(model) {
+      if (model.getUsers().length < 1) {
+        throw "Please select at least one user";
+      }
+    }
+  };
+
 HourEntryModel.dateComparator = function(value1, value2) {
   if (value1.getDate() < value2.getDate()) {
     return 1;

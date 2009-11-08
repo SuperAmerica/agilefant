@@ -19,7 +19,7 @@ HourEntryController.prototype = new CommonController();
 
 HourEntryController.prototype.removeHourEntry = function() {
   var me = this;
-  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this hour entry?", function() {
+  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete logged effort?", function() {
     me.parentController.removeChildController("hourEntry", this);
     me.model.remove();
   });

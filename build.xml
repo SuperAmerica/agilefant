@@ -287,15 +287,15 @@
 
 	    <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.libs.path" />
 	    <svn javahl="false">
-	      <wcVersion path="${basedir}" />
+	      <info target="${basedir}" />
 	    </svn>
 		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
 		                         match="struts.agilefantVersionNumber = (.*)"
-		                         replace="struts.agilefantVersionNumber = \1 (r${revision.max})"
+		                         replace="struts.agilefantVersionNumber = \1 (r${svn.info.rev})"
 		                         byline="true"/>
 		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
 		                         match="struts.agilefantReleaseId = (.*)"
-		                         replace="struts.agilefantReleaseId = agilefant_revision_${revision.max}"
+		                         replace="struts.agilefantReleaseId = agilefant_revision_${svn.info.rev}"
 		                         byline="true"/>
 
 	</target>	
@@ -312,7 +312,7 @@
 		<copy todir="${release.dir}/sql-updates">
 			<fileset dir="${basedir}/doc/sql/updates" />
 		</copy>
-		<zip destfile="${release.zip.dir}/agilefant2_snapshot_r${revision.max}.zip" basedir="${release.dir}" update="true" />
+		<zip destfile="${release.zip.dir}/agilefant2_snapshot_r${svn.info.rev}.zip" basedir="${release.dir}" update="true" />
 	</target>
 
 	<target name="release" depends="clean, production-war, create-ddl" description="Generates release directory">

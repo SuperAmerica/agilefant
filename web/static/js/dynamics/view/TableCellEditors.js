@@ -771,11 +771,22 @@ TableEditors.Selection.prototype.init = function(element, model, options) {
   
   var me = this;
   var value = this.options.get.call(this.model);
-  jQuery.each(this.options.items, function(key, val) {
+  var items = this._parseItems();
+  jQuery.each(items, function(key, val) {
     var el = $('<option/>').val(key).text(val).appendTo(me.selectBox);
   });
   
   this._registerEditField(this.selectBox);
+};
+
+TableEditors.Selection.prototype._parseItems = function() {
+  // Check, whether object is a map
+  if (typeof(this.options.items) === "object") {
+    return this.options.items;
+  }
+  else {
+    return this.options.items();
+  }
 };
 
 TableEditors.Selection.prototype._registerEditField = function(field) {

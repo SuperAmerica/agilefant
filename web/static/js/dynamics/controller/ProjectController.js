@@ -136,6 +136,21 @@ ProjectController.prototype.removeDoneStoriesFilter = function() {
   this.storyListView.render();
 };
 
+/**
+ * Get backlogs selectable for a story in the project.
+ */
+ProjectController.prototype.getSelectableBacklogs = function() {
+  var returned = {};
+  
+  returned[this.model.getId()] = this.model.getName();
+  
+  var children = this.model.getChildren();
+  for (var i = 0; i < children.length; i++) {
+    returned[children[i].getId()] = children[i].getName();
+  }
+  
+  return returned;
+};
 
 /**
  * Construct edit buttons.
@@ -365,6 +380,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
  * Initialize configuration for story lists.
  */
 ProjectController.prototype.initializeStoryConfig = function() {
+  var me = this;
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
     dataSource : ProjectModel.prototype.getLeafStories,
@@ -478,7 +494,13 @@ ProjectController.prototype.initializeStoryConfig = function() {
     decorator: DynamicsDecorators.backlogSelectDecorator,
     sortCallback: DynamicsComparators.storyBacklogNameComparator,
     defaultSortColumn: true,
-    editable : false
+    editable : true,
+    openOnRowEdit: false,
+    edit: {
+      editor: "Selection",
+      items: function() { return me.getSelectableBacklogs(); },
+      set: StoryModel.prototype.moveStory
+    }
   });
   config.addColumnConfiguration(6, {
     minWidth : 26,

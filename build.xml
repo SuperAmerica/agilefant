@@ -287,7 +287,8 @@
 
 	    <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.libs.path" />
 	    <svn javahl="false">
-	      <info target="${basedir}" />
+	    	<!-- src directory is used as the ant task refuses to work on the root folder with Linux platforms  -->
+	      <info target="${basedir}/src" />
 	    </svn>
 		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
 		                         match="struts.agilefantVersionNumber = (.*)"

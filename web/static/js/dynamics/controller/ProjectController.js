@@ -56,6 +56,7 @@ ProjectController.prototype.iterationRowControllerFactory = function(view, model
 ProjectController.prototype.paintStoryList = function() {
   this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
       this.parentView);
+  
   this.storyListView.render();
 };
 
@@ -115,6 +116,26 @@ ProjectController.prototype.createStory = function() {
   row.render();
   controller.openRowEdit();
 };
+
+ProjectController.prototype.filterDoneStories = function(list) {
+  var returned = [];
+  for (var i = 0; i < list.length; i++) {
+    var story = list[i];
+    if (story.getState() !== "DONE") {
+      returned.push(story);
+    }
+  }
+  return returned;
+};
+ProjectController.prototype.addDoneStoriesFilter = function() {
+  this.storyListView.setFilter(ProjectController.prototype.filterDoneStories);
+  this.storyListView.render();
+};
+ProjectController.prototype.removeDoneStoriesFilter = function() {
+  this.storyListView.setFilter();
+  this.storyListView.render();
+};
+
 
 /**
  * Construct edit buttons.
@@ -339,6 +360,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
 
 
 
+
 /**
  * Initialize configuration for story lists.
  */
@@ -356,6 +378,23 @@ ProjectController.prototype.initializeStoryConfig = function() {
     cssClass : "create",
     callback : ProjectController.prototype.createStory
   });
+  
+  config.addCaptionItem({
+    name : "filterDoneStories",
+    text : "Hide done",
+    callback: ProjectController.prototype.addDoneStoriesFilter,
+    connectWith : "unfilterDoneStories",
+    visible: true
+  });
+  
+  config.addCaptionItem({
+    name : "unfilterDoneStories",
+    text : "Show done",
+    callback: ProjectController.prototype.removeDoneStoriesFilter,
+    connectWith : "filterDoneStories",
+    visible: false
+  });
+  
   
   config.addColumnConfiguration(0, {
     minWidth : 24,

@@ -11,9 +11,13 @@ var StoryTreeController = function StoryTreeController(id, element) {
   this.id = id;
   this.element = element;
   this.init();
-  this._initializeTree();
 };
 StoryTreeController.prototype = new CommonController();
+
+
+StoryTreeController.prototype.refresh = function() {
+  this._initializeTree();
+};
 
 /**
  * Initializes the tree.

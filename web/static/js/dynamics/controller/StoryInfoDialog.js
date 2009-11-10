@@ -148,5 +148,19 @@ StoryInfoDialog.prototype.initConfig = function() {
     }
   });
   
+  config.addColumnConfiguration(3, {
+    title : "Responsibles",
+    headerTooltip : 'Story responsibles',
+    get : StoryModel.prototype.getResponsibles,
+    decorator: DynamicsDecorators.userInitialsListDecorator,
+    editable : true,
+    edit : {
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
+      set : StoryModel.prototype.setResponsibles
+    }
+  });
+  
   this.storyInfoConfig = config;
 };

@@ -56,7 +56,7 @@ ProjectController.prototype.iterationRowControllerFactory = function(view, model
 ProjectController.prototype.paintStoryList = function() {
   this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
       this.parentView);
-  
+  this.addDoneStoriesFilter();
   this.storyListView.render();
 };
 
@@ -384,7 +384,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     text : "Hide done",
     callback: ProjectController.prototype.addDoneStoriesFilter,
     connectWith : "unfilterDoneStories",
-    visible: true
+    visible: false
   });
   
   config.addCaptionItem({
@@ -392,7 +392,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     text : "Show done",
     callback: ProjectController.prototype.removeDoneStoriesFilter,
     connectWith : "filterDoneStories",
-    visible: false
+    visible: true
   });
   
   

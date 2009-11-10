@@ -8,6 +8,7 @@ var StoryInfoDialog = function StoryInfoDialog(story) {
   var me = this;
   this.model = story;
  
+  this.initConfig();
   this.initDialog();
 };
 StoryInfoDialog.prototype = new CommonController();
@@ -69,14 +70,23 @@ StoryInfoDialog.prototype.selectTab = function(index) {
 
 StoryInfoDialog.prototype.renderInfoTab = function() {
   this.infoTabElement = $('<div id="storyinfo-1"></div>').appendTo(this.tabsElement);
+  this.storyInfoElement = $('<div/>').appendTo(this.infoTabElement);
+  this.storyHierarchyElement = $('<div/>').appendTo(this.infoTabElement);
   var me = this;
   jQuery.get("ajax/getStoryHierarchy.action",
     { "storyId": this.model.getId() },
     function(data, status) {
-      me.infoTabElement.append(data);
+      me.storyHierarchyElement.append(data);
     },
     "html"
   );
+  
+  
+  this.storyInfoView = new DynamicVerticalTable(
+      this,
+      this.model,
+      this.storyInfoConfig,
+      this.storyInfoElement);
 };
 StoryInfoDialog.prototype.renderHistoryTab = function() {
   this.historyTabElement = $('<div id="storyinfo-2"></div>').appendTo(this.tabsElement);
@@ -91,4 +101,52 @@ StoryInfoDialog.prototype.renderSpentEffortTab = function() {
  */
 StoryInfoDialog.prototype.close = function() {
   this.element.dialog('destroy').remove();
+};
+
+StoryInfoDialog.prototype.initConfig = function() {
+  var config = new DynamicTableConfiguration({
+    leftWidth: '20%',
+    rightWidth: '75%',
+    cssClass: "ui-widget-content ui-corner-all",
+    preventCommit: false,
+    closeRowCallback: null
+  });
+  
+  config.addColumnConfiguration(0, {
+    title: 'Name',
+    get: StoryModel.prototype.getName,
+    editable: true,
+    openOnRowEdit: false,
+    edit: {
+      editor: "Text",
+      required: true,
+      set: StoryModel.prototype.setName
+    }
+  });
+    
+  config.addColumnConfiguration(1, {
+    title: 'Points',
+    get: StoryModel.prototype.getStoryPoints,
+    editable: true,
+    openOnRowEdit: false,
+    edit: {
+      editor: "Number",
+      set: StoryModel.prototype.setStoryPoints
+    }
+  });
+  
+  config.addColumnConfiguration(2, {
+    title: 'State',
+    get: StoryModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator,
+    editable: true,
+    openOnRowEdit: false,
+    edit: {
+      editor: "Selection",
+      items: DynamicsDecorators.stateOptions,
+      set: StoryModel.prototype.setState
+    }
+  });
+  
+  this.storyInfoConfig = config;
 };

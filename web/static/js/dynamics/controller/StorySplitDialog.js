@@ -231,12 +231,7 @@ StorySplitDialog.prototype._initOriginalStoryConfig = function() {
       set: StoryModel.prototype.setName
     }
   });
-  
-//  config.addColumnConfiguration(1, {
-//    title: "Parent story",
-//    get: StoryModel.prototype.getParentStoryName
-//  });
-  
+    
   config.addColumnConfiguration(1, {
     title: 'Points',
     get: StoryModel.prototype.getStoryPoints,

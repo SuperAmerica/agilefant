@@ -27,5 +27,8 @@ var DynamicsComparators = {
       return function(obj1, obj2) {
           return DynamicsComparators.genericFilteredComparator(obj1, obj2, targetMethod, filterFunc);
       };
+  },
+  storyBacklogNameComparator: function(obj1, obj2) {
+    return DynamicsComparators.doCompare(obj1.getBacklog().getName(), obj2.getBacklog().getName());
   }
 };

@@ -357,17 +357,16 @@ ProjectController.prototype.initializeStoryConfig = function() {
     callback : ProjectController.prototype.createStory
   });
   
-  config.addColumnConfiguration(StoryController.columnIndices.priority, {
+  config.addColumnConfiguration(0, {
     minWidth : 24,
     autoScale : true,
     cssClass : 'projectstory-row',
     title : "#",
     headerTooltip : 'Priority',
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
-    defaultSortColumn: true,
     subViewFactory : StoryController.prototype.descriptionToggleFactory
   });
-  config.addColumnConfiguration(StoryController.columnIndices.name, {
+  config.addColumnConfiguration(1, {
     minWidth : 280,
     autoScale : true,
     cssClass : 'projectstory-row',
@@ -382,37 +381,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
       required: true
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.points, {
-    minWidth : 50,
-    autoScale : true,
-    cssClass : 'projectstory-row',
-    title : "Points",
-    headerTooltip : 'Estimate in story points',
-    get : StoryModel.prototype.getStoryPoints,
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
-    editable : true,
-    editableCallback: StoryController.prototype.storyPointsEditable,
-    edit : {
-      editor : "Estimate",
-      set : StoryModel.prototype.setStoryPoints
-    }
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.state, {
-    minWidth : 70,
-    autoScale : true,
-    cssClass : 'projectstory-row',
-    title : "State",
-    headerTooltip : 'Story state',
-    get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
-    editable : true,
-    edit : {
-      editor : "Selection",
-      set : StoryModel.prototype.setState,
-      items : DynamicsDecorators.stateOptions
-    }
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
+  config.addColumnConfiguration(2, {
     minWidth : 60,
     autoScale : true,
     cssClass : 'projectstory-row',
@@ -429,14 +398,57 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.actions, {
+
+
+  config.addColumnConfiguration(3, {
+    minWidth : 70,
+    autoScale : true,
+    cssClass : 'projectstory-row',
+    title : "State",
+    headerTooltip : 'Story state',
+    get : StoryModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator,
+    editable : true,
+    edit : {
+      editor : "Selection",
+      set : StoryModel.prototype.setState,
+      items : DynamicsDecorators.stateOptions
+    }
+  });
+  config.addColumnConfiguration(4, {
+    minWidth : 50,
+    autoScale : true,
+    cssClass : 'projectstory-row',
+    title : "Points",
+    headerTooltip : 'Estimate in story points',
+    get : StoryModel.prototype.getStoryPoints,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+    editable : true,
+    editableCallback: StoryController.prototype.storyPointsEditable,
+    edit : {
+      editor : "Estimate",
+      set : StoryModel.prototype.setStoryPoints
+    }
+  });
+  config.addColumnConfiguration(5, {
+    minWidth : 100,
+    autoScale : true,
+    title : "Backlog",
+    headerTooltip : 'The backlog, where the story resides',
+    get : StoryModel.prototype.getBacklog,
+    decorator: DynamicsDecorators.backlogSelectDecorator,
+    sortCallback: DynamicsComparators.storyBacklogNameComparator,
+    defaultSortColumn: true,
+    editable : false
+  });
+  config.addColumnConfiguration(6, {
     minWidth : 26,
     autoScale : true,
     cssClass : 'projectstory-row',
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
   });
-  config.addColumnConfiguration(StoryController.columnIndices.description, {
+  config.addColumnConfiguration(7, {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
@@ -447,7 +459,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.buttons, {
+  config.addColumnConfiguration(8, {
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-data',

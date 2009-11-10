@@ -202,7 +202,7 @@
     <action name="projectData" class="projectAction" method="projectData">
       <result name="success" type="json">
         <param name="target">project</param>
-        <param name="patterns">+leafStories.responsibles, +children, +children.stories, +children.stories, +stories, +stories.responsibles, -stories.backlog, +assignments, +assignments.user</param>
+        <param name="patterns">+leafStories.responsibles, +leafStories.backlog.class, +leafStories.backlog.id, -leafStories.backlog.*, +children, +children.stories, +children.stories, +stories, +stories.responsibles, -stories.backlog, +assignments, +assignments.user</param>
       </result>
     </action>
     

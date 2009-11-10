@@ -287,7 +287,7 @@
 
 	    <typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpathref="svnant.libs.path" />
 	    <svn javahl="false">
-	      <wcVersion path="." />
+	      <wcVersion path="${basedir}" />
 	    </svn>
 		<replaceregexp file="${build.dir}/webapp/WEB-INF/classes/messages.properties"
 		                         match="struts.agilefantVersionNumber = (.*)"

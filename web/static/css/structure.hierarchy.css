@@ -28,6 +28,53 @@ div.hierarchyContainer {
   cursor: pointer;
 }
 
-.hierarchyContainer ul li span:hover {
+/**
+ * EDIT BUTTON
+ */
+.hierarchyContainer .editButton {
+  display: inline;
+  margin-left: 1em;
+  padding: 0.1em 0.3em;
+  font-size: 80%;
+  text-align: center;
+  border: 1px solid #ccc;
+  -moz-border-radius: 0.2em;
+  -webkit-border-radius: 0.2em;
+  background: #eee;
+}
+
+.hierarchyContainer .editButton:hover {
   color: #E17009;
+}
+
+.editButtonMenu {
+  display: block;
+  position: absolute;
+  
+  z-index: 500;
+  
+  list-style-type: none !important;
+  list-style-image: none !important;
+  
+  border: 1px solid #ccc;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  
+  width: 10em;
+  background: #eee;
+  margin: 0;
+  padding: 0;
+  
+  font-size: 125%
+}
+
+.editButtonMenu li {
+  margin: 0;
+  padding: 0 0 0 1em;
+  text-align: left;
+}
+
+.editButtonMenu li:hover {
+  background: transparent url(../img/gradient.png) 80% 60% repeat-x;
+  cursor: pointer;
 }

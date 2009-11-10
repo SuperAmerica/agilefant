@@ -11,12 +11,13 @@ var StoryTreeController = function StoryTreeController(id, element) {
   this.id = id;
   this.element = element;
   this.init();
+  this._initializeTree();
 };
 StoryTreeController.prototype = new CommonController();
 
 
 StoryTreeController.prototype.refresh = function() {
-  this._initializeTree();
+  $(this.element).load("ajax/getProjectStoryTree.action", {projectId: this.id});
 };
 
 /**
@@ -25,9 +26,8 @@ StoryTreeController.prototype.refresh = function() {
  * Will send an ajax request.
  */
 StoryTreeController.prototype._initializeTree = function() {
-  var elem = $(this.element);
-
-  elem.find('li > span').live('click', function() {
+  
+  $(this.element).find('li > span').live('click', function() {
     var id = $(this).parent().attr('storyid');
     
     var model = ModelFactory.getOrRetrieveObject(
@@ -40,8 +40,6 @@ StoryTreeController.prototype._initializeTree = function() {
           MessageDisplay.Error('Story cannot be loaded', xhr);
         });
   });
-  
-  elem.load("ajax/getProjectStoryTree.action", {projectId: this.id});
 };
 
 

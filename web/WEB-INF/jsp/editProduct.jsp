@@ -2,6 +2,8 @@
 
 <struct:htmlWrapper navi="backlog">
 
+<h2>Product: <c:out value="${product.name}"/></h2>
+
 <div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img

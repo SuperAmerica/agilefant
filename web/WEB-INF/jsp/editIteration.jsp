@@ -3,6 +3,8 @@
 <struct:htmlWrapper navi="backlog">
 <jsp:body>
 
+<h2>Iteration: <c:out value="${iteration.name}"/></h2>
+
 
 <aef:currentBacklog backlogId="${iteration.id}"/>
 

@@ -3,6 +3,8 @@
 <struct:htmlWrapper navi="backlog">
 <jsp:body>
 
+<h2>Project: <c:out value="${project.name}"/></h2>
+
 <div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img

@@ -13,13 +13,17 @@ var ProjectController = function ProjectController(options) {
   this.assigmentListElement = options.assigmentListElement;
   this.iterationListElement = options.iterationListElement;
   this.hourEntryListElement = options.hourEntryListElement;
+  this.storyTreeElement = options.storyTreeElement;
 
   this.init();
   this.initializeProjectDetailsConfig();
   this.initAssigneeConfiguration();
   this.initializeIterationListConfig();
   this.initializeStoryConfig();
+  
   this.paint();
+  
+  this.initializeStoryTree();
 };
 ProjectController.prototype = new BacklogController();
 
@@ -35,6 +39,10 @@ ProjectController.columnIndices = {
     actions: 4,
     description: 5,
     buttons: 6
+};
+
+ProjectController.prototype.initializeStoryTree = function() {
+  this.storyTreeController = new StoryTreeController(this.id, this.storyTreeElement);
 };
 
 /**

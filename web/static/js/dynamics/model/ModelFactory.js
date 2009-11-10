@@ -114,7 +114,14 @@ ModelFactory.typeToClassName = {
 };
 
 ModelFactory.typeToLazyLoadingUri = {
-   iteration:   "ajax/retrieveIteration.action"
+  iteration:   {
+    uri: "ajax/retrieveIteration.action",
+    idParam: "iterationId"
+  },
+  story: {
+    uri: "ajax/retrieveStory.action",
+    idParam: "storyId"
+  }
 };
 
 /**
@@ -561,15 +568,18 @@ ModelFactory.listener = function(event) {
 };
 
 ModelFactory.prototype._retrieveLazily = function(type, id, callback, errorCallback) {
-    var uri = ModelFactory.typeToLazyLoadingUri[type];
+    var urlInfo = ModelFactory.typeToLazyLoadingUri[type];
     
-    if (! uri) {
+    if (! urlInfo) {
         throw new TypeError("Type " + type + " cannot be loaded lazily");
     }
     
+    var data = {};
+    data[urlInfo.idParam] = id;
+    
     jQuery.getJSON(
-        uri,
-        { iterationId: id },
+        urlInfo.uri,
+        data,
         function (data, status) {
             var object = ModelFactory.updateObject(data);
             callback(type, id, object);

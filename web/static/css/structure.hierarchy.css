@@ -23,3 +23,11 @@ div.hierarchyContainer {
   color: #000;
   font-weight: bold;
 }
+
+.hierarchyContainer ul li span {
+  cursor: pointer;
+}
+
+.hierarchyContainer ul li span:hover {
+  color: #E17009;
+}

@@ -36,7 +36,8 @@ $(document).ready(function() {
     assigmentListElement: $("#backlogAssignees"),
     iterationListElement: $("#iterations"),
     storyListElement: $('#stories'),
-    hourEntryListElement: $("#backlogSpentEffort")
+    hourEntryListElement: $("#backlogSpentEffort"),
+    storyTreeElement: $('#storyTree')
   });
   if(Configuration.isTimesheetsEnabled()) {
   	$("#backlogInfo").bind('tabsselect', function(event, ui) {
@@ -45,7 +46,7 @@ $(document).ready(function() {
     	}
   	});
   }
-  $("#storyTree").load("ajax/getProjectStoryTree.action", {projectId: ${project.id}});
+  
   $("#treeHideDone").change(function() {
     var opt = $(this);
     if(opt.is(":checked")) {

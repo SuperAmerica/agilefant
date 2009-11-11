@@ -25,7 +25,7 @@ div.hierarchyContainer {
 }
 
 .hierarchyContainer ul li span {
-  cursor: pointer;
+  /*cursor: pointer;*/
 }
 
 /**

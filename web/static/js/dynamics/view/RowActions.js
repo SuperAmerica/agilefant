@@ -16,7 +16,7 @@ DynamicTableRowActions.prototype.initialize = function() {
   var me = this;
   this.container = $('<div />').width("68px").appendTo(
       this.parentView.getElement());
-  this.button = $('<div class="actionColumn"><div class="edit">Edit</div></div>');
+  this.button = $('<div class="actionColumn"><div class="edit">Edit &#8711;</div></div>');
   this.button.appendTo(this.container);
 
   this.toggleMenuListener = function(event) {
@@ -47,7 +47,9 @@ DynamicTableRowActions.prototype.open = function() {
     "z-index" : "100",
     "white-space" : "nowrap",
     "top" : off.top + 18,
-    "left" : off.left - 32
+    "left" : off.left - 32,
+    "-webkit-border-radius": "5px",
+    "-moz-border-radius": "5px"
   };
   this.menu.css(menuCss);
   $.each(this.items, function(index, item) {

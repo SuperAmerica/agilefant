@@ -161,6 +161,14 @@ StoryInfoDialog.prototype.initConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
+
+  config.addColumnConfiguration(4, {
+    title : "Backlog",
+    headerTooltip : 'The backlog, where the story resides',
+    get : StoryModel.prototype.getBacklog,
+    decorator: DynamicsDecorators.backlogSelectDecorator,
+    editable : false
+  });
   
   this.storyInfoConfig = config;
 };

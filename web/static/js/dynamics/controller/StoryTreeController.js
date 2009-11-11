@@ -59,7 +59,7 @@ StoryTreeController.prototype._initializeTree = function() {
       "top" : off.top + 18,
       "left" : off.left - 32
     });
-    var editButton = $('<li/>').text('Edit').appendTo(menu);
+    var editButton = $('<li/>').text('Details').appendTo(menu);
     var splitButton = $('<li/>').text('Split').appendTo(menu);
     var deleteButton = $('<li/>').text('Delete').appendTo(menu);
     

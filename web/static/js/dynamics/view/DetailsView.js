@@ -83,7 +83,7 @@ DetailsView.prototype.render = function() {
         this.link.click(this.toggleViewListener);
     };
     
-    this.link.text(contextString + ' ▼');
+    this.link.text(contextString + ' ∇');
 };
 
 /**

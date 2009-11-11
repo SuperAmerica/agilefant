@@ -32,6 +32,7 @@ div.hierarchyContainer {
  * EDIT BUTTON
  */
 .hierarchyContainer .editButton {
+  white-space: nowrap;
   display: inline;
   margin-left: 1em;
   padding: 0.1em 0.3em;
@@ -41,6 +42,7 @@ div.hierarchyContainer {
   -moz-border-radius: 0.2em;
   -webkit-border-radius: 0.2em;
   background: #eee;
+  cursor: pointer;
 }
 
 .hierarchyContainer .editButton:hover {

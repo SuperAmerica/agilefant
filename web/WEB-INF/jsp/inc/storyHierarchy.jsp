@@ -26,14 +26,14 @@ Link to backlog:
   </c:otherwise>
   </c:choose>
     
-  <li style="margin-left: ${indent}px;" class="${cssClass}"><c:out value="${item.name}" /></li>
+  <li style="margin-left: ${indent}px;" class="${cssClass}"><c:out value="${item.name}" /> <span style="font-size: 80%">(<c:out value="${item.backlog.name}" />)</span></li>
   
   
   <c:set var="indent" value="${indent + 10}"/>
   
   <c:if test="${count == itemNumber}">
     <c:forEach items="${item.children}" var="child">
-      <li style="margin-left: ${indent}px;"><c:out value="${item.name}" /></li>        
+      <li style="margin-left: ${indent}px;"><c:out value="${item.name}" /> <span style="font-size: 80%">(<c:out value="${item.backlog.name}" />)</span></li>        
     </c:forEach>
   </c:if>
   

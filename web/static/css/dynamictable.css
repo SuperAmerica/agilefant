@@ -318,7 +318,8 @@ li.dynamictable-captionaction {
 	padding-left:3px;
 	padding-right:3px;
 	white-space:nowrap !important;
-	width:3em;
+	width:2em;
+	text-align: center;
 }
 .actionColumn .edit:hover {
 	color: #e50;

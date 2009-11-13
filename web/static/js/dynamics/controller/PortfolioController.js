@@ -87,8 +87,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
 	    get : ProjectModel.prototype.getAssignees,
-	    getView : ProjectModel.prototype.getAnnotatedAssignees,
-	    decorator: DynamicsDecorators.annotatedUserInitialsListDecorator
+	    decorator: DynamicsDecorators.userInitialsListDecorator
 	  });
 	  
   this.rankedProjectsConfig = config; 
@@ -135,9 +134,8 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
-	    get : ProjectModel.prototype.getAssignees,
-	    getView : ProjectModel.prototype.getAnnotatedAssignees,
-	    decorator: DynamicsDecorators.annotatedUserInitialsListDecorator
+      get : ProjectModel.prototype.getAssignees,
+      decorator: DynamicsDecorators.userInitialsListDecorator
 	  }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, {
 	    minWidth : 50,

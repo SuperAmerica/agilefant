@@ -543,6 +543,7 @@
 		<action name="projectPortfolioData" class="projectPortfolioAction" method="portfolioData">
     	<result name="success" type="json">
 	      <param name="target">projects</param>
+	      <param name="patterns">+assignments.user</param>
     	</result>			
 		</action>
 		<!-- /Dev portfolio -->

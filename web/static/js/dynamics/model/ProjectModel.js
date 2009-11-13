@@ -240,7 +240,18 @@ ProjectModel.prototype.setName = function(name) {
 };
 
 
+ProjectModel.prototype.getAssigments = function() {
+  return this.relations.assigment;
+};
 
+ProjectModel.prototype.getAssignees = function() {
+  var returned = [];
+  for (var i = 0; i < this.relations.assignment.length; i++) {
+    var assignment = this.relations.assignment[i];
+    returned.push(assignment.getUser());
+  }
+  return returned;
+};
 
 ProjectModel.prototype.getScheduleStatus = function() {
   return this.currentData.scheduleStatus;

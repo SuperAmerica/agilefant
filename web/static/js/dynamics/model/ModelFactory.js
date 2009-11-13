@@ -373,6 +373,12 @@ ModelFactory.initUsers = function(callback) {
   ModelFactory.getInstance()._initUsers(callback);
 };
 
+/**
+ * Get project portfolio data with an ajax query and create a PortfolioModel instance.
+ */
+ModelFactory.initProjectPortfolio = function(callback) {
+  ModelFactory.getInstance()._initProjectPortfolio(callback);
+};
 /* OBJECT METHODS */
 
 /**
@@ -431,11 +437,6 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       params: { },
       callback: me._constructUserList
     },
-    "portfolioData": {
-      url: "ajax/portfolioData.action",
-      params: { },
-      callback: me._constructPortfolioData
-    },
     "user": {
       url: "ajax/retrieveUser.action",
       params: { userId: id},
@@ -479,6 +480,25 @@ ModelFactory.prototype._initUsers = function(callback) {
     }
   });
 };
+/**
+ * Get all users with an ajax query.
+ */
+ModelFactory.prototype._initProjectPortfolio = function(callback) {
+  var me = this;
+  jQuery.ajax({
+    type: "POST",
+    dataType: "json",
+    url: "ajax/projectPortfolioData.action",
+    async: true,
+    success: function(data,status) {
+      var model = me._constructProjectPortfolioData(data)
+      if (callback) { callback(model); }
+    },
+    error: function(xhr, status, error) {
+      var msg = MessageDisplay.ErrorMessage("Error loading portfolio.", xhr);
+    }
+  });
+};
 
 /**
  * Internal function to construct list of users.
@@ -498,7 +518,7 @@ ModelFactory.prototype._constructUserList = function(id, data) {
   return userList;
 };
 
-ModelFactory.prototype._constructPortfolioData = function(id, data) {
+ModelFactory.prototype._constructProjectPortfolioData = function(data) {
   var model = new PortfolioModel();
   for (var i = 0; i < data.length; i++) {
     var project = ModelFactory.updateObject(data[i]);

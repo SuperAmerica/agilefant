@@ -540,7 +540,7 @@
 	
 	
 		<!-- Dev portfolio -->
-		<action name="portfolioData" class="projectPortfolioAction" method="portfolioData">
+		<action name="projectPortfolioData" class="projectPortfolioAction" method="portfolioData">
     	<result name="success" type="json">
 	      <param name="target">projects</param>
     	</result>			

@@ -13,3 +13,11 @@ PortfolioRowController.columnIndices = {
   startDate: 3,
   endDate: 4
 };
+// Drag'n'drop related
+PortfolioRowController.prototype.rankAndMoveProject = function(view, model, newPos) {
+	// Code to launch the prioritization algorithm?
+};
+
+PortfolioRowController.prototype.acceptsDroppable = function(model) {
+	  return (model instanceof ProjectModel);
+};

@@ -22,6 +22,13 @@ PortfolioController.prototype.paint = function() {
     me.paintTimeline();
   });
 };
+// Drag'n'drop related
+PortfolioController.prototype.acceptsDraggable = function(model) {
+	  if (model instanceof ProjectModel) {
+	    return true;
+	  }
+	  return false;
+};
 
 PortfolioController.prototype.paintRankedProjects = function() {
   this.rankedProjectsView = new DynamicTable(this, this.model, this.rankedProjectsConfig,
@@ -51,6 +58,12 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
 	    dataSource : PortfolioModel.prototype.getProjects,
 	    caption: "Ranked projects",
 	    cssClass: "corner-border task-table",
+	   // Drag'n'drop related
+	    rowDroppable : true,
+	    dropOptions: {
+	    accepts: PortfolioRowController.prototype.acceptsDroppable,
+        callback: PortfolioRowController.prototype.moveStoryToBacklog
+	    }
 	  });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {
@@ -60,6 +73,8 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
 	    headerTooltip : 'Project name',
 	    get : ProjectModel.prototype.getName,
 	    editable : true,
+	    // Drag'n'drop related
+	    dragHandle : true,
         edit : {
             editor : "Text",
             set : ProjectModel.prototype.setName,
@@ -98,7 +113,14 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
 	    rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
 	    dataSource : PortfolioModel.prototype.getProjects,
 	    caption: "Unranked projects",
-	    cssClass: "corner-border task-table"
+	    cssClass: "corner-border task-table",
+	 	// Drag'n'drop related
+		sortCallback: PortfolioRowController.prototype.rankAndMoveProject,
+		sortOptions: {
+		    items: "> .dynamicTableDataRow",
+		    handle: "." + DynamicTable.cssClasses.dragHandle,
+		    connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
+		}
 	  });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {
@@ -108,6 +130,8 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
 	    headerTooltip : 'Project name',
 	    get : ProjectModel.prototype.getName,
 	    editable : true,
+	    // Drag'n'drop related
+	    dragHandle : true,
         edit : {
             editor : "Text",
             set : ProjectModel.prototype.setName,

@@ -312,11 +312,26 @@ $(document).ready(function() {
   
   test("Date - events", function() {
     var editor = new TableEditors.Date(this.element, null, {});
-    var input = this.element.find("input");
-    testBlurAndFocus(editor, this.element, input);
+    var editorElement = this.element.find("input");
+    var element = this.element;
+    var blurCaptured = 0;
+    var focusCaptured = 0;
+    element.bind("DynamicsFocus", function() {
+      focusCaptured++;
+    });
+    element.bind("DynamicsBlur", function() {
+      blurCaptured++;
+    });
+    editorElement.focus();
+    equals(focusCaptured, 1, "DynamicsFocus fired");
+    ok(editor.isFocused(), "Editor remembers focused state");
+    
+    $(window).click();
+    equals(blurCaptured, 1, "Dynamics blur fired");
+    ok(!editor.isFocused(), "Editor remembers focus state");
+    
+    ok(editorElement.hasClass('dynamics-editor-element'), "Editor has class: dynamics-editor-element");
   });
-  
-  
   
   test("Password edit validation", function() {
     var mockElement = this.mockControl.createMock(jQuery, "Mock element");

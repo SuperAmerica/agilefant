@@ -647,6 +647,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
 };
 
 TableEditors.Date.prototype.close = function() {
+  $(window).unbind("click.dynamicsDatePicker");
   this.element.find('img').remove();
   this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
@@ -668,6 +669,33 @@ TableEditors.Date.prototype._validate = function() {
     this.addErrorMessage(errorMessage);
   }
   return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
+TableEditors.Date.prototype._registerEditField = function(element) {
+  var me = this;
+  this.windowListener = function(event) {
+    if(me.datepickerOpen) {
+      return;
+    }
+    if($(event.target).parents("div.ui-datepicker").length) {
+      return;
+    }
+    me._requestSaveIfNotInRowEdit();
+    me.element.trigger("DynamicsBlur");
+    me.focused = false;
+  };
+  $(window).bind("click.dynamicsDatePicker",this.windowListener);
+  element.keydown(function(event) {
+    me._handleKeyEvent(event);
+    return true;
+  });
+  
+  element.focus(function() {
+    me.element.trigger("DynamicsFocus");
+    me.focused = true;
+  });
+  
+  element.data("editor", this).addClass("dynamics-editor-element");
 };
 
 /*

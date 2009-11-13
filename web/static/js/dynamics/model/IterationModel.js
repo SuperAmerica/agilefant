@@ -175,6 +175,10 @@ IterationModel.prototype.getScheduleStatus = function() {
   return this.currentData.scheduleStatus;
 };
 
+IterationModel.prototype.isScheduledAt = function(statuses) {
+  return statuses[this.getScheduleStatus()];
+};
+
 IterationModel.prototype.getStartDate = function() {
   return this.currentData.startDate;
 };

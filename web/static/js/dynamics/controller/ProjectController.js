@@ -13,13 +13,17 @@ var ProjectController = function ProjectController(options) {
   this.assigmentListElement = options.assigmentListElement;
   this.iterationListElement = options.iterationListElement;
   this.hourEntryListElement = options.hourEntryListElement;
-
+  this.iterationSelect = {};
+  this.iterationSelect.ongoing = options.iterationSelectOngoing;
+  this.iterationSelect.future = options.iterationSelectFuture;
+  this.iterationSelect.past = options.iterationSelectPast;
+  this.iterationSelect.filters = {"FUTURE": false, "PAST": false, "ONGOING": true};
   this.init();
+  this.initIterationFilters();
   this.initializeProjectDetailsConfig();
   this.initAssigneeConfiguration();
   this.initializeIterationListConfig();
-  this.initializeStoryConfig();
-  
+  this.initializeStoryConfig();  
   this.paint();
 };
 ProjectController.prototype = new BacklogController();
@@ -47,6 +51,28 @@ ProjectController.prototype.storyControllerFactory = function(view, model) {
   return storyController;
 };
 
+ProjectController.prototype.initIterationFilters = function() {
+  var me = this;
+  var updateFilters = function() {
+    me.iterationSelect.filters["PAST"] = me.iterationSelect.past.is(":checked");
+    me.iterationSelect.filters["ONGOING"] = me.iterationSelect.ongoing.is(":checked");
+    me.iterationSelect.filters["FUTURE"] = me.iterationSelect.future.is(":checked");
+    me.iterationsView.render();
+  };
+  this.iterationSelect.future.change(updateFilters);
+  this.iterationSelect.ongoing.change(updateFilters);
+  this.iterationSelect.past.change(updateFilters);
+};
+
+ProjectController.prototype.filterIterations = function(iterationList) {
+  var ret = [];
+  for(var i = 0; i < iterationList.length; i++) {
+    if(iterationList[i].isScheduledAt(this.iterationSelect.filters)) {
+      ret.push(iterationList[i]);
+    }
+  }
+  return ret;
+};
 ProjectController.prototype.iterationRowControllerFactory = function(view, model) {
   var iterationController = new IterationRowController(model, view, this);
   this.addChildController("iteration", iterationController);
@@ -67,8 +93,12 @@ ProjectController.prototype.paintProjectDetails = function() {
 };
 
 ProjectController.prototype.paintIterationList = function() {
+  var me = this;
   this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
       this.iterationListElement);
+  this.iterationsView.setFilter(function(list) {
+    return me.filterIterations(list);
+  });
   this.iterationsView.render();
 };
 

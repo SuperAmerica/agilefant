@@ -38,7 +38,10 @@ $(document).ready(function() {
     assigmentListElement: $("#backlogAssignees"),
     iterationListElement: $("#iterations"),
     storyListElement: $('#stories'),
-    hourEntryListElement: $("#backlogSpentEffort")
+    hourEntryListElement: $("#backlogSpentEffort"),
+    iterationSelectOngoing: $("#showOngoingIterations"),
+    iterationSelectFuture: $("#showFutureIterations"),
+    iterationSelectPast: $("#showPastIterations")
   });
   if(Configuration.isTimesheetsEnabled()) {
   	$("#backlogInfo").bind('tabsselect', function(event, ui) {
@@ -85,6 +88,10 @@ $(document).ready(function() {
     <div id="storyTree">&nbsp;</div>
   </div>
   <div class="details" id="iterations">
+    Display 
+    <input id="showOngoingIterations" type="checkbox" checked="checked"/> Ongoing
+    <input id="showFutureIterations" type="checkbox"/> Future
+    <input id="showPastIterations" type="checkbox"/> Past Iterations
   		<div id="iterations">&nbsp;</div>
   </div>
 </form>

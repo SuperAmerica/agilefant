@@ -46,6 +46,15 @@ $(document).ready(function() {
 </li>
 </c:if>
 
+<!-- Dev Portfolio -->
+<li id="navitab-portfolio">
+  <a href="contextView.action?contextName=projectPortfolio&resetContextView=true">
+  <span>
+  <img src="static/img/portfolio.png" alt="Dev Portfolio" />
+  Dev Portfolio
+  </span>
+  </a>
+</li>
 
 <%-- Settings --%>
 <li id="navitab-settings">

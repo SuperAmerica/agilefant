@@ -197,6 +197,12 @@
 	</action>
 	<!-- /Daily work -->
 
+		<!-- Dev portfolio -->
+		<action name="projectPortfolio" class="projectPortfolioAction" method="retrieve">
+			<result type="dispatcher">/WEB-INF/jsp/projectPortfolio.jsp</result>
+		</action>
+		<!-- /Dev portfolio -->
+
 		<action name="drawProjectBurnup" method="getProjectBurnup" class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">${contentType}</param>

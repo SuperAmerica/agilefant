@@ -25,5 +25,5 @@ public class PortfolioBusinessImpl implements PortfolioBusiness {
     public void setProjectDAO(ProjectDAO projectDAO) {
         this.projectDAO = projectDAO;
     }
-
+    
 }

@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.RankUnderDelegate;
+import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
@@ -19,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
@@ -36,6 +39,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private StoryHierarchyDAO storyHierarchyDAO;
     
     private TransferObjectBusiness transferObjectBusiness;
+    private RankingBusiness rankingBusiness;
 
     public ProjectBusinessImpl() {
         super(Project.class);
@@ -51,6 +55,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public void setBacklogDAO(BacklogDAO backlogDAO) {
         this.backlogDAO = backlogDAO;
     }    
+    
+    @Autowired
+    public void setRankingBusiness(RankingBusiness rankingBusiness) {
+        this.rankingBusiness = rankingBusiness;
+    }
     
     @Autowired
     public void setProductBusiness(ProductBusiness productBusiness) {
@@ -163,4 +172,22 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public List<Story> retrievetRootStories(Project project) {
         return this.storyHierarchyDAO.retrieveProjectRootStories(project);
     }
+
+    /** {@inheritDoc} */
+    @Transactional
+    public Project rankUnderProject(final Project project, Project upperProject)
+            throws IllegalArgumentException {
+        if (project == null) {
+            throw new IllegalArgumentException("Project should be given");
+        }
+        
+        rankingBusiness.rankUnder(project, upperProject, new RankUnderDelegate() {
+            public Collection<? extends Rankable> getWithRankBetween(Integer lower, Integer upper) {
+                return projectDAO.getProjectsWithRankBetween(lower, upper);
+            }
+        });
+
+        return project;
+    }
+
 }

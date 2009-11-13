@@ -18,7 +18,7 @@ public class ProjectPortfolioAction {
 
     @Autowired
     private PortfolioBusiness portfolioBusiness;
-
+    
     private List<Project> projects = Collections.emptyList();
 
     public String retrieve() {
@@ -37,5 +37,5 @@ public class ProjectPortfolioAction {
     public void setPortfolioBusiness(PortfolioBusiness portfolioBusiness) {
         this.portfolioBusiness = portfolioBusiness;
     }
-
+    
 }

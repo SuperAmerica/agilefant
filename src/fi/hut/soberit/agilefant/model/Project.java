@@ -50,7 +50,7 @@ import flexjson.JSON;
 @Entity
 @BatchSize(size = 20)
 @Audited
-public class Project extends Backlog implements Schedulable {
+public class Project extends Backlog implements Schedulable, Rankable {
 
     private ProjectType projectType;
 

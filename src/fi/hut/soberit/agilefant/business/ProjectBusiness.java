@@ -26,4 +26,7 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
     public ProjectTO getProjectData(int projectId);
     
     public List<Story> retrievetRootStories(Project project);
+
+    Project rankUnderProject(Project project, Project upperProject)
+            throws IllegalArgumentException;
 }

@@ -26,4 +26,6 @@ public interface ProjectDAO extends GenericDAO<Project> {
      */
     public List<Project> getActiveProjectsSortedByRank();
 
+    Collection<Project> getProjectsWithRankBetween(int lower, int upper);
+
 }

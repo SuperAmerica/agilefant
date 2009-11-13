@@ -51,4 +51,10 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         return asList(crit);
     }
     
+    public Collection<Project> getProjectsWithRankBetween(int lower, int upper) {
+        Criteria crit = getCurrentSession().createCriteria(Project.class);
+        crit.add(Restrictions.between("rank", lower, upper));
+        return asCollection(crit);
+    }
+    
 }

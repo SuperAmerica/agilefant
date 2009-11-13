@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
@@ -32,6 +33,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 @Service("storyBusiness")
@@ -58,6 +60,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private StoryHistoryDAO storyHistoryDAO;
     @Autowired
     private RankingBusiness rankingBusiness;
+    @Autowired
+    private TransferObjectBusiness transferObjectBusiness;
 
     public StoryBusinessImpl() {
         super(Story.class);
@@ -359,6 +363,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public List<HistoryRowTO> retrieveStoryHistory(int id) {
         return storyHistoryDAO.retrieveLatestChanges(id, null);
     }
+    @Transactional(readOnly=true)
+    public StoryTO retrieveStoryWithMetrics(int storyId) {
+        Story story = this.retrieve(storyId);
+        StoryTO storyTo = this.transferObjectBusiness.constructStoryTO(story);
+        storyTo.setMetrics(this.calculateMetrics(story));
+        return storyTo;
+    }
     
 
     public void setUserDAO(UserDAO userDAO) {
@@ -395,5 +406,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
+    }
+
+    public void setTransferObjectBusiness(
+            TransferObjectBusiness transferObjectBusiness) {
+        this.transferObjectBusiness = transferObjectBusiness;
     }
 }

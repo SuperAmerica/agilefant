@@ -208,6 +208,7 @@ StoryModel.prototype._remove = function(successCallback) {
 StoryModel.prototype.addTask = function(task) {
   this.addRelation(task);
   this.relationEvents();
+  this.reload();
 };
 
 

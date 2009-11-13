@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 public class StoryActionTest {
 
@@ -64,7 +65,8 @@ public class StoryActionTest {
     @Test
     public void testRetrieve() {
         storyAction.setStoryId(story.getId());
-        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        StoryTO storyTo = new StoryTO(story);
+        expect(storyBusiness.retrieveStoryWithMetrics(story.getId())).andReturn(storyTo);
        
         replayAll();
         
@@ -79,7 +81,7 @@ public class StoryActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testRetrieve_noSuchStory() {
         storyAction.setStoryId(-1);
-        expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        expect(storyBusiness.retrieveStoryWithMetrics(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         
         storyAction.retrieve();

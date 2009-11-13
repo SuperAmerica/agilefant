@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.RankingBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.StoryBusinessImpl;
+import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
@@ -30,6 +31,7 @@ import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 public class StoryBusinessTest {
 
@@ -44,6 +46,8 @@ public class StoryBusinessTest {
     BacklogHistoryEntryBusiness blheBusiness;
     IterationHistoryEntryBusiness iheBusiness;
     RankingBusiness rankingBusiness;
+    TransferObjectBusiness transferObjectBusiness;
+    HourEntryDAO hourEntryDAO;
     
     
     Backlog backlog;
@@ -100,6 +104,12 @@ public class StoryBusinessTest {
         
         rankingBusiness = new RankingBusinessImpl();
         storyBusiness.setRankingBusiness(rankingBusiness);
+        
+        transferObjectBusiness = createMock(TransferObjectBusiness.class);
+        storyBusiness.setTransferObjectBusiness(transferObjectBusiness);
+        
+        hourEntryDAO = createMock(HourEntryDAO.class);
+        storyBusiness.setHourEntryDAO(hourEntryDAO);
     }
     
     @Before
@@ -127,11 +137,11 @@ public class StoryBusinessTest {
     }
 
     private void replayAll() {
-        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
+        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO);
     }
     
     private void verifyAll() {
-        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness);
+        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO);
     }
 
     
@@ -743,5 +753,15 @@ public class StoryBusinessTest {
         replayAll();
         storyBusiness.storeBatch(batch);
         verifyAll();
+    }
+    
+    @Test
+    public void testRetrieveStoryTO() {
+        StoryTO storyTo = new StoryTO(story1);
+        expect(storyDAO.get(story1.getId())).andReturn(story1);
+        expect(transferObjectBusiness.constructStoryTO(story1)).andReturn(storyTo);
+        expect(hourEntryDAO.calculateSumByStory(story1.getId())).andReturn(100l);
+        replayAll();
+        assertEquals(storyTo, storyBusiness.retrieveStoryWithMetrics(story1.getId()));
     }
 }

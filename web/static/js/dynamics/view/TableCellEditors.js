@@ -647,7 +647,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
 };
 
 TableEditors.Date.prototype.close = function() {
-  $(window).unbind("click.dynamicsDatePicker");
+  $(window).unbind("click.dynamicsDatePicker", this.windowListener);
   this.element.find('img').remove();
   this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
@@ -674,10 +674,13 @@ TableEditors.Date.prototype._validate = function() {
 TableEditors.Date.prototype._registerEditField = function(element) {
   var me = this;
   this.windowListener = function(event) {
-    if(me.datepickerOpen) {
+    if(event.target === me.textField[0]) { //editor clicked
       return;
     }
-    if($(event.target).parents("div.ui-datepicker").length) {
+    if(me.datepickerOpen) { //picker open
+      return;
+    }
+    if($(event.target).parents("div.ui-datepicker").length) { //picked clicked
       return;
     }
     me._requestSaveIfNotInRowEdit();

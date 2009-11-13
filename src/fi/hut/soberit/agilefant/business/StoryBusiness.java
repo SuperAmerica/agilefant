@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public interface StoryBusiness extends GenericBusiness<Story> {
@@ -85,4 +86,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     public void storeBatch(Collection<Story> stories);
     
     public Collection<Story> retrieveMultiple(Collection<Story> stories);
+    
+    public StoryTO retrieveStoryWithMetrics(int storyId);
 }

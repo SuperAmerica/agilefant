@@ -27,4 +27,7 @@ PortfolioModel.prototype._setData = function(newData) {
   }
 };
 
+PortfolioModel.prototype.getProjects = function() {
+  return this.relations.project;
+};
 

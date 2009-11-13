@@ -9,5 +9,7 @@ PortfolioRowController.prototype = new CommonController();
 PortfolioRowController.columnIndices = {
   name: 0,
   status: 1,
-  responsibles: 2
+  assignees: 2,
+  startDate: 3,
+  endDate: 4
 };

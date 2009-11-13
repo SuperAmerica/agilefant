@@ -2,6 +2,13 @@ package fi.hut.soberit.agilefant.db;
 
 import static org.junit.Assert.*;
 
+import java.util.Collection;
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -56,5 +63,36 @@ public class ProjectDAOTest extends AbstractHibernateTests {
         Project proj = projectDAO.get(1);
         assertNotNull(proj);
         assertEquals(2, proj.getAssignments().size());
+    }
+    
+    @Test
+    public void testGetUnrankedProjects() {
+        executeSql("classpath:fi/hut/soberit/agilefant/db/ProjectDAOTest-portfolio-data.sql");
+        Collection<Project> projects = projectDAO.getUnrankedProjects();
+        assertNotNull(projects);
+        assertEquals(2, projects.size());
+        
+        for (Project project : projects) {
+          assertTrue(project.getRank() < 1);
+        }
+        
+        
+    }
+    @Test
+    public void testGetRankedProjects() {
+        executeSql("classpath:fi/hut/soberit/agilefant/db/ProjectDAOTest-portfolio-data.sql");
+        LocalDate startDate = new LocalDate(2009, 10, 1);
+        LocalDate endDate = new LocalDate(2009, 12, 30);
+        List<Project> projects = projectDAO.getRankedProjects(startDate, endDate);
+        assertNotNull(projects);
+        assertEquals(4, projects.size());
+        
+        for (Project project : projects) {
+          assertTrue(project.getRank() > 0);
+          assertFalse(project.getEndDate().isBefore(startDate.toDateTimeAtStartOfDay()));
+          assertFalse(project.getStartDate().isAfter(endDate.toDateTimeAtStartOfDay()));
+        }
+        
+        
     }
 }

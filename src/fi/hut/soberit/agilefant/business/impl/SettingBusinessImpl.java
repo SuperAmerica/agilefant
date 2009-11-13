@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     public static final String SETTING_NAME_OPTIMAL_LOW = "OptimalLow";
     public static final String SETTING_NAME_OPTIMAL_HIGH = "OptimalHigh";
     public static final String SETTING_NAME_CRITICAL_LOW = "CriticalLow";
+    public static final String SETTING_NAME_PORTFOLIO_TIME_SPAN = "PortfolioTimeSpan";
 
     public SettingBusinessImpl() {
         super(Setting.class);
@@ -227,6 +229,27 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
             return DEFAULT_CRITICAL_LOW;
         }
         return Integer.parseInt(setting.getValue());
+    }
+    
+    
+    @Transactional(readOnly = true)
+    public Period getPortfolioTimeSpan() {
+        Setting setting = this.retrieveByName(SETTING_NAME_PORTFOLIO_TIME_SPAN);
+        
+        if(setting == null) {
+            return DEFAULT_PORTFOLIO_TIME_SPAN; 
+        }
+        return Period.months(Integer.parseInt(setting.getValue()));
+        
+    }
+    
+    @Transactional(readOnly = true)
+    public void setPortfolioTimeSpan(Period timeSpan) {
+        if( timeSpan == null) {
+            this.storeSetting(SETTING_NAME_PORTFOLIO_TIME_SPAN, Integer.toString(DEFAULT_PORTFOLIO_TIME_SPAN.getMonths()));
+        } else {
+            this.storeSetting(SETTING_NAME_PORTFOLIO_TIME_SPAN, Integer.toString(timeSpan.getMonths()));
+        }
     }
 
 }

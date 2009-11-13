@@ -8,6 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.ProjectDAO;
@@ -55,6 +57,21 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         Criteria crit = getCurrentSession().createCriteria(Project.class);
         crit.add(Restrictions.between("rank", lower, upper));
         return asCollection(crit);
+    }
+    
+    public Collection<Project> getUnrankedProjects() {
+        Criteria crit = getCurrentSession().createCriteria(Project.class);
+        crit.add(Restrictions.lt("rank", 1));
+        return asCollection(crit);
+    }
+           
+    public List<Project> getRankedProjects(LocalDate startDate, LocalDate endDate) {
+        Criteria crit = getCurrentSession().createCriteria(Project.class);
+        crit.add(Restrictions.ge("endDate", startDate.toDateTimeAtStartOfDay()));
+        crit.add(Restrictions.le("startDate", endDate.toDateTimeAtStartOfDay()));
+        crit.add(Restrictions.gt("rank", 0));
+        crit.addOrder(Order.asc("rank"));
+        return asList(crit);
     }
     
 }

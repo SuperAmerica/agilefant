@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business;
 
 
+import org.joda.time.Period;
+
 import fi.hut.soberit.agilefant.model.Setting;
 
 /**
@@ -16,6 +18,7 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
     public static final int DEFAULT_OPTIMAL_HIGH = 85;
     public static final int DEFAULT_CRITICAL_LOW = 100;
     public static final int DEFAULT_RANGE_HIGH = 120;
+    public static final Period DEFAULT_PORTFOLIO_TIME_SPAN = Period.months(6);
     
     /**
      * Is hour reporting enabled
@@ -86,5 +89,17 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
      * @return the percentage value
      */
     int getCriticalLow();
+    
+    /**
+     * Get portfolio time span for portfolio view
+     * @return the period object
+     */
+    Period getPortfolioTimeSpan();
+    
+    /**
+     * Set portfolio time span for portfolio view
+     * @param the period object
+     */
+    void setPortfolioTimeSpan(Period timeSpan);
     
 }

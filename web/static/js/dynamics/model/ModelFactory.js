@@ -431,6 +431,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       params: { },
       callback: me._constructUserList
     },
+    "portfolioData": {
+      url: "ajax/portfolioData.action",
+      params: { },
+      callback: me._constructPortfolioData
+    },
     "user": {
       url: "ajax/retrieveUser.action",
       params: { userId: id},
@@ -491,6 +496,16 @@ ModelFactory.prototype._constructUserList = function(id, data) {
   }
   ModelFactory.getInstance().rootObject = userList;
   return userList;
+};
+
+ModelFactory.prototype._constructPortfolioData = function(id, data) {
+  var model = new PortfolioModel();
+  for (var i = 0; i < data.length; i++) {
+    var project = ModelFactory.updateObject(data[i]);
+    model.addRelation(project);
+  }
+  ModelFactory.getInstance().rootObject = model;
+  return model;
 };
 
 /**

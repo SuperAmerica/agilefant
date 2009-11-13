@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
 import java.util.Collection;
+import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
@@ -18,4 +19,11 @@ public interface ProjectDAO extends GenericDAO<Project> {
     public Collection<User> getAssignedUsers(Project project);
     
     public Collection<Project> getProjectsWithUserAssigned(User user);
+    
+    /**
+     * Gets all active projects (endDate > today)
+     * @return projects
+     */
+    public List<Project> getActiveProjectsSortedByRank();
+
 }

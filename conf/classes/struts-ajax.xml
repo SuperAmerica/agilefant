@@ -539,6 +539,14 @@
 	<!-- /Utility actions -->
 	
 	
+		<!-- Dev portfolio -->
+		<action name="portfolioData" class="projectPortfolioAction" method="portfolioData">
+    	<result name="success" type="json">
+	      <param name="target">projects</param>
+    	</result>			
+		</action>
+		<!-- /Dev portfolio -->
+
 	<!-- Story hierarchy -->
 	<action name="getStoryHierarchy" class="storyHierarchyAction" method="recurseHierarchyAsList">
     <result type="dispatcher">/WEB-INF/jsp/inc/storyHierarchy.jsp</result>

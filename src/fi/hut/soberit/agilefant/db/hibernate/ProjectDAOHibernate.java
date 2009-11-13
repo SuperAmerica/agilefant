@@ -1,10 +1,13 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.ProjectDAO;
@@ -40,4 +43,12 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         criteria = criteria.createCriteria("backlog");
         return asCollection(criteria);
     }
+
+    public List<Project> getActiveProjectsSortedByRank() {
+        Criteria crit = getCurrentSession().createCriteria(Project.class);
+        crit.add(Restrictions.gt("endDate", new DateTime()));
+        crit.addOrder(Order.desc("rank"));
+        return asList(crit);
+    }
+    
 }

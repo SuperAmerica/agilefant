@@ -10,7 +10,18 @@ var CommonController = function CommonController() {
 CommonController.prototype.init = function() {
   this.childControllers = {};
   this.autohideCells = [];
+  this.attachModelListener();
 };
+
+CommonController.prototype.attachModelListener = function() {
+  if(this.model) {
+    var me = this;
+    this.modelListener = function(event) {
+      me.handleModelEvents(event);
+    };
+    this.model.addListener(this.modelListener);
+  }
+}
 
 /**
  * Add a child controller to this controller.
@@ -80,6 +91,7 @@ CommonController.prototype.openRowEdit = function() {
 CommonController.prototype.closeRowEdit = function() {
   if(!this.model.getId()) {
     this.view.remove();
+    this.model.removeListener(this.modelListener);
     return;
   }
   for (var i = 0; i < this.autohideCells.length; i++) {
@@ -90,6 +102,10 @@ CommonController.prototype.closeRowEdit = function() {
     }
   }
   this.view.closeRowEdit();
+};
+
+CommonController.prototype.handleModelEvents = function(event) {
+  
 };
 
 

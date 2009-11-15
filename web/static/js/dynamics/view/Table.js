@@ -295,6 +295,10 @@ DynamicTable.prototype._registerDropFor = function(target) {
        if (draggable.data("sortactive")) {
          return false; 
        }
+       var rowObj = draggable.data("row");
+       if(!rowObj) {
+         return false;
+       }
        var dropTarget;
        var me = $(this);
        if(me.data("row")) {
@@ -302,7 +306,9 @@ DynamicTable.prototype._registerDropFor = function(target) {
        } else {
          dropTarget = me.data("table");
        }
-       var rowObj = draggable.data("row");
+       if(!dropTarget) {
+         return false;
+       }
        var model = rowObj.getModel();
        return dropOptions.accepts.call(dropTarget.getController(), model);
     }

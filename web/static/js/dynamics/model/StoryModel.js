@@ -132,6 +132,18 @@ StoryModel.prototype.reload = function() {
   );
 };
 
+StoryModel.prototype.reloadMetrics = function() {
+  var me = this;
+  jQuery.getJSON(
+    "ajax/retrieveStoryMetrics.action",
+    {storyId: me.getId()},
+    function(data,status) {
+      me.setData(data);
+      me.callListeners(new DynamicsEvents.EditEvent(me));
+    }
+  );
+};
+
 StoryModel.prototype.moveStory = function(backlogId) {
   var me = this;
   jQuery.ajax({
@@ -208,7 +220,6 @@ StoryModel.prototype._remove = function(successCallback) {
 StoryModel.prototype.addTask = function(task) {
   this.addRelation(task);
   this.relationEvents();
-  this.reload();
 };
 
 

@@ -38,6 +38,7 @@ var TaskModel = function TaskModel() {
       "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
   };
   this.transientData.workingOnTaskIds = [];
+  this.metricFields = ["effortLeft", "originalEstimate", "effortSpent"];
 };
 
 TaskModel.prototype = new CommonModel();
@@ -193,7 +194,9 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       data.storyId = me.getParent().getId();
     }
   }
-  
+  if(!data.iterationId && !data.storyId) {
+    return; //there has to be a container
+  }
   jQuery.ajax({
     url: "ajax/rankTaskAndMoveUnder.action",
     type: "post",

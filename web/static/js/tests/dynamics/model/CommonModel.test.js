@@ -424,4 +424,17 @@ $(document).ready(function() {
     same(iter.relations.story.length, 0, "Iteration doesn't contain the common model");
     same(internalCallCount, 1, "Internal remove called once");
   });
+  
+  test("_isMetricsDataUpdated", function() {
+    var testModel = new CommonModel();
+    testModel.initialize();
+    ok(!testModel._isMetricsDataUpdated(null), "no metrics fields set");
+    
+    testModel.metricFields = ["field1"];
+    testModel.currentData = {"field1" : "value"};
+    
+    ok(!testModel._isMetricsDataUpdated({"field1" : "value"}), "data not updated");
+    
+    ok(testModel._isMetricsDataUpdated({"field1" : "value2"}), "data updated");
+  });
 });

@@ -18,6 +18,7 @@ CommonModel.prototype.initialize = function() {
   this.persistedData = {};
   this.transientData = {};
   this.classNameToRelation = {};
+  this.metricFields = [];
 };
 
 
@@ -34,11 +35,30 @@ CommonModel.prototype.reload = function() {
  * Calls an abstract internal method, which should be overridden.
  */
 CommonModel.prototype.setData = function(newData) {  
+  var metricsUpdated = this._isMetricsDataUpdated(newData);
   this._setData(newData);
   if (this._copyFields(newData)) {
     this.callListeners(new DynamicsEvents.EditEvent(this));
   }
+  if(metricsUpdated) {
+    this.callListeners(new DynamicsEvents.MetricsEvent(this));
+  }
   this.relationEvents();
+};
+
+/**
+ * Check whether one of the special metrics fields has been updated.
+ */
+CommonModel.prototype._isMetricsDataUpdated = function(newData) {
+  for ( var i = 0; i < this.metricFields.length; i++) {
+    var field = this.metricFields[i];
+    if (this.currentData[field] !== undefined
+        && newData[field] !== undefined 
+        && this.currentData[field] !== newData[field]) {
+      return true;
+    }
+  }
+  return false;
 };
 
 CommonModel.prototype.relationEvents = function() {
@@ -183,7 +203,6 @@ CommonModel.prototype.addRelation = function(object) {
   if (this.id) {
     object._addOneWayRelation(this);
   }
-  this.relationChanged = true;
 };
 
 CommonModel.prototype._addOneWayRelation = function(object) {
@@ -192,10 +211,12 @@ CommonModel.prototype._addOneWayRelation = function(object) {
     // Do not add duplicates
     if (jQuery.inArray(object, this.relations[type]) === -1) { 
       this.relations[type].push(object);
+      this.relationChanged = true;
     }
   }
-  else {
+  else if(this.relations[type] !== object) { //only if the relation does not exist
     this.relations[type] = object;
+    this.relationChanged = true;
   }
 };
 
@@ -216,9 +237,11 @@ CommonModel.prototype._removeOneWayRelation = function(object) {
   var type = this.classNameToRelation[object.getPersistedClass()];
   if (this.relations[type].constructor === Array) {
     ArrayUtils.remove(this.relations[type], object);
+    this.relationChanged = true;
   }
-  else {
+  else if(this.relations[type] === object) {
     this.relations[type] = null;
+    this.relationChanged = true;
   }
 };
 

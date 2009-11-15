@@ -290,6 +290,13 @@
        </result>
     </action>
     
+    <action name="retrieveStoryMetrics" method="retrieve" class="storyAction">
+       <result type="json">
+        <param name="target">story</param>
+        <param name="patterns">+metrics.*, +id, +class, -*</param>
+       </result>
+    </action>
+    
     <action name="deleteStory" method="delete" class="storyAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>

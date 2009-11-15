@@ -160,3 +160,15 @@ DynamicsEvents.ValidationValid = function DynamicsEvents_ValidationValid(editor)
 };
 DynamicsEvents.ValidationValid.prototype = new DynamicsEvents.CommonEvent();
 
+/**
+ * 
+ * @constructor
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.MetricsEvent = function DynamicsEvents_MetricsEvent(origin) {
+  this.initialize();
+  this.type = "MetricsEvent";
+  this.object = origin;
+};
+DynamicsEvents.MetricsEvent.prototype = new DynamicsEvents.CommonEvent();
+

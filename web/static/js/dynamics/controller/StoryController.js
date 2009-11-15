@@ -24,6 +24,14 @@ StoryController.columnIndices = {
 
 StoryController.prototype = new CommonController();
 
+StoryController.prototype.handleModelEvents = function(event) {
+  //reload model to update metrics if tasks haven been added or 
+  //removed within the story.
+  if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
+    this.model.reloadMetrics();
+  }
+};
+
 /**
  * Remove story associated with controllers row and the row itself.
  */

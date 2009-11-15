@@ -23,7 +23,12 @@ TaskController.columnIndices = {
 
 TaskController.prototype = new CommonController();
 
-
+TaskController.prototype.handleModelEvents = function(event) {
+  if (event instanceof DynamicsEvents.MetricsEvent
+      && this.model.getParent() instanceof StoryModel) {
+    this.model.getParent().reloadMetrics(); 
+  }
+};
 TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
   var previousRow      = newPos - 1;
   var targetModel      = view.getParentView().getModel();

@@ -234,6 +234,7 @@ ProductController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
+  /*
   config.addColumnConfiguration(StoryController.columnIndices.el, {
     minWidth : 30,
     autoScale : true,
@@ -260,6 +261,7 @@ ProductController.prototype.initializeStoryConfig = function() {
       get : StoryModel.prototype.getTotalEffortSpent
     });
   }
+  */
   config.addColumnConfiguration(StoryController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,

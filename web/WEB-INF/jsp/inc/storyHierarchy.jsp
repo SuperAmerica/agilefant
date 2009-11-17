@@ -33,7 +33,7 @@ Link to backlog:
   
   <c:if test="${count == itemNumber}">
     <c:forEach items="${item.children}" var="child">
-      <li style="margin-left: ${indent}px;"><c:out value="${item.name}" /> <span style="font-size: 80%">(<c:out value="${item.backlog.name}" />)</span></li>        
+      <li style="margin-left: ${indent}px;"><c:out value="${child.name}" /> <span style="font-size: 80%">(<c:out value="${item.backlog.name}" />)</span></li>        
     </c:forEach>
   </c:if>
   

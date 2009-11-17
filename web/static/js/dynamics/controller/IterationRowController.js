@@ -119,7 +119,7 @@ IterationRowController.prototype.createStory = function() {
     dataSource : IterationModel.prototype.getStories,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
-    cssClass: "project-iteration-storylist",
+    cssClass: "project-iteration-storylist corner-border task-table",
     sortCallback: StoryController.prototype.rankStory,
     sortOptions: {
       items: "> div.dynamicTableDataRow",

@@ -113,6 +113,9 @@ StoryModel.prototype._saveData = function(id, changedData) {
       if(!id) {
         me.relations.backlog.addStory(me);
       }
+      if (me.relations.backlog) {
+        me.relations.backlog.reload();
+      }
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving story", xhr);

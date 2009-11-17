@@ -1,11 +1,9 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.List;
-
-import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.transfer.PortfolioTO;
 
 public interface PortfolioBusiness {
     
-    public List<Project> getPortfolioData();
+    PortfolioTO getPortfolioData();
 
 }

@@ -448,8 +448,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     cssClass : 'projectstory-row',
     title : "#",
     headerTooltip : 'Priority',
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
-    subViewFactory : StoryController.prototype.descriptionToggleFactory
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
   });
   config.addColumnConfiguration(1, {
     minWidth : 280,

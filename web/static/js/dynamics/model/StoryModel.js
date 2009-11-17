@@ -157,6 +157,7 @@ StoryModel.prototype.moveStory = function(backlogId) {
     async: true,
     cache: false,
     success: function(data,status) {
+      me._setData(data);
       MessageDisplay.Ok("Story moved");
       me.getParent().reload();
       me.callListeners(new DynamicsEvents.EditEvent(me));  

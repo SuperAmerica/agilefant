@@ -45,8 +45,13 @@ $(document).ready(function() {
 });
 </script>
 
+<div class="ui-widget-content ui-corner-all structure-main-block dynamictable">
+  <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree</div>
+  <form onsubmit="return false;"><div id="storyTree">&nbsp;</div></form>
+</div>
+
 <form onsubmit="return false;"><div id="projects" class="structure-main-block">&nbsp;</div></form>
 
-<form onsubmit="return false;"><div id="storyTree" class="structure-main-block">&nbsp;</div></form>
+
 
 </struct:htmlWrapper>

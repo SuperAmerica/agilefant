@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -11,7 +12,9 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
+import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Story;
 
 @Component("productAction")
 @Scope("prototype")
@@ -22,12 +25,17 @@ public class ProductAction implements CRUDAction, Prefetching {
     @Autowired
     private ProductBusiness productBusiness;
 
+    @Autowired
+    private StoryHierarchyBusiness storyHierarchyBusiness;
+    
     @PrefetchId
     private int productId;
 
     private Product product = new Product();
 
     private Collection<Product> products = new ArrayList<Product>();
+    
+    private List<Story> stories = new ArrayList<Story>();
 
     public String create() {
         productId = 0;
@@ -55,6 +63,14 @@ public class ProductAction implements CRUDAction, Prefetching {
         products = productBusiness.retrieveAll();
         return Action.SUCCESS;
     }
+    
+    public String retrieveRootStories() {
+        product = productBusiness.retrieve(productId);
+        stories = storyHierarchyBusiness.retrieveProductRootStories(product);
+        return Action.SUCCESS;
+    }
+    
+    
     
     public void initializePrefetchedData(int objectId) {
        product = productBusiness.retrieve(objectId);
@@ -86,6 +102,15 @@ public class ProductAction implements CRUDAction, Prefetching {
 
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
+    }
+
+    public void setStoryHierarchyBusiness(
+            StoryHierarchyBusiness storyHierarchyBusiness) {
+        this.storyHierarchyBusiness = storyHierarchyBusiness;
+    }
+
+    public List<Story> getStories() {
+        return stories;
     }
 
 }

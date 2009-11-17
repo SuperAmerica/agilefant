@@ -20,7 +20,7 @@
  */
 .structure-main-block {
   min-width: 750px;
-  width: 98%;
+  width: 98% !important;
 }
 
 /**

@@ -560,7 +560,11 @@
     <result type="dispatcher">/WEB-INF/jsp/inc/storyHierarchy.jsp</result>
 	</action>
 	
-	 <action name="getProjectStoryTree" class="projectAction" method="retrieveRootStories">
+	<action name="getProjectStoryTree" class="projectAction" method="retrieveRootStories">
+    <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
+  </action>
+	
+	<action name="getProductStoryTree" class="productAction" method="retrieveRootStories">
     <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
   </action>
 	

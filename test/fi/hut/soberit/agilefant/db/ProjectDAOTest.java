@@ -68,12 +68,16 @@ public class ProjectDAOTest extends AbstractHibernateTests {
     @Test
     public void testGetUnrankedProjects() {
         executeSql("classpath:fi/hut/soberit/agilefant/db/ProjectDAOTest-portfolio-data.sql");
-        Collection<Project> projects = projectDAO.getUnrankedProjects();
+        LocalDate startDate = new LocalDate(2009, 10, 1);
+        LocalDate endDate = new LocalDate(2009, 12, 30);
+        Collection<Project> projects = projectDAO.getUnrankedProjects(startDate, endDate);
         assertNotNull(projects);
-        assertEquals(2, projects.size());
+        assertEquals(1, projects.size());
         
         for (Project project : projects) {
           assertTrue(project.getRank() < 1);
+          assertFalse(project.getEndDate().isBefore(startDate.toDateTimeAtStartOfDay()));
+          assertFalse(project.getStartDate().isAfter(endDate.toDateTimeAtStartOfDay()));
         }
         
         

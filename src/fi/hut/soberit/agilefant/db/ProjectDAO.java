@@ -31,9 +31,11 @@ public interface ProjectDAO extends GenericDAO<Project> {
     
     /**
      * Gets a collection of unranked projects
+     * @param startDate start date
+     * @param endDate end date
      * @return projects
      */
-    public Collection<Project> getUnrankedProjects();
+    public Collection<Project> getUnrankedProjects(LocalDate startDate, LocalDate endDate);
     
     /**
      * Gets a list of ranked projects

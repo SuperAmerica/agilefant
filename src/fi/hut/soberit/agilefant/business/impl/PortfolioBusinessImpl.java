@@ -28,7 +28,8 @@ public class PortfolioBusinessImpl implements PortfolioBusiness {
                 .getPortfolioTimeSpan());
         portfolioData.setRankedProjects(projectDAO.getRankedProjects(startDate,
                 endDate));
-        portfolioData.setUnrankedProjects(projectDAO.getUnrankedProjects());
+        portfolioData.setUnrankedProjects(projectDAO.getUnrankedProjects(
+                startDate, endDate));
         return portfolioData;
     }
 

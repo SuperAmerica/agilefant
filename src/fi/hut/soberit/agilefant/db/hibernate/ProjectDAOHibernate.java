@@ -59,8 +59,10 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         return asCollection(crit);
     }
     
-    public Collection<Project> getUnrankedProjects() {
+    public Collection<Project> getUnrankedProjects(LocalDate startDate, LocalDate endDate) {
         Criteria crit = getCurrentSession().createCriteria(Project.class);
+        crit.add(Restrictions.ge("endDate", startDate.toDateTimeAtStartOfDay()));
+        crit.add(Restrictions.le("startDate", endDate.toDateTimeAtStartOfDay()));
         crit.add(Restrictions.lt("rank", 1));
         return asCollection(crit);
     }

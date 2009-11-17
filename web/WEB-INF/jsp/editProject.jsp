@@ -5,7 +5,7 @@
 
 <h2>Project: <c:out value="${project.name}"/></h2>
 
-<div class="structure-main-block" id="backlogInfo">
+<div class="structure-main-block project-color-header" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
@@ -71,7 +71,7 @@ $(document).ready(function() {
 });
 </script>
 
-<div style="margin-top: 3em;" class="structure-main-block" id="releaseContents">
+<div style="margin-top: 3em;" class="structure-main-block project-color-header" id="releaseContents">
 <ul class="backlogTabs">
   <li class=""><a href="#stories"><span><img
 				alt="Edit" src="static/img/info.png" /> Stories</span></a></li>

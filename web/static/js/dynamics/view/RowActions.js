@@ -16,7 +16,7 @@ DynamicTableRowActions.prototype.initialize = function() {
   var me = this;
   this.container = $('<div />').width("68px").appendTo(
       this.parentView.getElement());
-  this.button = $('<div class="actionColumn"><div class="edit">Edit</div></div>');
+  this.button = $('<div class="actionColumn"><div class="edit">Edit &#8711;</div></div>');
   this.button.appendTo(this.container);
 
   this.toggleMenuListener = function(event) {

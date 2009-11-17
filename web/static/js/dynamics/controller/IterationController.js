@@ -117,7 +117,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table",
+    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table tasksWithoutStory-table",
     sortCallback: TaskController.prototype.sortAndMoveTask,
     sortOptions: {
       items: "> .dynamicTableDataRow",
@@ -362,6 +362,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Estimate in story points',
     get : StoryModel.prototype.getStoryPoints,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+    decorator: DynamicsDecorators.estimateDecorator,
     editable : true,
     editableCallback: StoryController.prototype.storyPointsEditable,
     edit : {
@@ -404,19 +405,19 @@ IterationController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(StoryController.columnIndices.el, {
     minWidth : 30,
     autoScale : true,
-    cssClass : 'story-row',
-    title : "EL",
-    headerTooltip : 'Total task effort left',
-    decorator: DynamicsDecorators.exactEstimateDecorator,
+    cssClass : 'sum-column',
+    title : "Σ(EL)",
+    headerTooltip : "Total sum of stories' tasks' effort left estimates",
+    decorator: DynamicsDecorators.exactEstimateSumDecorator,
     get : StoryModel.prototype.getTotalEffortLeft
   });
   config.addColumnConfiguration(StoryController.columnIndices.oe, {
     minWidth : 30,
     autoScale : true,
-    cssClass : 'story-row',
-    title : "OE",
+    cssClass : 'sum-column',
+    title : "Σ(OE)",
     headerTooltip : 'Total task original estimate',
-    decorator: DynamicsDecorators.exactEstimateDecorator,
+    decorator: DynamicsDecorators.exactEstimateSumDecorator,
     get : StoryModel.prototype.getTotalOriginalEstimate
   });
   if (Configuration.isTimesheetsEnabled()) {
@@ -464,7 +465,7 @@ IterationController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(StoryController.columnIndices.tasksData, {
     fullWidth : true,
     visible : false,
-    cssClass : 'story-data',
+    cssClass : 'story-task-container',
     targetCell: StoryController.columnIndices.tasksData,
     subViewFactory : StoryController.prototype.storyContentsFactory,
     delayedRender: true

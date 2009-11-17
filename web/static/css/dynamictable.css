@@ -318,7 +318,7 @@ li.dynamictable-captionaction {
 	padding-left:3px;
 	padding-right:3px;
 	white-space:nowrap !important;
-	width:2em;
+	width:2.8em;
 	text-align: center;
 }
 .actionColumn .edit:hover {
@@ -439,11 +439,22 @@ li.dynamictable-captionaction {
 .task-table {
   background: white;  
 }
+.story-task-container .dynamictable {
+  border-color: rgb(180, 180, 204);  
+}
+.story-task-container .ui-widget-header {
+  background: #666666 url(../img/ui/ui-bg_gloss-wave_55_333333_500x100.png) 50% 50% repeat-x;
+  border-color: #999;
+}
 .task-table .dynamictable-row {
   background: #eee;  
 }
 .story-table {
   background: white;  
+}
+.tasksWithoutStory-table .ui-widget-header {
+  background: #666666 url(../img/ui/ui-bg_gloss-wave_55_333333_500x100.png) 50% 50% repeat-x;
+  border-color: #999;
 }
 
 
@@ -462,6 +473,7 @@ li.dynamictable-captionaction {
 .project-iteration-storylist .dynamictable-row {
   background-color: #eee;  
 }
+
 
 
 /**
@@ -494,7 +506,9 @@ li.dynamictable-captionaction {
   background-color: #eee;  
 }
 
-
+.sum-column {
+  color: #666;  
+}
 
 
 

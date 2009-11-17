@@ -317,6 +317,9 @@ StoryController.prototype.storyPointsEditable = function() {
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
     dataSource : StoryModel.prototype.getTasks,
     caption: "Tasks",
+    captionConfig: {
+      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    },
     sortCallback: TaskController.prototype.sortAndMoveTask,
     cssClass: "corner-border task-table",
     sortOptions: {

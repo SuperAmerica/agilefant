@@ -55,7 +55,7 @@ PortfolioController.prototype.portfolioRowControllerFactory = function(view, mod
 PortfolioController.prototype.initRankedProjectsConfig = function() {
   var config = new DynamicTableConfiguration( {
 	    rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
-	    dataSource : PortfolioModel.prototype.getProjects,
+	    dataSource : PortfolioModel.prototype.getRankedProjects,
 	    caption: "Ranked projects",
 	    cssClass: "corner-border task-table",
 	   // Drag'n'drop related
@@ -111,7 +111,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
 PortfolioController.prototype.initUnrankedProjectsConfig = function() {
   var config = new DynamicTableConfiguration( {
 	    rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
-	    dataSource : PortfolioModel.prototype.getProjects,
+	    dataSource : PortfolioModel.prototype.getUnrankedProjects,
 	    caption: "Unranked projects",
 	    cssClass: "corner-border task-table",
 	 	// Drag'n'drop related

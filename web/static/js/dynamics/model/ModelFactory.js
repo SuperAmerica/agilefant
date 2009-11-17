@@ -520,10 +520,7 @@ ModelFactory.prototype._constructUserList = function(id, data) {
 
 ModelFactory.prototype._constructProjectPortfolioData = function(data) {
   var model = new PortfolioModel();
-  for (var i = 0; i < data.length; i++) {
-    var project = ModelFactory.updateObject(data[i]);
-    model.addRelation(project);
-  }
+  model.setData(data);
   ModelFactory.getInstance().rootObject = model;
   return model;
 };

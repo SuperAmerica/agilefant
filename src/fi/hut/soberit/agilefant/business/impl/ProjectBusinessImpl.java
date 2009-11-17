@@ -259,15 +259,15 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         List<Project> projects = projectDAO.getRankedProjects(startDate, endDate);
         Project project = projectDAO.get(projectId);
         
+        Project maxRankedProject = projectDAO.getMaxRankedProject();
         if( projects.isEmpty()) {
-            Project maxRankedProject = projectDAO.getMaxRankedProject();
             if(maxRankedProject == null) {
                 project.setRank(1);
             } else {
                 rankUnderProject(project,maxRankedProject);
             }   
-            
         } else {
+            project.setRank(maxRankedProject.getRank() + 1);
             rankUnderProject(project,projects.get(projects.size() - 1));
         }
         

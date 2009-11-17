@@ -53,9 +53,11 @@ PortfolioRowController.prototype.moveToUnrankedButtonFactory = function(view, mo
 };
 	
 PortfolioRowController.prototype.rank = function() {
-	var me = this;
+	this.model.rank();
+	
 };
 
 PortfolioRowController.prototype.unrank = function() {
 	this.model.unrank();
+	
 };

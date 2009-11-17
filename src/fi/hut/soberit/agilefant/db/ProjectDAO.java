@@ -46,5 +46,7 @@ public interface ProjectDAO extends GenericDAO<Project> {
     public List<Project> getRankedProjects(LocalDate startDate, LocalDate endDate);
 
     Collection<Project> getProjectsWithRankBetween(int lower, int upper);
+    
+    public Project getMaxRankedProject();
 
 }

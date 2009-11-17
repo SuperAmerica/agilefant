@@ -34,4 +34,6 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
     Project rankUnderProject(int projectId, int rankUnderId);
     
     public void unrankProject(int projectId);
+    
+    public void moveToRanked(int projectId);
 }

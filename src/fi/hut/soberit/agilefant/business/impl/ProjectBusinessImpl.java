@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -48,6 +50,9 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
+    
+    @Autowired
+    private SettingBusiness settingBusiness;
 
     public ProjectBusinessImpl() {
         super(Project.class);
@@ -243,6 +248,29 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         });
 
         return project;
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public void moveToRanked(int projectId) {
+        LocalDate startDate = new LocalDate();
+        LocalDate endDate = startDate.plus(settingBusiness
+                .getPortfolioTimeSpan());
+        List<Project> projects = projectDAO.getRankedProjects(startDate, endDate);
+        Project project = projectDAO.get(projectId);
+        
+        if( projects.isEmpty()) {
+            Project maxRankedProject = projectDAO.getMaxRankedProject();
+            if(maxRankedProject == null) {
+                project.setRank(1);
+            } else {
+                rankUnderProject(project,maxRankedProject);
+            }   
+            
+        } else {
+            rankUnderProject(project,projects.get(projects.size() - 1));
+        }
+        
     }
 
 }

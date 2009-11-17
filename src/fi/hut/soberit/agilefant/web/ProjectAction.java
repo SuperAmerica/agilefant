@@ -100,6 +100,11 @@ public class ProjectAction implements CRUDAction, Prefetching {
         this.project = this.projectBusiness.retrieve(objectId);        
     }
     
+    public String moveToRanked() {
+        this.projectBusiness.moveToRanked(projectId);
+        return Action.SUCCESS;
+    }
+    
     //GETTERS AND SETTERS
     
     public Project getProject() {

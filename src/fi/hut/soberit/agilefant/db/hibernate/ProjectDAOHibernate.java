@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -74,6 +75,14 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         crit.add(Restrictions.gt("rank", 0));
         crit.addOrder(Order.asc("rank"));
         return asList(crit);
+    }
+    
+    public Project getMaxRankedProject() {
+        Criteria crit = getCurrentSession().createCriteria(Project.class);
+        crit.add(Restrictions.gt("rank", 0));
+        crit.addOrder(Order.asc("rank"));
+        crit.setMaxResults(1);
+        return uniqueResult(crit);
     }
     
 }

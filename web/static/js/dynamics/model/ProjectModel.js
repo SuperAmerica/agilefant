@@ -333,3 +333,25 @@ ProjectModel.prototype.unrank = function() {
     }
   });
 };
+
+ProjectModel.prototype.rank = function() {
+	  var me = this;
+	    
+	  var data = {
+	  projectId: me.getId(),
+	  };  
+
+	  jQuery.ajax({
+	    url: "ajax/rankProject.action",
+	    type: "post",
+	    dataType: "text",
+	    data: data,
+	    success: function(data, status) {
+	      MessageDisplay.Ok("Project ranked successfully.");
+	      me.callListeners(new DynamicsEvents.EditEvent(me));
+	    },
+	    error: function(xhr, status) {
+	      MessageDisplay.Error("An error occured while ranking the project.", xhr);
+	    }
+	  });
+	};

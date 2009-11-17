@@ -222,6 +222,12 @@
     <action name="projectMetrics" class="projectAction" method="projectMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>
     </action>
+    
+    <action name="rankProject" class="projectAction" method="moveToRanked">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
     <!-- /Project actions -->
     
 

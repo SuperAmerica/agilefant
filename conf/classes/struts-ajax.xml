@@ -180,6 +180,12 @@
       <result type="dispatcher">/WEB-INF/jsp/forms/createProject.jsp</result>
     </action>
     
+    <action name="rankProjectAndMoveUnder" method="rankProject" class="projectAction">
+      <result name="success" type="json">
+        <param name="target">project</param>
+      </result>
+    </action>
+
     <action name="storeProject" method="store" class="projectAction">    
       <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">

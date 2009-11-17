@@ -15,9 +15,20 @@ PortfolioRowController.columnIndices = {
 };
 // Drag'n'drop related
 PortfolioRowController.prototype.rankAndMoveProject = function(view, model, newPos) {
-	// Code to launch the prioritization algorithm?
+	  var previousRow      = newPos - 1;
+	  var previousProjectId   = -1;
+	  var previousProject     = null;
+	  
+	  if (view.getParentView().getDataRowAt(previousRow)) {
+	    previousProject = view.getParentView().getDataRowAt(previousRow).getModel();
+	    previousProjectId = previousProject.getId();
+	  }
+
+	if (previousProjectId != -1) {
+		model.rankUnder(previousProjectId);
+	}
 };
 
-PortfolioRowController.prototype.acceptsDroppable = function(model) {
+PortfolioRowController.prototype.acceptsDraggable = function(model) {
 	  return (model instanceof ProjectModel);
 };

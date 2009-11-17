@@ -26,6 +26,8 @@ public class ProjectAction implements CRUDAction, Prefetching {
     
     private Integer productId = null;
 
+    private Integer rankUnderId = null;
+    
     private Project project;
     
     private ProjectMetrics projectMetrics;
@@ -35,6 +37,10 @@ public class ProjectAction implements CRUDAction, Prefetching {
     @Autowired
     private ProjectBusiness projectBusiness;
     
+    public String rankProject() {
+        project = projectBusiness.rankUnderProject(projectId, rankUnderId);
+        return Action.SUCCESS;
+    }
     
     public String projectMetrics() {
         project = projectBusiness.retrieve(projectId);
@@ -111,5 +117,12 @@ public class ProjectAction implements CRUDAction, Prefetching {
 
     public List<Story> getStories() {
         return stories;
+    }
+    
+    public Integer getRankUnderId() {
+        return rankUnderId;
+    }
+    public void setRankUnderId(Integer rankUnderId) {
+        this.rankUnderId = rankUnderId;
     }
 }

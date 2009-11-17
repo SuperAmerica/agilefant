@@ -27,6 +27,7 @@ var ProjectModel = function ProjectModel() {
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "product",
+      
       "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
       "fi.hut.soberit.agilefant.model.Story":         "story",
       "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
@@ -273,4 +274,27 @@ ProjectModel.prototype.setStatus = function(status) {
 
 ProjectModel.prototype.getStories = function() {
   return this.relations.story;
+};
+
+ProjectModel.prototype.rankUnder = function(rankUnderId) {
+  var me = this;
+	  
+  var data = {
+  projectId: me.getId(),
+  rankUnderId: rankUnderId
+  };  
+
+  jQuery.ajax({
+    url: "ajax/rankProjectAndMoveUnder.action",
+    type: "post",
+    dataType: "json",
+    data: data,
+    success: function(data, status) {
+      MessageDisplay.Ok("Project ranked successfully.");
+      me.setData(data);
+    },
+    error: function(xhr, status) {
+      MessageDisplay.Error("An error occured while ranking the project.", xhr);
+    }
+  });
 };

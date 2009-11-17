@@ -173,6 +173,14 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         return this.storyHierarchyDAO.retrieveProjectRootStories(project);
     }
 
+    @Transactional
+    public Project rankUnderProject(int projectId, int rankUnderId) {
+        Project project = projectDAO.get(projectId);
+        Project rankUnder = projectDAO.get(rankUnderId);
+        rankUnderProject(project, rankUnder);
+        return project;
+    }
+    
     /** {@inheritDoc} */
     @Transactional
     public Project rankUnderProject(final Project project, Project upperProject)

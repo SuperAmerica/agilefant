@@ -1,0 +1,62 @@
+
+.reportTable {
+  width: 100%;
+  text-align: left;
+  padding: 0;
+}
+
+.innerTable .reportTable {
+  width: 97%;
+  margin: 0 0 0 3%;
+}
+
+.reportTable tr {
+  margin: 0;
+  padding: 0;
+}
+
+.reportTable th, .reportTable td {
+  font-weight: normal;
+  background: transparent;
+  margin: 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.reportTable th {
+  padding: 0.2em;
+}
+
+.innerTable {
+  width: 100%;
+}
+
+.reportTable .effortCol {
+  text-align: right;
+  width: 10em;
+}
+.reportTable .userNameCol {}
+.reportTable .entryDescCol {}
+
+
+
+.reportTable th a, .reportTable td a {
+  cursor: pointer;
+}
+
+
+
+.reportTable .iteration {
+  background: #e9eeff;  
+}
+
+.reportTable .project {
+  background: #edf;
+}
+
+.reportTable .product {
+  background: #fec;
+}
+
+.reportTable .story {
+  background: #eee;
+}

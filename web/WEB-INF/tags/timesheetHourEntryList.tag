@@ -4,14 +4,14 @@
 
 <%@ attribute type="fi.hut.soberit.agilefant.util.TimesheetNode"
 	name="node"%>
-<table class="reportTable" style="width: 100%;">
+<table class="reportTable" cellpadding="0" cellspacing="0">
 <c:forEach items="${node.hourEntries}" var="entry">
 	<tr>
-	<td style="padding-left: 15px; width: 120px;">
+	<td>
 	<joda:format value="${entry.date}" pattern="yyyy-MM-dd HH:mm" />
 	</td>
-	<td style="width: 160px;">${entry.user.fullName}</td>
-	<td>${entry.description}</td>
+	<td class="userNameCol">${entry.user.fullName}</td>
+	<td class="entryDescCol">${entry.description}</td>
 	<td class="effortCol">${aef:minutesToString(entry.minutesSpent)}</td>
 	</tr>
 </c:forEach>

@@ -3,7 +3,7 @@
 	description="This tag generates the display data for timesheet querys"%>
 
 <%@ attribute type="java.util.List" name="nodes"%>
-<table class="reportTable" style="width: 100%; text-align: left;">
+<table class="reportTable" cellpadding="0" cellspacing="0">
 <c:forEach items="${nodes}" var="node">
 	<tr>
 	<c:choose>

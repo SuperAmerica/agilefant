@@ -11,6 +11,8 @@
 
 @import "ui.dynatree.css";
 
+@import "timesheets.css";
+
 html {
 	margin: 0;
 	padding: 0;

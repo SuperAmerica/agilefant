@@ -4,7 +4,7 @@
 
 <%@ attribute type="java.util.List" name="nodes"%>
 <c:if test="${!empty nodes}">
-	<table class="reportTable" style="width: 100%;">
+	<table class="reportTable" cellpadding="0" cellspacing="0">
 	<c:forEach items="${nodes}" var="sNode">
 		<tr>
 		<th class="story">

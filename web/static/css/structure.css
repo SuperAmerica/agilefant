@@ -19,6 +19,8 @@
 @import "autocomplete.css";
 @import "dynamictable.css";
 
+@import "timesheets.css";
+
 html, body {
   margin: 0;
   padding: 0;

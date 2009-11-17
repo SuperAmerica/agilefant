@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,10 @@ public class ProjectAction implements CRUDAction, Prefetching {
     
     private List<Story> stories;
 
+    private Set<Integer> assigneeIds = new HashSet<Integer>();
+    
+    private boolean assigneesChanged = false;
+    
     @Autowired
     private ProjectBusiness projectBusiness;
     
@@ -72,7 +78,11 @@ public class ProjectAction implements CRUDAction, Prefetching {
     }
     
     public String store() {
-       project = this.projectBusiness.store(projectId, productId, project);
+       Set<Integer> assignees = null;
+       if (assigneesChanged) {
+           assignees = assigneeIds;
+       }
+       project = this.projectBusiness.store(projectId, productId, project, assignees);
        return Action.SUCCESS;
     }
     
@@ -125,4 +135,20 @@ public class ProjectAction implements CRUDAction, Prefetching {
     public void setRankUnderId(Integer rankUnderId) {
         this.rankUnderId = rankUnderId;
     }
+    public Set<Integer> getAssigneeIds() {
+        return assigneeIds;
+    }
+    
+    public void setAssigneeIds(Set<Integer> assigneeIds) {
+        this.assigneeIds = assigneeIds;
+    }
+    
+    public void setAssigneesChanged(boolean assigneesChanged) {
+        this.assigneesChanged = assigneesChanged;
+    }
+    
+    public boolean isAssigneesChanged() {
+        return assigneesChanged;
+    }
+    
 }

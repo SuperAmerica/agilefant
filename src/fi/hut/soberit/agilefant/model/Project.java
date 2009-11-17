@@ -126,7 +126,7 @@ public class Project extends Backlog implements Schedulable, Rankable {
         this.status = status;
     }
 
-    @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
+    @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,            
                 mappedBy = "backlog")
     @JSON(include = false)
     @NotAudited

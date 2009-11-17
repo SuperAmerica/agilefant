@@ -120,7 +120,7 @@ public class ProjectBusinessTest {
         expect(projectDAO.get(project.getId())).andReturn(project);
         projectDAO.store(project);
         replayAll();
-        assertEquals(project, projectBusiness.store(project.getId(), null, project));
+        assertEquals(project, projectBusiness.store(project.getId(), null, project, null));
         verifyAll();
     }
 
@@ -131,7 +131,7 @@ public class ProjectBusinessTest {
         expect(projectDAO.create(EasyMock.isA(Project.class))).andReturn(123);
         expect(projectDAO.get(123)).andReturn(project);
         replayAll();
-        assertEquals(project, projectBusiness.store(0, 313, project));
+        assertEquals(project, projectBusiness.store(0, 313, project, null));
         verifyAll();
     }
 
@@ -143,7 +143,7 @@ public class ProjectBusinessTest {
         expect(projectDAO.get(project.getId())).andReturn(project);
         projectDAO.store(project);
         replayAll();
-        projectBusiness.store(project.getId(), null, project);
+        projectBusiness.store(project.getId(), null, project, null);
         verifyAll();
     }
 
@@ -153,7 +153,7 @@ public class ProjectBusinessTest {
         falseProject.setId(4);
         expect(projectDAO.get(falseProject.getId())).andReturn(null);
         replayAll();
-        projectBusiness.store(falseProject.getId(), null, falseProject);
+        projectBusiness.store(falseProject.getId(), null, falseProject, null);
         verifyAll();
     }
 
@@ -163,7 +163,7 @@ public class ProjectBusinessTest {
         expect(productBusiness.retrieve(313)).andReturn(product);
         projectDAO.store(project);
         replayAll();
-        assertEquals(project, projectBusiness.store(project.getId(), 313, project));
+        assertEquals(project, projectBusiness.store(project.getId(), 313, project, null));
         verifyAll();
         assertEquals(product, project.getParent());
     }
@@ -173,13 +173,13 @@ public class ProjectBusinessTest {
         expect(projectDAO.get(123)).andReturn(project);
         expect(productBusiness.retrieve(313)).andThrow(new ObjectNotFoundException());
         replayAll();
-        projectBusiness.store(123, 313, project);
+        projectBusiness.store(123, 313, project, null);
         verifyAll();
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testStoreProject_newProjectWithoutParent() {
-        projectBusiness.store(0, null, project);
+        projectBusiness.store(0, null, project, null);
     }
 
     @Test

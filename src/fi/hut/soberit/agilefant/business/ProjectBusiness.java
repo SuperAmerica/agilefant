@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Project;
@@ -18,7 +19,7 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
      */
     public Collection<User> getAssignedUsers(Project project);
     
-    public Project store(int projectId, Integer productId, Project project) throws ObjectNotFoundException,
+    public Project store(int projectId, Integer productId, Project project, Set<Integer> assigneeIds) throws ObjectNotFoundException,
             IllegalArgumentException;
 
     public ProjectMetrics getProjectMetrics(Project project);

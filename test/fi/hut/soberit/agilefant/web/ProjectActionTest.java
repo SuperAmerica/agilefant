@@ -105,7 +105,7 @@ public class ProjectActionTest {
         projectAction.setProductId(313);
         projectAction.setProjectId(123);
         projectAction.setProject(project);
-        expect(projectBusiness.store(123, 313, project)).andReturn(dummy);
+        expect(projectBusiness.store(123, 313, project, null)).andReturn(dummy);
         replayAll();
         projectAction.store();
         assertEquals(dummy, projectAction.getProject());

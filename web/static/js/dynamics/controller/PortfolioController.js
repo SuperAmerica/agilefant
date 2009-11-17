@@ -96,13 +96,20 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
     }
   }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, {
-    minWidth : 60,
-    autoScale : true,
-    title : "Assignees",
-    headerTooltip : 'Project assignees',
-    get : ProjectModel.prototype.getAssignees,
-    decorator: DynamicsDecorators.userInitialsListDecorator
-  });
+	    minWidth : 60,
+	    autoScale : true,
+	    title : "Assignees",
+	    headerTooltip : 'Project assignees',
+	    get : ProjectModel.prototype.getAssignees,
+	    decorator: DynamicsDecorators.userInitialsListDecorator,
+	    editable: true,
+	    edit: {
+        editor : "Autocomplete",
+        dialogTitle: "Select users",
+        dataType: "usersAndTeams",
+        set : ProjectModel.prototype.setAssignees
+      }
+	  });
 	  
   this.rankedProjectsConfig = config; 
 };
@@ -151,13 +158,20 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     }
   }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, {
-    minWidth : 60,
-    autoScale : true,
-    title : "Assignees",
-    headerTooltip : 'Project assignees',
-    get : ProjectModel.prototype.getAssignees,
-    decorator: DynamicsDecorators.userInitialsListDecorator
-  }); 
+	    minWidth : 60,
+	    autoScale : true,
+	    title : "Assignees",
+	    headerTooltip : 'Project assignees',
+      get : ProjectModel.prototype.getAssignees,
+      decorator: DynamicsDecorators.userInitialsListDecorator,
+      editable: true,
+      edit: {
+        editor : "Autocomplete",
+        dialogTitle: "Select users",
+        dataType: "usersAndTeams",
+        set : ProjectModel.prototype.setAssignees
+      }
+	  }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, {
     minWidth : 50,
     autoScale : true,

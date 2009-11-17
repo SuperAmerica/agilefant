@@ -88,7 +88,14 @@ ProjectModel.prototype._saveData = function(id, changedData) {
   var me = this;
   
   var url = "ajax/storeProject.action";
-  var data = this.serializeFields("project", changedData);
+  var data = {};
+
+  if (changedData.assigneesChanged) {
+    jQuery.extend(data, {assigneeIds: changedData.assigneeIds, assigneesChanged: true});
+    delete changedData.assigneeIds;
+    delete changedData.assigneesChanged;
+  }
+  jQuery.extend(data, this.serializeFields("project", changedData));
   
   if (id) {
     data.projectId = id;    
@@ -252,6 +259,16 @@ ProjectModel.prototype.getAssignees = function() {
     returned.push(assignment.getUser());
   }
   return returned;
+};
+
+ProjectModel.prototype.setAssignees = function(assigneeIds, assigneeJson) {
+  if (assigneeJson) {
+    $.each(assigneeJson, function(k,v) {
+      ModelFactory.updateObject(v);    
+    });
+  }
+  this.currentData.assigneeIds = assigneeIds;
+  this.currentData.assigneesChanged = true;
 };
 
 ProjectModel.prototype.getScheduleStatus = function() {

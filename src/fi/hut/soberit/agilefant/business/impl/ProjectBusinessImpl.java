@@ -2,7 +2,10 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,10 +16,13 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
@@ -37,6 +43,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private BacklogDAO backlogDAO;
     private ProductBusiness productBusiness;
     private StoryHierarchyDAO storyHierarchyDAO;
+    private AssignmentDAO assignmentDAO;
+    private UserDAO userDAO;
     
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
@@ -75,7 +83,17 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public void setStoryHierarchyDAO(StoryHierarchyDAO storyHierarchyDAO) {
         this.storyHierarchyDAO = storyHierarchyDAO;
     }
-
+    
+    @Autowired
+    public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
+        this.assignmentDAO = assignmentDAO;
+    }
+    
+    @Autowired
+    public void setUserDAO(UserDAO userDAO) {
+        this.userDAO = userDAO;
+    }
+    
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public ProjectMetrics getProjectMetrics(Project project) {
@@ -90,7 +108,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     
     /** {@inheritDoc} */
     public Project store(int projectId,
-            Integer productId, Project project) throws ObjectNotFoundException,
+            Integer productId, Project project, Set<Integer> assigneeIds) throws ObjectNotFoundException,
             IllegalArgumentException {
 
         Project persistable = new Project();
@@ -102,6 +120,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
             Product product = this.productBusiness.retrieve(productId);
             persistable.setParent(product);
         }
+        setAssignees(persistable, assigneeIds);
         
         persistable.setName(project.getName());
         persistable.setStartDate(project.getStartDate());
@@ -115,6 +134,28 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         return stored;
     }
     
+    private void setAssignees(Project project, Set<Integer> assigneeIds) {
+        if (assigneeIds != null) {
+            Map<Integer, Assignment> userIdsAndAssigments = new HashMap<Integer, Assignment>();
+            for (Assignment assignment : project.getAssignments()) {
+                userIdsAndAssigments.put(assignment.getUser().getId(), assignment);
+            }
+            for (Map.Entry<Integer, Assignment> existingValue : userIdsAndAssigments.entrySet()) {
+                if (!assigneeIds.contains(existingValue.getKey())) {
+                    project.getAssignments().remove(existingValue.getValue());
+                    assignmentDAO.remove(existingValue.getValue());
+                }
+            }
+            for (Integer assigneeId : assigneeIds) {
+                if (!userIdsAndAssigments.containsKey(assigneeId)) {
+                    User user = userDAO.get(assigneeId);
+                    Assignment assignment = new Assignment(user, project);
+                    project.getAssignments().add(assignment);
+                    assignmentDAO.create(assignment);
+                }
+            }
+        }
+    }
     /**
      * Persists a given project.
      * <p>

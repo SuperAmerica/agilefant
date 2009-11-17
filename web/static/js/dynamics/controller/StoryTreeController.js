@@ -7,8 +7,9 @@
  * @base CommonController
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var StoryTreeController = function StoryTreeController(id, element) {
+var StoryTreeController = function StoryTreeController(id, type, element) {
   this.id = id;
+  this.type = type;
   this.element = element;
   this.init();
   this._initializeTree();
@@ -17,7 +18,23 @@ StoryTreeController.prototype = new CommonController();
 
 
 StoryTreeController.prototype.refresh = function() {
-  $(this.element).load("ajax/getProjectStoryTree.action", {projectId: this.id});
+  var urlInfo = {
+    "project": {
+      url: "ajax/getProjectStoryTree.action",
+      idName: "projectId"
+    },
+    "product": {
+      url: "ajax/getProductStoryTree.action",
+      idName: "productId"
+    }
+  };
+  
+  // Url params
+  var data = {};
+  data[urlInfo[this.type].idName] = this.id;
+  
+  // Ajax request
+  $(this.element).load(urlInfo[this.type].url, data);
 };
 
 StoryTreeController.prototype._getStoryForId = function(id, callback) {

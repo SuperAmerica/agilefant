@@ -51,7 +51,7 @@ $(document).ready(function() {
   	});
   }
 
-  var storyTreeController = new StoryTreeController(${project.id}, $('#storyTree'));
+  var storyTreeController = new StoryTreeController(${project.id}, "project", $('#storyTree'));
 
   $('#releaseContents').bind('tabsselect', function(event, ui) {
     if (ui.index == 1) {

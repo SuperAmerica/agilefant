@@ -39,11 +39,14 @@ $(document).ready(function() {
     	}
   	});
   }
+
+  var storyTreeController = new StoryTreeController(${product.id}, "product", $('#storyTree'));
+  storyTreeController.refresh();
 });
 </script>
 
 <form onsubmit="return false;"><div id="projects" class="structure-main-block">&nbsp;</div></form>
 
-<form onsubmit="return false;"><div id="stories" class="structure-main-block">&nbsp;</div></form>
+<form onsubmit="return false;"><div id="storyTree" class="structure-main-block">&nbsp;</div></form>
 
 </struct:htmlWrapper>

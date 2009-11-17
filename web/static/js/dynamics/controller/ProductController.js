@@ -8,7 +8,6 @@
  */
 var ProductController = function ProductController(options) {
   this.id = options.id;
-  this.storyListElement = options.storyListElement;
   this.productDetailsElement = options.productDetailsElement;
   this.projectListElement = options.projectListElement;
   this.iterationListElement = options.iterationListElement;
@@ -18,30 +17,14 @@ var ProductController = function ProductController(options) {
   this.initializeProductDetailsConfig();
   this.initializeProjectListConfig();
   this.initAssigneeConfiguration();
-  this.initializeStoryConfig();
   this.paint();
 };
 ProductController.prototype = new BacklogController();
-
-/**
- * Creates a new story controller.
- */
-ProductController.prototype.storyControllerFactory = function(view, model) {
-  var storyController = new StoryController(model, view, this);
-  this.addChildController("story", storyController);
-  return storyController;
-};
 
 ProductController.prototype.projectRowControllerFactory = function(view, model) {
   var projectController = new ProjectRowController(model, view, this);
   this.addChildController("project", projectController);
   return projectController;
-};
-
-ProductController.prototype.paintStoryList = function() {
-  this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
-      this.storyListElement);
-  this.storyListView.render();
 };
 
 ProductController.prototype.paintProductDetails = function() {
@@ -63,7 +46,7 @@ ProductController.prototype.paintProjectList = function() {
 };
 
 /**
- * Initialize and render the story list.
+ * Initialize and render the page.
  */
 ProductController.prototype.paint = function() {
   var me = this;
@@ -72,7 +55,6 @@ ProductController.prototype.paint = function() {
         me.model = model;
         me.paintProductDetails();
         me.paintProjectList();
-        me.paintStoryList();
       });
 };
 
@@ -93,19 +75,6 @@ ProductController.prototype.createProject = function() {
 };
 
 
-/**
- * Populate a new, editable story row to the story table. 
- */
-ProductController.prototype.createStory = function() {
-  var mockModel = ModelFactory.createObject(ModelFactory.types.story);
-  mockModel.setBacklog(this.model);
-  var controller = new StoryController(mockModel, null, this);
-  var row = this.storyListView.createRow(controller, mockModel, "top");
-  controller.view = row;
-  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
-  row.render();
-  controller.openRowEdit();
-};
 
 /**
  * Initialize product details configuration.
@@ -139,156 +108,6 @@ ProductController.prototype.initializeProductDetailsConfig = function() {
 };
 
 
-/**
- * Initialize configuration for story lists.
- */
-ProductController.prototype.initializeStoryConfig = function() {
-  var config = new DynamicTableConfiguration( {
-    rowControllerFactory : ProductController.prototype.storyControllerFactory,
-    dataSource : ProductModel.prototype.getStories,
-    sortCallback: StoryController.prototype.rankStory,
-    caption : "Stories",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    cssClass: "ui-widget-content ui-corner-all product-story-table"
-  });
-
-  config.addCaptionItem( {
-    name : "createStory",
-    text : "Create story",
-    cssClass : "create",
-    callback : ProductController.prototype.createStory
-  });
-
-  config.addColumnConfiguration(StoryController.columnIndices.priority, {
-    minWidth : 24,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "#",
-    headerTooltip : 'Priority',
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
-    defaultSortColumn: true
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.name, {
-    minWidth : 280,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "Name",
-    headerTooltip : 'Story name',
-    get : StoryModel.prototype.getName,
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
-    defaultSortColumn: true,
-    editable : true,
-    dragHandle: true,
-    edit : {
-      editor : "Text",
-      set : StoryModel.prototype.setName,
-      required: true
-    }
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.points, {
-    minWidth : 50,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "Points",
-    headerTooltip : 'Estimate in story points',
-    get : StoryModel.prototype.getStoryPoints,
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
-    editable : true,
-    editableCallback: StoryController.prototype.storyPointsEditable,
-    edit : {
-      editor : "Estimate",
-      set : StoryModel.prototype.setStoryPoints
-    }
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.state, {
-    minWidth : 70,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "State",
-    headerTooltip : 'Story state',
-    get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
-    editable : true,
-    edit : {
-      editor : "Selection",
-      set : StoryModel.prototype.setState,
-      items : DynamicsDecorators.stateOptions
-    }
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.responsibles, {
-    minWidth : 60,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "Responsibles",
-    headerTooltip : 'Story responsibles',
-    get : StoryModel.prototype.getResponsibles,
-    decorator: DynamicsDecorators.userInitialsListDecorator,
-    editable : true,
-    openOnRowEdit: false,
-    edit : {
-      editor : "Autocomplete",
-      dialogTitle: "Select users",
-      dataType: "usersAndTeams",
-      set : StoryModel.prototype.setResponsibles
-    }
-  });
-  /*
-  config.addColumnConfiguration(StoryController.columnIndices.el, {
-    minWidth : 30,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "EL",
-    headerTooltip : 'Total task effort left',
-    get : StoryModel.prototype.getTotalEffortLeft
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.oe, {
-    minWidth : 30,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "OE",
-    headerTooltip : 'Total task original estimate',
-    get : StoryModel.prototype.getTotalOriginalEstimate
-  });
-  if (Configuration.isTimesheetsEnabled()) {
-    config.addColumnConfiguration(StoryController.columnIndices.es, {
-      minWidth : 30,
-      autoScale : true,
-      cssClass : 'productstory-row',
-      title : "ES",
-      headerTooltip : 'Total task effort spent',
-      get : StoryModel.prototype.getTotalEffortSpent
-    });
-  }
-  */
-  config.addColumnConfiguration(StoryController.columnIndices.actions, {
-    minWidth : 26,
-    autoScale : true,
-    cssClass : 'productstory-row',
-    title : "Edit",
-    subViewFactory : StoryController.prototype.storyActionFactory
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.description, {
-    fullWidth : true,
-    visible : false,
-    get : StoryModel.prototype.getDescription,
-    cssClass : 'productstory-data',
-    editable : true,
-    edit : {
-      editor : "Wysiwyg",
-      set : StoryModel.prototype.setDescription
-    }
-  });
-  config.addColumnConfiguration(StoryController.columnIndices.buttons, {
-    fullWidth : true,
-    visible : false,
-    cssClass : 'productstory-data',
-    subViewFactory : DynamicsButtons.commonButtonFactory
-  });
-
-  this.storyListConfig = config;
-};
 
 /**
  * Initialize project list

@@ -12,6 +12,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
@@ -153,6 +154,13 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 Projections.sum("storyPoints")));
         return sum((Integer) projectCrit.uniqueResult(),
                 (Integer) iterationCrit.uniqueResult());
+    }
+
+    public List<Story> retrieveProductRootStories(Product product) {
+        Criteria rootFilter = getCurrentSession().createCriteria(Story.class);
+        rootFilter.add(Restrictions.eq("backlog", product));
+        rootFilter.add(Restrictions.isNull("parent"));
+        return asList(rootFilter);
     }
 
 }

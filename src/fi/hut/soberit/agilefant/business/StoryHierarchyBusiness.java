@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -28,5 +29,14 @@ public interface StoryHierarchyBusiness {
      * @return list of leaf stories
      */
     public List<Story> retrieveProjectLeafStories(Project project);
+    
+    /**
+     * Retrieve all stories that are in the given product and 
+     * which have no parent story.
+     * 
+     * @param product
+     * @return
+     */
+    public List<Story> retrieveProductRootStories(Product product);
 
 }

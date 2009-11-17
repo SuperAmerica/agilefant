@@ -6,8 +6,13 @@
  *               32
  */
 -- product stories 
-INSERT INTO backlogs (id, backlogtype, name) VALUES (1, 'Product', 'Test project');
+INSERT INTO backlogs (id, backlogtype, name) VALUES (11, 'Product', 'Test product 2');
+INSERT INTO backlogs (id, backlogtype, name) VALUES (1, 'Product', 'Test product');
+
 INSERT INTO stories (id, state, rank, storyPoints, backlog_id, name, parent_id) VALUES (11, 1, 1, 10, 1, 'Product Story 1', NULL);
+INSERT INTO stories (id, state, rank, storyPoints, backlog_id, name, parent_id) VALUES (12, 1, 1, 10, 1, 'Product Story 1', 11);
+INSERT INTO stories (id, state, rank, storyPoints, backlog_id, name, parent_id) VALUES (13, 1, 1, 10, 1, 'Product Story 1', 12);
+INSERT INTO stories (id, state, rank, storyPoints, backlog_id, name, parent_id) VALUES (14, 1, 1, 10, 1, 'Product Story 1', NULL);
 
 -- release stories
 INSERT INTO backlogs (id, backlogtype, name, parent_id, rank) VALUES (2, 'Project', 'Test project', 1, 1);

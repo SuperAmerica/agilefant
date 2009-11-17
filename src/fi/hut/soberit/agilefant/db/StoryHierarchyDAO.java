@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.db;
 
 import java.util.List;
 
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -49,4 +50,13 @@ public interface StoryHierarchyDAO {
      * @return
      */
     public long totalRootStoryPoints(Project project);
+    
+    /**
+     * Retrieve all product level stories that do not have 
+     * a parent story.
+     * 
+     * @param product
+     * @return list of product root stories
+     */
+    public List<Story> retrieveProductRootStories(Product product);
 }

@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.StoryHierarchyBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -56,6 +57,17 @@ public class StoryHierarchyBusinessTest {
             andReturn(stories);
         replayAll();
         assertSame(stories, storyHierarchyBusiness.retrieveProjectRootStories(proj));
+        verifyAll();
+    }
+    
+    @Test
+    public void testRetrieveProductRootStories() {
+        Product prod = new Product();
+        List<Story> stories = new ArrayList<Story>();
+        expect(storyHierarchyDAO.retrieveProductRootStories(prod)).
+            andReturn(stories);
+        replayAll();
+        assertSame(stories, storyHierarchyBusiness.retrieveProductRootStories(prod));
         verifyAll();
     }
 

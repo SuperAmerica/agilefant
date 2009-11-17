@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -27,6 +28,9 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         return storyHierarchyDAO.retrieveProjectRootStories(project);
     }
 
+    public List<Story> retrieveProductRootStories(Product product) {
+        return storyHierarchyDAO.retrieveProductRootStories(product);
+    }
     
     /*
      * GETTERS AND SETTERS

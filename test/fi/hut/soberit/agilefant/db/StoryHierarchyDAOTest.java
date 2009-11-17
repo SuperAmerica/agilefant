@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
@@ -22,9 +23,15 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     private StoryHierarchyDAO testable;
     private Project project;
     private Project emptyProject;
+    private Product product;
+    private Product emptyProduct;
     
     @Before
     public void setUp_data() {
+        product = new Product();
+        product.setId(1);
+        emptyProduct = new Product();
+        emptyProduct.setId(11);
         project = new Project();
         project.setId(2);
         emptyProject = new Project();
@@ -107,5 +114,25 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     public void testTotalRootStoryPoints_empty() {
         executeClassSql();
         assertEquals(0l, this.testable.totalRootStoryPoints(emptyProject));
+    }
+    
+    @Test
+    public void testRetrieveProductRootStories() {
+        executeClassSql();
+        Set<Integer> actualStoryIds = new HashSet<Integer>();
+        List<Story> actual = this.testable.retrieveProductRootStories(product);
+        assertEquals(2, actual.size());
+        for(Story story : actual) {
+            actualStoryIds.add(story.getId());
+        }
+       assertTrue(actualStoryIds.contains(11));
+       assertTrue(actualStoryIds.contains(14));
+    }
+    
+    @Test
+    public void testRetrieveProductRootStories_emptyProduct() {
+        executeClassSql();
+        List<Story> actual = this.testable.retrieveProductRootStories(emptyProduct);
+        assertEquals(0, actual.size());
     }
 }

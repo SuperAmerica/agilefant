@@ -54,6 +54,37 @@ $(document).ready(function() {
     same(listenerCallCount, 1, "Listeners are called once");
   });
   
+  test("Set data - prevent set data", function() {
+    // Should not do anything after prevention mode is set
+    this.commonModel.setPreventSetData(true);
+    
+    var listenerCallCount = 0;
+    this.commonModel.callListeners = function(event) {
+      same(event.type, "edit", "Event types match");
+      listenerCallCount++;
+    };
+    var internalCallCount = 0;
+    this.commonModel._setData = function() {
+      internalCallCount++;
+    };
+    var copyFieldsCallCount = 0;
+    this.commonModel._copyFields = function() {
+      copyFieldsCallCount++;
+      return true;
+    };
+    
+    var data = {
+      id: 7413,
+      name: "Test model"
+    };
+    
+    this.commonModel.setData(data);
+    
+    same(internalCallCount, 0, "Internal method is never called");
+    same(copyFieldsCallCount, 0, "Copy fields is never called");
+    same(listenerCallCount, 0, "Listeners are never called");
+  });
+  
   test("Copy fields", function() {
     var newData = {
         name: "Foo field name",

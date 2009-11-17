@@ -7,11 +7,14 @@
 var StorySplitDialog = function StorySplitDialog(story) {
   var me = this;
   this.model = story;
+  this.model.reload();
   this.init();
   this.initDialog();
   this.initConfigs();
   this.render();
-  this.model.reload();
+  
+  this.model.setPreventSetData(true);
+  
   this.editListener = function(event) { me._transactionEditListener(event); };
   this.model.addListener(this.editListener);
   this.oldModels = [];

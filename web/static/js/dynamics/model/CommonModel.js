@@ -19,6 +19,7 @@ CommonModel.prototype.initialize = function() {
   this.transientData = {};
   this.classNameToRelation = {};
   this.metricFields = [];
+  this.preventSetData = false;
 };
 
 
@@ -34,16 +35,18 @@ CommonModel.prototype.reload = function() {
  * <p>
  * Calls an abstract internal method, which should be overridden.
  */
-CommonModel.prototype.setData = function(newData) {  
-  var metricsUpdated = this._isMetricsDataUpdated(newData);
-  this._setData(newData);
-  if (this._copyFields(newData)) {
-    this.callListeners(new DynamicsEvents.EditEvent(this));
+CommonModel.prototype.setData = function(newData) {
+  if (!this.preventSetData) {
+    var metricsUpdated = this._isMetricsDataUpdated(newData);
+    this._setData(newData);
+    if (this._copyFields(newData)) {
+      this.callListeners(new DynamicsEvents.EditEvent(this));
+    }
+    if(metricsUpdated) {
+      this.callListeners(new DynamicsEvents.MetricsEvent(this));
+    }
+    this.relationEvents();
   }
-  if(metricsUpdated) {
-    this.callListeners(new DynamicsEvents.MetricsEvent(this));
-  }
-  this.relationEvents();
 };
 
 /**
@@ -363,6 +366,14 @@ CommonModel.prototype.getId = function() {
 };
 CommonModel.prototype.setId = function(id) {
   this.id = id;
+};
+
+
+/**
+ * Set the object's transaction mode state.
+ */
+CommonModel.prototype.setPreventSetData = function(prevent) {
+  this.preventSetData = prevent;
 };
 
 /**

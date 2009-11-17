@@ -190,6 +190,7 @@
       <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">
         <param name="target">project</param>
+        <param name="patterns">+assignments.user</param>
       </result>
     </action>
 

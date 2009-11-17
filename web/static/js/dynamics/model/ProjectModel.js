@@ -262,11 +262,6 @@ ProjectModel.prototype.getAssignees = function() {
 };
 
 ProjectModel.prototype.setAssignees = function(assigneeIds, assigneeJson) {
-  if (assigneeJson) {
-    $.each(assigneeJson, function(k,v) {
-      ModelFactory.updateObject(v);    
-    });
-  }
   this.currentData.assigneeIds = assigneeIds;
   this.currentData.assigneesChanged = true;
 };

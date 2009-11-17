@@ -51,7 +51,6 @@ PortfolioController.prototype.portfolioRowControllerFactory = function(view, mod
   return rowController;
 };
 
-
 PortfolioController.prototype.initRankedProjectsConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
@@ -109,6 +108,13 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
         dataType: "usersAndTeams",
         set : ProjectModel.prototype.setAssignees
       }
+	  });
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedActions, {
+	    minWidth : 35,
+	    autoScale : true,
+	    title : "Unrank",
+	    headerTooltip : 'Move to unranked projects',
+	    subViewFactory: PortfolioRowController.prototype.moveToUnrankedButtonFactory
 	  });
 	  
   this.rankedProjectsConfig = config; 
@@ -208,6 +214,13 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
       required: true
     }
   });
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.actions, {
+	    minWidth : 35,
+	    autoScale : true,
+	    title : "Rank",
+	    headerTooltip : 'Move to ranked projects',
+	    subViewFactory: PortfolioRowController.prototype.moveToRankedButtonFactory
+	  }); 
   
   this.unrankedProjectsConfig = config;
 };

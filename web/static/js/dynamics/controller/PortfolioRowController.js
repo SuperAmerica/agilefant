@@ -11,8 +11,12 @@ PortfolioRowController.columnIndices = {
   status: 1,
   assignees: 2,
   startDate: 3,
-  endDate: 4
+  endDate: 4,
+  actions: 5,
+  rankedActions: 3
 };
+
+
 // Drag'n'drop related
 PortfolioRowController.prototype.rankAndMoveProject = function(view, model, newPos) {
 	  var previousRow      = newPos - 1;
@@ -31,4 +35,20 @@ PortfolioRowController.prototype.rankAndMoveProject = function(view, model, newP
 
 PortfolioRowController.prototype.acceptsDraggable = function(model) {
 	  return (model instanceof ProjectModel);
+};
+
+PortfolioRowController.prototype.moveToRankedButtonFactory = function(view, model) {
+	return new DynamicsButtons(this, [{text: 'Rank', callback: PortfolioController.prototype.rank}] ,view);
+};
+	
+PortfolioRowController.prototype.moveToUnrankedButtonFactory = function(view, model) {
+	return new DynamicsButtons(this, [{text: 'Unrank', callback: PortfolioController.prototype.unrank}] ,view);
+};
+	
+PortfolioRowController.prototype.rank = function() {
+	var me = this;
+};
+
+PortfolioRowController.prototype.unrank = function() {
+	var me = this;
 };

@@ -311,3 +311,25 @@ ProjectModel.prototype.rankUnder = function(rankUnderId) {
     }
   });
 };
+
+ProjectModel.prototype.unrank = function() {
+  var me = this;
+    
+  var data = {
+  projectId: me.getId(),
+  };  
+
+  jQuery.ajax({
+    url: "ajax/unrankProject.action",
+    type: "post",
+    dataType: "json",
+    data: data,
+    success: function(data, status) {
+      MessageDisplay.Ok("Project unranked successfully.");
+      me.callListeners(new DynamicsEvents.EditEvent(me));
+    },
+    error: function(xhr, status) {
+      MessageDisplay.Error("An error occured while unranking the project.", xhr);
+    }
+  });
+};

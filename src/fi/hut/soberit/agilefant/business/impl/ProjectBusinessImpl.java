@@ -94,6 +94,12 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         this.userDAO = userDAO;
     }
     
+    @Transactional
+    public void unrankProject(int projectId) {
+        Project project = projectDAO.get(projectId);
+        project.setRank(0);
+    }
+    
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public ProjectMetrics getProjectMetrics(Project project) {

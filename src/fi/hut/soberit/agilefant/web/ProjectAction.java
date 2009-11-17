@@ -48,6 +48,11 @@ public class ProjectAction implements CRUDAction, Prefetching {
         return Action.SUCCESS;
     }
     
+    public String unrankProject() {
+        projectBusiness.unrankProject(projectId);
+        return Action.SUCCESS;
+    }
+    
     public String projectMetrics() {
         project = projectBusiness.retrieve(projectId);
         projectMetrics = projectBusiness.getProjectMetrics(project);

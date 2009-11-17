@@ -18,4 +18,5 @@ public interface RankingBusiness {
      * @param delegate
      */
     public void rankUnder(Rankable rankable, Rankable justAbove, RankUnderDelegate delegate);
+    
 }

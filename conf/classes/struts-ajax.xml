@@ -186,6 +186,12 @@
       </result>
     </action>
 
+	<action name="unrankProject" method="unrankProject" class="projectAction">
+      <result name="success" type="json">
+        <param name="target">project</param>
+      </result>
+    </action>
+    
     <action name="storeProject" method="store" class="projectAction">    
       <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">

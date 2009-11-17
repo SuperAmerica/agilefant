@@ -32,4 +32,6 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
             throws IllegalArgumentException;
 
     Project rankUnderProject(int projectId, int rankUnderId);
+    
+    public void unrankProject(int projectId);
 }

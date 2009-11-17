@@ -133,4 +133,5 @@ public class RankingBusinessImpl implements RankingBusiness {
         shiftRanks(dir, shiftables);
         entry.setRank(newRank);
     }
+    
 }

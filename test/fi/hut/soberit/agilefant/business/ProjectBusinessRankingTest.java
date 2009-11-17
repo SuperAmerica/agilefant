@@ -84,7 +84,7 @@ public class ProjectBusinessRankingTest {
      * A utility class for defining projects (builder-pattern style)
      */
     private class ProjectDefinition {
-
+        
         private int rank;
         private int expectedRank;
         private boolean move;
@@ -132,6 +132,7 @@ public class ProjectBusinessRankingTest {
      * because no sessionFactory has been injected.
      */
     private class MockProjectDAO extends ProjectDAOHibernate {
+
         @Override
         public Collection<Project> getProjectsWithRankBetween(int lower,
                 int upper) {

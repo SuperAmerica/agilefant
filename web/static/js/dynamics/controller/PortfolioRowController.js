@@ -45,11 +45,11 @@ PortfolioRowController.prototype.acceptsDraggable = function(model) {
 };
 
 PortfolioRowController.prototype.moveToRankedButtonFactory = function(view, model) {
-	return new DynamicsButtons(this, [{text: 'Rank', callback: PortfolioController.prototype.rank}] ,view);
+	return new DynamicsButtons(this, [{text: 'Rank', callback: PortfolioRowController.prototype.rank}] ,view);
 };
 	
 PortfolioRowController.prototype.moveToUnrankedButtonFactory = function(view, model) {
-	return new DynamicsButtons(this, [{text: 'Unrank', callback: PortfolioController.prototype.unrank}] ,view);
+	return new DynamicsButtons(this, [{text: 'Unrank', callback: PortfolioRowController.prototype.unrank}] ,view);
 };
 	
 PortfolioRowController.prototype.rank = function() {
@@ -57,5 +57,5 @@ PortfolioRowController.prototype.rank = function() {
 };
 
 PortfolioRowController.prototype.unrank = function() {
-	var me = this;
+	this.model.unrank();
 };

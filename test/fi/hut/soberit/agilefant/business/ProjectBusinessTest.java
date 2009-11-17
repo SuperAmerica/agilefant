@@ -250,4 +250,16 @@ public class ProjectBusinessTest {
         projectBusiness.getProjectData(-1);
         verifyAll();
     }
+    
+    @Test
+    public void testUnrank() {
+        Project project = new Project();
+        project.setId(500);
+        project.setRank(999);
+        expect(projectDAO.get(500)).andReturn(project);
+        replayAll();
+        projectBusiness.unrankProject(project.getId());
+        assertEquals(0, project.getRank());
+        verifyAll();
+    }
 }

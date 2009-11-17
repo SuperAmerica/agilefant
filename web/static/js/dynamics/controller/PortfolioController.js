@@ -69,22 +69,8 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {
-    minWidth : 180,
-    autoScale : true,
-    title : "Name",
-    headerTooltip : 'Project name',
-    get : ProjectModel.prototype.getName,
-    editable : true,
-    dragHandle : true,
-    edit : {
-      editor : "Text",
-      set : ProjectModel.prototype.setName,
-      required : true
-    }
-  });
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.status, {
-    minWidth : 80,
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedStatus, {
+    minWidth : 30,
     autoScale : true,
     title : "Status",
     headerTooltip : 'Project status',
@@ -98,8 +84,22 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
       items : DynamicsDecorators.projectStates
     }
   }); 
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, {
-	    minWidth : 60,
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedName, {
+    minWidth : 180,
+    autoScale : true,
+    title : "Name",
+    headerTooltip : 'Project name',
+    get : ProjectModel.prototype.getName,
+    editable : true,
+    dragHandle : true,
+    edit : {
+      editor : "Text",
+      set : ProjectModel.prototype.setName,
+      required : true
+    }
+  });
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedAssignees, {
+	    minWidth : 150,
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
@@ -152,23 +152,8 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
       required : true
     }
 }); 
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.status, {
-    minWidth : 80,
-    autoScale : true,
-    title : "Status",
-    headerTooltip : 'Project status',
-    get : ProjectModel.prototype.getStatus,
-    decorator: DynamicsDecorators.projectStatusDecorator,
-    defaultSortColumn: false,
-    editable : true,
-    edit : {
-      editor : "Selection",
-      set : ProjectModel.prototype.setStatus,
-      items : DynamicsDecorators.projectStates
-    }
-  }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, {
-	    minWidth : 60,
+	    minWidth : 150,
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',

@@ -13,6 +13,9 @@ var IterationController = function IterationController(options) {
   this.assigmentListElement = options.assigmentListElement;
   this.taskListElement = options.taskListElement;
   this.hourEntryListElement = options.hourEntryListElement;
+  this.metricsElement = options.metricsElement;
+  this.smallBurndownElement = options.smallBurndownElement;
+  this.burndownElement = options.burndownElement;
   this.init();
   this.initAssigneeConfiguration();
   this.initializeStoryConfig();
@@ -25,6 +28,23 @@ IterationController.prototype = new BacklogController();
 IterationController.prototype.paintIterationInfo = function() {
   this.iterationInfoView = new DynamicVerticalTable(this, this.model, this.iterationDetailConfig, this.iterationInfoElement);
 };
+
+IterationController.prototype.reloadBurndown = function() {
+  var href = this.burndownElement.attr("src");
+  this.burndownElement.attr("src", href+"#");
+  href = this.smallBurndownElement.attr("src");
+  this.smallBurndownElement.attr("src", href+"#");
+};
+IterationController.prototype.reloadMetricsBox = function() {
+  this.metricsElement.load("ajax/iterationMetrics.action", {iterationId: this.id});
+  this.reloadBurndown();
+};
+
+IterationController.prototype.reloadMetrics = function() {
+  this.reloadBurndown();
+  this.reloadMetricsBox();
+};
+
 /**
  * Creates a new story controller.
  */

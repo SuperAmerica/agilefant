@@ -27,6 +27,11 @@ TaskController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.MetricsEvent
       && this.model.getParent() instanceof StoryModel) {
     this.model.getParent().reloadMetrics(); 
+    if(this.parentController instanceof IterationController) {
+      this.parentController.reloadMetrics();
+    } else if(this.parentController.parentController instanceof IterationController) {
+      this.parentController.parentController.reloadMetrics();
+    }
   }
 };
 TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {

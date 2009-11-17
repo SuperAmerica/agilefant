@@ -34,6 +34,7 @@ var StoryModel = function StoryModel() {
       "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
       "fi.hut.soberit.agilefant.model.Story":         "story"
   };
+  this.metricFields = ["storyPoints", "state"];
 };
 
 StoryModel.prototype = new CommonModel();

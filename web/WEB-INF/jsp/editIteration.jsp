@@ -50,7 +50,10 @@ $(document).ready(function() {
       burndownElement: null,
       assigmentListElement: $("#backlogAssignees"),
       hourEntryListElement: $("#backlogSpentEffort"),
-      taskListElement: $("#tasksWithoutStory")
+      taskListElement: $("#tasksWithoutStory"),
+      metricsElement: $("#iterationMetrics"),
+      smallBurndownElement: $("#smallChart"),
+      burndownElement: $("#bigChart")
   });
   if(Configuration.isTimesheetsEnabled()) {
   	$("#backlogInfo").bind('tabsselect', function(event, ui) {

@@ -29,6 +29,14 @@ StoryController.prototype.handleModelEvents = function(event) {
   //removed within the story.
   if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
     this.model.reloadMetrics();
+    if(this.parentController instanceof IterationController) {
+      this.parentController.reloadMetrics();
+    }
+  }
+  //is story's storypoints or status change
+  if (event instanceof DynamicsEvents.MetricsEvent 
+      && this.parentController instanceof IterationController) {
+    this.parentController.reloadMetricsBox();
   }
 };
 

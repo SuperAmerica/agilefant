@@ -22,6 +22,10 @@ PortfolioController.prototype.paint = function() {
     me.paintTimeline();
   });
 };
+
+PortfolioController.prototype.reload = function() {
+  this.model.reload();
+};
 // Drag'n'drop related
 PortfolioController.prototype.acceptsDraggable = function(model) {
   if (model instanceof ProjectModel) {

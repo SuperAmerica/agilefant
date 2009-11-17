@@ -304,6 +304,7 @@ ProjectModel.prototype.rankUnder = function(rankUnderId) {
     success: function(data, status) {
       MessageDisplay.Ok("Project ranked successfully.");
       me.setData(data);
+      me.callListeners(new DynamicsEvents.EditEvent(me));
     },
     error: function(xhr, status) {
       MessageDisplay.Error("An error occured while ranking the project.", xhr);

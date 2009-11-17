@@ -21,6 +21,8 @@ PortfolioModel.prototype = new CommonModel();
  */
 PortfolioModel.prototype._setData = function(newData) {
   if (newData) {
+    this.unrankedProjects = [];
+    this.rankedProjects = [];
     for (var i = 0, len = newData.rankedProjects.length; i < len; i++) {
       this.rankedProjects.push(ModelFactory.updateObject(newData.rankedProjects[i]));
     }
@@ -28,6 +30,24 @@ PortfolioModel.prototype._setData = function(newData) {
       this.unrankedProjects.push(ModelFactory.updateObject(newData.unrankedProjects[i]));
     }
   }
+};
+
+PortfolioModel.prototype.reload = function() {
+  var me = this;
+  jQuery.ajax({
+    type: "POST",
+    dataType: "json",
+    url: "ajax/projectPortfolioData.action",
+    async: true,
+    success: function(data,status) {
+      me.setData(data);
+      //me.callListeners(new DynamicsEvents.EditEvent(me));
+      me.callListeners(new DynamicsEvents.RelationUpdatedEvent(me));
+    },
+    error: function(xhr, status, error) {
+      var msg = MessageDisplay.ErrorMessage("Error loading portfolio.", xhr);
+    }
+  });  
 };
 
 PortfolioModel.prototype.getRankedProjects = function() {

@@ -16,6 +16,13 @@ PortfolioRowController.columnIndices = {
   rankedActions: 3
 };
 
+PortfolioRowController.prototype.handleModelEvents = function(event) {
+  if (event instanceof DynamicsEvents.EditEvent) {
+    this.parentController.reload();
+  } else if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
+    this.parentController.reload();
+  }
+};
 
 // Drag'n'drop related
 PortfolioRowController.prototype.rankAndMoveProject = function(view, model, newPos) {

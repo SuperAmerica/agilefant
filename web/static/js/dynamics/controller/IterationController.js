@@ -25,6 +25,18 @@ var IterationController = function IterationController(options) {
 };
 IterationController.prototype = new BacklogController();
 
+IterationController.prototype.handleModelEvents = function(event) {
+  if (event instanceof DynamicsEvents.MetricsEvent 
+      || event instanceof DynamicsEvents.RelationUpdatedEvent) {
+    if(event.getObject() instanceof TaskModel) {
+      this.reloadMetrics();
+    }
+    if(event.getObject() instanceof StoryModel) {
+      this.reloadMetricsBox();
+    }
+  }
+};
+
 IterationController.prototype.paintIterationInfo = function() {
   this.iterationInfoView = new DynamicVerticalTable(this, this.model, this.iterationDetailConfig, this.iterationInfoElement);
 };

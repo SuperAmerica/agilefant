@@ -25,18 +25,13 @@ StoryController.columnIndices = {
 StoryController.prototype = new CommonController();
 
 StoryController.prototype.handleModelEvents = function(event) {
+  if(this.parentController) {
+    this.parentController.handleModelEvents(event);
+  }
   //reload model to update metrics if tasks haven been added or 
   //removed within the story.
   if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
     this.model.reloadMetrics();
-    if(this.parentController instanceof IterationController) {
-      this.parentController.reloadMetrics();
-    }
-  }
-  //is story's storypoints or status change
-  if (event instanceof DynamicsEvents.MetricsEvent 
-      && this.parentController instanceof IterationController) {
-    this.parentController.reloadMetricsBox();
   }
 };
 

@@ -24,13 +24,14 @@ TaskController.columnIndices = {
 TaskController.prototype = new CommonController();
 
 TaskController.prototype.handleModelEvents = function(event) {
-  if (event instanceof DynamicsEvents.MetricsEvent
-      && this.model.getParent() instanceof StoryModel) {
-    this.model.getParent().reloadMetrics(); 
-    if(this.parentController instanceof IterationController) {
-      this.parentController.reloadMetrics();
-    } else if(this.parentController.parentController instanceof IterationController) {
-      this.parentController.parentController.reloadMetrics();
+  if(this.parentController) {
+    this.parentController.handleModelEvents(event);
+  }
+  // listen for task metrics changes
+  if (event instanceof DynamicsEvents.MetricsEvent) {
+    // reload the parent story (if within a story)
+    if (this.model.getParent() instanceof StoryModel) {
+      this.model.getParent().reloadMetrics();
     }
   }
 };

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.ReadablePeriod;
 import org.junit.Before;
@@ -100,23 +101,15 @@ public class ProjectBusinessRankingTest {
         private int expectedRank;
         private boolean move;
         private boolean underThis;
-        private LocalDate startDate;
-        private LocalDate endDate;
+        private LocalDate startDate = new LocalDate();
+        private LocalDate endDate = new LocalDate();
 
-        ProjectDefinition withStartDatePlus(ReadablePeriod period) {
+        ProjectDefinition withStartDateOffset(ReadablePeriod period) {
             this.startDate = new LocalDate().plus(period.toPeriod());
             return this;
         }
-        ProjectDefinition withStartDateMinus(ReadablePeriod period) {
-            this.startDate = new LocalDate().minus(period.toPeriod());
-            return this;
-        }
-        ProjectDefinition withEndDatePlus(ReadablePeriod period) {
+        ProjectDefinition withEndDateOffset(ReadablePeriod period) {
             this.endDate = new LocalDate().plus(period.toPeriod());
-            return this;
-        }
-        ProjectDefinition withEndDateMinus(ReadablePeriod period) {
-            this.endDate = new LocalDate().minus(period.toPeriod());
             return this;
         }
         ProjectDefinition withRank(int rank) {

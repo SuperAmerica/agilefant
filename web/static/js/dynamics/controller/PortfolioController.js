@@ -70,7 +70,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
   });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedStatus, {
-    minWidth : 30,
+    minWidth : 3,
     autoScale : true,
     title : "Status",
     headerTooltip : 'Project status',
@@ -85,7 +85,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
     }
   }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedName, {
-    minWidth : 180,
+    minWidth : 27,
     autoScale : true,
     title : "Name",
     headerTooltip : 'Project name',
@@ -99,7 +99,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
     }
   });
   config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedAssignees, {
-	    minWidth : 150,
+	    minWidth : 30,
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
@@ -114,7 +114,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
       }
 	  });
   config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedActions, {
-	    minWidth : 35,
+	    minWidth : 4,
 	    autoScale : true,
 	    title : "Unrank",
 	    headerTooltip : 'Move to unranked projects',
@@ -139,7 +139,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
 });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {
-    minWidth : 180,
+    minWidth : 30,
     autoScale : true,
     title : "Name",
     headerTooltip : 'Project name',
@@ -153,7 +153,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     }
 }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, {
-	    minWidth : 150,
+	    minWidth : 18,
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
@@ -168,7 +168,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
       }
 	  }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, {
-    minWidth : 50,
+    minWidth : 6,
     autoScale : true,
     title : "Start date",
     headerTooltip : 'Start date',
@@ -186,7 +186,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     }
   }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, {
-    minWidth : 50,
+    minWidth : 6,
     autoScale : true,
     title : "End date",
     headerTooltip : 'End date',
@@ -204,7 +204,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     }
   });
   config.addColumnConfiguration(PortfolioRowController.columnIndices.actions, {
-	    minWidth : 35,
+	    minWidth : 4,
 	    autoScale : true,
 	    title : "Rank",
 	    headerTooltip : 'Move to ranked projects',

@@ -102,7 +102,7 @@ public class ProjectBusinessRankingTest {
     }
     
     @Test
-    public void testMoveToRanked_noActiveProjects() {
+    public void testMoveToRanked_noRankedProjects() {
         setupProjects(
                 project().withRank(0).expectedRank(2),
                 project().withRank(1).expectedRank(1).withStartDateOffset(Months.months(8).toPeriod())
@@ -113,6 +113,94 @@ public class ProjectBusinessRankingTest {
         verifyMocks();
         verifyRanks();
     }
+    
+    @Test
+    public void testMoveToRanked_spaceBetweenProjects() {
+        setupProjects(
+                project().withRank(0).expectedRank(4),
+                project().withRank(1).expectedRank(1),
+                project().withRank(3).expectedRank(3)
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
+    @Test
+    public void testMoveToRanked_onlyUnrankedProjects() {
+        setupProjects(
+                project().withRank(0).expectedRank(1),
+                project().withRank(0).expectedRank(0),
+                project().withRank(0).expectedRank(0)
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
+    @Test
+    public void testMoveToRanked_rankedProjectInThePast() {
+        setupProjects(
+                project().withRank(0).expectedRank(5),
+                project().withRank(4).expectedRank(4).withEndDateOffset(Months.months(-8).toPeriod())
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
+    @Test
+    public void testMoveToRanked_addBeforeRankedProjects() {
+        setupProjects(
+                project().withRank(0).expectedRank(2),
+                project().withRank(1).expectedRank(1),
+                project().withRank(4).expectedRank(5).withStartDateOffset(Months.months(8).toPeriod()),
+                project().withRank(5).expectedRank(6).withStartDateOffset(Months.months(9).toPeriod())
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
+    @Test
+    public void testMoveToRanked_projectsNotEntirelyInView() {
+        setupProjects(
+                project().withRank(0).expectedRank(10),
+                project().withRank(7).expectedRank(7).withStartDateOffset(Months.months(-2).toPeriod()),
+                project().withRank(9).expectedRank(9).withEndDateOffset(Months.months(2).toPeriod())
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
+    @Test
+    public void testMoveToRanked_projectEndAndStartOutsideView() {
+        setupProjects(
+                project().withRank(0).expectedRank(8),
+                project().withRank(7).expectedRank(7).withStartDateOffset(Months.months(-2).toPeriod()).withEndDateOffset(Months.months(2).toPeriod())
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
+    
+    
+    
+    
     
 
     /*

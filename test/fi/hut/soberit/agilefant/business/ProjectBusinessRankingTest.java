@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.LocalDate;
+import org.joda.time.ReadablePeriod;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,6 +59,11 @@ public class ProjectBusinessRankingTest {
         verifyRanks();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankUnderProject_nullProject() {
+        projectBusiness.rankUnderProject(null, null);
+    }
+
     /*
      * The rest of this file contains only infrastructure
      * that is needed for readable tests in this class. 
@@ -71,8 +78,12 @@ public class ProjectBusinessRankingTest {
     private void setupProjects(ProjectDefinition... projectDefinitions) {
         projects = new ArrayList<Project>();
         expectedRanks = new HashMap<Project, Integer>();
+        int id = 0;
         for (ProjectDefinition definition : projectDefinitions) {
-            projects.add(definition.build());
+            Project project = definition.build();
+            project.setId(id);
+            projects.add(project);
+            id++;
         }
     }
 
@@ -89,7 +100,25 @@ public class ProjectBusinessRankingTest {
         private int expectedRank;
         private boolean move;
         private boolean underThis;
+        private LocalDate startDate;
+        private LocalDate endDate;
 
+        ProjectDefinition withStartDatePlus(ReadablePeriod period) {
+            this.startDate = new LocalDate().plus(period.toPeriod());
+            return this;
+        }
+        ProjectDefinition withStartDateMinus(ReadablePeriod period) {
+            this.startDate = new LocalDate().minus(period.toPeriod());
+            return this;
+        }
+        ProjectDefinition withEndDatePlus(ReadablePeriod period) {
+            this.endDate = new LocalDate().plus(period.toPeriod());
+            return this;
+        }
+        ProjectDefinition withEndDateMinus(ReadablePeriod period) {
+            this.endDate = new LocalDate().minus(period.toPeriod());
+            return this;
+        }
         ProjectDefinition withRank(int rank) {
             this.rank = rank;
             return this;
@@ -110,12 +139,14 @@ public class ProjectBusinessRankingTest {
         Project build() {
             Project project = new Project();
             project.setRank(rank);
+            project.setStartDate(startDate.toDateTimeAtStartOfDay());
+            project.setEndDate(endDate.toDateTimeAtStartOfDay());
             if (underThis) {
                 target = project;
             }
             if (move) {
                 toBeRanked = project;
-            }
+            }            
             expectedRanks.put(project, expectedRank);
             return project;
         }

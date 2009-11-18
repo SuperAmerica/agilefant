@@ -156,7 +156,23 @@ public class ProjectBusinessRankingTest {
      * because no sessionFactory has been injected.
      */
     private class MockProjectDAO extends ProjectDAOHibernate {
-
+        
+        @Override
+        public Project get(int id) {
+            return projects.get(id);
+        }
+        
+        @Override
+        public Project getMaxRankedProject() {
+            Project result = null;
+            for (Project project : projects) {
+                if (result == null || project.getRank() > result.getRank()) {
+                    result = project;
+                }
+            }
+            return result;
+        }
+        
         @Override
         public Collection<Project> getProjectsWithRankBetween(int lower,
                 int upper) {

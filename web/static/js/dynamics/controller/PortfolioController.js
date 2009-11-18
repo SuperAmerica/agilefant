@@ -1,6 +1,7 @@
 var PortfolioController = function PortfolioController(options) {
   this.rankedProjectsElement = options.rankedProjectsElement;
   this.unrankedProjectsElement = options.unrankedProjectsElement;
+  this.timelineElement = options.timelineElement;
   
   this.init();
   this.initRankedProjectsConfig();
@@ -20,7 +21,14 @@ PortfolioController.prototype.paint = function() {
     me.paintRankedProjects();
     me.paintUnrankedProjects();
     me.paintTimeline();
+    me.attachModelListener();
   });
+};
+
+PortfolioController.prototype.handleModelEvents = function(event) {
+  if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
+    this.eventSource.loadData();
+  }
 };
 
 PortfolioController.prototype.reload = function() {
@@ -47,6 +55,29 @@ PortfolioController.prototype.paintUnrankedProjects = function() {
 };
 
 PortfolioController.prototype.paintTimeline = function() {
+  this.model.startDate = new Date();
+  this.model.endDate = new Date();
+  this.model.endDate.addMonths(6);
+  var middleDate = new Date();
+  middleDate.addMonths(3);
+  var eventSource = new Timeline.PortfolioEventSource();
+  this.eventSource = eventSource;
+  var theme = Timeline.ClassicTheme.create();
+  theme.timeline_start = this.model.startDate;
+  theme.timeline_stop = this.model.endDate;
+  var bandInfos = [
+      Timeline.createBandInfo({
+        width: "100%",
+        date: middleDate,
+        intervalUnit: Timeline.DateTime.MONTH,
+        intervalPixels: 125,
+        eventSource: eventSource,
+        theme: theme
+      })
+  ];
+  eventSource.setModel(this.model);
+  this.timeline = Timeline.create(this.timelineElement[0], bandInfos);
+  eventSource.loadData();
 };
 
 PortfolioController.prototype.portfolioRowControllerFactory = function(view, model) {

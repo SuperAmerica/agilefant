@@ -6,10 +6,14 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 
 import org.easymock.EasyMock;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -36,6 +40,7 @@ public class ProjectBusinessTest {
     BacklogDAO backlogDAO;
     ProductBusiness productBusiness;
     TransferObjectBusiness transferObjectBusiness;
+    SettingBusiness settingBusiness;
 
     Project project;
     Product product;
@@ -57,6 +62,10 @@ public class ProjectBusinessTest {
         
         transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
         projectBusiness.setTransferObjectBusiness(transferObjectBusiness);
+        
+        settingBusiness = createStrictMock(SettingBusiness.class);
+        projectBusiness.setSettingBusiness(settingBusiness);     
+
     }
 
     @Before
@@ -87,11 +96,11 @@ public class ProjectBusinessTest {
     }
 
     private void replayAll() {
-        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness);
+        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness);
     }
 
     private void verifyAll() {
-        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness);
+        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness);
     }
 
     @Test
@@ -262,4 +271,5 @@ public class ProjectBusinessTest {
         assertEquals(0, project.getRank());
         verifyAll();
     }
+             
 }

@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business;
 
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,8 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.easymock.EasyMock;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.joda.time.Months;
+import org.joda.time.Period;
 import org.joda.time.ReadablePeriod;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +28,7 @@ import fi.hut.soberit.agilefant.model.Project;
 public class ProjectBusinessRankingTest {
 
     private ProjectBusinessImpl projectBusiness;
+    private SettingBusiness settingBusiness;
     private ProjectDAO projectDAO = new MockProjectDAO();
     private List<Project> projects;    
     private Map<Project, Integer> expectedRanks;
@@ -34,6 +40,8 @@ public class ProjectBusinessRankingTest {
         projectBusiness = new ProjectBusinessImpl();
         projectBusiness.setRankingBusiness(new RankingBusinessImpl());
         projectBusiness.setProjectDAO(projectDAO);
+        settingBusiness = EasyMock.createMock(SettingBusiness.class); 
+        projectBusiness.setSettingBusiness(settingBusiness);
     }
 
     @Test
@@ -64,11 +72,61 @@ public class ProjectBusinessRankingTest {
     public void testRankUnderProject_nullProject() {
         projectBusiness.rankUnderProject(null, null);
     }
+    
+    @Test
+    public void testMoveToRanked() {
+        setupProjects(
+                project().withRank(1).expectedRank(1),
+                project().withRank(2).expectedRank(2),
+                project().withRank(3).expectedRank(3),
+                project().withRank(0).expectedRank(4)
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(3);
+        verifyMocks();
+        verifyRanks();
+        
+    }
+    
+    @Test
+    public void testMoveToRanked_emptyDatabase() {
+        setupProjects(
+                project().withRank(0).expectedRank(1)
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
+    @Test
+    public void testMoveToRanked_noActiveProjects() {
+        setupProjects(
+                project().withRank(0).expectedRank(2),
+                project().withRank(1).expectedRank(1).withStartDateOffset(Months.months(8).toPeriod())
+        );
+        expect(settingBusiness.getPortfolioTimeSpan()).andReturn(Months.months(6).toPeriod());
+        replayMocks();
+        projectBusiness.moveToRanked(0);
+        verifyMocks();
+        verifyRanks();
+    }
+    
 
     /*
      * The rest of this file contains only infrastructure
      * that is needed for readable tests in this class. 
      */
+    
+    private void replayMocks() {
+        EasyMock.replay(settingBusiness);
+    }
+    
+    private void verifyMocks() {
+        EasyMock.verify(settingBusiness);
+    }
     
     private void verifyRanks() {
         for (Map.Entry<Project, Integer> entry : expectedRanks.entrySet()) {
@@ -101,15 +159,15 @@ public class ProjectBusinessRankingTest {
         private int expectedRank;
         private boolean move;
         private boolean underThis;
-        private LocalDate startDate = new LocalDate();
-        private LocalDate endDate = new LocalDate();
+        private ReadablePeriod startDateOffset = Days.days(0);
+        private ReadablePeriod endDateOffset = Days.days(0);
 
         ProjectDefinition withStartDateOffset(ReadablePeriod period) {
-            this.startDate = new LocalDate().plus(period.toPeriod());
+            this.startDateOffset = period;
             return this;
         }
         ProjectDefinition withEndDateOffset(ReadablePeriod period) {
-            this.endDate = new LocalDate().plus(period.toPeriod());
+            this.endDateOffset = period;
             return this;
         }
         ProjectDefinition withRank(int rank) {
@@ -132,8 +190,9 @@ public class ProjectBusinessRankingTest {
         Project build() {
             Project project = new Project();
             project.setRank(rank);
-            project.setStartDate(startDate.toDateTimeAtStartOfDay());
-            project.setEndDate(endDate.toDateTimeAtStartOfDay());
+            LocalDate today = new LocalDate();
+            project.setStartDate(today.plus(startDateOffset).toDateTimeAtStartOfDay());
+            project.setEndDate(project.getStartDate().plus(endDateOffset));
             if (underThis) {
                 target = project;
             }
@@ -163,9 +222,36 @@ public class ProjectBusinessRankingTest {
         }
         
         @Override
+        public List<Project> getRankedProjects(LocalDate startDate, LocalDate endDate) {
+            List<Project> result = new ArrayList<Project>();
+            for (Project project : projects) {
+                if (project.getEndDate().isBefore(startDate.toDateTimeAtStartOfDay())) continue;
+                if (project.getStartDate().isAfter(endDate.toDateTimeAtStartOfDay())) continue;
+                if (project.getRank() > 0) {
+                    result.add(project);
+                }
+            }
+            return result;
+        }
+        
+        @Override
+        public List<Project> getUnrankedProjects(LocalDate startDate, LocalDate endDate) {
+            List<Project> result = new ArrayList<Project>();
+            for (Project project : projects) {
+                if (project.getEndDate().isBefore(startDate.toDateTimeAtStartOfDay())) continue;
+                if (project.getStartDate().isAfter(endDate.toDateTimeAtStartOfDay())) continue;
+                if (project.getRank() < 1) {
+                    result.add(project);
+                }
+            }
+            return result;
+        }
+
+        @Override
         public Project getMaxRankedProject() {
             Project result = null;
             for (Project project : projects) {
+                if (project.getRank() < 1) continue;
                 if (result == null || project.getRank() > result.getRank()) {
                     result = project;
                 }

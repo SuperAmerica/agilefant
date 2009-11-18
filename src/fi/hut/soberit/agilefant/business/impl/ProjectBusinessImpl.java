@@ -50,9 +50,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
-    
-    @Autowired
     private SettingBusiness settingBusiness;
+    
 
     public ProjectBusinessImpl() {
         super(Project.class);
@@ -72,6 +71,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Autowired
     public void setRankingBusiness(RankingBusiness rankingBusiness) {
         this.rankingBusiness = rankingBusiness;
+    }
+    
+    @Autowired
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
     
     @Autowired
@@ -260,14 +264,16 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         Project project = projectDAO.get(projectId);
         
         Project maxRankedProject = projectDAO.getMaxRankedProject();
-        if( projects.isEmpty()) {
+        if (maxRankedProject != null) {
+            project.setRank(maxRankedProject.getRank() + 1);
+        }
+        if( projects.isEmpty() ) {
             if(maxRankedProject == null) {
                 project.setRank(1);
             } else {
                 rankUnderProject(project,maxRankedProject);
             }   
         } else {
-            project.setRank(maxRankedProject.getRank() + 1);
             rankUnderProject(project,projects.get(projects.size() - 1));
         }
         

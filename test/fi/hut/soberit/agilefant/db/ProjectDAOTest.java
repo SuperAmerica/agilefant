@@ -82,6 +82,7 @@ public class ProjectDAOTest extends AbstractHibernateTests {
         
         
     }
+    
     @Test
     public void testGetRankedProjects() {
         executeSql("classpath:fi/hut/soberit/agilefant/db/ProjectDAOTest-portfolio-data.sql");
@@ -95,8 +96,15 @@ public class ProjectDAOTest extends AbstractHibernateTests {
           assertTrue(project.getRank() > 0);
           assertFalse(project.getEndDate().isBefore(startDate.toDateTimeAtStartOfDay()));
           assertFalse(project.getStartDate().isAfter(endDate.toDateTimeAtStartOfDay()));
-        }
+        }      
         
-        
+    }
+    
+    @Test
+    public void testGetMaxRankedProject() {
+        executeSql("classpath:fi/hut/soberit/agilefant/db/ProjectDAOTest-portfolio-data.sql");
+        Project project = projectDAO.getMaxRankedProject();
+        assertNotNull(project);
+        assertEquals(1, project.getRank());       
     }
 }

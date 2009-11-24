@@ -17,7 +17,11 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
     } else {
       start.setTime(event.getStartDate());
     }    
-    end.setTime(event.getEndDate());
+    if (event.getEndDate() > this.model.endDate.getTime()) {
+      end.setTime(this.model.endDate.getTime());
+    } else {
+      end.setTime(event.getEndDate());
+    }
     
     var status = event.getStatus();
     var color = "";

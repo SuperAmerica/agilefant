@@ -49,4 +49,8 @@ public interface ProjectDAO extends GenericDAO<Project> {
     
     public Project getMaxRankedProject();
 
+    Project getProjectWithRankLessThan(int rank);
+
+    void increaseRankedProjectRanks();
+
 }

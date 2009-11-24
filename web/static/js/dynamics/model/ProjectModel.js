@@ -312,6 +312,30 @@ ProjectModel.prototype.rankUnder = function(rankUnderId) {
   });
 };
 
+ProjectModel.prototype.rankOver = function(rankOverId) {
+  var me = this;
+    
+  var data = {
+  projectId: me.getId(),
+  rankOverId: rankOverId
+  };  
+
+  jQuery.ajax({
+    url: "ajax/rankProjectAndMoveOver.action",
+    type: "post",
+    dataType: "json",
+    data: data,
+    success: function(data, status) {
+      MessageDisplay.Ok("Project ranked successfully.");
+      me.setData(data);
+      me.callListeners(new DynamicsEvents.EditEvent(me));
+    },
+    error: function(xhr, status) {
+      MessageDisplay.Error("An error occured while ranking the project.", xhr);
+    }
+  });
+};
+
 ProjectModel.prototype.unrank = function() {
   var me = this;
     

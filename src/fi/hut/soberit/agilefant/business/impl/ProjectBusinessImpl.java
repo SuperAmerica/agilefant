@@ -254,6 +254,24 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         return project;
     }
     
+    
+    @Transactional
+    public Project rankOverProject(int projectId, int rankOverId) {
+        Project project = projectDAO.get(projectId);
+        Project rankOver = projectDAO.get(rankOverId);        
+        Project rankUnder = projectDAO.getProjectWithRankLessThan(rankOver.getRank());
+        if (rankUnder == null) {
+            System.out.println(project.getRank());
+            projectDAO.increaseRankedProjectRanks();
+            System.out.println(project.getRank());
+            project.setRank(1);
+            System.out.println(project.getRank());
+        } else {
+            rankUnderProject(project, rankUnder);            
+        }
+        return project;
+    }
+    
     /** {@inheritDoc} */
     @Transactional
     public void moveToRanked(int projectId) {

@@ -30,6 +30,8 @@ public class ProjectAction implements CRUDAction, Prefetching {
 
     private Integer rankUnderId = null;
     
+    private Integer rankOverId = null;
+
     private Project project;
     
     private ProjectMetrics projectMetrics;
@@ -45,6 +47,11 @@ public class ProjectAction implements CRUDAction, Prefetching {
     
     public String rankProject() {
         project = projectBusiness.rankUnderProject(projectId, rankUnderId);
+        return Action.SUCCESS;
+    }
+    
+    public String rankOverProject() {
+        project = projectBusiness.rankOverProject(projectId, rankOverId);
         return Action.SUCCESS;
     }
     
@@ -159,6 +166,13 @@ public class ProjectAction implements CRUDAction, Prefetching {
     
     public boolean isAssigneesChanged() {
         return assigneesChanged;
+    }
+    
+    public void setRankOverId(Integer rankOverId) {
+        this.rankOverId = rankOverId;
+    }
+    public Integer getRankOverId() {
+        return rankOverId;
     }
     
 }

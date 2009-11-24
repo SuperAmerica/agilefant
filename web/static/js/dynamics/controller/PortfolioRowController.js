@@ -31,14 +31,22 @@ PortfolioRowController.prototype.rankAndMoveProject = function(view, model, newP
 	  var previousRow      = newPos - 1;
 	  var previousProjectId   = -1;
 	  var previousProject     = null;
+    var nextRow = newPos + 1;
+	  var nextProjectId = -1;
 	  
 	  if (view.getParentView().getDataRowAt(previousRow)) {
 	    previousProject = view.getParentView().getDataRowAt(previousRow).getModel();
 	    previousProjectId = previousProject.getId();
 	  }
+	  if (view.getParentView().getDataRowAt(nextRow)) {
+	    var nextProject = view.getParentView().getDataRowAt(nextRow).getModel();
+	    nextProjectId = nextProject.getId();
+	  }
 
 	if (previousProjectId != -1) {
 		model.rankUnder(previousProjectId);
+	} else if (nextProjectId != -1){
+	  model.rankOver(nextProjectId);
 	}
 };
 

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -83,6 +84,20 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         crit.addOrder(Order.desc("rank"));
         crit.setMaxResults(1);
         return uniqueResult(crit);
+    }
+
+    public Project getProjectWithRankLessThan(int rank) {
+        Criteria crit = getCurrentSession().createCriteria(Project.class);
+        crit.add(Restrictions.lt("rank", rank));
+        crit.add(Restrictions.gt("rank", 0));
+        crit.addOrder(Order.asc("rank"));
+        crit.setMaxResults(1);
+        return uniqueResult(crit);
+    }
+    
+    public void increaseRankedProjectRanks() {
+        Query query = getCurrentSession().createQuery("UPDATE Project project SET project.rank = project.rank + 1 WHERE project.rank > 0");
+        query.executeUpdate();
     }
     
 }

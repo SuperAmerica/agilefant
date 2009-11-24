@@ -62,6 +62,8 @@ PortfolioController.prototype.paintTimeline = function() {
   this.timelineElement.css("height", (this.model.getRankedProjects().length * 30 + 50) + "px");
   this.model.startDate = new Date();
   this.model.endDate = new Date();
+  this.model.startDate.zeroTime();
+  this.model.endDate.zeroTime();
   this.model.endDate.addDays(this.model.getTimeSpanInDays());
   var middleDate = new Date();
   middleDate.addDays(this.model.getTimeSpanInDays() / 2);

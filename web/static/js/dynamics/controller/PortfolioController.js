@@ -59,7 +59,7 @@ PortfolioController.prototype.paintUnrankedProjects = function() {
 PortfolioController.prototype.paintTimeline = function() {
   // A random guess for timeline height
   // An exact height is very difficult to calculate because we'd have to add ems to pixels
-  this.timelineElement.css("height", (this.model.getRankedProjects().length * 30 + 50) + "px");
+  this.timelineElement.css("height", (this.model.getRankedProjects().length * 30) + "px");
   this.model.startDate = new Date();
   this.model.endDate = new Date();
   this.model.startDate.zeroTime();

@@ -19,7 +19,25 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
     }    
     end.setTime(event.getEndDate());
     
-
+    var status = event.getStatus();
+    var color = "";
+    switch (status) {
+      case "BLACK":
+        color = "#000000";
+        break;
+      case "RED":
+        color = "#FF0000";
+        break;
+      case "GREEN":
+        color = "#00FF00";
+        break;
+      case "GREY":
+        color = "#999999";
+        break;
+      case "YELLOW":
+        color = "#FFFF00";
+        break;
+    }
     var evt = new Timeline.DefaultEventSource.Event({
                   id: ""+event.getId(),
                start: this.model.startDate,
@@ -32,8 +50,8 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
          image: this._resolveRelativeURL(event.image, ""),
          link: this._resolveRelativeURL(event.link , ""),
          icon: this._resolveRelativeURL(event.icon , ""),
-        color: event.color,                                      
-    textColor: event.textColor,
+        color: color,
+    textColor: "#000000",
     hoverText: event.hoverText,
     classname: event.classname,
     tapeImage: event.tapeImage,

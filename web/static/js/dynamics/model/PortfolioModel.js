@@ -43,7 +43,6 @@ PortfolioModel.prototype.reload = function() {
     async: true,
     success: function(data,status) {
       me.setData(data);
-      //me.callListeners(new DynamicsEvents.EditEvent(me));
       me.callListeners(new DynamicsEvents.RelationUpdatedEvent(me));
     },
     error: function(xhr, status, error) {

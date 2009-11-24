@@ -28,6 +28,8 @@ PortfolioController.prototype.paint = function() {
 PortfolioController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
     this.eventSource.loadData();
+  } else if (event instanceof DynamicsEvents.EditEvent) {
+    this.eventSource.loadData();
   }
 };
 

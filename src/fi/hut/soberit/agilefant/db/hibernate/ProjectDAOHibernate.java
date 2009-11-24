@@ -80,7 +80,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
     public Project getMaxRankedProject() {
         Criteria crit = getCurrentSession().createCriteria(Project.class);
         crit.add(Restrictions.gt("rank", 0));
-        crit.addOrder(Order.asc("rank"));
+        crit.addOrder(Order.desc("rank"));
         crit.setMaxResults(1);
         return uniqueResult(crit);
     }

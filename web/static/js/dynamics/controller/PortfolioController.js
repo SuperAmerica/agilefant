@@ -64,7 +64,8 @@ PortfolioController.prototype.paintTimeline = function() {
   this.eventSource = eventSource;
   var theme = Timeline.ClassicTheme.create();
   theme.timeline_start = this.model.startDate;
-  theme.timeline_stop = this.model.endDate;
+  theme.timeline_stop = this.model.endDate;  
+  theme.event.duration.impreciseOpacity = 0;
   var bandInfos = [
       Timeline.createBandInfo({
         width: "100%",

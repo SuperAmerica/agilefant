@@ -7,7 +7,9 @@ var PortfolioModel = function PortfolioModel() {
   this.initialize();
   this.persistedClassName = "non.existent.PortfolioModel";
   this.relations = { };
-  this.copiedFields = { };
+  this.copiedFields = {
+    "timeSpanInDays": "timeSpanInDays"
+  };
   this.unrankedProjects = [];
   this.rankedProjects = [];
   this.classNameToRelation = {};
@@ -56,4 +58,7 @@ PortfolioModel.prototype.getRankedProjects = function() {
 
 PortfolioModel.prototype.getUnrankedProjects = function() {
   return this.unrankedProjects;
+};
+PortfolioModel.prototype.getTimeSpanInDays = function() {
+  return this.currentData.timeSpanInDays;
 };

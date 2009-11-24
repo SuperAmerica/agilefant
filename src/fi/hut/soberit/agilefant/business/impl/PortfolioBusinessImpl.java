@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,12 @@ public class PortfolioBusinessImpl implements PortfolioBusiness {
     public PortfolioTO getPortfolioData() {
         PortfolioTO portfolioData = new PortfolioTO();
         LocalDate startDate = new LocalDate();
-        LocalDate endDate = startDate.plus(settingBusiness
-                .getPortfolioTimeSpan());
+        LocalDate endDate = startDate.plus(settingBusiness.getPortfolioTimeSpan());
         portfolioData.setRankedProjects(projectDAO.getRankedProjects(startDate,
                 endDate));
         portfolioData.setUnrankedProjects(projectDAO.getUnrankedProjects(
                 startDate, endDate));
+        portfolioData.setTimeSpanInDays(Days.daysBetween(startDate, endDate).getDays());
         return portfolioData;
     }
 

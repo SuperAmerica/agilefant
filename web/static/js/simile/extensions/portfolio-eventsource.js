@@ -7,6 +7,7 @@ Timeline.PortfolioEventSource.prototype.setModel = function(model) {
 Timeline.PortfolioEventSource.prototype.loadData = function() { 
   var data = this.model.rankedProjects;
   this.clear();
+  added = false;
   for (var i=0; i < data.length; i++){
     var event = data[i];
     var start = new Date();

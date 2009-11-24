@@ -55,23 +55,27 @@ PortfolioController.prototype.paintUnrankedProjects = function() {
 };
 
 PortfolioController.prototype.paintTimeline = function() {
+  // A random guess for timeline height
+  // An exact height is very difficult to calculate because we'd have to add ems to pixels
+  this.timelineElement.css("height", (this.model.getRankedProjects().length * 30 + 50) + "px");
   this.model.startDate = new Date();
   this.model.endDate = new Date();
-  this.model.endDate.addMonths(6);
+  this.model.endDate.addDays(this.model.getTimeSpanInDays());
   var middleDate = new Date();
-  middleDate.addMonths(3);
+  middleDate.addDays(this.model.getTimeSpanInDays() / 2);
   var eventSource = new Timeline.PortfolioEventSource();
   this.eventSource = eventSource;
   var theme = Timeline.ClassicTheme.create();
   theme.timeline_start = this.model.startDate;
   theme.timeline_stop = this.model.endDate;  
   theme.event.duration.impreciseOpacity = 0;
+  theme.event.track.height = 30;
   var bandInfos = [
       Timeline.createBandInfo({
         width: "100%",
         date: middleDate,
         intervalUnit: Timeline.DateTime.MONTH,
-        intervalPixels: 125,
+        intervalPixels: 100,
         eventSource: eventSource,
         theme: theme
       })

@@ -24,11 +24,15 @@ $(document).ready(function() {
 </script>
 
 
-<div id="timeline" class="structure-main-block" style="height: 500px; width: 600px !important">
+<div style="width: 600px; float: left; margin-top: 5px; padding: 0.2em">
+	<div id="timeline" style="margin-top: 57px">
+	</div>
 </div>
-<div id="rankedProjects" class="structure-main-block">
-</div>
-<div id="unrankedProjects" class="structure-main-block">
+<div style="margin-left: 600px">
+	<div id="rankedProjects">
+	</div>
+	<div id="unrankedProjects">
+	</div>
 </div>
 
 </struct:htmlWrapper>

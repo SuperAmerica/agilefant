@@ -179,14 +179,8 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
     dataSource : PortfolioModel.prototype.getUnrankedProjects,
     caption: "Unranked projects",
-    cssClass: "corner-border task-table",
-		sortCallback: PortfolioRowController.prototype.rankAndMoveProject,
-		sortOptions: {
-    items: "> .dynamicTableDataRow",
-    handle: "." + DynamicTable.cssClasses.dragHandle,
-    connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
-  }
-});
+    cssClass: "corner-border task-table"
+  });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {
     minWidth : 30,
@@ -195,7 +189,6 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     headerTooltip : 'Project name',
     get : ProjectModel.prototype.getName,
     editable : true,
-    dragHandle : true,
     edit : {
       editor : "Text",
       set : ProjectModel.prototype.setName,

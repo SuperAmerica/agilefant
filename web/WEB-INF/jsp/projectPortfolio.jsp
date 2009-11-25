@@ -24,7 +24,7 @@ $(document).ready(function() {
 </script>
 
 
-	<div id="timeline" class="structure-main-block">
+	<div id="timeline">
 	</div>
 	<div id="rankedProjects" class="structure-main-block">
 	</div>

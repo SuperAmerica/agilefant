@@ -65,6 +65,7 @@ PortfolioController.prototype.paintTimeline = function() {
   this.model.startDate.zeroTime();
   this.model.endDate.zeroTime();
   this.model.endDate.addDays(this.model.getTimeSpanInDays());
+  this.timelineElement.css("width", (Math.abs(this.model.endDate.getMonth() - this.model.startDate.getMonth()) * 100) + "px");
   var middleDate = new Date();
   middleDate.addDays(this.model.getTimeSpanInDays() / 2);
   var eventSource = new Timeline.PortfolioEventSource();

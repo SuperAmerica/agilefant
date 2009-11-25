@@ -27,7 +27,9 @@ PortfolioController.prototype.paint = function() {
 
 PortfolioController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
+    this.timelineElement.css("height", (this.model.getRankedProjects().length * 40) + "px");
     this.eventSource.loadData();
+    this.timeline.layout();
   } else if (event instanceof DynamicsEvents.EditEvent) {
     this.eventSource.loadData();
   }
@@ -57,8 +59,6 @@ PortfolioController.prototype.paintUnrankedProjects = function() {
 };
 
 PortfolioController.prototype.paintTimeline = function() {
-  // A random guess for timeline height
-  // An exact height is very difficult to calculate because we'd have to add ems to pixels
   this.timelineElement.css("height", (this.model.getRankedProjects().length * 40) + "px");
   this.model.startDate = new Date();
   this.model.endDate = new Date();

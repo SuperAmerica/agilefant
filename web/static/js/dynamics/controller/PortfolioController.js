@@ -136,7 +136,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
     }
   }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedName, {
-    minWidth : 27,
+    minWidth : 23,
     autoScale : true,
     title : "Name",
     headerTooltip : 'Project name',
@@ -150,7 +150,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
     }
   });
   config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedAssignees, {
-	    minWidth : 30,
+	    minWidth : 34,
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
@@ -184,7 +184,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
   });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {
-    minWidth : 30,
+    minWidth : 26,
     autoScale : true,
     title : "Name",
     headerTooltip : 'Project name',
@@ -197,7 +197,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     }
 }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, {
-	    minWidth : 18,
+	    minWidth : 16,
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
@@ -212,7 +212,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
       }
 	  }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, {
-    minWidth : 7,
+    minWidth : 10,
     autoScale : true,
     title : "Start date",
     headerTooltip : 'Start date',
@@ -230,7 +230,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     }
   }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, {
-    minWidth : 7,
+    minWidth : 10,
     autoScale : true,
     title : "End date",
     headerTooltip : 'End date',

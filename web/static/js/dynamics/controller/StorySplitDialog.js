@@ -4,9 +4,10 @@
  * @param {StoryModel} story the story to be split
  * @constructor
  */
-var StorySplitDialog = function StorySplitDialog(story) {
+var StorySplitDialog = function StorySplitDialog(story, closeCallback) {
   var me = this;
   this.model = story;
+  this.closeCallback = closeCallback;
   
   story.reload(function() {
     story.setPreventSetData(true);
@@ -49,11 +50,7 @@ StorySplitDialog.prototype.initDialog = function() {
   this.hierarchyElement = $('<div/>').addClass('ui-widget-content ui-corner-all').appendTo(this.form);
   
   this.storyInfoElement = $('<div/>').addClass('story-info').appendTo(this.form);
-  
-  this.checkBoxContainer = $('<div/>').addClass('checkbox-container').appendTo(this.form);
-  this.checkBox = $('<input type="checkbox" />').appendTo(this.checkBoxContainer);
-  $('<span/>').text('Move original story to product level').appendTo(this.checkBoxContainer);
-  
+    
   this.storyListElement = $('<div/>').addClass('story-split-list').appendTo(this.form);
 };
 
@@ -139,6 +136,9 @@ StorySplitDialog.prototype.close = function() {
   this._removeListeners();
   this.model.setPreventSetData(false);
   this.element.dialog('destroy').remove();
+  if (this.closeCallback) {
+    this.closeCallback();
+  }
 };
 
 StorySplitDialog.prototype._removeListeners = function() {
@@ -188,7 +188,7 @@ StorySplitDialog.prototype.isFormDataValid = function() {
  * Serialize and save the data.
  */
 StorySplitDialog.prototype.saveStories = function() {
-  var ssc = new StorySplitContainer(this.model, this.newModels, this.oldModels, this.checkBox.is(':checked'));
+  var ssc = new StorySplitContainer(this.model, this.newModels, this.oldModels, false);
   ssc.commit();
 };
 

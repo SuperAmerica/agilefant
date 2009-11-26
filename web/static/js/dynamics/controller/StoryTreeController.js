@@ -101,7 +101,7 @@ StoryTreeController.prototype._initializeTree = function() {
     splitButton.click(function() {
       var id = $(this).parents('li:eq(0)').attr('storyid');
       me._getStoryForId(id, function(object) {
-        var dialog = new StorySplitDialog(object);
+        var dialog = new StorySplitDialog(object, function() { me.refresh(); });
       });
       menu.remove();
     });

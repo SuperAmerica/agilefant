@@ -26,6 +26,8 @@ public class StorySplitBusinessTest {
     StoryDAO storyDAO;
 
     StoryBusiness storyBusiness;
+    
+    BacklogHistoryEntryBusiness blheBusiness;
 
     Product product;
 
@@ -48,6 +50,9 @@ public class StorySplitBusinessTest {
 
         storyBusiness = createStrictMock(StoryBusiness.class);
         testable.setStoryBusiness(storyBusiness);
+        
+        blheBusiness = createStrictMock(BacklogHistoryEntryBusiness.class);
+        testable.setBacklogHistoryEntryBusiness(blheBusiness);
     }
 
     @Before
@@ -80,21 +85,23 @@ public class StorySplitBusinessTest {
     }
 
     private void verifyAll() {
-        verify(storyDAO, storyBusiness);
+        verify(storyDAO, storyBusiness, blheBusiness);
     }
 
     private void replayAll() {
-        replay(storyDAO, storyBusiness);
+        replay(storyDAO, storyBusiness, blheBusiness);
     }
 
     private void childCreationExpects() {
 //        expect(storyDAO.getLastStoryInRank(parentStory.getBacklog())).andReturn(parentStory);
         expect(storyDAO.create(childStories.get(0))).andReturn(1);
         expect(storyBusiness.rankToBottom(childStories.get(0), 1)).andReturn(childStories.get(1));
+        blheBusiness.updateHistory(childStories.get(0).getBacklog().getId());
         storyDAO.store(childStories.get(0));
         
         expect(storyDAO.create(childStories.get(1))).andReturn(2);
         expect(storyBusiness.rankToBottom(childStories.get(1), 1)).andReturn(childStories.get(1));
+        blheBusiness.updateHistory(childStories.get(1).getBacklog().getId());
         storyDAO.store(childStories.get(1));
     }
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StorySplitBusiness;
 import fi.hut.soberit.agilefant.db.StoryDAO;
@@ -19,6 +20,8 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
     private StoryDAO storyDAO;
     @Autowired
     private StoryBusiness storyBusiness;
+    @Autowired
+    private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     
     @Transactional
     public Story splitStory(Story original, Collection<Story> newStories, Collection<Story> oldChangedStories) {
@@ -47,6 +50,7 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
             story.getResponsibles().addAll(original.getResponsibles());
             this.storyDAO.create(story);
             this.storyBusiness.rankToBottom(story, story.getBacklog().getId());
+            this.backlogHistoryEntryBusiness.updateHistory(story.getBacklog().getId());
             this.storyDAO.store(story);
         }
     }
@@ -62,5 +66,10 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
 
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
+    }
+
+    public void setBacklogHistoryEntryBusiness(
+            BacklogHistoryEntryBusiness backlogHistoryEntryBusiness) {
+        this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
     }
 }

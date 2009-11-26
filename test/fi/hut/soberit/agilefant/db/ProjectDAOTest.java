@@ -5,10 +5,7 @@ import static org.junit.Assert.*;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.Assert;
-
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;

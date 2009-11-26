@@ -8,11 +8,10 @@
  * @param {Array} newStories the stories that should be created
  * @return
  */
-var StorySplitContainer = function StorySplitContainer(originalStory, newStories, oldStories, moveOriginal) {
+var StorySplitContainer = function StorySplitContainer(originalStory, newStories, oldStories) {
   this.originalStory = originalStory;
   this.newStories = newStories;
   this.oldStories = oldStories;
-  this.moveOriginal = moveOriginal;
   
   if (!this.newStories) { this.newStories = []; }
   if (!this.oldStories) { this.oldStories = []; }
@@ -50,8 +49,6 @@ StorySplitContainer.prototype.serializeData = function() {
   var data = this.originalStory.serializeFields("original", originalChangedData);
   
   data.originalStoryId = this.originalStory.getId();
-  
-  data.moveOriginalStory = this.moveOriginal;
   
   for (var i = 0; i < this.newStories.length; i++) {
     var story = this.newStories[i];

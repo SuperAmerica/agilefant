@@ -25,8 +25,6 @@ public class StorySplitBusinessTest {
 
     StoryDAO storyDAO;
 
-    BacklogHistoryEntryBusiness backlogHistoryBusiness;
-
     StoryBusiness storyBusiness;
 
     Product product;
@@ -47,9 +45,6 @@ public class StorySplitBusinessTest {
 
         storyDAO = createStrictMock(StoryDAO.class);
         testable.setStoryDAO(storyDAO);
-
-        backlogHistoryBusiness = createStrictMock(BacklogHistoryEntryBusiness.class);
-        testable.setBacklogHistoryEntryBusiness(backlogHistoryBusiness);
 
         storyBusiness = createStrictMock(StoryBusiness.class);
         testable.setStoryBusiness(storyBusiness);
@@ -85,11 +80,11 @@ public class StorySplitBusinessTest {
     }
 
     private void verifyAll() {
-        verify(storyDAO, backlogHistoryBusiness, storyBusiness);
+        verify(storyDAO, storyBusiness);
     }
 
     private void replayAll() {
-        replay(storyDAO, backlogHistoryBusiness, storyBusiness);
+        replay(storyDAO, storyBusiness);
     }
 
     private void childCreationExpects() {
@@ -118,10 +113,9 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inProductBacklog() {
         parentStory.setBacklog(product);
         childCreationExpects();
-        backlogHistoryBusiness.updateHistory(1);
         storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories, oldStories, true);
+        testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
         checkChildStories();
     }
@@ -130,10 +124,10 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inIterationBacklog() {
         parentStory.setBacklog(iteration);
         childCreationExpects();
-        storyBusiness.moveStoryToBacklog(parentStory, product);
+//        storyBusiness.moveStoryToBacklog(parentStory, product);
         storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories, oldStories, true);
+        testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
         checkChildStories();
     }
@@ -142,27 +136,27 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inProjectBacklog() {
         parentStory.setBacklog(project);
         childCreationExpects();
-        storyBusiness.moveStoryToBacklog(parentStory, product);
+//        storyBusiness.moveStoryToBacklog(parentStory, product);
         storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories, oldStories, true);
+        testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
         checkChildStories();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSplitStory_emptyList() {
-        testable.splitStory(new Story(), new ArrayList<Story>(), oldStories, true);
+        testable.splitStory(new Story(), new ArrayList<Story>(), oldStories);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testSplitStory_nullOriginal() {
-        testable.splitStory(null, Arrays.asList(new Story()), oldStories, true);
+        testable.splitStory(null, Arrays.asList(new Story()), oldStories);
     }
     
     @Test(expected = RuntimeException.class)
     public void testSplitStory_originalNotPersisted() {
-        testable.splitStory(new Story(), Arrays.asList(new Story()), oldStories, true);
+        testable.splitStory(new Story(), Arrays.asList(new Story()), oldStories);
     }
     
     @Test
@@ -171,7 +165,7 @@ public class StorySplitBusinessTest {
         childCreationExpects();
         storyBusiness.storeBatch(oldStories);
         replayAll();
-        testable.splitStory(parentStory, childStories, oldStories, false);
+        testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
         checkChildStories();
         assertSame(iteration, parentStory.getBacklog());

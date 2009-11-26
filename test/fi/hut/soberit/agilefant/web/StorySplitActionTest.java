@@ -47,7 +47,6 @@ public class StorySplitActionTest {
     
     @Test
     public void testSplit_checkMoveOriginalStory() {
-        testable.setMoveOriginalStory(true);
         testSplitting(true);
     }
 
@@ -56,7 +55,7 @@ public class StorySplitActionTest {
         Story story = new Story();
         testable.setOriginal(story);
         testable.setOldStories(null);
-        expect(storySplitBusiness.splitStory(story, testable.getNewStories(), null, moveOriginal)).andReturn(null);
+        expect(storySplitBusiness.splitStory(story, testable.getNewStories(), null)).andReturn(null);
         
         replayAll();
         assertEquals(Action.SUCCESS, testable.split());

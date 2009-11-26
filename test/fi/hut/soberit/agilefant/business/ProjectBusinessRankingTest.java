@@ -1,8 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,7 +13,6 @@ import org.easymock.EasyMock;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.Months;
-import org.joda.time.Period;
 import org.joda.time.ReadablePeriod;
 import org.junit.Before;
 import org.junit.Test;

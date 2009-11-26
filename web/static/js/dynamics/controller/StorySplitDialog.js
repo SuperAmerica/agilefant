@@ -188,7 +188,7 @@ StorySplitDialog.prototype.isFormDataValid = function() {
  * Serialize and save the data.
  */
 StorySplitDialog.prototype.saveStories = function() {
-  var ssc = new StorySplitContainer(this.model, this.newModels, this.oldModels, false);
+  var ssc = new StorySplitContainer(this.model, this.newModels, this.oldModels);
   ssc.commit();
 };
 

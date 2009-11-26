@@ -7,13 +7,15 @@
 var StorySplitDialog = function StorySplitDialog(story) {
   var me = this;
   this.model = story;
-  this.model.reload();
+  
+  story.reload(function() {
+    story.setPreventSetData(true);
+  });
+  
   this.init();
   this.initDialog();
   this.initConfigs();
   this.render();
-  
-  this.model.setPreventSetData(true);
   
   this.editListener = function(event) { me._transactionEditListener(event); };
   this.model.addListener(this.editListener);
@@ -66,12 +68,14 @@ StorySplitDialog.prototype.render = function() {
       this.model,
       this.storyInfoConfig,
       this.storyInfoElement);
+  this.view.render();
   
   this.storiesView = new DynamicTable(
       this,
       this.model,
       this.storyListConfig,
       this.storyListElement);
+  this.storiesView.render();
 };
 
 StorySplitDialog.prototype._renderHierarchy = function() {
@@ -133,6 +137,7 @@ StorySplitDialog.prototype._cancel = function() {
  */
 StorySplitDialog.prototype.close = function() {
   this._removeListeners();
+  this.model.setPreventSetData(false);
   this.element.dialog('destroy').remove();
 };
 

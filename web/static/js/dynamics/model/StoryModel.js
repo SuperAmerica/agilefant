@@ -124,7 +124,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
   });
 };
 
-StoryModel.prototype.reload = function() {
+StoryModel.prototype.reload = function(callback) {
   var me = this;
   jQuery.getJSON(
     "ajax/retrieveStory.action",
@@ -132,6 +132,9 @@ StoryModel.prototype.reload = function() {
     function(data,status) {
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
+      if (callback) {
+        callback();
+      }
     }
   );
 };

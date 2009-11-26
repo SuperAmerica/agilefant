@@ -67,7 +67,6 @@ $(document).ready(function() {
 var expectedSerialized = {
   "originalStoryId":           313,
   "original.name":             "Modified name",
-  "moveOriginalStory":         true,
   "newStories[0].name":        "First split",
   "newStories[0].storyPoints": 2,
   "newStories[0].state":       "BLOCKED",

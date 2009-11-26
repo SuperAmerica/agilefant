@@ -118,6 +118,13 @@
     
     
     <!-- Backlog actions -->
+    <action name="retrieveBacklog" method="retrieve" class="backlogAction">
+      <result name="success" type="json">
+        <param name="target">backlog</param>
+        <param name="patterns"></param>
+      </result>
+    </action>
+    
     <action name="retrieveStories" method="retrieveStories" class="backlogAction">
       <result name="success" type="json">
         <param name="target">stories</param>

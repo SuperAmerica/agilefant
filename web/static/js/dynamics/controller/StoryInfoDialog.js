@@ -171,7 +171,13 @@ StoryInfoDialog.prototype.initConfig = function() {
     headerTooltip : 'The backlog, where the story resides',
     get : StoryModel.prototype.getBacklog,
     decorator: DynamicsDecorators.backlogSelectDecorator,
-    editable : false
+    editable : true,
+    edit: {
+      editor: "AutocompleteSingle",
+      dialogTitle: "Select backlog",
+      dataType: "backlogs",
+      set : StoryModel.prototype.setBacklogByModel
+    }
   });
   
   this.storyInfoConfig = config;

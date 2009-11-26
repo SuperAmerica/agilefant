@@ -237,9 +237,14 @@ StoryModel.prototype.setBacklog = function(backlog) {
   this.addRelation(backlog);
 };
 
-StoryModel.prototype.setBacklogForSplitting = function(backlog) {
+StoryModel.prototype.setBacklogByModel = function(backlog) {
   this.setBacklog(backlog);
   this.currentData.backlog = backlog.getId();
+};
+
+StoryModel.prototype.setBacklogById = function(backlogId) {
+  this.setBacklog(ModelFactory.getOrRetrieveObject(ModelFactory.types.backlog, backlogId));
+  this.currentData.backlogId = backlogId;
 };
 
 

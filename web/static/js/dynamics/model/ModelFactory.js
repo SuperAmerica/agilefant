@@ -95,6 +95,8 @@ ModelFactory.classNameToJsClass = {
 };
 
 ModelFactory.typeToClassName = {
+    iteration:  "fi.hut.soberit.agilefant.model.Backlog",
+    
     iteration:  "fi.hut.soberit.agilefant.model.Iteration",
     product:    "fi.hut.soberit.agilefant.model.Product",
     project:    "fi.hut.soberit.agilefant.model.Project",
@@ -114,6 +116,10 @@ ModelFactory.typeToClassName = {
 };
 
 ModelFactory.typeToLazyLoadingUri = {
+  backlog: {
+    uri: "ajax/retrieveBacklog.action",
+    idParam: "backlogId"
+  },
   iteration:   {
     uri: "ajax/retrieveIteration.action",
     idParam: "iterationId"

@@ -156,7 +156,7 @@ StorySplitDialog.prototype.storyControllerFactory = function(view, model) {
 StorySplitDialog.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
   this.newModels.push(mockModel);
-  mockModel.setBacklogForSplitting(this.model.getBacklog());
+  mockModel.setBacklogByModel(this.model.getBacklog());
   var controller = new StoryController(mockModel, null, this);
   var row = this.storiesView.createRow(controller, mockModel, "top");
   controller.view = row;
@@ -354,7 +354,7 @@ StorySplitDialog.prototype._initStoryListConfig = function() {
       dataType: "backlogs",
       params: { backlogId: this.model.getBacklog().getId() },
       dialogTitle: "Select backlog",
-      set : StoryModel.prototype.setBacklogForSplitting
+      set : StoryModel.prototype.setBacklogByModel
     }
   });
   

@@ -37,6 +37,11 @@ public class BacklogAction extends ActionSupport {
     private BacklogBusiness backlogBusiness;
 
     
+    public String retrieve() {
+        backlog = backlogBusiness.retrieve(backlogId);
+        return Action.SUCCESS;
+    }
+    
     public String retrieveStories() {
         backlog = backlogBusiness.retrieve(backlogId);
         stories = backlog.getStories();

@@ -40,13 +40,34 @@ $(document).ready(function() {
   	});
   }
 
-  var storyTreeController = new StoryTreeController(${product.id}, "product", $('#storyTree'));
+  var hideDoneStories = function() {
+    var opt = $(this);
+    if(opt.is(":checked")) {
+      $("#storyTree [storystate=DONE]").hide();
+    } else {
+      $("#storyTree li").show();
+    }
+  }
+  $("#treeHideDone").change(hideDoneStories);
+  
+  
+  var storyTreeController = new StoryTreeController(
+    ${product.id}, "product", $('#storyTree'),
+    {
+      refreshCallback: function() { hideDoneStories.call($("#treeHideDone"),[]); }
+    }
+  );
   storyTreeController.refresh();
+
+  window.setInterval(function() {
+    storyTreeController.refresh();
+  }, 120000);
 });
 </script>
 
 <div class="ui-widget-content ui-corner-all structure-main-block dynamictable">
   <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree</div>
+  <div><input id="treeHideDone" type="checkbox"/>Hide done stories</div>
   <form onsubmit="return false;"><div id="storyTree">&nbsp;</div></form>
 </div>
 

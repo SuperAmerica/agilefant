@@ -4,10 +4,11 @@
  * @param {StoryModel} story
  * @constructor
  */
-var StoryInfoDialog = function StoryInfoDialog(story) {
+var StoryInfoDialog = function StoryInfoDialog(story, closeCallback) {
   var me = this;
   this.model = story;
- 
+  this.closeCallback = closeCallback;
+  
   this.initConfig();
   this.initDialog();
 };
@@ -101,6 +102,9 @@ StoryInfoDialog.prototype.renderSpentEffortTab = function() {
  */
 StoryInfoDialog.prototype.close = function() {
   this.element.dialog('destroy').remove();
+  if (this.closeCallback) {
+    this.closeCallback();
+  }
 };
 
 StoryInfoDialog.prototype.initConfig = function() {

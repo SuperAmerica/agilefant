@@ -7,10 +7,14 @@
  * @base CommonController
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var StoryTreeController = function StoryTreeController(id, type, element) {
+var StoryTreeController = function StoryTreeController(id, type, element, options) {
   this.id = id;
   this.type = type;
   this.element = element;
+  this.options = {
+    refreshCallback: null
+  };
+  jQuery.extend(this.options, options);
   this.init();
   this._initializeTree();
 };
@@ -34,7 +38,7 @@ StoryTreeController.prototype.refresh = function() {
   data[urlInfo[this.type].idName] = this.id;
   
   // Ajax request
-  $(this.element).load(urlInfo[this.type].url, data);
+  $(this.element).load(urlInfo[this.type].url, data, this.options.refreshCallback);
 };
 
 StoryTreeController.prototype._getStoryForId = function(id, callback) {
@@ -86,7 +90,7 @@ StoryTreeController.prototype._initializeTree = function() {
     editButton.click(function() {
       var id = $(this).parents('li:eq(0)').attr('storyid');
       me._getStoryForId(id, function(object) {
-        var dialog = new StoryInfoDialog(object);
+        var dialog = new StoryInfoDialog(object, function() { me.refresh(); });
       });
       menu.remove();
     });

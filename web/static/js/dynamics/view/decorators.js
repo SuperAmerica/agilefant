@@ -35,7 +35,7 @@ var DynamicsDecorators = {
     } else if(value === 0) {
       return "0h";
     } else {
-      return Math.round(100*value/60)/100+"h";
+      return Math.round(10*value/60)/10+"h";
     }
   },
   exactEstimateEditDecorator: function(value) {
@@ -45,10 +45,10 @@ var DynamicsDecorators = {
     if (!value) {
       return "";
     }
-    return Math.round(100*value/60)/100+"h";
+    return Math.round(10*value/60)/10+"h";
   },
   exactEstimateSumDecorator: function(value) {
-    return "(" + DynamicsDecorators.exactEstimateDecorator(value) + ")";
+    return DynamicsDecorators.exactEstimateDecorator(value);
   },
   estimateDecorator: function(value) {
     if (!value) {

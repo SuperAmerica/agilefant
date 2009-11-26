@@ -51,23 +51,29 @@ $(document).ready(function() {
   	});
   }
 
-  var storyTreeController = new StoryTreeController(${project.id}, "project", $('#storyTree'));
-
-  $('#releaseContents').bind('tabsselect', function(event, ui) {
-    if (ui.index == 1) {
-      storyTreeController.refresh();
-    }
-  });
-  
-  
-  $("#treeHideDone").change(function() {
+  var hideDoneStories = function() {
     var opt = $(this);
     if(opt.is(":checked")) {
       $("#storyTree [storystate=DONE]").hide();
     } else {
       $("#storyTree li").show();
     }
+  }
+  $("#treeHideDone").change(hideDoneStories);
+
+  var storyTreeController = new StoryTreeController(
+    ${project.id}, "project", $('#storyTree'),
+    {
+      refreshCallback: function() { hideDoneStories.call($("#treeHideDone"),[]); }
+    }
+  );
+
+  $('#releaseContents').bind('tabsselect', function(event, ui) {
+    if (ui.index == 1) {
+      storyTreeController.refresh();
+    }
   });
+
 });
 </script>
 

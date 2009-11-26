@@ -173,6 +173,7 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
     @JSON(include=false)
     @OneToMany(mappedBy="parent", targetEntity=fi.hut.soberit.agilefant.model.Story.class)
     @Fetch(FetchMode.SELECT)
+    @OrderBy("name asc")
     @NotAudited
     public Set<Story> getChildren() {
         return children;

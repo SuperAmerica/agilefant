@@ -1,14 +1,17 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
@@ -124,6 +127,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public List<Story> retrieveProjectRootStories(Project project) {
 
         Criteria projectCrit = getCurrentSession().createCriteria(Story.class);
@@ -137,6 +141,8 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         ret.addAll(directProjectRoots);
         ret.addAll(iterationRoots);
 
+        Collections.sort(ret, new PropertyComparator("name", true, true));
+        
         return ret;
     }
 
@@ -160,6 +166,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         Criteria rootFilter = getCurrentSession().createCriteria(Story.class);
         rootFilter.add(Restrictions.eq("backlog", product));
         rootFilter.add(Restrictions.isNull("parent"));
+        rootFilter.addOrder(Order.asc("name"));
         return asList(rootFilter);
     }
 

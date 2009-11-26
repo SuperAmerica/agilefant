@@ -6,7 +6,7 @@
   name="node"%>
   <li storyid="${node.id}" storystate="${node.state}">
     <div class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />">${fn:substring(node.state, 0, 1)}</div>
-    <span title="<c:out value="${node.name}" />"><c:out value="${node.name}" /></span>
+    <span title="<c:out value="${node.name}" />"><c:out value="${node.name}" /> <span style="font-size:80%" title="${node.backlog.name}">(<c:out value="${node.backlog.name}"/>)</span></span>
     <c:if test="${node.children != null}">
     <ul>
       <c:forEach items="${node.children}" var="childStory">

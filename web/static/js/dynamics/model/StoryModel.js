@@ -153,6 +153,7 @@ StoryModel.prototype.reloadMetrics = function() {
 
 StoryModel.prototype.moveStory = function(backlogId) {
   var me = this;
+  var oldParent = this.getBacklog();
   jQuery.ajax({
     url: "ajax/moveStory.action",
     data: {storyId: me.getId(), backlogId: backlogId},
@@ -163,8 +164,8 @@ StoryModel.prototype.moveStory = function(backlogId) {
     success: function(data,status) {
       me._setData(data);
       MessageDisplay.Ok("Story moved");
-      me.getParent().reload();
-      me.callListeners(new DynamicsEvents.EditEvent(me));  
+      oldParent.reload();
+      me.callListeners(new DynamicsEvents.EditEvent(me));
     },
     error: function(xhr) {
       MessageDisplay.Error("An error occurred moving the story", xhr);
@@ -217,7 +218,9 @@ StoryModel.prototype._remove = function(successCallback) {
       cache: false,
       success: function(data, status) {
         MessageDisplay.Ok("Story removed");
-        successCallback();
+        if (successCallback) {
+          successCallback();
+        }
       },
       error: function(data, status) {
         MessageDisplay.Error("Error deleting story.", data);

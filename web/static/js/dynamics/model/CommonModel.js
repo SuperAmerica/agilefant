@@ -180,8 +180,10 @@ CommonModel.prototype._removeAllRelations = function() {
  */
 CommonModel.prototype.remove = function() {
   var me = this;
-  this._removeAllRelations();
-  this._remove(function() { me.callListeners(new DynamicsEvents.DeleteEvent(me)); });
+  this._remove(function() {
+    me._removeAllRelations();
+    me.callListeners(new DynamicsEvents.DeleteEvent(me));
+  });
 };
 
 /**
@@ -233,7 +235,9 @@ CommonModel.prototype._addOneWayRelation = function(object) {
 CommonModel.prototype.removeRelation = function(object) {
   this._removeOneWayRelation(object);
   object._removeOneWayRelation(this);
-  this.relationChanged = true;
+//  this.relationChanged = true;
+  this.relationEvents();
+  object.relationEvents();
 };
 
 CommonModel.prototype._removeOneWayRelation = function(object) {

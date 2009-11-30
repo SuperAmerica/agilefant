@@ -83,7 +83,11 @@ $(document).ready(function() {
 
   $("#treeHideDone").change(runFilters);
   $("#filterByText").keyup(timeoutFilter);
-
+  $("#resetFilters").click(function() {
+    $("#filterByText").val('');
+    $("#treeHideDone").removeAttr('checked');
+    runFilters();
+  });
 
   
   var storyTreeController = new StoryTreeController(
@@ -115,7 +119,14 @@ $(document).ready(function() {
 <form onsubmit="return false;">
   <div class="details" id="stories"></div>
   <div class="details" id="storyTreeContainer">
-    <div><input id="treeHideDone" type="checkbox"/>Hide done stories | Filter by text: <input type="text" id="filterByText"/></div>
+    <div>
+      <form onsubmit="return false;">
+        <input id="treeHideDone" type="checkbox"/>
+        Hide done stories | Filter by text:
+        <input type="text" id="filterByText"/>
+        <button id="resetFilters">Reset filters</button>
+      </form>
+    </div>
     <div id="storyTree">&nbsp;</div>
   </div>
   <div class="details" id="iterations">

@@ -164,7 +164,13 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
 
     public List<Story> retrieveProductRootStories(Product product) {
         Criteria rootFilter = getCurrentSession().createCriteria(Story.class);
-        rootFilter.add(Restrictions.eq("backlog", product));
+        rootFilter.createAlias(
+                "backlog.parent", "secondParent", CriteriaSpecification.LEFT_JOIN)
+                .createAlias("secondParent.parent", "thirdParent",
+                        CriteriaSpecification.LEFT_JOIN);
+        rootFilter.add(Restrictions.or(Restrictions.or(Restrictions.eq(
+                "backlog", product), Restrictions.eq("secondParent.id",
+                product.getId())), Restrictions.eq("thirdParent.id", product.getId())));
         rootFilter.add(Restrictions.isNull("parent"));
         rootFilter.addOrder(Order.asc("name"));
         return asList(rootFilter);

@@ -52,7 +52,7 @@ public interface StoryHierarchyDAO {
     public long totalRootStoryPoints(Project project);
     
     /**
-     * Retrieve all product level stories that do not have 
+     * Retrieve all stories within a given product that do not have 
      * a parent story.
      * 
      * @param product

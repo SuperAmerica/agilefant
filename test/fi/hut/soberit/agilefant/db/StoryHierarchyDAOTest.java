@@ -121,12 +121,15 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
         executeClassSql();
         Set<Integer> actualStoryIds = new HashSet<Integer>();
         List<Story> actual = this.testable.retrieveProductRootStories(product);
-        assertEquals(2, actual.size());
+        assertEquals(5, actual.size());
         for(Story story : actual) {
             actualStoryIds.add(story.getId());
         }
        assertTrue(actualStoryIds.contains(11));
        assertTrue(actualStoryIds.contains(14));
+       assertTrue(actualStoryIds.contains(24));
+       assertTrue(actualStoryIds.contains(41));
+       assertTrue(actualStoryIds.contains(33));
     }
     
     @Test

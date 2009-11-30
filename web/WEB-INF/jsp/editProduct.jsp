@@ -40,21 +40,32 @@ $(document).ready(function() {
   	});
   }
 
-  var hideDoneStories = function() {
-    var opt = $(this);
+  var hideDoneStories = function(option) {
+    var opt = $(option);
     if(opt.is(":checked")) {
-      $("#storyTree [storystate=DONE]").hide();
-    } else {
-      $("#storyTree li").show();
+      $("#storyTree [storystate=DONE]").addClass("tree-hideByFilter");
     }
-  }
-  $("#treeHideDone").change(hideDoneStories);
+  };
+  var filterByText = function(textField) {
+    var field = $(textField);
+    var text = field.val().toLowerCase();
+    $("#storyTree li").not(":contains('" + text + "')").addClass("tree-hideByFilter");
+  };
+
+  var runFilters = function() {
+    $("#storyTree li").removeClass("tree-hideByFilter");
+    hideDoneStories($("#treeHideDone"));
+    filterByText($("#filterByText"));
+  };
+
+  $("#treeHideDone").change(runFilters);
+  $("#filterByText").change(runFilters);
   
   
   var storyTreeController = new StoryTreeController(
     ${product.id}, "product", $('#storyTree'),
     {
-      refreshCallback: function() { hideDoneStories.call($("#treeHideDone"),[]); }
+      refreshCallback: function() { runFilters(); }
     }
   );
   storyTreeController.refresh();
@@ -62,12 +73,21 @@ $(document).ready(function() {
   window.setInterval(function() {
     storyTreeController.refresh();
   }, 120000);
+/*
+  $("#storyTree").sortable({
+    items: "ul > li",
+    placeholder: "tree-sort-placeholder",
+    tolerance: "pointer",
+    revert: true,
+    axis: "y"
+  });
+  */
 });
 </script>
 
 <div class="ui-widget-content ui-corner-all structure-main-block dynamictable">
   <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree</div>
-  <div><input id="treeHideDone" type="checkbox"/>Hide done stories</div>
+  <div><input id="treeHideDone" type="checkbox"/>Hide done stories | Filter by text: <input type="text" id="filterByText"/></div>
   <form onsubmit="return false;"><div id="storyTree">&nbsp;</div></form>
 </div>
 

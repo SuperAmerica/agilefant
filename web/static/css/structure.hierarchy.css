@@ -28,6 +28,10 @@ div.hierarchyContainer {
   /*cursor: pointer;*/
 }
 
+.hierarchyContainer .tree-hideByFilter {
+  display: none;
+}
+
 /**
  * EDIT BUTTON
  */

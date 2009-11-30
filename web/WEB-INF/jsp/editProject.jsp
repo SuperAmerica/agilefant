@@ -50,7 +50,7 @@ $(document).ready(function() {
     	}
   	});
   }
-
+/*
   var hideDoneStories = function() {
     var opt = $(this);
     if(opt.is(":checked")) {
@@ -60,11 +60,32 @@ $(document).ready(function() {
     }
   }
   $("#treeHideDone").change(hideDoneStories);
+*/
+  var hideDoneStories = function(option) {
+    var opt = $(option);
+    if(opt.is(":checked")) {
+      $("#storyTree [storystate=DONE]").addClass("tree-hideByFilter");
+    }
+  };
+  var filterByText = function(textField) {
+    var field = $(textField);
+    var text = field.val().toLowerCase();
+    $("#storyTree li").not(":contains('" + text + "')").addClass("tree-hideByFilter");
+  };
+
+  var runFilters = function() {
+    $("#storyTree li").removeClass("tree-hideByFilter");
+    hideDoneStories($("#treeHideDone"));
+    filterByText($("#filterByText"));
+  };
+
+  $("#treeHideDone").change(runFilters);
+  $("#filterByText").change(runFilters);
 
   var storyTreeController = new StoryTreeController(
     ${project.id}, "project", $('#storyTree'),
     {
-      refreshCallback: function() { hideDoneStories.call($("#treeHideDone"),[]); }
+      refreshCallback: function() { runFilters(); }
     }
   );
 
@@ -90,7 +111,7 @@ $(document).ready(function() {
 <form onsubmit="return false;">
   <div class="details" id="stories"></div>
   <div class="details" id="storyTreeContainer">
-    <input id="treeHideDone" type="checkbox"/>Hide done stories
+    <div><input id="treeHideDone" type="checkbox"/>Hide done stories | Filter by text: <input type="text" id="filterByText"/></div>
     <div id="storyTree">&nbsp;</div>
   </div>
   <div class="details" id="iterations">

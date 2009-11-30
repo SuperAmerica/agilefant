@@ -103,6 +103,25 @@ public class TaskBusinessTest {
         taskBusiness.storeTask(null, iteration.getId(), null);
     }
     
+    
+    /**
+     * Helper method for testing that the ranking method is called.
+     */
+    private void expectRankToBottom(Task rankable, Story story, Iteration iteration) {
+        Task lastTask = new Task();
+        lastTask.setRank(11);
+        
+        if (story != null) {
+            expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        }
+        else if (iteration != null) {
+            expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
+        }
+        
+        expect(taskDAO.getLastTaskInRank(story, iteration)).andReturn(lastTask);
+        rankingBusiness.rankToBottom(rankable, lastTask);
+    }
+    
     @Test
     public void testStoreTask_newTaskToIteration() {
         Task lastTask = new Task();
@@ -149,10 +168,34 @@ public class TaskBusinessTest {
     }
     
     @Test
+    public void testStoreTask_dontChangeParent() {
+        task.setId(54326);
+        task.setIteration(iteration);
+
+        taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
+        
+        replayAll();
+        
+        Task actualTask = taskBusiness.storeTask(task, null, null);
+        
+        assertEquals(task.getId(), actualTask.getId());
+        
+        verifyAll();
+    }
+    
+    @Test
     public void testStoreTask_existingTask() {
         task.setId(54326);
+        task.setIteration(new Iteration());
+        
+        
+        
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
         taskDAO.store(task);
+        
+        expectRankToBottom(task, null, iteration);
+        
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
         replayAll();
@@ -164,6 +207,8 @@ public class TaskBusinessTest {
         
         verifyAll();
     }
+
+
     
     @Test
     public void testStoreTask_existingTaskStateSetToDone() {
@@ -171,6 +216,7 @@ public class TaskBusinessTest {
         task.setState(TaskState.DONE);
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
         taskDAO.store(task);
+        expectRankToBottom(task, null, iteration);
         dailyWorkBusiness.removeTaskFromWorkQueues(task);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
@@ -189,6 +235,8 @@ public class TaskBusinessTest {
         
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
+        expectRankToBottom(task, story, null);
+
         
         replayAll();
         
@@ -208,6 +256,8 @@ public class TaskBusinessTest {
         
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
+        expectRankToBottom(task, story, null);
+
         
         replayAll();
         
@@ -222,12 +272,14 @@ public class TaskBusinessTest {
     @Test
     public void testStoreTask_responsibles() {
         task.setId(123515);
+        task.setIteration(iteration);
         
-        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
+        iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
+        
         replayAll();
         
-        taskBusiness.storeTask(task, null, story.getId());
+        taskBusiness.storeTask(task, null, null);
                 
         verifyAll();
     }

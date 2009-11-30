@@ -19,6 +19,7 @@ import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Rankable;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
@@ -82,6 +83,9 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         else {
             this.store(task);
             storedTask = task;
+            if (iterationId != null || storyId != null) {
+                this.rankToBottom(task, storyId, iterationId);
+            }
         }
         
         updateIterationHistoryIfApplicable(task);
@@ -280,20 +284,34 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     @Transactional
     public Task rankToBottom(Task task, Integer parentStoryId, Integer parentIterationId)
         throws IllegalArgumentException {
-        if (task == null || (parentStoryId == null && parentIterationId == null)) {
-            throw new IllegalArgumentException();
-        }
-
-        Task lastInRank;
+        Story story = null;
+        Iteration iter = null;
         
         if (parentStoryId != null) {
-            lastInRank = taskDAO.getLastTaskInRank(storyBusiness.retrieve(parentStoryId), null);    
+            story = storyBusiness.retrieve(parentStoryId);
+        }
+        else if (parentIterationId != null) {
+            iter = iterationBusiness.retrieve(parentIterationId);
+        }
+        
+        return this.rankToBottom(task, story, iter);
+    }
+    
+    private Task rankToBottom(Task task, Story story, Iteration iteration) {
+        if (task == null || (story == null && iteration == null)) {
+            throw new IllegalArgumentException();
+        }
+        Task lastInRank = null;
+        
+        if (story != null) {
+            lastInRank = taskDAO.getLastTaskInRank(story, null);    
         }
         else {
-            lastInRank = taskDAO.getLastTaskInRank(null, iterationBusiness.retrieve(parentIterationId));
+            lastInRank = taskDAO.getLastTaskInRank(null, iteration);
         }
-
+        
         rankingBusiness.rankToBottom(task, lastInRank);
+        
         return task;
     }
     

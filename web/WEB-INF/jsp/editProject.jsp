@@ -50,17 +50,9 @@ $(document).ready(function() {
     	}
   	});
   }
-/*
-  var hideDoneStories = function() {
-    var opt = $(this);
-    if(opt.is(":checked")) {
-      $("#storyTree [storystate=DONE]").hide();
-    } else {
-      $("#storyTree li").show();
-    }
-  }
-  $("#treeHideDone").change(hideDoneStories);
-*/
+
+
+  
   var hideDoneStories = function(option) {
     var opt = $(option);
     if(opt.is(":checked")) {
@@ -79,9 +71,21 @@ $(document).ready(function() {
     filterByText($("#filterByText"));
   };
 
-  $("#treeHideDone").change(runFilters);
-  $("#filterByText").change(runFilters);
+  var storyTreeFilterTimer = null;
+  var timeoutFilter = function() {
+    if (storyTreeFilterTimer) {
+      clearTimeout(storyTreeFilterTimer);
+    }
+    storyTreeFilterTimer = setTimeout(function() {
+      runFilters();
+    }, 500);
+  };
 
+  $("#treeHideDone").change(runFilters);
+  $("#filterByText").keyup(timeoutFilter);
+
+
+  
   var storyTreeController = new StoryTreeController(
     ${project.id}, "project", $('#storyTree'),
     {

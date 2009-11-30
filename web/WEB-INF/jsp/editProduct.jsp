@@ -40,6 +40,8 @@ $(document).ready(function() {
   	});
   }
 
+  
+
   var hideDoneStories = function(option) {
     var opt = $(option);
     if(opt.is(":checked")) {
@@ -58,8 +60,21 @@ $(document).ready(function() {
     filterByText($("#filterByText"));
   };
 
+  var storyTreeFilterTimer = null;
+  var timeoutFilter = function() {
+    if (storyTreeFilterTimer) {
+      clearTimeout(storyTreeFilterTimer);
+    }
+    storyTreeFilterTimer = setTimeout(function() {
+      runFilters();
+    }, 500);
+  };
+  
   $("#treeHideDone").change(runFilters);
-  $("#filterByText").change(runFilters);
+  $("#filterByText").keyup(timeoutFilter);
+
+
+  
   
   
   var storyTreeController = new StoryTreeController(
@@ -73,15 +88,7 @@ $(document).ready(function() {
   window.setInterval(function() {
     storyTreeController.refresh();
   }, 120000);
-/*
-  $("#storyTree").sortable({
-    items: "ul > li",
-    placeholder: "tree-sort-placeholder",
-    tolerance: "pointer",
-    revert: true,
-    axis: "y"
-  });
-  */
+
 });
 </script>
 

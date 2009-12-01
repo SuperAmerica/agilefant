@@ -23,6 +23,7 @@ $(document).ready(function() {
 });
 </script>
 
+<h2>Project portfolio</h2>
 
 	<div id="timeline">
 	</div>

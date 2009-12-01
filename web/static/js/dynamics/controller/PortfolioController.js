@@ -75,6 +75,7 @@ PortfolioController.prototype.paintTimeline = function() {
   theme.timeline_stop = this.model.endDate;  
   theme.event.duration.impreciseOpacity = 0;
   theme.event.track.height = 30;
+  theme.mouseWheel = null;
   var bandInfos = [
       Timeline.createBandInfo({
         width: "100%",

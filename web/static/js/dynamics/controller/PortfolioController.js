@@ -85,15 +85,6 @@ PortfolioController.prototype.paintTimeline = function() {
         theme: theme
       })
   ];
-  bandInfos[0].decorators = [
-    new Timeline.SpanHighlightDecorator({
-      startDate:  this.model.startDate,
-      endDate:    this.model.endDate,
-      color:      "#9abfdb",
-      opacity:    50,
-      theme: theme
-      })
-  ];
   
   eventSource.setModel(this.model);
   this.timeline = Timeline.create(this.timelineElement[0], bandInfos);

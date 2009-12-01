@@ -1,6 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,9 +41,10 @@ public class HourEntryAction extends ActionSupport implements CRUDAction, Prefet
     private TaskBusiness taskBusiness;
     @Autowired
     private BacklogBusiness backlogBusiness;
+    private boolean limited;
     
     private List<HourEntry> hourEntries = new ArrayList<HourEntry>();
-    
+   
     public String retrieveTaskHourEntries() {
         this.hourEntries.addAll(taskBusiness.retrieve(parentObjectId).getHourEntries());
         return Action.SUCCESS;
@@ -50,7 +54,7 @@ public class HourEntryAction extends ActionSupport implements CRUDAction, Prefet
         return Action.SUCCESS;
     }
     public String retrieveBacklogHourEntries() {
-        this.hourEntries.addAll(backlogBusiness.retrieve(parentObjectId).getHourEntries());
+        this.hourEntries = hourEntryBusiness.retrieveBacklogHourEntries(parentObjectId, limited);
         return Action.SUCCESS;
     }
     
@@ -108,6 +112,9 @@ public class HourEntryAction extends ActionSupport implements CRUDAction, Prefet
     public int getHourEntryId() {
         return hourEntryId;
     }
+    public boolean isLimited() {
+        return this.limited;
+    }
 
     public void setHourEntryId(int hourEntryId) {
         this.hourEntryId = hourEntryId;
@@ -146,6 +153,9 @@ public class HourEntryAction extends ActionSupport implements CRUDAction, Prefet
     }
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
+    }
+    public void setLimited (boolean limited) {
+        this.limited = limited;
     }
     
     public List<HourEntry> getHourEntries() {

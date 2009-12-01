@@ -402,5 +402,10 @@ public class HourEntryBusinessTest {
         verifyAll();
 
     }
+    
+    @Test
+    public void testRetrieveBacklogHourEntries() {
+       // TODO
+    }
 
 }

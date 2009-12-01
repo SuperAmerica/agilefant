@@ -66,4 +66,7 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
 
     public long calculateWeekSum(LocalDate week, int userId);
 
+    List<HourEntry> retrieveBacklogHourEntries(int backlogId,
+            boolean limited);
+
 }

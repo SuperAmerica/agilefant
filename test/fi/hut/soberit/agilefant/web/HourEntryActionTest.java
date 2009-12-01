@@ -111,4 +111,9 @@ public class HourEntryActionTest {
         hourEntryAction.logTaskEffort();
         verifyAll();
     }
+    
+    @Test
+    public void testRetrieveBacklogHourEntries() {
+     // TODO
+    }
 }

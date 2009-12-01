@@ -58,4 +58,6 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
      */
     public List<HourEntry> getHourEntriesByFilter(DateTime startTime,
             DateTime endTime, int userId);
+
+    List<HourEntry> getBacklogHourEntries(int backlogId, int limit);
 }

@@ -488,6 +488,18 @@ li.dynamictable-captionaction {
 
 
 
+/**
+ * Portfolio page styles
+ */
+.portfolio-ranked-project-table .dynamictable-row {
+  background-color: #edf;
+}
+.portfolio-unranked-project-table .dynamictable-row {
+  background-color: #edf; 	
+}
+
+
+
 
 
 .dynamictable .dynamictable-row .text-editor {

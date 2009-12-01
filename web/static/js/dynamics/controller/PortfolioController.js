@@ -102,7 +102,10 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
     dataSource : PortfolioModel.prototype.getRankedProjects,
     caption: "Ranked projects",
-    cssClass: "corner-border task-table",
+    captionConfig: {
+  	  cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    },
+    cssClass: "ui-widget-content ui-corner-all portfolio-ranked-project-table",
     sortCallback: PortfolioRowController.prototype.rankAndMoveProject,
     sortOptions: {
       items: "> .dynamicTableDataRow",
@@ -171,7 +174,10 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
     dataSource : PortfolioModel.prototype.getUnrankedProjects,
     caption: "Unranked projects",
-    cssClass: "corner-border task-table"
+    captionConfig: {
+  	  cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    },
+    cssClass: "ui-widget-content ui-corner-all portfolio-unranked-project-table",
   });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {

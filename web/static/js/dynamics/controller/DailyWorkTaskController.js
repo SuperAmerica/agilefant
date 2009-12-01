@@ -100,6 +100,10 @@ DailyWorkTaskController.prototype.queuedTaskActionColumnFactory = function(view,
          callback : DailyWorkTaskController.prototype.createSplitTask
      },
      {
+         text: "Log effort",
+         callback: DailyWorkTaskController.prototype.openLogEffort
+     },
+     {
          text : "Remove from this list",
          callback : DailyWorkTaskController.prototype.removeTaskFromDailyWork
      },
@@ -157,4 +161,9 @@ DailyWorkTaskController.prototype.unqueuedTaskActionColumnFactory = function(vie
 DailyWorkTaskController.prototype.detailsViewFactory = function(view, model) {
     var detailsView = new DetailsView(this, this.model, view);
     return detailsView;
+};
+
+DailyWorkTaskController.prototype.openLogEffort = function() {
+  var dialog = CreateDialog.createById("createNewEffortEntry");
+  dialog.getModel().setParent(this.model);
 };

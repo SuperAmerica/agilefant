@@ -17,12 +17,12 @@ DynamicsConfirmationDialog.prototype._show = function() {
     position: 'center',
     resizable: false,
     buttons: {
-    No: function() { me._cancel(); },  
-    Yes: function() { me._ok(); }
+    Yes: function() { me._ok(); },
+    No: function() { me._cancel(); }  
     },
     open: function() {
       var dialogMessage  = $(this);
-      dialogMessage.siblings(".ui-dialog-buttonpane button:eq(1)").focus();
+      dialogMessage.siblings(".ui-dialog-buttonpane button:eq(0)").focus();
     }
   });
 };

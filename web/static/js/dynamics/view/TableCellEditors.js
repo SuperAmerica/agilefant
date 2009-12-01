@@ -1027,8 +1027,8 @@ TableEditors.DialogEditor.prototype._openDialog = function() {
       autoOpen:   this.options.autoShow,
       modal:      this.options.modal,
       buttons:    {
-        'Ok':     function() { me._ok(); },
-        'Cancel': function() { me._cancel(); }
+        'Cancel': function() { me._cancel(); },
+        'Ok':     function() { me._ok(); }
       },
       close:      function() { me._cancel(); },
       width:      500,

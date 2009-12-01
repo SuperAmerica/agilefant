@@ -140,5 +140,9 @@ img {
   border-top: 1px solid #A6C9E2;
 }
 
-
-
+.ui-dialog .ui-dialog-buttonpane {
+	text-align: right;
+}
+.ui-dialog .ui-dialog-buttonpane button {
+	float: none;
+} 

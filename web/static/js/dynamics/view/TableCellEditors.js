@@ -544,16 +544,6 @@ TableEditors.ExactEstimate.prototype.init = function(element, model, options) {
   TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
 };
 
-TableEditors.ExactEstimate.prototype._requestSave = function() {
-  var value = jQuery.trim(this.textField.val());
-  if (value == "") {
-    if (!this.options.required) {
-      this._requestCancel();
-      return;
-    }
-  }
-  this.element.trigger("storeRequested", [this]);  
-};
 TableEditors.ExactEstimate.prototype._validate = function() {
   var value = jQuery.trim(this.textField.val());
   

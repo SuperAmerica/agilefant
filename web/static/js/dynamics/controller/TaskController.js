@@ -192,7 +192,9 @@ TaskController.prototype.openQuickLogEffort = function(model, view) {
 };
 
 TaskController.prototype.quickLogEffort = function (spentEffort) {
-  HourEntryModel.logEffortForCurrentUser(this, spentEffort);
+  if (spentEffort !== "") {
+    HourEntryModel.logEffortForCurrentUser(this, spentEffort);
+  }
 };
 
 TaskController.prototype.openLogEffort = function() {

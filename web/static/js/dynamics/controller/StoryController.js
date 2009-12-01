@@ -290,7 +290,9 @@ StoryController.prototype.openQuickLogEffort = function(model, view) {
  * NOT TO THIS CONTROLLER.
  */
 StoryController.prototype.quickLogEffort = function(spentEffort) {
-  HourEntryModel.logEffortForCurrentUser(this, spentEffort);
+  if (spentEffort !== "") {
+    HourEntryModel.logEffortForCurrentUser(this, spentEffort);
+  }
 };
 
 /**

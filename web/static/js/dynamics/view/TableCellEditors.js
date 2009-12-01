@@ -658,10 +658,10 @@ TableEditors.Date.prototype._validate = function() {
   var errorMessage = "";
   if (this.options.withTime) {
       pattern = new RegExp("^\\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1]) ([0-1][0-9]|2[0-3]):([0-5][0-9])$");
-      errorMessage = "Invalid format (yyy.mm.dd hh:mm)";
+      errorMessage = "Invalid format (yyyy-mm-dd hh:mm)";
   } else {
       pattern = new RegExp("^\\d{4}-([1-9]|0[1-9]|1[0-2])-([1-9]|0[1-9]|[1-2][0-9]|3[0-1])$");
-      errorMessage = "Invalid format (yyy.mm.dd)";
+      errorMessage = "Invalid format (yyyy-mm-dd)";
   }
   var value = jQuery.trim(this.textField.val());
   var valid = pattern.test(value);

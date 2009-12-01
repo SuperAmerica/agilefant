@@ -65,7 +65,16 @@ PortfolioController.prototype.paintTimeline = function() {
   this.model.startDate.zeroTime();
   this.model.endDate.zeroTime();
   this.model.endDate.addDays(this.model.getTimeSpanInDays());
-  this.timelineElement.css("width", (Math.abs(this.model.endDate.getMonth() - this.model.startDate.getMonth()) * 100) + "px");
+  var dateEnd = this.model.endDate.getMonth();
+  var dateStart = this.model.startDate.getMonth();
+  var timeSpan;
+  var timelineWidth = 741;
+  if (dateEnd>dateStart) {
+    timeSpan = dateEnd - dateStart;
+  } else {
+    timeSpan = 12 - (Math.abs(dateStart-dateEnd));
+  }
+  this.timelineElement.css("width", timelineWidth + "px");
   var middleDate = new Date();
   middleDate.addDays(this.model.getTimeSpanInDays() / 2);
   var eventSource = new Timeline.PortfolioEventSource();
@@ -81,7 +90,7 @@ PortfolioController.prototype.paintTimeline = function() {
         width: "100%",
         date: middleDate,
         intervalUnit: Timeline.DateTime.MONTH,
-        intervalPixels: 100,
+        intervalPixels: (timelineWidth/timeSpan),
         eventSource: eventSource,
         theme: theme
       })

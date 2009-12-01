@@ -149,7 +149,7 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
 	    get : ProjectModel.prototype.getAssignees,
-	    decorator: DynamicsDecorators.userInitialsListDecorator,
+	    decorator: DynamicsDecorators.assigneesDecorator,
 	    editable: true,
 	    edit: {
         editor : "Autocomplete",
@@ -199,7 +199,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
       get : ProjectModel.prototype.getAssignees,
-      decorator: DynamicsDecorators.userInitialsListDecorator,
+      decorator: DynamicsDecorators.assigneesDecorator,
       editable: true,
       edit: {
         editor : "Autocomplete",

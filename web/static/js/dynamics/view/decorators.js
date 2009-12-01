@@ -120,9 +120,16 @@ var DynamicsDecorators = {
   userNameDecorator: function(user) {
     return user.getFullName();
   },
-  userInitialsListDecorator: function(userList) {
+  assigneesDecorator: function(userList) {
+    return DynamicsDecorators.userInitialsListDecorator(userList, "No assignees selected");
+  },
+  userInitialsListDecorator: function(userList, emptyText) {
     if(!userList || !userList.length) {
-      return "";
+      if (emptyText == null) {
+        return "";
+      } else {
+        return emptyText;
+      }
     }
     var initials = [];
     for(var i = 0; i < userList.length; i++) {

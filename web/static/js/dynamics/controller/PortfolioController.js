@@ -92,7 +92,8 @@ PortfolioController.prototype.paintTimeline = function() {
         intervalUnit: Timeline.DateTime.MONTH,
         intervalPixels: (timelineWidth/timeSpan),
         eventSource: eventSource,
-        theme: theme
+        theme: theme,
+        eventPainter: Timeline.NoopEventPainter
       })
   ];
   

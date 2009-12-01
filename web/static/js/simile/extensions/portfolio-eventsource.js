@@ -1,3 +1,13 @@
+/**
+ * An event painter that has no-op onClick event handlers
+ */
+Timeline.NoopEventPainter = Timeline.OriginalEventPainter;
+
+Timeline.NoopEventPainter.prototype._onClickDurationEvent = function(icon, domEvt, evt) {
+};
+Timeline.NoopEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
+};
+
 Timeline.PortfolioEventSource = Timeline.DefaultEventSource;
 
 Timeline.PortfolioEventSource.prototype.setModel = function(model) {

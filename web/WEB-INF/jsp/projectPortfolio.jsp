@@ -25,7 +25,12 @@ $(document).ready(function() {
 
 <h2>Project portfolio</h2>
 
-	<div id="timeline">
+	<div class="structure-main-block">	
+		<div class="dynamictable ui-widget ui-widget-content ui-corner-all">
+			<div class="dynamictable-caption dynamictable-caption-block ui-widget-header ui-corner-all">Portfolio timeline</div>
+			<div id="timeline">
+			</div>
+		</div>
 	</div>
 	<div id="rankedProjects" class="structure-main-block">
 	</div>

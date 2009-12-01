@@ -17,6 +17,23 @@ var PortfolioModel = function PortfolioModel() {
 
 PortfolioModel.prototype = new CommonModel();
 
+PortfolioModel.Validators = {
+    _parseDate: function(original) {
+      if (typeof original === "number") {
+        return new Date(original);
+      }
+      return Date.fromString(original);
+    },
+    dateValidator: function(model) {
+      var start = PortfolioModel.Validators._parseDate(model.getStartDate());
+      var end   = PortfolioModel.Validators._parseDate(model.getEndDate());
+      
+      if (start.after(end)) {
+        throw "Start date must be before end date";
+      }
+    }
+  };
+
 /**
  * Internal function to set data
  * @see CommonModel#setData

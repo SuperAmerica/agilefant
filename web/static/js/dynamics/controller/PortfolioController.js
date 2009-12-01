@@ -183,6 +183,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
     dataSource : PortfolioModel.prototype.getUnrankedProjects,
+    validators: [ PortfolioModel.Validators.dateValidator ],
     caption: "Unranked projects",
     captionConfig: {
   	  cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"

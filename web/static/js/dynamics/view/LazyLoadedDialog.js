@@ -4,7 +4,6 @@ var LazyLoadedDialog = function LazyLoadedDialog(options) {
   this.title = options.title;
   this.okCallback = options.okCallback;
   this.cancelCallback = options.cancelCallback;
-  this.ready = false;
   this.init();
 };
 
@@ -19,22 +18,27 @@ LazyLoadedDialog.prototype.init = function() {
     width: '400',
     position: 'center',
     resizable: false,
-    buttons: {
-      "Ok": function() {
-        if (me.ready) {
-          me._ok();
-        }
-      },
-      "Cancel": function() {
-        if (me.ready) {
-          me._cancel();
-        }
-      }
-    },
     open: function() {
-      me.contentElement.load(me.url, me.data, function(responseText, textStatus, XMLHttpRequest) {
+      me.contentElement.load(me.url, me.data, function(responseText, textStatus, xhr) {
         if (textStatus === 'success') {
           me.ready = true;
+          me.contentElement.dialog('option', 'buttons', {
+            "Ok": function() {
+              me._ok();
+            },
+            "Cancel": function() {
+              me._cancel();
+            }
+          });
+        } else if (textStatus === 'error') {
+          me.error = true;
+          me.contentElement.empty();
+          me.contentElement.dialog('option', 'buttons', {
+            "Cancel": function() {
+              me._cancel();
+            }
+          });
+          $("<p>Error loading dialog</p>").appendTo(me.contentElement);
         }
       });
     }

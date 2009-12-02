@@ -16,10 +16,10 @@ var HourEntryListContainer = function HourEntryListContainer() {
   };
 };
 
-HourEntryListContainer.initializeFor = function(parent, callback) {
+HourEntryListContainer.initializeFor = function(parent, callback, limited) {
   var object = new HourEntryListContainer();
   object.setParent(parent);
-  object.fillData(callback);
+  object.fillData(callback, limited);
 };
 
 HourEntryListContainer.prototype = new CommonModel();
@@ -43,9 +43,12 @@ HourEntryListContainer.prototype.reload = function() {
   this.relationEvents();
 };
 
-HourEntryListContainer.prototype.fillData = function(callback) {
+HourEntryListContainer.prototype.fillData = function(callback, limitedEntries) {
   var me = this;
   var url = "";
+  if (limitedEntries == undefined) {
+    limitedEntries = false;
+  }
   if(this.relations.parent instanceof BacklogModel) {
     url = "ajax/retrieveBacklogHourEntries.action";
   } else if(this.relations.parent instanceof StoryModel) {
@@ -54,7 +57,8 @@ HourEntryListContainer.prototype.fillData = function(callback) {
     url = "ajax/retrieveTaskHourEntries.action";
   }
   var params = {
-    parentObjectId: this.relations.parent.getId()
+    parentObjectId: this.relations.parent.getId(),
+    limited: limitedEntries
   };
   jQuery.getJSON(
       url,

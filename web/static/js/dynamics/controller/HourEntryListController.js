@@ -9,6 +9,7 @@ var HourEntryListController = function HourEntryListController(options) {
   this.hourEntryListElement = options.hourEntryListElement;
   this.parentModel = options.parentModel;
   this.model = null;
+  this.limited = true;
   this.init();
   this.initConfig();
   this.paint();
@@ -39,7 +40,7 @@ HourEntryListController.prototype.paint = function() {
   HourEntryListContainer.initializeFor(this.parentModel, function(model) {
     me.model = model;
     me.paintHourEntryList();
-  });
+  }, this.limited);
 };
 
 
@@ -52,6 +53,11 @@ HourEntryListController.prototype.openLogEffort = function() {
   dialog.getModel().setParent(this.parentModel);
   dialog.getModel().setHourEntryList(this.model);
 };
+
+HourEntryListController.prototype.showAllEntries = function() {
+  this.limited = false;
+  this.reload(); 
+}
 
 /**
  * Initialize <code>DynamicTableConfiguration</code> for the
@@ -128,4 +134,12 @@ HourEntryListController.prototype.initConfig = function() {
     cssClass : 'hourEntry-data',
     visible : false
   });
+  if (this.limited) {
+    this.hourEntryListConfig.addCaptionItem( {
+      name : "seeAllHourEntries",
+      text : "See all",
+      cssClass : "create",
+      callback : HourEntryListController.prototype.showAllEntries
+    });
+  }
 };

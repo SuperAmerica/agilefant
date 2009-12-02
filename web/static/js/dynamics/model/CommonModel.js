@@ -37,13 +37,12 @@ CommonModel.prototype.reload = function() {
  */
 CommonModel.prototype.setData = function(newData) {
   if (!this.preventSetData) {
-    var metricsUpdated = this._isMetricsDataUpdated(newData);
+    if(this._isMetricsDataUpdated(newData)) {
+      this.callListeners(new DynamicsEvents.MetricsEvent(this));
+    }
     this._setData(newData);
     if (this._copyFields(newData)) {
       this.callListeners(new DynamicsEvents.EditEvent(this));
-    }
-    if(metricsUpdated) {
-      this.callListeners(new DynamicsEvents.MetricsEvent(this));
     }
     this.relationEvents();
   }
@@ -55,9 +54,9 @@ CommonModel.prototype.setData = function(newData) {
 CommonModel.prototype._isMetricsDataUpdated = function(newData) {
   for ( var i = 0; i < this.metricFields.length; i++) {
     var field = this.metricFields[i];
-    if (this.currentData[field] !== undefined
+    if (this.persistedData[field] !== undefined
         && newData[field] !== undefined 
-        && this.currentData[field] !== newData[field]) {
+        && this.persistedData[field] !== newData[field]) {
       return true;
     }
   }

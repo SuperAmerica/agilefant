@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
@@ -24,6 +25,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
 @Service("taskBusiness")
 @Transactional
@@ -44,6 +46,9 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     @Autowired
     private RankingBusiness rankingBusiness;
+    
+    @Autowired
+    private HourEntryBusiness hourEntryBusiness;
     
     private TaskDAO taskDAO;
     
@@ -237,6 +242,27 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         delete(retrieve(id));
     }
     
+    public void delete(int id, HourEntryHandlingChoice hourEntryHandlingChoice) {
+        Task task = retrieve(id);
+        if (hourEntryHandlingChoice == null) {
+            delete(task);
+        } else {
+            switch (hourEntryHandlingChoice) {
+                case DELETE:
+                    hourEntryBusiness.deleteAll(task.getHourEntries());
+                    task.getHourEntries().clear();
+                    break;
+                case MOVE:
+                    if (task.getStory() == null) {
+                        hourEntryBusiness.moveToBacklog(task.getHourEntries(), task.getIteration());
+                    } else {
+                        hourEntryBusiness.moveToStory(task.getHourEntries(), task.getStory());
+                    }
+                    break;
+            }
+        }
+    }
+
     @Override
     public void delete(Task task) {
         if(task.getHourEntries().size() != 0) {
@@ -356,5 +382,9 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
 
     public void setDailyWorkBusiness(DailyWorkBusiness dailyWorkBusiness) {
         this.dailyWorkBusiness = dailyWorkBusiness;
+    }
+    
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
     }
 }

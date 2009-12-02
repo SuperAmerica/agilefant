@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.easymock.Capture;
 import org.easymock.classextension.EasyMock;
 import org.joda.time.DateTime;
@@ -456,4 +457,64 @@ public class HourEntryBusinessTest {
         assertSame(hourEntries, hourEntryBusiness.retrieveStoryHourEntries(10, true));
         verifyAll();
     }
+    
+    @Test
+    public void testDeleteAll() {
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        HourEntry hourEntry1 = new HourEntry();
+        HourEntry hourEntry2 = new HourEntry();
+        hourEntries.add(hourEntry1);
+        hourEntries.add(hourEntry2);
+        hourEntryDAO.remove(hourEntry1);
+        hourEntryDAO.remove(hourEntry2);
+        replayAll();
+        hourEntryBusiness.deleteAll(hourEntries);
+        verifyAll();
+    }
+
+    @Test
+    public void testMoveToBacklog() {
+        Iteration backlog = new Iteration();
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        HourEntry hourEntry1 = new HourEntry();
+        HourEntry hourEntry2 = new HourEntry();
+        hourEntries.add(hourEntry1);
+        hourEntries.add(hourEntry2);
+        hourEntryDAO.remove(hourEntry1);
+        hourEntryDAO.remove(hourEntry2);
+        Capture<BacklogHourEntry> newHourEntry1 = new Capture<BacklogHourEntry>();
+        Capture<BacklogHourEntry> newHourEntry2 = new Capture<BacklogHourEntry>();
+        hourEntryDAO.store(EasyMock.capture(newHourEntry1));
+        hourEntryDAO.store(EasyMock.capture(newHourEntry2));
+        replayAll();
+        hourEntryBusiness.moveToBacklog(hourEntries, backlog);
+        assertSame(backlog, newHourEntry1.getValue().getBacklog());
+        assertSame(backlog, newHourEntry2.getValue().getBacklog());
+        verifyAll();
+    }
+
+    @Test
+    public void testMoveToBacklog_checkFields() {
+        Iteration backlog = new Iteration();
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        User user = new User();
+        DateTime now = new DateTime();
+        HourEntry hourEntry1 = new HourEntry();
+        hourEntry1.setMinutesSpent(100L);
+        hourEntry1.setDate(now);
+        hourEntry1.setDescription("Description");
+        hourEntry1.setUser(user);
+        hourEntries.add(hourEntry1);
+        hourEntryDAO.remove(hourEntry1);
+        Capture<BacklogHourEntry> newHourEntry1 = new Capture<BacklogHourEntry>();
+        hourEntryDAO.store(EasyMock.capture(newHourEntry1));
+        replayAll();
+        hourEntryBusiness.moveToBacklog(hourEntries, backlog);
+        assertEquals(100L, newHourEntry1.getValue().getMinutesSpent());
+        assertEquals(now, newHourEntry1.getValue().getDate());
+        assertEquals("Description", newHourEntry1.getValue().getDescription());
+        assertSame(user, newHourEntry1.getValue().getUser());
+        verifyAll();
+    }
+
 }

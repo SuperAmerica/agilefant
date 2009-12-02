@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
 @Component("taskAction")
 @Scope("prototype")
@@ -39,6 +40,9 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private Integer iterationId;
     private Integer storyId;
     private boolean    responsiblesChanged = false;
+    
+    private HourEntryHandlingChoice hourEntryHandlingChoice;
+    
     public void setResponsiblesChanged(boolean responsiblesChanged) {
         this.responsiblesChanged = responsiblesChanged;
     }
@@ -68,8 +72,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     public String delete() {
-        task = taskBusiness.retrieve(taskId);
-        taskBusiness.delete(task.getId());
+        taskBusiness.delete(taskId, hourEntryHandlingChoice);
         return Action.SUCCESS;
     }
     
@@ -154,4 +157,13 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     public void setRankUnderId(int rankUnderId) {
         this.rankUnderId = rankUnderId;
     }
+    
+    public void setHourEntryHandlingChoice(
+            HourEntryHandlingChoice hourEntryHandlingChoice) {
+        this.hourEntryHandlingChoice = hourEntryHandlingChoice;
+    }
+    public HourEntryHandlingChoice getHourEntryHandlingChoice() {
+        return hourEntryHandlingChoice;
+    }
+    
 }

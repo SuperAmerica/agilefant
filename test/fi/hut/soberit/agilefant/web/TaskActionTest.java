@@ -1,11 +1,16 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +24,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
 public class TaskActionTest {
 
@@ -167,8 +173,7 @@ public class TaskActionTest {
     
     @Test
     public void testDeleteTask() {
-       expect(taskBusiness.retrieve(task.getId())).andReturn(task);
-       taskBusiness.delete(task.getId());
+       taskBusiness.delete(task.getId(), null);
        replayAll();
        
        assertEquals(Action.SUCCESS, taskAction.delete());
@@ -179,8 +184,8 @@ public class TaskActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testDeleteTask_noSuchTask() {
         taskAction.setTaskId(-1);
-        expect(taskBusiness.retrieve(-1))
-            .andThrow(new ObjectNotFoundException());
+        taskBusiness.delete(-1, null);
+        expectLastCall().andThrow(new ObjectNotFoundException());        
         replayAll();
         
         taskAction.delete();
@@ -188,14 +193,24 @@ public class TaskActionTest {
         verifyAll();
     }
     
-    @Test(expected = ConstraintViolationException.class)
-    public void testDeleteTask_withHourEntries() {
-       expect(taskBusiness.retrieve(task.getId())).andReturn(task);
-       taskBusiness.delete(task.getId());
-       expectLastCall().andThrow(new ConstraintViolationException("Action not allowed", null, null));
+    @Test
+    public void testDeleteTask_moveChoice() {
+       taskAction.setHourEntryHandlingChoice(HourEntryHandlingChoice.MOVE);
+       taskBusiness.delete(task.getId(), HourEntryHandlingChoice.MOVE);
        replayAll();
        
-       taskAction.delete();
+       assertEquals(Action.SUCCESS, taskAction.delete());
+       
+       verifyAll();
+    }
+
+    @Test
+    public void testDeleteTask_deleteChoice() {
+       taskAction.setHourEntryHandlingChoice(HourEntryHandlingChoice.DELETE);
+       taskBusiness.delete(task.getId(), HourEntryHandlingChoice.DELETE);
+       replayAll();
+       
+       assertEquals(Action.SUCCESS, taskAction.delete());
        
        verifyAll();
     }

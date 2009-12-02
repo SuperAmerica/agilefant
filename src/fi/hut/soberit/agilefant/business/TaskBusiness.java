@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
 public interface TaskBusiness extends GenericBusiness<Task> {
 
@@ -72,4 +73,6 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      * Adds the given user to the set of responsibles for task
      */
     public void addResponsible(Task task, User user);
+
+    void delete(int id, HourEntryHandlingChoice hourEntryHandlingChoice);
 }

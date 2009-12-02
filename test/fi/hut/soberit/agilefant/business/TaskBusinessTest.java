@@ -24,6 +24,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
 public class TaskBusinessTest {
     
@@ -36,6 +37,7 @@ public class TaskBusinessTest {
     };
     private IterationBusiness iterationBusiness;
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness; 
+    private HourEntryBusiness hourEntryBusiness;
     private StoryBusiness storyBusiness;
     private TaskDAO taskDAO;
     private RankingBusiness rankingBusiness;
@@ -65,14 +67,17 @@ public class TaskBusinessTest {
         
         rankingBusiness = new RankingBusinessImpl();
         taskBusiness.setRankingBusiness(rankingBusiness);
+        
+        hourEntryBusiness = createStrictMock(HourEntryBusiness.class);
+        taskBusiness.setHourEntryBusiness(hourEntryBusiness);
     }
     
     private void replayAll() {
-        replay(taskDAO, iterationBusiness, storyBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
+        replay(taskDAO, iterationBusiness, storyBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness, hourEntryBusiness);
     }
     
     private void verifyAll() {
-        verify(taskDAO, iterationBusiness, storyBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness);
+        verify(taskDAO, iterationBusiness, storyBusiness, iterationHistoryEntryBusiness, dailyWorkBusiness, hourEntryBusiness);
     }
     
     @Before
@@ -905,4 +910,40 @@ public class TaskBusinessTest {
         taskBusiness.rankAndMove(new Task(), null, 123, 345);
         verifyAll();
     }
+    
+    @Test
+    public void testDeleteWithHandlingChoice_delete() {
+        Task task = new Task();
+        task.setId(50);
+        expect(taskDAO.get(50)).andReturn(task);
+        hourEntryBusiness.deleteAll(task.getHourEntries());
+        replayAll();
+        taskBusiness.delete(50, HourEntryHandlingChoice.DELETE);
+        verifyAll();
+    }
+    
+    @Test
+    public void testDeleteWithHandlingChoice_move_toStory() {
+        Task task = new Task();
+        task.setStory(new Story());
+        task.setId(50);
+        expect(taskDAO.get(50)).andReturn(task);
+        hourEntryBusiness.moveToStory(task.getHourEntries(), task.getStory());
+        replayAll();
+        taskBusiness.delete(50, HourEntryHandlingChoice.MOVE);
+        verifyAll();
+    }
+
+    @Test
+    public void testDeleteWithHandlingChoice_move_toBacklog() {
+        Task task = new Task();
+        task.setIteration(new Iteration());
+        task.setId(50);
+        expect(taskDAO.get(50)).andReturn(task);
+        hourEntryBusiness.moveToBacklog(task.getHourEntries(), task.getIteration());
+        replayAll();
+        taskBusiness.delete(50, HourEntryHandlingChoice.MOVE);
+        verifyAll();
+    }
+
 }

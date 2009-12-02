@@ -11,6 +11,7 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 
 /**
@@ -74,5 +75,12 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
 
     List<HourEntry> retrieveTaskHourEntries(int taskId,
             boolean limited);
+
+    void deleteAll(Collection<? extends HourEntry> hourEntries);
+
+    void moveToStory(Collection<? extends HourEntry> hourEntries, Story story);
+
+    void moveToBacklog(Collection<? extends HourEntry> hourEntries,
+            Backlog backlog);
 
 }

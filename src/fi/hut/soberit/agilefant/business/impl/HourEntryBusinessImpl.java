@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -264,4 +265,39 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         this.backlogBusiness = backlogBusiness;
     }
 
+    public void deleteAll(Collection<? extends HourEntry> hourEntries) {
+        for (HourEntry hourEntry : hourEntries) {
+            hourEntryDAO.remove(hourEntry);
+        }
+    }
+    
+    public void moveToBacklog(Collection<? extends HourEntry> hourEntries, Backlog backlog) {
+        for (HourEntry hourEntry : hourEntries) {
+            BacklogHourEntry newHourEntry = new BacklogHourEntry();
+            try {
+                PropertyUtils.copyProperties(newHourEntry, hourEntry);
+                newHourEntry.setId(0);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            hourEntryDAO.remove(hourEntry);
+            newHourEntry.setBacklog(backlog);
+            hourEntryDAO.store(newHourEntry);
+        }
+    }
+
+    public void moveToStory(Collection<? extends HourEntry> hourEntries, Story story) {
+        for (HourEntry hourEntry : hourEntries) {
+            StoryHourEntry newHourEntry = new StoryHourEntry();
+            try {
+                PropertyUtils.copyProperties(newHourEntry, hourEntry);
+                newHourEntry.setId(0);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            hourEntryDAO.remove(hourEntry);
+            newHourEntry.setStory(story);
+            hourEntryDAO.store(newHourEntry);
+        }
+    }
 }

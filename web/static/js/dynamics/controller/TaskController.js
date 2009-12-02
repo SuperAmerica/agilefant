@@ -81,9 +81,16 @@ TaskController.prototype.removeFromMyWorkQueue = function() {
 
 TaskController.prototype.removeTask = function() {
   var me = this;
-  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this task?", function() {
-    me.parentController.removeChildController("task", this);
-    me.model.remove();
+  var dialog = new LazyLoadedDialog({
+    title: "Delete task",
+    url: "ajax/deleteTaskForm",
+    data: {
+      id: me.model.getId()
+    },
+    okCallback: function() {
+      me.parentController.removeChildController("task", this);
+      me.model.remove();
+    }
   });
 };
 

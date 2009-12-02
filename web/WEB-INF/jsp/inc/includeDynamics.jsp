@@ -25,6 +25,7 @@
 <script type="text/javascript" src="static/js/dynamics/view/ConfirmationDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/ChangePasswordDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/DetailsView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/view/LazyLoadedDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 
 <script type="text/javascript" src="static/js/dynamics/model/CommonModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>

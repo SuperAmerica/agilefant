@@ -366,4 +366,16 @@ public class TaskActionTest {
         
         verifyAll();
     }
+    
+    @Test
+    public void testDeleteTaskForm() {
+        taskAction.setTaskId(10);
+        expect(taskBusiness.retrieve(10)).andReturn(task);
+        
+        replayAll();
+        
+        assertEquals(Action.SUCCESS, taskAction.deleteTaskForm());
+        
+        verifyAll();
+    }
 }

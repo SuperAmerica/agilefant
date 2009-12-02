@@ -83,9 +83,9 @@ TaskController.prototype.removeTask = function() {
   var me = this;
   var dialog = new LazyLoadedDialog({
     title: "Delete task",
-    url: "ajax/deleteTaskForm",
+    url: "ajax/deleteTaskForm.action",
     data: {
-      id: me.model.getId()
+      taskId: me.model.getId()
     },
     okCallback: function() {
       me.parentController.removeChildController("task", this);

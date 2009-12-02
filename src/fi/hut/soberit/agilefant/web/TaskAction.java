@@ -98,6 +98,11 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         return Action.SUCCESS;
     }
     
+    public String deleteTaskForm() {
+        task = taskBusiness.retrieve(taskId);
+        return Action.SUCCESS;
+    }
+    
     private void populateJsonData() {
         task = transferObjectBusiness.constructTaskTO(task);
     }

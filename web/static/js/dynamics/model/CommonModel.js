@@ -178,12 +178,15 @@ CommonModel.prototype._removeAllRelations = function() {
  * Will call the internal method <code>_remove</code>, which should be
  * overwritten by any subclass. 
  */
-CommonModel.prototype.remove = function() {
+CommonModel.prototype.remove = function(successCallback, extraData) {
   var me = this;
   this._remove(function() {
     me._removeAllRelations();
     me.callListeners(new DynamicsEvents.DeleteEvent(me));
-  });
+    if (successCallback) {
+      successCallback();
+    }
+  }, extraData);
 };
 
 /**

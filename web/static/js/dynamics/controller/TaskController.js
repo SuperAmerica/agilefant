@@ -81,15 +81,17 @@ TaskController.prototype.removeFromMyWorkQueue = function() {
 
 TaskController.prototype.removeTask = function() {
   var me = this;
-  var dialog = new LazyLoadedDialog({
+  var dialog = new LazyLoadedFormDialog();
+  dialog.init({
     title: "Delete task",
     url: "ajax/deleteTaskForm.action",
     data: {
       taskId: me.model.getId()
     },
-    okCallback: function() {
-      me.parentController.removeChildController("task", this);
-      me.model.remove();
+    okCallback: function(extraData) {
+      me.model.remove(function() {
+        me.parentController.removeChildController("task", this);
+      }, extraData);
     }
   });
 };

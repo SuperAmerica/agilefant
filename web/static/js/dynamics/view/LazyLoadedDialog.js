@@ -1,13 +1,12 @@
-var LazyLoadedDialog = function LazyLoadedDialog(options) {
+var LazyLoadedDialog = function LazyLoadedDialog() {
+};
+
+LazyLoadedDialog.prototype.init = function(options) {
   this.url = options.url;
   this.data = options.data;
   this.title = options.title;
   this.okCallback = options.okCallback;
   this.cancelCallback = options.cancelCallback;
-  this.init();
-};
-
-LazyLoadedDialog.prototype.init = function() {
   this.contentElement = $('<div><div style="text-align: center"><img src="static/img/pleasewait.gif" alt="Loading..." /></div></div>').appendTo(document.body);
   var me = this;
   this.contentElement.dialog({
@@ -62,3 +61,20 @@ LazyLoadedDialog.prototype.close = function() {
   this.contentElement.dialog("destroy").remove();
 };
 
+var LazyLoadedFormDialog = function LazyLoadedFormDialog() {
+};
+
+LazyLoadedFormDialog.prototype = new LazyLoadedDialog();
+
+LazyLoadedFormDialog.prototype._ok = function() {
+  if (this.okCallback) {
+    var data = this.contentElement.find('form:eq(0)').serializeArray();
+    var finalData = {};
+    for (var i = 0, len = data.length; i < len; i++) {
+      var element = data[i];
+      finalData[element.name] = element.value;
+    }
+    this.okCallback(finalData);
+  }
+  this.close();
+};

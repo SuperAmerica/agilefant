@@ -148,15 +148,19 @@ TaskModel.prototype._saveData = function(id, changedData) {
   });
 };
 
-TaskModel.prototype._remove = function(successCallback) {
+TaskModel.prototype._remove = function(successCallback, extraData) {
   var me = this;
+  var data = {
+      taskId: me.getId()
+  };
+  jQuery.extend(data, extraData);
   jQuery.ajax({
       type: "POST",
       url: "ajax/deleteTask.action",
       async: true,
       cache: false,
       dataType: "text",
-      data: {taskId: me.getId()},
+      data: data,
       success: function(data,status) {
         MessageDisplay.Ok("Task removed");
         if (successCallback) {

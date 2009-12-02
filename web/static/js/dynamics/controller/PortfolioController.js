@@ -58,6 +58,19 @@ PortfolioController.prototype.paintUnrankedProjects = function() {
   this.unrankedProjectsView.render();
 };
 
+PortfolioController.prototype._calculateTimelineUnitSize = function() {
+  var timelineWidth = this.timelineElement.width();
+  var dateEnd = this.model.endDate.getMonth();
+  var dateStart = this.model.startDate.getMonth();
+  var timeSpan;
+  if (dateEnd>dateStart) {
+    timeSpan = dateEnd - dateStart;
+  } else {
+    timeSpan = 12 - (Math.abs(dateStart-dateEnd));
+  }
+  return (timelineWidth / timeSpan);
+}
+
 PortfolioController.prototype.paintTimeline = function() {
   this.timelineElement.css("height", (this.model.getRankedProjects().length * 40) + "px");
   this.model.startDate = new Date();
@@ -67,14 +80,6 @@ PortfolioController.prototype.paintTimeline = function() {
   this.model.endDate.addDays(this.model.getTimeSpanInDays());
   var dateEnd = this.model.endDate.getMonth();
   var dateStart = this.model.startDate.getMonth();
-  var timeSpan;
-  var timelineWidth = 741;
-  if (dateEnd>dateStart) {
-    timeSpan = dateEnd - dateStart;
-  } else {
-    timeSpan = 12 - (Math.abs(dateStart-dateEnd));
-  }
-  this.timelineElement.css("width", timelineWidth + "px");
   var middleDate = new Date();
   middleDate.addDays(this.model.getTimeSpanInDays() / 2);
   var eventSource = new Timeline.PortfolioEventSource();
@@ -90,7 +95,7 @@ PortfolioController.prototype.paintTimeline = function() {
         width: "100%",
         date: middleDate,
         intervalUnit: Timeline.DateTime.MONTH,
-        intervalPixels: (timelineWidth/timeSpan),
+        intervalPixels: this._calculateTimelineUnitSize(),
         eventSource: eventSource,
         theme: theme,
         eventPainter: Timeline.NoopEventPainter
@@ -100,6 +105,13 @@ PortfolioController.prototype.paintTimeline = function() {
   eventSource.setModel(this.model);
   this.timeline = Timeline.create(this.timelineElement[0], bandInfos);
   eventSource.loadData();
+  
+  var me = this;
+  $(window).resize(function() {
+    var pixelSize = me._calculateTimelineUnitSize();
+    me.timeline.getBand(0).getEther()._pixelsPerInterval = pixelSize;
+    me.timeline.paint();
+  });
 };
 
 PortfolioController.prototype.portfolioRowControllerFactory = function(view, model) {

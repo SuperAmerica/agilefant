@@ -60,4 +60,8 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
             DateTime endTime, int userId);
 
     List<HourEntry> getBacklogHourEntries(int backlogId, int limit);
+
+    List<HourEntry> getTaskHourEntries(int taskId, int limit);
+
+    List<HourEntry> getStoryHourEntries(int storyId, int limit);
 }

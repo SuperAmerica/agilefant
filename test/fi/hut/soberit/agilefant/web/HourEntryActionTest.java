@@ -3,7 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -114,6 +116,71 @@ public class HourEntryActionTest {
     
     @Test
     public void testRetrieveBacklogHourEntries() {
-     // TODO
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        hourEntryAction.setParentObjectId(100);
+        expect(hourEntryBusiness.retrieveBacklogHourEntries(100, false)).andReturn(hourEntries);
+        replayAll();
+        assertEquals(Action.SUCCESS, hourEntryAction.retrieveBacklogHourEntries());
+        assertSame(hourEntries, hourEntryAction.getHourEntries());
+        verifyAll();
     }
+
+    @Test
+    public void testRetrieveBacklogHourEntries_withLimit() {
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        hourEntryAction.setParentObjectId(100);
+        hourEntryAction.setLimited(true);
+        expect(hourEntryBusiness.retrieveBacklogHourEntries(100, true)).andReturn(hourEntries);
+        replayAll();
+        assertEquals(Action.SUCCESS, hourEntryAction.retrieveBacklogHourEntries());
+        assertSame(hourEntries, hourEntryAction.getHourEntries());
+        verifyAll();
+    }
+
+    @Test
+    public void testRetrieveStoryHourEntries() {
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        hourEntryAction.setParentObjectId(100);
+        expect(hourEntryBusiness.retrieveStoryHourEntries(100, false)).andReturn(hourEntries);
+        replayAll();
+        assertEquals(Action.SUCCESS, hourEntryAction.retrieveStoryHourEntries());
+        assertSame(hourEntries, hourEntryAction.getHourEntries());
+        verifyAll();
+    }
+
+    @Test
+    public void testRetrieveStoryHourEntries_withLimit() {
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        hourEntryAction.setParentObjectId(100);
+        hourEntryAction.setLimited(true);
+        expect(hourEntryBusiness.retrieveStoryHourEntries(100, true)).andReturn(hourEntries);
+        replayAll();
+        assertEquals(Action.SUCCESS, hourEntryAction.retrieveStoryHourEntries());
+        assertSame(hourEntries, hourEntryAction.getHourEntries());
+        verifyAll();
+    }
+
+    @Test
+    public void testRetrieveTaskHourEntries() {
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        hourEntryAction.setParentObjectId(100);
+        expect(hourEntryBusiness.retrieveTaskHourEntries(100, false)).andReturn(hourEntries);
+        replayAll();
+        assertEquals(Action.SUCCESS, hourEntryAction.retrieveTaskHourEntries());
+        assertSame(hourEntries, hourEntryAction.getHourEntries());
+        verifyAll();
+    }
+
+    @Test
+    public void testRetrieveTaskHourEntries_withLimit() {
+        List<HourEntry> hourEntries = new ArrayList<HourEntry>();
+        hourEntryAction.setParentObjectId(100);
+        hourEntryAction.setLimited(true);
+        expect(hourEntryBusiness.retrieveTaskHourEntries(100, true)).andReturn(hourEntries);
+        replayAll();
+        assertEquals(Action.SUCCESS, hourEntryAction.retrieveTaskHourEntries());
+        assertSame(hourEntries, hourEntryAction.getHourEntries());
+        verifyAll();
+    }
+
 }

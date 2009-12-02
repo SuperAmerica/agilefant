@@ -297,4 +297,22 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         }
         return asList(crit);
     }
+    public List<HourEntry> getTaskHourEntries(int taskId, int limit) {
+        Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
+        crit.add(Restrictions.eq("task.id", taskId));
+        crit.addOrder(Order.desc("date"));
+        if (limit > 0) {
+            crit.setMaxResults(limit);
+        }
+        return asList(crit);
+    }
+    public List<HourEntry> getStoryHourEntries(int storyId, int limit) {
+        Criteria crit = getCurrentSession().createCriteria(StoryHourEntry.class);
+        crit.add(Restrictions.eq("story.id", storyId));
+        crit.addOrder(Order.desc("date"));
+        if (limit > 0) {
+            crit.setMaxResults(limit);
+        }
+        return asList(crit);
+    }
 }

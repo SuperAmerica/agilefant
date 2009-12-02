@@ -69,4 +69,10 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
     List<HourEntry> retrieveBacklogHourEntries(int backlogId,
             boolean limited);
 
+    List<HourEntry> retrieveStoryHourEntries(int storyId,
+            boolean limited);
+
+    List<HourEntry> retrieveTaskHourEntries(int taskId,
+            boolean limited);
+
 }

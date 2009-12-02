@@ -127,6 +127,18 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         return hourEntryDAO.getBacklogHourEntries(backlogId, limit);
     }
     
+    @Transactional(readOnly = true)
+    public List<HourEntry> retrieveStoryHourEntries(int storyId, boolean limited) {
+        int limit = (limited) ? 30 : 0;
+        return hourEntryDAO.getStoryHourEntries(storyId, limit);
+    }
+
+    @Transactional(readOnly = true)
+    public List<HourEntry> retrieveTaskHourEntries(int taskId, boolean limited) {
+        int limit = (limited) ? 30 : 0;
+        return hourEntryDAO.getTaskHourEntries(taskId, limit);
+    }
+
     public List<BacklogHourEntry> retrieveByParent(Backlog parent) {
         return backlogHourEntryDAO.retrieveByBacklog(parent);
     }

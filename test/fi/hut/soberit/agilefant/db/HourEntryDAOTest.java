@@ -240,4 +240,28 @@ public class HourEntryDAOTest extends AbstractHibernateTests {
         assertEquals(1, hourEntryDAO.getBacklogHourEntries(5, 1).size());
     }
 
+    @Test
+    public void testGetStoryHourEntries() {
+        executeClassSql();
+        assertEquals(3, hourEntryDAO.getStoryHourEntries(6, 0).size());
+    }
+    
+    @Test
+    public void testGetStoryHourEntries_withLimit() {
+        executeClassSql();
+        assertEquals(1, hourEntryDAO.getStoryHourEntries(6, 1).size());
+    }
+
+    @Test
+    public void testGetTaskHourEntries() {
+        executeClassSql();
+        assertEquals(2, hourEntryDAO.getTaskHourEntries(4, 0).size());
+    }
+    
+    @Test
+    public void testGetTaskHourEntries_withLimit() {
+        executeClassSql();
+        assertEquals(1, hourEntryDAO.getTaskHourEntries(4, 1).size());
+    }
+
 }

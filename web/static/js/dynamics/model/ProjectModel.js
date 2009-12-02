@@ -52,9 +52,6 @@ ProjectModel.prototype._setData = function(newData) {
   // Set the id
   this.id = newData.id;
   
-  // Copy fields
-  this._copyFields(newData);
-  
   // Set stories
   if (newData.stories) {
     this._updateRelations(ModelFactory.types.story, newData.stories);

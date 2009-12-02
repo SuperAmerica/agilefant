@@ -914,9 +914,12 @@ public class TaskBusinessTest {
     @Test
     public void testDeleteWithHandlingChoice_delete() {
         Task task = new Task();
+        task.setIteration(new Iteration());
         task.setId(50);
         expect(taskDAO.get(50)).andReturn(task);
         hourEntryBusiness.deleteAll(task.getHourEntries());
+        taskDAO.remove(50);
+        iterationHistoryEntryBusiness.updateIterationHistory(0);
         replayAll();
         taskBusiness.delete(50, HourEntryHandlingChoice.DELETE);
         verifyAll();
@@ -929,6 +932,7 @@ public class TaskBusinessTest {
         task.setId(50);
         expect(taskDAO.get(50)).andReturn(task);
         hourEntryBusiness.moveToStory(task.getHourEntries(), task.getStory());
+        taskDAO.remove(50);
         replayAll();
         taskBusiness.delete(50, HourEntryHandlingChoice.MOVE);
         verifyAll();
@@ -941,6 +945,8 @@ public class TaskBusinessTest {
         task.setId(50);
         expect(taskDAO.get(50)).andReturn(task);
         hourEntryBusiness.moveToBacklog(task.getHourEntries(), task.getIteration());
+        taskDAO.remove(50);
+        iterationHistoryEntryBusiness.updateIterationHistory(0);
         replayAll();
         taskBusiness.delete(50, HourEntryHandlingChoice.MOVE);
         verifyAll();

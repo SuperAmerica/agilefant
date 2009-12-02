@@ -370,6 +370,11 @@
         <param name="target">metrics</param>
       </result>
     </action>
+
+    <action name="deleteStoryForm" method="deleteStoryForm" class="storyAction">
+    	<result type="dispatcher">/WEB-INF/jsp/forms/deleteStoryForm.jsp</result>
+    </action>
+
     <!-- /Story actions -->
 
 

@@ -7,20 +7,20 @@ LazyLoadedDialog.prototype.init = function(options) {
   this.title = options.title;
   this.okCallback = options.okCallback;
   this.cancelCallback = options.cancelCallback;
+  this.loadCallback = options.loadCallback;
   this.contentElement = $('<div><div style="text-align: center"><img src="static/img/pleasewait.gif" alt="Loading..." /></div></div>').appendTo(document.body);
   var me = this;
   this.contentElement.dialog({
     modal: true,
     title: me.title,
     minHeight: '200',
-    minWidth: '400',
-    width: '400',
+    minWidth: 600,
+    width: 600,
     position: 'center',
     resizable: false,
     open: function() {
       me.contentElement.load(me.url, me.data, function(responseText, textStatus, xhr) {
         if (textStatus === 'success') {
-          me.ready = true;
           me.contentElement.dialog('option', 'buttons', {
             "Ok": function() {
               me._ok();
@@ -29,8 +29,10 @@ LazyLoadedDialog.prototype.init = function(options) {
               me._cancel();
             }
           });
+          if (me.loadCallback) {
+            me.loadCallback(me.contentElement);
+          }
         } else if (textStatus === 'error') {
-          me.error = true;
           me.contentElement.empty();
           me.contentElement.dialog('option', 'buttons', {
             "Cancel": function() {

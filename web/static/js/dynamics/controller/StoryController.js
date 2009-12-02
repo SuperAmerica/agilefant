@@ -40,9 +40,32 @@ StoryController.prototype.handleModelEvents = function(event) {
  */
 StoryController.prototype.removeStory = function() {
   var me = this;
-  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this story?", function() {
-    me.parentController.removeChildController("story", me);
-    me.model.remove();
+  var dialog = new LazyLoadedFormDialog();
+  dialog.init({
+    title: "Delete story",
+    url: "ajax/deleteStoryForm.action",
+    data: {
+      storyId: me.model.getId()
+    },
+    loadCallback: function(dialog) {
+      dialog.find("input[name=taskHandlingChoice]").click(function() {
+        var element = $(this);
+        var formDiv = element.parents(".deleteForm");
+        var taskHours = formDiv.find('.taskHourEntryHandling:eq(0)');
+        if (element.val() == 'DELETE') {
+          taskHours.show();
+          taskHours.find('input:eq(0)').attr('checked', 'checked');
+        } else if (element.val() == 'MOVE') {
+          taskHours.hide();
+          taskHours.find('input').removeAttr('checked');
+        }
+      });
+    },
+    okCallback: function(extraData) {
+      me.model.remove(function() {
+        me.parentController.removeChildController("story", me);
+      }, extraData);
+    }
   });
 };
 

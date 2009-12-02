@@ -207,13 +207,17 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
 };
 
 
-StoryModel.prototype._remove = function(successCallback) {
+StoryModel.prototype._remove = function(successCallback, extraData) {
   var me = this;
+  var data = {
+      storyId: me.getId()
+  };
+  jQuery.extend(data, extraData);
   jQuery.ajax({
       type: "POST",
       dataType: "text",
       url: "ajax/deleteStory.action",
-      data: {storyId: me.getId()},
+      data: data,
       async: true,
       cache: false,
       success: function(data, status) {

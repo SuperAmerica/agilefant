@@ -588,3 +588,12 @@ ul.dynamics-error-container {
   border: 1px solid #c55;
   background-color: #fcc;
 }
+
+.deleteForm p {
+	font-weight: bold;
+}
+
+.deleteForm ul {
+	list-style: none;
+	padding-left: 20px;
+}

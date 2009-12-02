@@ -244,9 +244,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     
     public void delete(int id, HourEntryHandlingChoice hourEntryHandlingChoice) {
         Task task = retrieve(id);
-        if (hourEntryHandlingChoice == null) {
-            delete(task);
-        } else {
+        if (hourEntryHandlingChoice != null) {
             switch (hourEntryHandlingChoice) {
                 case DELETE:
                     hourEntryBusiness.deleteAll(task.getHourEntries());
@@ -258,9 +256,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
                     } else {
                         hourEntryBusiness.moveToStory(task.getHourEntries(), task.getStory());
                     }
+                    task.getHourEntries().clear();
                     break;
             }
-        }
+        }        
+        delete(task);
     }
 
     @Override

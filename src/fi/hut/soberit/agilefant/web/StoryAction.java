@@ -95,6 +95,11 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         return Action.SUCCESS;
     }
 
+    public String deleteStoryForm() {
+        story = storyBusiness.retrieve(storyId);
+        return Action.SUCCESS;
+    }
+    
     public String store() {
         Set<Integer> users = null;
         if (usersChanged) {

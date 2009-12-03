@@ -8,6 +8,11 @@
   padding: 0.2em;
 }
 
+/** when sorting is disabled the ocupacity shoudnt change */
+.dynamictable .ui-state-disabled { 
+	opacity: 1; !important;
+	filter:Alpha(Opacity=100) !important;
+}
 .dynamictable-caption {
 	font-weight:bold;
 	height:19px;

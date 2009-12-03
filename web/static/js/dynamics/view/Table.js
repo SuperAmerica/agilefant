@@ -85,6 +85,7 @@ DynamicTable.prototype.initialize = function() {
   for ( var i = 0; i < columnConfigs.length; i++) {
     if (columnConfigs[i].isDefaultSortColumn()) {
       this.currentSortColumn = i;
+      this.defaultSoftColumnNum = i;
       break;
     }
   }
@@ -263,6 +264,16 @@ DynamicTable.prototype.layout = function() {
   }
   if(this.config.isRowDroppable()) {
     this.element.find("div.dynamicTableDataRow").each(function(k,v) { me._registerDropFor($(v)); });
+  }
+};
+
+DynamicTable.prototype._toggleSortable = function() {
+  if(this.config.isSortable()) {
+    if(this.currentSortColumn === this.defaultSoftColumnNum && this.currentSortDirection === DynamicTable.constants.asc) {
+      this.element.sortable("enable");
+    } else {
+      this.element.sortable("disable");
+    }
   }
 };
 
@@ -575,6 +586,7 @@ DynamicTable.prototype._sortByColumn = function(column) {
     this.currentSortColumn = column;
     this.currentSortDirection = DynamicTable.constants.asc;
   }
+  this._toggleSortable();
   this._updateSortArrow();
   this._sort();
   this.render();

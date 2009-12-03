@@ -33,6 +33,8 @@
 		<mapping class="fi.hut.soberit.agilefant.model.HolidayAnomaly" />
 		<mapping class="fi.hut.soberit.agilefant.model.AgilefantRevisionEntity" />
         <mapping class="fi.hut.soberit.agilefant.model.WhatsNextEntry" />
+        <mapping class="fi.hut.soberit.agilefant.model.StoryRank" />
+    
 
 		<!--
 			<mapping class="fi.hut.soberit.agilefant.model.BusinessTheme" />

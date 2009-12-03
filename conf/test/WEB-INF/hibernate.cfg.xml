@@ -29,6 +29,7 @@
         <mapping class="fi.hut.soberit.agilefant.model.BacklogHourEntry"/>
         <mapping class="fi.hut.soberit.agilefant.model.BusinessTheme"/>
         <mapping class="fi.hut.soberit.agilefant.model.BacklogThemeBinding"/>
+        <mapping class="fi.hut.soberit.agilefant.model.StoryRank" />
         
         
         <!-- Activate hibernate validation: these listeners will raise an exception

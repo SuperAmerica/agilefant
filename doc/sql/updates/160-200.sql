@@ -663,5 +663,81 @@ alter table stories add index FK8FB06053F5E897CD (parent_id), add constraint FK8
 
 alter table users add column autoassignToTasks bit default 1;
 
+--- after alpha 2
+
 alter table history_backlogs add column rootSum bigint not null;
 
+
+--- after alpha 3
+
+create table storyrank (id integer not null auto_increment, backlog_id integer not null, next_id integer, previous_id integer, story_id integer not null, primary key (id), unique (backlog_id, story_id)) ENGINE=InnoDB;
+alter table storyrank add index FK6600C2A1F63400A2 (backlog_id), add constraint FK6600C2A1F63400A2 foreign key (backlog_id) references backlogs (id);
+alter table storyrank add index FK6600C2A1E0E4BFA2 (story_id), add constraint FK6600C2A1E0E4BFA2 foreign key (story_id) references stories (id);
+alter table storyrank add index FK6600C2A1CD3EA02C (previous_id), add constraint FK6600C2A1CD3EA02C foreign key (previous_id) references storyrank (id);
+alter table storyrank add index FK6600C2A1774AFEB0 (next_id), add constraint FK6600C2A1774AFEB0 foreign key (next_id) references storyrank (id);
+
+DROP PROCEDURE IF EXISTS StoryLinkedListRankForProject //
+CREATE PROCEDURE StoryLinkedListRankForProject(IN bid INT)
+BEGIN
+  DECLARE story_rank_loop_done BOOL DEFAULT FALSE;
+  DECLARE story_id INT;
+  DECLARE previous_id INT DEFAULT NULL;
+  DECLARE current_id INT DEFAULT NULL; 
+  DECLARE story_rank_cur
+    CURSOR FOR
+    SELECT stories.id  FROM stories stories 
+        LEFT JOIN backlogs b1 ON b1.id = stories.backlog_id 
+        LEFT JOIN backlogs b2 ON b2.id = b1.parent_id 
+        WHERE NOT EXISTS (SELECT id FROM stories s2 WHERE s2.parent_id = stories.id) 
+        AND ((b1.backlogtype = 'Project' AND b1.id = bid) 
+        OR (b2.backlogtype = 'Project' AND b2.id = bid)) ORDER BY stories.priority;
+
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET story_rank_loop_done = TRUE;
+
+  OPEN story_rank_cur;
+
+  storyRankLoop: LOOP
+    FETCH story_rank_cur INTO story_id;
+
+    IF story_rank_loop_done THEN
+      CLOSE story_rank_cur;
+      LEAVE storyRankLoop;
+    END IF;
+
+
+    INSERT INTO storyrank (`story_id`, `backlog_id`, `previous_id`) VALUES(story_id, bid, previous_id);
+    SELECT LAST_INSERT_ID() INTO current_id;
+    UPDATE storyrank SET next_id=current_id WHERE id = previous_id;
+    SET previous_id = current_id;
+
+  END LOOP;
+END //
+
+DROP PROCEDURE IF EXISTS UpdateProjectLeafStoryRanks //
+CREATE PROCEDURE UpdateProjectLeafStoryRanks()
+BEGIN
+  DECLARE project_loop_done BOOL DEFAULT FALSE;
+  DECLARE project_id INT;
+  DECLARE cur_project
+    CURSOR FOR
+    SELECT id FROM backlogs WHERE backlogtype="Project" ORDER BY id;
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET project_loop_done = TRUE;
+
+  OPEN cur_project;
+
+  projectLoop: LOOP
+    FETCH cur_project INTO project_id;
+
+    IF project_loop_done THEN
+      CLOSE cur_project;
+      LEAVE projectLoop;
+    END IF;
+    CALL StoryLinkedListRankForProject(project_id);
+  END LOOP;
+END //
+
+CALL UpdateProjectLeafStoryRanks();

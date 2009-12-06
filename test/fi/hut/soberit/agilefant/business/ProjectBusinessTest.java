@@ -37,6 +37,7 @@ public class ProjectBusinessTest {
     ProductBusiness productBusiness;
     TransferObjectBusiness transferObjectBusiness;
     SettingBusiness settingBusiness;
+    RankingBusiness rankingBusiness;
 
     Project project;
     Product product;
@@ -60,8 +61,10 @@ public class ProjectBusinessTest {
         projectBusiness.setTransferObjectBusiness(transferObjectBusiness);
         
         settingBusiness = createStrictMock(SettingBusiness.class);
-        projectBusiness.setSettingBusiness(settingBusiness);     
-
+        projectBusiness.setSettingBusiness(settingBusiness);
+        
+        rankingBusiness = createStrictMock(RankingBusiness.class);
+        projectBusiness.setRankingBusiness(rankingBusiness);
     }
 
     @Before
@@ -92,11 +95,11 @@ public class ProjectBusinessTest {
     }
 
     private void replayAll() {
-        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness);
+        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness);
     }
 
     private void verifyAll() {
-        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness);
+        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness);
     }
 
     @Test
@@ -267,5 +270,43 @@ public class ProjectBusinessTest {
         assertEquals(0, project.getRank());
         verifyAll();
     }
+    
+    @Test
+    public void testRankOver_rankToTop() {
+        Project project = new Project();
+        project.setId(1);
+        project.setRank(2);
+        Project rankOver = new Project();
+        rankOver.setRank(1);
+        rankOver.setId(5);
+        expect(projectDAO.get(project.getId())).andReturn(project);
+        expect(projectDAO.get(rankOver.getId())).andReturn(rankOver);
+        expect(projectDAO.getProjectWithRankLessThan(1)).andReturn(null);
+        projectDAO.increaseRankedProjectRanks();
+        replayAll();
+        projectBusiness.rankOverProject(project.getId(), rankOver.getId());
+        verifyAll();
+        assertEquals(1, project.getId());
+    }
              
+    @Test
+    public void testRankOver() {
+        Project project = new Project();
+        project.setId(1);
+        project.setRank(3);
+        Project rankOver = new Project();
+        Project rankUnder = new Project();
+        rankUnder.setRank(1);
+        rankOver.setRank(2);
+        rankOver.setId(5);
+        expect(projectDAO.get(project.getId())).andReturn(project);
+        expect(projectDAO.get(rankOver.getId())).andReturn(rankOver);
+        expect(projectDAO.getProjectWithRankLessThan(2)).andReturn(rankUnder);
+        rankingBusiness.rankUnder(eq(project), eq(rankUnder), isA(RankUnderDelegate.class));
+        replayAll();
+        projectBusiness.rankOverProject(project.getId(), rankOver.getId());
+        verifyAll();
+        assertEquals(1, project.getId());
+    }
+
 }

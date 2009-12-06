@@ -261,11 +261,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         Project rankOver = projectDAO.get(rankOverId);        
         Project rankUnder = projectDAO.getProjectWithRankLessThan(rankOver.getRank());
         if (rankUnder == null) {
-            System.out.println(project.getRank());
             projectDAO.increaseRankedProjectRanks();
-            System.out.println(project.getRank());
             project.setRank(1);
-            System.out.println(project.getRank());
         } else {
             rankUnderProject(project, rankUnder);            
         }

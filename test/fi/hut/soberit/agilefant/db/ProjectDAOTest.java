@@ -104,4 +104,23 @@ public class ProjectDAOTest extends AbstractHibernateTests {
         assertNotNull(project);
         assertEquals(6, project.getRank());       
     }
+    
+    @Test
+    public void testIncreaseRankedProjectsRank() {
+        executeClassSql();
+        projectDAO.increaseRankedProjectRanks();
+        Collection<Project> projects = projectDAO.getAll();
+        int lowest = Integer.MAX_VALUE;
+        int highest = Integer.MIN_VALUE;
+        for (Project project : projects) {
+            if (project.getRank() < lowest) {
+                lowest = project.getRank();
+            }
+            if (project.getRank() > highest) {
+                highest = project.getRank();
+            }
+        }
+        assertEquals(2, lowest);
+        assertEquals(4, highest);
+    }
 }

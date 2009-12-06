@@ -32,6 +32,8 @@ import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 public class StoryBusinessTest {
 
@@ -48,6 +50,8 @@ public class StoryBusinessTest {
     RankingBusiness rankingBusiness;
     TransferObjectBusiness transferObjectBusiness;
     HourEntryDAO hourEntryDAO;
+    TaskBusiness taskBusiness;
+    HourEntryBusiness hourEntryBusiness;
     
     
     Backlog backlog;
@@ -110,6 +114,13 @@ public class StoryBusinessTest {
         
         hourEntryDAO = createMock(HourEntryDAO.class);
         storyBusiness.setHourEntryDAO(hourEntryDAO);
+        
+        taskBusiness = createMock(TaskBusiness.class);
+        storyBusiness.setTaskBusiness(taskBusiness);
+        
+        hourEntryBusiness = createMock(HourEntryBusiness.class);
+        storyBusiness.setHourEntryBusiness(hourEntryBusiness);
+        
     }
     
     @Before
@@ -137,11 +148,11 @@ public class StoryBusinessTest {
     }
 
     private void replayAll() {
-        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO);
+        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness);
     }
     
     private void verifyAll() {
-        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO);
+        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness);
     }
 
     
@@ -243,8 +254,7 @@ public class StoryBusinessTest {
         
         iheBusiness.updateIterationHistory(oldBacklog.getId());
         iheBusiness.updateIterationHistory(newBacklog.getId());
-        
-        
+                
         replayAll();
         storyBusiness.moveStoryToBacklog(movable, newBacklog);
         verifyAll();
@@ -568,6 +578,61 @@ public class StoryBusinessTest {
         StoryHourEntry he = new StoryHourEntry();
         story1.getHourEntries().add(he);
         storyBusiness.delete(story1);
+    }
+
+    @Test
+    public void testDelete_taskChoice_move() {
+        Task task = new Task();
+        storyInIteration.getTasks().add(task);
+        expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
+        expect(taskBusiness.move(task, storyInIteration.getBacklog().getId(), null)).andReturn(task);
+        storyDAO.remove(storyInIteration);
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
+        replayAll();
+        storyBusiness.delete(storyInIteration.getId(), TaskHandlingChoice.MOVE, null, null);
+        verifyAll();
+        assertTrue(storyInIteration.getTasks().isEmpty());
+    }
+
+    @Test
+    public void testDelete_taskChoice_delete() {
+        Task task = new Task();
+        storyInIteration.getTasks().add(task);
+        expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
+        taskBusiness.delete(task.getId(), HourEntryHandlingChoice.MOVE);
+        storyDAO.remove(storyInIteration);
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
+        replayAll();
+        storyBusiness.delete(storyInIteration.getId(), TaskHandlingChoice.DELETE, null, HourEntryHandlingChoice.MOVE);
+        verifyAll();
+        assertNull(task.getStory());
+        assertSame(storyInIteration.getBacklog(), task.getIteration());
+        assertTrue(storyInIteration.getTasks().isEmpty());
+    }
+    
+    @Test
+    public void testDelete_hourEntryChoice_move() {
+        storyInIteration.getHourEntries().add(new StoryHourEntry());
+        expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
+        hourEntryBusiness.moveToBacklog(storyInIteration.getHourEntries(), storyInIteration.getBacklog());
+        storyDAO.remove(storyInIteration);
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
+        replayAll();
+        storyBusiness.delete(storyInIteration.getId(), null, HourEntryHandlingChoice.MOVE, null);
+        verifyAll();
+        assertTrue(storyInIteration.getHourEntries().isEmpty());
+    }
+    @Test
+    public void testDelete_hourEntryChoice_delete() {
+        storyInIteration.getHourEntries().add(new StoryHourEntry());
+        expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
+        hourEntryBusiness.deleteAll(storyInIteration.getHourEntries());
+        storyDAO.remove(storyInIteration);
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
+        replayAll();
+        storyBusiness.delete(storyInIteration.getId(), null, HourEntryHandlingChoice.DELETE, null);
+        verifyAll();
+        assertTrue(storyInIteration.getHourEntries().isEmpty());
     }
 
     /*

@@ -22,6 +22,8 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 public class StoryActionTest {
 
@@ -167,8 +169,7 @@ public class StoryActionTest {
     @Test
     public void testDelete() {
        storyAction.setStoryId(story.getId());
-       expect(storyBusiness.retrieve(story.getId())).andReturn(story);
-       storyBusiness.delete(story.getId());
+       storyBusiness.delete(story.getId(), null, null, null);
        replayAll();
        
        assertEquals(Action.SUCCESS, storyAction.delete());
@@ -176,30 +177,20 @@ public class StoryActionTest {
        verifyAll();
     }
     
-    @Test(expected = ObjectNotFoundException.class)
-    public void testDelete_noSuchStory() {
-        storyAction.setStoryId(-1);
-        expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
-        replayAll();
-        
-        storyAction.delete();
-        
-        verifyAll(); 
-    }
-    
-    @Test(expected = ConstraintViolationException.class)
-    public void testDelete_storyHasHourEntries() {
+    @Test
+    public void testDelete_withChoices() {
        storyAction.setStoryId(story.getId());
-       expect(storyBusiness.retrieve(story.getId())).andReturn(story);
-       storyBusiness.delete(story.getId());
-       expectLastCall().andThrow(new ConstraintViolationException("Action not allowed", null, null));
+       storyAction.setTaskHandlingChoice(TaskHandlingChoice.MOVE);
+       storyAction.setStoryHourEntryHandlingChoice(HourEntryHandlingChoice.MOVE);
+       storyAction.setTaskHourEntryHandlingChoice(HourEntryHandlingChoice.DELETE);
+       storyBusiness.delete(story.getId(), TaskHandlingChoice.MOVE, HourEntryHandlingChoice.MOVE, HourEntryHandlingChoice.DELETE);
        replayAll();
        
-       storyAction.delete();
+       assertEquals(Action.SUCCESS, storyAction.delete());
        
        verifyAll();
     }
-    
+
     @Test
     public void testInitializePrefetchingData() {
         Story newStory = new Story();

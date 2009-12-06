@@ -11,11 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -34,7 +36,9 @@ import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Service("storyBusiness")
 @Transactional
@@ -62,7 +66,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private RankingBusiness rankingBusiness;
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
-
+    @Autowired
+    private HourEntryBusiness hourEntryBusiness;
+    @Autowired
+    private TaskBusiness taskBusiness;
+    
     public StoryBusinessImpl() {
         super(Story.class);
     }
@@ -371,6 +379,43 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return storyTo;
     }
     
+    public void delete(int id, TaskHandlingChoice taskHandlingChoice,
+            HourEntryHandlingChoice storyHourEntryHandlingChoice,
+            HourEntryHandlingChoice taskHourEntryHandlingChoice) {
+        Story story = retrieve(id);
+        Iteration iteration = (Iteration) story.getBacklog();
+        if (taskHandlingChoice != null) {
+            switch (taskHandlingChoice) {
+                case DELETE:
+                    for (Task task : story.getTasks()) {
+                        task.setStory(null);
+                        task.setIteration(iteration);
+                        taskBusiness.delete(task.getId(), taskHourEntryHandlingChoice);
+                    }
+                    break;
+                case MOVE:
+                    for (Task task : story.getTasks()) {                        
+                        taskBusiness.move(task, iteration.getId(), null);
+                        task.setStory(null);
+                    }
+                    break;
+            }
+            story.getTasks().clear();
+        }
+        if (storyHourEntryHandlingChoice != null) {
+            switch (storyHourEntryHandlingChoice) {
+                case DELETE:
+                    hourEntryBusiness.deleteAll(story.getHourEntries());
+                    break;
+                case MOVE:
+                    hourEntryBusiness.moveToBacklog(story.getHourEntries(), story.getBacklog());
+                    break;
+            }
+            story.getHourEntries().clear();
+        }
+        delete(story);
+    }
+    
 
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
@@ -412,4 +457,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;
     }
+    
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
+    }
+    
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
+    }
+
 }

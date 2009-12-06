@@ -12,7 +12,9 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 public interface StoryBusiness extends GenericBusiness<Story> {
 
@@ -88,4 +90,7 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     public Collection<Story> retrieveMultiple(Collection<Story> stories);
     
     public StoryTO retrieveStoryWithMetrics(int storyId);
+
+    void delete(int id, TaskHandlingChoice taskHandlingChoice, HourEntryHandlingChoice storyHourEntryHandlingChoice, HourEntryHandlingChoice taskHourEntryHandlingChoice);
+
 }

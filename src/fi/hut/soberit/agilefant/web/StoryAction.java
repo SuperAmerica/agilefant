@@ -21,7 +21,9 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Component("storyAction")
 @Scope("prototype")
@@ -63,6 +65,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     
     @Autowired
     private BacklogBusiness backlogBusiness;
+    
+    private HourEntryHandlingChoice taskHourEntryHandlingChoice;
+    private HourEntryHandlingChoice storyHourEntryHandlingChoice;
+    private TaskHandlingChoice taskHandlingChoice;
 
 
     @Override
@@ -79,8 +85,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
 
     public String delete() {
-        story = storyBusiness.retrieve(storyId);
-        storyBusiness.delete(story.getId());
+        storyBusiness.delete(storyId, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
         return Action.SUCCESS;
     }
 
@@ -259,6 +264,26 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     public void setRankUnderId(Integer rankUnderId) {
         this.rankUnderId = rankUnderId;
+    }
+    public void setTaskHandlingChoice(TaskHandlingChoice taskHandlingChoice) {
+        this.taskHandlingChoice = taskHandlingChoice;
+    }
+    public void setTaskHourEntryHandlingChoice(
+            HourEntryHandlingChoice taskHourEntryHandlingChoice) {
+        this.taskHourEntryHandlingChoice = taskHourEntryHandlingChoice;
+    }
+    public void setStoryHourEntryHandlingChoice(
+            HourEntryHandlingChoice storyHourEntryHandlingChoice) {
+        this.storyHourEntryHandlingChoice = storyHourEntryHandlingChoice;
+    }
+    public HourEntryHandlingChoice getStoryHourEntryHandlingChoice() {
+        return storyHourEntryHandlingChoice;
+    }
+    public TaskHandlingChoice getTaskHandlingChoice() {
+        return taskHandlingChoice;
+    }
+    public HourEntryHandlingChoice getTaskHourEntryHandlingChoice() {
+        return taskHourEntryHandlingChoice;
     }
     
 }

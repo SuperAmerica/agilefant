@@ -17,8 +17,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
@@ -118,7 +116,6 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Task.class,
             mappedBy = "story"
     )
-    @Cascade(CascadeType.DELETE_ORPHAN)
     @NotAudited
     public Set<Task> getTasks() {
         return tasks;

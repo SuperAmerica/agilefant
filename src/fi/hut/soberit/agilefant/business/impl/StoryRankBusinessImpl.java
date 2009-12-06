@@ -156,9 +156,27 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
         StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
                 story);
         if (rank != null) {
-            skipRank(rank); //fix the linked list first
+            skipRank(rank); // fix the linked list first
             this.storyRankDAO.remove(rank);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void rankToBottom(Story story, Backlog context) {
+        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
+                story);
+        StoryRank tailRank = this.storyRankDAO.retrieveTailByBacklog(context);
+        if (rank != null) {
+            skipRank(rank);
+        } else {
+            rank = createRank(story, context);
+        }
+        if (tailRank != null) {
+            addRank(rank, tailRank, tailRank.getNext());
+        }
+
     }
 
     public void setStoryRankDAO(StoryRankDAO storyRankDAO) {

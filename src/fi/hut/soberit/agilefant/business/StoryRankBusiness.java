@@ -11,9 +11,6 @@ public interface StoryRankBusiness {
      * Retrieve stories in the ranking order by backlog. Note that this method
      * may not return all the stories contained in the backlog, only the stories
      * that have rank will be returned.
-     * 
-     * @param backlog
-     * @return
      */
     List<Story> retrieveByRankingContext(Backlog backlog);
 
@@ -42,5 +39,13 @@ public interface StoryRankBusiness {
     void rankAbove(Story story, Backlog context, Backlog fromContext,
             Story lower);
 
+    /**
+     * Rank the given story to the bottom of the given context.
+     */
+    void rankToBottom(Story story, Backlog context);
+
+    /**
+     * Remove rank from the given story in the given context.
+     */
     void removeRank(Story story, Backlog context);
 }

@@ -8,4 +8,6 @@ public interface StoryRankDAO extends GenericDAO<StoryRank> {
     StoryRank retrieveHeadByBacklog(Backlog backlog);
 
     StoryRank retrieveByBacklogAndStory(Backlog backlog, Story story);
+    
+    StoryRank retrieveTailByBacklog(Backlog backlog);
 }

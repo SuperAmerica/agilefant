@@ -275,10 +275,11 @@ public class StoryRankBusinessTest {
         storyRankBusiness.rankBelow(story, context, oldBacklog, ref);
         verifyAll();
     }
-    
+
     @Test
     public void testRemoveRank() {
-        expect(this.storyRankDAO.retrieveByBacklogAndStory(context, story)).andReturn(this.storyRanks.get(1));
+        expect(this.storyRankDAO.retrieveByBacklogAndStory(context, story))
+                .andReturn(this.storyRanks.get(1));
         this.storyRankDAO.remove(this.storyRanks.get(1));
         replayAll();
         this.storyRankBusiness.removeRank(story, context);
@@ -286,25 +287,60 @@ public class StoryRankBusinessTest {
         assertSame(this.storyRanks.get(2), this.storyRanks.get(0).getNext());
         assertSame(this.storyRanks.get(0), this.storyRanks.get(2).getPrevious());
     }
-    
+
     @Test
     public void testRemoveRank_top() {
-        expect(this.storyRankDAO.retrieveByBacklogAndStory(context, story)).andReturn(this.storyRanks.get(0));
+        expect(this.storyRankDAO.retrieveByBacklogAndStory(context, story))
+                .andReturn(this.storyRanks.get(0));
         this.storyRankDAO.remove(this.storyRanks.get(0));
         replayAll();
         this.storyRankBusiness.removeRank(story, context);
         verifyAll();
         assertNull(this.storyRanks.get(1).getPrevious());
     }
-    
+
     @Test
     public void testRemoveRank_bottom() {
-        expect(this.storyRankDAO.retrieveByBacklogAndStory(context, story)).andReturn(this.storyRanks.get(2));
+        expect(this.storyRankDAO.retrieveByBacklogAndStory(context, story))
+                .andReturn(this.storyRanks.get(2));
         this.storyRankDAO.remove(this.storyRanks.get(2));
         replayAll();
         this.storyRankBusiness.removeRank(story, context);
         verifyAll();
         assertNull(this.storyRanks.get(1).getNext());
+    }
+
+    @Test
+    public void testRankToBottom() {
+        expect(storyRankDAO.retrieveByBacklogAndStory(context, story))
+                .andReturn(rankable);
+        expect(storyRankDAO.retrieveTailByBacklog(context)).andReturn(
+                storyRanks.get(2));
+        replayAll();
+        storyRankBusiness.rankToBottom(story, context);
+        verifyAll();
+        assertSame(storyRanks.get(2), rankable.getPrevious());
+        assertSame(rankable, storyRanks.get(2).getNext());
+        assertNull(rankable.getNext());
+    }
+
+    @Test
+    public void testRankToBottom_emptyContext() {
+        Serializable id = new Integer(1);
+        Capture<StoryRank> capt = new Capture<StoryRank>();
+        expect(storyRankDAO.retrieveByBacklogAndStory(context, story))
+                .andReturn(null);
+        expect(storyRankDAO.retrieveTailByBacklog(context)).andReturn(null);
+        expect(storyRankDAO.create(EasyMock.capture(capt))).andReturn(id);
+        expect(storyRankDAO.get(1)).andReturn(null);
+        replayAll();
+        storyRankBusiness.rankToBottom(story, context);
+        verifyAll();
+        StoryRank rank = capt.getValue();
+        assertSame(context, rank.getBacklog());
+        assertSame(story, rank.getStory());
+        assertNull(rank.getNext());
+        assertNull(rank.getPrevious());
     }
 
 }

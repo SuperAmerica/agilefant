@@ -40,4 +40,16 @@ public class StoryRankDAOHibernate extends GenericDAOHibernate<StoryRank>
         return uniqueResult(crit);
     }
 
+    public StoryRank retrieveTailByBacklog(Backlog backlog) {
+        Criteria crit = sessionFactory.getCurrentSession().createCriteria(
+                StoryRank.class);
+        crit.add(Restrictions.eq("backlog", backlog));
+        crit.addOrder(Order.asc("next"));
+        List<StoryRank> res = asList(crit);
+        if (res.size() > 0) {
+            return res.get(0);
+        }
+        return null;
+    }
+
 }

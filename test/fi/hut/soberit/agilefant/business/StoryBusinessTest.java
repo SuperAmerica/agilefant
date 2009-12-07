@@ -599,6 +599,7 @@ public class StoryBusinessTest {
         Task task = new Task();
         storyInIteration.getTasks().add(task);
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
+        hourEntryBusiness.moveToBacklog(task.getHourEntries(), storyInIteration.getBacklog());
         taskBusiness.delete(task.getId(), HourEntryHandlingChoice.MOVE);
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
@@ -606,7 +607,6 @@ public class StoryBusinessTest {
         storyBusiness.delete(storyInIteration.getId(), TaskHandlingChoice.DELETE, null, HourEntryHandlingChoice.MOVE);
         verifyAll();
         assertNull(task.getStory());
-        assertSame(storyInIteration.getBacklog(), task.getIteration());
         assertTrue(storyInIteration.getTasks().isEmpty());
     }
     

@@ -383,17 +383,18 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
             HourEntryHandlingChoice taskHourEntryHandlingChoice) {
         Story story = retrieve(id);
-        Iteration iteration = (Iteration) story.getBacklog();
         if (taskHandlingChoice != null) {
             switch (taskHandlingChoice) {
                 case DELETE:
                     for (Task task : story.getTasks()) {
-                        task.setStory(null);
-                        task.setIteration(iteration);
+                        if (taskHourEntryHandlingChoice == HourEntryHandlingChoice.MOVE) {
+                          hourEntryBusiness.moveToBacklog(task.getHourEntries(), story.getBacklog());
+                        }
                         taskBusiness.delete(task.getId(), taskHourEntryHandlingChoice);
                     }
                     break;
                 case MOVE:
+                    Iteration iteration = (Iteration) story.getBacklog();
                     for (Task task : story.getTasks()) {                        
                         taskBusiness.move(task, iteration.getId(), null);
                         task.setStory(null);

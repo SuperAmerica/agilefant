@@ -8,11 +8,11 @@
 var HourEntryListController = function HourEntryListController(options) {
   this.hourEntryListElement = options.hourEntryListElement;
   this.hourEntryTableElement = $('<div></div>').appendTo(this.hourEntryListElement);
-  this.hourEntryButtonsElement = $('<div></div>').appendTo(this.hourEntryListElement);
   this.parentModel = options.parentModel;
   this.model = null;
   this.limited = true;
   this.init();
+  this.initButtonsView();
   this.initConfig();
   this.paint();
 };
@@ -35,8 +35,17 @@ HourEntryListController.prototype.paintHourEntryTable = function() {
 };
 
 HourEntryListController.prototype.paintHourEntryButtons = function() {
+  this.limited = this.model.getHourEntries().length >= 30;
+  var me = this;
   if(this.limited) {
-    
+    this.seeAllButton = new DynamicsButtons(this, [ 
+      {
+        text: "See all",
+        callback: function () {
+          me.showAllEntries();
+        }
+      }
+    ], this.hourEntryButtonsView);
   } 
 };
 
@@ -53,7 +62,11 @@ HourEntryListController.prototype.paint = function() {
   }, this.limited);
 };
 
-
+HourEntryListController.prototype.initButtonsView = function() {  
+  var hourEntryButtonsElement = $('<div style="text-align: right"></div>').appendTo(this.hourEntryListElement);
+  this.hourEntryButtonsView = new ViewPart();
+  this.hourEntryButtonsView.element = hourEntryButtonsElement;
+};
 HourEntryListController.prototype.reload = function() {
   this.model.reload();
 };
@@ -66,7 +79,8 @@ HourEntryListController.prototype.openLogEffort = function() {
 
 HourEntryListController.prototype.showAllEntries = function() {
   this.limited = false;
-  this.reload(); 
+  this.hourEntryButtonsView.hide();
+  this.reload();
 }
 
 /**

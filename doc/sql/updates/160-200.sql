@@ -807,3 +807,5 @@ DROP PROCEDURE IF EXISTS UpdateProjectLeafStoryRanks;
 DROP PROCEDURE IF EXISTS StoryRankForIteration;
 DROP PROCEDURE IF EXISTS UpdateIterationStoryRanks;
 
+ALTER TABLE stories DROP COLUMN rank;
+

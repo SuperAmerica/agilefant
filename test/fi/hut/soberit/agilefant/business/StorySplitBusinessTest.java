@@ -70,7 +70,6 @@ public class StorySplitBusinessTest {
 
         parentStory = new Story();
         parentStory.setId(1);
-        parentStory.setRank(2);
 
         User responsible = new User();
         parentStory.getResponsibles().add(responsible);

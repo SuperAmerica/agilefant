@@ -14,7 +14,6 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-import fi.hut.soberit.agilefant.business.impl.RankingBusinessImpl;
 import fi.hut.soberit.agilefant.business.impl.StoryBusinessImpl;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -47,7 +46,7 @@ public class StoryBusinessTest {
     ProjectBusiness projectBusiness;
     BacklogHistoryEntryBusiness blheBusiness;
     IterationHistoryEntryBusiness iheBusiness;
-    RankingBusiness rankingBusiness;
+    StoryRankBusiness storyRankBusiness;
     TransferObjectBusiness transferObjectBusiness;
     HourEntryDAO hourEntryDAO;
     TaskBusiness taskBusiness;
@@ -106,8 +105,8 @@ public class StoryBusinessTest {
         iheBusiness = createMock(IterationHistoryEntryBusiness.class);
         storyBusiness.setIterationHistoryEntryBusiness(iheBusiness);
         
-        rankingBusiness = new RankingBusinessImpl();
-        storyBusiness.setRankingBusiness(rankingBusiness);
+        storyRankBusiness = createMock(StoryRankBusiness.class);
+        storyBusiness.setStoryRankBusiness(storyRankBusiness);
         
         transferObjectBusiness = createMock(TransferObjectBusiness.class);
         storyBusiness.setTransferObjectBusiness(transferObjectBusiness);
@@ -148,11 +147,11 @@ public class StoryBusinessTest {
     }
 
     private void replayAll() {
-        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness);
+        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness);
     }
     
     private void verifyAll() {
-        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness);
+        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness);
     }
 
     
@@ -242,12 +241,9 @@ public class StoryBusinessTest {
         oldBacklog.setStories(new HashSet<Story>(Arrays.asList(movable)));
         movable.setBacklog(oldBacklog);
         
-        Story last = new Story();
-        last.setRank(123);
-        
         storyDAO.store(isA(Story.class));
         expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        expect(storyDAO.getLastStoryInRank(newBacklog)).andReturn(last);
+        storyRankBusiness.rankToBottom(movable, newBacklog);
         
         blheBusiness.updateHistory(oldBacklog.getId());
         blheBusiness.updateHistory(newBacklog.getId());
@@ -262,7 +258,6 @@ public class StoryBusinessTest {
         assertTrue(newBacklog.getStories().contains(movable));
         assertFalse(oldBacklog.getStories().contains(movable));
         assertEquals(newBacklog, movable.getBacklog());
-        assertEquals(124, movable.getRank());
     }
     
     @Test(expected = OperationNotPermittedException.class)
@@ -309,7 +304,7 @@ public class StoryBusinessTest {
         
         storyDAO.store(isA(Story.class));
         expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        expect(storyDAO.getLastStoryInRank(newBacklog)).andReturn(new Story());
+        storyRankBusiness.rankToBottom(movable, newBacklog);
         
         blheBusiness.updateHistory(oldBacklog.getId());
         blheBusiness.updateHistory(newBacklog.getId());
@@ -344,7 +339,7 @@ public class StoryBusinessTest {
         
         storyDAO.store(isA(Story.class));
         expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        expect(storyDAO.getLastStoryInRank(newBacklog)).andReturn(new Story());
+        storyRankBusiness.rankToBottom(movable, newBacklog);
         
         blheBusiness.updateHistory(oldBacklog.getId());
         blheBusiness.updateHistory(newBacklog.getId());
@@ -403,7 +398,6 @@ public class StoryBusinessTest {
         dataItem.setDescription("Fubar");
         dataItem.setStoryPoints(333);
         dataItem.setState(StoryState.PENDING);
-        dataItem.setRank(222);
         
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         
@@ -485,11 +479,10 @@ public class StoryBusinessTest {
         
         Capture<Story> capturedStory = new Capture<Story>();
         
-        Story last = new Story();
-        last.setRank(12);
-        expect(storyDAO.getLastStoryInRank(isA(Backlog.class))).andReturn(last);
-        
         expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
+        
+        storyRankBusiness.rankToBottom(EasyMock.isA(Story.class), EasyMock.isA(Backlog.class));
+
         
         expectHistoryUpdates(blog);
         
@@ -513,7 +506,6 @@ public class StoryBusinessTest {
         assertEquals(dataItem.getDescription(), capturedStory.getValue().getDescription());
         assertEquals(dataItem.getStoryPoints(), capturedStory.getValue().getStoryPoints());
         assertEquals(dataItem.getState(), capturedStory.getValue().getState());
-        assertEquals(13, capturedStory.getValue().getRank());
     }
     
     @Test
@@ -528,11 +520,9 @@ public class StoryBusinessTest {
         
         Capture<Story> capturedStory = new Capture<Story>();
         
-        Story last = new Story();
-        last.setRank(286);
-        expect(storyDAO.getLastStoryInRank(isA(Backlog.class))).andReturn(last);
-        
         expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
+        
+        storyRankBusiness.rankToBottom(EasyMock.isA(Story.class), EasyMock.isA(Backlog.class));
         
         expectHistoryUpdates(blog);
         
@@ -640,17 +630,14 @@ public class StoryBusinessTest {
      */
     @Test
     public void testRankToBottom() {
-        Story last = new Story();
-        last.setRank(117);
         Backlog product = new Product();
         product.setId(123);
         expect(backlogBusiness.retrieve(123)).andReturn(product);
-        expect(storyDAO.getLastStoryInRank(product)).andReturn(last);
+        storyRankBusiness.rankToBottom(story1, product);
         replayAll();
         Story actual = storyBusiness.rankToBottom(story1, 123);
         verifyAll();
         assertEquals(story1.getId(), actual.getId());
-        assertEquals(118, actual.getRank());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -671,88 +658,13 @@ public class StoryBusinessTest {
      * RANK UNDER STORY
      */
     
-    Story firstInRank;
-    Story secondInRank;
-    Story thirdInRank;
-    Story fourthInRank;
-    
-    private void createRankUnderStoryTestData() {
-       Iteration iter = new Iteration();
-        
-       firstInRank = new Story();
-       secondInRank = new Story();
-       thirdInRank = new Story();
-       fourthInRank = new Story();
-       
-       firstInRank.setId(222);
-       secondInRank.setId(515);
-       thirdInRank.setId(7646);
-       fourthInRank.setId(57);
-       
-       firstInRank.setBacklog(iter);
-       secondInRank.setBacklog(iter);
-       thirdInRank.setBacklog(iter);
-       fourthInRank.setBacklog(iter);
-       
-       firstInRank.setRank(0);
-       secondInRank.setRank(2);
-       thirdInRank.setRank(3);
-       fourthInRank.setRank(13);
-    }
-    
-    private void checkRanks(int first, int second, int third, int fourth) {
-        assertEquals("First item's rank doesn't match", first, firstInRank.getRank());
-        assertEquals("Second item's rank doesn't match", second, secondInRank.getRank());
-        assertEquals("Third item's rank doesn't match", third, thirdInRank.getRank());
-        assertEquals("Fourth item's rank doesn't match", fourth, fourthInRank.getRank());
-    }
     
     @Test
-    public void testRankUnderStory_bottomToTop() {
-        createRankUnderStoryTestData();
-        
-        expect(storyDAO.getStoriesWithRankBetween(fourthInRank.getBacklog(), 0, 12))
-            .andReturn(Arrays.asList(firstInRank, secondInRank, thirdInRank));
-        
+    public void testRankUnderStory() {
+        storyRankBusiness.rankBelow(story1, story1.getBacklog(), story2);
         replayAll();
-        Story actual = storyBusiness.rankUnderStory(fourthInRank, null);
+        storyBusiness.rankUnderStory(story1, story2);
         verifyAll();
-        
-        assertSame(fourthInRank, actual);
-        
-        checkRanks(1, 3, 4, 0);
-    }
-    
-    @Test
-    public void testRankUnderStory_downwards() {
-        createRankUnderStoryTestData();
-        
-        expect(storyDAO.getStoriesWithRankBetween(fourthInRank.getBacklog(), 1, 3))
-            .andReturn(Arrays.asList(secondInRank, thirdInRank));
-        
-        replayAll();
-        Story actual = storyBusiness.rankUnderStory(firstInRank, thirdInRank);
-        verifyAll();
-        
-        assertSame(firstInRank, actual);
-        
-        checkRanks(3, 1, 2, 13);
-    }
-    
-    @Test
-    public void testRankUnderStory_upwards() {
-        createRankUnderStoryTestData();
-        
-        expect(storyDAO.getStoriesWithRankBetween(fourthInRank.getBacklog(), 1, 12))
-            .andReturn(Arrays.asList(secondInRank, thirdInRank));
-        
-        replayAll();
-        Story actual = storyBusiness.rankUnderStory(fourthInRank, firstInRank);
-        verifyAll();
-        
-        assertSame(fourthInRank, actual);
-        
-        checkRanks(0, 3, 4, 1);
     }
     
     @Test(expected = IllegalArgumentException.class)
@@ -768,30 +680,16 @@ public class StoryBusinessTest {
         second.setBacklog(new Iteration());
         
         storyBusiness.rankUnderStory(first, second);
-
     }
     
     
     @Test
     public void testRankAndMove_toTop() {
-        createRankUnderStoryTestData();
-        Story rankedStory = new Story();
-        rankedStory.setBacklog(new Project());
-        Backlog expectedParent = new Project();
-        expectedParent.setId(123);
-        expect(backlogBusiness.retrieve(123)).andReturn(expectedParent);
-        storyDAO.store(rankedStory);
-        expect(storyDAO.getLastStoryInRank(expectedParent)).andReturn(fourthInRank);
-        blheBusiness.updateHistory(0);
-        blheBusiness.updateHistory(123);
-        expect(storyDAO.getStoriesWithRankBetween(expectedParent, 0, fourthInRank.getRank()))
-            .andReturn(Arrays.asList(firstInRank, secondInRank, thirdInRank, fourthInRank));
+        story2.setBacklog(new Project());
+        storyRankBusiness.rankBelow(story1, story2.getBacklog(), story1.getBacklog(), story2);
         replayAll();
-        Story actual = storyBusiness.rankAndMove(rankedStory, null, expectedParent);
+        storyBusiness.rankAndMove(story1, story2, story2.getBacklog());
         verifyAll();
-        
-        assertEquals(expectedParent, actual.getBacklog());
-        assertEquals(0, actual.getRank());
     }
     
     @Test

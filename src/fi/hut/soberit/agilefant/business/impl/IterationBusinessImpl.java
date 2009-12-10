@@ -28,11 +28,9 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
-import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.Pair;
 
@@ -85,24 +83,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     @Transactional(readOnly = true)
     public IterationTO getIterationContents(int iterationId) {
         Iteration iteration = this.retrieve(iterationId);
-         
-//        Iteration iteration = this.iterationDAO.retrieveDeep(iterationId);
-//        if(iteration == null) {
-//            throw new ObjectNotFoundException();
-//        }
-        IterationTO iterationTO = new IterationTO(iteration);
-
-        // 1. Set iteration's stories as transfer objects and include story
-        // metrics
-        Collection<StoryTO> stories = transferObjectBusiness
-                .constructBacklogData(iteration);
-        iterationTO.setStories(new HashSet<Story>());
-        for (StoryTO storyTO : stories) {
-            storyTO.setMetrics(storyBusiness.calculateMetrics(storyTO));
-            iterationTO.getStories().add(storyTO);
-        }
-
-        // 2. Set the tasks without a story
+        IterationTO iterationTO = transferObjectBusiness.constructIterationTO(iteration);
+        
+        // Set the tasks without a story
         Collection<Task> tasksWithoutStory = iterationDAO
                 .getTasksWithoutStoryForIteration(iteration);
 

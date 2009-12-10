@@ -47,7 +47,7 @@ public class TransferObjectBusinessTest {
     private ProductBusiness productBusiness;
     private ProjectBusiness projectBusiness;
     private IterationBusiness iterationBusiness;
-    private StoryHierarchyBusiness storyHierarchyBusiness;
+    private StoryRankBusiness storyRankBusiness;
     
     Project   project;
     Iteration iteration;
@@ -84,16 +84,20 @@ public class TransferObjectBusinessTest {
         storyBusiness = createMock(StoryBusiness.class);
         transferObjectBusiness.setStoryBusiness(storyBusiness);
         
-        storyHierarchyBusiness = createMock(StoryHierarchyBusiness.class);
-        transferObjectBusiness.setStoryHierarchyBusiness(storyHierarchyBusiness);
+        storyRankBusiness = createMock(StoryRankBusiness.class);
+        transferObjectBusiness.setStoryRankBusiness(storyRankBusiness);
     }
     
     private void verifyAll() {
-        verify(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
+        verify(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness,
+                backlogBusiness, productBusiness, projectBusiness,
+                iterationBusiness, storyRankBusiness);
     }
 
     private void replayAll() {
-        replay(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness, backlogBusiness, productBusiness, projectBusiness, iterationBusiness, storyHierarchyBusiness);
+        replay(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness,
+                backlogBusiness, productBusiness, projectBusiness,
+                iterationBusiness, storyRankBusiness);
     }
     
     
@@ -118,39 +122,7 @@ public class TransferObjectBusinessTest {
         task.setId(1236);
     }
 
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testContructBacklogDataWithUserData() {
-        story1.getTasks().add(task);
-        task.setHourEntries(null);
-        iteration.setStories(new HashSet<Story>(Arrays.asList(story1, story2)));
 
-        expect(hourEntryBusiness.calculateSum((Collection<? extends HourEntry>) isNull()))
-                .andReturn(Long.valueOf(0)).anyTimes();
-
-        replayAll();
-
-        Collection<Story> actualStories = new ArrayList<Story>();
-        actualStories.addAll(transferObjectBusiness
-                .constructBacklogData(iteration));
-
-        verifyAll();
-
-        assertTrue("List does not contain correct story transfer object",
-                containsStoryWithId(story1.getId(), actualStories));
-        assertTrue("List does not contain correct story transfer object",
-                containsStoryWithId(story2.getId(), actualStories));
-        assertTrue("Story 1 transfer object does not contain correct task transfer object",
-                containsTaskWithId(task.getId(), story1.getId(), actualStories));
-    }
-
-    @Test
-    public void testContructBacklogDataWithUserData_emptyIteration() {
-        iteration.getStories().clear();
-        Collection<StoryTO> stories = transferObjectBusiness
-                .constructBacklogData(iteration);
-        assertEquals(0, stories.size());
-    }
 
     @SuppressWarnings("unchecked")
     @Test
@@ -180,6 +152,11 @@ public class TransferObjectBusinessTest {
         story1.setBacklog(iteration);
         story1.setResponsibles(responsibles);
 
+        StoryMetrics metrics = new StoryMetrics();
+        
+        expect(storyBusiness.calculateMetrics(story1))
+            .andReturn(metrics);
+        
         replayAll();
         StoryTO actualTO = transferObjectBusiness.constructStoryTO(story1);
         verifyAll();
@@ -187,6 +164,8 @@ public class TransferObjectBusinessTest {
         assertEquals("Task and transfer object id's not equal", story1.getId(),
                 actualTO.getId());
 
+        assertEquals(actualTO.getMetrics(), metrics);
+        
         assertEquals(responsibles, actualTO.getResponsibles());
     }
     
@@ -195,10 +174,33 @@ public class TransferObjectBusinessTest {
         Iteration past = new Iteration();
         past.setStartDate(new DateTime().minusMonths(2));
         past.setEndDate(new DateTime().minusMonths(1));
+        
+        Story s1 = new Story();
+        s1.setId(1);
+        Story s2 = new Story();
+        s2.setId(2);
+        Story s3 = new Story();
+        s3.setId(12);
+        List<Story> stories = new ArrayList<Story>(Arrays.asList(s1, s2, s3));
+        
+        expect(storyRankBusiness.retrieveByRankingContext(past))
+            .andReturn(stories);
+        
+        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class)))
+                .andReturn(new StoryMetrics()).times(3);
+        
         replayAll();
         IterationTO actual = transferObjectBusiness.constructIterationTO(past);
         verifyAll();
+        
         assertEquals(ScheduleStatus.PAST, actual.getScheduleStatus());
+        
+        assertEquals(0, ((StoryTO)actual.getRankedStories().get(0)).getRank().intValue());
+        assertEquals(1, ((StoryTO)actual.getRankedStories().get(1)).getRank().intValue());
+        assertEquals(2, ((StoryTO)actual.getRankedStories().get(2)).getRank().intValue());
+        assertEquals(1, actual.getRankedStories().get(0).getId());
+        assertEquals(2, actual.getRankedStories().get(1).getId());
+        assertEquals(12, actual.getRankedStories().get(2).getId());
     }
     
     @Test
@@ -207,18 +209,30 @@ public class TransferObjectBusinessTest {
         past.setStartDate(new DateTime().minusMonths(2));
         past.setEndDate(new DateTime().minusMonths(1));
         
-        List<Story> stories = new ArrayList<Story>(Arrays.asList(new Story(), new Story()));
+        Story s1 = new Story();
+        s1.setId(1);
+        Story s2 = new Story();
+        s2.setId(2);
+        List<Story> stories = new ArrayList<Story>(Arrays.asList(s1, s2));
         
-        expect(storyHierarchyBusiness.retrieveProjectLeafStories(past))
+        expect(storyRankBusiness.retrieveByRankingContext(past))
             .andReturn(stories);
+        
+        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class)))
+        .andReturn(new StoryMetrics()).times(2);
         
         replayAll();
         ProjectTO actual = transferObjectBusiness.constructProjectTO(past);
         verifyAll();
         
         assertEquals(ScheduleStatus.PAST, actual.getScheduleStatus());
-        assertTrue(actual.getLeafStories().containsAll(stories));
+//        assertTrue(actual.getLeafStories().containsAll(stories));
         assertEquals(2, actual.getLeafStories().size());
+        
+        assertEquals(0, ((StoryTO)actual.getLeafStories().get(0)).getRank().intValue());
+        assertEquals(1, ((StoryTO)actual.getLeafStories().get(1)).getRank().intValue());
+        assertEquals(1, actual.getLeafStories().get(0).getId());
+        assertEquals(2, actual.getLeafStories().get(1).getId());
     }
     
     
@@ -290,46 +304,6 @@ public class TransferObjectBusinessTest {
         assertSame(team, actual.get(0).getOriginalObject());
         assertNull(actual.get(0).getIdList());
         verifyAll();
-    }
-
-    /**
-     * Helper method to check that the stories list contains a story with a
-     * specific id.
-     */
-    private boolean containsStoryWithId(int expectedId,
-            Collection<Story> storiesList) {
-        boolean idFound = false;
-        for (Story actualStory : storiesList) {
-            if (actualStory.getId() == expectedId) {
-                idFound = true;
-                break;
-            }
-        }
-        return idFound;
-    }
-
-    /**
-     * Helper method to check that the task list contains a task with a specific
-     * id.
-     * 
-     * @param storyId
-     *            TODO
-     */
-    private boolean containsTaskWithId(int expectedId, int storyId,
-            Collection<Story> storiesList) {
-        boolean idFound = false;
-        for (Story actualStory : storiesList) {
-            if (actualStory.getId() == storyId) {
-                for (Task task : actualStory.getTasks()) {
-                    if (task.getId() == expectedId) {
-                        idFound = true;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        return idFound;
     }
 
     /*
@@ -662,11 +636,11 @@ public class TransferObjectBusinessTest {
         task2.setId(6);
         task2.setIteration(iteration);
         
-        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics());;
-        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics());
-        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
-        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
-        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
+        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics()).anyTimes();
+//        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class))).andReturn(new StoryMetrics());
+        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L).anyTimes();
+//        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
+//        expect(hourEntryBusiness.calculateSum((Collection<HourEntry>)EasyMock.isA(Collection.class))).andReturn(0L);
 
         replayAll();
         AssignedWorkTO assigned = transferObjectBusiness.constructAssignedWorkTO(

@@ -26,15 +26,5 @@ public interface StoryDAO extends GenericDAO<Story> {
 
     public Map<Integer, Integer> getNumOfResponsiblesByStory(Set<Integer> storyIds);
     
-    /*
-     * RANKING
-     */
-    /**
-     * Get the last story in rank for the given backlog.
-     */
-    public Story getLastStoryInRank(Backlog parent);
-    
-    public Collection<Story> getStoriesWithRankBetween(Backlog parent, int lower, int upper);
-
     public Collection<Story> getAllIterationStoriesByResponsibleAndInterval(User user, Interval interval);
 }

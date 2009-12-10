@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.easymock.Capture;
 import org.easymock.classextension.EasyMock;
 import org.joda.time.DateTime;

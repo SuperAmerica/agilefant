@@ -28,13 +28,13 @@ import flexjson.JSON;
 @Entity
 @Table(name = "stories")
 @Audited
-public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskContainer {
+public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     private int id;
     private String name;
     private String description;
     private Backlog backlog;
     private StoryState state = StoryState.NOT_STARTED;
-    private int rank = 0;
+//    private int rank = 0;
     private Story parent;
     private Set<Story> children = new HashSet<Story>();
     
@@ -145,16 +145,20 @@ public class Story implements TimesheetLoggable, NamedObject, Rankable, TaskCont
     public void setHourEntries(Set<StoryHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
     }
-
-    @JSON
-    @Column(nullable = false, columnDefinition = "int default 0")
-    public int getRank() {
-        return rank;
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
-    }
+    
+    /*
+     * TODO: Remove column from SQL
+     */
+//
+//    @JSON
+//    @Column(nullable = false, columnDefinition = "int default 0")
+//    public int getRank() {
+//        return rank;
+//    }
+//
+//    public void setRank(int rank) {
+//        this.rank = rank;
+//    }
 
     @JSON
     @ManyToOne

@@ -44,7 +44,9 @@ CommonModel.prototype.setData = function(newData) {
     if (this._copyFields(newData)) {
       this.callListeners(new DynamicsEvents.EditEvent(this));
     }
-    this.relationEvents();
+// TODO: Disabled because of tons of ajax requests
+// Uncomment, when works
+// this.relationEvents();
   }
 };
 

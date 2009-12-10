@@ -134,33 +134,48 @@ public class IterationBusinessTest {
     }
 
     @Test
-    public void testGetIterationContents_doNotExcludeTasks() {
+    public void testGetIterationContents() {
+        
+//
+////        expect(transferObjectBusiness.constructBacklogData(
+////                        iteration)).andReturn(storiesList);
+//        for (StoryTO storyTO : storiesList) {
+//            expect(storyBusiness.calculateMetrics(storyTO)).andReturn(null);
+//        }
+//        expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
+//                .andReturn(tasksWithoutStoryList);
+//
+//        expect(transferObjectBusiness.constructTaskTO(task))
+//                .andReturn(taskTO);
+//
+//        replayAll();
+//
+//        IterationTO actualIterationData = iterationBusiness
+//                .getIterationContents(iteration.getId());
+//
+//        assertEquals(expectedIterationData.getStories(), actualIterationData
+//                .getStories());
+//        assertEquals(expectedIterationData.getTasks(),
+//                actualIterationData.getTasks());
+//
+//        assertEquals(1, actualIterationData.getTasks().size());
+//        assertEquals(2, actualIterationData.getStories().size());
+//        assertEquals(storiesList, actualIterationData.getStories());
+//        
+//        verifyAll();
+        
+        
         expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
-
-        expect(transferObjectBusiness.constructBacklogData(
-                        iteration)).andReturn(storiesList);
-        for (StoryTO storyTO : storiesList) {
-            expect(storyBusiness.calculateMetrics(storyTO)).andReturn(null);
-        }
+        expect(transferObjectBusiness.constructIterationTO(iteration))
+            .andReturn(new IterationTO(iteration));
         expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
-                .andReturn(tasksWithoutStoryList);
-
-        expect(transferObjectBusiness.constructTaskTO(task))
-                .andReturn(taskTO);
-
+            .andReturn(new ArrayList<Task>(Arrays.asList(new Task(), new Task())));
+        expect(transferObjectBusiness.constructTaskTO(EasyMock.isA(Task.class)))
+            .andReturn(new TaskTO(new Task())).times(2);
+        
         replayAll();
-
-        IterationTO actualIterationData = iterationBusiness
-                .getIterationContents(iteration.getId());
-
-        assertEquals(expectedIterationData.getStories(), actualIterationData
-                .getStories());
-        assertEquals(expectedIterationData.getTasks(),
-                actualIterationData.getTasks());
-
-        assertEquals(1, actualIterationData.getTasks().size());
-        assertEquals(2, actualIterationData.getStories().size());
-        assertEquals(storiesList, actualIterationData.getStories());
+        
+        iterationBusiness.getIterationContents(iteration.getId());
         
         verifyAll();
     }

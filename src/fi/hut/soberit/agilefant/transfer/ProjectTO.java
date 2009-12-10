@@ -11,7 +11,7 @@ public class ProjectTO extends Project {
 
     private ScheduleStatus scheduleStatus;
     
-    private List<Story> leafStories; 
+    private List<? extends Story> leafStories; 
     
     public ProjectTO(Project project) {
         BeanCopier.copy(project, this);
@@ -26,11 +26,11 @@ public class ProjectTO extends Project {
     }
 
     @JSON
-    public List<Story> getLeafStories() {
+    public List<? extends Story> getLeafStories() {
         return leafStories;
     }
 
-    public void setLeafStories(List<Story> leafStories) {
+    public void setLeafStories(List<? extends Story> leafStories) {
         this.leafStories = leafStories;
     }
 

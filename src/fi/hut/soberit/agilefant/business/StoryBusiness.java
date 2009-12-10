@@ -85,6 +85,9 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      */
     public Story rankAndMove(Story story, Story upperStory, Backlog newParent);
     
+    
+    
+    
     public void storeBatch(Collection<Story> stories);
     
     public Collection<Story> retrieveMultiple(Collection<Story> stories);

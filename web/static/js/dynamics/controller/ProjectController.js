@@ -448,6 +448,8 @@ ProjectController.prototype.initializeStoryConfig = function() {
     cssClass : 'projectstory-row',
     title : "#",
     headerTooltip : 'Priority',
+    defaultSortColumn: true,
+    get: StoryModel.prototype.getRank,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
   });
   config.addColumnConfiguration(1, {
@@ -458,7 +460,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
-    defaultSortColumn: true,
+//    defaultSortColumn: true,
     editable : true,
     edit : {
       editor : "Text",
@@ -523,7 +525,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getBacklog,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     sortCallback: DynamicsComparators.storyBacklogNameComparator,
-    defaultSortColumn: true,
+//    defaultSortColumn: true,
     editable : true,
     openOnRowEdit: false,
     edit: {

@@ -742,6 +742,68 @@ BEGIN
   END LOOP;
 END //
 
+DROP PROCEDURE IF EXISTS StoryRankForIteration //
+CREATE PROCEDURE StoryRankForIteration(IN blid INT)
+BEGIN
+  DECLARE story_loop_done BOOL DEFAULT FALSE;
+  DECLARE story_id INT;
+  DECLARE previous_id INT DEFAULT NULL;
+  DECLARE current_id INT DEFAULT NULL; 
+  DECLARE cur_story CURSOR FOR
+    SELECT id FROM stories WHERE backlog_id=blid ORDER BY rank ASC;
+  
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET story_loop_done = TRUE;
+    
+  OPEN cur_story;
+  
+  storyLoop: LOOP
+    FETCH cur_story INTO story_id;
+    
+    IF story_loop_done THEN
+      CLOSE cur_story;
+      LEAVE storyLoop;
+    END IF;
+
+    INSERT INTO storyrank (`story_id`, `backlog_id`, `previous_id`) VALUES(story_id, blid, previous_id);
+    SELECT LAST_INSERT_ID() INTO current_id;
+    UPDATE storyrank SET next_id=current_id WHERE id = previous_id;
+    SET previous_id = current_id;
+  END LOOP;
+END //
+
+
+DROP PROCEDURE IF EXISTS UpdateIterationStoryRanks //
+CREATE PROCEDURE UpdateIterationStoryRanks()
+BEGIN
+	DECLARE iteration_loop_done BOOL DEFAULT FALSE;
+	DECLARE iteration_id INT;
+	DECLARE cur_iteration CURSOR FOR
+	  SELECT id FROM backlogs WHERE backlogtype="Iteration" ORDER BY id;
+	
+	DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+	  SET iteration_loop_done = TRUE;
+	  
+	OPEN cur_iteration;
+	
+	iterationLoop: LOOP
+    FETCH cur_iteration INTO iteration_id;
+    
+    IF iteration_loop_done THEN
+      CLOSE cur_iteration;
+      LEAVE iterationLoop;
+    END IF;
+    CALL StoryRankForIteration(iteration_id);
+	END LOOP;
+END //
+
 DELIMITER ;
 
 CALL UpdateProjectLeafStoryRanks();
+CALL UpdateIterationStoryRanks();
+
+DROP PROCEDURE IF EXISTS StoryLinkedListRankForProject;
+DROP PROCEDURE IF EXISTS UpdateProjectLeafStoryRanks;
+DROP PROCEDURE IF EXISTS StoryRankForIteration;
+DROP PROCEDURE IF EXISTS UpdateIterationStoryRanks;
+

@@ -14,9 +14,8 @@ import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.business.RankUnderDelegate;
-import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
@@ -29,7 +28,6 @@ import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
@@ -62,8 +60,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private ProjectBusiness projectBusiness;
     @Autowired
     private StoryHistoryDAO storyHistoryDAO;
+//    @Autowired
+//    private RankingBusiness rankingBusiness;
     @Autowired
-    private RankingBusiness rankingBusiness;
+    private StoryRankBusiness storyRankBusiness;
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
     @Autowired
@@ -225,9 +225,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.setResponsibles(story, responsibleIds);
         this.populateStoryFields(story, dataItem);
         story.setBacklog(backlog);
-        this.rankToBottom(story, backlogId);
-        
+                
         int newId = (Integer)storyDAO.create(story);
+        
+        this.rankToBottom(story, backlogId);
         
         if (backlog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
@@ -287,8 +288,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             throw new IllegalArgumentException("Parent should be given");
         }
         Backlog parent = backlogBusiness.retrieve(parentBacklogId);
-        Story last = storyDAO.getLastStoryInRank(parent);
-        rankingBusiness.rankToBottom(story, last);
+//        Story last = storyDAO.getLastStoryInRank(parent);
+        storyRankBusiness.rankToBottom(story, parent);
         return story;
     }
     
@@ -303,11 +304,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             throw new IllegalArgumentException("Stories' parent's should be the same");
         }
         
-        rankingBusiness.rankUnder(story, upperStory, new RankUnderDelegate() {
-            public Collection<? extends Rankable> getWithRankBetween(Integer first, Integer second) {
-                return storyDAO.getStoriesWithRankBetween(story.getBacklog(), first, second);
-            }
-        });
+        storyRankBusiness.rankBelow(story, story.getBacklog(), upperStory);
 
         return story;
     }
@@ -315,13 +312,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     /** {@inheritDoc} */
     @Transactional
     public Story rankAndMove(Story story, Story upperStory, Backlog newParent) {
-        if (newParent != null) {
-            moveStoryToBacklog(story, newParent);
-        }
-        rankUnderStory(story, upperStory);        
+        storyRankBusiness.rankBelow(story, newParent, story.getBacklog(), upperStory);      
         return story;
-    };
-    
+    }
 
 
     @Transactional(readOnly = true)
@@ -446,10 +439,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.hourEntryDAO = hourEntryDAO;
     }
 
-    public void setRankingBusiness(RankingBusiness rankingBusiness) {
-        this.rankingBusiness = rankingBusiness;
-    }
-
     public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
         this.backlogBusiness = backlogBusiness;
     }
@@ -465,6 +454,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     
     public void setTaskBusiness(TaskBusiness taskBusiness) {
         this.taskBusiness = taskBusiness;
+    }
+
+    public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
+        this.storyRankBusiness = storyRankBusiness;
     }
 
 }

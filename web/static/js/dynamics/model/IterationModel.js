@@ -48,8 +48,8 @@ IterationModel.prototype._setData = function(newData) {
   this.id = newData.id;
   
   // Set stories
-  if (newData.stories) {
-    this._updateRelations(ModelFactory.types.story, newData.stories);
+  if (newData.rankedStories) {
+    this._updateRelations(ModelFactory.types.story, newData.rankedStories);
   }
   // Set tasks
   if (newData.tasks) {

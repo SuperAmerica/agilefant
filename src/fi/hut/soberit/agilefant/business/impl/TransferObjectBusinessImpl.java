@@ -17,7 +17,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
-import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
+import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
@@ -69,28 +69,10 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     @Autowired
     private StoryBusiness storyBusiness;
     
-    @Autowired
-    private StoryHierarchyBusiness storyHierarchyBusiness;
     
-    /** {@inheritDoc} */
-    @Transactional(readOnly = true)
-    public Collection<StoryTO> constructBacklogData(
-            Backlog backlog) {
-        Collection<StoryTO> iterationStories = new ArrayList<StoryTO>();
-        
-        for (Story story : backlog.getStories()) {
-            StoryTO storyTO = this.constructStoryTO(story);
-            storyTO.setTasks(new HashSet<Task>());
-            
-            for (Task task : story.getTasks()) {
-                TaskTO taskTO = this.constructTaskTO(task);
-                taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
-                storyTO.getTasks().add(taskTO);
-            }
-            iterationStories.add(storyTO);
-        }
-        return iterationStories;
-    }
+    @Autowired
+    private StoryRankBusiness storyRankBusiness;
+    
     
     private void fillInEffortSpent(TaskTO taskTO) {
         taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
@@ -107,13 +89,27 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public StoryTO constructStoryTO(Story story) {
-        return new StoryTO(story);
+        StoryTO returned = new StoryTO(story);
+        returned.setTasks(new HashSet<Task>());
+        
+        returned.setMetrics(storyBusiness.calculateMetrics(story));
+        
+        for (Task task : story.getTasks()) {
+            TaskTO taskTO = this.constructTaskTO(task);
+            returned.getTasks().add(taskTO);
+        }
+        
+        return returned;
     }
     
     @Transactional(readOnly = true)
     public IterationTO constructIterationTO(Iteration iteration) {
         IterationTO returned = new IterationTO(iteration);
         returned.setScheduleStatus(this.getBacklogScheduleStatus(iteration));
+        
+        returned.setRankedStories(new ArrayList<Story>());
+        returned.getRankedStories().addAll(retrieveListOfRankedStories(iteration));
+        
         return returned;
     }
     
@@ -121,10 +117,20 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     public ProjectTO constructProjectTO(Project project) {
         ProjectTO returned = new ProjectTO(project);
         returned.setScheduleStatus(this.getBacklogScheduleStatus(project));
-        
-        returned.setLeafStories(storyHierarchyBusiness
-                .retrieveProjectLeafStories(project));
+        returned.setLeafStories(retrieveListOfRankedStories(project));
         return returned;
+    }
+
+    @Transactional(readOnly = true)
+    private List<StoryTO> retrieveListOfRankedStories(Backlog rankingContext) {
+        List<Story> stories = storyRankBusiness.retrieveByRankingContext(rankingContext);
+        List<StoryTO> rankedStories = new ArrayList<StoryTO>();
+        for (int i = 0; i < stories.size(); i++) {
+            StoryTO storyTO = constructStoryTO(stories.get(i));
+            storyTO.setRank(i);
+            rankedStories.add(storyTO);
+        }
+        return rankedStories;
     }
     
     /** {@inheritDoc} */
@@ -384,8 +390,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         this.storyBusiness = storyBusiness;
     }
 
-    public void setStoryHierarchyBusiness(
-            StoryHierarchyBusiness storyHierarchyBusiness) {
-        this.storyHierarchyBusiness = storyHierarchyBusiness;
+    public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
+        this.storyRankBusiness = storyRankBusiness;
     }
 }

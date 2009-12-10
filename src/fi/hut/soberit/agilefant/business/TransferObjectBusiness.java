@@ -21,11 +21,6 @@ import fi.hut.soberit.agilefant.transfer.TaskTO;
 public interface TransferObjectBusiness {
 
     /**
-     * Constructs transfer object based contents of a backlog. 
-     */
-    public Collection<StoryTO> constructBacklogData(Backlog backlog);
-    
-    /**
      * Constructs a new transfer object based on given task.
      */
     public TaskTO constructTaskTO(Task task);

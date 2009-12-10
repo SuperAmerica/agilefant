@@ -18,18 +18,12 @@ INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (7, 3,    
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (8, 4,     5, 1, 'Story 8');
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (9, 4,  null, 1, 'Story 9');
 
--- Ranking items
-INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (21, 0, 4, 0, 'First in rank');
-INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (22, 2, 4, 0, 'Second in rank');
-INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (23, 7, 4, 0, 'Third in rank');
-INSERT INTO stories (id, rank, backlog_id, state, name) VALUES (24, 3412, 4, 0, 'Last in rank');
-
 -- Create user --
 INSERT INTO users (id, enabled) VALUES (1, true);
 INSERT INTO story_user (story_id, user_id) VALUES(1, 1); -- in product --
 INSERT INTO story_user (story_id, user_id) VALUES(6, 1); -- in iteration 3 --
 INSERT INTO story_user (story_id, user_id) VALUES(7, 1); -- in iteration 3 --
-INSERT INTO story_user (story_id, user_id) VALUES(24,1); -- in iteration 4, not in timebox --
+--- INSERT INTO story_user (story_id, user_id) VALUES(24,1); -- in iteration 4, not in timebox --
 
 -- Tasks for story 3 --
 INSERT INTO tasks (id, story_id, state) VALUES (1, 3, 0);

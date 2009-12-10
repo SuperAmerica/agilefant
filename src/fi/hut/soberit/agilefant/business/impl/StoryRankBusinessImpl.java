@@ -178,6 +178,11 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
         }
 
     }
+    
+    public void rankToHead(Story story, Backlog backlog) {
+        StoryRank head = this.storyRankDAO.retrieveHeadByBacklog(backlog);
+        this.rankAbove(story, backlog, head.getStory());
+    }
 
     public void setStoryRankDAO(StoryRankDAO storyRankDAO) {
         this.storyRankDAO = storyRankDAO;

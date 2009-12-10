@@ -302,7 +302,7 @@ IterationController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : IterationController.prototype.storyControllerFactory,
     dataSource : IterationModel.prototype.getStories,
-    //sortCallback: StoryController.prototype.rankStory,
+    sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -360,7 +360,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
     defaultSortColumn: true,
     editable : true,
-//    dragHandle: true,
+    dragHandle: true,
     edit : {
       editor : "Text",
       set : StoryModel.prototype.setName,

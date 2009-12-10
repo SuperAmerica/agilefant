@@ -663,12 +663,12 @@ alter table stories add index FK8FB06053F5E897CD (parent_id), add constraint FK8
 
 alter table users add column autoassignToTasks bit default 1;
 
---- after alpha 2
+/* after alpha 2 */
 
 alter table history_backlogs add column rootSum bigint not null;
 
 
---- after alpha 3
+/* after alpha 3 */
 
 create table storyrank (id integer not null auto_increment, backlog_id integer not null, next_id integer, previous_id integer, story_id integer not null, primary key (id), unique (backlog_id, story_id)) ENGINE=InnoDB;
 alter table storyrank add index FK6600C2A1F63400A2 (backlog_id), add constraint FK6600C2A1F63400A2 foreign key (backlog_id) references backlogs (id);

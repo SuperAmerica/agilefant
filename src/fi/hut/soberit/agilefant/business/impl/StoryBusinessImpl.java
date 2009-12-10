@@ -300,19 +300,28 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if (story == null) {
             throw new IllegalArgumentException("Story should be given");
         }
-        else if (upperStory != null && story.getBacklog() != upperStory.getBacklog()) {
+        if (upperStory != null && story.getBacklog() != upperStory.getBacklog()) {
             throw new IllegalArgumentException("Stories' parent's should be the same");
         }
-        
-        storyRankBusiness.rankBelow(story, story.getBacklog(), upperStory);
-
+        this.rankAndMove(story, upperStory, null);
         return story;
     }
     
     /** {@inheritDoc} */
     @Transactional
     public Story rankAndMove(Story story, Story upperStory, Backlog newParent) {
-        storyRankBusiness.rankBelow(story, newParent, story.getBacklog(), upperStory);      
+        if (story == null) {
+            throw new IllegalArgumentException("Story should be given");
+        }
+        if(upperStory == null) {
+            storyRankBusiness.rankToHead(story, story.getBacklog());
+            return story;
+        }
+        if(newParent == null) {
+            storyRankBusiness.rankBelow(story, story.getBacklog(), upperStory);
+        } else {
+            storyRankBusiness.rankBelow(story, newParent, story.getBacklog(), upperStory);      
+        }
         return story;
     }
 

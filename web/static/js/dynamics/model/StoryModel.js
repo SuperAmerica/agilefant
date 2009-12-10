@@ -22,7 +22,6 @@ var StoryModel = function StoryModel() {
     "name": "name",
     "description": "description",
     "state": "state",
-    "rank": "rank",
     "storyPoints": "storyPoints"
   };
   this.classNameToRelation = {
@@ -55,6 +54,10 @@ StoryModel.prototype._setData = function(newData) {
   // Set the id
   this.id = newData.id;
     
+  //set the rank by hand if it exists in the data
+  if(newData.rank !== undefined && newData.rank !== null) {
+    this.setRank(newData.rank);
+  }
   // Set the tasks
   if (newData.tasks) {
     this._updateRelations(ModelFactory.types.task, newData.tasks);

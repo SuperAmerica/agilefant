@@ -676,6 +676,8 @@ alter table storyrank add index FK6600C2A1E0E4BFA2 (story_id), add constraint FK
 alter table storyrank add index FK6600C2A1CD3EA02C (previous_id), add constraint FK6600C2A1CD3EA02C foreign key (previous_id) references storyrank (id);
 alter table storyrank add index FK6600C2A1774AFEB0 (next_id), add constraint FK6600C2A1774AFEB0 foreign key (next_id) references storyrank (id);
 
+DELIMITER //
+
 DROP PROCEDURE IF EXISTS StoryLinkedListRankForProject //
 CREATE PROCEDURE StoryLinkedListRankForProject(IN bid INT)
 BEGIN
@@ -690,7 +692,7 @@ BEGIN
         LEFT JOIN backlogs b2 ON b2.id = b1.parent_id 
         WHERE NOT EXISTS (SELECT id FROM stories s2 WHERE s2.parent_id = stories.id) 
         AND ((b1.backlogtype = 'Project' AND b1.id = bid) 
-        OR (b2.backlogtype = 'Project' AND b2.id = bid)) ORDER BY stories.priority;
+        OR (b2.backlogtype = 'Project' AND b2.id = bid)) ORDER BY stories.rank;
 
 
   DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
@@ -739,5 +741,7 @@ BEGIN
     CALL StoryLinkedListRankForProject(project_id);
   END LOOP;
 END //
+
+DELIMITER ;
 
 CALL UpdateProjectLeafStoryRanks();

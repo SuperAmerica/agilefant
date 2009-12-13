@@ -103,7 +103,6 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inProductBacklog() {
         parentStory.setBacklog(product);
         childCreationExpects();
-        storyBusiness.storeBatch(oldStories);
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
@@ -114,7 +113,6 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inIterationBacklog() {
         parentStory.setBacklog(iteration);
         childCreationExpects();
-        storyBusiness.storeBatch(oldStories);
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();
@@ -125,6 +123,42 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inProjectBacklog() {
         parentStory.setBacklog(project);
         childCreationExpects();
+        replayAll();
+        testable.splitStory(parentStory, childStories, oldStories);
+        verifyAll();
+        checkChildStories();
+    }
+    
+    @Test
+    public void testSplitStory_changeOld() {
+        Story existing = new Story();
+        oldStories = Arrays.asList(existing);
+        existing.setBacklog(project);
+        existing.setId(10);
+        parentStory.setBacklog(project);
+        childCreationExpects();
+        expect(storyBusiness.retrieve(10)).andReturn(existing);
+        storyBusiness.storeBatch(oldStories);
+        replayAll();
+        testable.splitStory(parentStory, childStories, oldStories);
+        verifyAll();
+        checkChildStories();
+    }
+    
+    @Test
+    public void testSplitStory_backlogChangeOld() {
+        Story existing = new Story();
+        existing.setId(10);
+        oldStories = Arrays.asList(existing);
+        existing.setBacklog(project);
+        
+        Story persistedExisting = new Story();
+        persistedExisting.setBacklog(iteration);
+        
+        parentStory.setBacklog(project);
+        childCreationExpects();
+        expect(storyBusiness.retrieve(10)).andReturn(persistedExisting);
+        storyBusiness.moveStoryToBacklog(persistedExisting, project);
         storyBusiness.storeBatch(oldStories);
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories);
@@ -151,7 +185,6 @@ public class StorySplitBusinessTest {
     public void testSplitStory_dontChangeOriginalStoryBacklog() {
         parentStory.setBacklog(iteration);
         childCreationExpects();
-        storyBusiness.storeBatch(oldStories);
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories);
         verifyAll();

@@ -31,13 +31,26 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
         }
 
         persistChildStories(original, newStories);
-        this.storyBusiness.storeBatch(oldChangedStories);
+        if(oldChangedStories != null) {
+            updateChangedStories(oldChangedStories);
+        }
         return original;
     }
 
-    /**
-     * @TODO: update project histories!
+    /*
+     * Backlog changes have to be handled through move story as the 
+     * story ranks and backlog histories must be updated.
      */
+    private void updateChangedStories(Collection<Story> stories) {
+        for(Story story : stories) {
+            Story oldStory = this.storyBusiness.retrieve(story.getId());
+            if(oldStory.getBacklog() != story.getBacklog()) {
+                this.storyBusiness.moveStoryToBacklog(oldStory, story.getBacklog());
+            }
+        }
+        this.storyBusiness.storeBatch(stories);
+    }
+    
     private void persistChildStories(Story original,
             Collection<Story> newStories) {
 

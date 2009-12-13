@@ -66,6 +66,9 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      */
     private void handleContextSwitch(Story story, Backlog context,
             Backlog fromContext) {
+        if(fromContext == null) {
+            return;
+        }
         StoryRank oldRank = this.storyRankDAO.retrieveByBacklogAndStory(
                 fromContext, story);
         StoryRank newRank = this.storyRankDAO.retrieveByBacklogAndStory(
@@ -159,6 +162,12 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
             skipRank(rank); // fix the linked list first
             this.storyRankDAO.remove(rank);
         }
+    }
+    
+    public void rankToBottom(Story story, Backlog context, Backlog fromContext) {
+        handleContextSwitch(story, context, fromContext);
+        rankToBottom(story, context);
+
     }
 
     /**

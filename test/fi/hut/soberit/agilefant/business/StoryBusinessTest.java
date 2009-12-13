@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -230,128 +229,7 @@ public class StoryBusinessTest {
         verifyAll();
     }
     
-    @Test
-    public void testMoveStoryToBacklog() {
-        Backlog oldBacklog = new Iteration();
-        oldBacklog.setId(8482);
-        Backlog newBacklog = new Iteration();
-        newBacklog.setId(1904);
-        Story movable = new Story();
-        
-        oldBacklog.setStories(new HashSet<Story>(Arrays.asList(movable)));
-        movable.setBacklog(oldBacklog);
-        
-        storyDAO.store(isA(Story.class));
-        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        storyRankBusiness.rankToBottom(movable, newBacklog);
-        
-        blheBusiness.updateHistory(oldBacklog.getId());
-        blheBusiness.updateHistory(newBacklog.getId());
-        
-        iheBusiness.updateIterationHistory(oldBacklog.getId());
-        iheBusiness.updateIterationHistory(newBacklog.getId());
-                
-        replayAll();
-        storyBusiness.moveStoryToBacklog(movable, newBacklog);
-        verifyAll();
-        
-        assertTrue(newBacklog.getStories().contains(movable));
-        assertFalse(oldBacklog.getStories().contains(movable));
-        assertEquals(newBacklog, movable.getBacklog());
-    }
-    
-    @Test(expected = OperationNotPermittedException.class)
-    public void testMoveStoryToBacklog_withChildrenToAnotherProduct() {
-        Product oldParent = new Product();
-        Backlog oldBacklog = new Project();
-        oldBacklog.setId(8482);
-        oldBacklog.setParent(oldParent);
-        
-        Product newBacklog = new Product();
-        newBacklog.setId(1904);
-        
-        Story movable = new Story();
-        movable.setBacklog(oldBacklog);
-        
-        movable.setChildren(new HashSet<Story>(Arrays.asList(new Story(), new Story())));
 
-        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(oldParent);
-        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(newBacklog);
-        replayAll();
-        storyBusiness.moveStoryToBacklog(movable, newBacklog);
-        verifyAll();
-    }
-    
-    @Test
-    public void testMoveStoryToBacklog_withChildrenToSameProduct() {
-        Product newBacklog = new Product();
-        newBacklog.setId(1904);
-        
-        Backlog oldBacklog = new Iteration();
-        oldBacklog.setId(8482);
-        Project project = new Project();
-        project.setParent(new Product());
-        oldBacklog.setParent(newBacklog);
-        
-        
-        Story movable = new Story();
-        movable.setBacklog(oldBacklog);
-        
-        movable.setChildren(new HashSet<Story>(Arrays.asList(new Story(), new Story())));
-
-        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(newBacklog);
-        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(newBacklog);
-        
-        storyDAO.store(isA(Story.class));
-        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        storyRankBusiness.rankToBottom(movable, newBacklog);
-        
-        blheBusiness.updateHistory(oldBacklog.getId());
-        blheBusiness.updateHistory(newBacklog.getId());
-        
-        iheBusiness.updateIterationHistory(oldBacklog.getId());
-        
-        replayAll();
-        storyBusiness.moveStoryToBacklog(movable, newBacklog);
-        verifyAll();
-    }
-    
-    @Test
-    public void testMoveStoryToBacklog_parentStoryUnderDifferentProduct() {
-        Product newBacklog = new Product();
-        newBacklog.setId(1904);
-        
-        Backlog oldBacklog = new Iteration();
-        oldBacklog.setId(8482);
-        Project project = new Project();
-        project.setParent(new Product());
-        
-        Story parentStory = new Story();
-        parentStory.setBacklog(oldBacklog);
-        
-        Story movable = new Story();
-        movable.setBacklog(oldBacklog);
-        
-        movable.setParent(parentStory);
-
-        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(new Product());
-        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(newBacklog);
-        
-        storyDAO.store(isA(Story.class));
-        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        storyRankBusiness.rankToBottom(movable, newBacklog);
-        
-        blheBusiness.updateHistory(oldBacklog.getId());
-        blheBusiness.updateHistory(newBacklog.getId());
-        
-        iheBusiness.updateIterationHistory(oldBacklog.getId());
-        
-        replayAll();
-        storyBusiness.moveStoryToBacklog(movable, newBacklog);
-        verifyAll();
-        
-        assertNull(movable.getParent());
-    }
     
     
     private void store_createMockStoryBusiness() {       
@@ -461,100 +339,7 @@ public class StoryBusinessTest {
     }
     
     
-    private void expectHistoryUpdates(Backlog blog) {
-        if (blog instanceof Iteration) {
-            blheBusiness.updateHistory(blog.getId());
-            iheBusiness.updateIterationHistory(blog.getId());
-        }
-        else if (blog instanceof Project) {
-            blheBusiness.updateHistory(blog.getId());
-        }
-    }
-    
-    
-    @Test
-    public void testCreateStory_noResponsibles() {
-        Backlog blog = new Iteration();
-        expect(backlogBusiness.retrieve(5)).andReturn(blog).times(2);
-        
-        Capture<Story> capturedStory = new Capture<Story>();
-        
-        expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
-        
-        storyRankBusiness.rankToBottom(EasyMock.isA(Story.class), EasyMock.isA(Backlog.class));
-
-        
-        expectHistoryUpdates(blog);
-        
-        Story returnedStory = new Story();
-        expect(storyDAO.get(88)).andReturn(returnedStory);
-        
-        Story dataItem = new Story();
-        dataItem.setName("Foofaa");
-        dataItem.setDescription("Foofaa");
-        dataItem.setStoryPoints(22);
-        dataItem.setState(StoryState.STARTED);
-        
-        replayAll();
-        Story actual = this.storyBusiness.create(dataItem, 5, null);
-        verifyAll();
-        
-        assertEquals(actual.getClass(), Story.class);
-        assertEquals(blog, capturedStory.getValue().getBacklog());
-        
-        assertEquals(dataItem.getName(), capturedStory.getValue().getName());
-        assertEquals(dataItem.getDescription(), capturedStory.getValue().getDescription());
-        assertEquals(dataItem.getStoryPoints(), capturedStory.getValue().getStoryPoints());
-        assertEquals(dataItem.getState(), capturedStory.getValue().getState());
-    }
-    
-    @Test
-    public void testCreateStory_withResponsibles() {
-        User user1 = new User();
-        User user2 = new User();
-        
-        Backlog blog = new Project();
-        expect(backlogBusiness.retrieve(5)).andReturn(blog).times(2);
-        expect(userDAO.get(2)).andReturn(user1);
-        expect(userDAO.get(23)).andReturn(user2);
-        
-        Capture<Story> capturedStory = new Capture<Story>();
-        
-        expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
-        
-        storyRankBusiness.rankToBottom(EasyMock.isA(Story.class), EasyMock.isA(Backlog.class));
-        
-        expectHistoryUpdates(blog);
-        
-        Story returnedStory = new Story();
-        expect(storyDAO.get(88)).andReturn(returnedStory);
-        
-        replayAll();
-        Story actual = this.storyBusiness.create(new Story(), 5,
-                new HashSet<Integer>(Arrays.asList(2,23)));
-        verifyAll();
-        
-        assertSame(actual, returnedStory);
-        assertTrue(capturedStory.getValue().getResponsibles().contains(user1));
-        assertTrue(capturedStory.getValue().getResponsibles().contains(user2));
-        assertEquals(blog, capturedStory.getValue().getBacklog());
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateStory_nullDataItem() {
-        this.storyBusiness.create(null, 123, new HashSet<Integer>());
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void testCreateStory_nullBacklogId() {
-        this.storyBusiness.create(new Story(), null, new HashSet<Integer>());
-    }
-    
-    @Test(expected = ObjectNotFoundException.class)
-    public void testCreateStory_backlogNotFound() {
-        expect(backlogBusiness.retrieve(5)).andThrow(new ObjectNotFoundException());
-        this.storyBusiness.create(new Story(), 222, new HashSet<Integer>());
-    }
+ 
     
     @Test(expected = OperationNotPermittedException.class)
     public void testDelete_withTasks() {
@@ -625,70 +410,53 @@ public class StoryBusinessTest {
         assertTrue(storyInIteration.getHourEntries().isEmpty());
     }
 
-    /*
-     * RANK TO BOTTOM
-     */
     @Test
-    public void testRankToBottom() {
-        Backlog product = new Product();
-        product.setId(123);
-        expect(backlogBusiness.retrieve(123)).andReturn(product);
-        storyRankBusiness.rankToBottom(story1, product);
+    public void testRankStory() {
+        Backlog blog = new Iteration();
+        Story story = new Story();
+        story.setBacklog(blog);
+        Story ref = new Story();
+        ref.setBacklog(blog);
+        storyRankBusiness.rankBelow(story, blog, ref);
         replayAll();
-        Story actual = storyBusiness.rankToBottom(story1, 123);
-        verifyAll();
-        assertEquals(story1.getId(), actual.getId());
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testRankToBottom_noParentGiven() {
-        storyBusiness.rankToBottom(story1, null);
-    }
-    
-    @Test(expected = ObjectNotFoundException.class)
-    public void testRankToBottom_noParentFound() {
-        expect(backlogBusiness.retrieve(1222)).andThrow(new ObjectNotFoundException());
-        replayAll();
-        storyBusiness.rankToBottom(story1, 1222);
-        verifyAll();
-    }
-
-    
-    /*
-     * RANK UNDER STORY
-     */
-    
-    
-    @Test
-    public void testRankUnderStory() {
-        storyRankBusiness.rankBelow(story1, story1.getBacklog(), story2);
-        replayAll();
-        storyBusiness.rankUnderStory(story1, story2);
+        storyBusiness.rankStory(story, ref);
         verifyAll();
     }
     
-    @Test(expected = IllegalArgumentException.class)
-    public void testRankUnderStory_nullStory() {
-        storyBusiness.rankUnderStory(null, new Story());
-    }
-    
-    @Test(expected = IllegalArgumentException.class)
-    public void testRankUnderStory_differentParent() {
-        Story first = new Story();
-        first.setBacklog(new Product());
-        Story second = new Story();
-        second.setBacklog(new Iteration());
+    @Test(expected=IllegalArgumentException.class)
+    public void testRankStory_null() {
+        Backlog blog = new Iteration();
+        Story story = null;
+        Story ref = new Story();
+        ref.setBacklog(blog);
         
-        storyBusiness.rankUnderStory(first, second);
+        replayAll();
+        storyBusiness.rankStory(story, ref);
+        verifyAll();
     }
     
+    @Test(expected=IllegalArgumentException.class)
+    public void testRankStory_invalidbacklogs() {
+        Backlog blog = new Iteration();
+        Story story = new Story();
+        story.setBacklog(blog);
+        Story ref = new Story();
+        ref.setBacklog(null);
+        
+        replayAll();
+        storyBusiness.rankStory(story, ref);
+        verifyAll();
+    }
     
     @Test
-    public void testRankAndMove_toTop() {
-        story2.setBacklog(new Project());
-        storyRankBusiness.rankBelow(story1, story2.getBacklog(), story1.getBacklog(), story2);
+    public void testRankStory_toTop() {
+        Backlog blog = new Iteration();
+        Story story = new Story();
+        story.setBacklog(blog);
+        Story ref = null;
+        storyRankBusiness.rankToHead(story, blog);
         replayAll();
-        storyBusiness.rankAndMove(story1, story2, story2.getBacklog());
+        storyBusiness.rankStory(story, ref);
         verifyAll();
     }
     

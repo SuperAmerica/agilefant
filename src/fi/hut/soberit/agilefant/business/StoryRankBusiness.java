@@ -52,5 +52,8 @@ public interface StoryRankBusiness {
      * Rank to the top.
      */
     void rankToHead(Story story, Backlog backlog);
+    
+    public void rankToBottom(Story story, Backlog context, Backlog fromContext);
+
 
 }

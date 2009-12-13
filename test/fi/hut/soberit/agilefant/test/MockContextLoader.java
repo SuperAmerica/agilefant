@@ -19,6 +19,7 @@ import org.springframework.test.context.support.GenericXmlContextLoader;
 public class MockContextLoader extends GenericXmlContextLoader {
 
     private Map<String, Class<?>> mockDefinitions = new HashMap<String, Class<?>>();
+    private Map<String, String> mockConstructors = new HashMap<String, String>();
     private Map<String, Class<?>> beanDefinitions = new HashMap<String, Class<?>>();
 
     /**
@@ -52,7 +53,7 @@ public class MockContextLoader extends GenericXmlContextLoader {
             Class<?> classToMock = definition.getValue();
             BeanDefinition beanDefinition = BeanDefinitionBuilder
                     .genericBeanDefinition(EasyMock.class).setFactoryMethod(
-                            "createMock").addConstructorArgValue(classToMock)
+                            mockConstructors.get(beanName)).addConstructorArgValue(classToMock)
                     .getBeanDefinition();
             context.registerBeanDefinition(beanName, beanDefinition);
         }
@@ -99,6 +100,11 @@ public class MockContextLoader extends GenericXmlContextLoader {
             Mock mockAnnotation = field.getAnnotation(Mock.class);
             if (mockAnnotation != null) {
                 mockDefinitions.put(field.getName(), field.getType());
+                if(mockAnnotation.strict()) {
+                    mockConstructors.put(field.getName(), "createStrictMock");
+                } else {
+                    mockConstructors.put(field.getName(), "createMock");
+                }
             }
             TestedBean beanAnnotation = field.getAnnotation(TestedBean.class);
             if (beanAnnotation != null) {

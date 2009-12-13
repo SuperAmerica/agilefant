@@ -225,13 +225,11 @@ public class StoryActionTest {
         Story lower = new Story();
         Story upper = new Story();
         Story returned = new Story();
-        Backlog parent = new Project();
         
         expect(storyBusiness.retrieve(123)).andReturn(lower);
         expect(storyBusiness.retrieveIfExists(666)).andReturn(upper);
-        expect(backlogBusiness.retrieveIfExists(222)).andReturn(parent);
         
-        expect(storyBusiness.rankAndMove(lower, upper, parent)).andReturn(returned);
+        expect(storyBusiness.rankStory(lower, upper)).andReturn(returned);
         
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.rankStory());

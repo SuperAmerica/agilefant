@@ -1,8 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
 import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
@@ -17,27 +15,20 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.PortfolioBusiness;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.SpringAssertions;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.PortfolioTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
-public class ProjectPortfolioActionTest {
+public class ProjectPortfolioActionTest extends MockedTestCase {
 
     @TestedBean
     private ProjectPortfolioAction projectPortfolioAction;
 
     @Mock
     private PortfolioBusiness portfolioBusiness;
-
-    protected void replayAll() {
-        replay(portfolioBusiness);
-    }
-
-    protected void verifyAll() {
-        verify(portfolioBusiness);
-    }
 
     // ProjectPortfolioAction should
     // + have Scope annotation with "prototype" value

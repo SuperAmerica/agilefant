@@ -34,6 +34,8 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * @throws ObjectNotFoundException TODO
      */
     Story create(Story dataItem, Integer backlogId, Set<Integer> responsibleIds) throws IllegalArgumentException, ObjectNotFoundException;
+    
+    int create(Story story);
   
     public List<Story> getStoriesByBacklog(Backlog backlog);
 
@@ -63,27 +65,12 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     
     public List<HistoryRowTO> retrieveStoryHistory(int id);
     
-    
-    /* RANKING */   
+
     /**
-     * Rank the story to be under the given upperStory.
-     * 
-     * @param upperStory the story under which the other story should be ranked. null if topmost.
-     * 
-     * @throws IllegalArgumentException if the given story was null
+     * Rank story under the give upperStory. If upperStory is null 
+     * the story will be ranked to the top. 
      */
-    public Story rankUnderStory(Story story, Story upperStory) throws IllegalArgumentException;
-    
-    /**
-     * Ranks the story to bottom most item under given parent.
-     * @throws IllegalArgumentException if story was null
-     */
-    public Story rankToBottom(Story story, Integer parentBacklogId) throws IllegalArgumentException;
-    
-    /**
-     * Moves the story to a new backlog and calls rankUnderStory.
-     */
-    public Story rankAndMove(Story story, Story upperStory, Backlog newParent);
+    public Story rankStory(final Story story, final Story upperStory);
     
     
     

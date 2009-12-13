@@ -27,8 +27,6 @@ public class StorySplitBusinessTest {
 
     StoryBusiness storyBusiness;
     
-    BacklogHistoryEntryBusiness blheBusiness;
-
     Product product;
 
     Project project;
@@ -50,9 +48,6 @@ public class StorySplitBusinessTest {
 
         storyBusiness = createStrictMock(StoryBusiness.class);
         testable.setStoryBusiness(storyBusiness);
-        
-        blheBusiness = createStrictMock(BacklogHistoryEntryBusiness.class);
-        testable.setBacklogHistoryEntryBusiness(blheBusiness);
     }
 
     @Before
@@ -84,24 +79,16 @@ public class StorySplitBusinessTest {
     }
 
     private void verifyAll() {
-        verify(storyDAO, storyBusiness, blheBusiness);
+        verify(storyDAO, storyBusiness);
     }
 
     private void replayAll() {
-        replay(storyDAO, storyBusiness, blheBusiness);
+        replay(storyDAO, storyBusiness);
     }
 
     private void childCreationExpects() {
-//        expect(storyDAO.getLastStoryInRank(parentStory.getBacklog())).andReturn(parentStory);
-        expect(storyDAO.create(childStories.get(0))).andReturn(1);
-        expect(storyBusiness.rankToBottom(childStories.get(0), 1)).andReturn(childStories.get(1));
-        blheBusiness.updateHistory(childStories.get(0).getBacklog().getId());
-        storyDAO.store(childStories.get(0));
-        
-        expect(storyDAO.create(childStories.get(1))).andReturn(2);
-        expect(storyBusiness.rankToBottom(childStories.get(1), 1)).andReturn(childStories.get(1));
-        blheBusiness.updateHistory(childStories.get(1).getBacklog().getId());
-        storyDAO.store(childStories.get(1));
+        expect(storyBusiness.create(childStories.get(0))).andReturn(1);
+        expect(storyBusiness.create(childStories.get(1))).andReturn(2);
     }
 
     private void checkChildStories() {
@@ -110,9 +97,6 @@ public class StorySplitBusinessTest {
 
             assertEquals(parentStory.getResponsibles(), child.getResponsibles());
         }
-        // Rank should be handled by rankToBottom
-//        assertEquals(3, childStories.get(0).getRank());
-//        assertEquals(4, childStories.get(1).getRank());
     }
 
     @Test
@@ -130,7 +114,6 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inIterationBacklog() {
         parentStory.setBacklog(iteration);
         childCreationExpects();
-//        storyBusiness.moveStoryToBacklog(parentStory, product);
         storyBusiness.storeBatch(oldStories);
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories);
@@ -142,7 +125,6 @@ public class StorySplitBusinessTest {
     public void testSplitStory_inProjectBacklog() {
         parentStory.setBacklog(project);
         childCreationExpects();
-//        storyBusiness.moveStoryToBacklog(parentStory, product);
         storyBusiness.storeBatch(oldStories);
         replayAll();
         testable.splitStory(parentStory, childStories, oldStories);

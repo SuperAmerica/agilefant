@@ -27,6 +27,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
@@ -60,8 +61,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private ProjectBusiness projectBusiness;
     @Autowired
     private StoryHistoryDAO storyHistoryDAO;
-//    @Autowired
-//    private RankingBusiness rankingBusiness;
     @Autowired
     private StoryRankBusiness storyRankBusiness;
     @Autowired
@@ -226,9 +225,23 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.populateStoryFields(story, dataItem);
         story.setBacklog(backlog);
                 
+        int newId = create(story);
+        return storyDAO.get(newId);
+    }
+
+    @Transactional
+    @Override
+    public int create(Story story) {
+        Backlog backlog = story.getBacklog();
         int newId = (Integer)storyDAO.create(story);
+        story = storyDAO.get(newId);
         
-        this.rankToBottom(story, backlogId);
+        this.storyRankBusiness.rankToBottom(story, backlog);
+        
+        //rank to the project leaf stories
+        if(backlog instanceof Iteration) {
+            this.storyRankBusiness.rankToBottom(story, backlog.getParent());
+        }
         
         if (backlog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
@@ -238,7 +251,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             backlogHistoryEntryBusiness.updateHistory(backlog.getId());
         }
         
-        return storyDAO.get(newId);
+        return newId;
     };
     
     
@@ -247,12 +260,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Backlog oldBacklog = story.getBacklog();
         
         /* Check for moving to other product */
-        if (story.getChildren().size() > 0) {
+        if (!story.getChildren().isEmpty()) {
             if (backlogBusiness.getParentProduct(oldBacklog) !=
                     backlogBusiness.getParentProduct(backlog)) {
                 throw new OperationNotPermittedException("Can't move a story with children to another product");
            }
         }
+        
+        //cut the parent relation if moving to another product
         if (story.getParent() != null) {
             if (backlogBusiness.getParentProduct(story.getParent().getBacklog()) !=
                 backlogBusiness.getParentProduct(backlog)) {
@@ -264,7 +279,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         story.setBacklog(backlog);
         backlog.getStories().add(story);
         storyDAO.store(story);
-        this.rankToBottom(story, backlog.getId());
+        //TODO: project rank should not change is story is moved from project to one 
+        //of it's iterations or between iterations under one project!
+        rankToBottom(story, backlog, oldBacklog);
+        
         backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
         backlogHistoryEntryBusiness.updateHistory(backlog.getId());
         if (oldBacklog instanceof Iteration) {
@@ -277,50 +295,69 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
 
-    /*
-     * STORY RANKING
-     */
-    /** {@inheritDoc} */
-    @Transactional
-    public Story rankToBottom(Story story, Integer parentBacklogId)
-            throws IllegalArgumentException {
-        if (parentBacklogId == null) {
-            throw new IllegalArgumentException("Parent should be given");
+    private void rankToBottom(Story story, Backlog backlog, Backlog oldBacklog) {
+        if(backlog == null || oldBacklog == null) {
+            throw new IllegalArgumentException("backlogs can not be null");
         }
-        Backlog parent = backlogBusiness.retrieve(parentBacklogId);
-//        Story last = storyDAO.getLastStoryInRank(parent);
-        storyRankBusiness.rankToBottom(story, parent);
-        return story;
+        // if target is product remove all ranks
+        if ((backlog instanceof Product) && !(oldBacklog instanceof Product)) {      
+            if (oldBacklog instanceof Iteration) {
+                storyRankBusiness.removeRank(story, oldBacklog.getParent());
+            }
+            storyRankBusiness.removeRank(story, oldBacklog);
+        } else if (backlog instanceof Iteration
+                && oldBacklog instanceof Iteration) {// from iteration to an
+                                                     // other
+            // iterations are under the same project
+            if (backlog.getParent() == oldBacklog.getParent()) {
+                storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
+            } else {
+                storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
+                storyRankBusiness.rankToBottom(story, backlog.getParent(),
+                        oldBacklog.getParent());
+            }
+        } else if (backlog instanceof Project && oldBacklog instanceof Project
+                && story.getChildren().isEmpty()) { // project to project
+            storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
+        } else if (backlog instanceof Project
+                && oldBacklog instanceof Iteration
+                && story.getChildren().isEmpty()) { // iteration to project
+            // move to the parent project
+            if (backlog == oldBacklog.getParent()) {
+                storyRankBusiness.removeRank(story, oldBacklog);
+            } else {
+                storyRankBusiness.rankToBottom(story, backlog, oldBacklog
+                        .getParent());
+                storyRankBusiness.removeRank(story, oldBacklog);
+            }
+        } else if (backlog instanceof Iteration
+                && oldBacklog instanceof Project) {// project to iteration
+            // iteration is under the project
+            if (backlog.getParent() == oldBacklog) {
+                storyRankBusiness.rankToBottom(story, backlog);
+            } else {
+                storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
+                storyRankBusiness.rankToBottom(story, backlog.getParent());
+            }
+        }
     }
+    
     
     /** {@inheritDoc} */
     @Transactional
-    public Story rankUnderStory(final Story story, Story upperStory)
-            throws IllegalArgumentException {
+    public Story rankStory(Story story, Story upperStory) {
         if (story == null) {
             throw new IllegalArgumentException("Story should be given");
         }
-        if (upperStory != null && story.getBacklog() != upperStory.getBacklog()) {
-            throw new IllegalArgumentException("Stories' parent's should be the same");
+        //backlog mismatch
+        if(upperStory != null && story.getBacklog() != upperStory.getBacklog()) {
+            throw new IllegalArgumentException("Invalid backlogs");
         }
-        this.rankAndMove(story, upperStory, null);
-        return story;
-    }
-    
-    /** {@inheritDoc} */
-    @Transactional
-    public Story rankAndMove(Story story, Story upperStory, Backlog newParent) {
-        if (story == null) {
-            throw new IllegalArgumentException("Story should be given");
-        }
+        
         if(upperStory == null) {
             storyRankBusiness.rankToHead(story, story.getBacklog());
-            return story;
-        }
-        if(newParent == null) {
-            storyRankBusiness.rankBelow(story, story.getBacklog(), upperStory);
         } else {
-            storyRankBusiness.rankBelow(story, newParent, story.getBacklog(), upperStory);      
+            storyRankBusiness.rankBelow(story, story.getBacklog(), upperStory);
         }
         return story;
     }

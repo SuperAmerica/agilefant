@@ -500,4 +500,29 @@ public class StoryBusinessTest {
         replayAll();
         assertEquals(storyTo, storyBusiness.retrieveStoryWithMetrics(story1.getId()));
     }
+    
+    @Test
+    public void testRemoveRanks() {
+        Story story = new Story();
+        Project backlog = new Project();
+        story.setBacklog(backlog);
+        storyRankBusiness.removeRank(story, backlog);
+        replayAll();
+        storyBusiness.removeRanks(story);
+        verifyAll();
+    }
+    
+    @Test
+    public void testRemoveRanks_iteration() {
+        Story story = new Story();
+        Project backlog = new Project();
+        Iteration iteration = new Iteration();
+        iteration.setParent(backlog);
+        story.setBacklog(iteration);
+        storyRankBusiness.removeRank(story, backlog);
+        storyRankBusiness.removeRank(story, iteration);
+        replayAll();
+        storyBusiness.removeRanks(story);
+        verifyAll();
+    }
 }

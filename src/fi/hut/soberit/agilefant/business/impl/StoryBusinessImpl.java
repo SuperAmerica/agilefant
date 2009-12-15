@@ -171,6 +171,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return persisted;
     }
 
+    public void removeRanks(Story story) {
+        if(story.getBacklog() instanceof Iteration) {
+            storyRankBusiness.removeRank(story, story.getBacklog().getParent());
+        }
+        storyRankBusiness.removeRank(story, story.getBacklog());
+    }
+    
     @Transactional
     public void storeBatch(Collection<Story> stories) {
         for(Story story : stories) {

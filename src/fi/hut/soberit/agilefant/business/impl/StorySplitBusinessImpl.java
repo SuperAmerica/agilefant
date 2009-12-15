@@ -30,6 +30,10 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
             throw new RuntimeException("Original story not persisted.");
         }
 
+        if(!newStories.isEmpty()) {
+            storyBusiness.removeRanks(original);
+        }
+        
         persistChildStories(original, newStories);
         if(oldChangedStories != null) {
             updateChangedStories(oldChangedStories);

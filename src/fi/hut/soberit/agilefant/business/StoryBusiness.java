@@ -73,7 +73,7 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      */
     public Story rankStory(final Story story, final Story upperStory, Backlog backlog);
     
-    
+    public void removeRanks(Story story);
     
     
     public void storeBatch(Collection<Story> stories);

@@ -228,8 +228,8 @@ public class StoryActionTest {
         
         expect(storyBusiness.retrieve(123)).andReturn(lower);
         expect(storyBusiness.retrieveIfExists(666)).andReturn(upper);
-        
-        expect(storyBusiness.rankStory(lower, upper, null)).andReturn(returned);
+        expect(backlogBusiness.retrieveIfExists(222)).andReturn(iter);
+        expect(storyBusiness.rankStory(lower, upper, iter)).andReturn(returned);
         
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.rankStory());

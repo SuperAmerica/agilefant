@@ -22,6 +22,10 @@ StoryTreeController.prototype = new CommonController();
 
 
 StoryTreeController.prototype.refresh = function() {
+  this.tree.refresh();
+};
+
+StoryTreeController.prototype.initTree = function() {
   var urlInfo = {
     "project": {
       url: "ajax/getProjectStoryTree.action",
@@ -36,11 +40,53 @@ StoryTreeController.prototype.refresh = function() {
   // Url params
   var data = {};
   data[urlInfo[this.type].idName] = this.id;
-  
+  var me = this;
+  /*
   // Ajax request
   $(this.element).load(urlInfo[this.type].url, data, this.options.refreshCallback);
+  */
+  this.tree = $(this.element).tree({
+    data: {
+      async: false,
+      type: "html",
+      opts: {
+        url: urlInfo[this.type].url + "?" + urlInfo[this.type].idName + "=" + this.id
+      },
+    },
+    ui: {
+        theme_path: "static/css/jstree/apple/style.css",
+        theme_name: "apple"
+    },
+    callback: {
+        onload: function() { me._onload(); },
+        onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); }
+    },
+    types: {
+      story: {
+        draggable: true
+      }
+    }
+  });
+  this.tree = jQuery.tree.reference(this.element);
 };
 
+StoryTreeController.prototype._onload = function() {
+  this.tree.open_all();
+  this.options.refreshCallback();
+};
+StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {
+  var myId = $(node).attr("storyid");
+  var refId = $(ref_node).attr("storyid");
+  alert("you moved story " + myId + " " + type + " story " + refId);
+  switch(type) {
+  case "before":
+    break;
+  case "after":
+    break;
+  case "inside":
+    break;
+  }
+};
 StoryTreeController.prototype._getStoryForId = function(id, callback) {
   var model = ModelFactory.getOrRetrieveObject(
     ModelFactory.types.story,

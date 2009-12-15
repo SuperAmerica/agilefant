@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -70,6 +73,8 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     private Set<Story> stories = new HashSet<Story>();
     
     private Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>();
+    
+    private Set<StoryRank> storyRanks = new HashSet<StoryRank>();
     
     /**
      * Get the id of this object.
@@ -170,5 +175,17 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     public void setHourEntries(Set<BacklogHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
+    }
+
+    @JSON(include=false)
+    @NotAudited
+    @OneToMany(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.DELETE_ORPHAN)
+    public Set<StoryRank> getStoryRanks() {
+        return storyRanks;
+    }
+
+    public void setStoryRanks(Set<StoryRank> storyRanks) {
+        this.storyRanks = storyRanks;
     }
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +18,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
@@ -41,6 +44,7 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     private Set<User> responsibles = new HashSet<User>();
     private Set<Task> tasks = new HashSet<Task>();
     private Set<StoryHourEntry> hourEntries = new HashSet<StoryHourEntry>();
+    private Set<StoryRank> storyRanks = new HashSet<StoryRank>();
 
     private Integer storyPoints;
     
@@ -182,5 +186,17 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
 
     public void setChildren(Set<Story> children) {
         this.children = children;
+    }
+    
+    @JSON(include=false)
+    @NotAudited
+    @OneToMany(fetch = FetchType.LAZY)
+    @Cascade(CascadeType.DELETE_ORPHAN)
+    public Set<StoryRank> getStoryRanks() {
+        return storyRanks;
+    }
+
+    public void setStoryRanks(Set<StoryRank> storyRanks) {
+        this.storyRanks = storyRanks;
     }
 }

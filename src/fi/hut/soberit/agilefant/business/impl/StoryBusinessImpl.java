@@ -345,21 +345,31 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     
     /** {@inheritDoc} */
     @Transactional
-    public Story rankStory(Story story, Story upperStory) {
+    public Story rankStory(Story story, Story upperStory, Backlog backlog) {
         if (story == null) {
             throw new IllegalArgumentException("Story should be given");
         }
         //backlog mismatch
-        if(upperStory != null && story.getBacklog() != upperStory.getBacklog()) {
+        if(upperStory != null && backlog == null && !isValidRankTarget(story, upperStory)) {
             throw new IllegalArgumentException("Invalid backlogs");
+        }
+        if(backlog == null)  {
+            backlog = story.getBacklog();
         }
         
         if(upperStory == null) {
-            storyRankBusiness.rankToHead(story, story.getBacklog());
+            storyRankBusiness.rankToHead(story, backlog);
         } else {
-            storyRankBusiness.rankBelow(story, story.getBacklog(), upperStory);
+            storyRankBusiness.rankBelow(story, backlog, upperStory);
         }
         return story;
+    }
+
+    private boolean isValidRankTarget(Story story, Story upperStory) {
+        boolean hasSameBacklog = upperStory.getBacklog() == story.getBacklog();
+        boolean underReference = upperStory.getBacklog() == story.getBacklog().getParent();
+        boolean referenceUnder = story.getBacklog() == upperStory.getBacklog().getParent();
+        return hasSameBacklog || underReference || referenceUnder;
     }
 
 

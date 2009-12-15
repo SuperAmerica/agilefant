@@ -57,7 +57,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/asm.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/asm-attrs.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/cglib-2.1_3.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-beanutils.jar" sourcepath="lib"/>
 	<classpathentry exported="true" kind="lib" path="lib/displaytag-1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/postgresql-8.1-407.jdbc3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/ehcache-1.2.0_03.jar"/>

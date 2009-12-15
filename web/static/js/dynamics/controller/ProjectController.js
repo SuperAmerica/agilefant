@@ -398,7 +398,6 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   config.addColumnConfiguration(IterationRowController.columnIndices.storiesData, {
     fullWidth : true,
     visible : false,
-    subViewFactory : IterationRowController.prototype.rowContentsFactory,
     delayedRender: true
   });
 };
@@ -415,6 +414,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
     dataSource : ProjectModel.prototype.getLeafStories,
     cssClass: "project-story-table",
+    sortCallback: StoryController.prototype.rankStory,
     caption : "Leaf stories"
   });
 
@@ -461,6 +461,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
 //    defaultSortColumn: true,
+    dragHandle: true,
     editable : true,
     edit : {
       editor : "Text",

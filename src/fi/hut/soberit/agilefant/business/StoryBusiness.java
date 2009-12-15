@@ -69,8 +69,9 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     /**
      * Rank story under the give upperStory. If upperStory is null 
      * the story will be ranked to the top. 
+     * @param backlog TODO
      */
-    public Story rankStory(final Story story, final Story upperStory);
+    public Story rankStory(final Story story, final Story upperStory, Backlog backlog);
     
     
     

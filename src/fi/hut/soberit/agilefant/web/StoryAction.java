@@ -128,7 +128,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     public String rankStory() {
         story = storyBusiness.retrieve(storyId);
         Story upper = storyBusiness.retrieveIfExists(rankUnderId);
-        story = storyBusiness.rankStory(story, upper);
+        Backlog backlog = backlogBusiness.retrieveIfExists(backlogId);
+        story = storyBusiness.rankStory(story, upper, backlog);
         return Action.SUCCESS;
     }
     

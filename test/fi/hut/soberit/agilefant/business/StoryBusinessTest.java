@@ -419,7 +419,7 @@ public class StoryBusinessTest {
         ref.setBacklog(blog);
         storyRankBusiness.rankBelow(story, blog, ref);
         replayAll();
-        storyBusiness.rankStory(story, ref);
+        storyBusiness.rankStory(story, ref, null);
         verifyAll();
     }
     
@@ -431,20 +431,25 @@ public class StoryBusinessTest {
         ref.setBacklog(blog);
         
         replayAll();
-        storyBusiness.rankStory(story, ref);
+        storyBusiness.rankStory(story, ref, null);
         verifyAll();
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testRankStory_invalidbacklogs() {
-        Backlog blog = new Iteration();
+        Project proj1 = new Project();
+        Project proj2 = new Project();
+        Iteration iter = new Iteration();
+        iter.setParent(proj1);
+        Iteration blog = new Iteration();
+        blog.setParent(proj2);
         Story story = new Story();
         story.setBacklog(blog);
         Story ref = new Story();
-        ref.setBacklog(null);
+        ref.setBacklog(iter);
         
         replayAll();
-        storyBusiness.rankStory(story, ref);
+        storyBusiness.rankStory(story, ref, null);
         verifyAll();
     }
     
@@ -456,7 +461,7 @@ public class StoryBusinessTest {
         Story ref = null;
         storyRankBusiness.rankToHead(story, blog);
         replayAll();
-        storyBusiness.rankStory(story, ref);
+        storyBusiness.rankStory(story, ref, null);
         verifyAll();
     }
     

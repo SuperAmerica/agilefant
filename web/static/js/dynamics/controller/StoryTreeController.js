@@ -22,6 +22,10 @@ StoryTreeController.prototype = new CommonController();
 
 
 StoryTreeController.prototype.refresh = function() {
+  if(!this.tree) {
+    this.initTree();
+    return;
+  }
   this.tree.refresh();
 };
 

@@ -115,6 +115,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, secondProject);
         verifyAll();
+        assertEquals(secondProject, story.getBacklog());  
     }
 
     @Test
@@ -136,6 +137,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveStoryToBacklog(story, firstProject);
         verifyAll();
+        assertEquals(firstProject, story.getBacklog());
     }
 
     @Test
@@ -157,6 +159,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, firstIteration);
         verifyAll();
+        assertEquals(firstIteration, story.getBacklog());
     }
 
     @Test
@@ -176,6 +179,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, firstIteration);
         verifyAll();
+        assertEquals(firstIteration, story.getBacklog());
     }
 
     @Test
@@ -197,6 +201,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, secondIteration);
         verifyAll();
+        assertEquals(secondIteration, story.getBacklog());
     }
 
     @Test
@@ -219,6 +224,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveStoryToBacklog(story, secondIteration);
         verifyAll();
+        assertEquals(secondIteration, story.getBacklog());
     }
     
     @Test
@@ -234,6 +240,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveStoryToBacklog(story, firstProject);
         verifyAll();
+        assertEquals(firstProject, story.getBacklog());
     }
 
     @Test
@@ -253,6 +260,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveStoryToBacklog(story, firstProject);
         verifyAll();
+        assertEquals(firstProject, story.getBacklog());
     }
     
     @Test
@@ -272,6 +280,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveStoryToBacklog(story, firstProduct);
         verifyAll();
+        assertEquals(firstProduct, story.getBacklog());
     }
     
     @Test
@@ -287,6 +296,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveStoryToBacklog(story, firstProduct);
         verifyAll();
+        assertEquals(firstProduct, story.getBacklog());
     }
 
     @Test(expected = OperationNotPermittedException.class)

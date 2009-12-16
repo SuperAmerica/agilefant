@@ -164,4 +164,52 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         expect(backlogBusiness.retrieve(5)).andThrow(new ObjectNotFoundException());
         this.storyBusiness.create(new Story(), 222, new HashSet<Integer>());
     }
+    
+    @Test
+    @DirtiesContext
+    public void createStoryToIteration() {
+        Project project = new Project();
+        project.setId(1);
+        
+        Iteration iteration = new Iteration();
+        iteration.setId(2);
+        iteration.setParent(project);
+        
+        Story story = new Story();
+        story.setBacklog(iteration);
+        
+        expect(storyDAO.create(story)).andReturn(new Integer(1));
+        expect(storyDAO.get(1)).andReturn(story);
+        
+        storyRankBusiness.rankToBottom(story, iteration);
+        storyRankBusiness.rankToBottom(story, project);
+        
+        iheBusiness.updateIterationHistory(2);
+        blheBusiness.updateHistory(2);
+        
+        replayAll();
+        storyBusiness.create(story);
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void createStoryToProject() {
+        Project project = new Project();
+        project.setId(1);
+        
+        Story story = new Story();
+        story.setBacklog(project);
+        
+        expect(storyDAO.create(story)).andReturn(new Integer(1));
+        expect(storyDAO.get(1)).andReturn(story);
+        
+        storyRankBusiness.rankToBottom(story, project);
+        
+        blheBusiness.updateHistory(1);
+        
+        replayAll();
+        storyBusiness.create(story);
+        verifyAll();
+    }
 }

@@ -6,39 +6,38 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fi.hut.soberit.agilefant.business.impl.StoryHierarchyBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.test.Mock;
+import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+import fi.hut.soberit.agilefant.test.TestedBean;
 
-public class StoryHierarchyBusinessTest {
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = MockContextLoader.class)
+public class StoryHierarchyBusinessTest extends MockedTestCase {
+
+    @TestedBean
     private StoryHierarchyBusinessImpl storyHierarchyBusiness;
     
+    @Mock(strict=true)
     private StoryHierarchyDAO storyHierarchyDAO;
     
-    @Before
-    public void setUp() {
-        storyHierarchyBusiness = new StoryHierarchyBusinessImpl();
-        
-        storyHierarchyDAO = createStrictMock(StoryHierarchyDAO.class);
-        storyHierarchyBusiness.setStoryHierarchyDAO(storyHierarchyDAO);
-    }
-
-    private void replayAll() {
-        replay(storyHierarchyDAO);
-    }
-
-    private void verifyAll() {
-        verify(storyHierarchyDAO);
-    }
-
+    @Mock(strict=true)
+    private StoryBusiness storyBusiness;
     
     @Test
+    @DirtiesContext
     public void testRetrieveProjectLeafStories() {
         Project proj = new Project();
         List<Story> stories = new ArrayList<Story>();
@@ -50,6 +49,7 @@ public class StoryHierarchyBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testRetrieveProjectRootStories() {
         Project proj = new Project();
         List<Story> stories = new ArrayList<Story>();
@@ -61,6 +61,7 @@ public class StoryHierarchyBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testRetrieveProductRootStories() {
         Product prod = new Product();
         List<Story> stories = new ArrayList<Story>();
@@ -71,5 +72,28 @@ public class StoryHierarchyBusinessTest {
         verifyAll();
     }
 
+    @Test
+    @DirtiesContext
+    public void testChangeStoryParent() {
+        Story story = new Story();
+        Story oldParent = new Story();
+        Story newParent = new Story();
+        
+        story.setParent(oldParent);
+        oldParent.getChildren().add(story);
+        
+        expect(storyBusiness.updateStoryRanks(newParent)).andReturn(null);
+        expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
+        
+        replayAll();
+        
+        storyHierarchyBusiness.changeParentStory(story, newParent);
+        
+        verifyAll();
+        
+        assertTrue(newParent.getChildren().contains(story));
+        assertFalse(oldParent.getChildren().contains(story));
+        assertSame(newParent, story.getParent());
+    }
 
 }

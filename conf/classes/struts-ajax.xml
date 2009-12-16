@@ -335,6 +335,12 @@
       </result>
     </action>
     
+    <action name="changeStoryParent" method="changeParentStory" class="storyHierarchyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+    
     <action name="moveStory" method="moveStory" class="storyAction">
       <result name="success" type="json">
         <param name="target">story</param>

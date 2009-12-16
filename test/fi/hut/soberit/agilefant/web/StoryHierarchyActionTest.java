@@ -3,40 +3,38 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.test.Mock;
+import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+import fi.hut.soberit.agilefant.test.TestedBean;
 
-public class StoryHierarchyActionTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = MockContextLoader.class)
+public class StoryHierarchyActionTest extends MockedTestCase {
     
+    @TestedBean
     private StoryHierarchyAction storyHierarchyAction;
     
+    @Mock(strict=true)
     private StoryBusiness storyBusiness;
-
     
-    
-    @Before
-    public void setUp_dependencies() {
-        storyHierarchyAction = new StoryHierarchyAction();
-        
-        storyBusiness = createStrictMock(StoryBusiness.class);
-        storyHierarchyAction.setStoryBusiness(storyBusiness);
-    }
-    
-    private void replayAll() {
-        replay(storyBusiness);
-    }
-
-    private void verifyAll() {
-        verify(storyBusiness);
-    }
+    @Mock
+    private StoryHierarchyBusiness storyHierarchyBusiness;
     
     @Test
+    @DirtiesContext
     public void testRecurseHierarchyAsList() {
         Story story = new Story();
         Story parent = new Story();
@@ -60,6 +58,7 @@ public class StoryHierarchyActionTest {
     }
     
     @Test
+    @DirtiesContext
     public void testRecurseHierarchyAsList_noParent() {
         Story story = new Story();
         storyHierarchyAction.setStoryId(123);
@@ -75,6 +74,7 @@ public class StoryHierarchyActionTest {
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testRecurseHierarchyAsList_noSuchStory() {
         storyHierarchyAction.setStoryId(-1);
         
@@ -82,6 +82,22 @@ public class StoryHierarchyActionTest {
         
         replayAll();
         storyHierarchyAction.recurseHierarchyAsList();
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testChangeParent() {
+        Story story = new Story();
+        expect(storyBusiness.retrieve(1)).andReturn(story);
+        expect(storyBusiness.retrieve(2)).andReturn(story);
+        storyHierarchyBusiness.changeParentStory(story, story);
+        
+        storyHierarchyAction.setStoryId(1);
+        storyHierarchyAction.setParentId(2);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyHierarchyAction.changeParentStory());
         verifyAll();
     }
 

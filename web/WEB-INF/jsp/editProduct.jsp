@@ -104,7 +104,7 @@ $(document).ready(function() {
       <button id="resetFilters">Reset filters</button>
     </form>
   </div>
-  <form onsubmit="return false;"><div class="hierarchyContainer" id="storyTree">&nbsp;</div></form>
+  <form onsubmit="return false;"><div id="storyTree">&nbsp;</div></form>
 </div>
 
 <form onsubmit="return false;"><div id="projects" class="structure-main-block">&nbsp;</div></form>

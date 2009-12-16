@@ -58,8 +58,8 @@ StoryTreeController.prototype.initTree = function() {
       },
     },
     ui: {
-        theme_path: "static/css/jstree/apple/style.css",
-        theme_name: "apple"
+        theme_path: "static/css/jstree/agilefant/style.css",
+        theme_name: "classic"
     },
     callback: {
         onload: function() { me._onload(); },
@@ -67,8 +67,16 @@ StoryTreeController.prototype.initTree = function() {
     },
     types: {
       story: {
-        draggable: true
+        draggable: true,
+        clickable: false,
+        creatable: false,
+        deletable: false,
+        renameable: false
       }
+    },
+    rules: {
+      use_max_children : false,
+      use_max_depth : false
     }
   });
   this.tree = jQuery.tree.reference(this.element);
@@ -81,7 +89,14 @@ StoryTreeController.prototype._onload = function() {
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {
   var myId = $(node).attr("storyid");
   var refId = $(ref_node).attr("storyid");
-  alert("you moved story " + myId + " " + type + " story " + refId);
+  //alert("you moved story " + myId + " " + type + " story " + refId);
+  var data = {storyId: myId, parentId: refId};
+  $.ajax({
+    url: "ajax/changeStoryParent.action",
+    data: data,
+    type: "post",
+    async: true
+  });
   switch(type) {
   case "before":
     break;

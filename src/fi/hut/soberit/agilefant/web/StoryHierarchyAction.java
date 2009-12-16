@@ -11,6 +11,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.model.Story;
 
 @Component("storyHierarchyAction")
@@ -20,15 +21,19 @@ public class StoryHierarchyAction extends ActionSupport {
 
     @Autowired
     private StoryBusiness storyBusiness;
-    
+
+    @Autowired
+    private StoryHierarchyBusiness storyHierarchyBusiness;
+
     private Integer storyId;
     private Story story;
-    
+    private Integer parentId;
+
     private List<Story> hierarchy = new ArrayList<Story>();
-    
+
     public String recurseHierarchyAsList() {
         story = storyBusiness.retrieve(storyId);
-        
+
         Story iterator = story;
         while (iterator != null) {
             hierarchy.add(0, iterator);
@@ -36,15 +41,22 @@ public class StoryHierarchyAction extends ActionSupport {
         }
         return Action.SUCCESS;
     }
-    
+
+    public String changeParentStory() {
+        Story target = this.storyBusiness.retrieve(storyId);
+        Story parent = this.storyBusiness.retrieve(parentId);
+        this.storyHierarchyBusiness.changeParentStory(target, parent);
+        return Action.SUCCESS;
+    }
+
     /*
-     * SETTERS AND GETTERS 
+     * SETTERS AND GETTERS
      */
-    
+
     public void setStoryId(Integer storyId) {
         this.storyId = storyId;
     }
-    
+
     public List<Story> getHierarchy() {
         return hierarchy;
     }
@@ -56,5 +68,14 @@ public class StoryHierarchyAction extends ActionSupport {
     public Story getStory() {
         return story;
     }
-    
+
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
+    }
+
+    public void setStoryHierarchyBusiness(
+            StoryHierarchyBusiness storyHierarchyBusiness) {
+        this.storyHierarchyBusiness = storyHierarchyBusiness;
+    }
+
 }

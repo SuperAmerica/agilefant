@@ -141,7 +141,7 @@ UserModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("User saved successfully");  
-      me.setData(data);
+      ModelFactory.updateObject(data);
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving user", xhr);

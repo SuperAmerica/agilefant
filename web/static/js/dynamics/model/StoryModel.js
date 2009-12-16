@@ -22,7 +22,8 @@ var StoryModel = function StoryModel() {
     "name": "name",
     "description": "description",
     "state": "state",
-    "storyPoints": "storyPoints"
+    "storyPoints": "storyPoints",
+    "rank": "rank"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "backlog",
@@ -112,8 +113,8 @@ StoryModel.prototype._saveData = function(id, changedData) {
     data: data,
     dataType: "json",
     success: function(data, status) {
-      MessageDisplay.Ok("Story saved successfully");  
-      me.setData(data);
+      MessageDisplay.Ok("Story saved successfully");
+      ModelFactory.updateObject(data);
       if(!id) {
         me.relations.backlog.addStory(me);
       }

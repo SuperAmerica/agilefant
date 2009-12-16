@@ -132,7 +132,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Task saved successfully");
-      me.setData(data);
+      ModelFactory.updateObject(data);
       if(!id) {
         if (me.relations.story instanceof StoryModel) {
           me.relations.story.addTask(me);

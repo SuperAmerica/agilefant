@@ -66,7 +66,7 @@ TeamModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Team saved successfully");  
-      me.setData(data);
+      ModelFactory.updateObject(data);
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving team", xhr);

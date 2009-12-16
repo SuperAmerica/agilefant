@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
+import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
@@ -361,6 +362,7 @@ public class StoryBusinessTest {
         storyInIteration.getTasks().add(task);
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
         expect(taskBusiness.move(task, storyInIteration.getBacklog().getId(), null)).andReturn(task);
+        storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
@@ -376,6 +378,7 @@ public class StoryBusinessTest {
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
         hourEntryBusiness.moveToBacklog(task.getHourEntries(), storyInIteration.getBacklog());
         taskBusiness.delete(task.getId(), HourEntryHandlingChoice.MOVE);
+        storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
@@ -390,6 +393,7 @@ public class StoryBusinessTest {
         storyInIteration.getHourEntries().add(new StoryHourEntry());
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
         hourEntryBusiness.moveToBacklog(storyInIteration.getHourEntries(), storyInIteration.getBacklog());
+        storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
@@ -402,12 +406,37 @@ public class StoryBusinessTest {
         storyInIteration.getHourEntries().add(new StoryHourEntry());
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
         hourEntryBusiness.deleteAll(storyInIteration.getHourEntries());
+        storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
         storyBusiness.delete(storyInIteration.getId(), null, HourEntryHandlingChoice.DELETE, null);
         verifyAll();
         assertTrue(storyInIteration.getHourEntries().isEmpty());
+    }
+    
+    @Test
+    public void testDelete_onlyChildRemoved() {
+        Story parent = new Story();
+        Story child = new Story();
+        Backlog backlog = new Project();
+        backlog.setId(1);
+        
+        parent.getChildren().add(child);
+        child.setParent(parent);
+        child.setBacklog(backlog);
+        parent.setBacklog(backlog);
+        
+        storyRankBusiness.rankToBottom(parent, backlog);
+        storyRankBusiness.removeStoryRanks(child);
+        storyDAO.remove(child);
+        blheBusiness.updateHistory(child.getBacklog().getId());
+
+        replayAll();
+        storyBusiness.delete(child);
+        verifyAll();
+        assertTrue(parent.getChildren().isEmpty());
+        
     }
 
     @Test
@@ -502,27 +531,41 @@ public class StoryBusinessTest {
     }
     
     @Test
-    public void testRemoveRanks() {
+    public void testUpdateRanks_noChildren_HasRank() {
         Story story = new Story();
         Project backlog = new Project();
         story.setBacklog(backlog);
-        storyRankBusiness.removeRank(story, backlog);
+        StoryRank rank = new StoryRank();
+        story.getStoryRanks().add(rank);
         replayAll();
-        storyBusiness.removeRanks(story);
+        storyBusiness.updateStoryRanks(story);
         verifyAll();
     }
     
     @Test
-    public void testRemoveRanks_iteration() {
+    public void testUpdateRanks_noChildren_NoRank() {
         Story story = new Story();
         Project backlog = new Project();
-        Iteration iteration = new Iteration();
-        iteration.setParent(backlog);
-        story.setBacklog(iteration);
-        storyRankBusiness.removeRank(story, backlog);
-        storyRankBusiness.removeRank(story, iteration);
+        story.setBacklog(backlog);
+        storyRankBusiness.rankToBottom(story, backlog);
         replayAll();
-        storyBusiness.removeRanks(story);
+        storyBusiness.updateStoryRanks(story);
+        verifyAll();
+    }
+    
+    @Test
+    public void testUpdateRanks_children_HasRank() {
+        Story story = new Story();
+        Project backlog = new Project();
+        story.setBacklog(backlog);
+        StoryRank rank = new StoryRank();
+        story.getStoryRanks().add(rank);
+        Story child = new Story();
+        story.getChildren().add(child);
+        
+        storyRankBusiness.removeStoryRanks(story);
+        replayAll();
+        storyBusiness.updateStoryRanks(story);
         verifyAll();
     }
 }

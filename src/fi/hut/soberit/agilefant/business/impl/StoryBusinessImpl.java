@@ -142,8 +142,20 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if (backlog != null) {
             backlog.getStories().remove(story);
         }
+        
+        Story parentStory = story.getParent();
+        
+        // if last child of the parent story is removed the parent story may
+        // need to be ranked
+        if (parentStory != null) {
+            parentStory.getChildren().remove(story);
+            updateStoryRanks(parentStory);
+        }
+        storyRankBusiness.removeStoryRanks(story);
         super.delete(story);
         backlogHistoryEntryBusiness.updateHistory(backlog.getId());
+        
+        
     }
     /** {@inheritDoc} */
     @Transactional
@@ -171,11 +183,26 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return persisted;
     }
 
-    public void removeRanks(Story story) {
-        if(story.getBacklog() instanceof Iteration) {
-            storyRankBusiness.removeRank(story, story.getBacklog().getParent());
+    public Story updateStoryRanks(Story story) {
+        if(story.getBacklog() instanceof Product) {
+            return story;
         }
-        storyRankBusiness.removeRank(story, story.getBacklog());
+        
+        if(!story.getChildren().isEmpty() && !story.getStoryRanks().isEmpty()) {
+            //need to remove ranks
+            storyRankBusiness.removeStoryRanks(story);
+            
+        } else if(story.getChildren().isEmpty() && story.getStoryRanks().isEmpty()) {
+            createStoryRanks(story, story.getBacklog());
+        }
+        return story;
+    }
+    
+    private void createStoryRanks(Story story, Backlog backlog) {
+        this.storyRankBusiness.rankToBottom(story, backlog);
+        if(backlog instanceof Iteration) {
+            this.storyRankBusiness.rankToBottom(story, backlog.getParent());
+        }
     }
     
     @Transactional
@@ -243,12 +270,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         int newId = (Integer)storyDAO.create(story);
         story = storyDAO.get(newId);
         
-        this.storyRankBusiness.rankToBottom(story, backlog);
-        
-        //rank to the project leaf stories
-        if(backlog instanceof Iteration) {
-            this.storyRankBusiness.rankToBottom(story, backlog.getParent());
-        }
+        createStoryRanks(story, backlog);
         
         if (backlog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(backlog.getId());
@@ -259,7 +281,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         
         return newId;
-    };
+    }
     
     
     @Transactional

@@ -72,9 +72,8 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * @param backlog TODO
      */
     public Story rankStory(final Story story, final Story upperStory, Backlog backlog);
-    
-    public void removeRanks(Story story);
-    
+        
+    public Story updateStoryRanks(Story story);
     
     public void storeBatch(Collection<Story> stories);
     

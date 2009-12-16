@@ -31,7 +31,7 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
         }
 
         if(!newStories.isEmpty()) {
-            storyBusiness.removeRanks(original);
+            storyBusiness.updateStoryRanks(original);
         }
         
         persistChildStories(original, newStories);

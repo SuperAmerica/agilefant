@@ -87,7 +87,7 @@ public class StorySplitBusinessTest {
     }
 
     private void childCreationExpects() {
-        storyBusiness.removeRanks(parentStory);
+        expect(storyBusiness.updateStoryRanks(parentStory)).andReturn(null);
         expect(storyBusiness.create(childStories.get(0))).andReturn(1);
         expect(storyBusiness.create(childStories.get(1))).andReturn(2);
     }

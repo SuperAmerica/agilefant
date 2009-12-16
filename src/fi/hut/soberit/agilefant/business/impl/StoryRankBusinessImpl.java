@@ -164,6 +164,30 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
         }
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public void removeStoryRanks(Story story) {
+        for(StoryRank rank : story.getStoryRanks()) {
+            skipRank(rank);
+            this.storyRankDAO.remove(rank);
+        }
+        
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void removeBacklogRanks(Backlog backlog) {
+        for(StoryRank rank : backlog.getStoryRanks()) {
+            skipRank(rank);
+            this.storyRankDAO.remove(rank);
+        }        
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void rankToBottom(Story story, Backlog context, Backlog fromContext) {
         handleContextSwitch(story, context, fromContext);
         rankToBottom(story, context);

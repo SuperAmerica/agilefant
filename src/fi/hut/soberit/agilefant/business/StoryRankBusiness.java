@@ -48,6 +48,10 @@ public interface StoryRankBusiness {
      * Remove rank from the given story in the given context.
      */
     void removeRank(Story story, Backlog context);
+    
+    void removeStoryRanks(Story story);
+    
+    void removeBacklogRanks(Backlog backlog);
     /**
      * Rank to the top.
      */

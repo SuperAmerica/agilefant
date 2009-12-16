@@ -191,7 +191,6 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     @JSON(include=false)
     @NotAudited
     @OneToMany(fetch = FetchType.LAZY, targetEntity=StoryRank.class, mappedBy="story")
-    @Cascade(CascadeType.DELETE_ORPHAN)
     public Set<StoryRank> getStoryRanks() {
         return storyRanks;
     }

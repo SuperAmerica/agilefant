@@ -53,7 +53,7 @@ public class BacklogHistoryEntryBusinessImpl extends
         }
         DateTime currentTime = new DateTime();
         BacklogHistoryEntry entry = backlogHistoryEntryDAO.retrieveLatest(
-                currentTime, backlogId);
+                currentTime, project.getId());
         // if an existing entry is within the set interval update that entry,
         // else create a new one
         if (entry == null || entry.getTimestamp().isBefore(

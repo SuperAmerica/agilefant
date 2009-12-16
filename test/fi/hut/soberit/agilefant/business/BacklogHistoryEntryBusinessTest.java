@@ -62,6 +62,7 @@ public class BacklogHistoryEntryBusinessTest {
     @Test
     public void testUpdateHistory_project() {
         Project project = new Project();
+        project.setId(1);
 
         expect(backlogDAO.get(1)).andReturn(project);
         expect(
@@ -89,12 +90,13 @@ public class BacklogHistoryEntryBusinessTest {
     @Test
     public void testUpdateHistory_iteration() {
         Project project = new Project();
+        project.setId(2);
         Iteration iteration = new Iteration();
         iteration.setParent(project);
         expect(backlogDAO.get(1)).andReturn(iteration);
         expect(
                 backlogHistoryEntryDAO.retrieveLatest(EasyMock
-                        .isA(DateTime.class), EasyMock.eq(1))).andReturn(
+                        .isA(DateTime.class), EasyMock.eq(2))).andReturn(
                 oldEntry);
         expect(storyHierarchyDAO.totalLeafDoneStoryPoints(project)).andReturn(
                 10l);
@@ -117,12 +119,13 @@ public class BacklogHistoryEntryBusinessTest {
     @Test
     public void testUpdateHistory_updateLatestEntry() {
         Project project = new Project();
+        project.setId(2);
         Iteration iteration = new Iteration();
         iteration.setParent(project);
         expect(backlogDAO.get(1)).andReturn(iteration);
         expect(
                 backlogHistoryEntryDAO.retrieveLatest(EasyMock
-                        .isA(DateTime.class), EasyMock.eq(1))).andReturn(
+                        .isA(DateTime.class), EasyMock.eq(2))).andReturn(
                 newEntry);
         expect(storyHierarchyDAO.totalLeafDoneStoryPoints(project)).andReturn(
                 10l);

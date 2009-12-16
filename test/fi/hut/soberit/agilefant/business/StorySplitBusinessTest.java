@@ -97,7 +97,9 @@ public class StorySplitBusinessTest {
             assertEquals(parentStory, child.getParent());
 
             assertEquals(parentStory.getResponsibles(), child.getResponsibles());
-        }
+            
+            assertTrue(parentStory.getChildren().contains(child));
+        }     
     }
 
     @Test

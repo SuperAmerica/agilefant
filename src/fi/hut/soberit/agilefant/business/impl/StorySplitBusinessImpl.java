@@ -35,6 +35,7 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
         }
         
         persistChildStories(original, newStories);
+        original.getChildren().addAll(newStories);
         if(oldChangedStories != null) {
             updateChangedStories(oldChangedStories);
         }

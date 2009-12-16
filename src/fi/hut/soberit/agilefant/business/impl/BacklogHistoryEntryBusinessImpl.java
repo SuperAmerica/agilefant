@@ -51,8 +51,16 @@ public class BacklogHistoryEntryBusinessImpl extends
         } else {
             project = (Project) backlog;
         }
+        DateTime currentTime = new DateTime();
+        BacklogHistoryEntry entry = backlogHistoryEntryDAO.retrieveLatest(
+                currentTime, backlogId);
+        // if an existing entry is within the set interval update that entry,
+        // else create a new one
+        if (entry == null || entry.getTimestamp().isBefore(
+                currentTime.minus(BacklogHistoryEntryBusiness.UPDATE_INTERVAL))) {
+            entry = new BacklogHistoryEntry();
+        }
 
-        BacklogHistoryEntry entry = new BacklogHistoryEntry();
         entry.setTimestamp(new DateTime());
         entry.setDoneSum(storyHierarchyDAO.totalLeafDoneStoryPoints(project));
         entry.setEstimateSum(storyHierarchyDAO.totalLeafStoryPoints(project));

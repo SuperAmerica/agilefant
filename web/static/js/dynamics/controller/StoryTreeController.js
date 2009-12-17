@@ -10,13 +10,16 @@
 var StoryTreeController = function StoryTreeController(id, type, element, options) {
   this.id = id;
   this.type = type;
-  this.element = element;
+  this.parentElement = element;
+  this.headerElement = $('<div/>').appendTo(this.parentElement);
+  this.element = $('<div/>').appendTo(this.parentElement);
   this.options = {
     refreshCallback: null
   };
   jQuery.extend(this.options, options);
   this.init();
   this._initializeTree();
+  this.initHeader();
 };
 StoryTreeController.prototype = new CommonController();
 
@@ -27,6 +30,24 @@ StoryTreeController.prototype.refresh = function() {
     return;
   }
   this.tree.refresh();
+};
+
+
+StoryTreeController.prototype.initHeader = function() {
+  var me = this;
+  
+  var textFilterBox = $('<div>Filter by text: </div>').appendTo(this.headerElement);
+  this.textFilterField = $('<input type="text"/>').appendTo(textFilterBox);
+  
+  this.textFilterField.keyup(function() {
+    me.element.find('li').removeClass("tree-hideByFilter");
+    me.element.find('li a').removeClass("tree-highlightByFilter");
+    var text = $(this).val();
+    if (text) {
+      me.element.find('li').not(":contains('" + text + "')").addClass("tree-hideByFilter");
+      me.element.find('li a:contains("' + text + '")').addClass("tree-highlightByFilter");
+    }
+  });
 };
 
 StoryTreeController.prototype.initTree = function() {
@@ -84,7 +105,9 @@ StoryTreeController.prototype.initTree = function() {
 
 StoryTreeController.prototype._onload = function() {
   this.tree.open_all();
-  this.options.refreshCallback();
+  if (this.options.refreshCallback) {
+    this.options.refreshCallback();
+  }
 };
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {
   var myId = $(node).attr("storyid");
@@ -123,10 +146,10 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
  */
 StoryTreeController.prototype._initializeTree = function() {
   var me = this;
-  var elem = $(this.element);
+  var elem = $(this.parentElement).attr('id');
   
   /* Show edit button */
-  elem.find('li > span').live('mouseover', function() {
+  $('#' + elem + ' li > a').live('mouseover', function() {
     if (!$(this).children('.editButton').get(0)) {
       $('.editButton').remove();
       var button = $('<div />').addClass('editButton').html('Edit &#8711;').appendTo($(this));
@@ -135,12 +158,13 @@ StoryTreeController.prototype._initializeTree = function() {
   
   
   /* Edit menu creation*/
-  elem.find('.editButton').live('click', function() {
+  $('#' + elem + ' .editButton').live('click', function() {
     var off = $(this).offset();
     var menu = $('<ul/>').addClass('editButtonMenu').appendTo($(this));
     menu.css({
       "top" : off.top + 18,
-      "left" : off.left - 32
+      "left" : off.left - 32,
+      "display": "block"
     });
     var editButton = $('<li/>').text('Details').appendTo(menu);
     var splitButton = $('<li/>').text('Split').appendTo(menu);

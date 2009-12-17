@@ -25,6 +25,8 @@
   <li class=""><a href="#backlogHistory"><span><img
     alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
 </ul>
+
+
 <div class="details" id="backlogDetails" style="overflow: auto;">
 <div id="detailContainer" style="width: 70%; float: left; padding: 8px;"></div>
 <div style="width: 28%; float: right">
@@ -36,7 +38,10 @@
 </div>
 </div>
 <div class="details" id="backlogAssignees"></div>
-<div class="details" id="backlogSpentEffort"></div>
+
+<c:if test="${settings.hourReportingEnabled}">
+  <div class="details" id="backlogSpentEffort"></div>
+</c:if>
 </div>
 
 <script type="text/javascript">

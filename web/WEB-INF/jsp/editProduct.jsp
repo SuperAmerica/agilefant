@@ -17,7 +17,9 @@
 </ul>
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
-<div class="details" id="backlogSpentEffort"></div>
+<c:if test="${settings.hourReportingEnabled}">
+  <div class="details" id="backlogSpentEffort"></div>
+</c:if>
 <div class="details" id="backlogHistory"></div>
 </div>
 
@@ -40,51 +42,9 @@ $(document).ready(function() {
   	});
   }
 
-  
-
-  var hideDoneStories = function(option) {
-    var opt = $(option);
-    if(opt.is(":checked")) {
-      $("#storyTree [storystate=DONE]").addClass("tree-hideByFilter");
-    }
-  };
-  var filterByText = function(textField) {
-    var field = $(textField);
-    var text = field.val().toLowerCase();
-    $("#storyTree li").not(":contains('" + text + "')").addClass("tree-hideByFilter");
-  };
-
-  var runFilters = function() {
-    $("#storyTree li").removeClass("tree-hideByFilter");
-    hideDoneStories($("#treeHideDone"));
-    filterByText($("#filterByText"));
-  };
-
-  var storyTreeFilterTimer = null;
-  var timeoutFilter = function() {
-    if (storyTreeFilterTimer) {
-      clearTimeout(storyTreeFilterTimer);
-    }
-    storyTreeFilterTimer = setTimeout(function() {
-      runFilters();
-    }, 500);
-  };
-  
-  $("#treeHideDone").change(runFilters);
-  $("#filterByText").keyup(timeoutFilter);
-  $("#resetFilters").click(function() {
-    $("#filterByText").val('');
-    $("#treeHideDone").removeAttr('checked');
-    runFilters();
-  });
-
-  
+   
   var storyTreeController = new StoryTreeController(
-    ${product.id}, "product", $('#storyTree'),
-    {
-      refreshCallback: function() { runFilters(); }
-    }
-  );
+    ${product.id}, "product", $('#storyTree'),{});
   storyTreeController.initTree();
 
   window.setInterval(function() {
@@ -94,16 +54,14 @@ $(document).ready(function() {
 });
 </script>
 
+<style type="text/css">
+.search {
+  background: #f0f;
+}
+</style>
+
 <div class="ui-widget-content ui-corner-all structure-main-block dynamictable">
   <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree</div>
-  <div>
-    <form onsubmit="return false;">
-      <input id="treeHideDone" type="checkbox"/>
-      Hide done stories | Filter by text:
-      <input type="text" id="filterByText"/>
-      <button id="resetFilters">Reset filters</button>
-    </form>
-  </div>
   <form onsubmit="return false;"><div id="storyTree">&nbsp;</div></form>
 </div>
 

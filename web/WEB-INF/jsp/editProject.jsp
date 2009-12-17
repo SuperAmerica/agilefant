@@ -21,7 +21,9 @@
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
 <div class="details" id="backlogAssignees"></div>
-<div class="details" id="backlogSpentEffort"></div>
+<c:if test="${settings.hourReportingEnabled}">
+  <div class="details" id="backlogSpentEffort"></div>
+</c:if>
 
 </div>
 

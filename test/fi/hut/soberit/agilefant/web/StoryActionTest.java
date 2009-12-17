@@ -9,26 +9,38 @@ import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
-import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.test.Mock;
+import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
-public class StoryActionTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = MockContextLoader.class)
+public class StoryActionTest extends MockedTestCase {
 
+    @TestedBean
     StoryAction storyAction;
     
+    @Mock
     StoryBusiness storyBusiness;
+    
+    @Mock
     BacklogBusiness backlogBusiness;
     
     Story story;
@@ -44,26 +56,8 @@ public class StoryActionTest {
     }
 
     
-    @Before
-    public void setUp_dependencies() {
-        storyAction = new StoryAction();
-        
-        storyBusiness = createStrictMock(StoryBusiness.class);
-        storyAction.setStoryBusiness(storyBusiness);
-        
-        backlogBusiness = createStrictMock(BacklogBusiness.class);
-        storyAction.setBacklogBusiness(backlogBusiness);
-    }
-    
-    private void replayAll() {
-        replay(storyBusiness, backlogBusiness);
-    }
-    
-    private void verifyAll() {
-        verify(storyBusiness, backlogBusiness);
-    }
-    
     @Test
+    @DirtiesContext
     public void testRetrieve() {
         storyAction.setStoryId(story.getId());
         StoryTO storyTo = new StoryTO(story);
@@ -77,9 +71,8 @@ public class StoryActionTest {
         verifyAll();
     }
 
-
-    
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testRetrieve_noSuchStory() {
         storyAction.setStoryId(-1);
         expect(storyBusiness.retrieveStoryWithMetrics(-1)).andThrow(new ObjectNotFoundException());
@@ -91,6 +84,7 @@ public class StoryActionTest {
     }
     
     @Test
+    @DirtiesContext
     public void testCreate() {
         Story returnedStory = new Story();
         expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), storyAction.getUserIds())).andReturn(returnedStory);
@@ -103,6 +97,7 @@ public class StoryActionTest {
     
     
     @Test
+    @DirtiesContext
     public void testStore() {
         storyAction.setStory(story);
         storyAction.setStoryId(story.getId());
@@ -116,6 +111,7 @@ public class StoryActionTest {
     }
     
     @Test
+    @DirtiesContext
     public void testStore_changeResponsibles() {
         storyAction.setStory(story);
         storyAction.setStoryId(story.getId());
@@ -129,6 +125,7 @@ public class StoryActionTest {
     }
     
     @Test
+    @DirtiesContext
     public void testStoryContents() {
         storyAction.setIterationId(iter.getId());
         story.setBacklog(iter);
@@ -149,6 +146,7 @@ public class StoryActionTest {
     }
         
     @Test
+    @DirtiesContext
     public void testMoveStory() {
         storyAction.setStoryId(story.getId());
         storyAction.setBacklogId(iter.getId());
@@ -166,6 +164,7 @@ public class StoryActionTest {
      */
     
     @Test
+    @DirtiesContext
     public void testDelete() {
        storyAction.setStoryId(story.getId());
        storyBusiness.delete(story.getId(), null, null, null);
@@ -177,6 +176,7 @@ public class StoryActionTest {
     }
     
     @Test
+    @DirtiesContext
     public void testDelete_withChoices() {
        storyAction.setStoryId(story.getId());
        storyAction.setTaskHandlingChoice(TaskHandlingChoice.MOVE);
@@ -191,6 +191,7 @@ public class StoryActionTest {
     }
 
     @Test
+    @DirtiesContext
     public void testInitializePrefetchingData() {
         Story newStory = new Story();
         newStory.setId(2222);
@@ -205,6 +206,7 @@ public class StoryActionTest {
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testInitializePrefetchingData_noSuchStory() {
         expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         
@@ -217,9 +219,10 @@ public class StoryActionTest {
     
     
     @Test
-    public void testRankStory() {
+    @DirtiesContext
+    public void testRankUnder() {
         storyAction.setStoryId(123);
-        storyAction.setRankUnderId(666);
+        storyAction.setTargetStoryId(666);
         storyAction.setBacklogId(222);
         
         Story lower = new Story();
@@ -229,21 +232,45 @@ public class StoryActionTest {
         expect(storyBusiness.retrieve(123)).andReturn(lower);
         expect(storyBusiness.retrieveIfExists(666)).andReturn(upper);
         expect(backlogBusiness.retrieveIfExists(222)).andReturn(iter);
-        expect(storyBusiness.rankStory(lower, upper, iter)).andReturn(returned);
+        expect(storyBusiness.rankStoryUnder(lower, upper, iter)).andReturn(returned);
         
         replayAll();
-        assertEquals(Action.SUCCESS, storyAction.rankStory());
+        assertEquals(Action.SUCCESS, storyAction.rankStoryUnder());
+        verifyAll();
+        
+        assertEquals(returned, storyAction.getStory());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRankOver() {
+        storyAction.setStoryId(123);
+        storyAction.setTargetStoryId(666);
+        storyAction.setBacklogId(222);
+        
+        Story targetStory = new Story();
+        Story story = new Story();
+        Story returned = new Story();
+        
+        expect(storyBusiness.retrieve(123)).andReturn(story);
+        expect(storyBusiness.retrieveIfExists(666)).andReturn(targetStory);
+        expect(backlogBusiness.retrieveIfExists(222)).andReturn(iter);
+        expect(storyBusiness.rankStoryOver(story, targetStory, iter)).andReturn(returned);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.rankStoryOver());
         verifyAll();
         
         assertEquals(returned, storyAction.getStory());
     }
     
     @Test(expected = ObjectNotFoundException.class)
-    public void testRankStory_notFound() {
+    @DirtiesContext
+    public void testRankUnder_notFound() {
         storyAction.setStoryId(-1);
         expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
-        storyAction.rankStory();
+        storyAction.rankStoryUnder();
         verifyAll();
     }
     

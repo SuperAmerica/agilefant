@@ -361,7 +361,13 @@
       </result>
     </action>
     
-    <action name="rankStory" method="rankStory" class="storyAction">
+    <action name="rankStoryOver" method="rankStoryOver" class="storyAction">
+      <result name="success" type="json">
+        <param name="target">story</param>
+      </result>
+    </action>
+    
+    <action name="rankStoryUnder" method="rankStoryUnder" class="storyAction">
       <result name="success" type="json">
         <param name="target">story</param>
       </result>

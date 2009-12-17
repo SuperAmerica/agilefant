@@ -67,12 +67,16 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     
 
     /**
-     * Rank story under the give upperStory. If upperStory is null 
-     * the story will be ranked to the top. 
-     * @param backlog TODO
+     * Rank story under the give upperStory.
      */
-    public Story rankStory(final Story story, final Story upperStory, Backlog backlog);
-        
+    public Story rankStoryUnder(final Story story, final Story upperStory, Backlog backlog);
+    
+    /**
+     * Rank story over the given lowerStory.
+     */
+    public Story rankStoryOver(final Story story, final Story lowerStory, Backlog backlog);
+    
+    
     public Story updateStoryRanks(Story story);
     
     public void storeBatch(Collection<Story> stories);

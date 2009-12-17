@@ -36,7 +36,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     @PrefetchId
     private Integer storyId;
     
-    private Integer rankUnderId;
+    private Integer targetStoryId;
 
     private StoryState state;
     
@@ -125,11 +125,19 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         return Action.SUCCESS;
     }
     
-    public String rankStory() {
+    public String rankStoryUnder() {
         story = storyBusiness.retrieve(storyId);
-        Story upper = storyBusiness.retrieveIfExists(rankUnderId);
+        Story upper = storyBusiness.retrieveIfExists(targetStoryId);
         Backlog backlog = backlogBusiness.retrieveIfExists(backlogId);
-        story = storyBusiness.rankStory(story, upper, backlog);
+        story = storyBusiness.rankStoryUnder(story, upper, backlog);
+        return Action.SUCCESS;
+    }
+    
+    public String rankStoryOver() {
+        story = storyBusiness.retrieve(storyId);
+        Story lower = storyBusiness.retrieveIfExists(targetStoryId);
+        Backlog backlog = backlogBusiness.retrieveIfExists(backlogId);
+        story = storyBusiness.rankStoryOver(story, lower, backlog);
         return Action.SUCCESS;
     }
     
@@ -262,8 +270,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         this.backlogBusiness = backlogBusiness;
     }
 
-    public void setRankUnderId(Integer rankUnderId) {
-        this.rankUnderId = rankUnderId;
+    public void setTargetStoryId(Integer targetStoryId) {
+        this.targetStoryId = targetStoryId;
     }
     public void setTaskHandlingChoice(TaskHandlingChoice taskHandlingChoice) {
         this.taskHandlingChoice = taskHandlingChoice;

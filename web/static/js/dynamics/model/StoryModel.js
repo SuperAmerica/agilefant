@@ -178,18 +178,31 @@ StoryModel.prototype.moveStory = function(backlogId) {
 };
 
 StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
+  this._rank("under", rankUnderId, moveUnder);
+};
+
+StoryModel.prototype.rankOver = function(rankOverId, moveUnder) {
+  this._rank("over", rankOverId, moveUnder);
+};
+
+StoryModel.prototype._rank = function(direction, targetStoryId, targetBacklog) {
   var me = this;
   var postData = {
-    storyId: me.getId(),
-    rankUnderId: rankUnderId
+    "storyId": me.getId(),
+    "targetStoryId": targetStoryId
   };
   
-  if (moveUnder && moveUnder != this.getParent()) {
-    postData.backlogId = moveUnder.getId();
+  if (targetBacklog && targetBacklog != this.getParent()) {
+    postData.backlogId = targetBacklog.getId();
   }
   
+  var urls = {
+    "over": "ajax/rankStoryOver.action",
+    "under": "ajax/rankStoryUnder.action"
+  };
+  
   jQuery.ajax({
-    url: "ajax/rankStory.action",
+    url: urls[direction],
     type: "post",
     dataType: "json",
     data: postData,
@@ -200,8 +213,8 @@ StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       var oldParent = me.getParent();
       me.setData(data);
       oldParent.reload();
-      if (oldParent !== moveUnder) {
-        moveUnder.reload();
+      if (oldParent !== targetBacklog) {
+        targetBacklog.reload();
       }
     },
     error: function(xhr) {

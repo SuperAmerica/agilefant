@@ -440,7 +440,7 @@ public class StoryBusinessTest {
     }
 
     @Test
-    public void testRankStory() {
+    public void testRankStoryUnder() {
         Backlog blog = new Iteration();
         Story story = new Story();
         story.setBacklog(blog);
@@ -448,24 +448,37 @@ public class StoryBusinessTest {
         ref.setBacklog(blog);
         storyRankBusiness.rankBelow(story, blog, ref);
         replayAll();
-        storyBusiness.rankStory(story, ref, null);
+        storyBusiness.rankStoryUnder(story, ref, null);
+        verifyAll();
+    }
+    
+    @Test
+    public void testRankStoryOver() {
+        Backlog blog = new Iteration();
+        Story story = new Story();
+        story.setBacklog(blog);
+        Story ref = new Story();
+        ref.setBacklog(blog);
+        storyRankBusiness.rankAbove(story, blog, ref);
+        replayAll();
+        storyBusiness.rankStoryOver(story, ref, null);
         verifyAll();
     }
     
     @Test(expected=IllegalArgumentException.class)
-    public void testRankStory_null() {
+    public void testRankStoryUnder_null() {
         Backlog blog = new Iteration();
         Story story = null;
         Story ref = new Story();
         ref.setBacklog(blog);
         
         replayAll();
-        storyBusiness.rankStory(story, ref, null);
+        storyBusiness.rankStoryUnder(story, ref, null);
         verifyAll();
     }
     
     @Test(expected=IllegalArgumentException.class)
-    public void testRankStory_invalidbacklogs() {
+    public void testRankStoryUnder_invalidbacklogs() {
         Project proj1 = new Project();
         Project proj2 = new Project();
         Iteration iter = new Iteration();
@@ -478,19 +491,18 @@ public class StoryBusinessTest {
         ref.setBacklog(iter);
         
         replayAll();
-        storyBusiness.rankStory(story, ref, null);
+        storyBusiness.rankStoryUnder(story, ref, null);
         verifyAll();
     }
     
-    @Test
-    public void testRankStory_toTop() {
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testRankStory_underNull() {
         Backlog blog = new Iteration();
         Story story = new Story();
         story.setBacklog(blog);
-        Story ref = null;
-        storyRankBusiness.rankToHead(story, blog);
         replayAll();
-        storyBusiness.rankStory(story, ref, null);
+        storyBusiness.rankStoryUnder(story, null, null);
         verifyAll();
     }
     

@@ -374,24 +374,36 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     
     /** {@inheritDoc} */
     @Transactional
-    public Story rankStory(Story story, Story upperStory, Backlog backlog) {
+    public Story rankStoryUnder(Story story, Story upperStory, Backlog backlog) {
+        backlog = checkRankingArguments(story, upperStory, backlog);
+        storyRankBusiness.rankBelow(story, backlog, upperStory);
+        return story;
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public Story rankStoryOver(Story story, Story lowerStory, Backlog backlog) {
+        backlog = checkRankingArguments(story, lowerStory, backlog);
+        storyRankBusiness.rankAbove(story, backlog, lowerStory);
+        return story;
+    }
+
+    private Backlog checkRankingArguments(Story story, Story otherStory,
+            Backlog backlog) {
         if (story == null) {
             throw new IllegalArgumentException("Story should be given");
         }
         //backlog mismatch
-        if(upperStory != null && backlog == null && !isValidRankTarget(story, upperStory)) {
+        if(otherStory != null && backlog == null && !isValidRankTarget(story, otherStory)) {
             throw new IllegalArgumentException("Invalid backlogs");
         }
         if(backlog == null)  {
             backlog = story.getBacklog();
         }
-        
-        if(upperStory == null) {
-            storyRankBusiness.rankToHead(story, backlog);
-        } else {
-            storyRankBusiness.rankBelow(story, backlog, upperStory);
+        if (otherStory == null) {
+            throw new IllegalArgumentException("Upper story should be given");
         }
-        return story;
+        return backlog;
     }
 
     private boolean isValidRankTarget(Story story, Story upperStory) {

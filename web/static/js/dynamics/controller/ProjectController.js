@@ -290,11 +290,6 @@ ProjectController.prototype.initializeIterationListConfig = function() {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getIterations,
     caption : "Iterations",
-    rowDroppable: true,
-    dropOptions: {
-      accepts: IterationRowController.prototype.acceptsDroppable,
-      callback: StoryController.prototype.moveStoryToBacklog
-    },
     cssClass: "project-iteration-table",
     validators: [ BacklogModel.Validators.dateValidator ]
   });

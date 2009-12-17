@@ -101,16 +101,17 @@ StoryController.prototype.rankStory = function(view, model, newPos) {
   var previousRow = newPos - 1;
   var targetModel = view.getParentView().getModel();
   if (view.getParentView().getDataRowAt(previousRow)) {
-    previousStory = view.getParentView().getDataRowAt(previousRow).getModel();
-    model.rankUnder(previousStory.getId(), targetModel);
+    var targetStory = view.getParentView().getDataRowAt(previousRow).getModel();
+    model.rankUnder(targetStory.getId(), targetModel);
   }
   else {
-    model.rankUnder(-1, targetModel);
+    var targetStory = view.getParentView().getDataRowAt(1).getModel();
+    model.rankOver(targetStory.getId(), targetModel);
   }
 };
 
 StoryController.prototype.moveStoryToBacklog = function(targetModel) {
-  this.model.rankUnder(-1, targetModel);
+  this.model.moveStory(targetModel.getId());
 };
 
 

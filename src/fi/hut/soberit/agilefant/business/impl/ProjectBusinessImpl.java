@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;

@@ -39,6 +39,10 @@ public interface StoryHierarchyBusiness {
      */
     public List<Story> retrieveProductRootStories(Product product);
     
-    public void changeParentStory(Story story, Story newParent);
+    public void moveUnder(Story story, Story refernece);
+    
+    public void moveAfter(Story story, Story reference);
+    
+    public void moveBefore(Story story, Story reference);
 
 }

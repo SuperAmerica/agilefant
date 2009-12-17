@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -140,7 +141,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         persistable.setName(project.getName());
         persistable.setStartDate(project.getStartDate());
         persistable.setEndDate(project.getEndDate());
-        persistable.setProjectType(project.getProjectType());
         persistable.setDescription(project.getDescription());
         persistable.setStatus(project.getStatus());
         persistable.setBacklogSize(project.getBacklogSize());        
@@ -216,7 +216,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public ProjectTO getProjectData(int projectId) {
         Project original = this.retrieve(projectId);
         ProjectTO project = transferObjectBusiness.constructProjectTO(original);
-        project.setChildren(new ArrayList<Backlog>());
+        project.setChildren(new HashSet<Backlog>());
         for (Backlog backlog : original.getChildren()) {
             IterationTO iter = new IterationTO((Iteration)backlog);
             iter.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));

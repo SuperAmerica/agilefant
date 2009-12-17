@@ -1,8 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.DiscriminatorColumn;
@@ -20,8 +18,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -68,7 +64,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     private Backlog parent;
     
-    private List<Backlog> children = new ArrayList<Backlog>();
+    private Set<Backlog> children = new HashSet<Backlog>();
     
     private Set<Story> stories = new HashSet<Story>();
     
@@ -142,7 +138,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      * Set the backlog's child backlogs.
      * @param children
      */
-    public void setChildren(List<Backlog> children) {
+    public void setChildren(Set<Backlog> children) {
         this.children = children;
     }
 
@@ -152,7 +148,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @OneToMany(mappedBy = "parent")
     @NotAudited
-    public List<Backlog> getChildren() {
+    public Set<Backlog> getChildren() {
         return children;
     }
    

@@ -90,21 +90,18 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
   var myId = $(node).attr("storyid");
   var refId = $(ref_node).attr("storyid");
   //alert("you moved story " + myId + " " + type + " story " + refId);
-  var data = {storyId: myId, parentId: refId};
+  var data = {storyId: myId, referenceStoryId: refId};
+  var urls = {
+      "before": "ajax/moveStoryBefore.action",
+      "after": "ajax/moveStoryAfter.action",
+      "inside": "ajax/moveStoryUnder.action"
+  };
   $.ajax({
-    url: "ajax/changeStoryParent.action",
+    url: urls[type],
     data: data,
     type: "post",
     async: true
   });
-  switch(type) {
-  case "before":
-    break;
-  case "after":
-    break;
-  case "inside":
-    break;
-  }
 };
 StoryTreeController.prototype._getStoryForId = function(id, callback) {
   var model = ModelFactory.getOrRetrieveObject(

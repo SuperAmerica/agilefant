@@ -62,4 +62,19 @@ public class IterationDAOTest extends AbstractHibernateTests {
         assertEquals(3, actual.get(0).getId());
         assertEquals(1, actual.size());
     }
+    
+    @Test
+    public void testRetrieveDeep_emptyIteration() {
+        executeClassSql();
+        Iteration actual = iterationDAO.retrieveDeep(3);
+        assertNotNull(actual);
+    }
+    
+    @Test
+    public void testRetrieveDeep() {
+        executeClassSql();
+        Iteration actual = iterationDAO.retrieveDeep(1);
+        assertNotNull(actual);    
+        
+    }
 }

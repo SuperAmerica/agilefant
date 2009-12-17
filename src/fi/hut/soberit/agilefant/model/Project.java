@@ -10,7 +10,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
@@ -52,8 +51,6 @@ import flexjson.JSON;
 @Audited
 public class Project extends Backlog implements Schedulable, Rankable {
 
-    private ProjectType projectType;
-
     private DateTime endDate;
 
     private DateTime startDate;
@@ -88,17 +85,6 @@ public class Project extends Backlog implements Schedulable, Rankable {
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     public DateTime getStartDate() {
         return startDate;
-    }
-
-    @ManyToOne
-    @JSON(include = false)
-    @NotAudited
-    public ProjectType getProjectType() {
-        return projectType;
-    }
-
-    public void setProjectType(ProjectType projectType) {
-        this.projectType = projectType;
     }
 
     @Column(nullable = true)

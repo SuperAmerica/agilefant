@@ -27,7 +27,7 @@ public class StoryHierarchyAction extends ActionSupport {
 
     private Integer storyId;
     private Story story;
-    private Integer parentId;
+    private Integer referenceStoryId;
 
     private List<Story> hierarchy = new ArrayList<Story>();
 
@@ -42,13 +42,26 @@ public class StoryHierarchyAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
-    public String changeParentStory() {
+    public String moveStoryUnder() {
         Story target = this.storyBusiness.retrieve(storyId);
-        Story parent = this.storyBusiness.retrieve(parentId);
-        this.storyHierarchyBusiness.changeParentStory(target, parent);
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        this.storyHierarchyBusiness.moveUnder(target, reference);
         return Action.SUCCESS;
     }
 
+    public String moveStoryAfter() {
+        Story target = this.storyBusiness.retrieve(storyId);
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        this.storyHierarchyBusiness.moveAfter(target, reference);
+        return Action.SUCCESS;
+    }
+    
+    public String moveStoryBefore() {
+        Story target = this.storyBusiness.retrieve(storyId);
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        this.storyHierarchyBusiness.moveBefore(target, reference);
+        return Action.SUCCESS;
+    }
     /*
      * SETTERS AND GETTERS
      */
@@ -69,8 +82,8 @@ public class StoryHierarchyAction extends ActionSupport {
         return story;
     }
 
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
+    public void setReferenceStoryId(Integer parentId) {
+        this.referenceStoryId = parentId;
     }
 
     public void setStoryHierarchyBusiness(

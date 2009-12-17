@@ -42,6 +42,7 @@
 				<entry key="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect" />
 				<entry key="hibernate.jdbc.batch_size" value="0" />
 				<entry key="hibernate.hbm2ddl.auto" value="create-drop" />
+				<entry key="hibernate.show_sql" value="true" />
 			</map>
 		</property>
 	</bean>

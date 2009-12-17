@@ -26,7 +26,7 @@ public class ProductBusinessTest {
 
     @Test
     public void testRetrieveAllOrderByName() {
-        expect(productDAO.getAllOrderByName()).andReturn(
+        expect(productDAO.retrieveBacklogTree()).andReturn(
                 new ArrayList<Product>());
         replay(productDAO);
 

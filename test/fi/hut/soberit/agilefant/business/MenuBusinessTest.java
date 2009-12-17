@@ -64,7 +64,7 @@ public class MenuBusinessTest {
         secondProduct.setId(444);
         secondProduct.setName("Bar product");
         
-        expect(productBusiness.retrieveAll()).andReturn(
+        expect(productBusiness.retrieveAllOrderByName()).andReturn(
                 Arrays.asList(firstProduct, secondProduct));
         
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))

@@ -74,7 +74,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
     @Test
     @DirtiesContext
-    public void testChangeStoryParent() {
+    public void testMoveUnder() {
         Story story = new Story();
         Story oldParent = new Story();
         Story newParent = new Story();
@@ -87,7 +87,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         
         replayAll();
         
-        storyHierarchyBusiness.changeParentStory(story, newParent);
+        storyHierarchyBusiness.moveUnder(story, newParent);
         
         verifyAll();
         

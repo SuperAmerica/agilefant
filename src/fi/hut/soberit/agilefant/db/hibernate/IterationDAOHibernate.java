@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
@@ -162,15 +163,10 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         return asList(crit);
     }
     
-    /**
-     * 090928 Reko: Does not work, when iteration has no stories 
-     * or tasks.
-     */
-    @Deprecated
     public Iteration retrieveDeep(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
-        Criteria storyCrit = crit.createCriteria("stories");
-        Criteria taskCrit = crit.createCriteria("tasks");
+        Criteria storyCrit = crit.createAlias("stories", "stories", CriteriaSpecification.LEFT_JOIN);
+        Criteria taskCrit = crit.createAlias("tasks", "tasks", CriteriaSpecification.LEFT_JOIN);
         //Criteria taskWOStoryCrit = crit.createCriteria("tasks");
         
         crit.setFetchMode("stories", FetchMode.JOIN);

@@ -1,7 +1,10 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.springframework.stereotype.Repository;
@@ -24,6 +27,15 @@ public class ProductDAOHibernate extends GenericDAOHibernate<Product> implements
     public Collection<Product> getAllOrderByName() {
         DetachedCriteria crit = createCriteria().addOrder(Order.asc("name"));
         return hibernateTemplate.findByCriteria(crit);
+    }
+    
+    public List<Product> retrieveBacklogTree() {
+        Criteria crit = this.getCurrentSession().createCriteria(this.getPersistentClass());
+        crit.createAlias("children", "projects", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("projects.children", "iterations", CriteriaSpecification.LEFT_JOIN);
+        crit.addOrder(Order.asc("name"));
+        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return asList(crit);
     }
 
 }

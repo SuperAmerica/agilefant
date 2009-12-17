@@ -87,17 +87,49 @@ public class StoryHierarchyActionTest extends MockedTestCase {
     
     @Test
     @DirtiesContext
-    public void testChangeParent() {
+    public void testMoveUnder() {
         Story story = new Story();
         expect(storyBusiness.retrieve(1)).andReturn(story);
         expect(storyBusiness.retrieve(2)).andReturn(story);
-        storyHierarchyBusiness.changeParentStory(story, story);
+        storyHierarchyBusiness.moveUnder(story, story);
         
         storyHierarchyAction.setStoryId(1);
-        storyHierarchyAction.setParentId(2);
+        storyHierarchyAction.setReferenceStoryId(2);
         
         replayAll();
-        assertEquals(Action.SUCCESS, storyHierarchyAction.changeParentStory());
+        assertEquals(Action.SUCCESS, storyHierarchyAction.moveStoryUnder());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testMoveBefore() {
+        Story story = new Story();
+        expect(storyBusiness.retrieve(1)).andReturn(story);
+        expect(storyBusiness.retrieve(2)).andReturn(story);
+        storyHierarchyBusiness.moveBefore(story, story);
+        
+        storyHierarchyAction.setStoryId(1);
+        storyHierarchyAction.setReferenceStoryId(2);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyHierarchyAction.moveStoryBefore());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testMoveAfter() {
+        Story story = new Story();
+        expect(storyBusiness.retrieve(1)).andReturn(story);
+        expect(storyBusiness.retrieve(2)).andReturn(story);
+        storyHierarchyBusiness.moveAfter(story, story);
+        
+        storyHierarchyAction.setStoryId(1);
+        storyHierarchyAction.setReferenceStoryId(2);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyHierarchyAction.moveStoryAfter());
         verifyAll();
     }
 

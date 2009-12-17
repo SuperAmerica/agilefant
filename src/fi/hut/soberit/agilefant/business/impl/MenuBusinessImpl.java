@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.business.MenuBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
@@ -36,7 +37,7 @@ public class MenuBusinessImpl implements MenuBusiness {
     @SuppressWarnings("unchecked")
     public List<MenuDataNode> constructBacklogMenuData() {
         List<MenuDataNode> nodes = new ArrayList<MenuDataNode>();
-        List<Product> products = new ArrayList<Product>(productBusiness.retrieveAll());
+        List<Product> products = new ArrayList<Product>(productBusiness.retrieveAllOrderByName());
         Collections.sort(products, new PropertyComparator("name", true, true));
         for (Product prod : products) {
             nodes.add(constructMenuDataNode(prod));
@@ -50,8 +51,10 @@ public class MenuBusinessImpl implements MenuBusiness {
         mdn.setTitle(backlog.getName());
         mdn.setId(backlog.getId());
         mdn.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
-        for (Backlog child : backlog.getChildren()) {
-            mdn.getChildren().add(constructMenuDataNode(child));
+        if(!(backlog instanceof Iteration)) { //optimization
+            for (Backlog child : backlog.getChildren()) {
+                mdn.getChildren().add(constructMenuDataNode(child));
+            }
         }
         if (mdn.getChildren().size() > 0 && mdn.getChildren().get(0) instanceof Schedulable) {
             Collections.sort(mdn.getChildren(), new PropertyComparator("startDate", true, true));

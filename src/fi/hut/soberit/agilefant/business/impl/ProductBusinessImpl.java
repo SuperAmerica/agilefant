@@ -29,7 +29,7 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
 
     @Transactional(readOnly = true)
     public Collection<Product> retrieveAllOrderByName() {
-        return productDAO.getAllOrderByName();
+        return productDAO.retrieveBacklogTree();
     }
 
     public Product store(int productId, Product productData) {

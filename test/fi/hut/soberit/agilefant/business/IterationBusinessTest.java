@@ -165,7 +165,7 @@ public class IterationBusinessTest {
 //        verifyAll();
         
         
-        expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
+        expect(iterationDAO.retrieveDeep(iteration.getId())).andReturn(iteration);
         expect(transferObjectBusiness.constructIterationTO(iteration))
             .andReturn(new IterationTO(iteration));
         expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
@@ -182,7 +182,7 @@ public class IterationBusinessTest {
 
     @Test(expected = ObjectNotFoundException.class)
     public void testGetIterationContents_nullBacklog() {
-        expect(iterationDAO.get(0)).andReturn(null);
+        expect(iterationDAO.retrieveDeep(0)).andReturn(null);
         replay(iterationDAO);
         assertNull(iterationBusiness.getIterationContents(0));
         verify(iterationDAO);

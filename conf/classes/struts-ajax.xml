@@ -335,7 +335,21 @@
       </result>
     </action>
     
-    <action name="changeStoryParent" method="changeParentStory" class="storyHierarchyAction">
+    <action name="moveStoryUnder" method="moveStoryUnder" class="storyHierarchyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+    
+        
+    <action name="moveStoryBefore" method="moveStoryBefore" class="storyHierarchyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+    
+        
+    <action name="moveStoryAfter" method="moveStoryAfter" class="storyHierarchyAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>

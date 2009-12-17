@@ -37,16 +37,34 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     }
     
     @Transactional
-    public void changeParentStory(Story story, Story newParent) {
+    public void moveUnder(Story story, Story refernece) {
         Story oldParent = story.getParent();
-        story.setParent(newParent);
-        newParent.getChildren().add(story);
+        story.setParent(refernece);
+        refernece.getChildren().add(story);
         
-        storyBusiness.updateStoryRanks(newParent);
+        storyBusiness.updateStoryRanks(refernece);
         
         if(oldParent != null) {
             oldParent.getChildren().remove(story);
             storyBusiness.updateStoryRanks(oldParent);
+        }
+        
+    }
+    
+    public void moveAfter(Story story, Story reference) {
+        if(story.getParent() != reference.getParent()) {
+            if(reference.getParent() != null) {
+                moveUnder(story, reference);
+            } 
+        }
+        
+    }
+
+    public void moveBefore(Story story, Story reference) {
+        if(story.getParent() != reference.getParent()) {
+            if(reference.getParent() != null) {
+                moveUnder(story, reference);
+            } 
         }
         
     }
@@ -58,7 +76,4 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     public void setStoryHierarchyDAO(StoryHierarchyDAO storyHierarchyDAO) {
         this.storyHierarchyDAO = storyHierarchyDAO;
     }
-
-
-
 }

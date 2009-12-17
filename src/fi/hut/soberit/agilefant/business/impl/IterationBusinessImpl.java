@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
+import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
@@ -82,7 +83,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
     @Transactional(readOnly = true)
     public IterationTO getIterationContents(int iterationId) {
-        Iteration iteration = this.retrieve(iterationId);
+        Iteration iteration = this.iterationDAO.retrieveDeep(iterationId);
+        if(iteration == null) {
+            throw new ObjectNotFoundException("Iteration not found");
+        }
         IterationTO iterationTO = transferObjectBusiness.constructIterationTO(iteration);
         
         // Set the tasks without a story

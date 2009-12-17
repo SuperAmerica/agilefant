@@ -119,7 +119,7 @@
 
 /* Markers */
 #jstree-marker.marker {
-  display: block !important;
+  /*display: block !important;*/
   height: 0.2em !important;
   width: 10em !important;
   background: #E17009 !important;
@@ -127,6 +127,7 @@
 }
 
 #jstree-marker.marker_plus {
+  margin-top: -3px;
   width: 12px;
   height: 12px;
   background-position: right top;

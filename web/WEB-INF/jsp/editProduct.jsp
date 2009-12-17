@@ -18,7 +18,7 @@
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
 <div class="details" id="backlogSpentEffort"></div>
-
+<div class="details" id="backlogHistory"></div>
 </div>
 
 

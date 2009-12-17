@@ -74,7 +74,7 @@ ProductModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Product saved successfully");
-      ModelFactory.updateObject(data);
+      var object = ModelFactory.updateObject(data);
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving product", xhr);

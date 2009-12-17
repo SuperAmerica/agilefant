@@ -114,9 +114,9 @@ StoryModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Story saved successfully");
-      ModelFactory.updateObject(data);
+      var object = ModelFactory.updateObject(data);
       if(!id) {
-        me.relations.backlog.addStory(me);
+        me.relations.backlog.addStory(object);
       }
       if (me.relations.backlog) {
         me.relations.backlog.reload();

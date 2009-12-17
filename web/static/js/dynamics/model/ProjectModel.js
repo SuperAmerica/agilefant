@@ -111,9 +111,9 @@ ProjectModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Project saved successfully");
-      ModelFactory.updateObject(data);
+      var object = ModelFactory.updateObject(data);
       if(!id) {
-        me.getParent().addProject(me);
+        me.getParent().addProject(object);
       }
     },
     error: function(xhr, status, error) {

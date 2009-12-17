@@ -90,9 +90,9 @@ IterationModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Iteration saved successfully");
-      ModelFactory.updateObject(data);
+      var object = ModelFactory.updateObject(data);
       if(id === null || id === undefined) {
-        me.getParent().addIteration(me);
+        me.getParent().addIteration(object);
       }
     },
     error: function(xhr, status, error) {

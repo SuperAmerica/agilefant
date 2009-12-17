@@ -53,51 +53,8 @@ $(document).ready(function() {
   	});
   }
 
-
-  
-  var hideDoneStories = function(option) {
-    var opt = $(option);
-    if(opt.is(":checked")) {
-      $("#storyTree [storystate=DONE]").addClass("tree-hideByFilter");
-    }
-  };
-  var filterByText = function(textField) {
-    var field = $(textField);
-    var text = field.val().toLowerCase();
-    $("#storyTree li").not(":contains('" + text + "')").addClass("tree-hideByFilter");
-  };
-
-  var runFilters = function() {
-    $("#storyTree li").removeClass("tree-hideByFilter");
-    hideDoneStories($("#treeHideDone"));
-    filterByText($("#filterByText"));
-  };
-
-  var storyTreeFilterTimer = null;
-  var timeoutFilter = function() {
-    if (storyTreeFilterTimer) {
-      clearTimeout(storyTreeFilterTimer);
-    }
-    storyTreeFilterTimer = setTimeout(function() {
-      runFilters();
-    }, 500);
-  };
-
-  $("#treeHideDone").change(runFilters);
-  $("#filterByText").keyup(timeoutFilter);
-  $("#resetFilters").click(function() {
-    $("#filterByText").val('');
-    $("#treeHideDone").removeAttr('checked');
-    runFilters();
-  });
-
-  
   var storyTreeController = new StoryTreeController(
-    ${project.id}, "project", $('#storyTree'),
-    {
-      refreshCallback: function() { runFilters(); }
-    }
-  );
+    ${project.id}, "project", $('#storyTree'), {});
 
   $('#releaseContents').bind('tabsselect', function(event, ui) {
     if (ui.index == 1) {
@@ -121,14 +78,6 @@ $(document).ready(function() {
 <form onsubmit="return false;">
   <div class="details" id="stories"></div>
   <div class="details" id="storyTreeContainer">
-    <div>
-      <form onsubmit="return false;">
-        <input id="treeHideDone" type="checkbox"/>
-        Hide done stories | Filter by text:
-        <input type="text" id="filterByText"/>
-        <button id="resetFilters">Reset filters</button>
-      </form>
-    </div>
     <div id="storyTree">&nbsp;</div>
   </div>
   <div class="details" id="iterations">

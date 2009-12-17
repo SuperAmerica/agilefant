@@ -18,10 +18,9 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
-
 /**
- * The implementation class for calculating data to the lefthand
- * menu.
+ * The implementation class for calculating data to the lefthand menu.
+ * 
  * @author rjokelai
  */
 @Service("menuBusiness")
@@ -30,14 +29,15 @@ public class MenuBusinessImpl implements MenuBusiness {
 
     @Autowired
     private ProductBusiness productBusiness;
-    
+
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
-    
+
     @SuppressWarnings("unchecked")
     public List<MenuDataNode> constructBacklogMenuData() {
         List<MenuDataNode> nodes = new ArrayList<MenuDataNode>();
-        List<Product> products = new ArrayList<Product>(productBusiness.retrieveAllOrderByName());
+        List<Product> products = new ArrayList<Product>(productBusiness
+                .retrieveAllOrderByName());
         Collections.sort(products, new PropertyComparator("name", true, true));
         for (Product prod : products) {
             nodes.add(constructMenuDataNode(prod));
@@ -50,24 +50,28 @@ public class MenuBusinessImpl implements MenuBusiness {
         MenuDataNode mdn = new MenuDataNode();
         mdn.setTitle(backlog.getName());
         mdn.setId(backlog.getId());
-        mdn.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
-        if(!(backlog instanceof Iteration)) { //optimization
-            for (Backlog child : backlog.getChildren()) {
-                mdn.getChildren().add(constructMenuDataNode(child));
-            }
+        mdn.setScheduleStatus(transferObjectBusiness
+                .getBacklogScheduleStatus(backlog));
+        List<Backlog> children = Collections.EMPTY_LIST;
+        if (!(backlog instanceof Iteration)) { // optimization
+            children = new ArrayList<Backlog>();
+            children.addAll(backlog.getChildren());
+            Collections.sort(children, new PropertyComparator("startDate",
+                    true, true));
         }
-        if (mdn.getChildren().size() > 0 && mdn.getChildren().get(0) instanceof Schedulable) {
-            Collections.sort(mdn.getChildren(), new PropertyComparator("startDate", true, true));
+        for (Backlog child : children) {
+            mdn.getChildren().add(constructMenuDataNode(child));
         }
+
         return mdn;
     }
-    
 
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
     }
 
-    public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
+    public void setTransferObjectBusiness(
+            TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;
     }
 

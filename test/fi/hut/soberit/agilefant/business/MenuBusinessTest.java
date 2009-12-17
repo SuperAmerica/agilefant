@@ -4,8 +4,11 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +28,8 @@ public class MenuBusinessTest {
     
     TransferObjectBusiness transferObjectBusiness;
     
+    Set<Product> products;
+    
     @Before
     public void setUp_dependencies() {
         menuBusiness = new MenuBusinessImpl();
@@ -36,6 +41,46 @@ public class MenuBusinessTest {
         menuBusiness.setTransferObjectBusiness(transferObjectBusiness);
     }
 
+    @Before
+    public void setUp_dataset() {
+        products = new HashSet<Product>();
+        Product prod1 = new Product();
+        prod1.setName("zzz");
+        prod1.setId(2);
+        products.add(prod1);
+        Product prod2 = new Product();
+        prod2.setName("aaa");
+        products.add(prod2);
+        prod2.setId(1);
+        
+        Project proj1 = new Project();
+        proj1.setStartDate(new DateTime(2009,1,1,0,0,0,0));
+        proj1.setId(3);
+        Project proj2 = new Project();
+        proj2.setStartDate(new DateTime(2009,10,1,0,0,0,0));
+        proj2.setId(5);
+        Project proj3 = new Project();
+        proj3.setStartDate(new DateTime(2009,6,1,0,0,0,0));
+        proj3.setId(4);
+        
+        prod1.getChildren().add(proj1);
+        prod1.getChildren().add(proj2);
+        prod1.getChildren().add(proj3);
+        
+        Iteration iter1 = new Iteration();
+        iter1.setStartDate(new DateTime(2009,12,1,0,0,0,0));
+        iter1.setId(8);
+        Iteration iter2 = new Iteration();
+        iter2.setStartDate(new DateTime(2009,2,1,0,0,0,0));
+        iter2.setId(6);
+        Iteration iter3 = new Iteration();
+        iter3.setStartDate(new DateTime(2009,7,1,0,0,0,0));
+        iter3.setId(7);
+        
+        proj1.getChildren().add(iter1);
+        proj1.getChildren().add(iter2);
+        proj1.getChildren().add(iter3);
+    }
     private void replayAll() {
         replay(productBusiness, transferObjectBusiness);
     }
@@ -45,58 +90,37 @@ public class MenuBusinessTest {
     }
     
     @Test
-    public void constructBacklogMenuData() {
-        Product firstProduct = new Product();
-        firstProduct.setId(123);
-        firstProduct.setName("Foo product");
-        
-        Project firstProject = new Project();
-        firstProject.setId(23);
-        firstProject.setName("Project");
-        firstProduct.getChildren().add(firstProject);
-        
-        Iteration firstIteration = new Iteration();
-        firstIteration.setId(666);
-        firstIteration.setName("Iteration");
-        firstProduct.getChildren().add(firstIteration);
-        
-        Product secondProduct = new Product();
-        secondProduct.setId(444);
-        secondProduct.setName("Bar product");
-        
+    public void constructBacklogMenuData() {  
         expect(productBusiness.retrieveAllOrderByName()).andReturn(
-                Arrays.asList(firstProduct, secondProduct));
+                products);
         
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
-            .andReturn(ScheduleStatus.FUTURE).times(4);
+            .andReturn(ScheduleStatus.FUTURE).times(8);
         replayAll();
         List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData();
         verifyAll();
         
         assertEquals(2, actual.size());
-        checkReturnedData(actual);
+        checkProducts(actual);
     }
     
-    private void checkReturnedData(List<MenuDataNode> nodes) {
-        checkNode(nodes, 123, "Foo product");
-        checkNode(nodes, 444, "Bar product");
+    private void checkProducts(List<MenuDataNode> nodes) {
+        assertEquals(1, nodes.get(0).getId());
+        assertEquals(2, nodes.get(1).getId());
         
-        checkNode(getNodeById(nodes, 123).getChildren(), 23, "Project");
-        checkNode(getNodeById(nodes, 123).getChildren(), 666, "Iteration");
+        checkProjects(nodes.get(1).getChildren());
     }
     
-    private void checkNode(List<MenuDataNode> nodes, int nodeId, String name) {
-        MenuDataNode actual = getNodeById(nodes, nodeId);
-        assertEquals(name, actual.getTitle());
-        assertEquals(ScheduleStatus.FUTURE, actual.getScheduleStatus());
+    private void checkProjects(List<MenuDataNode> nodes) {
+        assertEquals(3, nodes.get(0).getId());
+        assertEquals(4, nodes.get(1).getId());
+        assertEquals(5, nodes.get(2).getId());
+        checkIterations(nodes.get(0).getChildren());
     }
     
-    private MenuDataNode getNodeById(List<MenuDataNode> nodes, int id) {
-        for (MenuDataNode node : nodes) {
-            if (node.getId() == id) {
-                return node;
-            }
-        }
-        return null;
+    private void checkIterations(List<MenuDataNode> nodes) {
+        assertEquals(6, nodes.get(0).getId());
+        assertEquals(7, nodes.get(1).getId());
+        assertEquals(8, nodes.get(2).getId());
     }
 }

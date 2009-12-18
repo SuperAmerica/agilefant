@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -20,6 +22,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -36,8 +39,9 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     private Backlog backlog;
     private StoryState state = StoryState.NOT_STARTED;
 //    private int rank = 0;
+    private int treeRank = 0;
     private Story parent;
-    private Set<Story> children = new HashSet<Story>();
+    private List<Story> children = new ArrayList<Story>();
     
     private Set<User> responsibles = new HashSet<User>();
     private Set<Task> tasks = new HashSet<Task>();
@@ -147,20 +151,6 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     public void setHourEntries(Set<StoryHourEntry> hourEntries) {
         this.hourEntries = hourEntries;
     }
-    
-    /*
-     * TODO: Remove column from SQL
-     */
-//
-//    @JSON
-//    @Column(nullable = false, columnDefinition = "int default 0")
-//    public int getRank() {
-//        return rank;
-//    }
-//
-//    public void setRank(int rank) {
-//        this.rank = rank;
-//    }
 
     @JSON
     @ManyToOne
@@ -176,13 +166,13 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     @JSON(include=false)
     @OneToMany(mappedBy="parent", targetEntity=fi.hut.soberit.agilefant.model.Story.class)
     @Fetch(FetchMode.SELECT)
-    @OrderBy("name asc")
+    @IndexColumn(name="treeRank")
     @NotAudited
-    public Set<Story> getChildren() {
+    public List<Story> getChildren() {
         return children;
     }
 
-    public void setChildren(Set<Story> children) {
+    public void setChildren(List<Story> children) {
         this.children = children;
     }
     
@@ -195,5 +185,15 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
 
     public void setStoryRanks(Set<StoryRank> storyRanks) {
         this.storyRanks = storyRanks;
+    }
+
+    @Column(nullable = false, columnDefinition = "int default 0")
+    @JSON
+    public int getTreeRank() {
+        return treeRank;
+    }
+
+    public void setTreeRank(int treeRank) {
+        this.treeRank = treeRank;
     }
 }

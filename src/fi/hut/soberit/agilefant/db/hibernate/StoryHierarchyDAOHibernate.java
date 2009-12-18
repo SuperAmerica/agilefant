@@ -172,7 +172,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 "backlog", product), Restrictions.eq("secondParent.id",
                 product.getId())), Restrictions.eq("thirdParent.id", product.getId())));
         rootFilter.add(Restrictions.isNull("parent"));
-        rootFilter.addOrder(Order.asc("name"));
+        rootFilter.addOrder(Order.asc("treeRank"));
         return asList(rootFilter);
     }
 

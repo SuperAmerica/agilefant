@@ -313,8 +313,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         Story movable = new Story();
         movable.setBacklog(oldBacklog);
 
-        movable.setChildren(new HashSet<Story>(Arrays.asList(new Story(),
-                new Story())));
+        movable.setChildren(Arrays.asList(new Story(),
+                new Story()));
 
         expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(
                 oldParent);
@@ -322,6 +322,60 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
                 newBacklog);
         replayAll();
         storyBusiness.moveStoryToBacklog(movable, newBacklog);
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void moveFromProductToIteration() {
+        firstProject.setParent(firstProduct);
+        firstIteration.setParent(firstProject);
+        story.setBacklog(firstProduct);
+        
+        storyDAO.store(story);
+        storyRankBusiness.rankToBottom(story, firstIteration);
+        storyRankBusiness.rankToBottom(story, firstProject);
+        
+        backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
+        
+        iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
+        
+        replayAll();
+        storyBusiness.moveStoryToBacklog(story, firstIteration);
+        verifyAll();
+        assertEquals(firstIteration, story.getBacklog());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void moveFromProductToProject() {
+        story.setBacklog(firstProduct);
+        
+        storyDAO.store(story);
+        storyRankBusiness.rankToBottom(story, firstProject);
+        
+        backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        
+        replayAll();
+        storyBusiness.moveStoryToBacklog(story, firstProject);
+        verifyAll();
+        assertEquals(firstProject, story.getBacklog());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void moveFromProductToProduct() {
+        Product prod = new Product();
+        prod.setId(313);
+        story.setBacklog(firstProduct);
+        storyDAO.store(story);
+        backlogHistoryEntryBusiness.updateHistory(prod.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
+        replayAll();
+        storyBusiness.moveStoryToBacklog(story, prod);
+        assertEquals(prod, story.getBacklog());
         verifyAll();
     }
 /*

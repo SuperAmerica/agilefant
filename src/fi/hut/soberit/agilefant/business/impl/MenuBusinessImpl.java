@@ -15,7 +15,6 @@ import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
-import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 /**

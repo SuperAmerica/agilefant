@@ -1,11 +1,14 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
@@ -18,10 +21,13 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
 
     @Autowired
     private StoryHierarchyDAO storyHierarchyDAO;
-    
+
     @Autowired
     private StoryBusiness storyBusiness;
-    
+
+    @Autowired
+    private BacklogBusiness backlogBusiness;
+
     @Transactional(readOnly = true)
     public List<Story> retrieveProjectLeafStories(Project project) {
         return storyHierarchyDAO.retrieveProjectLeafStories(project);
@@ -35,45 +41,107 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     public List<Story> retrieveProductRootStories(Product product) {
         return storyHierarchyDAO.retrieveProductRootStories(product);
     }
-    
+
     @Transactional
-    public void moveUnder(Story story, Story refernece) {
+    public void moveUnder(Story story, Story reference) {
         Story oldParent = story.getParent();
-        story.setParent(refernece);
-        refernece.getChildren().add(story);
-        
-        storyBusiness.updateStoryRanks(refernece);
-        
+
         if(oldParent != null) {
             oldParent.getChildren().remove(story);
-            storyBusiness.updateStoryRanks(oldParent);
         }
-        
-    }
-    
-    public void moveAfter(Story story, Story reference) {
-        if(story.getParent() != reference.getParent()) {
-            if(reference.getParent() != null) {
-                moveUnder(story, reference);
-            } 
+        reference.getChildren().add(story);
+        story.setParent(reference);
+
+        updateBacklogRanks(oldParent);
+        updateBacklogRanks(reference);
+
+        updateTreeRanks(reference.getChildren());
+        if(oldParent != null) {
+            updateTreeRanks(oldParent.getChildren());
         }
-        
+
     }
 
-    public void moveBefore(Story story, Story reference) {
-        if(story.getParent() != reference.getParent()) {
-            if(reference.getParent() != null) {
-                moveUnder(story, reference);
-            } 
+    @Transactional
+    public void moveAfter(Story story, Story reference) {
+        Story oldParent = story.getParent();
+        Story parent = reference.getParent();
+
+        LinkedList<Story> tmpList = retrieveChildListAndMoveStory(story,
+                oldParent, parent);
+
+        if (tmpList.getLast() != reference) {
+            tmpList.add(tmpList.indexOf(reference) + 1, story);
+        } else {
+            tmpList.addLast(story);
         }
-        
+
+        updateTreeRanks(tmpList);
+        if (parent != null) {
+            parent.setChildren(tmpList);
+            if (parent != oldParent) {
+                updateBacklogRanks(parent);
+            }
+        }
+
+    }
+
+    @Transactional
+    public void moveBefore(Story story, Story reference) {
+        Story oldParent = story.getParent();
+        Story parent = reference.getParent();
+        LinkedList<Story> tmpList = retrieveChildListAndMoveStory(story,
+                oldParent, parent);
+
+        tmpList.add(tmpList.indexOf(reference), story);
+
+        updateTreeRanks(tmpList);
+        if (parent != null) {
+            parent.setChildren(tmpList);
+            if (parent != oldParent) {
+                updateBacklogRanks(parent);
+            }
+        }
+    }
+
+    private LinkedList<Story> retrieveChildListAndMoveStory(Story story,
+            Story oldParent, Story parent) {
+        LinkedList<Story> tmpList = new LinkedList<Story>();
+        if (parent != oldParent) {
+            story.setParent(parent);
+            if (oldParent != null) {
+                oldParent.getChildren().remove(story);
+                updateBacklogRanks(oldParent);
+                updateTreeRanks(oldParent.getChildren());
+            }
+        }
+        if (parent != null) {
+            tmpList.addAll(parent.getChildren());
+        } else {
+            Product product = backlogBusiness.getParentProduct(story
+                    .getBacklog());
+            tmpList.addAll(this.retrieveProductRootStories(product));
+        }
+        if (tmpList.contains(story)) {
+            tmpList.remove(story);
+        }
+        return tmpList;
     }
     
-    /*
-     * GETTERS AND SETTERS
-     */
-    
-    public void setStoryHierarchyDAO(StoryHierarchyDAO storyHierarchyDAO) {
-        this.storyHierarchyDAO = storyHierarchyDAO;
+    private void updateBacklogRanks(Story story) {
+        if (story != null) {
+            storyBusiness.updateStoryRanks(story);
+        }
+
+    }
+
+    private void updateTreeRanks(List<Story> tmpList) {
+        int currentRank = 0;
+        for (Iterator<Story> iter = tmpList.iterator(); iter.hasNext(); currentRank++) {
+            Story tmp = iter.next();
+            if (tmp.getTreeRank() != currentRank) {
+                tmp.setTreeRank(currentRank);
+            }
+        }
     }
 }

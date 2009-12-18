@@ -797,15 +797,74 @@ BEGIN
 	END LOOP;
 END //
 
+DROP PROCEDURE IF EXISTS UpdateStoryTreeRank //
+CREATE PROCEDURE UpdateStoryTreeRank(IN parent_id INT)
+BEGIN
+  DECLARE story_loop_done BOOL DEFAULT FALSE;
+  DECLARE story_id INT;
+  DECLARE current_rank INT DEFAULT 0;
+  DECLARE tree_cur
+    CURSOR FOR SELECT s.id FROM stories s WHERE s.parent_id = parent_id ORDER BY id;
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET story_loop_done = TRUE;
+
+  OPEN tree_cur;
+
+  story_tree_loop: LOOP
+    FETCH tree_cur INTO story_id;
+
+    IF story_loop_done THEN
+      CLOSE tree_cur;
+      LEAVE story_tree_loop;
+    END IF;
+    UPDATE stories set treeRank = current_rank WHERE id = story_id;
+    SET current_rank = current_rank + 1;
+  END LOOP;
+END //
+
+DROP PROCEDURE IF EXISTS SetTreeRanks //
+CREATE PROCEDURE SetTreeRanks()
+BEGIN
+  DECLARE loop_done BOOL DEFAULT FALSE;
+  DECLARE story_id INT;
+  /* all non root stories with children */
+  DECLARE cur_stories CURSOR FOR
+    SELECT story.id FROM stories as story 
+        WHERE story.parent_id IS NOT NULL 
+        AND EXISTS (SELECT id FROM stories s2 WHERE s2.parent_id = story.id)
+        ORDER BY story.parent_id ASC;          
+
+  DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'
+    SET loop_done = TRUE;
+                      
+  OPEN cur_stories;
+                          
+  storyLoop: LOOP
+    FETCH cur_stories INTO story_id;
+                                    
+    IF loop_done THEN
+      CLOSE cur_stories;
+      LEAVE storyLoop;
+    END IF;
+    CALL UpdateStoryTreeRank(story_id);
+  END LOOP;
+END //
+
+
 DELIMITER ;
 
 CALL UpdateProjectLeafStoryRanks();
 CALL UpdateIterationStoryRanks();
+CALL SetTreeRanks();
 
 DROP PROCEDURE IF EXISTS StoryLinkedListRankForProject;
 DROP PROCEDURE IF EXISTS UpdateProjectLeafStoryRanks;
 DROP PROCEDURE IF EXISTS StoryRankForIteration;
 DROP PROCEDURE IF EXISTS UpdateIterationStoryRanks;
+DROP PROCEDURE IF EXISTS UpdateStoryTreeRank;
+DROP PROCEDURE IF EXISTS SetTreeRanks;
 
 ALTER TABLE stories DROP COLUMN rank;
+alter table stories add column treeRank int default 0;
+alter table stories_AUD add column treeRank int default 0;
 

@@ -676,6 +676,9 @@ alter table storyrank add index FK6600C2A1E0E4BFA2 (story_id), add constraint FK
 alter table storyrank add index FK6600C2A1CD3EA02C (previous_id), add constraint FK6600C2A1CD3EA02C foreign key (previous_id) references storyrank (id);
 alter table storyrank add index FK6600C2A1774AFEB0 (next_id), add constraint FK6600C2A1774AFEB0 foreign key (next_id) references storyrank (id);
 
+alter table stories add column treeRank int default 0;
+alter table stories_AUD add column treeRank int default 0;
+
 DELIMITER //
 
 DROP PROCEDURE IF EXISTS StoryLinkedListRankForProject //
@@ -865,6 +868,4 @@ DROP PROCEDURE IF EXISTS UpdateStoryTreeRank;
 DROP PROCEDURE IF EXISTS SetTreeRanks;
 
 ALTER TABLE stories DROP COLUMN rank;
-alter table stories add column treeRank int default 0;
-alter table stories_AUD add column treeRank int default 0;
 

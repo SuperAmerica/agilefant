@@ -833,8 +833,7 @@ BEGIN
   /* all non root stories with children */
   DECLARE cur_stories CURSOR FOR
     SELECT story.id FROM stories as story 
-        WHERE story.parent_id IS NOT NULL 
-        AND EXISTS (SELECT id FROM stories s2 WHERE s2.parent_id = story.id)
+        WHERE EXISTS (SELECT id FROM stories s2 WHERE s2.parent_id = story.id)
         ORDER BY story.parent_id ASC;          
 
   DECLARE CONTINUE HANDLER FOR SQLSTATE '02000'

@@ -178,7 +178,7 @@ TaskController.prototype.resetOriginalEstimate = function() {
 };
 
 TaskController.prototype.effortLeftEditable = function() {
-  if (this.model.getState() === "DONE" || !this.model.getOriginalEstimate()) {
+  if (this.model.getState() === "DONE") {
     return false;
   }
   return true;

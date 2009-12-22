@@ -38,7 +38,7 @@ $(document).ready(function() {
     noOETC.model = taskWithNoOE;
     
     ok(!doneTC.effortLeftEditable(), "Done task's effort left is not editable");
-    ok(!noOETC.effortLeftEditable(), "Effort left is not editable for task with no original estimate");
+    ok(noOETC.effortLeftEditable(), "Effort left is editable for task with no original estimate");
     ok(startedTC.effortLeftEditable(), "Started task's effort left is editable");
   });
   

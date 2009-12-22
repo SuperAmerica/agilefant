@@ -88,6 +88,13 @@
   background-position: -16px 0;
 }
 
+#jstree-dragged {
+  background: white;
+  border: 1px solid #ccc;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
 #jstree-dragged.tree-classic ins {
   background: url("icons.png") -16px -32px no-repeat;
   display: inline-block !important;

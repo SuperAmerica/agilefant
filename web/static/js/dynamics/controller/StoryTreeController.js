@@ -79,6 +79,7 @@ StoryTreeController.prototype.initTree = function() {
       },
     },
     ui: {
+        dots: false,
         theme_path: "static/css/jstree/agilefant/style.css",
         theme_name: "classic"
     },

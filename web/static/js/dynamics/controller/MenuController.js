@@ -44,7 +44,7 @@ BacklogMenuController.prototype.initTree = function() {
  * 0.5.2.
  */
 BacklogMenuController.prototype.reload = function() {
-  this.tree.reloadAjax();
+  this.tree.reload();
 };
 
 

@@ -356,11 +356,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             // other
             // iterations are under the same project
             if (backlog.getParent() == oldBacklog.getParent()) {
-                storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
+                storyRankBusiness.removeRank(story, oldBacklog);
+                storyRankBusiness.rankToBottom(story, backlog);
             } else {
-                storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
-                storyRankBusiness.rankToBottom(story, backlog.getParent(),
-                        oldBacklog.getParent());
+                storyRankBusiness.removeRank(story, oldBacklog);
+                storyRankBusiness.rankToBottom(story, backlog);
+                storyRankBusiness.removeRank(story, oldBacklog.getParent());
+                storyRankBusiness.rankToBottom(story, backlog.getParent());
             }
 
         } else if (oldBacklog instanceof Project) {// project to iteration
@@ -368,7 +370,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             if (backlog.getParent() == oldBacklog) {
                 storyRankBusiness.rankToBottom(story, backlog);
             } else {
-                storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
+                storyRankBusiness.removeRank(story, oldBacklog);
+                storyRankBusiness.rankToBottom(story, backlog);
                 storyRankBusiness.rankToBottom(story, backlog.getParent());
             }
         }
@@ -380,15 +383,17 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storyRankBusiness.rankToBottom(story, backlog);
         } else if (oldBacklog instanceof Project
                 && story.getChildren().isEmpty()) { // project to project
-            storyRankBusiness.rankToBottom(story, backlog, oldBacklog);
+            storyRankBusiness.removeRank(story, oldBacklog);
+            storyRankBusiness.rankToBottom(story, backlog);
         } else if (oldBacklog instanceof Iteration
                 && story.getChildren().isEmpty()) { // iteration to project
             // move to the parent project
             if (backlog == oldBacklog.getParent()) {
                 storyRankBusiness.removeRank(story, oldBacklog);
             } else {
-                storyRankBusiness.rankToBottom(story, backlog, oldBacklog
+                storyRankBusiness.removeRank(story, oldBacklog
                         .getParent());
+                storyRankBusiness.rankToBottom(story, backlog);
                 storyRankBusiness.removeRank(story, oldBacklog);
             }
         }

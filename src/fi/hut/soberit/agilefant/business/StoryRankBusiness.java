@@ -21,23 +21,9 @@ public interface StoryRankBusiness {
     void rankBelow(Story story, Backlog context, Story upper);
 
     /**
-     * Move story between contexts and rank the given story below the given
-     * upper story with in the backlog context.
-     */
-    void rankBelow(Story story, Backlog context, Backlog fromContext,
-            Story upper);
-
-    /**
      * Rank the given story above the lower story within the backlog context.
      */
     void rankAbove(Story story, Backlog context, Story lower);
-
-    /**
-     * Move story between contexts and rank the given story above the lower
-     * story within the backlog context.
-     */
-    void rankAbove(Story story, Backlog context, Backlog fromContext,
-            Story lower);
 
     /**
      * Rank the given story to the bottom of the given context.
@@ -57,7 +43,5 @@ public interface StoryRankBusiness {
      */
     void rankToHead(Story story, Backlog backlog);
     
-    public void rankToBottom(Story story, Backlog context, Backlog fromContext);
-
 
 }

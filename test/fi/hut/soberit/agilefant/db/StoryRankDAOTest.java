@@ -20,41 +20,6 @@ public class StoryRankDAOTest extends AbstractHibernateTests {
     @Autowired
     private StoryRankDAO storyRankDAO;
 
-    @Test
-    public void testGetHead() {
-        executeClassSql();
-        Backlog backlog = new Project();
-        backlog.setId(1);
-        StoryRank actual = storyRankDAO.retrieveHeadByBacklog(backlog);
-        assertEquals(1, actual.getId());
-    }
-
-    @Test
-    public void testGetHead_empty() {
-        executeClassSql();
-        Backlog backlog = new Project();
-        backlog.setId(2);
-        StoryRank actual = storyRankDAO.retrieveHeadByBacklog(backlog);
-        assertNull(actual);
-    }
-
-    @Test
-    public void testGetTail() {
-        executeClassSql();
-        Backlog backlog = new Project();
-        backlog.setId(1);
-        StoryRank actual = storyRankDAO.retrieveTailByBacklog(backlog);
-        assertEquals(4, actual.getId());
-    }
-
-    @Test
-    public void testGetTail_empty() {
-        executeClassSql();
-        Backlog backlog = new Project();
-        backlog.setId(2);
-        StoryRank actual = storyRankDAO.retrieveTailByBacklog(backlog);
-        assertNull(actual);
-    }
 
     @Test
     public void testGetByStoryAndBacklog() {

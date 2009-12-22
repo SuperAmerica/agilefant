@@ -20,18 +20,6 @@ public class StoryRankDAOHibernate extends GenericDAOHibernate<StoryRank>
         super(StoryRank.class);
     }
 
-    public StoryRank retrieveHeadByBacklog(Backlog backlog) {
-        Criteria crit = sessionFactory.getCurrentSession().createCriteria(
-                StoryRank.class);
-        crit.add(Restrictions.eq("backlog", backlog));
-        crit.addOrder(Order.asc("previous"));
-        List<StoryRank> res = asList(crit);
-        if (res.size() > 0) {
-            return res.get(0);
-        }
-        return null;
-    }
-
     public StoryRank retrieveByBacklogAndStory(Backlog backlog, Story story) {
         Criteria crit = sessionFactory.getCurrentSession().createCriteria(
                 StoryRank.class);
@@ -40,16 +28,11 @@ public class StoryRankDAOHibernate extends GenericDAOHibernate<StoryRank>
         return uniqueResult(crit);
     }
 
-    public StoryRank retrieveTailByBacklog(Backlog backlog) {
+    public List<StoryRank> retrieveRanksByBacklog(Backlog backlog) {
         Criteria crit = sessionFactory.getCurrentSession().createCriteria(
                 StoryRank.class);
         crit.add(Restrictions.eq("backlog", backlog));
-        crit.addOrder(Order.asc("next"));
-        List<StoryRank> res = asList(crit);
-        if (res.size() > 0) {
-            return res.get(0);
-        }
-        return null;
+        crit.addOrder(Order.asc("rank"));
+        return asList(crit);
     }
-
 }

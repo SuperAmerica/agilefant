@@ -104,7 +104,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         story.setBacklog(firstIteration);
 
         storyDAO.store(story);
-        storyRankBusiness.rankToBottom(story, secondProject, firstProject);
+        storyRankBusiness.removeRank(story, firstProject);
+        storyRankBusiness.rankToBottom(story, secondProject);
         storyRankBusiness.removeRank(story, firstIteration);
 
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
@@ -148,7 +149,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         
         
         storyDAO.store(story);
-        storyRankBusiness.rankToBottom(story, firstIteration, secondProject);
+        storyRankBusiness.removeRank(story, secondProject);
+        storyRankBusiness.rankToBottom(story, firstIteration);
         storyRankBusiness.rankToBottom(story, firstProject);
         
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
@@ -190,8 +192,10 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         story.setBacklog(firstIteration);
         
         storyDAO.store(story);
-        storyRankBusiness.rankToBottom(story, secondIteration, firstIteration);
-        storyRankBusiness.rankToBottom(story, secondProject, firstProject);
+        storyRankBusiness.removeRank(story, firstIteration);
+        storyRankBusiness.rankToBottom(story, secondIteration);
+        storyRankBusiness.removeRank(story, firstProject);
+        storyRankBusiness.rankToBottom(story, secondProject);
         
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(secondIteration.getId());
@@ -212,7 +216,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         story.setBacklog(firstIteration);
         
         storyDAO.store(story);
-        storyRankBusiness.rankToBottom(story, secondIteration, firstIteration);
+        storyRankBusiness.removeRank(story, firstIteration);
+        storyRankBusiness.rankToBottom(story, secondIteration);
         
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(secondIteration.getId());
@@ -233,7 +238,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         story.setBacklog(secondProject);
 
         storyDAO.store(story);
-        storyRankBusiness.rankToBottom(story, firstProject, secondProject);
+        storyRankBusiness.removeRank(story, secondProject);
+        storyRankBusiness.rankToBottom(story, firstProject);
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         replayAll();

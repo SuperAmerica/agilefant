@@ -670,11 +670,9 @@ alter table history_backlogs add column rootSum bigint not null;
 
 /* after alpha 3 */
 
-create table storyrank (id integer not null auto_increment, backlog_id integer not null, next_id integer, previous_id integer, story_id integer not null, primary key (id), unique (backlog_id, story_id)) ENGINE=InnoDB;
+create table storyrank (id integer not null auto_increment, backlog_id integer not null, rank integer not null default 0, story_id integer not null, primary key (id), unique (backlog_id, story_id)) ENGINE=InnoDB;
 alter table storyrank add index FK6600C2A1F63400A2 (backlog_id), add constraint FK6600C2A1F63400A2 foreign key (backlog_id) references backlogs (id);
 alter table storyrank add index FK6600C2A1E0E4BFA2 (story_id), add constraint FK6600C2A1E0E4BFA2 foreign key (story_id) references stories (id);
-alter table storyrank add index FK6600C2A1CD3EA02C (previous_id), add constraint FK6600C2A1CD3EA02C foreign key (previous_id) references storyrank (id);
-alter table storyrank add index FK6600C2A1774AFEB0 (next_id), add constraint FK6600C2A1774AFEB0 foreign key (next_id) references storyrank (id);
 
 alter table stories add column treeRank int default 0;
 alter table stories_AUD add column treeRank int default 0;
@@ -686,8 +684,7 @@ CREATE PROCEDURE StoryLinkedListRankForProject(IN bid INT)
 BEGIN
   DECLARE story_rank_loop_done BOOL DEFAULT FALSE;
   DECLARE story_id INT;
-  DECLARE previous_id INT DEFAULT NULL;
-  DECLARE current_id INT DEFAULT NULL; 
+  DECLARE current_rank_num INT DEFAULT 0;
   DECLARE story_rank_cur
     CURSOR FOR
     SELECT stories.id  FROM stories stories 
@@ -712,10 +709,8 @@ BEGIN
     END IF;
 
 
-    INSERT INTO storyrank (`story_id`, `backlog_id`, `previous_id`) VALUES(story_id, bid, previous_id);
-    SELECT LAST_INSERT_ID() INTO current_id;
-    UPDATE storyrank SET next_id=current_id WHERE id = previous_id;
-    SET previous_id = current_id;
+    INSERT INTO storyrank (`story_id`, `backlog_id`, `rank`) VALUES(story_id, bid, current_rank_num);
+    SET current_rank_num = current_rank_num + 1;
 
   END LOOP;
 END //
@@ -750,8 +745,6 @@ CREATE PROCEDURE StoryRankForIteration(IN blid INT)
 BEGIN
   DECLARE story_loop_done BOOL DEFAULT FALSE;
   DECLARE story_id INT;
-  DECLARE previous_id INT DEFAULT NULL;
-  DECLARE current_id INT DEFAULT NULL; 
   DECLARE cur_story CURSOR FOR
     SELECT id FROM stories WHERE backlog_id=blid ORDER BY rank ASC;
   
@@ -767,11 +760,9 @@ BEGIN
       CLOSE cur_story;
       LEAVE storyLoop;
     END IF;
-
-    INSERT INTO storyrank (`story_id`, `backlog_id`, `previous_id`) VALUES(story_id, blid, previous_id);
-    SELECT LAST_INSERT_ID() INTO current_id;
-    UPDATE storyrank SET next_id=current_id WHERE id = previous_id;
-    SET previous_id = current_id;
+   
+    INSERT INTO storyrank (`story_id`, `backlog_id`, `rank`) VALUES(story_id, blid, current_rank_num);
+    SET current_rank_num = current_rank_num + 1;
   END LOOP;
 END //
 

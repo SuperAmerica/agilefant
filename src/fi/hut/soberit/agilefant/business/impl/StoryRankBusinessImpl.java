@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,11 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
                 story);
         StoryRank nextRank = this.storyRankDAO.retrieveByBacklogAndStory(
                 context, upper);
-        if (rank != null) {
-            skipRank(rank);
-        } else {
+        if (rank == null) {
             rank = createRank(story, context);
         }
         if (nextRank != null) {
-            addRank(rank, nextRank.getPrevious(), nextRank);
+            rankAbove(rank, nextRank);
         }
     }
 
@@ -51,61 +50,62 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
         return rank;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void rankAbove(Story story, Backlog context, Backlog fromContext,
-            Story upper) {
-        handleContextSwitch(story, context, fromContext);
-        this.rankAbove(story, context, upper);
+    private void rankAbove(StoryRank rank, StoryRank next) {
+        LinkedList<StoryRank> ranks = prepareRankingContext(rank);
+
+        int nextIndex = ranks.indexOf(next);
+        if (nextIndex == -1) {
+            ranks.addLast(rank);
+        } else {
+            ranks.add(nextIndex, rank);
+        }
+
+        updateContextRanks(ranks);
     }
 
-    /**
-     * Move ranked story from a context to another context. In the case of
-     * duplicate rank, the rank from the old context will be removed.
-     */
-    private void handleContextSwitch(Story story, Backlog context,
-            Backlog fromContext) {
-        if(fromContext == null) {
-            return;
+    private void rankBelow(StoryRank rank, StoryRank previous) {
+        LinkedList<StoryRank> ranks = prepareRankingContext(rank);
+
+        int previousIndex = ranks.indexOf(previous);
+        if (previousIndex == -1 || previousIndex == ranks.size() - 1) {
+            ranks.addLast(rank);
+        } else {
+            ranks.add(previousIndex + 1, rank);
         }
-        StoryRank oldRank = this.storyRankDAO.retrieveByBacklogAndStory(
-                fromContext, story);
-        StoryRank newRank = this.storyRankDAO.retrieveByBacklogAndStory(
-                context, story);
-        if (oldRank != null && newRank != null) {
-            this.storyRankDAO.remove(oldRank);
-        } else if (oldRank != null) {
-            oldRank.setBacklog(context);
-            skipRank(oldRank);
-            this.storyRankDAO.store(oldRank);
+
+        updateContextRanks(ranks);
+    }
+
+    private void updateContextRanks(LinkedList<StoryRank> ranks) {
+        int currentRankNum = 0;
+        for (StoryRank currentRank : ranks) {
+            currentRank.setRank(currentRankNum++);
         }
+    }
+
+    private LinkedList<StoryRank> prepareRankingContext(StoryRank rank) {
+        LinkedList<StoryRank> ranks = retrieveLinkedList(rank);
+        if (ranks.contains(rank)) {
+            ranks.remove(rank);
+        }
+        return ranks;
+    }
+
+    private LinkedList<StoryRank> retrieveLinkedList(StoryRank rank) {
+        LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();
+        ranks.addAll(this.storyRankDAO
+                .retrieveRanksByBacklog(rank.getBacklog()));
+        return ranks;
     }
 
     /**
      * Remove item from the linked list.
      */
-    private void skipRank(StoryRank rank) {
-        if (rank.getNext() != null) {
-            rank.getNext().setPrevious(rank.getPrevious());
-        }
-        if (rank.getPrevious() != null) {
-            rank.getPrevious().setNext(rank.getNext());
-        }
-    }
 
-    /**
-     * Add item to the linked list.
-     */
-    private void addRank(StoryRank rank, StoryRank previous, StoryRank next) {
-        if (previous != null) {
-            previous.setNext(rank);
-        }
-        if (next != null) {
-            next.setPrevious(rank);
-        }
-        rank.setPrevious(previous);
-        rank.setNext(next);
+    private void skipRank(StoryRank rank) {
+        LinkedList<StoryRank> ranks = retrieveLinkedList(rank);
+        ranks.remove(rank);
+        updateContextRanks(ranks);
     }
 
     /**
@@ -116,24 +116,12 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
                 story);
         StoryRank prevRank = this.storyRankDAO.retrieveByBacklogAndStory(
                 context, upper);
-        if (rank != null) {
-            skipRank(rank);
-        } else {
+        if (rank == null) {
             rank = createRank(story, context);
         }
         if (prevRank != null) {
-            addRank(rank, prevRank, prevRank.getNext());
+            rankBelow(rank, prevRank);
         }
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void rankBelow(Story story, Backlog context, Backlog fromContext,
-            Story upper) {
-        handleContextSwitch(story, context, fromContext);
-        rankBelow(story, context, upper);
 
     }
 
@@ -141,15 +129,12 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * {@inheritDoc}
      */
     public List<Story> retrieveByRankingContext(Backlog backlog) {
-        StoryRank currentRank = this.storyRankDAO
-                .retrieveHeadByBacklog(backlog);
-        List<Story> result = new ArrayList<Story>();
-
-        while (currentRank != null) {
-            result.add(currentRank.getStory());
-            currentRank = currentRank.getNext();
+        List<StoryRank> ranks = this.storyRankDAO.retrieveRanksByBacklog(backlog);
+        List<Story> stories = new ArrayList<Story>();
+        for(StoryRank rank : ranks ) {
+            stories.add(rank.getStory());
         }
-        return result;
+        return stories;
     }
 
     /**
@@ -159,39 +144,30 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
         StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
                 story);
         if (rank != null) {
-            skipRank(rank); // fix the linked list first
+            skipRank(rank);
             this.storyRankDAO.remove(rank);
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public void removeStoryRanks(Story story) {
-        for(StoryRank rank : story.getStoryRanks()) {
+        for (StoryRank rank : story.getStoryRanks()) {
             skipRank(rank);
             this.storyRankDAO.remove(rank);
         }
-        
+
     }
 
     /**
      * {@inheritDoc}
      */
     public void removeBacklogRanks(Backlog backlog) {
-        for(StoryRank rank : backlog.getStoryRanks()) {
+        for (StoryRank rank : backlog.getStoryRanks()) {
             skipRank(rank);
             this.storyRankDAO.remove(rank);
-        }        
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void rankToBottom(Story story, Backlog context, Backlog fromContext) {
-        handleContextSwitch(story, context, fromContext);
-        rankToBottom(story, context);
-
+        }
     }
 
     /**
@@ -200,21 +176,40 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
     public void rankToBottom(Story story, Backlog context) {
         StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
                 story);
-        StoryRank tailRank = this.storyRankDAO.retrieveTailByBacklog(context);
-        if (rank != null) {
-            skipRank(rank);
-        } else {
+        LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();
+        ranks.addAll(this.storyRankDAO.retrieveRanksByBacklog(context));
+        StoryRank tailRank = null;
+        try {
+            tailRank = ranks.getLast();
+        } catch (Exception e) {
+
+        }
+        if (rank == null) {
             rank = createRank(story, context);
         }
         if (tailRank != null) {
-            addRank(rank, tailRank, tailRank.getNext());
+            rankBelow(rank, tailRank);
         }
 
     }
-    
+
     public void rankToHead(Story story, Backlog backlog) {
-        StoryRank head = this.storyRankDAO.retrieveHeadByBacklog(backlog);
-        this.rankAbove(story, backlog, head.getStory());
+        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(backlog,
+                story);
+        LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();
+        ranks.addAll(this.storyRankDAO.retrieveRanksByBacklog(backlog));
+        StoryRank topRank = null;
+        try {
+            topRank = ranks.getFirst();
+        } catch (Exception e) {
+
+        }
+        if (rank == null) {
+            rank = createRank(story, backlog);
+        }
+        if (topRank != null) {
+            rankAbove(rank, topRank);
+        }
     }
 
     public void setStoryRankDAO(StoryRankDAO storyRankDAO) {

@@ -15,8 +15,7 @@ public class StoryRank {
     private int id;
     private Story story;
     private Backlog backlog;
-    private StoryRank next;
-    private StoryRank previous;
+    private int rank;
 
     @Id
     @GeneratedValue
@@ -45,22 +44,12 @@ public class StoryRank {
     public void setBacklog(Backlog backlog) {
         this.backlog = backlog;
     }
-
-    @ManyToOne(optional = true)
-    public StoryRank getNext() {
-        return next;
+    
+    public int getRank() {
+        return rank;
     }
 
-    public void setNext(StoryRank next) {
-        this.next = next;
-    }
-
-    @ManyToOne(optional = true)
-    public StoryRank getPrevious() {
-        return previous;
-    }
-
-    public void setPrevious(StoryRank previous) {
-        this.previous = previous;
+    public void setRank(int rank) {
+        this.rank = rank;
     }
 }

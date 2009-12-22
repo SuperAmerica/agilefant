@@ -99,7 +99,7 @@ PageController.prototype.pageListener = function(event) {
   if ((event instanceof DynamicsEvents.EditEvent ||
       event instanceof DynamicsEvents.DeleteEvent) &&
       event.getObject() instanceof BacklogModel) {
-    //this.refreshMenu();
+    this.refreshMenu();
   }
 };
 

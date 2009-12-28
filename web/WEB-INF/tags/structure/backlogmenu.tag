@@ -2,8 +2,8 @@
 <%@tag description="Agilefant backlog menu" %>
 
 <div id="menuAccordion">
-    <h3 id="assigmentsTreeAccordionHeader"><a href="#">My Assignments</a></h3>
-    <div>Second content</div>
+    <h3 id="assignmentsTreeAccordionHeader"><a href="#">My Assignments</a></h3>
+    <div id="assignmentsMenuTree"></div>
     <h3 id="backlogTreeAccordionHeader"><a href="#">Products</a></h3>
     <div id="backlogMenuTree"></div>
 </div>
@@ -22,6 +22,7 @@ $(document).ready(function() {
     	}
   	}
   });
+  $("#assignmentsMenuTree").load("ajax/retrieveAssignments.action");
 });
 </script>
 

@@ -113,6 +113,9 @@
         <param name="status">200</param>
       </result>
     </action>
+    <action name="retrieveAssignments" method="constructAssignmentData" class="menuAction">
+      <result type="dispatcher">/WEB-INF/jsp/inc/myAssignments.jsp</result>
+    </action>
     <!-- /Menu actions -->
     
     

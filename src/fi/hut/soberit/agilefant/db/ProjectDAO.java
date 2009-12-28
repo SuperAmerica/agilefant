@@ -52,4 +52,6 @@ public interface ProjectDAO extends GenericDAO<Project> {
 
     void increaseRankedProjectRanks();
 
+    List<Project> retrieveActiveWithUserAssigned(int userId);
+
 }

@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 
@@ -14,5 +16,7 @@ import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 public interface MenuBusiness {
 
     public List<MenuDataNode> constructBacklogMenuData();
+
+    List<AssignmentMenuNode> constructMyAssignmentsData(User user);
 
 }

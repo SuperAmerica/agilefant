@@ -1,7 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 
@@ -11,6 +14,7 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.MenuBusiness;
+import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 public class MenuActionTest {
@@ -43,4 +47,13 @@ public class MenuActionTest {
         assertEquals(Action.SUCCESS, menuAction.constructBacklogMenuData());
         verifyAll();
     }
+    
+    @Test
+    public void testConstructAssignmentData() {
+        expect(menuBusiness.constructMyAssignmentsData(null)).andReturn(Arrays.asList(new AssignmentMenuNode()));
+        replayAll();
+        assertEquals(Action.SUCCESS, menuAction.constructAssignmentData());
+        verifyAll();
+    }
+
 }

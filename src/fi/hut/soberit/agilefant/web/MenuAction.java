@@ -10,6 +10,8 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.MenuBusiness;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
+import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 /**
@@ -27,9 +29,15 @@ public class MenuAction extends ActionSupport {
     private MenuBusiness menuBusiness;
     
     private List<MenuDataNode> menuData;
+    private List<AssignmentMenuNode> assignmentData;    
     
     public String constructBacklogMenuData() {
         menuData = menuBusiness.constructBacklogMenuData();
+        return Action.SUCCESS;
+    }
+    
+    public String constructAssignmentData() {
+        assignmentData = menuBusiness.constructMyAssignmentsData(SecurityUtil.getLoggedUser());
         return Action.SUCCESS;
     }
 
@@ -40,4 +48,13 @@ public class MenuAction extends ActionSupport {
     public void setMenuBusiness(MenuBusiness menuBusiness) {
         this.menuBusiness = menuBusiness;
     }
+    
+    public void setAssignmentData(List<AssignmentMenuNode> assignmentData) {
+        this.assignmentData = assignmentData;
+    }
+    
+    public List<AssignmentMenuNode> getAssignmentData() {
+        return assignmentData;
+    }
+    
 }

@@ -39,4 +39,6 @@ public interface IterationDAO extends GenericDAO<Iteration> {
             DateTime dayStart);
     
     public Iteration retrieveDeep(int iterationId);
+
+    List<Iteration> retrieveActiveWithUserAssigned(int userId);
 }

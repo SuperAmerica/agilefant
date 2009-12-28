@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
@@ -19,7 +20,9 @@ import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
@@ -180,5 +183,17 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return (Iteration)crit.uniqueResult();
     }
+
+    public List<Iteration> retrieveActiveWithUserAssigned(int userId) {
+        Session session = sessionFactory.getCurrentSession();
+        Criteria crit = session.createCriteria(Iteration.class);
+        crit.setFetchMode("parent", FetchMode.JOIN);
+        crit.add(Restrictions.gt("endDate", new DateTime()));
+        crit = crit.createCriteria("assignments");
+        crit = crit.createCriteria("user");
+        crit.add(Restrictions.idEq(userId));
+        return asList(crit);
+    }
+
 }
 

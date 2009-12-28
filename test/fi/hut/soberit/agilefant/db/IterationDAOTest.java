@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
@@ -77,4 +78,12 @@ public class IterationDAOTest extends AbstractHibernateTests {
         assertNotNull(actual);    
         
     }
+
+    @Test
+    public void testRetrieveActiveWithUserAssigned() {
+        executeSql("classpath:fi/hut/soberit/agilefant/db/IterationDAOTest-assignments-data.sql");
+        List<Iteration> iterations = iterationDAO.retrieveActiveWithUserAssigned(1);
+        assertEquals(2, iterations.size());
+    }
+
 }

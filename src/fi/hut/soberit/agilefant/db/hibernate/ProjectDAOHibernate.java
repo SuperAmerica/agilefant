@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
@@ -96,6 +97,16 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
     public void increaseRankedProjectRanks() {
         Query query = getCurrentSession().createQuery("UPDATE Project project SET project.rank = project.rank + 1 WHERE project.rank > 0");
         query.executeUpdate();
+    }
+    
+    public List<Project> retrieveActiveWithUserAssigned(int userId) {
+        Session session = sessionFactory.getCurrentSession();
+        Criteria crit = session.createCriteria(Project.class);
+        crit.add(Restrictions.gt("endDate", new DateTime()));
+        crit = crit.createCriteria("assignments");
+        crit = crit.createCriteria("user");
+        crit.add(Restrictions.idEq(userId));
+        return asList(crit);
     }
     
 }

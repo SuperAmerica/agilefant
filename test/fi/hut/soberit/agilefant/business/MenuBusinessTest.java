@@ -1,8 +1,13 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,10 +17,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.MenuBusinessImpl;
+import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 
@@ -24,6 +33,10 @@ public class MenuBusinessTest {
     MenuBusinessImpl menuBusiness;
     
     ProductBusiness productBusiness;
+    
+    ProjectDAO projectDAO;
+    
+    IterationDAO iterationDAO;
     
     TransferObjectBusiness transferObjectBusiness;
     
@@ -38,6 +51,12 @@ public class MenuBusinessTest {
         
         transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
         menuBusiness.setTransferObjectBusiness(transferObjectBusiness);
+        
+        iterationDAO = createStrictMock(IterationDAO.class);
+        menuBusiness.setIterationDAO(iterationDAO);
+        
+        projectDAO = createStrictMock(ProjectDAO.class);
+        menuBusiness.setProjectDAO(projectDAO);
     }
 
     @Before
@@ -81,11 +100,11 @@ public class MenuBusinessTest {
         proj1.getChildren().add(iter3);
     }
     private void replayAll() {
-        replay(productBusiness, transferObjectBusiness);
+        replay(iterationDAO, projectDAO, productBusiness, transferObjectBusiness);
     }
 
     private void verifyAll() {
-        verify(productBusiness, transferObjectBusiness);
+        verify(iterationDAO, projectDAO, productBusiness, transferObjectBusiness);
     }
     
     @Test
@@ -101,6 +120,26 @@ public class MenuBusinessTest {
         
         assertEquals(2, actual.size());
         checkProducts(actual);
+    }
+    
+    @Test
+    public void testConstructMyAssigmentsData() {
+        User user = new User();
+        user.setId(10);
+        Project project = new Project();
+        project.setName("Project");
+        Iteration iteration = new Iteration();
+        iteration.setName("Iteration");
+        iteration.setParent(project);
+        expect(projectDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(project));
+        expect(iterationDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(iteration));
+        replayAll();
+        List<AssignmentMenuNode> nodes = menuBusiness.constructMyAssignmentsData(user);
+        verifyAll();
+        assertEquals(1, nodes.size());
+        assertEquals("Project", nodes.get(0).getTitle());
+        assertEquals(1, nodes.get(0).getChildren().size());
+        assertEquals("Iteration", nodes.get(0).getChildren().get(0).getTitle());
     }
     
     private void checkProducts(List<MenuDataNode> nodes) {
@@ -122,4 +161,5 @@ public class MenuBusinessTest {
         assertEquals(7, nodes.get(1).getId());
         assertEquals(8, nodes.get(2).getId());
     }
+
 }

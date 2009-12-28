@@ -123,4 +123,11 @@ public class ProjectDAOTest extends AbstractHibernateTests {
         assertEquals(2, lowest);
         assertEquals(4, highest);
     }
+    
+    @Test
+    public void testRetrieveActiveWithUserAssigned() {
+        executeSql("classpath:fi/hut/soberit/agilefant/db/ProjectDAOTest-assignments-data.sql");
+        List<Project> projects = projectDAO.retrieveActiveWithUserAssigned(1);
+        assertEquals(2, projects.size());
+    }
 }

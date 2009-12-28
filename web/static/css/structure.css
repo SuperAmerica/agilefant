@@ -108,8 +108,8 @@ img {
   background: url('../img/toggle.png');
 }
 
-#menuRefreshControl {
-  background: url('../img/refresh.png');
+#menuContent {
+	margin-right: 20px;
 }
     
 

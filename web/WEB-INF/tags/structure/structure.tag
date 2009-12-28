@@ -93,7 +93,6 @@
   <c:if test="${hideMenu != true}">
     <div id="menuControlPanel"> 
       <div id="menuToggleControl"> </div>
-      <div id="menuRefreshControl"> </div>
     </div>
     
     <div id="menuContent">

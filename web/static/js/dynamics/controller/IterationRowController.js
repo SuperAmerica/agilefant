@@ -63,7 +63,6 @@ IterationRowController.prototype.toggleFactory = function(view, model) {
   var options = {
     collapse : IterationRowController.prototype.hideDetails,
     expand : IterationRowController.prototype.showDetails,
-    targetCell: IterationRowController.columnIndices.storiesData,
     expanded: false
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
@@ -73,6 +72,10 @@ IterationRowController.prototype.toggleFactory = function(view, model) {
 IterationRowController.prototype.showDetails = function() {
   var cell = this.view.getCell(IterationRowController.columnIndices.storiesData);
   if (cell) {
+    var data = {
+        id: this.model.id
+    };
+    cell.element.load("ajax/iterationRowMetrics.action", data);
     cell.show();
   }
 };

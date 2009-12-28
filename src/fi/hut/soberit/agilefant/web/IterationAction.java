@@ -62,6 +62,10 @@ public class IterationAction implements
         return Action.SUCCESS;
     }
 
+    public String iterationRowMetrics() {
+        return Action.SUCCESS;
+    }
+    
     public String iterationMetrics() {
         iteration = iterationBusiness.retrieve(iterationId);
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);

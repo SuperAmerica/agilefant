@@ -22,7 +22,7 @@ $(document).ready(function() {
     	}
   	}
   });
-  $("#assignmentsMenuTree").load("ajax/retrieveAssignments.action");
+  window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));
 });
 </script>
 

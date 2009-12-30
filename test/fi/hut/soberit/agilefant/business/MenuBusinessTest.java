@@ -24,7 +24,6 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 
@@ -134,7 +133,7 @@ public class MenuBusinessTest {
         expect(projectDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(project));
         expect(iterationDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(iteration));
         replayAll();
-        List<AssignmentMenuNode> nodes = menuBusiness.constructMyAssignmentsData(user);
+        List<MenuDataNode> nodes = menuBusiness.constructMyAssignmentsData(user);
         verifyAll();
         assertEquals(1, nodes.size());
         assertEquals("Project", nodes.get(0).getTitle());

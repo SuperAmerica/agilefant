@@ -10,8 +10,7 @@ public class MenuDataNode {
     private int id;
     private String title;
     private ScheduleStatus scheduleStatus = ScheduleStatus.ONGOING;
-    
-    
+    private boolean expand = false;
     private boolean icon = false;
     
     private List<MenuDataNode> children = new ArrayList<MenuDataNode>();
@@ -61,4 +60,14 @@ public class MenuDataNode {
     public ScheduleStatus getScheduleStatus() {
         return scheduleStatus;
     }
+    
+    @JSON
+    public boolean isExpand() {
+        return expand;
+    }
+    
+    public void setExpand(boolean expand) {
+        this.expand = expand;
+    }
+    
 }

@@ -14,7 +14,6 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.MenuBusiness;
-import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 public class MenuActionTest {
@@ -50,7 +49,7 @@ public class MenuActionTest {
     
     @Test
     public void testConstructAssignmentData() {
-        expect(menuBusiness.constructMyAssignmentsData(null)).andReturn(Arrays.asList(new AssignmentMenuNode()));
+        expect(menuBusiness.constructMyAssignmentsData(null)).andReturn(Arrays.asList(new MenuDataNode()));
         replayAll();
         assertEquals(Action.SUCCESS, menuAction.constructAssignmentData());
         verifyAll();

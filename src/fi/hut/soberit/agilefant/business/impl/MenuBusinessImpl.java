@@ -2,9 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PropertyComparator;
@@ -21,10 +19,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
-import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
-import fi.hut.soberit.agilefant.transfer.AssignmentMenuNodeType;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
+import fi.hut.soberit.agilefant.util.MyAssignmentsMenuBuilder;
 
 /**
  * The implementation class for calculating data to the lefthand menu.
@@ -80,44 +76,20 @@ public class MenuBusinessImpl implements MenuBusiness {
         return mdn;
     }
     
-    private AssignmentMenuNode constructAssignmentMenuDataNode(Backlog backlog) {
-        AssignmentMenuNode node = new AssignmentMenuNode();
-        node.setTitle(backlog.getName());
-        node.setId(backlog.getId());
-        node.setType(AssignmentMenuNodeType.BACKLOG);
-        return node;
-    }
-    
     @Transactional(readOnly = true)
-    public List<AssignmentMenuNode> constructMyAssignmentsData(User user) {
-        List<AssignmentMenuNode> nodes = new ArrayList<AssignmentMenuNode>();
+    public List<MenuDataNode> constructMyAssignmentsData(User user) {
         List<Project> projects = projectDAO.retrieveActiveWithUserAssigned(user.getId());
         List<Iteration> iterations = iterationDAO.retrieveActiveWithUserAssigned(user.getId());
-        Set<Integer> projectIds = new HashSet<Integer>();
+        MyAssignmentsMenuBuilder builder = new MyAssignmentsMenuBuilder();
+        
         for (Project project : projects) {
-            AssignmentMenuNode node = constructAssignmentMenuDataNode(project);
-            projectIds.add(project.getId());
-            nodes.add(node);
+            builder.insert(project);
         }
         for (Iteration iteration : iterations) {
-            AssignmentMenuNode node = constructAssignmentMenuDataNode(iteration);
-            AssignmentMenuNode projectNode = null;
-            Project project = (Project) iteration.getParent();
-            if (projectIds.contains(project.getId())) {
-                for (AssignmentMenuNode existingNode : nodes) {
-                    if (existingNode.getType().equals(AssignmentMenuNodeType.BACKLOG) &&
-                            existingNode.getId() == project.getId()) {
-                        projectNode = existingNode;
-                    }
-                }
-            } else {
-                projectNode = constructAssignmentMenuDataNode(project);
-                projectIds.add(project.getId());
-                nodes.add(projectNode);
-            }
-            projectNode.getChildren().add(node);                
+            builder.insert(iteration);
         }
-        return nodes;
+        
+        return builder.getNodes();
     }
 
     public void setProductBusiness(ProductBusiness productBusiness) {

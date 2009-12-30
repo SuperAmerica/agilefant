@@ -11,7 +11,6 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.MenuBusiness;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
-import fi.hut.soberit.agilefant.transfer.AssignmentMenuNode;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 /**
@@ -29,7 +28,7 @@ public class MenuAction extends ActionSupport {
     private MenuBusiness menuBusiness;
     
     private List<MenuDataNode> menuData;
-    private List<AssignmentMenuNode> assignmentData;    
+    private List<MenuDataNode> assignmentData;    
     
     public String constructBacklogMenuData() {
         menuData = menuBusiness.constructBacklogMenuData();
@@ -49,11 +48,7 @@ public class MenuAction extends ActionSupport {
         this.menuBusiness = menuBusiness;
     }
     
-    public void setAssignmentData(List<AssignmentMenuNode> assignmentData) {
-        this.assignmentData = assignmentData;
-    }
-    
-    public List<AssignmentMenuNode> getAssignmentData() {
+    public List<MenuDataNode> getAssignmentData() {
         return assignmentData;
     }
     

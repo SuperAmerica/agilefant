@@ -61,14 +61,18 @@ public class SpentEffortActionTest {
     public void getSelectedDate_currentDate() {
         LocalDate current = new LocalDate();
         int currentWeek = current.getWeekOfWeekyear();
+        int nextWeek = current.plusWeeks(1).getWeekOfWeekyear();
+        int previousWeek = current.minusWeeks(1).getWeekOfWeekyear();
+        int nextWeekYear = current.plusWeeks(1).getYear();
+        int previousWeekYear = current.minusWeeks(1).getYear();
         int currentYear = current.getYear();
         DateTime actual = testable.getSelectedDate();
         assertEquals(currentYear, actual.getYear());
         assertEquals(currentWeek, actual.getWeekOfWeekyear());
-        assertEquals(currentWeek + 1, testable.getNextWeek().getWeekOfWeekyear());
-        assertEquals(currentYear, testable.getNextWeek().getYear());
-        assertEquals(currentWeek - 1, testable.getPrevWeek().getWeekOfWeekyear());
-        assertEquals(currentYear, testable.getPrevWeek().getYear());
+        assertEquals(nextWeek, testable.getNextWeek().getWeekOfWeekyear());
+        assertEquals(nextWeekYear, testable.getNextWeek().getYear());
+        assertEquals(previousWeek, testable.getPrevWeek().getWeekOfWeekyear());
+        assertEquals(previousWeekYear, testable.getPrevWeek().getYear());
     }
     
     @Test

@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.Collection;
+import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
+import fi.hut.soberit.agilefant.model.Iteration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,7 +27,6 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
@@ -290,6 +291,14 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     public void setBacklogHistoryEntryBusiness(
             BacklogHistoryEntryBusiness backlogHistoryEntryBusiness) {
         this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
+    }
+    
+    public IterationRowMetrics getIterationRowMetrics(int iterationId) {
+        IterationRowMetrics iterationRowMetrics = new IterationRowMetrics();
+        
+        iterationRowMetrics.setStateData(iterationDAO.countIterationStoriesByState(iterationId));
+        
+        return iterationRowMetrics;
     }
 
 }

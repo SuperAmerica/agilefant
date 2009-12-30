@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 import fi.hut.soberit.agilefant.util.Pair;
@@ -84,6 +86,18 @@ public class IterationDAOTest extends AbstractHibernateTests {
         executeSql("classpath:fi/hut/soberit/agilefant/db/IterationDAOTest-assignments-data.sql");
         List<Iteration> iterations = iterationDAO.retrieveActiveWithUserAssigned(1);
         assertEquals(2, iterations.size());
+    }
+    
+    @Test
+    public void testCountIterationStoriesByState() {
+        executeClassSql();
+        Map<StoryState, Integer> data = iterationDAO.countIterationStoriesByState(3);
+        assertEquals(new Integer(0), data.get(StoryState.NOT_STARTED));
+        assertEquals(new Integer(1), data.get(StoryState.STARTED));
+        assertEquals(new Integer(2), data.get(StoryState.PENDING));
+        assertEquals(new Integer(3), data.get(StoryState.BLOCKED));
+        assertEquals(new Integer(4), data.get(StoryState.IMPLEMENTED));
+        assertEquals(new Integer(5), data.get(StoryState.DONE));
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.Pair;
@@ -22,6 +23,8 @@ public interface IterationDAO extends GenericDAO<Iteration> {
     public Collection<Task> getTasksWithoutStoryForIteration(Iteration iteration);
 
     public List<Task> getAllTasksForIteration(Iteration iteration);
+    
+    public Map<StoryState, Integer> countIterationStoriesByState(int iterationId);
 
     public Pair<Integer, Integer> getCountOfDoneAndAllTasks(Iteration iteration);
 

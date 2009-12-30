@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,29 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         Criteria criteria = getCurrentSession().createCriteria(Task.class);
         return asList(addIterationRestriction(criteria, Arrays
                 .asList("iteration"), iteration));
+    }
+    public Map<StoryState, Integer> countIterationStoriesByState(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(Story.class);
+        criteria.add(Restrictions.eq("backlog.id", iterationId));
+        criteria.setProjection(Projections.projectionList().add(
+                Projections.property("state")).add(Projections.rowCount(),
+                "storyCount").add(Projections.groupProperty("state"), "state"));
+        
+        Map<StoryState, Integer> results = new EnumMap<StoryState, Integer>(StoryState.class);
+        
+        for (StoryState state : StoryState.values()) {
+            results.put(state, 0);
+        }
+        
+        List<Object[]> queryResults = asList(criteria);
+        
+        for (Object[] row : queryResults) {
+            StoryState state = (StoryState) row[0];
+            Integer count = (Integer) row[1];
+            results.put(state, count);
+        }
+        
+        return results;
     }
 
     private Pair<Integer, Integer> getCounOfDoneAndAll(Class<?> type,

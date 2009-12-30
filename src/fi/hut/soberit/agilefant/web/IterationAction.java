@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
+import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 
 @Component("iterationAction")
 @Scope("prototype")
@@ -30,6 +31,8 @@ public class IterationAction implements
     private int parentBacklogId;
 
     private IterationMetrics iterationMetrics;
+    
+    private IterationRowMetrics iterationRowMetrics;
 
     @Autowired
     private IterationBusiness iterationBusiness;
@@ -63,6 +66,7 @@ public class IterationAction implements
     }
 
     public String iterationRowMetrics() {
+        iterationRowMetrics = iterationBusiness.getIterationRowMetrics(iterationId);
         return Action.SUCCESS;
     }
     

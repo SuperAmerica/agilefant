@@ -123,6 +123,10 @@ public class IterationAction implements
     public IterationMetrics getIterationMetrics() {
         return iterationMetrics;
     }
+    
+    public IterationRowMetrics getIterationRowMetrics() {
+        return iterationRowMetrics;
+    }
 
     public Backlog getParentBacklog() {
         return parentBacklog;

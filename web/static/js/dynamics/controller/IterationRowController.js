@@ -73,7 +73,7 @@ IterationRowController.prototype.showDetails = function() {
   var cell = this.view.getCell(IterationRowController.columnIndices.storiesData);
   if (cell) {
     var data = {
-        id: this.model.id
+        iterationId: this.model.id
     };
     cell.element.load("ajax/iterationRowMetrics.action", data);
     cell.show();

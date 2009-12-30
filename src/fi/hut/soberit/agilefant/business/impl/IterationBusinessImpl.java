@@ -293,10 +293,18 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
     }
     
+    @Transactional(readOnly = true)
     public IterationRowMetrics getIterationRowMetrics(int iterationId) {
+        Iteration iteration = retrieve(iterationId);
+        LocalDate today = new LocalDate();
         IterationRowMetrics iterationRowMetrics = new IterationRowMetrics();
         
         iterationRowMetrics.setStateData(iterationDAO.countIterationStoriesByState(iterationId));
+        iterationRowMetrics.setTotalDays(Days.daysBetween(iteration.getStartDate(), iteration.getEndDate()).getDays());
+        
+        if (today.isBefore(iteration.getEndDate().toLocalDate())) {
+            iterationRowMetrics.setDaysLeft(Days.daysBetween(today, iteration.getEndDate().toLocalDate()).getDays());
+        }
         
         return iterationRowMetrics;
     }

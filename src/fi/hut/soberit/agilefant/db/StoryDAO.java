@@ -27,4 +27,7 @@ public interface StoryDAO extends GenericDAO<Story> {
     public Map<Integer, Integer> getNumOfResponsiblesByStory(Set<Integer> storyIds);
     
     public Collection<Story> getAllIterationStoriesByResponsibleAndInterval(User user, Interval interval);
+
+    List<Story> retrieveActiveIterationStoriesWithUserResponsible(int userId);
+
 }

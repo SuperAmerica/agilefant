@@ -1,10 +1,12 @@
 package fi.hut.soberit.agilefant.db;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -103,4 +105,14 @@ public class StoryDAOTest extends AbstractHibernateTests {
        Collection<Story> actual = this.storyDAO.getAllIterationStoriesByResponsibleAndInterval(user, interval);
        assertEquals(0, actual.size());
    }
+
+   @Test
+   public void testRetrieveActiveIterationStoriesWithUserResponsible() {
+       executeSql("classpath:fi/hut/soberit/agilefant/db/StoryDAOTest-assignments-data.sql");
+       List<Story> stories = storyDAO.retrieveActiveIterationStoriesWithUserResponsible(1);
+       assertEquals(1, stories.size());
+       assertEquals(1, stories.get(0).getId());
+   }
+
+
 }

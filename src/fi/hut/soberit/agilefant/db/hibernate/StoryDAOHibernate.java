@@ -9,10 +9,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
@@ -154,4 +156,22 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         
         return stories;
     }
+    
+    // :)
+    private static final String QUERY_RETRIEVE_ACTIVE_ITERATION_STORIES_WITH_USER_RESPONSIBLE =
+        "SELECT story FROM Story story" + " LEFT JOIN story.responsibles AS responsible"
+        + " LEFT JOIN story.backlog.parent AS project"
+        + " WHERE responsible.id = :userId"
+        + " AND story.backlog.endDate > :now"
+        + " AND story.backlog.class = :backlogType";
+    
+    @SuppressWarnings("unchecked")
+    public List<Story> retrieveActiveIterationStoriesWithUserResponsible(int userId) {
+        Query query = getCurrentSession().createQuery(QUERY_RETRIEVE_ACTIVE_ITERATION_STORIES_WITH_USER_RESPONSIBLE);
+        query.setParameter("userId", userId);
+        query.setParameter("now", new DateTime());
+        query.setParameter("backlogType", "Iteration");
+        return query.list();
+    }
+
 }

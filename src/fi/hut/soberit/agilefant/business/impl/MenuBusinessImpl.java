@@ -14,10 +14,12 @@ import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 import fi.hut.soberit.agilefant.util.MyAssignmentsMenuBuilder;
@@ -36,6 +38,9 @@ public class MenuBusinessImpl implements MenuBusiness {
     
     @Autowired
     private ProjectDAO projectDAO;
+    
+    @Autowired
+    private StoryDAO storyDAO;
     
     @Autowired
     private ProductBusiness productBusiness;
@@ -80,6 +85,7 @@ public class MenuBusinessImpl implements MenuBusiness {
     public List<MenuDataNode> constructMyAssignmentsData(User user) {
         List<Project> projects = projectDAO.retrieveActiveWithUserAssigned(user.getId());
         List<Iteration> iterations = iterationDAO.retrieveActiveWithUserAssigned(user.getId());
+        List<Story> stories = storyDAO.retrieveActiveIterationStoriesWithUserResponsible(user.getId());
         MyAssignmentsMenuBuilder builder = new MyAssignmentsMenuBuilder();
         
         for (Project project : projects) {
@@ -87,6 +93,9 @@ public class MenuBusinessImpl implements MenuBusiness {
         }
         for (Iteration iteration : iterations) {
             builder.insert(iteration);
+        }
+        for (Story story : stories) {
+            builder.insert(story);
         }
         
         return builder.getNodes();
@@ -107,6 +116,10 @@ public class MenuBusinessImpl implements MenuBusiness {
     
     public void setProjectDAO(ProjectDAO projectDAO) {
         this.projectDAO = projectDAO;
+    }
+    
+    public void setStoryDAO(StoryDAO storyDAO) {
+        this.storyDAO = storyDAO;
     }
     
 }

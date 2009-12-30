@@ -22,7 +22,7 @@ MyAssignmentsMenuController.prototype.initTree = function() {
     autoFocus: false,
     onClick: function(dtnode, event) {
       if ($(event.target).hasClass("ui-dynatree-title")) {
-        if (dtnode.data.id != null) {
+        if (dtnode.data.id > 0) {
           window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
         }
       }

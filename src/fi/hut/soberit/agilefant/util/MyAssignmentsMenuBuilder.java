@@ -8,6 +8,7 @@ import java.util.Map;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 public class MyAssignmentsMenuBuilder {
@@ -22,6 +23,12 @@ public class MyAssignmentsMenuBuilder {
         MenuDataNode node = new MenuDataNode();
         node.setId(backlog.getId());
         node.setTitle(backlog.getName());
+        return node;
+    }
+
+    private MenuDataNode constructNode(Story story) {
+        MenuDataNode node = new MenuDataNode();
+        node.setTitle(story.getName());
         return node;
     }
 
@@ -58,6 +65,12 @@ public class MyAssignmentsMenuBuilder {
 
     public void insert(Project project) {
         ensureNode(project);
+    }
+
+    public void insert(Story story) {
+        MenuDataNode iterationNode = ensureNode((Iteration) story.getBacklog());
+        MenuDataNode node = constructNode(story);
+        iterationNode.getChildren().add(node);
     }
 
     public List<MenuDataNode> getNodes() {

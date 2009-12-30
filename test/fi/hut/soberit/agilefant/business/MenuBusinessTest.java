@@ -19,10 +19,12 @@ import org.junit.Test;
 import fi.hut.soberit.agilefant.business.impl.MenuBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
@@ -36,6 +38,8 @@ public class MenuBusinessTest {
     ProjectDAO projectDAO;
     
     IterationDAO iterationDAO;
+    
+    StoryDAO storyDAO;
     
     TransferObjectBusiness transferObjectBusiness;
     
@@ -56,6 +60,9 @@ public class MenuBusinessTest {
         
         projectDAO = createStrictMock(ProjectDAO.class);
         menuBusiness.setProjectDAO(projectDAO);
+        
+        storyDAO = createStrictMock(StoryDAO.class);
+        menuBusiness.setStoryDAO(storyDAO);
     }
 
     @Before
@@ -99,11 +106,11 @@ public class MenuBusinessTest {
         proj1.getChildren().add(iter3);
     }
     private void replayAll() {
-        replay(iterationDAO, projectDAO, productBusiness, transferObjectBusiness);
+        replay(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness);
     }
 
     private void verifyAll() {
-        verify(iterationDAO, projectDAO, productBusiness, transferObjectBusiness);
+        verify(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness);
     }
     
     @Test
@@ -126,19 +133,31 @@ public class MenuBusinessTest {
         User user = new User();
         user.setId(10);
         Project project = new Project();
+        project.setId(1);
         project.setName("Project");
         Iteration iteration = new Iteration();
+        iteration.setId(2);
         iteration.setName("Iteration");
         iteration.setParent(project);
+        Story story = new Story();
+        story.setId(3);
+        story.setName("Story");
+        story.setBacklog(iteration);
         expect(projectDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(project));
         expect(iterationDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(iteration));
+        expect(storyDAO.retrieveActiveIterationStoriesWithUserResponsible(user.getId())).andReturn(Arrays.asList(story));
         replayAll();
         List<MenuDataNode> nodes = menuBusiness.constructMyAssignmentsData(user);
         verifyAll();
         assertEquals(1, nodes.size());
-        assertEquals("Project", nodes.get(0).getTitle());
-        assertEquals(1, nodes.get(0).getChildren().size());
-        assertEquals("Iteration", nodes.get(0).getChildren().get(0).getTitle());
+        MenuDataNode projectNode = nodes.get(0);
+        assertEquals("Project", projectNode.getTitle());
+        assertEquals(1, projectNode.getChildren().size());
+        MenuDataNode iterationNode = projectNode.getChildren().get(0);
+        assertEquals("Iteration", iterationNode.getTitle());
+        assertEquals(1, iterationNode.getChildren().size());
+        MenuDataNode storyNode = iterationNode.getChildren().get(0);
+        assertEquals("Story", storyNode.getTitle());
     }
     
     private void checkProducts(List<MenuDataNode> nodes) {

@@ -54,7 +54,7 @@ $(document).ready(function() {
   }
 
   var storyTreeController = new StoryTreeController(
-    ${project.id}, "project", $('#storyTree'), {});
+    ${project.id}, "project", $('#storyTree'), {disableRootSort: true});
 
   $('#releaseContents').bind('tabsselect', function(event, ui) {
     if (ui.index == 1) {

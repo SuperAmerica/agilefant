@@ -19,9 +19,10 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
     private StoryDAO storyDAO;
     @Autowired
     private StoryBusiness storyBusiness;
-    
+
     @Transactional
-    public Story splitStory(Story original, Collection<Story> newStories, Collection<Story> oldChangedStories) {
+    public Story splitStory(Story original, Collection<Story> newStories,
+            Collection<Story> oldChangedStories) {
         if (original == null || newStories.size() == 0) {
             throw new IllegalArgumentException(
                     "Original story and new stories should be given");
@@ -30,38 +31,40 @@ public class StorySplitBusinessImpl implements StorySplitBusiness {
             throw new RuntimeException("Original story not persisted.");
         }
 
-        if(!newStories.isEmpty()) {
+        if (!newStories.isEmpty()) {
             storyBusiness.updateStoryRanks(original);
         }
-        
+
         persistChildStories(original, newStories);
         original.getChildren().addAll(newStories);
-        if(oldChangedStories != null) {
+        if (oldChangedStories != null) {
             updateChangedStories(oldChangedStories);
         }
         return original;
     }
 
     /*
-     * Backlog changes have to be handled through move story as the 
-     * story ranks and backlog histories must be updated.
+     * Backlog changes have to be handled through move story as the story ranks
+     * and backlog histories must be updated.
      */
     private void updateChangedStories(Collection<Story> stories) {
-        for(Story story : stories) {
+        for (Story story : stories) {
             Story oldStory = this.storyBusiness.retrieve(story.getId());
-            if(oldStory.getBacklog() != story.getBacklog()) {
-                this.storyBusiness.moveStoryToBacklog(oldStory, story.getBacklog());
+            if (oldStory.getBacklog() != story.getBacklog()) {
+                this.storyBusiness.moveStoryToBacklog(oldStory, story
+                        .getBacklog());
             }
         }
         this.storyBusiness.storeBatch(stories);
     }
-    
+
     private void persistChildStories(Story original,
             Collection<Story> newStories) {
-
+        int currentTreeRank = original.getChildren().size();
         for (Story story : newStories) {
             story.setParent(original);
-            //copy responsible from the parent story
+            story.setTreeRank(currentTreeRank++);
+            // copy responsible from the parent story
             story.getResponsibles().addAll(original.getResponsibles());
             this.storyBusiness.create(story);
         }

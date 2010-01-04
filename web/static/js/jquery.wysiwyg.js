@@ -218,8 +218,8 @@
 
             separator01 : { visible : false, separator : true },
 
-            indent  : { visible : false },
-            outdent : { visible : false },
+            indent  : { visible : true },
+            outdent : { visible : true },
 
             separator02 : { visible : true, separator : true },
 
@@ -233,8 +233,8 @@
 
             separator04 : { visible : true, separator : true },
 
-            insertOrderedList    : { visible : false, tags : ['ol'] },
-            insertUnorderedList  : { visible : false, tags : ['ul'] },
+            insertOrderedList    : { visible : true, tags : ['ol'] },
+            insertUnorderedList  : { visible : true, tags : ['ul'] },
             insertHorizontalRule : { visible : false, tags : ['hr'] },
 
             separator05 : { separator : true },
@@ -297,9 +297,9 @@
 
             separator07 : { visible : false, separator : true },
 
-            cut   : { visible : false },
-            copy  : { visible : false },
-            paste : { visible : false },
+            cut   : { visible : true },
+            copy  : { visible : true },
+            paste : { visible : true },
 
             separator08 : { separator : true && !( $.browser.msie ) },
 
@@ -328,7 +328,7 @@
             },
 
             removeFormat : {
-                visible : false,
+                visible : true,
                 exec    : function()
                 {
                     this.editorDoc.execCommand('removeFormat', false, []);

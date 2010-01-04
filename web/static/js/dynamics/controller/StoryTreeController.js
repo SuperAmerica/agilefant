@@ -14,7 +14,8 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   this.headerElement = $('<div/>').appendTo(this.parentElement);
   this.element = $('<div/>').appendTo(this.parentElement);
   this.options = {
-    refreshCallback: null
+    refreshCallback: null,
+    disableRootSort: false
   };
   jQuery.extend(this.options, options);
   this.init();
@@ -85,7 +86,8 @@ StoryTreeController.prototype.initTree = function() {
     },
     callback: {
         onload: function() { me._onload(); },
-        onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); }
+        onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
+        beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); }
     },
     types: {
       story: {
@@ -126,6 +128,16 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
     type: "post",
     async: true
   });
+};
+StoryTreeController.prototype.checkStoryMove = function(node, ref_node, type, tree_obj, rb) {
+  if(this.options.disableRootSort) {
+    var ref_parent = tree_obj.parent(ref_node);
+    if(ref_parent === -1) {
+      alert("Not implemented.");
+      return false;
+    }
+  }
+  return true;
 };
 StoryTreeController.prototype._getStoryForId = function(id, callback) {
   var model = ModelFactory.getOrRetrieveObject(

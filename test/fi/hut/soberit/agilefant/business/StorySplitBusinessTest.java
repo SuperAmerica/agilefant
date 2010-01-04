@@ -93,12 +93,16 @@ public class StorySplitBusinessTest {
     }
 
     private void checkChildStories() {
+        
+        int treeRank = 0;
         for (Story child : childStories) {
             assertEquals(parentStory, child.getParent());
 
             assertEquals(parentStory.getResponsibles(), child.getResponsibles());
             
             assertTrue(parentStory.getChildren().contains(child));
+            
+            assertEquals(treeRank++, child.getTreeRank());
         }     
     }
 

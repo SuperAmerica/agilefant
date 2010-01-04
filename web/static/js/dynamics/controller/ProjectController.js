@@ -445,6 +445,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Priority',
     defaultSortColumn: true,
     get: StoryModel.prototype.getRank,
+    subViewFactory: StoryController.prototype.descriptionToggleFactory,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
   });
   config.addColumnConfiguration(1, {
@@ -455,7 +456,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
-//    defaultSortColumn: true,
     dragHandle: true,
     editable : true,
     edit : {
@@ -537,7 +537,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
   });
-  config.addColumnConfiguration(7, {
+  config.addColumnConfiguration(10, {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
@@ -548,7 +548,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(8, {
+  config.addColumnConfiguration(11, {
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-data',

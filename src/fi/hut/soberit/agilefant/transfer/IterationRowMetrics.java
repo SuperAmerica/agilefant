@@ -13,6 +13,10 @@ public class IterationRowMetrics {
     
     private int storyCount = 0;
     
+    private int doneStoryCount = 0;
+    
+    private int doneStoryPercentage = 0;
+    
     private int totalDays = 0;
     
     public Map<StoryState, Integer> getStateDistribution() {
@@ -25,6 +29,10 @@ public class IterationRowMetrics {
             this.storyCount += entry.getValue();
         }
         this.stateDistribution = data;
+        this.doneStoryCount = this.stateDistribution.get(StoryState.DONE);
+        if (this.storyCount > 0) {
+            this.doneStoryPercentage = this.doneStoryCount * 100 / this.storyCount;
+        }
     }
     
     public int getStateData(StoryState state) {
@@ -39,8 +47,20 @@ public class IterationRowMetrics {
         this.daysLeft = daysLeft;
     }
     
+    public int getDaysLeftPercentage() {
+        return (totalDays == 0) ? 0 : daysLeft * 100 / totalDays;
+    }
+    
     public int getStoryCount() {
         return storyCount;
+    }
+    
+    public int getDoneStoryCount() {
+        return doneStoryCount;
+    }
+    
+    public int getDoneStoryPercentage() {
+        return doneStoryPercentage;
     }
     
     public int getTotalDays() {

@@ -479,7 +479,35 @@ li.dynamictable-captionaction {
   background-color: #eee;  
 }
 
+div.project-iteration-metrics {
+	margin: 2em;
+}
 
+table.project-iteration-metrics {
+	width: 100%;
+}
+
+.project-iteration-metrics .iterationRowMetricsBar {
+	height: 20px;
+}
+
+.project-iteration-metrics-storystates {
+  border: 1px solid #777;
+  width: 300px;
+}
+
+.project-iteration-metrics-storystates div {
+	float: left;
+}
+
+.project-iteration-metrics-timeleft {
+	border: 1px solid #777;
+	width: 300px;
+}
+
+.project-iteration-metrics-timeleft div {
+	float: left;
+}
 
 /**
  * Product page styles

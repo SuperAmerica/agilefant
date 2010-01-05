@@ -84,11 +84,14 @@ img {
   width: 15em;
   float: left;
   overflow: hidden;
+  position: relative;
 }
 
 #menuControlPanel {
-  float: right;
-  margin: 2px 2px 0 0;
+	position: absolute;
+	right: 3px;
+	top: 2px;
+	z-index: 100;
 }
 
 #menuControlPanel div {
@@ -107,11 +110,6 @@ img {
 #menuToggleControl {
   background: url('../img/toggle.png');
 }
-
-#menuContent {
-	margin-right: 20px;
-}
-    
 
 /* BODY WRAPPER */
 

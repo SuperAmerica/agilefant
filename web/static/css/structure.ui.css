@@ -65,6 +65,26 @@
   list-style-type: none;  
 }
 
+#menuAccordion .ui-accordion-header {
+	margin-bottom: 1px;
+}
+
+#menuAccordion .ui-state-active {
+	border-bottom-color: #d0e6f6 !important;
+}
+
+#menuAccordion .ui-accordion-header .ui-icon {
+	left: auto;
+}
+
+#menuAccordion .ui-accordion-header a {
+	padding: 0.3em 0.3em 0.3em 1.5em;
+}
+
+#menuAccordion .ui-accordion-content {
+	padding: 0 0 1em 0;
+}
+
 /* BACKLOG INFO TABLES */
  
 .structure-main-block ul.backlogTabs {

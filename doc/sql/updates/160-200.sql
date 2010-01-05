@@ -745,6 +745,7 @@ CREATE PROCEDURE StoryRankForIteration(IN blid INT)
 BEGIN
   DECLARE story_loop_done BOOL DEFAULT FALSE;
   DECLARE story_id INT;
+  DECLARE current_rank_num INT DEFAULT 0;
   DECLARE cur_story CURSOR FOR
     SELECT id FROM stories WHERE backlog_id=blid ORDER BY rank ASC;
   

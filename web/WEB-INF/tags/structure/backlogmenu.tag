@@ -16,10 +16,15 @@ $(document).ready(function() {
     autoHeight: false,
     change: function(event, ui) {
       var index = $("#menuAccordion .ui-accordion-header").index(ui.newHeader);
-      if (index) {
+      if (index >= 0) {
         $.cookie('agilefant-menu-accordion', index);
       }
-      if (ui.newHeader[0].id == 'menuAccordion-products') {
+      var selectedId = ui.newHeader[0].id;
+      if (selectedId == 'menuAccordion-myAssignments') {
+        if (window.myAssignmentsMenuController == null) {
+          window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));
+        }
+      } else if (selectedId == 'menuAccordion-products') {
         if (window.menuController == null) {
           window.menuController = new BacklogMenuController($('#backlogMenuTree'), $('#menuControl'));
         }
@@ -27,10 +32,11 @@ $(document).ready(function() {
   	}
   });
   var activatedSection = parseInt($.cookie('agilefant-menu-accordion'));
-  if (!isNaN(activatedSection)) {
-    $("#menuAccordion").accordion('activate', activatedSection); 
+  if (!isNaN(activatedSection) && activatedSection != 0) {
+    $("#menuAccordion").accordion('activate', activatedSection);
+  } else {
+    window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));
   }
-  window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));
 });
 </script>
 

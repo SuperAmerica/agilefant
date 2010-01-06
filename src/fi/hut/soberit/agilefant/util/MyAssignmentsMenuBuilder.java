@@ -28,6 +28,7 @@ public class MyAssignmentsMenuBuilder {
 
     private MenuDataNode constructNode(Story story) {
         MenuDataNode node = new MenuDataNode();
+        node.setId(story.getBacklog().getId());
         node.setTitle(story.getName());
         return node;
     }

@@ -444,7 +444,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     title : "#",
     headerTooltip : 'Priority',
     defaultSortColumn: true,
-    get: StoryModel.prototype.getRank,
+//    get: StoryModel.prototype.getRank,
     subViewFactory: StoryController.prototype.descriptionToggleFactory,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
   });

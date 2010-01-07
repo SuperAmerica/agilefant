@@ -345,7 +345,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     cssClass : 'story-row',
     title : "#",
     headerTooltip : 'Priority',
-    get: StoryModel.prototype.getRank,
+//    get: StoryModel.prototype.getRank,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
     defaultSortColumn: true,
     subViewFactory : StoryController.prototype.taskToggleFactory

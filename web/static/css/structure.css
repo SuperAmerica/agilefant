@@ -89,8 +89,8 @@ img {
 
 #menuControlPanel {
 	position: absolute;
-	right: 3px;
-	top: 2px;
+	right: 5px;
+	top: 3px;
 	z-index: 100;
 }
 
@@ -109,6 +109,10 @@ img {
 
 #menuToggleControl {
   background: url('../img/toggle.png');
+}
+
+#menuContent {
+  margin-top: 2px; 
 }
 
 /* BODY WRAPPER */

@@ -223,3 +223,8 @@ div#footerText label {
   cursor: pointer;
 }
 
+
+#menuAccordion .ui-accordion-header, #menuAccordion .ui-accordion-content {
+  margin-right: 2px !important;
+  margin-left: 2px !important;
+}

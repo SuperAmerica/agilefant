@@ -134,7 +134,7 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
 StoryTreeController.prototype.checkStoryMove = function(node, ref_node, type, tree_obj, rb) {
   if(this.options.disableRootSort) {
     var ref_parent = tree_obj.parent(ref_node);
-    if(ref_parent === -1) {
+    if(ref_parent === -1 && type !== "inside") {
       alert("Not implemented.");
       return false;
     }

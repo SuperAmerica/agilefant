@@ -33,6 +33,17 @@ public interface GenericDAO<T> {
     T get(int id);
 
     /**
+     * Get data model object of this type by id.
+     * 
+     * Will detach the object from Hibernate session.
+     * 
+     * @param id
+     *          requested id
+     * @return
+     */
+    T getAndDetach(int id);
+    
+    /**
      * Removes the object of this type with given id.
      * 
      * @param id

@@ -65,6 +65,13 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     }
 
     /** {@inheritDoc} */
+    public T getAndDetach(int id) {
+        T object = (T) this.get(id);
+        this.sessionFactory.getCurrentSession().evict(object);
+        return object;
+    }
+    
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     public Collection<T> getAll() {
         return hibernateTemplate.loadAll(getPersistentClass());

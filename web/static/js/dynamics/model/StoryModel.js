@@ -105,6 +105,8 @@ StoryModel.prototype._saveData = function(id, changedData) {
     data.backlogId = this.relations.backlog.getId();
   }
   
+
+  
   jQuery.ajax({
     type: "POST",
     url: url,

@@ -159,7 +159,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     // PREFETCHING
     
     public void initializePrefetchedData(int objectId) {
-        story = storyBusiness.retrieve(objectId);
+        story = storyBusiness.retrieveDetached(objectId);
     }
     
     

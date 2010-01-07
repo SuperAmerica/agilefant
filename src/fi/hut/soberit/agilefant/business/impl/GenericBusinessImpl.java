@@ -61,6 +61,15 @@ public abstract class GenericBusinessImpl<T> implements GenericBusiness<T> {
     public T retrieveIfExists(int id) {
         return genericDAO.get(id);
     }
+    
+    @Transactional(readOnly = true)
+    public T retrieveDetached(int id) {
+        T object = genericDAO.getAndDetach(id);
+        if (object == null) {
+            throw new ObjectNotFoundException("Object with id " + id +" was not found", this.modelType);
+        }
+        return object;
+    }
 
     @Transactional
     public void store(T object) {

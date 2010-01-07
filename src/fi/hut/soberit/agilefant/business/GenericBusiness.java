@@ -12,6 +12,8 @@ public interface GenericBusiness<T> {
      * Throws <code>ObjectNotFoundException</code> if not found.
      */
     T retrieve(int id);
+    
+    public T retrieveDetached(int id);
 
     void store(T object);
     

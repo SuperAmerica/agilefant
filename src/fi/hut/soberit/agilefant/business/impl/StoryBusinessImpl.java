@@ -180,6 +180,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             this.moveStoryToBacklog(persisted, backlogBusiness
                     .retrieve(backlogId));
         }
+        else if (dataItem.getBacklog() != persisted.getBacklog() &&
+                 dataItem.getBacklog() != null) {
+            this.moveStoryToBacklog(persisted, dataItem.getBacklog());
+        }
 
         backlogHistoryEntryBusiness.updateHistory(persisted.getBacklog()
                 .getId());

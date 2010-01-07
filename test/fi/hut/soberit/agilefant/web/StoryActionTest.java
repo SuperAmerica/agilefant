@@ -195,7 +195,7 @@ public class StoryActionTest extends MockedTestCase {
     public void testInitializePrefetchingData() {
         Story newStory = new Story();
         newStory.setId(2222);
-        expect(storyBusiness.retrieve(newStory.getId())).andReturn(newStory);
+        expect(storyBusiness.retrieveDetached(newStory.getId())).andReturn(newStory);
         
         replayAll();
         
@@ -208,7 +208,7 @@ public class StoryActionTest extends MockedTestCase {
     @Test(expected = ObjectNotFoundException.class)
     @DirtiesContext
     public void testInitializePrefetchingData_noSuchStory() {
-        expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        expect(storyBusiness.retrieveDetached(-1)).andThrow(new ObjectNotFoundException());
         
         replayAll();
         

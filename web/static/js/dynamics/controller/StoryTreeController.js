@@ -108,6 +108,8 @@ StoryTreeController.prototype.initTree = function() {
 
 StoryTreeController.prototype._onload = function() {
   this.tree.open_all();
+  /* Close done stories by default */
+  this.element.find('li > a > div.taskStateDONE').parent().parent().removeClass('open').addClass('closed');
   if (this.options.refreshCallback) {
     this.options.refreshCallback();
   }

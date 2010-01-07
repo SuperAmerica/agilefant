@@ -75,12 +75,12 @@ div.hierarchyContainer {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   
-  width: 10em;
-  background: #fcfcfc;
-  margin: 0 !important; 
+  width: 10em !important;
+  background: #fcfcfc !important;
+  margin: -0.2em 0 0 0 !important; 
   padding: 0 !important;
   
-  font-size: 125%
+  font-size: 125%;
 }
 
 .editButton:hover .editButtonMenu, .editButtonMenu:hover {

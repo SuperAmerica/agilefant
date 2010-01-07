@@ -234,7 +234,7 @@ ModelFactory.reloadRoot = function() {
  * Can only be set to one object at a time.
  */
 ModelFactory.reloadEvery = function(object, time) {
-  ModelFactory.currentTimer = setTimeout(function() { object.reload(); }, time);
+  ModelFactory.currentTimer = setInterval(function() { object.reload(); }, time);
 };
 
 /**

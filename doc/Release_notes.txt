@@ -1,6 +1,6 @@
-Agilefant 2.0 Alpha 3
+Agilefant 2.0 Alpha 4
 Release notes
-2009-11-17
+2010-01-07
 --
 
 
@@ -21,8 +21,6 @@ Current status of the release:
  
 - Many features are yet unfinished
  * Daily Work view is only partially implemented
- * Portfolio view is missing
- * Product view missing
  * Team support is limited
  * Themes have been removed and are replaced with tags in the future
  * Lots of small and medium sized usability and stability issues
@@ -36,6 +34,18 @@ Current status of the release:
 |     CHANGESET      |
 +--------------------+
 
+Changes from Alpha 3
+2010-01-09
+--
+ + Project portfolio view added
+ + Story tree on product and project pages
+   - including changing parent-child relationships
+   - sorting story trees
+ + Sorting project child stories
+ + 'My Assignments' in left hand menu
+ + Minor timesheets improvements
+
+
 Changes from Alpha 2
 2009-11-17 
 --
@@ -45,3 +55,4 @@ Changes from Alpha 2
  + Splitting stories
  + New layout
  + Lots of changes to Daily Work
+ 

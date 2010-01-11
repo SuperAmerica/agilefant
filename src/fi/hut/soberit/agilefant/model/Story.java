@@ -32,7 +32,7 @@ import flexjson.JSON;
 @Entity
 @Table(name = "stories")
 @Audited
-public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
+public class Story implements TimesheetLoggable, LabelContainer, NamedObject, TaskContainer {
     private int id;
     private String name;
     private String description;
@@ -42,6 +42,7 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     private int treeRank = 0;
     private Story parent;
     private List<Story> children = new ArrayList<Story>();
+    private Set<Label> labels = new HashSet<Label>();
     
     private Set<User> responsibles = new HashSet<User>();
     private Set<Task> tasks = new HashSet<Task>();
@@ -196,4 +197,16 @@ public class Story implements TimesheetLoggable, NamedObject, TaskContainer {
     public void setTreeRank(int treeRank) {
         this.treeRank = treeRank;
     }
+
+    public void setLabels(Set<Label> labels) {
+        this.labels = labels;
+    }
+
+    @JSON(include = false)
+    @OneToMany(mappedBy = "story")
+    @NotAudited
+    public Set<Label> getLabels() {
+        return labels;
+    }
+
 }

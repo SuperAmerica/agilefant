@@ -19,6 +19,7 @@
         <mapping class="fi.hut.soberit.agilefant.model.SignedExactEstimate" />
 		<mapping class="fi.hut.soberit.agilefant.model.Iteration" />
 		<mapping class="fi.hut.soberit.agilefant.model.IterationHistoryEntry" />
+		<mapping class="fi.hut.soberit.agilefant.model.Label" />
 		<mapping class="fi.hut.soberit.agilefant.model.Product" />
 		<mapping class="fi.hut.soberit.agilefant.model.Project" />
 		<mapping class="fi.hut.soberit.agilefant.model.ProjectType" />

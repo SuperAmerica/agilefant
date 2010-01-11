@@ -438,6 +438,16 @@
 				<include name="*.js" />
 			</fileset>
 		</concat>
-	</target>
-
+  </target>
+  <!-- Generates a rebel.xml configuration file for JRebel.
+       The file is generated both to basedir/classes and basedir/eclipse-classes so it should work both with Eclipse and command line deploying.
+       The configuration file is wiped out if you do a clean so if you want to continue using JRebel, you should always regenerate it.
+  -->
+  <target name="jrebel">
+    <filter token="webapp.root" value="${webapp.root}" />
+    <filter token="build.classes" value="${build.classes}" />
+    <filter token="eclipse.classes" value="${basedir}/eclipse-classes" />
+    <copy file="${basedir}/tools/rebel.xml.template" tofile="${build.classes}/rebel.xml" filtering="true" />
+    <copy file="${basedir}/tools/rebel.xml.template" tofile="${basedir}/eclipse-classes/rebel.xml" filtering="true" />
+  </target>
 </project>

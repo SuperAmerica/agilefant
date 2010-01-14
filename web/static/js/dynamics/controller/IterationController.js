@@ -627,21 +627,21 @@ IterationController.prototype.initAssigneeConfiguration = function() {
   config.addColumnConfiguration(3, {
     minWidth : 100,
     autoScale : true,
-    title : "assigned load",
+    title : "assigned",
     get : AssignmentModel.prototype.getAssignedLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator
   });
   config.addColumnConfiguration(4, {
     minWidth : 100,
     autoScale : true,
-    title : "unassigned load",
+    title : "unassigned",
     get : AssignmentModel.prototype.getUnassignedLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator
   });
   config.addColumnConfiguration(5, {
     minWidth : 100,
     autoScale : true,
-    title : "total load",
+    title : "total",
     get : AssignmentModel.prototype.getTotalLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator
   });

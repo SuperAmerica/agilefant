@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,31 +58,47 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
     }
 
     public List<Task> getAllTasksForIteration(Iteration iteration) {
-        Criteria criteria = getCurrentSession().createCriteria(Task.class);
-        return asList(addIterationRestriction(criteria, Arrays
-                .asList("iteration"), iteration));
+        Criteria storyTaskCrit = getCurrentSession().createCriteria(Task.class);
+        storyTaskCrit.setFetchMode("iteration",FetchMode.SELECT);
+        storyTaskCrit = storyTaskCrit.createCriteria("story").createCriteria("backlog");
+        storyTaskCrit.add(Restrictions.idEq(iteration.getId()));
+        
+        Criteria tasksWoStoryCrit = getCurrentSession().createCriteria(Task.class);
+        tasksWoStoryCrit.setFetchMode("story", FetchMode.SELECT);
+        tasksWoStoryCrit = tasksWoStoryCrit.createCriteria("iteration");
+        tasksWoStoryCrit.add(Restrictions.idEq(iteration.getId()));
+        
+        List<Task> tasks = new ArrayList<Task>();
+        List<Task> storyTasks = asList(storyTaskCrit);
+        tasks.addAll(storyTasks);
+        List<Task> iterationTasks = asList(tasksWoStoryCrit);
+        tasks.addAll(iterationTasks);
+
+        return tasks;
     }
+
     public Map<StoryState, Integer> countIterationStoriesByState(int iterationId) {
         Criteria criteria = getCurrentSession().createCriteria(Story.class);
         criteria.add(Restrictions.eq("backlog.id", iterationId));
         criteria.setProjection(Projections.projectionList().add(
                 Projections.property("state")).add(Projections.rowCount(),
                 "storyCount").add(Projections.groupProperty("state"), "state"));
-        
-        Map<StoryState, Integer> results = new EnumMap<StoryState, Integer>(StoryState.class);
-        
+
+        Map<StoryState, Integer> results = new EnumMap<StoryState, Integer>(
+                StoryState.class);
+
         for (StoryState state : StoryState.values()) {
             results.put(state, 0);
         }
-        
+
         List<Object[]> queryResults = asList(criteria);
-        
+
         for (Object[] row : queryResults) {
             StoryState state = (StoryState) row[0];
             Integer count = (Integer) row[1];
             results.put(state, count);
         }
-        
+
         return results;
     }
 
@@ -169,41 +186,42 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         // limit by assignee
         crit.createCriteria("assignments").createCriteria("user").add(
                 Restrictions.eq("id", assignee.getId()));
-        
-        //must have planned size set
+
+        // must have planned size set
         crit.add(Restrictions.isNotNull("backlogSize"));
-        
-        //must be empty
+
+        // must be empty
         crit.add(Restrictions.isEmpty("stories"));
         crit.add(Restrictions.isEmpty("tasks"));
 
         return asList(crit);
     }
 
-    public List<Iteration> retrieveCurrentAndFutureIterationsAt(
-            DateTime point) {
+    public List<Iteration> retrieveCurrentAndFutureIterationsAt(DateTime point) {
 
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
         crit.add(Restrictions.ge("endDate", point));
         return asList(crit);
     }
-    
+
     public Iteration retrieveDeep(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
-        Criteria storyCrit = crit.createAlias("stories", "stories", CriteriaSpecification.LEFT_JOIN);
-        Criteria taskCrit = crit.createAlias("tasks", "tasks", CriteriaSpecification.LEFT_JOIN);
-        //Criteria taskWOStoryCrit = crit.createCriteria("tasks");
-        
+        Criteria storyCrit = crit.createAlias("stories", "stories",
+                CriteriaSpecification.LEFT_JOIN);
+        Criteria taskCrit = crit.createAlias("tasks", "tasks",
+                CriteriaSpecification.LEFT_JOIN);
+        // Criteria taskWOStoryCrit = crit.createCriteria("tasks");
+
         crit.setFetchMode("stories", FetchMode.JOIN);
-        storyCrit.setFetchMode("tasks",FetchMode.JOIN);
-        
+        storyCrit.setFetchMode("tasks", FetchMode.JOIN);
+
         taskCrit.setFetchMode("responsibles", FetchMode.JOIN);
         taskCrit.setFetchMode("whatsNextEntries", FetchMode.JOIN);
-        
+
         crit.add(Restrictions.idEq(iterationId));
-        
+
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return (Iteration)crit.uniqueResult();
+        return (Iteration) crit.uniqueResult();
     }
 
     public List<Iteration> retrieveActiveWithUserAssigned(int userId) {
@@ -218,4 +236,3 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
     }
 
 }
-

@@ -26,6 +26,11 @@ var DynamicsDecorators = {
     };
     return '<div class="taskState taskState'+stateClass[state]+'">'+text+'</div>';
   },
+  appendDecoratorFactory: function(str) {
+    return function(value) {
+      return value + str;
+    };
+  },
   exactEstimateDecorator: function(value) {
     if (typeof (value) === 'string') {
       return value;

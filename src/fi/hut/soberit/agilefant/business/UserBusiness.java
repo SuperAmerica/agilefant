@@ -7,6 +7,7 @@ import java.util.Set;
 import org.joda.time.Duration;
 import org.joda.time.Interval;
 
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.User;
 
 /**
@@ -62,6 +63,7 @@ public interface UserBusiness extends GenericBusiness<User> {
      * within the given timeframe.
      */
     public Duration calculateWorktimePerPeriod(User user, Interval interval);
+    public ExactEstimate calculateWorkHoursPerPeriod(User user, Interval interval);
 
     public Collection<User> retrieveMultiple(Set<Integer> userIds);
 

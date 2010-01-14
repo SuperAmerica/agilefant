@@ -29,6 +29,9 @@ INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (2, 5, NULL, 1);
 INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (3, 5, 1, NULL);
 INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (4, 1, NULL, 2);
 INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (5, 5, NULL, 3);
+INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (6, 5, NULL, 4);
+
+INSERT INTO tasks (id, state, iteration_id, story_id) VALUES (7, 5, 3, NULL);
 
 INSERT INTO assignment (user_id, backlog_id, availability) VALUES (1,1,100);
 INSERT INTO assignment (user_id, backlog_id, availability) VALUES (1,2,100);

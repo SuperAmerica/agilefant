@@ -60,4 +60,8 @@ public class SignedExactEstimate extends Number implements Comparable<SignedExac
     public String toString() {
         return String.valueOf(this.minorUnits);
     }
+    
+    public void add(long addee) {
+        this.minorUnits += addee;
+    }
 }

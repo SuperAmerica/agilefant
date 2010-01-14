@@ -54,6 +54,7 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.Team":         "team",
     
   "fi.hut.soberit.agilefant.model.Assignment":   "assignment",
+  "fi.hut.soberit.agilefant.transfer.AssignmentTO":   "assignment",
   
   "fi.hut.soberit.agilefant.model.HourEntry":       "hourEntry",
   "fi.hut.soberit.agilefant.model.BacklogHourEntry": "hourEntry",
@@ -87,6 +88,7 @@ ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.model.Team":            TeamModel,
       
     "fi.hut.soberit.agilefant.model.Assignment":      AssignmentModel,
+    "fi.hut.soberit.agilefant.transfer.AssignmentTO":      AssignmentModel,
     
     "fi.hut.soberit.agilefant.model.HourEntry":       HourEntryModel,
     "fi.hut.soberit.agilefant.model.BacklogHourEntry": HourEntryModel,

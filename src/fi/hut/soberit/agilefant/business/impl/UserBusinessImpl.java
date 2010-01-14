@@ -19,6 +19,7 @@ import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Holiday;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
@@ -161,7 +162,12 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         return worktime;
     }
 
-
+    public ExactEstimate calculateWorkHoursPerPeriod(User user,
+            Interval interval) {
+        Duration workDuration = this.calculateWorktimePerPeriod(user, interval);
+        return new ExactEstimate((long) workDuration.toStandardSeconds()
+                .toStandardHours().getHours());
+    }
 
     public void disableUser(int id) {
         User user = userDAO.get(id);

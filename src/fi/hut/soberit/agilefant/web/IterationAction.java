@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -11,6 +13,7 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 
@@ -33,6 +36,8 @@ public class IterationAction implements
     private IterationMetrics iterationMetrics;
     
     private IterationRowMetrics iterationRowMetrics;
+    
+    private Set<AssignmentTO> assignments;
 
     @Autowired
     private IterationBusiness iterationBusiness;
@@ -67,6 +72,12 @@ public class IterationAction implements
 
     public String iterationRowMetrics() {
         iterationRowMetrics = iterationBusiness.getIterationRowMetrics(iterationId);
+        return Action.SUCCESS;
+    }
+    
+    public String iterationAssignments() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        assignments = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
         return Action.SUCCESS;
     }
     
@@ -130,5 +141,9 @@ public class IterationAction implements
 
     public Backlog getParentBacklog() {
         return parentBacklog;
+    }
+
+    public Set<AssignmentTO> getAssignments() {
+        return assignments;
     }
 }

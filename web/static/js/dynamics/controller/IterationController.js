@@ -87,9 +87,15 @@ IterationController.prototype.paint = function() {
         me.model = model;
         me.paintIterationInfo();
         me.paintStoryList();
-        me.paintAssigneeList();
         me.paintTaskList();
       });
+  this.assigneeContainer = new AssignmentContainer(this.id);
+  this.assigneeListView = new DynamicTable(this, this.assigneeContainer, this.assigneeListConfiguration,
+      this.assigmentListElement);
+};
+
+IterationController.prototype.selectAssigneesTab = function() {
+  this.assigneeContainer.reload();
 };
 
 /**
@@ -564,4 +570,94 @@ IterationController.prototype.initIterationInfoConfig = function() {
     }
   });
   this.iterationDetailConfig = config;
+};
+
+IterationController.prototype.initAssigneeConfiguration = function() {
+  var config = new DynamicTableConfiguration(
+      {
+        rowControllerFactory : BacklogController.prototype.assignmentControllerFactory,
+        dataSource : AssignmentContainer.prototype.getAssignments,
+        caption : "Assignees"
+      });
+/*
+  config.addCaptionItem( {
+    name : "addAssignees",
+    text : "Add assignees",
+    cssClass : "create",
+    callback : BacklogController.prototype.addAssignees
+  });
+*/  
+  config.addColumnConfiguration(0, {
+    minWidth : 200,
+    autoScale : true,
+    title : "User",
+    get : AssignmentModel.prototype.getUser,
+    decorator: DynamicsDecorators.userNameDecorator
+  });
+  
+  
+  config.addColumnConfiguration(1, {
+    minWidth : 100,
+    autoScale : true,
+    title : "adjustment",
+    get : AssignmentModel.prototype.getPersonalLoad,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      acceptNegative: true,
+      set: AssignmentModel.prototype.setPersonalLoad,
+      decorator: DynamicsDecorators.exactEstimateEditDecorator
+    }
+  });
+  config.addColumnConfiguration(2, {
+    minWidth : 80,
+    autoScale : true,
+    title : "Availability",
+    get : AssignmentModel.prototype.getAvailability,
+    decorator: DynamicsDecorators.appendDecoratorFactory("%"),
+    editable: true,
+    edit: {
+      editor: "Number",
+      minVal: 0,
+      maxVal: 100,
+      set: AssignmentModel.prototype.setAvailability
+    }
+  });
+  config.addColumnConfiguration(3, {
+    minWidth : 100,
+    autoScale : true,
+    title : "assigned load",
+    get : AssignmentModel.prototype.getAssignedLoad,
+    decorator: DynamicsDecorators.exactEstimateEditDecorator
+  });
+  config.addColumnConfiguration(4, {
+    minWidth : 100,
+    autoScale : true,
+    title : "unassigned load",
+    get : AssignmentModel.prototype.getUnassignedLoad,
+    decorator: DynamicsDecorators.exactEstimateEditDecorator
+  });
+  config.addColumnConfiguration(5, {
+    minWidth : 100,
+    autoScale : true,
+    title : "total load",
+    get : AssignmentModel.prototype.getTotalLoad,
+    decorator: DynamicsDecorators.exactEstimateEditDecorator
+  });
+  config.addColumnConfiguration(6, {
+    minWidth : 100,
+    autoScale : true,
+    title : "worktime",
+    get : AssignmentModel.prototype.getAvailableWorktime,
+    decorator: DynamicsDecorators.exactEstimateEditDecorator
+  });
+  config.addColumnConfiguration(7, {
+    minWidth : 100,
+    autoScale : true,
+    title : "load percentage",
+    get : AssignmentModel.prototype.getLoadPercentage,
+    decorator: DynamicsDecorators.appendDecoratorFactory("%")
+  });
+  this.assigneeListConfiguration = config;
 };

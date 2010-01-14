@@ -64,7 +64,9 @@ $(document).ready(function() {
   	$("#backlogInfo").bind('tabsselect', function(event, ui) {
 	    if (ui.index == 2) {
       	controller.selectSpentEffortTab();
-    	}
+    	} else if(ui.index == 1) {
+    	  controller.selectAssigneesTab();
+      }
   	});
   }
 });

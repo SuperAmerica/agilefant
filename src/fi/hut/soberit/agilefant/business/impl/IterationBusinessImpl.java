@@ -3,11 +3,16 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.Collection;
 import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.model.Iteration;
+
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +26,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -31,6 +37,8 @@ import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -307,6 +315,92 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         
         return iterationRowMetrics;
+    }
+    
+    public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter) {
+        List<Task> iterationTasks = this.iterationDAO
+                .getAllTasksForIteration(iter);
+
+        Map<Integer, AssignmentTO> assignments = new HashMap<Integer, AssignmentTO>();
+        long unassignedLoad = 0L;
+        int totalAvailability = 0;
+
+        for (Assignment assignment : iter.getAssignments()) {
+            AssignmentTO to = new AssignmentTO(assignment);
+            assignments.put(assignment.getUser().getId(), to);
+            totalAvailability += assignment.getAvailability();
+        }
+        if (totalAvailability == 0) {
+            totalAvailability = 1;
+        }
+
+        for (Task task : iterationTasks) {
+            int responsibleCount = task.getResponsibles().size();
+            long taskEffort = task.getEffortLeft().longValue();
+            if (responsibleCount != 0) {
+                Collection<User> responsibles = task.getResponsibles();
+                divideTaskLoad(assignments, responsibleCount, taskEffort,
+                        responsibles);
+            } else if (task.getStory() != null
+                    && !task.getStory().getResponsibles().isEmpty()) {
+                responsibleCount = task.getStory().getResponsibles().size();
+                Collection<User> responsibles = task.getStory()
+                        .getResponsibles();
+                divideTaskLoad(assignments, responsibleCount, taskEffort,
+                        responsibles);
+
+            } else {
+                unassignedLoad += taskEffort;
+            }
+        }
+        for (AssignmentTO assignment : assignments.values()) {
+            assignment
+                    .setUnassignedLoad(new ExactEstimate(
+                            (long) (((float) assignment.getAvailability() / (float) totalAvailability) * (float) unassignedLoad)));
+
+            ExactEstimate iterationWorkHours = new ExactEstimate(Math
+                    .round(this.calculateIterationTimeframePercentageLeft(iter) * iter.getBacklogSize().floatValue()
+                            * (float) assignment.getAvailability() / 100f));
+            assignment.setAvailableWorktime(iterationWorkHours);
+            SignedExactEstimate totalLoad = new SignedExactEstimate(0);
+            totalLoad.add(assignment.getUnassignedLoad().longValue());
+            totalLoad.add(assignment.getAssignedLoad().longValue());
+            if (assignment.getPersonalLoad() != null) {
+                totalLoad.add(assignment.getPersonalLoad().longValue());
+            }
+            assignment.setTotalLoad(totalLoad);
+            if (iterationWorkHours.longValue() > 0l) {
+                assignment.setLoadPercentage(Math.round(100f
+                        * assignment.getTotalLoad().floatValue()
+                        / assignment.getAvailableWorktime().floatValue()));
+            }
+        }
+        return new HashSet<AssignmentTO>(assignments.values());
+    }
+
+    private void divideTaskLoad(Map<Integer, AssignmentTO> assignments,
+            int responsibleCount, long taskEffort, Collection<User> responsibles) {
+        for (User user : responsibles) {
+            AssignmentTO assignment = assignments.get(user.getId());
+            if (assignment != null) {
+                assignment.getAssignedLoad().add(
+                        taskEffort / responsibleCount);
+            }
+        }
+    }
+    
+    public float calculateIterationTimeframePercentageLeft(Iteration iter) {
+        DateTime currentTime = new DateTime();
+        Interval iterInterval = new Interval(iter.getStartDate(), iter.getEndDate());
+        if(iter.getEndDate().isBefore(currentTime)) {
+            return 0.0f;
+        }
+        Interval toIterationEnd = new Interval(currentTime, iter.getEndDate());
+        Interval intersection = toIterationEnd.overlap(iterInterval);
+        if(iterInterval.toDurationMillis() == 0) {
+            return 0.0f;
+        }
+        return (float)intersection.toDurationMillis() / (float)iterInterval.toDurationMillis();
     }
 
 }

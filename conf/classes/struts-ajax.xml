@@ -302,6 +302,13 @@
       </result>
     </action>
     
+    <action name="iterationAssignments" class="iterationAction" method="iterationAssignments">
+      <result name="success" type="json">
+        <param name="target">assignments</param>
+        <param name="patterns">+user.initials</param>
+      </result>
+    </action>
+    
     <!-- /Iteration actions -->
 
 

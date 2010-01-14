@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.StoryState;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 import fi.hut.soberit.agilefant.util.Pair;
@@ -71,6 +72,15 @@ public class IterationDAOTest extends AbstractHibernateTests {
         executeClassSql();
         Iteration actual = iterationDAO.retrieveDeep(3);
         assertNotNull(actual);
+    }
+    
+    @Test
+    public void testgetAllTasksForIteration() {
+        executeClassSql();
+        Iteration iter = new Iteration();
+        iter.setId(3);
+        List<Task> tasks = iterationDAO.getAllTasksForIteration(iter);
+        assertEquals(2, tasks.size());
     }
     
     @Test

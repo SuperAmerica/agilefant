@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.io.Serializable;
-
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -22,8 +20,7 @@ import flexjson.JSON;
 @Entity
 @Table(name = "assignment")
 @Audited
-public class Assignment implements Serializable {
-    private static final long serialVersionUID = 5391104304173714927L;
+public class Assignment {
      
     private int id;
     private Backlog backlog;

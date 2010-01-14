@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +16,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 
@@ -124,5 +128,19 @@ public class IterationActionTest {
         iterationAction.store();
         assertEquals(transfer, iterationAction.getIteration());
         verifyAll();
+    }
+    
+    @Test
+    public void testIterationAssignments() {
+        Iteration iter = new Iteration();
+        Set<AssignmentTO> assignments = new HashSet<AssignmentTO>();
+        
+        expect(iterationBusiness.retrieve(1)).andReturn(iter);
+        expect(iterationBusiness.calculateAssignedLoadPerAssignee(iter)).andReturn(assignments);
+        replayAll();
+        iterationAction.setIterationId(1);
+        iterationAction.iterationAssignments();
+        verifyAll();
+        assertSame(assignments, iterationAction.getAssignments());
     }
 }

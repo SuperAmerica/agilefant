@@ -18,6 +18,7 @@ var AssignmentModel = function AssignmentModel() {
     "unassignedLoad": "unassignedLoad",
     "availableWorktime": "availableWorktime",
     "totalLoad": "totalLoad",
+    "unassigned": "unassigned",
     "loadPercentage": "loadPercentage"
   };
 
@@ -118,6 +119,10 @@ AssignmentModel.prototype.getTotalLoad = function() {
 };
 AssignmentModel.prototype.getLoadPercentage = function() {
   return this.currentData.loadPercentage;
+};
+
+AssignmentModel.prototype.isUnassigned = function() {
+  return this.currentData.unassigned;
 };
 
 var AssignmentContainer = function AssignmentContainer(iterationId) {

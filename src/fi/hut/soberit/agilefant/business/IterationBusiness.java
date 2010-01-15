@@ -3,8 +3,8 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 import java.util.Set;
 
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -32,7 +32,7 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter);
     
-    public Period timeLeftInIteration(Iteration iter);
+    public Days daysLeftInIteration(Iteration iter);
     
     public float calculateIterationTimeframePercentageLeft(Iteration iter);
 }

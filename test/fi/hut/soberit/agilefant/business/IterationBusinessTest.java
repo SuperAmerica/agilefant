@@ -12,8 +12,8 @@ import java.util.Set;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -442,7 +442,7 @@ public class IterationBusinessTest {
         iter.setStartDate(startDate.toDateMidnight().toDateTime());
         iter.setEndDate(endDate);
         
-        Period daysLeft = iterationBusiness.timeLeftInIteration(iter);
+        Days daysLeft = iterationBusiness.daysLeftInIteration(iter);
         
         assertEquals(3, daysLeft.getDays());
         
@@ -456,20 +456,21 @@ public class IterationBusinessTest {
         iter.setStartDate(startDate.toDateMidnight().toDateTime());
         iter.setEndDate(endDate);
         
-        Period daysLeft = iterationBusiness.timeLeftInIteration(iter);
+        Days daysLeft = iterationBusiness.daysLeftInIteration(iter);
         assertEquals(0, daysLeft.getDays());
     }
     
     @Test
     public void testTimeLeftInIteration_future() {
         Iteration iter = new Iteration();
-        DateTime startDate = new DateTime().plusDays(4);
-        DateTime endDate = startDate.plusDays(5);
+        DateTime startDate = new DateTime().plusDays(2);
+        DateTime endDate = startDate.plusDays(50);
         iter.setStartDate(startDate.toDateMidnight().toDateTime());
         iter.setEndDate(endDate);
         
-        Period daysLeft = iterationBusiness.timeLeftInIteration(iter);
-        assertEquals(5, daysLeft.getDays());
+        Days daysLeft = iterationBusiness.daysLeftInIteration(iter);
+        System.out.println(daysLeft);
+        assertEquals(50, daysLeft.getDays());
     }
     
     @Test
@@ -498,7 +499,7 @@ public class IterationBusinessTest {
     public void testCalculateIterationTimeframePercentageLeft_future() {
         Iteration iter = new Iteration();
         DateTime startDate = new DateTime().plusDays(4);
-        DateTime endDate = startDate.plusDays(5);
+        DateTime endDate = startDate.plusDays(50);
         iter.setStartDate(startDate.toDateMidnight().toDateTime());
         iter.setEndDate(endDate);
         float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);

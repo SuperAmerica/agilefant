@@ -612,7 +612,10 @@ IterationController.prototype.initAssigneeConfiguration = function() {
     autoScale : true,
     title : "User",
     get : AssignmentModel.prototype.getUser,
-    decorator: DynamicsDecorators.userNameDecorator
+    decorator: DynamicsDecorators.conditionColorDecorator(
+        AssignmentModel.prototype.isUnassigned, 
+        function(v) { if(v) { return 'red'; } }, 
+        DynamicsDecorators.userNameDecorator)
   });
   
   

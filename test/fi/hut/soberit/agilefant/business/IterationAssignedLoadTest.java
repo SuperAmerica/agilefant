@@ -176,7 +176,9 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
         verifyAll();
-        assertEquals(0, actual.size());
+        assertEquals(2, actual.size());
+        assertNotNull(this.findById(actual, -1));
+        assertNotNull(this.findById(actual, -2));
     }
 
     @Test
@@ -194,7 +196,7 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
         verifyAll();
         AssignmentTO ass = this.findById(actual, 1);
-        assertEquals(1, actual.size());
+        assertEquals(2, actual.size());
         assertEquals(taskInStory11.getEffortLeft().longValue()
                 + taskInStory12.getEffortLeft().longValue()
                 + taskInStory22.getEffortLeft().longValue()
@@ -258,11 +260,11 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         assertEquals(45, u2.getAvailableWorktime().longValue());
         assertEquals(455, u1.getAvailableWorktime().longValue());
         
-        assertEquals(10160l, u1.getTotalLoad().longValue());
-        assertEquals(101050l, u2.getTotalLoad().longValue());
+        assertEquals(10181l, u1.getTotalLoad().longValue());
+        assertEquals(101071l, u2.getTotalLoad().longValue());
         
-        assertEquals(2233, u1.getLoadPercentage());
-        assertEquals(224556, u2.getLoadPercentage());
+        assertEquals(2238, u1.getLoadPercentage());
+        assertEquals(224602, u2.getLoadPercentage());
     }
 
     @Test

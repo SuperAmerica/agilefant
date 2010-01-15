@@ -10,6 +10,18 @@ var DynamicsDecorators = {
   stateDecorator: function(val) {
     return DynamicsDecorators.stateOptions[val];
   },
+  conditionColorDecorator: function(getter,colorcallback,innerDecorator) {
+    return function(value) {
+      var compar = getter.call(this);
+      var color = colorcallback(compar);
+      var val = innerDecorator.call(this, value);
+      if(color) {
+        return '<span style="color: ' + color +';">' + val + '</span>'; 
+      } else {
+        return val;
+      }
+    };
+  },
   stateColorDecorator: function(state) {
     var text = DynamicsDecorators.stateDecorator(state);
     return '<div class="taskState taskState'+state+'">'+text+'</div>';

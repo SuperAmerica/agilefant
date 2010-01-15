@@ -12,6 +12,8 @@ public class AssignmentTO extends Assignment {
     private ExactEstimate unassignedLoad = new ExactEstimate(0);
     private ExactEstimate availableWorktime = new ExactEstimate(0);
     private SignedExactEstimate totalLoad = new SignedExactEstimate(0);
+    private SignedExactEstimate baselineLoad = new SignedExactEstimate(0);
+    private boolean unassigned = false;
     private int loadPercentage = 0;
 
     public AssignmentTO(Assignment assignment) {
@@ -61,5 +63,23 @@ public class AssignmentTO extends Assignment {
 
     public void setTotalLoad(SignedExactEstimate totalLoad) {
         this.totalLoad = totalLoad;
+    }
+
+    @JSON
+    public boolean isUnassigned() {
+        return unassigned;
+    }
+
+    public void setUnassigned(boolean unassigned) {
+        this.unassigned = unassigned;
+    }
+    
+    @JSON
+    public SignedExactEstimate getBaselineLoad() {
+        return baselineLoad;
+    }
+
+    public void setBaselineLoad(SignedExactEstimate baselineLoad) {
+        this.baselineLoad = baselineLoad;
     }
 }

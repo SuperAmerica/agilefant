@@ -8,3 +8,6 @@ AssignmentController.prototype = new CommonController();
 AssignmentController.prototype.remove = function(view, model) {
   this.model.remove();
 };
+AssignmentController.prototype.handleModelEvents = function(event) {
+
+};

@@ -17,13 +17,15 @@
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
   <li class=""><a href="#backlogAssignees"><span><img
-    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
+    alt="Edit" src="static/img/team.png" /> Workload</span></a></li>
   <c:if test="${settings.hourReportingEnabled}">
   <li class=""><a href="#backlogSpentEffort"><span><img
     alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
   </c:if>
+  <!-- 
   <li class=""><a href="#backlogHistory"><span><img
     alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
+    -->
 </ul>
 
 
@@ -58,17 +60,9 @@ $(document).ready(function() {
       taskListElement: $("#tasksWithoutStory"),
       metricsElement: $("#iterationMetrics"),
       smallBurndownElement: $("#smallChart"),
-      burndownElement: $("#bigChart")
+      burndownElement: $("#bigChart"),
+      tabs: $("#backlogInfo")
   });
-  if(Configuration.isTimesheetsEnabled()) {
-  	$("#backlogInfo").bind('tabsselect', function(event, ui) {
-	    if (ui.index == 2) {
-      	controller.selectSpentEffortTab();
-    	} else if(ui.index == 1) {
-    	  controller.selectAssigneesTab();
-      }
-  	});
-  }
 });
 </script>
 

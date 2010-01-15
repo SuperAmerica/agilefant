@@ -13,6 +13,7 @@ import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.Period;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -431,5 +432,76 @@ public class IterationBusinessTest {
         replayAll();
         this.iterationBusiness.moveTo(iteration, newParent);
         verifyAll();
+    }
+    
+    @Test
+    public void testTimeLeftInIteration() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(2);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        
+        Period daysLeft = iterationBusiness.timeLeftInIteration(iter);
+        
+        assertEquals(3, daysLeft.getDays());
+        
+    }
+    
+    @Test
+    public void testTimeLeftInIteration_past() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(40);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        
+        Period daysLeft = iterationBusiness.timeLeftInIteration(iter);
+        assertEquals(0, daysLeft.getDays());
+    }
+    
+    @Test
+    public void testTimeLeftInIteration_future() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().plusDays(4);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        
+        Period daysLeft = iterationBusiness.timeLeftInIteration(iter);
+        assertEquals(5, daysLeft.getDays());
+    }
+    
+    @Test
+    public void testCalculateIterationTimeframePercentageLeft() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(2);
+        DateTime endDate = startDate.plusDays(4);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
+        assertEquals(0.5f,percentage,0);
+    }
+    
+    @Test
+    public void testCalculateIterationTimeframePercentageLeft_past() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(40);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
+        assertEquals(0f, percentage, 0);
+    }
+    
+    @Test
+    public void testCalculateIterationTimeframePercentageLeft_future() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().plusDays(4);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
+        assertEquals(1f, percentage, 0);
     }
 }

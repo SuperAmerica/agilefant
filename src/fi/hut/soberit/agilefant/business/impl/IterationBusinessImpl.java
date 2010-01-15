@@ -14,6 +14,8 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.joda.time.MutablePeriod;
+import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -310,6 +312,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         iterationRowMetrics.setStateData(iterationDAO.countIterationStoriesByState(iterationId));
         iterationRowMetrics.setTotalDays(Days.daysBetween(iteration.getStartDate(), iteration.getEndDate()).getDays());
         
+        //use timeLeftInIteration method
         if (today.isBefore(iteration.getEndDate().toLocalDate())) {
             iterationRowMetrics.setDaysLeft(Days.daysBetween(today, iteration.getEndDate().toLocalDate()).getDays());
         }
@@ -354,18 +357,24 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             }
         }
         for (AssignmentTO assignment : assignments.values()) {
-            float assignedPortion = (float) assignment.getAvailability() / (float) totalAvailability;
-            assignment
-                    .setUnassignedLoad(new ExactEstimate(
-                            (long) (assignedPortion * (float) unassignedLoad)));
+            float assignedPortion = (float) assignment.getAvailability()
+                    / (float) totalAvailability;
+            float timeframeLeft = this
+                    .calculateIterationTimeframePercentageLeft(iter);
+            
+            assignment.setUnassignedLoad(new ExactEstimate(
+                    (long) (assignedPortion * (float) unassignedLoad)));
 
             ExactEstimate iterationWorkHours = new ExactEstimate(Math
-                    .round(this.calculateIterationTimeframePercentageLeft(iter) * iter.getBacklogSize().floatValue()
-                            * assignedPortion) );
+                    .round(timeframeLeft * iter.getBacklogSize().floatValue()
+                            * assignedPortion));
             assignment.setAvailableWorktime(iterationWorkHours);
             SignedExactEstimate totalLoad = new SignedExactEstimate(0);
             totalLoad.add(assignment.getUnassignedLoad().longValue());
             totalLoad.add(assignment.getAssignedLoad().longValue());
+            if (iter.getBaselineLoad() != null) {
+                totalLoad.add(iter.getBaselineLoad().longValue());
+            }
             if (assignment.getPersonalLoad() != null) {
                 totalLoad.add(assignment.getPersonalLoad().longValue());
             }
@@ -390,18 +399,28 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
     }
     
-    public float calculateIterationTimeframePercentageLeft(Iteration iter) {
+    public Period timeLeftInIteration(Iteration iter) {
         DateTime currentTime = new DateTime();
-        Interval iterInterval = new Interval(iter.getStartDate(), iter.getEndDate());
-        if(iter.getEndDate().isBefore(currentTime)) {
-            return 0.0f;
+        Interval iterInterval = new Interval(iter.getStartDate()
+                .toDateMidnight(), iter.getEndDate().toDateMidnight());
+        if (iter.getEndDate().isBeforeNow()) {
+            return new Period(0);
         }
-        Interval toIterationEnd = new Interval(currentTime, iter.getEndDate());
+        Interval toIterationEnd = new Interval(currentTime.toDateMidnight(),
+                iter.getEndDate().toDateMidnight());
         Interval intersection = toIterationEnd.overlap(iterInterval);
-        if(iterInterval.toDurationMillis() == 0) {
-            return 0.0f;
+        if (iterInterval.toDurationMillis() == 0) {
+            return new Period(0);
         }
-        return (float)intersection.toDurationMillis() / (float)iterInterval.toDurationMillis();
+        return intersection.toPeriod();
+    }
+
+    public float calculateIterationTimeframePercentageLeft(Iteration iter) {
+        Interval iterInterval = new Interval(iter.getStartDate()
+                .toDateMidnight(), iter.getEndDate().toDateMidnight());
+        Period daysLeft = this.timeLeftInIteration(iter);
+        return (float) daysLeft.toStandardDuration().getMillis()
+                / (float) iterInterval.toDurationMillis();
     }
 
 }

@@ -16,12 +16,21 @@ var IterationController = function IterationController(options) {
   this.metricsElement = options.metricsElement;
   this.smallBurndownElement = options.smallBurndownElement;
   this.burndownElement = options.burndownElement;
+  this.tabs = options.tabs;
   this.init();
   this.initAssigneeConfiguration();
   this.initializeStoryConfig();
   this.initIterationInfoConfig();
   this.initializeTaskListConfig();
   this.paint();
+  var me = this;
+  this.tabs.bind('tabsselect', function(event, ui) {
+    if (Configuration.isTimesheetsEnabled() && ui.index === 2) {
+      me.selectSpentEffortTab();
+    } else if(ui.index === 1) {
+      me.selectAssigneesTab();
+    }
+  });
 };
 IterationController.prototype = new BacklogController();
 
@@ -35,6 +44,9 @@ IterationController.prototype.handleModelEvents = function(event) {
       this.reloadMetricsBox();
     }
   }
+};
+IterationController.prototype.isAssigneesTabSelected = function() {
+  return (this.tabs.tabs("option","selected") === 1);
 };
 
 IterationController.prototype.paintIterationInfo = function() {
@@ -55,6 +67,9 @@ IterationController.prototype.reloadMetricsBox = function() {
 IterationController.prototype.reloadMetrics = function() {
   this.reloadBurndown();
   this.reloadMetricsBox();
+  if(this.isAssigneesTabSelected()) {
+    this.selectAssigneesTab();
+  }
 };
 
 /**
@@ -569,6 +584,19 @@ IterationController.prototype.initIterationInfoConfig = function() {
       set: IterationModel.prototype.setDescription
     }
   });
+  config.addColumnConfiguration(5, {
+    title : "Assignees",
+    headerTooltip : 'Project assignees',
+    get : BacklogModel.prototype.getAssignees,
+    decorator: DynamicsDecorators.assigneesDecorator,
+    editable: true,
+    edit: {
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
+      set : BacklogModel.prototype.setAssignees
+    }
+  });
   this.iterationDetailConfig = config;
 };
 
@@ -577,18 +605,10 @@ IterationController.prototype.initAssigneeConfiguration = function() {
       {
         rowControllerFactory : BacklogController.prototype.assignmentControllerFactory,
         dataSource : AssignmentContainer.prototype.getAssignments,
-        caption : "Assignees"
-      });
-/*
-  config.addCaptionItem( {
-    name : "addAssignees",
-    text : "Add assignees",
-    cssClass : "create",
-    callback : BacklogController.prototype.addAssignees
-  });
-*/  
+        caption : "Iteration workload by assigned user"
+      }); 
   config.addColumnConfiguration(0, {
-    minWidth : 200,
+    minWidth : 150,
     autoScale : true,
     title : "User",
     get : AssignmentModel.prototype.getUser,
@@ -643,21 +663,24 @@ IterationController.prototype.initAssigneeConfiguration = function() {
     autoScale : true,
     title : "total",
     get : AssignmentModel.prototype.getTotalLoad,
-    decorator: DynamicsDecorators.exactEstimateEditDecorator
+    decorator: DynamicsDecorators.exactEstimateEditDecorator,
+    sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getTotalLoad)
   });
   config.addColumnConfiguration(6, {
     minWidth : 100,
     autoScale : true,
     title : "worktime",
     get : AssignmentModel.prototype.getAvailableWorktime,
-    decorator: DynamicsDecorators.exactEstimateEditDecorator
+    decorator: DynamicsDecorators.exactEstimateEditDecorator,
+    sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getAvailableWorktime)
   });
   config.addColumnConfiguration(7, {
     minWidth : 100,
     autoScale : true,
-    title : "load percentage",
+    title : "load",
     get : AssignmentModel.prototype.getLoadPercentage,
-    decorator: DynamicsDecorators.appendDecoratorFactory("%")
+    decorator: DynamicsDecorators.appendDecoratorFactory("%"),
+    sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getLoadPercentage)
   });
   this.assigneeListConfiguration = config;
 };

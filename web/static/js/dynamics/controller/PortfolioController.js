@@ -171,14 +171,14 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
-	    get : ProjectModel.prototype.getAssignees,
+	    get : BacklogModel.prototype.getAssignees,
 	    decorator: DynamicsDecorators.assigneesDecorator,
 	    editable: true,
 	    edit: {
         editor : "Autocomplete",
         dialogTitle: "Select users",
         dataType: "usersAndTeams",
-        set : ProjectModel.prototype.setAssignees
+        set : BacklogModel.prototype.setAssignees
       }
 	  });
   config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedActions, {
@@ -222,14 +222,14 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
-      get : ProjectModel.prototype.getAssignees,
+      get : BacklogModel.prototype.getAssignees,
       decorator: DynamicsDecorators.assigneesDecorator,
       editable: true,
       edit: {
         editor : "Autocomplete",
         dialogTitle: "Select users",
         dataType: "usersAndTeams",
-        set : ProjectModel.prototype.setAssignees
+        set : BacklogModel.prototype.setAssignees
       }
 	  }); 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, {

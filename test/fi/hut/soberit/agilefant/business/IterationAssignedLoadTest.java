@@ -71,13 +71,17 @@ public class IterationAssignedLoadTest extends MockedTestCase {
     private Task taskInStory22;
     private Task taskWithoutStory;
     private List<Task> allTasks;
+    private static float u1fraction = 100f / 110f;
+    private static float u2fraction = 10f / 110f;
 
     @Before
     public void setupData() {
         iteration = new Iteration();
-        iteration.setStartDate(new DateTime(2009,1,1,0,0,0,0));
-        iteration.setEndDate(new DateTime(2009,2,1,0,0,0,0));
-        
+        iteration.setStartDate(new DateTime().plusDays(5));
+        iteration.setEndDate(iteration.getStartDate().plusDays(10));
+        iteration.setBacklogSize(new ExactEstimate(500));
+        iteration.setBaselineLoad(new ExactEstimate(50));
+
         user1 = new User();
         user1.setId(1);
 
@@ -121,7 +125,7 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         taskWithoutStory = new Task();
         taskWithoutStory.setIteration(iteration);
         taskWithoutStory.setEffortLeft(new ExactEstimate(100000L));
-        
+
         Task nullTask = new Task();
         nullTask.setEffortLeft(null);
 
@@ -189,12 +193,15 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
         verifyAll();
+        AssignmentTO ass = this.findById(actual, 1);
         assertEquals(1, actual.size());
         assertEquals(taskInStory11.getEffortLeft().longValue()
                 + taskInStory12.getEffortLeft().longValue()
                 + taskInStory22.getEffortLeft().longValue()
-                + taskWithoutStory.getEffortLeft().longValue(), this.findById(
-                actual, 1).getAssignedLoad().longValue());
+                + taskWithoutStory.getEffortLeft().longValue(), ass
+                .getAssignedLoad().longValue());
+        assertEquals(iteration.getBacklogSize().longValue(), ass
+                .getAvailableWorktime().longValue());
     }
 
     @Test
@@ -243,16 +250,19 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         AssignmentTO u1 = this.findById(actual, 1);
         AssignmentTO u2 = this.findById(actual, 2);
 
-        assertEquals(taskInStory11.getEffortLeft().longValue()
-                + taskInStory12.getEffortLeft().longValue()
-                + taskInStory22.getEffortLeft().longValue(), u1
-                .getAssignedLoad().longValue());
+        assertEquals(10110l, u1.getAssignedLoad().longValue());
         assertEquals(0L, u1.getUnassignedLoad().longValue());
-        assertEquals(taskInStory21.getEffortLeft().longValue()
-                + taskWithoutStory.getEffortLeft().longValue(), u2
-                .getAssignedLoad().longValue());
+        assertEquals(101000l, u2.getAssignedLoad().longValue());
         assertEquals(0L, u2.getUnassignedLoad().longValue());
 
+        assertEquals(45, u2.getAvailableWorktime().longValue());
+        assertEquals(455, u1.getAvailableWorktime().longValue());
+        
+        assertEquals(10160l, u1.getTotalLoad().longValue());
+        assertEquals(101050l, u2.getTotalLoad().longValue());
+        
+        assertEquals(2233, u1.getLoadPercentage());
+        assertEquals(224556, u2.getLoadPercentage());
     }
 
     @Test
@@ -260,6 +270,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
     public void testBothAssignees_unassigned() {
         iteration.getAssignments().add(assign1);
         iteration.getAssignments().add(assign2);
+        iteration.setBaselineLoad(null);
+        assign1.setPersonalLoad(null);
 
         expect(iterationDAO.getAllTasksForIteration(iteration)).andReturn(
                 allTasks);

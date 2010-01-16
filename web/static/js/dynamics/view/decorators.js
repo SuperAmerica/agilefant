@@ -225,5 +225,19 @@ var DynamicsDecorators = {
   },
   empty: function() {
     return "";
+  },
+  idLinkDecoratorFactory: function(target) {
+    return function(value) {
+      return '<a href="' + target.replace("#id", this.getId()) + '">' + value + '<a/>';
+    };
+  },
+  onEmptyDecoratorFactory: function(text) {
+    return function(value) {
+      if(!value) {
+        return text;
+      } else {
+        return value;
+      }
+    };
   }
 };

@@ -56,6 +56,10 @@ public class AssignmentBusinessImpl extends GenericBusinessImpl<Assignment>
         return userIds;
     }
     
+    public Set<Assignment> addMultiple(Backlog backlog, Set<Integer> userIds) {
+        return this.addMultiple(backlog, userIds, SignedExactEstimate.ZERO, 100);
+    }
+  
     public Set<Assignment> addMultiple(Backlog backlog,
             Set<Integer> userIds, SignedExactEstimate personalLoad, int availability) {
         Set<Assignment> assignments = this.getAssignemntsFromBacklog(backlog);

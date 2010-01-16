@@ -236,6 +236,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       editor : "Date",
       decorator: DynamicsDecorators.dateTimeDecorator,
       withTime: true,
+      size: '18ex',
       set: ProjectModel.prototype.setStartDate
     }
   });
@@ -249,6 +250,7 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       editor : "Date",
       decorator: DynamicsDecorators.dateTimeDecorator,
       withTime: true,
+      size: '18ex',
       set: ProjectModel.prototype.setEndDate
     }
   });
@@ -287,7 +289,10 @@ CreateDialog.Iteration.columnIndices = {
   parent:     1,
   startDate:  2,
   endDate:    3,
-  description:4
+  plannedSize:4,
+  baselineLoad:5,
+  assignees:  6,
+  description:7
 };
 CreateDialog.Iteration.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -297,16 +302,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     validators: [ BacklogModel.Validators.dateValidator, BacklogModel.Validators.parentValidator ]
   });
   
-  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.name,{
-    title: "Name",
-    editable: true,
-    get: CreateDialog.returnEmptyString,
-    edit: {
-      editor: "Text",
-      required: true,
-      set: IterationModel.prototype.setName
-    }
-  });
+  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.name,IterationController.columnConfigs.name);
   
   config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.parent,{
     title : "Parent",
@@ -323,45 +319,22 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     }
   });
     
-  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.startDate,{
-    title : "Start Date",
-    get : IterationModel.prototype.getStartDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
-      withTime: true,
-      set: IterationModel.prototype.setStartDate
-    }
-  });
-  
-  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.endDate,{
-    title : "End Date",
-    get : IterationModel.prototype.getEndDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
-      withTime: true,
-      set: IterationModel.prototype.setEndDate
-    }
-  });
+  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.startDate,
+      IterationController.columnConfigs.startDate);
+  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.endDate,
+      IterationController.columnConfigs.endDate);
+  config.addColumnConfiguration(
+      CreateDialog.Iteration.columnIndices.plannedSize,
+      IterationController.columnConfigs.plannedSize);
+  config.addColumnConfiguration(
+      CreateDialog.Iteration.columnIndices.baselineLoad,
+      IterationController.columnConfigs.baselineLoad);
+  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.assignees,
+      IterationController.columnConfigs.assignees);
+  config.addColumnConfiguration(
+      CreateDialog.Iteration.columnIndices.description,
+      IterationController.columnConfigs.description);
 
-
-  
-  config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.description, {
-    title: "Description",
-    get: IterationModel.prototype.getDescription,
-    editable: true,
-    edit: {
-      editor: "Wysiwyg",
-      set: IterationModel.prototype.setDescription
-    }
-  });
   
   this.formConfig = config;
 };
@@ -492,6 +465,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
     edit: {
       editor: "Text",
       required: true,
+      size: '40ex',
       set: UserModel.prototype.setFullName
     }
   });
@@ -502,6 +476,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
     get: UserModel.prototype.getLoginName,
     edit: {
       editor: "Text",
+      size: '10ex',
       required: true,
       set: UserModel.prototype.setLoginName
     }
@@ -514,6 +489,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
     edit: {
       editor: "Text",
       required: true,
+      size: '10ex',
       set: UserModel.prototype.setInitials
     }
   });
@@ -525,6 +501,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
     edit: {
       editor: "Email",
       required: true,
+      size: '40ex',
       set: UserModel.prototype.setEmail
     }
   });
@@ -535,6 +512,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
     get: UserModel.prototype.getPassword1,
     edit: {
       editor: "Password",
+      size: '20ex',
       set: UserModel.prototype.setPassword1,
       required: true
     }
@@ -546,6 +524,7 @@ CreateDialog.User.prototype.initFormConfig = function() {
     get: UserModel.prototype.getPassword2,
     edit: {
       editor: "Password",
+      size: '20ex',
       set: UserModel.prototype.setPassword2,
       required: true
     }

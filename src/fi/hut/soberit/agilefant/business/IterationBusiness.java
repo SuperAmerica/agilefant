@@ -24,7 +24,7 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
             IterationHistoryEntry yesterdayEntry);
 
     public IterationTO store(int iterationId, int parentBacklogId,
-            Iteration iterationData);
+            Iteration iterationData, Set<Integer> assigneeIds);
     
     public Collection<Iteration> retrieveCurrentAndFutureIterations();
     

@@ -447,7 +447,7 @@
     <filter token="webapp.root" value="${webapp.root}" />
     <filter token="build.classes" value="${build.classes}" />
     <filter token="eclipse.classes" value="${basedir}/eclipse-classes" />
-    <copy file="${basedir}/tools/rebel.xml.template" tofile="${build.classes}/rebel.xml" filtering="true" />
+    <copy file="${basedir}/tools/rebel.xml.template" tofile="${build.webapp}/WEB-INF/classes/rebel.xml" filtering="true" />
     <copy file="${basedir}/tools/rebel.xml.template" tofile="${basedir}/eclipse-classes/rebel.xml" filtering="true" />
   </target>
 </project>

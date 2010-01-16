@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.joda.time.DateTime;
@@ -38,6 +39,8 @@ public class IterationAction implements
     private IterationRowMetrics iterationRowMetrics;
     
     private Set<AssignmentTO> assignments;
+    
+    private Set<Integer> assigneeIds = new HashSet<Integer>();
 
     @Autowired
     private IterationBusiness iterationBusiness;
@@ -95,7 +98,11 @@ public class IterationAction implements
     )
     */
     public String store() {
-        iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration);
+        Set<Integer> assignees = null;
+        if(!this.assigneeIds.isEmpty()) {
+            assignees = this.assigneeIds;
+        }
+        iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees);
         return Action.SUCCESS;
     }
     
@@ -145,5 +152,13 @@ public class IterationAction implements
 
     public Set<AssignmentTO> getAssignments() {
         return assignments;
+    }
+
+    public Set<Integer> getAssigneeIds() {
+        return assigneeIds;
+    }
+
+    public void setAssigneeIds(Set<Integer> assigneeIds) {
+        this.assigneeIds = assigneeIds;
     }
 }

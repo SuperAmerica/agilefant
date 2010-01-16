@@ -73,10 +73,18 @@ IterationModel.prototype._saveData = function(id, changedData) {
   var url = "ajax/storeIteration.action";
   var data = this.serializeFields("iteration", changedData);
    
+  if (changedData.assigneesChanged) {
+    jQuery.extend(data, {assigneeIds: changedData.assigneeIds});
+    delete data.iteration.assigneeIds;
+    delete data.iteration.assigneesChanged;
+  }
+  
+  if(ArrayUtils.countObjectFields(data) === 0) {
+    return;
+  }
   if (id) {
     data.iterationId = id;    
-  }
-  else {
+  } else {
     url = "ajax/storeNewIteration.action";
     data.parentBacklogId = this.getParent().getId();
   }

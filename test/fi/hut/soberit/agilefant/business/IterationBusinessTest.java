@@ -327,7 +327,7 @@ public class IterationBusinessTest {
 
         replayAll();
 
-        Iteration actual = this.iterationBusiness.store(10, 11, iter);
+        Iteration actual = this.iterationBusiness.store(10, 11, iter, null);
         assertEquals(iter.getStartDate(), actual.getStartDate());
         assertEquals(iter.getEndDate(), actual.getEndDate());
         assertEquals(iter.getBacklogSize(), actual.getBacklogSize());
@@ -342,7 +342,7 @@ public class IterationBusinessTest {
     public void testStoreIteration_iterationParent() {
         expect(backlogBusiness.retrieve(11)).andReturn(iteration);
         replayAll();
-        this.iterationBusiness.store(10, 11, this.iteration);
+        this.iterationBusiness.store(10, 11, this.iteration, null);
         verifyAll();
     }
 
@@ -350,7 +350,7 @@ public class IterationBusinessTest {
     public void testStoreIteration_nullParent() {
         expect(backlogBusiness.retrieve(11)).andThrow(new ObjectNotFoundException());
         replayAll();
-        this.iterationBusiness.store(10, 11, this.iteration);
+        this.iterationBusiness.store(10, 11, this.iteration, null);
         verifyAll();
     }
 
@@ -363,7 +363,7 @@ public class IterationBusinessTest {
 
         expect(backlogBusiness.retrieve(12)).andReturn(project);
         replayAll();
-        this.iterationBusiness.store(11, 12, iteration);
+        this.iterationBusiness.store(11, 12, iteration, null);
         verifyAll();
     }
 
@@ -382,29 +382,27 @@ public class IterationBusinessTest {
         iter.setBaselineLoad(new ExactEstimate(100L));
         User user = new User();
         user.setId(1);
-        Assignment projectAssignment = new Assignment(user, project);
-        project.getAssignments().add(projectAssignment);
+        Assignment assignment = new Assignment();
         
         Capture<Set<Integer>> userIdCapture = new Capture<Set<Integer>>();
         expect(backlogBusiness.retrieve(11)).andReturn(project);
         expect(iterationDAO.create(EasyMock.isA(Iteration.class))).andReturn(new Integer(16));
         expect(iterationDAO.get(16)).andReturn(iteration);
         expect(assignmentBusiness.addMultiple(EasyMock.eq(iteration), 
-                EasyMock.capture(userIdCapture), EasyMock.eq(SignedExactEstimate.ZERO), 
-                EasyMock.eq(100))).andReturn(new HashSet<Assignment>(Arrays.asList(projectAssignment)));
+                EasyMock.capture(userIdCapture))).andReturn(new HashSet<Assignment>(Arrays.asList(assignment)));
         expect(transferObjectBusiness.constructIterationTO(iteration))
                 .andReturn(new IterationTO(iteration));
         
         replayAll();
         
-        this.iterationBusiness.store(0, 11, iter);
+        this.iterationBusiness.store(0, 11, iter, new HashSet<Integer>(Arrays.asList(1)));
         assertEquals(1, userIdCapture.getValue().size());
         assertTrue(userIdCapture.getValue().contains(1));
         verifyAll();
     }
 
     @Test
-    public void testCreateIteration_noProjectAssigments() {
+    public void testCreateIteration_noAssigments() {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(3);
         Iteration iter = new Iteration();
@@ -418,7 +416,7 @@ public class IterationBusinessTest {
         expect(transferObjectBusiness.constructIterationTO(iteration))
             .andReturn(new IterationTO(iteration));
         replayAll();
-        this.iterationBusiness.store(0, 11, iter);
+        this.iterationBusiness.store(0, 11, iter, null);
         verifyAll();
     }
     @Test

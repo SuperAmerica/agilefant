@@ -53,11 +53,25 @@ DynamicTableCell.prototype.initialize = function() {
 	  this.element.addClass(DynamicTable.cssClasses.dragHandle);
 	}
 	if(this.config.isEditable()) {
+	  //this.element.addClass('dynamictable-editable');
 	  this.element.attr("title", "Double click to edit");
 	  this.element.dblclick(function() {
 	    if (me.getRow().isEditable()) {
 	        me.openEditor();
 	    }
+	  });
+	  this.element.mouseenter(function() {
+     if(!me.editor) { // && me.verticalTableCell
+       me.cellContents.css("float", "left");
+        me.editClue = $('<div />').addClass('dynamictable-editclue').appendTo(me.element).click(
+            function(event) {
+              event.stopPropagation();
+              me.openEditor();
+            });
+      }
+	  });
+	  this.element.mouseleave(function() {
+	    me.removeEditClue();
 	  });
 	} else if(this.config.getDoubleClickCallback()) {
 	  this.element.dblclick(function() {
@@ -145,7 +159,7 @@ DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
   var editorOptions = this.config.getEditOptions();
   var editorName = editorOptions.editor;
   
-  
+  this.removeEditClue();
   if(this.editor) {
     return true; 
   }
@@ -200,4 +214,11 @@ DynamicTableCell.prototype.isFocused = function() {
 
 DynamicTableCell.prototype.onTransactionEdit = function() {
   this.render();
+};
+DynamicTableCell.prototype.removeEditClue = function() {
+  if(this.editClue) {
+    this.editClue.remove();
+    this.cellContents.css("float", "none");
+    this.editClue = null;
+  }
 };

@@ -192,7 +192,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
 
     public IterationTO store(int iterationId, int parentBacklogId,
-            Iteration iterationData) {
+            Iteration iterationData, Set<Integer> assigneeIds) {
         Backlog parent = null;
         if(parentBacklogId != 0) {
             parent = this.backlogBusiness.retrieve(parentBacklogId);
@@ -208,7 +208,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             throw new IllegalArgumentException("End date before start date");
         }
         if (iterationId == 0) {
-            return transferObjectBusiness.constructIterationTO(this.create(parent, iterationData));
+            return transferObjectBusiness.constructIterationTO(this.create(parent, iterationData, assigneeIds));
         }
         Iteration iter = this.retrieve(iterationId);
         iter.setStartDate(iterationData.getStartDate());
@@ -217,6 +217,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         iter.setBaselineLoad(iterationData.getBaselineLoad());
         iter.setDescription(iterationData.getDescription());
         iter.setName(iterationData.getName());
+        setAssignees(iter, assigneeIds);
         this.iterationDAO.store(iter);
         if (parent != null && iter.getParent() != parent) {
             this.moveTo(iter, parent);
@@ -224,25 +225,24 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         return transferObjectBusiness.constructIterationTO(iter);
     }
 
-    private Iteration create(Backlog parentBacklog, Iteration iterationData) {
+    private Iteration create(Backlog parentBacklog, Iteration iterationData, Set<Integer> assigneeIds) {
         iterationData.setParent(parentBacklog);
         int iterationId = (Integer) this.iterationDAO.create(iterationData);
         Iteration iter = this.retrieve(iterationId);
         
-        //copy project assignments
-        if (parentBacklog instanceof Project) {
-            Set<Integer> userIds = new HashSet<Integer>();
-            for (Assignment assignment : ((Project) parentBacklog)
-                    .getAssignments()) {
-                userIds.add(assignment.getUser().getId());
-            }
-            if(userIds.size() > 0) {
-                iterationData.setAssignments(this.assignmentBusiness.addMultiple(
-                        iter, userIds, SignedExactEstimate.ZERO,
-                        100));
-                }
-        }
+        setAssignees(iter, assigneeIds);
         return iter;
+    }
+    
+    private void setAssignees(Iteration iteration, Set<Integer> assigneeIds) {
+        if (assigneeIds != null) {
+            for(Assignment assignment : iteration.getAssignments()) {
+                if(!assigneeIds.contains(assignment.getUser().getId())) {
+                    assignmentBusiness.delete(assignment.getId());
+                }
+            }
+            assignmentBusiness.addMultiple(iteration, assigneeIds);
+        }
     }
 
     public void moveTo(Iteration iter, Backlog parent) {

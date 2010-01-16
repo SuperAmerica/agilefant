@@ -12,4 +12,5 @@ public interface AssignmentBusiness extends GenericBusiness<Assignment> {
 
     public Set<Assignment> addMultiple(Backlog backlog,
             Set<Integer> userIds, SignedExactEstimate personalLoad, int availability);
+    public Set<Assignment> addMultiple(Backlog backlog, Set<Integer> userIds);
 }

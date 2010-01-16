@@ -218,6 +218,16 @@ li.dynamictable-captionaction {
 	background-image:url(../img/timesheets_new.png);
 	background-position:100% 0;
 }
+
+.dynamictable a:link, .dynamictable a:visited {
+  color: #1E5EEE;
+  text-decoration: none;
+}
+
+.dynamictable a:hover, .dynamictable a:active {
+  color: #e50;
+}
+
 .dynamictable-captionactions {
   margin-top: 0px;
   padding-left: 0px;
@@ -427,9 +437,16 @@ li.dynamictable-captionaction {
   margin-right: 4%;
 }
 
-
-
-
+.dynamictable-editable > span:hover {
+	opacity: 0.8; !important;
+  filter:Alpha(Opacity=80) !important;
+}
+.dynamictable-editclue {
+	width: 16px;
+	height: 16px;
+	float: left;
+	background-image:url(../img/edit.png);
+}
 
 /**
  * Iteration page styles

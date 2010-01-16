@@ -88,96 +88,60 @@ UserListController.prototype.initConfig = function() {
     } 
   });
   
-  this._addColumnConfig(this.enabledUserListConfig);
-  this._addColumnConfig(this.disabledUserListConfig);
-};
-
-UserListController.prototype._addColumnConfig = function(config, actionFactory) { 
-  config.addColumnConfiguration(UserRowController.columnIndices.name, {
+  var name = {
     minWidth : 150,
     autoScale : true,
     cssClass : 'user-row',
     title: "Name",
     get: UserModel.prototype.getFullName,
+    decorator: DynamicsDecorators.idLinkDecoratorFactory("editUser.action?userId=#id"),
     defaultSortColumn: true,
-    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getFullName),
-    editable: true,
-    edit: {
-      editor: "Text",
-      required: true,
-      set: UserModel.prototype.setFullName
-    }
-  });
+    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getFullName)
+  };
   
-  config.addColumnConfiguration(UserRowController.columnIndices.login, {
+  var initials = {
     minWidth : 80,
     autoScale : true,
     cssClass : 'user-row',
-    title: "Login name",
-    get: UserModel.prototype.getLoginName,
-    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getLoginName),
-    editable: true,
-    edit: {
-      editor: "Text",
-      required: true,
-      set: UserModel.prototype.setLoginName
-    }
-  });
+    title: "Initials",
+    get: UserModel.prototype.getInitials,
+    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getInitials)
+  };
   
-  config.addColumnConfiguration(UserRowController.columnIndices.email, {
+  var email = {
     minWidth : 150,
     autoScale : true,
     cssClass : 'user-row',
     title: "Email",
     get: UserModel.prototype.getEmail,
-    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getEmail),
-    editable: true,
-    edit: {
-      editor: "Email",
-      set: UserModel.prototype.setEmail
-    }
-  });
+    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getEmail)
+  };
   
-  config.addColumnConfiguration(UserRowController.columnIndices.weekHours, {
+  var weekEffort = {
     minWidth : 60,
     autoScale : true,
     cssClass : 'user-row',
     title: "Week hours",
     get: UserModel.prototype.getWeekEffort,
     decorator: DynamicsDecorators.exactEstimateDecorator,
-    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getWeekEffort),
-    editable: true,
-    edit: {
-      editor: "ExactEstimate",
-      set: UserModel.prototype.setWeekEffort,
-      decorator: DynamicsDecorators.exactEstimateEditDecorator
-    }
-  });
+    sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getWeekEffort)
+  };
   
-  config.addColumnConfiguration(UserRowController.columnIndices.actions, {
+  var actions = {
     minWidth : 60,
     autoScale : true,
     cssClass : 'user-row',
     title: "Actions",
     subViewFactory: UserRowController.prototype.userActionFactory
-  });
+  };
   
-  config.addColumnConfiguration(UserRowController.columnIndices.password, {
-    visible: false,
-    fullWidth: true,
-    cssClass : 'user-data',
-    editable: true,
-    get: function() { return ""; },
-    edit: {
-      editor: "Password",
-      set: UserModel.prototype.setPassword1
-    }
-  });
+  this.enabledUserListConfig.addColumnConfiguration(0, name);
+  this.enabledUserListConfig.addColumnConfiguration(1, initials);
+  this.enabledUserListConfig.addColumnConfiguration(2, email);
+  this.enabledUserListConfig.addColumnConfiguration(3, weekEffort);
+  this.enabledUserListConfig.addColumnConfiguration(4, actions);
   
-  config.addColumnConfiguration(UserRowController.columnIndices.buttons, {
-    visible: false,
-    fullWidth: true,
-    cssClass : 'user-data',
-    subViewFactory: UserRowController.prototype.userButtonsFactory
-  });
+  this.disabledUserListConfig.addColumnConfiguration(0, name);
+  this.disabledUserListConfig.addColumnConfiguration(1, initials);
+  this.disabledUserListConfig.addColumnConfiguration(4, actions);
 };

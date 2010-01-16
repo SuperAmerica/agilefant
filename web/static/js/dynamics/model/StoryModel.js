@@ -96,6 +96,9 @@ StoryModel.prototype._saveData = function(id, changedData) {
     delete changedData.usersChanged;
   }
   jQuery.extend(data, this.serializeFields("story", changedData));
+  if(ArrayUtils.countObjectFields(data) === 0) {
+    return;
+  }
   // Add the id
   if (id) {
     data.storyId = id;    

@@ -85,3 +85,13 @@ ArrayUtils._getObjectFields = function(obj) {
   }
   return fields;
 };
+
+ArrayUtils.countObjectFields = function(obj) {
+  var count = 0;
+  for (field in obj) {
+    if (obj.hasOwnProperty(field)) {
+      count++;
+    }
+  }
+  return count;
+};

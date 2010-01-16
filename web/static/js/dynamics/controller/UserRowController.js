@@ -13,23 +13,6 @@ var UserRowController = function UserRowController(model, view, parentController
 };
 UserRowController.prototype = new CommonController();
 
-/**
- * Indices of the user list columns.
- * @member UserRowController
- */
-UserRowController.columnIndices = {
-    //toggle:   0,
-    name:     0,
-    login:    1,
-    email:    2,
-    weekHours:3,
-    enabled:  4,
-    actions:  5,
-    password: 6,
-    buttons:  7
-};
-
-
 
 /**
  * 

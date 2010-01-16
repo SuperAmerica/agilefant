@@ -1,5 +1,5 @@
 /**
- * @base DynamicView
+loginName * @base DynamicView
  * @constructor
  */
 var DynamicTable = function DynamicTable(controller, model, config, parentView) {
@@ -83,7 +83,7 @@ DynamicTable.prototype.initialize = function() {
   this.currentSortColumn = null;
   this.currentSortDirection = DynamicTable.constants.asc;
   for ( var i = 0; i < columnConfigs.length; i++) {
-    if (columnConfigs[i].isDefaultSortColumn()) {
+    if (columnConfigs[i] && columnConfigs[i].isDefaultSortColumn()) {
       this.currentSortColumn = i;
       this.defaultSoftColumnNum = i;
       break;
@@ -695,6 +695,7 @@ DynamicVerticalTable.prototype.initialize = function() {
     columnConfig.options.width = this.config.options.rightWidth;
     var title = row.createCell(titleColumnConfig);
     var value = row.createCell(columnConfig);
+    value.verticalTableCell = true;
     title.setValue(columnConfig.getTitle());
     this.rows.push(row);
   }

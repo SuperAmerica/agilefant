@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.AssignmentBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
@@ -45,7 +46,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private BacklogDAO backlogDAO;
     private ProductBusiness productBusiness;
     private StoryHierarchyDAO storyHierarchyDAO;
-    private AssignmentDAO assignmentDAO;
+    private AssignmentBusiness assignmentBusiness;
     private UserDAO userDAO;
     
     private TransferObjectBusiness transferObjectBusiness;
@@ -94,8 +95,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     }
     
     @Autowired
-    public void setAssignmentDAO(AssignmentDAO assignmentDAO) {
-        this.assignmentDAO = assignmentDAO;
+    public void setAssignmentDAO(AssignmentBusiness assignmentBusiness) {
+        this.assignmentBusiness = assignmentBusiness;
     }
     
     @Autowired
@@ -142,7 +143,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         persistable.setEndDate(project.getEndDate());
         persistable.setDescription(project.getDescription());
         persistable.setStatus(project.getStatus());
-        persistable.setBacklogSize(project.getBacklogSize());        
+        persistable.setBacklogSize(project.getBacklogSize());   
+        persistable.setBaselineLoad(project.getBaselineLoad());
         Project stored = persistProject(persistable);
         
         return stored;
@@ -150,24 +152,12 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     
     private void setAssignees(Project project, Set<Integer> assigneeIds) {
         if (assigneeIds != null) {
-            Map<Integer, Assignment> userIdsAndAssigments = new HashMap<Integer, Assignment>();
-            for (Assignment assignment : project.getAssignments()) {
-                userIdsAndAssigments.put(assignment.getUser().getId(), assignment);
-            }
-            for (Map.Entry<Integer, Assignment> existingValue : userIdsAndAssigments.entrySet()) {
-                if (!assigneeIds.contains(existingValue.getKey())) {
-                    project.getAssignments().remove(existingValue.getValue());
-                    assignmentDAO.remove(existingValue.getValue());
+            for(Assignment assignment : project.getAssignments()) {
+                if(!assigneeIds.contains(assignment.getId())) {
+                    assignmentBusiness.delete(assignment.getId());
                 }
             }
-            for (Integer assigneeId : assigneeIds) {
-                if (!userIdsAndAssigments.containsKey(assigneeId)) {
-                    User user = userDAO.get(assigneeId);
-                    Assignment assignment = new Assignment(user, project);
-                    project.getAssignments().add(assignment);
-                    assignmentDAO.create(assignment);
-                }
-            }
+            assignmentBusiness.addMultiple(project, assigneeIds);
         }
     }
     /**

@@ -32,6 +32,103 @@ var IterationController = function IterationController(options) {
     }
   });
 };
+IterationController.columnIndices = {
+  name: 0,
+  statDate: 1,
+  endDate: 2,
+  plannedSize: 3,
+  baselineLoad: 4,
+  assignees: 4
+};
+IterationController.columnConfigs = {
+  name: {
+    title : "Name",
+    get : IterationModel.prototype.getName,
+    editable : true,
+    edit : {
+      editor : "Text",
+      required: true,
+      set: IterationModel.prototype.setName
+    }
+  },
+  startDate: {
+    title : "Start Date",
+    get : IterationModel.prototype.getStartDate,
+    decorator: DynamicsDecorators.dateTimeDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      size: '18ex',
+      decorator: DynamicsDecorators.dateTimeDecorator,
+      required: true,
+      withTime: true,
+      set: IterationModel.prototype.setStartDate
+    }
+  },
+  endDate: {
+    title : "End Date",
+    get : IterationModel.prototype.getEndDate,
+    decorator: DynamicsDecorators.dateTimeDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateTimeDecorator,
+      required: true,
+      withTime: true,
+      size: '18ex',
+      set: IterationModel.prototype.setEndDate
+    }
+  },
+  plannedSize: {
+    title : "Planned Size",
+    get : IterationModel.prototype.getBacklogSize,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      size: '10ex',
+      set : IterationModel.prototype.setBacklogSize
+    }
+  },
+  baselineLoad: {
+    title : "Baseline load",
+    get : IterationModel.prototype.getBaselineLoad,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      size: '10ex',
+      set : IterationModel.prototype.setBaselineLoad
+    }
+  },
+  assignees: {
+    title : "Assignees",
+    headerTooltip : 'Project assignees',
+    get : BacklogModel.prototype.getAssignees,
+    decorator: DynamicsDecorators.assigneesDecorator,
+    editable: true,
+    openOnRowEdit: false,
+    edit: {
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams", 
+      set : BacklogModel.prototype.setAssignees
+    }
+  },
+  description: {
+    title : "Description",
+    get : IterationModel.prototype.getDescription,
+    editable : true,
+    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    edit : {
+      editor : "Wysiwyg",
+      set: IterationModel.prototype.setDescription
+    }
+  }
+ };
+
 IterationController.prototype = new BacklogController();
 
 IterationController.prototype.handleModelEvents = function(event) {
@@ -293,6 +390,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     get : TaskModel.prototype.getDescription,
     cssClass : 'task-data',
     visible : false,
+    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -483,7 +581,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    
+    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -517,86 +615,13 @@ IterationController.prototype.initIterationInfoConfig = function() {
     closeRowCallback: null,
     validators: [ BacklogModel.Validators.dateValidator ]
   });
-  config.addColumnConfiguration(0, {
-    title : "Name",
-    get : IterationModel.prototype.getName,
-    editable : true,
-    edit : {
-      editor : "Text",
-      required: true,
-      set: IterationModel.prototype.setName
-    }
-  });
-  config.addColumnConfiguration(1, {
-    title : "Start Date",
-    get : IterationModel.prototype.getStartDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
-      withTime: true,
-      set: IterationModel.prototype.setStartDate
-    }
-  });  
-  config.addColumnConfiguration(2, {
-    title : "End Date",
-    get : IterationModel.prototype.getEndDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
-      withTime: true,
-      set: IterationModel.prototype.setEndDate
-    }
-  });
-  config.addColumnConfiguration(3, {
-    title : "Planned Size",
-    get : IterationModel.prototype.getBacklogSize,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
-    editable: true,
-    edit: {
-      editor: "ExactEstimate",
-      decorator: DynamicsDecorators.exactEstimateEditDecorator,
-      set : IterationModel.prototype.setBacklogSize
-    }
-  });
-  config.addColumnConfiguration(4, {
-    title : "Baseline load",
-    get : IterationModel.prototype.getBaselineLoad,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
-    editable: true,
-    edit: {
-      editor: "ExactEstimate",
-      decorator: DynamicsDecorators.exactEstimateEditDecorator,
-      set : IterationModel.prototype.setBaselineLoad
-    }
-  });
-  config.addColumnConfiguration(5, {
-    title : "Description",
-    get : IterationModel.prototype.getDescription,
-    editable : true,
-    edit : {
-      editor : "Wysiwyg",
-      set: IterationModel.prototype.setDescription
-    }
-  });
-  config.addColumnConfiguration(5, {
-    title : "Assignees",
-    headerTooltip : 'Project assignees',
-    get : BacklogModel.prototype.getAssignees,
-    decorator: DynamicsDecorators.assigneesDecorator,
-    editable: true,
-    edit: {
-      editor : "Autocomplete",
-      dialogTitle: "Select users",
-      dataType: "usersAndTeams",
-      set : BacklogModel.prototype.setAssignees
-    }
-  });
+  config.addColumnConfiguration(0, IterationController.columnConfigs.name);
+  config.addColumnConfiguration(1, IterationController.columnConfigs.startDate);  
+  config.addColumnConfiguration(2, IterationController.columnConfigs.endDate);
+  config.addColumnConfiguration(3, IterationController.columnConfigs.plannedSize);
+  config.addColumnConfiguration(4, IterationController.columnConfigs.baselineLoad);
+  config.addColumnConfiguration(5, IterationController.columnConfigs.assignees);
+  config.addColumnConfiguration(6, IterationController.columnConfigs.description);
   this.iterationDetailConfig = config;
 };
 

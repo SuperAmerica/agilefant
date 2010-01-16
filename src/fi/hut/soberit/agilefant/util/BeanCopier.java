@@ -44,6 +44,9 @@ public class BeanCopier {
                 writer.getWriteMethod().invoke(dest, value);
             }
         }
+        catch(IntrospectionException e) {
+            
+        }
         catch (Exception e) {
             e.printStackTrace();
         }

@@ -43,12 +43,19 @@ CommonModel.prototype.setData = function(newData) {
     this._setData(newData);
     if (this._copyFields(newData)) {
       this.callListeners(new DynamicsEvents.EditEvent(this));
+      this._editFired = true;
     }
 // TODO: Disabled because of tons of ajax requests
 // Uncomment, when works
 // this.relationEvents();
   }
 };
+
+CommonModel.prototype.isEditEventFired = function() {
+  var fired = this._editFired;
+  this._editFired = false;
+  return fired;
+}
 
 /**
  * Check whether one of the special metrics fields has been updated.
@@ -85,7 +92,7 @@ CommonModel.prototype._copyFields = function(newData) {
     }
   }
   jQuery.extend(this.currentData, data);
-  if (!ArrayUtils.compareObjects(this.currentData, this.persistedData)) {
+  if (!ArrayUtils.compareOneSided(data, this.persistedData)) {
     jQuery.extend(this.persistedData, data);
     return true;
   }
@@ -103,6 +110,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   // 1. New hash codes to list
   for (var i = 0; i < newData.length; i++) {
     var object = ModelFactory.updateObject(newData[i]);
+    this._editFired = this._editFired || object.isEditEventFired();
     newObjects.push(object);
     newHashes.push(object.getHashCode());
   }
@@ -137,6 +145,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
 CommonModel.prototype._updateSingleRelation = function(type, newData) {
   var old = this.relations[type];
   var newObj = ModelFactory.updateObject(newData);
+  this._editFired = this._editFired || newObj.isEditEventFired();
   
   if (old !== newObj) {
     // Remove old relation
@@ -400,6 +409,7 @@ CommonModel.prototype.getCurrentData = function() {
 };
 
 CommonModel.prototype.serializeFields = function(prefix, changedData) {
+  return HttpParamSerializer.serializeSubstructure(changedData, {}, prefix);
   var data = {};
   for (field in changedData) {
     if (changedData.hasOwnProperty(field)) {

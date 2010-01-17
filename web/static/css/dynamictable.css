@@ -443,7 +443,7 @@ li.dynamictable-captionaction {
 }
 .dynamictable-editclue {
 	width: 16px;
-	height: 16px;
+	height: 1em;
 	float: left;
 	background-image:url(../img/edit.png);
 }

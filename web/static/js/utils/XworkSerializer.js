@@ -51,11 +51,15 @@ var HttpParamSerializer = {
             }
 
             var type = typeof(v);
-            if (type == 'object' && v != null) {
+            if (type == 'object' && v) {
                 serializeSubstructure(structure[k], serializedData, fieldName);
             }
             else if (type == 'string' || type == 'number' || type == 'boolean') {
+              if(v === null) {
+                serializedData[fieldName] = '';
+              } else {
                 serializedData[fieldName] = '' + v;
+              }
             }
             else {
                 throw new TypeError("Cannot serialize fields of type " + type);

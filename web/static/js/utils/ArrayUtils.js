@@ -76,9 +76,32 @@ ArrayUtils.compareObjects = function(obj1, obj2) {
   return true;
 };
 
+/**
+ * As compareObjects but obj2 may have additional properties
+ * only obj1 properties are compared against obj2.
+ */
+ArrayUtils.compareOneSided = function(obj1, obj2) {
+  // Check sanity
+  if (!obj1 && !obj2) {
+    return true;
+  }
+  else if (!obj1 || !obj2) {
+    return false;
+  }
+
+  // Check fields
+  for(var field in obj1) {
+    if(!obj1.hasOwnProperty(field) || !obj2.hasOwnProperty(field) || obj1[field] !== obj2[field]) {
+      return false;
+    }
+  }
+  
+  return true;
+};
+
 ArrayUtils._getObjectFields = function(obj) {
   var fields = [];
-  for (field in obj) {
+  for (var field in obj) {
     if (obj.hasOwnProperty(field)) {
       fields.push(field);
     }

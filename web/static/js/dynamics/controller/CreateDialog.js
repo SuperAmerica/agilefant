@@ -191,7 +191,10 @@ CreateDialog.Project.columnIndices = {
   parent: 1,
   startDate: 2,
   endDate: 3,
-  description: 4
+  plannedSize: 4,
+  baselineLoad: 5,
+  assignees: 6,
+  description: 7
 };
 CreateDialog.Project.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -201,17 +204,8 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     closeRowCallback: CreateDialogClass.prototype.close
   });
   
-  config.addColumnConfiguration(CreateDialog.Project.columnIndices.name,{
-    title: "Name",
-    editable: true,
-    get: ProjectModel.prototype.getName,
-    edit: {
-      editor: "Text",
-      required: true,
-      set: ProjectModel.prototype.setName
-    }
-  });
-  
+  config.addColumnConfiguration(CreateDialog.Project.columnIndices.name,
+      ProjectController.columnConfigs.name);
   config.addColumnConfiguration(CreateDialog.Project.columnIndices.parent,{
     title : "Parent",
     get : ProjectModel.prototype.getParent,
@@ -226,44 +220,21 @@ CreateDialog.Project.prototype.initFormConfig = function() {
       set: ProjectModel.prototype.setParent
     }
   });
-    
-  config.addColumnConfiguration(CreateDialog.Project.columnIndices.startDate,{
-    title : "Start Date",
-    get : ProjectModel.prototype.getStartDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      withTime: true,
-      size: '18ex',
-      set: ProjectModel.prototype.setStartDate
-    }
-  });
-  
-  config.addColumnConfiguration(CreateDialog.Project.columnIndices.endDate,{
-    title : "End Date",
-    get : ProjectModel.prototype.getEndDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      withTime: true,
-      size: '18ex',
-      set: ProjectModel.prototype.setEndDate
-    }
-  });
-  
-  config.addColumnConfiguration(CreateDialog.Project.columnIndices.description, {
-    title: "Description",
-    get: ProjectModel.prototype.getDescription,
-    editable: true,
-    edit: {
-      editor: "Wysiwyg",
-      set: ProjectModel.prototype.setDescription
-    }
-  });
+  config.addColumnConfiguration(CreateDialog.Project.columnIndices.startDate,
+      ProjectController.columnConfigs.startDate);
+  config.addColumnConfiguration(CreateDialog.Project.columnIndices.endDate,
+      ProjectController.columnConfigs.endDate);
+  config.addColumnConfiguration(
+      CreateDialog.Project.columnIndices.plannedSize,
+      ProjectController.columnConfigs.plannedSize);
+  config.addColumnConfiguration(
+      CreateDialog.Project.columnIndices.baselineLoad,
+      ProjectController.columnConfigs.baselineLoad);
+  config.addColumnConfiguration(CreateDialog.Project.columnIndices.assignees,
+      ProjectController.columnConfigs.assignees);
+  config.addColumnConfiguration(
+      CreateDialog.Project.columnIndices.description,
+      ProjectController.columnConfigs.description);
   
   
   this.formConfig = config;

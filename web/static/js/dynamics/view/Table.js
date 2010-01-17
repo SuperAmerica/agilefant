@@ -103,6 +103,10 @@ DynamicTable.prototype.initialize = function() {
   this.container.data("table", this);
 };
 
+DynamicTable.prototype.renderAlways = function() {
+  return false;
+};
+
 DynamicTable.prototype._bindEvents = function() {
   var me = this;
  

@@ -42,6 +42,95 @@ ProjectController.columnIndices = {
     buttons: 6
 };
 
+ProjectController.columnConfigs = {
+  name: {
+    title : "Name",
+    get : ProjectModel.prototype.getName,
+    editable : true,
+    edit : {
+      editor : "Text",
+      required: true,
+      set: ProjectModel.prototype.setName
+    }
+  },
+  startDate: {
+    title : "Start Date",
+    get : ProjectModel.prototype.getStartDate,
+    decorator: DynamicsDecorators.dateTimeDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      size: '18ex',
+      decorator: DynamicsDecorators.dateTimeDecorator,
+      required: true,
+      withTime: true,
+      set: ProjectModel.prototype.setStartDate
+    }
+  },
+  endDate: {
+    title : "End Date",
+    get : ProjectModel.prototype.getEndDate,
+    decorator: DynamicsDecorators.dateTimeDecorator,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateTimeDecorator,
+      required: true,
+      withTime: true,
+      size: '18ex',
+      set: ProjectModel.prototype.setEndDate
+    }
+  },
+  plannedSize: {
+    title : "Planned Size",
+    get : ProjectModel.prototype.getBacklogSize,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      size: '10ex',
+      set : ProjectModel.prototype.setBacklogSize
+    }
+  },
+  baselineLoad: {
+    title : "Baseline load",
+    get : ProjectModel.prototype.getBaselineLoad,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      size: '10ex',
+      set : ProjectModel.prototype.setBaselineLoad
+    }
+  },
+  assignees: {
+    title : "Assignees",
+    headerTooltip : 'Project assignees',
+    get : BacklogModel.prototype.getAssignees,
+    decorator: DynamicsDecorators.assigneesDecorator,
+    editable: true,
+    openOnRowEdit: false,
+    edit: {
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams", 
+      set : BacklogModel.prototype.setAssignees
+    }
+  },
+  description: {
+    title : "Description",
+    get : ProjectModel.prototype.getDescription,
+    editable : true,
+    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    edit : {
+      editor : "Wysiwyg",
+      set: ProjectModel.prototype.setDescription
+    }
+  }
+};
+
 /**
  * Creates a new story controller.
  */
@@ -211,74 +300,13 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
     closeRowCallback: null,
     validators: [ BacklogModel.Validators.dateValidator ]
   });
-  config.addColumnConfiguration(0, {
-    title : "Name",
-    get : ProjectModel.prototype.getName,
-    editable : true,
-    edit : {
-      editor : "Text",
-      required: true,
-      set: ProjectModel.prototype.setName
-    }
-  });
-  config.addColumnConfiguration(1, {
-    title : "Start Date",
-    get : ProjectModel.prototype.getStartDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
-      withTime: true,
-      set: ProjectModel.prototype.setStartDate
-    }
-  });  
-  config.addColumnConfiguration(2, {
-    title : "End Date",
-    get : ProjectModel.prototype.getEndDate,
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      required: true,
-      withTime: true,
-      set: ProjectModel.prototype.setEndDate
-    }
-  });
-  config.addColumnConfiguration(3, {
-    title : "Planned Size",
-    title : "Planned Size",
-    get : ProjectModel.prototype.getBacklogSize,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
-    editable: true,
-    edit: {
-      editor: "ExactEstimate",
-      decorator: DynamicsDecorators.exactEstimateEditDecorator,
-      set : ProjectModel.prototype.setBacklogSize
-    }
-  });
-  config.addColumnConfiguration(4, {
-    title : "Baseline load",
-    get : ProjectModel.prototype.getBaselineLoad,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
-    editable: true,
-    edit: {
-      editor: "ExactEstimate",
-      decorator: DynamicsDecorators.exactEstimateEditDecorator,
-      set : ProjectModel.prototype.setBaselineLoad
-    }
-  });
-  config.addColumnConfiguration(5, {
-    title : "Description",
-    get : ProjectModel.prototype.getDescription,
-    editable : true,
-    edit : {
-      editor : "Wysiwyg",
-      set: ProjectModel.prototype.setDescription
-    }
-  });
+  config.addColumnConfiguration(0, ProjectController.columnConfigs.name);
+  config.addColumnConfiguration(1, ProjectController.columnConfigs.startDate);  
+  config.addColumnConfiguration(2, ProjectController.columnConfigs.endDate);
+  config.addColumnConfiguration(3, ProjectController.columnConfigs.plannedSize);
+  config.addColumnConfiguration(4, ProjectController.columnConfigs.baselineLoad);
+  config.addColumnConfiguration(5, ProjectController.columnConfigs.assignees);
+  config.addColumnConfiguration(6, ProjectController.columnConfigs.description);
   this.projectDetailConfig = config;
 };
 
@@ -444,7 +472,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     title : "#",
     headerTooltip : 'Priority',
     defaultSortColumn: true,
-//    get: StoryModel.prototype.getRank,
     subViewFactory: StoryController.prototype.descriptionToggleFactory,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
   });
@@ -521,7 +548,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getBacklog,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     sortCallback: DynamicsComparators.storyBacklogNameComparator,
-//    defaultSortColumn: true,
     editable : true,
     openOnRowEdit: false,
     edit: {

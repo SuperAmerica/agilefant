@@ -1,10 +1,8 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.joda.time.LocalDate;
@@ -19,11 +17,9 @@ import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
-import fi.hut.soberit.agilefant.db.AssignmentDAO;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -47,7 +43,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private ProductBusiness productBusiness;
     private StoryHierarchyDAO storyHierarchyDAO;
     private AssignmentBusiness assignmentBusiness;
-    private UserDAO userDAO;
     
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
@@ -97,11 +92,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Autowired
     public void setAssignmentDAO(AssignmentBusiness assignmentBusiness) {
         this.assignmentBusiness = assignmentBusiness;
-    }
-    
-    @Autowired
-    public void setUserDAO(UserDAO userDAO) {
-        this.userDAO = userDAO;
     }
     
     @Transactional

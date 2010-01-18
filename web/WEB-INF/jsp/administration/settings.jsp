@@ -2,12 +2,13 @@
 
 <struct:htmlWrapper navi="settings">
 
-<jsp:attribute name="menuContent">
-  <struct:settingsMenu />
-</jsp:attribute>
-
 <jsp:body>
-<h2>Timesheet settings</h2>
+
+<h2>System-wide settings</h2>
+
+<p><strong>Note!</strong> Modifying these settings will affect all users.</p>
+
+<h3>Timesheet settings</h3>
 
 <ww:form action="storeSettings.action" method="post">
 <table id="row">
@@ -26,7 +27,7 @@
 </tbody>
 </table>
 
-<h2>Load meter settings</h2>
+<h3>Load meter settings</h3>
 
 <p>To restore default threshold, just leave the field empty.</p>
 

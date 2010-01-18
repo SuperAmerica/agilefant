@@ -102,7 +102,7 @@
         <jsp:invoke fragment="menuContent" />
       </c:when>
       <c:otherwise>
-        <struct:backlogMenu />
+        <struct:backlogMenu navi="${navi}"/>
       </c:otherwise>
       </c:choose>
     </div>

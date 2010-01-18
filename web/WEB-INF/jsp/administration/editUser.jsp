@@ -2,10 +2,6 @@
 
 <struct:htmlWrapper navi="settings">
 
-<jsp:attribute name="menuContent">
-  <struct:settingsMenu />
-</jsp:attribute>
-
 <jsp:body>
 
 <script type="text/javascript">

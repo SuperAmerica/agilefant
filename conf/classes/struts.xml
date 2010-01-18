@@ -241,8 +241,14 @@
 		</action>
 
 		<!-- Actions for changing settings -->
-		<action name="settings" class="settingAction" method="edit">
-			<result>/WEB-INF/jsp/administration/settings.jsp</result>
+		<action name="settings">
+		  <result type="redirectAction">
+        <param name="actionName">editUser</param>
+      </result>
+		</action>
+		
+		<action name="systemSettings" class="settingAction" method="edit">
+		  <result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
 		
 		<action name="storeSettings" class="settingAction" method="storeSettings">

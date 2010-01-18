@@ -6,26 +6,14 @@
 
 <h2>System-wide settings</h2>
 
-<p><strong>Note!</strong> Modifying these settings will affect all users.</p>
+<div style="width: 30em; border: 1px solid rgb(240, 192, 0); background: rgb(255, 255, 206); padding: 1em; margin: 0.3em;"> 
+  <strong>Note!</strong> Modifying these settings will affect all users.
+</div>
 
-<h3>Timesheet settings</h3>
 
 <ww:form action="storeSettings.action" method="post">
-<table id="row">
-<thead>
-<tr>
-<th>Setting</th>
-<th>Enabled</th>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Timesheets</td>
-<td>
-	<ww:checkbox name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox>		
-</td>
-</tr>
-</tbody>
-</table>
+
+<ww:checkbox name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox> Enable timesheets 
 
 <h3>Load meter settings</h3>
 

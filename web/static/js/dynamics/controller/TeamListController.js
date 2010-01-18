@@ -119,7 +119,7 @@ TeamListController.prototype.initConfig = function() {
       editor: "Autocomplete",
       dataType: "usersAndTeams",
       dialogTitle: "Select users",
-      set: function() {}
+      set: TeamModel.prototype.setUsers
     }
   };
   

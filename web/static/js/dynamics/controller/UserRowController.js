@@ -48,10 +48,12 @@ UserRowController.prototype.showDisableAction = function() {
 
 UserRowController.prototype.disableUser = function() {
   this.model.setEnabled(false);
+  this.model.commit();
 };
 
 UserRowController.prototype.enableUser = function() {
   this.model.setEnabled(true);
+  this.model.commit();
 };
 
 UserRowController.prototype.changePassword = function() {

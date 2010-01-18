@@ -548,6 +548,13 @@ table.project-iteration-metrics {
   background-color: #edf; 	
 }
 
+/**
+ * Administration styles
+ */
+.administration-team-table .dynamictable-row,
+.administration-user-table .dynamictable-row   {
+  background: #eee;
+}
 
 
 

@@ -64,7 +64,7 @@ UserListController.prototype.initConfig = function() {
     caption: "Enabled users",
     dataSource: UserListContainer.prototype.getEnabledUsers,
     rowControllerFactory: UserListController.prototype.userControllerFactory,
-    cssClass: "ui-widget-content ui-corner-all",
+    cssClass: "ui-widget-content ui-corner-all administration-user-table",
     validators: [ UserModel.Validators.loginNameValidator ],
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -81,7 +81,7 @@ UserListController.prototype.initConfig = function() {
     caption: "Disabled users",
     dataSource: UserListContainer.prototype.getDisabledUsers,
     rowControllerFactory: UserListController.prototype.userControllerFactory,
-    cssClass: "ui-widget-content ui-corner-all",
+    cssClass: "ui-widget-content ui-corner-all administration-user-table",
     validators: [ UserModel.Validators.loginNameValidator ],
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -91,7 +91,6 @@ UserListController.prototype.initConfig = function() {
   var name = {
     minWidth : 150,
     autoScale : true,
-    cssClass : 'user-row',
     title: "Name",
     get: UserModel.prototype.getFullName,
     decorator: DynamicsDecorators.idLinkDecoratorFactory("editUser.action?userId=#id"),
@@ -102,7 +101,6 @@ UserListController.prototype.initConfig = function() {
   var initials = {
     minWidth : 80,
     autoScale : true,
-    cssClass : 'user-row',
     title: "Initials",
     get: UserModel.prototype.getInitials,
     sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getInitials)
@@ -111,7 +109,6 @@ UserListController.prototype.initConfig = function() {
   var email = {
     minWidth : 150,
     autoScale : true,
-    cssClass : 'user-row',
     title: "Email",
     get: UserModel.prototype.getEmail,
     sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getEmail)
@@ -120,7 +117,6 @@ UserListController.prototype.initConfig = function() {
   var weekEffort = {
     minWidth : 60,
     autoScale : true,
-    cssClass : 'user-row',
     title: "Week hours",
     get: UserModel.prototype.getWeekEffort,
     decorator: DynamicsDecorators.exactEstimateDecorator,
@@ -130,7 +126,6 @@ UserListController.prototype.initConfig = function() {
   var actions = {
     minWidth : 60,
     autoScale : true,
-    cssClass : 'user-row',
     title: "Actions",
     subViewFactory: UserRowController.prototype.userActionFactory
   };

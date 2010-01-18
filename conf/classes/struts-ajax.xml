@@ -554,6 +554,7 @@
     <action name="retrieveAllTeams" method="retrieveAll" class="teamAction">
       <result name="success" type="json">
         <param name="target">teamList</param>
+        <param name="patterns">+users</param>
       </result>
     </action>
     <!-- /Team actions -->

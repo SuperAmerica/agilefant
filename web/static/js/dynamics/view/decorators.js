@@ -154,6 +154,20 @@ var DynamicsDecorators = {
     }
     return initials.join(", ");
   },
+  teamUserCountDecorator: function(userList) {
+    return userList.length + " members";
+  },
+  teamUserListDecorator: function(userList) {
+    retval = "<ul>";
+    if (!userList || !userList.length) {
+      return "<ul><li>(no users)</li></ul>";
+    }
+    for (var i = 0; i < userList.length; i++) {
+      retval += "<li>" + userList[i].getFullName() + "</li>";
+    }
+    retval += "</ul>";
+    return retval;
+  },
   teamUserInitialsListDecorator: function(userList) {
     if(!userList || !userList.length) {
       return "(Select users)";

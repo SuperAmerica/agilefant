@@ -176,7 +176,7 @@
 		<!-- /User actions -->
 
 		<!-- Team actions -->
-		<action name="listTeams" method="retrieveAll" class="teamAction">
+		<action name="listTeams" class="teamAction">
       <result type="dispatcher">/WEB-INF/jsp/administration/listTeams.jsp</result>
     </action>
 		

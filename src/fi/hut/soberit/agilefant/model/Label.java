@@ -14,6 +14,8 @@ import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
+import flexjson.JSON;
+
 @Entity
 @Table(name = "labels")
 public class Label implements NamedObject, Serializable {
@@ -56,6 +58,7 @@ public class Label implements NamedObject, Serializable {
         return name;
     }
 
+    @JSON(include = false)
     public Story getStory() {
         return story;
     }

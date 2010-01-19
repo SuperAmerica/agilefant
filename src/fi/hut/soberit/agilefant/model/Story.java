@@ -202,9 +202,9 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
         this.labels = labels;
     }
 
-    @JSON(include = false)
     @OneToMany(mappedBy = "story")
     @NotAudited
+    @JSON
     public Set<Label> getLabels() {
         return labels;
     }

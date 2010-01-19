@@ -206,17 +206,20 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
 
     public Iteration retrieveDeep(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
-        Criteria storyCrit = crit.createAlias("stories", "stories",
-                CriteriaSpecification.LEFT_JOIN);
-        Criteria taskCrit = crit.createAlias("tasks", "tasks",
-                CriteriaSpecification.LEFT_JOIN);
-        // Criteria taskWOStoryCrit = crit.createCriteria("tasks");
 
-        crit.setFetchMode("stories", FetchMode.JOIN);
-        storyCrit.setFetchMode("tasks", FetchMode.JOIN);
+        Criteria iterationTasksCrit = crit.createCriteria("tasks", CriteriaSpecification.LEFT_JOIN);
 
-        taskCrit.setFetchMode("responsibles", FetchMode.JOIN);
-        taskCrit.setFetchMode("whatsNextEntries", FetchMode.JOIN);
+        iterationTasksCrit.setFetchMode("responsibles", FetchMode.JOIN);
+        iterationTasksCrit.setFetchMode("whatsNextEntries", FetchMode.JOIN);
+
+        Criteria storiesCrit = crit.createCriteria("stories", CriteriaSpecification.LEFT_JOIN);
+
+        storiesCrit.setFetchMode("labels", FetchMode.JOIN);
+
+        Criteria storyTasksCrit = storiesCrit.createCriteria("tasks", CriteriaSpecification.LEFT_JOIN);
+
+        storyTasksCrit.setFetchMode("responsibles", FetchMode.JOIN);
+        storyTasksCrit.setFetchMode("whatsNextEntries", FetchMode.JOIN);
 
         crit.add(Restrictions.idEq(iterationId));
 

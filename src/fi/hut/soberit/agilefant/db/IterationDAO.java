@@ -23,7 +23,7 @@ public interface IterationDAO extends GenericDAO<Iteration> {
     public Collection<Task> getTasksWithoutStoryForIteration(Iteration iteration);
 
     public List<Task> getAllTasksForIteration(Iteration iteration);
-    
+
     public Map<StoryState, Integer> countIterationStoriesByState(int iterationId);
 
     public Pair<Integer, Integer> getCountOfDoneAndAllTasks(Iteration iteration);
@@ -40,7 +40,25 @@ public interface IterationDAO extends GenericDAO<Iteration> {
 
     public List<Iteration> retrieveCurrentAndFutureIterationsAt(
             DateTime dayStart);
-    
+
+    /**
+     * Retrieves an iteration by id and fetches eagerly the following
+     * associations:
+     * 
+     * <ul>
+     * <li>tasks</li>
+     * <li>tasks.responsibles</li>
+     * <li>tasks.whatsNextEntries</li>
+     * <li>stories</li>
+     * <li>stories.labels</li>
+     * <li>stories.tasks</li>
+     * <li>stories.tasks.responsibles</li>
+     * <li>stories.tasks.whatsNextEntries</li>
+     * </ul>
+     * 
+     * @param iterationId
+     * @return retrieved iteration object
+     */
     public Iteration retrieveDeep(int iterationId);
 
     List<Iteration> retrieveActiveWithUserAssigned(int userId);

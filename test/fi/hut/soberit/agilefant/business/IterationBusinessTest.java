@@ -5,8 +5,10 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.easymock.Capture;
@@ -28,9 +30,11 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
+import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -501,5 +505,28 @@ public class IterationBusinessTest {
         iter.setEndDate(endDate);
         float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
         assertEquals(1f, percentage, 0);
+    }
+    
+    @Test
+    public void testGetIterationRowMetrics() {
+        Iteration iter = new Iteration();
+        iter.setId(100);
+        iter.setStartDate(new DateTime());
+        iter.setEndDate(iter.getStartDate().plusDays(100));
+        Map<StoryState, Integer> data = new EnumMap<StoryState, Integer>(StoryState.class);
+        data.put(StoryState.NOT_STARTED, 0);
+        data.put(StoryState.STARTED, 1);
+        data.put(StoryState.PENDING, 2);
+        data.put(StoryState.BLOCKED, 3);
+        data.put(StoryState.IMPLEMENTED, 4);
+        data.put(StoryState.DONE, 5);
+        
+        expect(iterationDAO.get(iter.getId())).andReturn(iter);
+        expect(iterationDAO.countIterationStoriesByState(iter.getId())).andReturn(data);
+        replayAll();
+        IterationRowMetrics iterRow = iterationBusiness.getIterationRowMetrics(100);
+        assertEquals(100, iterRow.getDaysLeft());
+        verifyAll();
+
     }
 }

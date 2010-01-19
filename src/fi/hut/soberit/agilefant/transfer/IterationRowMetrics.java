@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.transfer;
 import java.util.EnumMap;
 import java.util.Map;
 
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.StoryState;
 
 public class IterationRowMetrics {
@@ -18,6 +19,14 @@ public class IterationRowMetrics {
     private int doneStoryPercentage = 0;
     
     private int totalDays = 0;
+    
+    private ExactEstimate spentEffort = new ExactEstimate(0);
+    
+    private ExactEstimate effortLeft = new ExactEstimate(0);
+    
+    private ExactEstimate originalEstimate = new ExactEstimate(0);
+    
+    private boolean timesheetsEnabled;
     
     public Map<StoryState, Integer> getStateDistribution() {
         return stateDistribution;
@@ -69,6 +78,34 @@ public class IterationRowMetrics {
     
     public void setTotalDays(int totalDays) {
         this.totalDays = totalDays;
+    }
+    
+    public ExactEstimate getEffortLeft() {
+        return effortLeft;
+    }
+    
+    public ExactEstimate getSpentEffort() {
+        return spentEffort;
+    }
+    
+    public ExactEstimate getOriginalEstimate() {
+        return originalEstimate;
+    }
+    
+    public boolean getTimesheetsEnabled() {
+        return timesheetsEnabled;
+    }
+    
+    public void setEffortLeft(ExactEstimate effortLeft) {
+        this.effortLeft = effortLeft;
+    }
+    
+    public void setOriginalEstimate(ExactEstimate originalEstimate) {
+        this.originalEstimate = originalEstimate;
+    }
+    
+    public void setSpentEffort(ExactEstimate spentEffort) {
+        this.spentEffort = spentEffort;
     }
     
 }

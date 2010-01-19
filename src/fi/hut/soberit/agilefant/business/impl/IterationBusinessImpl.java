@@ -309,10 +309,28 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         iterationRowMetrics.setStateData(iterationDAO.countIterationStoriesByState(iterationId));
         iterationRowMetrics.setTotalDays(Days.daysBetween(iteration.getStartDate(), iteration.getEndDate()).getDays());
         
-        //use timeLeftInIteration method
         if (today.isBefore(iteration.getEndDate().toLocalDate())) {
-            iterationRowMetrics.setDaysLeft(Days.daysBetween(today, iteration.getEndDate().toLocalDate()).getDays());
+            iterationRowMetrics.setDaysLeft(daysLeftInIteration(iteration).getDays());
         }
+        
+ /**       IterationHistoryEntry latestHistoryEntry = iterationHistoryEntryBusiness
+        .retrieveLatest(iteration);
+        
+        if (latestHistoryEntry == null) {
+            iterationRowMetrics.setOriginalEstimate(new ExactEstimate(0));
+            iterationRowMetrics.setEffortLeft(new ExactEstimate(0));
+        } else {
+            iterationRowMetrics.setOriginalEstimate(new ExactEstimate(latestHistoryEntry
+                    .getOriginalEstimateSum()));
+            iterationRowMetrics.setEffortLeft(new ExactEstimate(latestHistoryEntry
+                    .getEffortLeftSum()));
+        }
+
+        // Set spent effort
+        long spentEffort = hourEntryBusiness
+                .calculateSumOfIterationsHourEntries(iteration);
+        iterationRowMetrics.setSpentEffort(new ExactEstimate(spentEffort));
+**/
         
         return iterationRowMetrics;
     }

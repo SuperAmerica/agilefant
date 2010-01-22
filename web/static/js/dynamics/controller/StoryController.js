@@ -122,6 +122,11 @@ StoryController.prototype.splitStory = function() {
   var dialog = new StorySplitDialog(this.model);
 };
 
+StoryController.prototype.labelsViewFactory = function(view, model) {
+  var options = {};  
+  return new LabelsView(options, this, model, view); 
+};
+
 /**
  * 
  */
@@ -133,11 +138,14 @@ StoryController.prototype.storyContentsFactory = function(view, model) {
     rightWidth: '100%'
   });
   config.addColumnConfiguration(0, {
+    subViewFactory:  StoryController.prototype.labelsViewFactory
+  });
+  config.addColumnConfiguration(1, {
     get : StoryModel.prototype.getParentStoryName,
     decorator: DynamicsDecorators.parentStoryDecorator,
     cssClass : 'task-data'
   });
-  config.addColumnConfiguration(1, {
+  config.addColumnConfiguration(2, {
     get : StoryModel.prototype.getDescription,
     onDoubleClick: StoryController.prototype.editDescription,
     cssClass : 'task-data text-editor'

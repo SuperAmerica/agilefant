@@ -19,7 +19,9 @@ ModelFactory = function ModelFactory() {
     hourEntry: {},
     
     user: {},
-    team: {}
+    team: {},
+    
+    label: {}
   };
 };
 
@@ -59,7 +61,9 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.HourEntry":       "hourEntry",
   "fi.hut.soberit.agilefant.model.BacklogHourEntry": "hourEntry",
   "fi.hut.soberit.agilefant.model.StoryHourEntry":  "hourEntry",
-  "fi.hut.soberit.agilefant.model.TaskHourEntry":   "hourEntry"
+  "fi.hut.soberit.agilefant.model.TaskHourEntry":   "hourEntry",
+  
+  "fi.hut.soberit.agilefant.model.Label": "label"
 };
 
 /**
@@ -93,7 +97,8 @@ ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.model.HourEntry":       HourEntryModel,
     "fi.hut.soberit.agilefant.model.BacklogHourEntry": HourEntryModel,
     "fi.hut.soberit.agilefant.model.StoryHourEntry":  HourEntryModel,
-    "fi.hut.soberit.agilefant.model.TaskHourEntry":   HourEntryModel
+    "fi.hut.soberit.agilefant.model.TaskHourEntry":   HourEntryModel,
+    "fi.hut.soberit.agilefant.model.Label": LabelModel
 };
 
 ModelFactory.typeToClassName = {
@@ -114,7 +119,10 @@ ModelFactory.typeToClassName = {
       
     assignment: "fi.hut.soberit.agilefant.model.Assignment",
     
-    hourEntry:  "fi.hut.soberit.agilefant.model.HourEntry"
+    hourEntry:  "fi.hut.soberit.agilefant.model.HourEntry",
+    
+    label: "fi.hut.soberit.agilefant.model.Label"
+      
 };
 
 ModelFactory.typeToLazyLoadingUri = {
@@ -161,7 +169,9 @@ ModelFactory.types = {
     
     hourEntry: "hourEntry",
     
-    assignment: "assignment"
+    assignment: "assignment",
+    
+    label: "label"
 };
 
 /**

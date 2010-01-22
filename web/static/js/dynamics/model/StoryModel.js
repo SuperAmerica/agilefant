@@ -15,6 +15,7 @@ var StoryModel = function StoryModel() {
     hourEntry: [],
     user: [],
     story: [],
+    label: [],
     parent: null
   };
   this.metrics = {};
@@ -30,6 +31,7 @@ var StoryModel = function StoryModel() {
       "fi.hut.soberit.agilefant.model.Project":       "backlog",
       "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
       "fi.hut.soberit.agilefant.model.User":          "user",
+      "fi.hut.soberit.agilefant.model.Label":         "label",
       "fi.hut.soberit.agilefant.model.Task":          "task",
       "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
       "fi.hut.soberit.agilefant.model.Story":         "story"
@@ -75,6 +77,9 @@ StoryModel.prototype._setData = function(newData) {
   }
   if(newData.backlog) {
     this.setBacklog(ModelFactory.updateObject(newData.backlog));
+  }
+  if (newData.labels) {
+    this._updateRelations(ModelFactory.types.label, newData.labels);
   }
   if(newData.metrics) {
     this.metrics = newData.metrics;
@@ -370,6 +375,10 @@ StoryModel.prototype.getTotalEffortLeft = function() {
 };
 StoryModel.prototype.getTotalOriginalEstimate = function() {
   return this.metrics.originalEstimate;
+};
+
+StoryModel.prototype.getLabels = function() {
+  return this.relations.label;
 };
 
 StoryModel.prototype.retrieveDetails = function(callback) {

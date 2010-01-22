@@ -38,6 +38,8 @@
   <script type="text/javascript" src="static/js/backlogChooser.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/backlogSelector.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.tree.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/jquery.autoSuggest.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  
   
   <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>

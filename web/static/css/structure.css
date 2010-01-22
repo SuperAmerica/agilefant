@@ -20,6 +20,7 @@
 @import "dynamictable.css";
 
 @import "timesheets.css";
+@import "autoSuggest.css";
 
 html, body {
   margin: 0;

@@ -335,7 +335,7 @@
     <action name="retrieveStory" method="retrieve" class="storyAction">
        <result type="json">
         <param name="target">story</param>
-        <param name="patterns">+tasks, +children, -children.backlog.description, +parent</param>
+        <param name="patterns">+tasks, +children, -children.backlog.description, +parent, +labels,-labels.creator,-labels.timestamp</param>
        </result>
     </action>
     

@@ -501,7 +501,7 @@ div.project-iteration-metrics {
 }
 
 table.project-iteration-metrics {
-	width: 100%;
+	width: 300px;
 }
 
 .project-iteration-metrics .iterationRowMetricsBar {
@@ -517,6 +517,15 @@ table.project-iteration-metrics {
 	float: left;
 }
 
+.project-iteration-row-metrics-left div {
+	float: left;
+	width: 300px;	
+}
+
+.project-iteration-row-metrics-right div {
+	float: right;
+	width: 300px;
+}
 .project-iteration-metrics-timeleft {
 	border: 1px solid #777;
 	width: 300px;

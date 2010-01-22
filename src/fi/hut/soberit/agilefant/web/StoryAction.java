@@ -165,12 +165,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
 
     public String addLabel() {
-        try {
         story = storyBusiness.retrieve(storyId);
         labelBusiness.createStoryLabel(label, story);
-        } catch(Exception e) {
-            System.out.print(true);
-        }
         return Action.SUCCESS;
     }
     

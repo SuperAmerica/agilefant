@@ -25,11 +25,20 @@ LabelsView.prototype.initialize = function() {
   });
   this.inputField.keydown(function(event) {
     if (event.keyCode == '13') {
+      var labelName = me.inputField.val();
+      me.addLabel(labelName);
       me.inputField.val("");
       me.inputField.hide();
     } else if (event.keyCode == '27') {
       me.inputField.val("");
       me.inputField.hide();
+    }
+  });
+  
+  this.model.addListener(function(event) {
+    var me = this;
+    if(event instanceof DynamicsEvents.RelationsEvent) {
+      me.renderFully();
     }
   });
 
@@ -52,9 +61,16 @@ LabelsView.prototype.renderFully = function() {
       if (i > 0) {
         $('<span>, </span>').appendTo(labelContainer);
       }
-      $('<span>' + label.getDisplayName() + '</span>').appendTo(labelContainer);
+      var tempLabel = $('<span>' + label.getDisplayName() + '</span>');
+      tempLabel.appendTo(labelContainer);
+      tempLabel.mouseenter(function() {
+      });
+      tempLabel.mouseleave(function() {
+      });
+      
     }
   }
+  
   this.element.replaceWith(labelContainer);
   this.element = labelContainer;
   this.container.mouseenter(function() {
@@ -65,4 +81,16 @@ LabelsView.prototype.renderFully = function() {
   this.container.mouseleave(function() {
     me.addButton.hide();
   });
+};
+
+LabelsView.prototype.addLabel = function(labelName) {
+  var me = this;
+  var storyId = this.model.getId();
+  $.post("ajax/addStoryLabel.action",{
+    storyId:storyId,
+    "label.displayName":labelName
+  },function(){
+    me.model.reload();
+    }
+  );
 };

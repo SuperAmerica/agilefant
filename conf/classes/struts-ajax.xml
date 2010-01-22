@@ -278,7 +278,7 @@
     <action name="iterationData" class="iterationAction" method="fetchIterationData">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">-stories, +rankedStories, +rankedStories.tasks, -rankedStories.backlog, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles, +*.workingOnTask</param>
+        <param name="patterns">-stories, +rankedStories, +rankedStories.tasks, +rankedStories.labels, -rankedStories.backlog, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles, +*.workingOnTask</param>
       </result>
     </action>
     
@@ -416,6 +416,12 @@
 
     <action name="deleteStoryForm" method="deleteStoryForm" class="storyAction">
     	<result type="dispatcher">/WEB-INF/jsp/forms/deleteStoryForm.jsp</result>
+    </action>
+	
+	<action name="addStoryLabel" method="addLabel" class="storyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
     </action>
 
     <!-- /Story actions -->

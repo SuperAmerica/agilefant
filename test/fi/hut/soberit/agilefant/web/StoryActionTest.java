@@ -17,9 +17,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.LabelBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Label;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.test.Mock;
@@ -39,6 +41,9 @@ public class StoryActionTest extends MockedTestCase {
     
     @Mock
     StoryBusiness storyBusiness;
+    
+    @Mock
+    LabelBusiness labelBusiness;
     
     @Mock
     BacklogBusiness backlogBusiness;
@@ -274,4 +279,17 @@ public class StoryActionTest extends MockedTestCase {
         verifyAll();
     }
     
+    @Test
+    @DirtiesContext
+    public void testAddLabel() {
+        storyAction.setStoryId(1);
+        Story story2 = new Story();
+        Label label = new Label();
+        storyAction.setLabel(label);
+        expect(storyBusiness.retrieve(1)).andReturn(story2);
+        expect(labelBusiness.createStoryLabel(label, story2)).andReturn((long)1);
+        replayAll();
+        storyAction.addLabel();
+        verifyAll();
+    }
 }

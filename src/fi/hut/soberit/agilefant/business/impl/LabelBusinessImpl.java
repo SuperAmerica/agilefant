@@ -1,12 +1,17 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.LabelBusiness;
 import fi.hut.soberit.agilefant.db.LabelDAO;
+import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Label;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 @Service("labelBusiness")
 @Transactional
@@ -23,5 +28,27 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
     public void setLabelDAO(LabelDAO labelDAO) {
         this.genericDAO = labelDAO;
         this.labelDAO = labelDAO;
+    }
+    
+    @Override
+    public void store(Label label){
+        throw new OperationNotPermittedException("Labels cannot be edited!");
+    }
+    
+    public long createLabel(Label label){
+        label.setName(label.getDisplayName());
+        User currentUser = SecurityUtil.getLoggedUser();
+        label.setCreator(currentUser);
+        label.setTimestamp(new DateTime());
+        long id = (Long)labelDAO.create(label);
+        return id;
+    }
+
+    public long createStoryLabel(Label label, Story story) {
+        if (labelDAO.labelExists(label.getDisplayName(), story)){
+            throw new OperationNotPermittedException("Label exists!");
+        }
+        label.setStory(story);
+        return createLabel(label);
     }
 }

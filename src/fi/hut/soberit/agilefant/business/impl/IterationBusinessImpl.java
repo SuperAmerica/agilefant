@@ -24,6 +24,7 @@ import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
+import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
@@ -66,6 +67,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private BacklogBusiness backlogBusiness;
     @Autowired
     private AssignmentBusiness assignmentBusiness;
+    @Autowired
+    private SettingBusiness settingBusiness;
 
     public IterationBusinessImpl() {
         super(Iteration.class);
@@ -300,12 +303,18 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
     }
     
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
+    }
+    
     @Transactional(readOnly = true)
     public IterationRowMetrics getIterationRowMetrics(int iterationId) {
         Iteration iteration = retrieve(iterationId);
         LocalDate today = new LocalDate();
         IterationRowMetrics iterationRowMetrics = new IterationRowMetrics();
         
+        // Timesheets enabled?
+        iterationRowMetrics.setTimesheetsEnabled(settingBusiness.isHourReportingEnabled());
         iterationRowMetrics.setStateData(iterationDAO.countIterationStoriesByState(iterationId));
         iterationRowMetrics.setTotalDays(Days.daysBetween(iteration.getStartDate(), iteration.getEndDate()).getDays());
         
@@ -313,7 +322,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             iterationRowMetrics.setDaysLeft(daysLeftInIteration(iteration).getDays());
         }
         
- /**       IterationHistoryEntry latestHistoryEntry = iterationHistoryEntryBusiness
+        IterationHistoryEntry latestHistoryEntry = iterationHistoryEntryBusiness
         .retrieveLatest(iteration);
         
         if (latestHistoryEntry == null) {
@@ -330,8 +339,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         long spentEffort = hourEntryBusiness
                 .calculateSumOfIterationsHourEntries(iteration);
         iterationRowMetrics.setSpentEffort(new ExactEstimate(spentEffort));
-**/
-        
+        // Set variance
+        iterationRowMetrics.setVariance(calculateVariance(iteration));
+  
         return iterationRowMetrics;
     }
     
@@ -449,6 +459,22 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Days daysLeft = this.daysLeftInIteration(iter);
         return (float) daysLeft.toStandardDuration().getMillis()
                 / (float) iterInterval.toDurationMillis();
+    }
+    
+    public Integer calculateVariance(Iteration iter) {
+        IterationHistoryEntry latestHistoryEntry = iterationHistoryEntryBusiness
+        .retrieveLatest(iter);
+        if(latestHistoryEntry == null) {
+            return null;
+        }
+        long effortLeft = latestHistoryEntry.getEffortLeftSum();
+        long dailyVelocity = calculateDailyVelocity(iter).longValue();
+        if(dailyVelocity != 0 && iter.getStartDate().isBeforeNow() && effortLeft != 0) {
+            int daysLeft = (int) (effortLeft / dailyVelocity);
+            return daysLeft - daysLeftInIteration(iter).getDays(); 
+        } else {
+            return null;
+        }      
     }
 
 }

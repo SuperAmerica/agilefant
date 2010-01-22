@@ -28,6 +28,8 @@ public class IterationRowMetrics {
     
     private boolean timesheetsEnabled;
     
+    private Integer variance = 0;
+    
     public Map<StoryState, Integer> getStateDistribution() {
         return stateDistribution;
     }
@@ -96,6 +98,10 @@ public class IterationRowMetrics {
         return timesheetsEnabled;
     }
     
+    public void setTimesheetsEnabled(boolean timesheetsEnabled) {
+        this.timesheetsEnabled = timesheetsEnabled;
+    }
+    
     public void setEffortLeft(ExactEstimate effortLeft) {
         this.effortLeft = effortLeft;
     }
@@ -106,6 +112,14 @@ public class IterationRowMetrics {
     
     public void setSpentEffort(ExactEstimate spentEffort) {
         this.spentEffort = spentEffort;
+    }
+    
+    public Integer getVariance() {
+        return variance;
+    }
+    
+    public void setVariance(Integer variance) {
+        this.variance = variance;
     }
     
 }

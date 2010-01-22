@@ -35,4 +35,6 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     public Days daysLeftInIteration(Iteration iter);
     
     public float calculateIterationTimeframePercentageLeft(Iteration iter);
+    
+    public Integer calculateVariance(Iteration iter);
 }

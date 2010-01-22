@@ -29,5 +29,19 @@
         </c:if>
 			</td>
 		</tr>
+		<tr>
+			<th>Effort left</th>
+			<td><c:out value="${aef:minutesToString(iterationRowMetrics.effortLeft.minorUnits)}" /></td>
+		</tr>
+		<tr>
+			<th>Original estimate</th>
+			<td><c:out value="${aef:minutesToString(iterationRowMetrics.originalEstimate.minorUnits)}" /></td>
+		</tr>
+		<c:if test="${iterationRowMetrics.timesheetsEnabled}">
+		<tr>
+			<th>Effort Spent</th>
+			<td><c:out value="${aef:minutesToString(iterationRowMetrics.spentEffort.minorUnits)}" /></td>
+		</tr>
+		</c:if>
 	</table>
 </div>

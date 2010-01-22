@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.poi.hssf.record.formula.functions.Today;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.joda.time.DateTime;
@@ -52,6 +53,7 @@ public class IterationBusinessTest {
     BacklogBusiness backlogBusiness;
     AssignmentBusiness assignmentBusiness;
     BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
+    SettingBusiness settingBusiness;
     
     Iteration iteration;
     Project project;
@@ -91,6 +93,9 @@ public class IterationBusinessTest {
         
         backlogHistoryEntryBusiness = createMock(BacklogHistoryEntryBusiness.class);
         iterationBusiness.setBacklogHistoryEntryBusiness(backlogHistoryEntryBusiness);
+        
+        settingBusiness = createMock(SettingBusiness.class);
+        iterationBusiness.setSettingBusiness(settingBusiness);
     }
 
     @Before
@@ -127,14 +132,14 @@ public class IterationBusinessTest {
         verify(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness);
+                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness);
     }
 
     private void replayAll() {
         replay(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness);
+                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness);
     }
 
     @Test
@@ -514,6 +519,9 @@ public class IterationBusinessTest {
         iter.setStartDate(new DateTime());
         iter.setEndDate(iter.getStartDate().plusDays(100));
         Map<StoryState, Integer> data = new EnumMap<StoryState, Integer>(StoryState.class);
+        IterationHistoryEntry latestHistoryEntry = new IterationHistoryEntry();
+        latestHistoryEntry.setOriginalEstimateSum(10);
+        latestHistoryEntry.setEffortLeftSum(10);
         data.put(StoryState.NOT_STARTED, 0);
         data.put(StoryState.STARTED, 1);
         data.put(StoryState.PENDING, 2);
@@ -521,12 +529,77 @@ public class IterationBusinessTest {
         data.put(StoryState.IMPLEMENTED, 4);
         data.put(StoryState.DONE, 5);
         
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
         expect(iterationDAO.get(iter.getId())).andReturn(iter);
         expect(iterationDAO.countIterationStoriesByState(iter.getId())).andReturn(data);
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(latestHistoryEntry);
+        expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iter)).andReturn((long) 10);
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(null);    
         replayAll();
         IterationRowMetrics iterRow = iterationBusiness.getIterationRowMetrics(100);
         assertEquals(100, iterRow.getDaysLeft());
+        assertEquals(10, iterRow.getEffortLeft().intValue());
+        assertEquals(10, iterRow.getOriginalEstimate().intValue());
         verifyAll();
-
+    }
+    
+    @Test
+    public void testCalculateVariance() {
+        Iteration iter = new Iteration();
+        LocalDate today = new LocalDate();
+        iter.setId(100);
+        iter.setStartDate(today.minusDays(10).toDateMidnight().toDateTime());
+        iter.setEndDate(iter.getStartDate().plusDays(100));
+        IterationHistoryEntry latestHistoryEntry = new IterationHistoryEntry();
+        IterationHistoryEntry yesterdayHistoryEntry = new IterationHistoryEntry();
+        yesterdayHistoryEntry.setEffortLeftSum(60);
+        yesterdayHistoryEntry.setOriginalEstimateSum(70);
+        latestHistoryEntry.setEffortLeftSum(60);
+        
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(latestHistoryEntry);    
+        expect(iterationHistoryEntryDAO.retrieveByDate(iter.getId(), today.minusDays(1))).andReturn(yesterdayHistoryEntry);
+        replayAll();
+        assertEquals((Integer)(-30), iterationBusiness.calculateVariance(iter));
+        verifyAll();
+    }
+    
+    @Test
+    public void testCalculateVariance_notStarted() {
+        Iteration iter = new Iteration();
+        LocalDate today = new LocalDate();
+        iter.setId(100);
+        iter.setStartDate(today.plusDays(10).toDateMidnight().toDateTime());
+        iter.setEndDate(iter.getStartDate().plusDays(100));
+        IterationHistoryEntry latestHistoryEntry = new IterationHistoryEntry();
+        IterationHistoryEntry yesterdayHistoryEntry = new IterationHistoryEntry();
+        yesterdayHistoryEntry.setEffortLeftSum(60);
+        yesterdayHistoryEntry.setOriginalEstimateSum(70);
+        latestHistoryEntry.setEffortLeftSum(60);
+        
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(latestHistoryEntry);    
+        expect(iterationHistoryEntryDAO.retrieveByDate(iter.getId(), today.minusDays(1))).andReturn(yesterdayHistoryEntry);
+        replayAll();
+        assertEquals(null, iterationBusiness.calculateVariance(iter));
+        verifyAll();
+    }
+    
+    @Test
+    public void testCalculateVariance_noEffortLeft() {
+        Iteration iter = new Iteration();
+        LocalDate today = new LocalDate();
+        iter.setId(100);
+        iter.setStartDate(today.minusDays(10).toDateMidnight().toDateTime());
+        iter.setEndDate(iter.getStartDate().plusDays(100));
+        IterationHistoryEntry latestHistoryEntry = new IterationHistoryEntry();
+        IterationHistoryEntry yesterdayHistoryEntry = new IterationHistoryEntry();
+        yesterdayHistoryEntry.setEffortLeftSum(0);
+        yesterdayHistoryEntry.setOriginalEstimateSum(30);
+        latestHistoryEntry.setEffortLeftSum(0);
+        
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(latestHistoryEntry);    
+        expect(iterationHistoryEntryDAO.retrieveByDate(iter.getId(), today.minusDays(1))).andReturn(yesterdayHistoryEntry);
+        replayAll();
+        assertEquals(null, iterationBusiness.calculateVariance(iter));
+        verifyAll();
     }
 }

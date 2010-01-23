@@ -55,7 +55,18 @@ AutoSuggest.prototype.initialize = function() {
 
 AutoSuggest.prototype.success = function() {
   if (this.options.successCallback) {
-    this.options.successCallback(this.valuesElement.val());
+    var values = this.valuesElement.val();
+    var data = [];
+    if (values.length > 0) {
+      var lastChar = values.charAt(values.length - 1);
+      // Eliminate last , so that we won't get an empty data in the array
+      if (lastChar == ',') {
+        data = values.substring(0, values.length - 1).split(',');
+      } else {
+        data = values.split(',');
+      }
+    }
+    this.options.successCallback(data);
   }  
 };
 

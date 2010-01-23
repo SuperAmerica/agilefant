@@ -9,7 +9,7 @@ LabelsView.prototype = new ViewPart();
 LabelsView.prototype.initialize = function() {
   var me = this;
   this.container = $('<div></div>');
-  this.element = $('<div></div>');
+  this.element = $('<div class="label-item"></div>');
   this.addButton = $('<div />').addClass('dynamictable-editclue');
   this.inputField = $('<input type="text" />');
   
@@ -36,8 +36,7 @@ LabelsView.prototype.initialize = function() {
   });
   
   this.model.addListener(function(event) {
-    var me = this;
-    if(event instanceof DynamicsEvents.RelationsEvent) {
+    if(event instanceof DynamicsEvents.RelationUpdatedEvent) {
       me.renderFully();
     }
   });
@@ -49,25 +48,35 @@ LabelsView.prototype.render = function() {
   this.renderFully();
 };
 
+LabelsView.prototype.renderLabel = function(label, labelContainer) {
+  var me = this;
+  var tempLabel = $('<div class="label-item">'
+      + label.getDisplayName() + '</div>').appendTo(labelContainer);
+  var deleteButton = $('<div class="as-close" style="display: none">X</div>');
+  deleteButton.appendTo(tempLabel);
+  
+  deleteButton.click(function(){
+    label.remove();
+  });
+  
+  tempLabel.mouseenter(function() {
+    deleteButton.show(); 
+  });
+  tempLabel.mouseleave(function() {
+    deleteButton.hide();
+  });  
+};
+
 LabelsView.prototype.renderFully = function() {
   var labels = this.model.getLabels();
   var me = this;
   var labelContainer = $('<div></div>').css("float", "left");
   if (labels.length == 0) {
-    $('<span>This story has no labels</span>').appendTo(labelContainer);
+    $('<div class="label-item">This story has no labels</div>').appendTo(labelContainer);
   } else {
     for (var i = 0, len = labels.length; i < len; i++) {
       var label = labels[i];
-      if (i > 0) {
-        $('<span>, </span>').appendTo(labelContainer);
-      }
-      var tempLabel = $('<span>' + label.getDisplayName() + '</span>');
-      tempLabel.appendTo(labelContainer);
-      tempLabel.mouseenter(function() {
-      });
-      tempLabel.mouseleave(function() {
-      });
-      
+      me.renderLabel(label, labelContainer);
     }
   }
   

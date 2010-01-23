@@ -35,20 +35,24 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
         throw new OperationNotPermittedException("Labels cannot be edited!");
     }
     
-    public long createLabel(Label label){
+    public Integer createLabel(Label label){
         label.setName(label.getDisplayName());
         User currentUser = SecurityUtil.getLoggedUser();
         label.setCreator(currentUser);
         label.setTimestamp(new DateTime());
-        long id = (Long)labelDAO.create(label);
+        Integer id = (Integer)labelDAO.create(label);
         return id;
     }
 
-    public long createStoryLabel(Label label, Story story) {
+    public void deleteLabel(Label label) {
+       labelDAO.remove(label);
+    }
+    public Integer createStoryLabel(Label label, Story story) {
         if (labelDAO.labelExists(label.getDisplayName(), story)){
             throw new OperationNotPermittedException("Label exists!");
         }
         label.setStory(story);
         return createLabel(label);
     }
+
 }

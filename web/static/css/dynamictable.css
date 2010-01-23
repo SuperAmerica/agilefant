@@ -479,6 +479,36 @@ li.dynamictable-captionaction {
   border-color: #999;
 }
 
+.label-item {
+	color: #2b3840;
+	font-size: 13px;
+	font-family: "Lucdia Grande", arial, sans-serif;
+	text-shadow: 0 1px 1px #fff;
+	background-color: #ddeefe;
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddeefe), to(#bfe0f1));
+	border: 1px solid #acc3ec;
+	border-top-color: #c0d9e9;
+	padding: 2px 7px 2px 10px;
+	border-radius: 12px;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	box-shadow: 0 1px 1px #e4edf2;
+	-webkit-box-shadow: 0 1px 1px #e4edf2;
+	-moz-box-shadow: 0 1px 1px #e4edf2;
+}
+
+.as-close {
+	float: right;
+	margin: 1px 0 0 7px;
+	padding: 0 2px;
+	cursor: pointer;
+	color: #5491be;
+	font-family: "Helvetica", helvetica, arial, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	text-shadow: 0 1px 1px #fff;
+	-webkit-transition: color .1s ease-in;
+}
 
 
 /**

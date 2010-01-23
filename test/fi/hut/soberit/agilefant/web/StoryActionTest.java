@@ -287,7 +287,7 @@ public class StoryActionTest extends MockedTestCase {
         Label label = new Label();
         storyAction.setLabel(label);
         expect(storyBusiness.retrieve(1)).andReturn(story2);
-        expect(labelBusiness.createStoryLabel(label, story2)).andReturn((long)1);
+        expect(labelBusiness.createStoryLabel(label, story2)).andReturn((int)1);
         replayAll();
         storyAction.addLabel();
         verifyAll();

@@ -424,7 +424,18 @@
       </result>
     </action>
 
-    <!-- /Story actions -->
+	<!-- /Story actions -->
+	
+	<!-- Label actions -->
+	<action name="deleteLabel" method="delete" class="labelAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+    
+    <!-- /Label actions -->
+    
+    
 
 
 

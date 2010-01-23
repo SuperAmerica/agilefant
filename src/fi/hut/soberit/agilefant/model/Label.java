@@ -30,7 +30,7 @@ public class Label implements NamedObject, Serializable {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Integer id;
 
     @Index(name = "label_name")
     @Column(nullable = false)
@@ -75,7 +75,7 @@ public class Label implements NamedObject, Serializable {
         this.displayName = displayName;
     }
 
-    public void setId(long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

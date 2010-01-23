@@ -37,3 +37,28 @@ LabelModel.prototype.getDisplayName = function() {
 LabelModel.prototype.getTimestamp = function() {
   return this.currentData.timestamp;
 };
+
+LabelModel.prototype._remove = function(successCallback, extraData) {
+  var me = this;
+  var data = {
+      labelId: me.getId()
+  };
+  jQuery.extend(data, extraData);
+  jQuery.ajax({
+      type: "POST",
+      dataType: "text",
+      url: "ajax/deleteLabel.action",
+      data: data,
+      async: true,
+      cache: false,
+      success: function(data, status) {
+        MessageDisplay.Ok("Label removed");
+        if (successCallback) {
+          successCallback();
+        }
+      },
+      error: function(data, status) {
+        MessageDisplay.Error("Error deleting label.", data);
+      }
+  });
+};

@@ -18,6 +18,8 @@ public interface GenericBusiness<T> {
     void store(T object);
     
     void delete(int id);
+    
+    void delete(T object);
 
     int create(T object);
 

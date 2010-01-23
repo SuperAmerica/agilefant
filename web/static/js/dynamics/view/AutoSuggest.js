@@ -12,17 +12,15 @@ AutoSuggest.prototype.initialize = function() {
   this.cancelButton = $('<img style="float:right; cursor:pointer" src="static/img/cancel.png" alt="Cancel" />').appendTo(this.element);
   this.okButton = $('<img style="float:right; cursor:pointer" src="static/img/ok.png" alt="Ok" />').appendTo(this.element);
   $('<input type="text" />').appendTo(this.element).autoSuggest(this.dataSource, this.options);
-  /*
   this.selectionsElement = this.element.find(".as-selections");
+  this.resultsElement = this.element.find(".as-results");
   this.valuesElement = this.selectionsElement.find(".as-values");
   this.inputElement = this.selectionsElement.find(".as-input");
   this.originalElement = this.selectionsElement.find(".as-original");
-  this.resultsElement = this.selectionsElement.find(".as-results");
-  */
   var me = this;
-  /*this.inputElement.keydown(function(e) {
+  this.inputElement.keydown(function(e) {
     if ((e.keyCode == 188 || e.keyCode == 13) && this.value != "") {
-      var label = this.value;
+      var label = me.inputElement.val();
       
       var existingData = me.valuesElement.val().indexOf(label + ",");
 
@@ -49,19 +47,23 @@ AutoSuggest.prototype.initialize = function() {
       e.preventDefault();
     }
     if (e.keyCode == 13) {
-      me.success();
+      var selectedResults = me.resultsElement.find(".active").length;
+      if (selectedResults == 0) {
+        me.success();
+      }
     } else if (e.keyCode == 27) {
       me.cancel();
     }
   });
-  */
+
   this.okButton.click(function() {
     me.success();
   });
-	  
+      
   this.cancelButton.click(function() {
     me.cancel();
-  });
+  });  
+  this.element.appendTo(this.parentView.getElement());
 };
 
 AutoSuggest.prototype.success = function() {

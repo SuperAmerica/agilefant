@@ -12,19 +12,13 @@ LabelsView.prototype.initialize = function() {
   this.labelsElement = $('<div></div>');
   this.addButton = $('<div style="float:left" />').addClass('dynamictable-editclue');
   
-  
   this.labelsElement.appendTo(this.element);
   this.addButton.appendTo(this.element);
-  var data = [
-              { value: "Jepujee", name: "Jepujee"},
-              { value: "Jepujsee", name: "Jepujsee"}
-            ];
-  this.inputView = new AutoSuggest(data, {
+  this.inputView = new AutoSuggest("ajax/lookupLabels.action", {
     startText: "Enter labels here.",
-//    source: "ajax/lookupLabels.action",
-//    queryParam: "labelName",
+    queryParam: "labelName",
     searchObj: "name",
-    selectedItem: "name",
+    selectedItem: "displayName",
     cancelCallback: function() {
       me.inputView.hide();
       me.inputView.empty();
@@ -32,8 +26,20 @@ LabelsView.prototype.initialize = function() {
     successCallback: function(data) {
       me.inputView.hide();
       me.inputView.empty();
-    }
-//    minChars: 3
+    },
+    retrieveComplete: function(data) {
+      var newData = [];
+      for (var i = 0, len = data.length; i < len; i++) {
+        var oneLabel = {
+            value: data[i].name,
+            name: data[i].name,
+            displayName: data[i].displayName
+        };
+        newData[i] = oneLabel;
+      }
+      return newData;
+    },
+    minChars: 3
   }, this);
   this.labelsElement.appendTo(this.element);
   this.addButton.appendTo(this.labelsElement);

@@ -32,6 +32,7 @@ LabelsView.prototype.initialize = function() {
   
   this.addButton.click(function(){
     me.inputView.show();
+    me.inputView.focus();
   });
   
   this.model.addListener(function(event) {

@@ -45,16 +45,28 @@ AutoSuggest.prototype.initialize = function() {
       e.preventDefault();
     }
     if (e.keyCode == 13) {
-      if (me.options.successCallback) {
-        me.options.successCallback(me.valuesElement.val());
-      }
+      me.success();
     } else if (e.keyCode == 27) {
-      if (me.options.cancelCallback) {
-        me.options.cancelCallback();
-      }
+      me.cancel();
     }
   });
   this.element.appendTo(this.parentView.getElement());
+};
+
+AutoSuggest.prototype.success = function() {
+  if (this.options.successCallback) {
+    this.options.successCallback(this.valuesElement.val());
+  }  
+};
+
+AutoSuggest.prototype.cancel = function() {
+  if (this.options.cancelCallback) {
+    this.options.cancelCallback();
+  }
+};
+
+AutoSuggest.prototype.focus = function() {
+  this.inputElement.focus();
 };
 
 AutoSuggest.prototype.empty = function() {

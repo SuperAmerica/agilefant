@@ -33,7 +33,6 @@ public class LabelAction extends ActionSupport {
     private LabelBusiness labelBusiness;
 
     public String delete() {
-        System.out.println(getLabelId());
         labelBusiness.delete(getLabelId());
         return Action.SUCCESS;
     }

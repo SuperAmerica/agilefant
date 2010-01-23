@@ -24,6 +24,7 @@ LabelsView.prototype.initialize = function() {
       me.inputView.empty();
     },
     successCallback: function(data) {
+      me.addLabels(data);
       me.inputView.hide();
       me.inputView.empty();
     },
@@ -110,12 +111,12 @@ LabelsView.prototype.renderFully = function() {
   this.labelsElement = labelContainer;
 };
 
-LabelsView.prototype.addLabel = function(labelName) {
+LabelsView.prototype.addLabels = function(labels) {
   var me = this;
   var storyId = this.model.getId();
-  $.post("ajax/addStoryLabel.action",{
+  $.post("ajax/addStoryLabels.action",{
     storyId:storyId,
-    "label.displayName":labelName
+    labelNames: labels,
   },function(){
     me.renderFully();
     }

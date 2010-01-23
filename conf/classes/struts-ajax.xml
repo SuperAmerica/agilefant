@@ -418,15 +418,16 @@
     	<result type="dispatcher">/WEB-INF/jsp/forms/deleteStoryForm.jsp</result>
     </action>
 	
-	<action name="addStoryLabel" method="addLabel" class="storyAction">
+	<!-- /Story actions -->
+	
+	<!-- Label actions -->
+	
+	<action name="addStoryLabels" method="addStoryLabels" class="labelAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>
     </action>
-
-	<!-- /Story actions -->
-	
-	<!-- Label actions -->
+    
 	<action name="deleteLabel" method="delete" class="labelAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>

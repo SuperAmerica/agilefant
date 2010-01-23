@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.LabelBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.LabelDAO;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Label;
@@ -27,6 +28,9 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
     }
     
     @Autowired
+    private StoryBusiness storybusiness;
+    
+    @Autowired
     public void setLabelDAO(LabelDAO labelDAO) {
         this.genericDAO = labelDAO;
         this.labelDAO = labelDAO;
@@ -36,29 +40,31 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
     public void store(Label label){
         throw new OperationNotPermittedException("Labels cannot be edited!");
     }
-    
-    public Integer createLabel(Label label){
-        label.setName(label.getDisplayName());
-        User currentUser = SecurityUtil.getLoggedUser();
-        label.setCreator(currentUser);
-        label.setTimestamp(new DateTime());
-        Integer id = (Integer)labelDAO.create(label);
-        return id;
-    }
 
     public void deleteLabel(Label label) {
        labelDAO.remove(label);
     }
-    public Integer createStoryLabel(Label label, Story story) {
-        if (labelDAO.labelExists(label.getDisplayName(), story)){
-            throw new OperationNotPermittedException("Label exists!");
+        
+    public void createStoryLabels(List<String> labelNames, Integer storyId) {
+        User currentUser = SecurityUtil.getLoggedUser();
+        Story story = storybusiness.retrieve(storyId);
+        for (String name : labelNames){
+                if (labelDAO.labelExists(name, story)){
+                }
+                Label label = new Label();
+                label.setDisplayName(name);
+                label.setName(name);
+                label.setCreator(currentUser);
+                label.setStory(story);
+                label.setTimestamp(new DateTime());
+                labelDAO.create(label);
         }
-        label.setStory(story);
-        return createLabel(label);
     }
     
     public List<Label> lookupLabelsLike(String labelName) {
         return labelDAO.lookupLabelsLike(labelName);
     }
+    
+
 
 }

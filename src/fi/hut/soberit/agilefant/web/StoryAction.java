@@ -15,10 +15,8 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
-import fi.hut.soberit.agilefant.business.LabelBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Label;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
@@ -61,15 +59,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private StoryMetrics metrics;
         
     private List<HistoryRowTO> storyHistory;
-    
-    private Label label;
 
     
     @Autowired
     private StoryBusiness storyBusiness;
-    
-    @Autowired
-    private LabelBusiness labelBusiness;
     
     @Autowired
     private BacklogBusiness backlogBusiness;
@@ -161,12 +154,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         } else {
             metrics = storyBusiness.calculateMetricsWithoutStory(iterationId);
         }
-        return Action.SUCCESS;
-    }
-
-    public String addLabel() {
-        story = storyBusiness.retrieve(storyId);
-        labelBusiness.createStoryLabel(label, story);
         return Action.SUCCESS;
     }
     
@@ -306,18 +293,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
     public HourEntryHandlingChoice getTaskHourEntryHandlingChoice() {
         return taskHourEntryHandlingChoice;
-    }
-    
-    public Label getLabel() {
-        return label;
-    }
-
-    public void setLabel(Label label) {
-        this.label = label;
-    }
-
-    public void setLabelBusiness(LabelBusiness labelBusiness) {
-        this.labelBusiness = labelBusiness;
     }
     
 }

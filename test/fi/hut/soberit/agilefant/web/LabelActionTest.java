@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.LabelBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Label;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -36,7 +38,7 @@ public class LabelActionTest extends MockedTestCase {
     
     @Mock
     LabelBusiness labelBusiness;
-    
+        
     @Mock
     BacklogBusiness backlogBusiness;
     
@@ -45,8 +47,7 @@ public class LabelActionTest extends MockedTestCase {
     
     Story story;
     Iteration iter;
-    
-
+          
     @Before
     public void setUp() {
         labelNames = new ArrayList<String>();
@@ -67,6 +68,25 @@ public class LabelActionTest extends MockedTestCase {
         labelAction.setStoryId(storyId);
         replayAll();
         assertEquals(Action.SUCCESS, labelAction.addStoryLabels());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testLookupLabels() {
+        ArrayList<Label> labelList = new ArrayList<Label>();
+        Label label1 = new Label();
+        label1.setDisplayName("Kissa");
+        label1.setName("Kissa");
+        Label label2 = new Label();
+        label2.setDisplayName("Koira");
+        label2.setName("Koira");
+        labelList.add(label1);
+        labelList.add(label2);
+        expect(labelBusiness.lookupLabelsLike("K")).andReturn(labelList);
+        labelAction.setLabelName("K");
+        replayAll();
+        assertEquals(Action.SUCCESS, labelAction.lookupLabels());
         verifyAll();
     }
 }

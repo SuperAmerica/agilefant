@@ -8,31 +8,30 @@ LabelsView.prototype = new ViewPart();
 
 LabelsView.prototype.initialize = function() {
   var me = this;
-  this.container = $('<div></div>');
-  this.element = $('<div class="label-item"></div>');
+  this.element = $('<div></div>');
+  this.labelsElement = $('<div class="label-item"></div>');
   this.addButton = $('<div />').addClass('dynamictable-editclue');
-  this.inputField = $('<input type="text" />');
   
-  this.element.appendTo(this.container);
-  this.addButton.appendTo(this.container);
-  this.inputField.appendTo(this.container);
+  this.labelsElement.appendTo(this.element);
+  this.addButton.appendTo(this.element);
+  this.inputView = new AutoSuggest({
+    source: "ajax/lookupLabels.action",
+    cancelCallback: function() {
+      me.inputView.hide();
+      me.inputView.empty();
+    },
+    successCallback: function(data) {
+      me.inputView.hide();
+      me.inputView.empty();
+    },
+    minChars: 3
+  }, this);
   
   this.addButton.hide();
-  this.inputField.hide();
+  this.inputView.hide();
   
   this.addButton.click(function(){
-    me.inputField.show();
-  });
-  this.inputField.keydown(function(event) {
-    if (event.keyCode == '13') {
-      var labelName = me.inputField.val();
-      me.addLabel(labelName);
-      me.inputField.val("");
-      me.inputField.hide();
-    } else if (event.keyCode == '27') {
-      me.inputField.val("");
-      me.inputField.hide();
-    }
+    me.inputView.show();
   });
   
   this.model.addListener(function(event) {
@@ -41,7 +40,15 @@ LabelsView.prototype.initialize = function() {
     }
   });
 
-  this.container.appendTo(this.parentView.getElement());
+  this.element.mouseenter(function() {
+    if (!me.inputView.isVisible()) {
+      me.addButton.show();
+    }
+  });
+  this.element.mouseleave(function() {
+    me.addButton.hide();
+  });
+  this.element.appendTo(this.parentView.getElement());
 };
 
 LabelsView.prototype.render = function() {
@@ -80,16 +87,8 @@ LabelsView.prototype.renderFully = function() {
     }
   }
   
-  this.element.replaceWith(labelContainer);
-  this.element = labelContainer;
-  this.container.mouseenter(function() {
-    if (!me.inputField.is(":visible")) {
-      me.addButton.show();
-    }
-  });
-  this.container.mouseleave(function() {
-    me.addButton.hide();
-  });
+  this.labelsElement.replaceWith(labelContainer);
+  this.labelsElement = labelContainer;
 };
 
 LabelsView.prototype.addLabel = function(labelName) {

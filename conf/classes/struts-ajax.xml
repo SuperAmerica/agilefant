@@ -433,6 +433,12 @@
       </result>
     </action>
     
+		<action name="lookupLabels" method="lookupLabels" class="labelAction">
+      <result name="success" type="json">
+        <param name="target">labels</param>
+        <param name="patterns">-creator,-timestamp</param>
+      </result>
+    </action>
     <!-- /Label actions -->
     
     

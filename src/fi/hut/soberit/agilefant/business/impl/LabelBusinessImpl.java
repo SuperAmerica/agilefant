@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +55,10 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
         }
         label.setStory(story);
         return createLabel(label);
+    }
+    
+    public List<Label> lookupLabelsLike(String labelName) {
+        return labelDAO.lookupLabelsLike(labelName);
     }
 
 }

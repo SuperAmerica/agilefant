@@ -292,7 +292,7 @@
             
     <action name="dailyWorkData" class="dailyWorkAction" method="retrieve">
       <result name="success" type="json">
-      	<param name="patterns">+assignedTasks, +assignedTasks.responsibles, +assignedWork.stories.iteration, +assignedWork.stories.tasks, +assignedWork.tasksWithoutStory.iteration, +*.workingOnTask, +*.responsibles, +user, -locale</param>
+      	<param name="patterns">+assignedTasks, +assignedTasks.responsibles, +assignedWork.stories.iteration, +assignedWork.stories.tasks, +assignedWork.tasksWithoutStory.iteration, +assignedWork.stories.labels, +*.workingOnTask, +*.responsibles, +user, -locale</param>
       </result>
     </action>
     

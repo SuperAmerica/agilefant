@@ -1,4 +1,5 @@
-var AutoSuggest = function AutoSuggest(options, parentView) {
+var AutoSuggest = function AutoSuggest(dataSource, options, parentView) {
+  this.dataSource = dataSource;
   this.options = options;
   this.parentView = parentView;
   this.initialize();
@@ -10,15 +11,16 @@ AutoSuggest.prototype.initialize = function() {
   this.element = $("<div></div>");
   this.cancelButton = $('<img style="float:right; cursor:pointer" src="static/img/cancel.png" alt="Cancel" />').appendTo(this.element);
   this.okButton = $('<img style="float:right; cursor:pointer" src="static/img/ok.png" alt="Ok" />').appendTo(this.element);
-  $('<input type="text" />').appendTo(this.element).autoSuggest(this.options.source, this.options);
+  $('<input type="text" />').appendTo(this.element).autoSuggest(this.dataSource, this.options);
+  /*
   this.selectionsElement = this.element.find(".as-selections");
   this.valuesElement = this.selectionsElement.find(".as-values");
   this.inputElement = this.selectionsElement.find(".as-input");
   this.originalElement = this.selectionsElement.find(".as-original");
   this.resultsElement = this.selectionsElement.find(".as-results");
-  
+  */
   var me = this;
-  this.inputElement.keydown(function(e) {
+  /*this.inputElement.keydown(function(e) {
     if ((e.keyCode == 188 || e.keyCode == 13) && this.value != "") {
       var label = this.value;
       
@@ -52,8 +54,7 @@ AutoSuggest.prototype.initialize = function() {
       me.cancel();
     }
   });
-  this.element.appendTo(this.parentView.getElement());
-  
+  */
   this.okButton.click(function() {
     me.success();
   });

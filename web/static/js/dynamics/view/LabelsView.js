@@ -13,9 +13,18 @@ LabelsView.prototype.initialize = function() {
   this.addButton = $('<div style="float:left" />').addClass('dynamictable-editclue');
   
   
-  this.inputView = new AutoSuggest({
+  this.labelsElement.appendTo(this.element);
+  this.addButton.appendTo(this.element);
+  var data = [
+              { value: "Jepujee", name: "Jepujee"},
+              { value: "Jepujsee", name: "Jepujsee"}
+            ];
+  this.inputView = new AutoSuggest(data, {
     startText: "Enter labels here.",
-    source: "ajax/lookupLabels.action",
+//    source: "ajax/lookupLabels.action",
+//    queryParam: "labelName",
+    searchObj: "name",
+    selectedItem: "name",
     cancelCallback: function() {
       me.inputView.hide();
       me.inputView.empty();
@@ -23,8 +32,8 @@ LabelsView.prototype.initialize = function() {
     successCallback: function(data) {
       me.inputView.hide();
       me.inputView.empty();
-    },
-    minChars: 3
+    }
+//    minChars: 3
   }, this);
   this.labelsElement.appendTo(this.element);
   this.addButton.appendTo(this.labelsElement);

@@ -9,12 +9,12 @@ LabelsView.prototype = new ViewPart();
 LabelsView.prototype.initialize = function() {
   var me = this;
   this.element = $('<div></div>');
-  this.labelsElement = $('<div class="label-item"></div>');
-  this.addButton = $('<div />').addClass('dynamictable-editclue');
+  this.labelsElement = $('<div></div>');
+  this.addButton = $('<div style="float:left" />').addClass('dynamictable-editclue');
   
-  this.labelsElement.appendTo(this.element);
-  this.addButton.appendTo(this.element);
+  
   this.inputView = new AutoSuggest({
+    startText: "Enter labels here.",
     source: "ajax/lookupLabels.action",
     cancelCallback: function() {
       me.inputView.hide();
@@ -26,6 +26,8 @@ LabelsView.prototype.initialize = function() {
     },
     minChars: 3
   }, this);
+  this.labelsElement.appendTo(this.element);
+  this.addButton.appendTo(this.labelsElement);
   
   this.addButton.hide();
   this.inputView.hide();
@@ -61,18 +63,19 @@ LabelsView.prototype.renderLabel = function(label, labelContainer) {
   var tempLabel = $('<div class="label-item">'
       + label.getDisplayName() + '</div>').appendTo(labelContainer);
   var deleteButton = $('<div class="as-close" style="display: none">X</div>');
-  deleteButton.appendTo(tempLabel);
+  var deleteButtonContainer = $('<div style="float:right; width: 20px; height: 16px"/>');
   
+  deleteButton.appendTo(deleteButtonContainer);
+  deleteButtonContainer.appendTo(tempLabel);
   deleteButton.click(function(){
     label.remove();
   });
-  
   tempLabel.mouseenter(function() {
     deleteButton.show(); 
   });
   tempLabel.mouseleave(function() {
     deleteButton.hide();
-  });  
+  })  
 };
 
 LabelsView.prototype.renderFully = function() {
@@ -87,7 +90,7 @@ LabelsView.prototype.renderFully = function() {
       me.renderLabel(label, labelContainer);
     }
   }
-  
+  this.addButton.appendTo(labelContainer);
   this.labelsElement.replaceWith(labelContainer);
   this.labelsElement = labelContainer;
 };
@@ -99,7 +102,7 @@ LabelsView.prototype.addLabel = function(labelName) {
     storyId:storyId,
     "label.displayName":labelName
   },function(){
-    me.model.reload();
+    me.renderFully();
     }
   );
 };

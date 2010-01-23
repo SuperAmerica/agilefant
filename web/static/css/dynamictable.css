@@ -495,6 +495,7 @@ li.dynamictable-captionaction {
 	box-shadow: 0 1px 1px #e4edf2;
 	-webkit-box-shadow: 0 1px 1px #e4edf2;
 	-moz-box-shadow: 0 1px 1px #e4edf2;
+	float : left;
 }
 
 .as-close {

@@ -76,16 +76,30 @@ AutoSuggest.prototype.success = function() {
       var lastChar = values.charAt(values.length - 1);
       // Eliminate last , so that we won't get an empty data in the array
       if (lastChar == ',') {
-        data = values.substring(0, values.length - 1).split(',');
+        var prelimData = [];
+        prelimData = values.substring(0, values.length - 1).split(',');
+        for (var i = 0, len = prelimData.length; i < len; i++) {
+          data.push(prelimData[i].substring(0,255));
+        }
       } else {
-        data = values.split(',');
+        var prelimData = [];
+        prelimData = values.split(',');
+        for (var i = 0, len = prelimData.length; i < len; i++) {
+          data.push(prelimData[i].substring(0,255));
+        }
       }
     }
-    this.options.successCallback(data);
+    if((!data.length == 0)){
+      this.options.successCallback(data);
+    } else {
+      this.cancel();
+    }
   }  
 };
 
 AutoSuggest.prototype.cancel = function() {
+  this.valuesElement.val("");
+  this.inputElement.val("");
   if (this.options.cancelCallback) {
     this.options.cancelCallback();
   }

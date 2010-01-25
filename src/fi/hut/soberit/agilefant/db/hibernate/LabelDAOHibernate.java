@@ -1,9 +1,11 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -34,8 +36,21 @@ LabelDAO {
         Criteria crit = getCurrentSession().createCriteria(Label.class);
         crit.add(Restrictions.like("name", labelName.toLowerCase() + "%"));
         crit.addOrder(Order.asc("name"));
+        ProjectionList plist = Projections.projectionList();
+        plist.add(Projections.groupProperty("name"));
+        plist.add(Projections.property("displayName"));
+        crit.setProjection(plist);
         //crit.setProjection(Projections.distinct(Projections.property("name")));
-        return asList(crit);
+        List<Object[]> clist = asList(crit);
+        ArrayList<Label> labelList = new ArrayList<Label>();
+        for (Object[] obj : clist){
+            Label tempLabel = new Label();
+            tempLabel.setDisplayName((String)obj[1]);
+            tempLabel.setName((String)obj[0]);
+            labelList.add(tempLabel);
+        }
+        return labelList;
+        
     }
 
 }

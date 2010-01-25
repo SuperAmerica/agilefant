@@ -20,8 +20,15 @@ DynamicTableToggleView.collapsed = 1;
 DynamicTableToggleView.expanded = 2;
 
 DynamicTableToggleView.prototype.render = function() {
-  if(this.parentView instanceof DynamicTableCell && this.options.targetCell) {
-    this.targetView = this.parentView.getRow().getCell(this.options.targetCell);
+  if(this.parentView instanceof DynamicTableCell) {
+    if(this.options.targetCell) {
+      this.targetViews = [this.parentView.getRow().getCell(this.options.targetCell)];
+    } else if(this.options.targetCells) {
+      this.targetViews = [];
+      for(var i = 0, len = this.options.targetCells.length; i < len; i++) {
+        this.targetViews.push(this.parentView.getRow().getCell(this.options.targetCells[i]));
+      }
+    }
   }
   if (this.options.expanded) {
     this.expand();
@@ -50,8 +57,10 @@ DynamicTableToggleView.prototype.showCollapsed = function() {
 };
 DynamicTableToggleView.prototype.collapse = function() {
   this.showCollapsed();
-  if(this.targetView) {
-    this.targetView.hide();
+  if(this.targetViews) {
+    for(var i = 0, len = this.targetViews.length; i < len; i++) {
+      this.targetViews[i].hide();
+    }
   } else {
     this.options.collapse.call(this.controller, this);
   }
@@ -63,9 +72,11 @@ DynamicTableToggleView.prototype.showExpanded = function() {
 };
 DynamicTableToggleView.prototype.expand = function() {
   this.showExpanded();
-  if(this.targetView) {
-    this.targetView.render();
-    this.targetView.show();
+  if(this.targetViews) {
+    for(var i = 0, len = this.targetViews.length; i < len; i++) {
+      this.targetViews[i].render();
+      this.targetViews[i].show();
+    }
   } else {
     this.options.expand.call(this.controller, this);
   }

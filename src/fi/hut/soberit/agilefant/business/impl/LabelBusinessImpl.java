@@ -50,14 +50,15 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
         Story story = storybusiness.retrieve(storyId);
         for (String name : labelNames){
                 if (labelDAO.labelExists(name, story)){
+                } else {
+                    Label label = new Label();
+                    label.setDisplayName(name);
+                    label.setName(name);
+                    label.setCreator(currentUser);
+                    label.setStory(story);
+                    label.setTimestamp(new DateTime());
+                    labelDAO.create(label);
                 }
-                Label label = new Label();
-                label.setDisplayName(name);
-                label.setName(name);
-                label.setCreator(currentUser);
-                label.setStory(story);
-                label.setTimestamp(new DateTime());
-                labelDAO.create(label);
         }
     }
     

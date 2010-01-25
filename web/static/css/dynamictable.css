@@ -596,6 +596,10 @@ table.project-iteration-metrics {
   background: #eee;
 }
 
+.administration-team-table ul {
+  list-style-type: none;  
+}
+
 
 
 

@@ -19,7 +19,8 @@ StoryController.columnIndices = {
   actions : 9,
   description : 10,
   buttons : 11,
-  tasksData : 12
+  details: 12,
+  tasksData : 13
 };
 
 StoryController.prototype = new CommonController();
@@ -130,37 +131,13 @@ StoryController.prototype.labelsViewFactory = function(view, model) {
 /**
  * 
  */
-StoryController.prototype.storyContentsFactory = function(view, model) {
-  this.contentsPanels = new DynamicsSplitPanel(view);
-  var info = this.contentsPanels.createPanel("storyInfo", {width: "30%"});
-  var config = new DynamicTableConfiguration({
-    leftWidth: '0%',
-    rightWidth: '100%'
-  });
-  config.addColumnConfiguration(0, {
-    subViewFactory:  StoryController.prototype.labelsViewFactory
-  });
-  config.addColumnConfiguration(1, {
-    get : StoryModel.prototype.getParentStoryName,
-    decorator: DynamicsDecorators.parentStoryDecorator,
-    cssClass : 'task-data'
-  });
-  config.addColumnConfiguration(2, {
-    get : StoryModel.prototype.getDescription,
-    onDoubleClick: StoryController.prototype.editDescription,
-    cssClass : 'task-data text-editor'
-  });
-  var infoContents = new DynamicVerticalTable(this, this.model, config, info);
-  var tasks = this.contentsPanels.createPanel("tasks", {width: "70%"});
-  
-  this.createTaskListView(tasks);
-  this.contentsPanels.addPanel(infoContents);
-  this.contentsPanels.addPanel(this.taskListView);
-  return this.contentsPanels;
+StoryController.prototype.storyDetailsFactory = function(view, model) {
+  return new StoryInfoWidget(model, view);
 };
 
-StoryController.prototype.createTaskListView = function(panel) {
-    this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig, panel);
+StoryController.prototype.storyTaskListFactory = function(view, model) {
+  this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig, view);
+  return this.taskListView;
 };
 
 /**
@@ -168,8 +145,12 @@ StoryController.prototype.createTaskListView = function(panel) {
  */
 StoryController.prototype.showTaskColumn = function() {
   var cell = this.view.getCell(StoryController.columnIndices.tasksData);
+  var cell2 = this.view.getCell(StoryController.columnIndices.details);
   if (cell) {
     cell.show();
+  }
+  if (cell2) {
+    cell2.show();
   }
 };
 
@@ -178,8 +159,12 @@ StoryController.prototype.showTaskColumn = function() {
  */
 StoryController.prototype.hideTaskColumn = function() {
   var cell = this.view.getCell(StoryController.columnIndices.tasksData);
+  var cell2 = this.view.getCell(StoryController.columnIndices.details);
   if (cell) {
     cell.hide();
+  }
+  if (cell2) {
+    cell2.hide();
   }
 };
 

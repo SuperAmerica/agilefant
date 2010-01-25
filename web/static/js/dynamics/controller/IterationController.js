@@ -598,7 +598,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : true,
     cssClass : 'story-task-container',
-    targetCell: StoryController.columnIndices.tasksData,
+    targetCell: StoryController.columnIndices.details,
     subViewFactory : StoryController.prototype.storyDetailsFactory,
     delayedRender: true
   });

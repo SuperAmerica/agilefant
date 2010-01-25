@@ -132,7 +132,7 @@ StoryController.prototype.labelsViewFactory = function(view, model) {
  * 
  */
 StoryController.prototype.storyDetailsFactory = function(view, model) {
-  return new StoryInfoWidget(model, view);
+  return new StoryInfoWidget(model, this, view);
 };
 
 StoryController.prototype.storyTaskListFactory = function(view, model) {

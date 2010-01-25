@@ -530,10 +530,12 @@ ModelFactory.prototype._initProjectPortfolio = function(callback) {
  */
 ModelFactory.prototype._constructUserList = function(id, data) {
   var userList = new UserListContainer();
+  userList.setData(data);
+  /*
   for (var i = 0; i < data.length; i++) {
     var user = ModelFactory.updateObject(data[i]);
     userList.addRelation(user);
-  }
+  }*/
   ModelFactory.getInstance().rootObject = userList;
   return userList;
 };

@@ -51,6 +51,13 @@ UserListController.prototype.paint = function() {
         me.model = model;
         me.paintEnabledUserList();
         me.paintDisabledUserList();
+        
+        me.model.addListener(function(event) {
+          if (event instanceof DynamicsEvents.EditEvent) {
+            me.userListView.render();
+            me.disabledUserListView.render();
+          }
+        });
       });
 };
 

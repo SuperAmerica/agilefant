@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.poi.hssf.record.formula.functions.Today;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.joda.time.DateTime;

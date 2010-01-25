@@ -52,12 +52,6 @@ LabelsView.prototype.initialize = function() {
     me.inputView.show();
     me.inputView.focus();
   });
-  
-  this.model.addListener(function(event) {
-    if(event instanceof DynamicsEvents.RelationUpdatedEvent) {
-      me.renderFully();
-    }
-  });
 
   this.element.mouseenter(function() {
     if (!me.inputView.isVisible()) {
@@ -68,6 +62,10 @@ LabelsView.prototype.initialize = function() {
     me.addButton.hide();
   });
   this.element.appendTo(this.parentView.getElement());
+};
+
+LabelsView.prototype.renderAlways = function() {
+  return true;
 };
 
 LabelsView.prototype.render = function() {
@@ -123,7 +121,7 @@ LabelsView.prototype.addLabels = function(labels) {
     storyId:storyId,
     labelNames: labels,
   },function(){
-    me.renderFully();
+    me.model.reload();
     }
   );
 };

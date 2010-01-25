@@ -6,6 +6,10 @@ var DynamicsSplitPanel = function DynamicsSplitPanel(parentView) {
 };
 DynamicsSplitPanel.prototype = new ViewPart();
 
+DynamicsSplitPanel.prototype.renderAlways = function() {
+  return true;
+};
+
 DynamicsSplitPanel.prototype.createPanel = function(name, options) {
   this.subViewElements[name] = $('<div />').appendTo(this.element);
   var panel = this.subViewElements[name];

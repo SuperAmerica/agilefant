@@ -9,10 +9,8 @@ AutoSuggest.prototype = new ViewPart();
 
 AutoSuggest.prototype.initialize = function() {
   this.element = $('<div style="margin:3px"></div>');
-  this.cancelButton = $('<img style="float:right; position:relative; top:8px;'
-      +'cursor:pointer" src="static/img/cancel.png" alt="Cancel" />').appendTo(this.element);
-  this.okButton = $('<img style="float:right; position:relative; top:8px;'
-      +'cursor:pointer" src="static/img/ok.png" alt="Ok" />').appendTo(this.element);
+  this.cancelButton = $('<img class="label-cancel" src="static/img/cancel.png" alt="Cancel" />').appendTo(this.element);
+  this.okButton = $('<img class="label-ok" src="static/img/ok.png" alt="Ok" />').appendTo(this.element);
   $('<input type="text" />').appendTo(this.element).autoSuggest(this.dataSource, this.options);
   this.selectionsElement = this.element.find(".as-selections");
   this.resultsElement = this.element.find(".as-results");

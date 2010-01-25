@@ -511,6 +511,48 @@ li.dynamictable-captionaction {
 }
 
 
+.label-cancel, .label-ok {
+	float: right;
+	position: relative;
+	top: 2px;
+	-moz-border-radius: 0.5em;
+	border: 1px solid #999;
+	background-color: #f3f3f3;
+	cursor: pointer;
+}
+.label-cancel {
+	margin: 2px 1px;
+	padding: 3px;
+}
+
+.label-ok {
+	padding: 2px 3px 4px;
+	margin: 2px 1px 2px 4px;
+}
+
+.label-add {
+	color: #2b3840;
+	font-size: 13px;
+	font-family: "Lucdia Grande", arial, sans-serif;
+	text-shadow: 0 1px 1px #fff;
+	background-color: #f3f3f3;
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddeefe), to(#bfe0f1));
+	border: 1px solid #acc3ec;
+	border-top-color: #c0d9e9;
+	padding: 2px 10px;
+	border-radius: 12px;
+	-webkit-border-radius: 12px;
+	-moz-border-radius: 12px;
+	box-shadow: 0 1px 1px #e4edf2;
+	-webkit-box-shadow: 0 1px 1px #e4edf2;
+	-moz-box-shadow: 0 1px 1px #e4edf2;
+	float : left;
+	cursor: pointer;
+}
+
+.label-add:hover {
+	color: #ee5500;
+}
 /**
  * Project page styles
  */

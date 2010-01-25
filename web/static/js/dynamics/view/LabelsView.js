@@ -10,7 +10,7 @@ LabelsView.prototype.initialize = function() {
   var me = this;
   this.element = $('<div></div>');
   this.labelsElement = $('<div></div>');
-  this.addButton = $('<div class="label-item" style="display:hidden"><b>Add</b></div>');
+  this.addButton = $('<div class="label-add" style="display:hidden"><b>Add</b></div>');
   
   this.labelsElement.appendTo(this.element);
   this.addButton.appendTo(this.element);

@@ -239,8 +239,8 @@ StoryController.prototype.createTask = function() {
 StoryController.prototype.taskToggleFactory = function(view, model) {
   var me = this;
   var options = {
-    collapse : StoryController.prototype.hideTaskColumn,
-    expand : StoryController.prototype.showTaskColumn,
+    collapse : function() { me.view.getElement().removeClass("bottom-margin"); },
+    expand : function() { me.view.getElement().addClass("bottom-margin"); },
     expanded: false,
     targetCells: [StoryController.columnIndices.tasksData, StoryController.columnIndices.details]
   };

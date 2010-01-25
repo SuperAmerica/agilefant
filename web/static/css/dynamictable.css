@@ -744,3 +744,7 @@ ul.dynamics-error-container {
 	list-style: none;
 	padding-left: 20px;
 }
+
+.bottom-margin {
+  margin-bottom: 2em;
+}

@@ -61,7 +61,8 @@ DynamicTableToggleView.prototype.collapse = function() {
     for(var i = 0, len = this.targetViews.length; i < len; i++) {
       this.targetViews[i].hide();
     }
-  } else {
+  }
+  if(this.options.collapse) {
     this.options.collapse.call(this.controller, this);
   }
 };
@@ -77,7 +78,8 @@ DynamicTableToggleView.prototype.expand = function() {
       this.targetViews[i].render();
       this.targetViews[i].show();
     }
-  } else {
+  }
+  if(this.options.expand) {
     this.options.expand.call(this.controller, this);
   }
 };

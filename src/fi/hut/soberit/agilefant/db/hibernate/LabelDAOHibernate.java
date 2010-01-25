@@ -40,7 +40,6 @@ LabelDAO {
         plist.add(Projections.groupProperty("name"));
         plist.add(Projections.property("displayName"));
         crit.setProjection(plist);
-        //crit.setProjection(Projections.distinct(Projections.property("name")));
         List<Object[]> clist = asList(crit);
         ArrayList<Label> labelList = new ArrayList<Label>();
         for (Object[] obj : clist){

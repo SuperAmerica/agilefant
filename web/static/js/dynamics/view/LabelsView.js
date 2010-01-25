@@ -74,13 +74,8 @@ LabelsView.prototype.render = function() {
 
 LabelsView.prototype.renderLabel = function(label, labelContainer) {
   var me = this;
-  if ((label.getDisplayName()).length<32) {
-    var tempLabel = $('<div class="label-item">'
+  var tempLabel = $('<div class="label-item">' 
         + label.getDisplayName() + '</div>').appendTo(labelContainer);
-  } else {
-    var tempLabel = $('<div class="label-item">'
-        + (label.getDisplayName()).substring(0,32)+"..." + '</div>').appendTo(labelContainer);
-  }
   var deleteButton = $('<div class="as-close" style="display: none">X</div>');
   var deleteButtonContainer = $('<div style="float:right; width: 20px; height: 16px"/>');
   

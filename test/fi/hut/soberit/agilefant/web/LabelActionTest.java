@@ -75,18 +75,11 @@ public class LabelActionTest extends MockedTestCase {
     @DirtiesContext
     public void testLookupLabels() {
         ArrayList<Label> labelList = new ArrayList<Label>();
-        Label label1 = new Label();
-        label1.setDisplayName("Kissa");
-        label1.setName("Kissa");
-        Label label2 = new Label();
-        label2.setDisplayName("Koira");
-        label2.setName("Koira");
-        labelList.add(label1);
-        labelList.add(label2);
         expect(labelBusiness.lookupLabelsLike("K")).andReturn(labelList);
         labelAction.setLabelName("K");
         replayAll();
         assertEquals(Action.SUCCESS, labelAction.lookupLabels());
+        assertSame(labelList, labelAction.getLabels());
         verifyAll();
     }
 }

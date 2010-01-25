@@ -464,7 +464,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     cssClass : 'story-row',
     title : "#",
     headerTooltip : 'Priority',
-    get: StoryModel.prototype.getRank,
+    /*get: StoryModel.prototype.getRank,*/
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
     defaultSortColumn: true,
     subViewFactory : StoryController.prototype.taskToggleFactory
@@ -596,8 +596,7 @@ IterationController.prototype.initializeStoryConfig = function() {
   });
   config.addColumnConfiguration(StoryController.columnIndices.details, {
     fullWidth : true,
-    visible : true,
-    cssClass : 'story-task-container',
+    visible : false,
     targetCell: StoryController.columnIndices.details,
     subViewFactory : StoryController.prototype.storyDetailsFactory,
     delayedRender: true

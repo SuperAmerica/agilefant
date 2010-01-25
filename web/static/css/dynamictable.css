@@ -47,8 +47,8 @@
   display: block;
   width: auto;
   float: left;
-  margin: 0 0.2% -2000px 0;
-  padding: 0 0 2002px 0.2%;
+  margin: 0 0.2% -2000em 0;
+  padding: 0 0 2000.2em 0.2%;
   overflow: hidden;
   border: none;
   background: transparent !important;

@@ -1,5 +1,6 @@
 var StoryInfoWidget = function StoryInfoWidget(model, controller, parentView) {
   this.parentView = parentView;
+  this.element = parentView.getElement();
   this.model = model;
   this.controller = controller;
   this.initialize();

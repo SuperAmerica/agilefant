@@ -242,8 +242,8 @@ StoryController.prototype.taskToggleFactory = function(view, model) {
   var options = {
     collapse : StoryController.prototype.hideTaskColumn,
     expand : StoryController.prototype.showTaskColumn,
-    expanded: expanded,
-    targetCell: StoryController.columnIndices.tasksData
+    expanded: expanded
+//    targetCell: StoryController.columnIndices.tasksData
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;

@@ -458,15 +458,14 @@ li.dynamictable-captionaction {
   background: #e9eeff;
   border-color: rgb(180, 180, 204);  
 }
-.task-table {
-  background: white;  
-}
 .story-task-container .dynamictable {
-  border-color: rgb(180, 180, 204);  
+  border: none;  
 }
 .story-task-container .ui-widget-header {
-  background: #666666 url(../img/ui/ui-bg_gloss-wave_55_333333_500x100.png) 50% 50% repeat-x;
-  border-color: #999;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 11pt;
 }
 .task-table .dynamictable-row {
   background: #eee;  
@@ -626,8 +625,13 @@ table.project-iteration-metrics {
 
 
 
-
-
+div.ruler {
+  background-image: url('../img/hr_left.png');
+  background-repeat: none;
+  background-color: transparent;
+  height: 1px;
+  width: 95%;
+}
 
 
 

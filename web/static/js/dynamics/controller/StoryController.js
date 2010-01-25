@@ -136,7 +136,9 @@ StoryController.prototype.storyDetailsFactory = function(view, model) {
 };
 
 StoryController.prototype.storyTaskListFactory = function(view, model) {
-  this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig, view);
+  $('<div class="ruler">&nbsp;</div>').appendTo(view.getElement());
+  var elem = $('<div/>').appendTo(view.getElement());
+  this.taskListView = new DynamicTable(this, this.model, StoryController.taskListConfig, elem);
   return this.taskListView;
 };
 

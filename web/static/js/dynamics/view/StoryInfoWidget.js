@@ -18,14 +18,7 @@ StoryInfoWidget.prototype.getElement = function() {
 StoryInfoWidget.prototype.initialize = function() {
   this.container = $('<div />');
   
-  this.hr = $('<div>&nbsp;</div>').css({
-     "background-image": "url('static/img/hr_left.png')",
-     "background-repeat": "none",
-     "background-color": "transparent",
-     "height": "1px",
-     "width": "95%",
-     "margin-left": "4%",
-  }).appendTo(this.container);
+  this.hr = $('<div class="ruler">&nbsp;</div>').appendTo(this.container);
 
   var config = new DynamicTableConfiguration({
     leftWidth: '10%',

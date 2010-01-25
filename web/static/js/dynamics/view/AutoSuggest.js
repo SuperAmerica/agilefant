@@ -55,6 +55,8 @@ AutoSuggest.prototype.initialize = function() {
       }
     } else if (e.keyCode == 27) {
       me.cancel();
+    } else if(e.keyCode == 188 && this.value == "") {
+      e.preventDefault();
     }
   });
 

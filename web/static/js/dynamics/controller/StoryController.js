@@ -328,7 +328,7 @@ StoryController.prototype.storyPointsEditable = function() {
  */
 (function() {
   var config = new DynamicTableConfiguration( {
-    cssClass: "dynamicTable-sortable-tasklist",
+    //cssClass: "dynamicTable-sortable-tasklist",
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
     dataSource : StoryModel.prototype.getTasks,
     caption: "Tasks",

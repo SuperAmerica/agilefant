@@ -684,12 +684,19 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         cssClass : 'story-row',
         subViewFactory : DynamicsButtons.commonButtonFactory
     });
+    config.addColumnConfiguration(StoryController.columnIndices.details, {
+      fullWidth : true,
+      visible : false,
+      targetCell: StoryController.columnIndices.details,
+      subViewFactory : StoryController.prototype.storyDetailsFactory,
+      delayedRender: true
+    });
     config.addColumnConfiguration(StoryController.columnIndices.tasksData, {
         fullWidth : true,
         visible : false,
-        cssClass : 'story-data',
+        cssClass : 'story-task-container',
         targetCell: StoryController.columnIndices.tasksData,
-        subViewFactory : StoryController.prototype.storyContentsFactory,
+        subViewFactory : StoryController.prototype.storyTaskListFactory,
         delayedRender: true
 
     });

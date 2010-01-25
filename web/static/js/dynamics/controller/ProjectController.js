@@ -566,13 +566,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(10, {
     fullWidth : true,
     visible : false,
-    get : StoryModel.prototype.getDescription,
-    cssClass : 'projectstory-data',
-    editable : true,
-    edit : {
-      editor : "Wysiwyg",
-      set : StoryModel.prototype.setDescription
-    }
+    subViewFactory : StoryController.prototype.storyDetailsFactory
   });
   config.addColumnConfiguration(11, {
     fullWidth : true,

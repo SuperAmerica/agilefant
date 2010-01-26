@@ -62,6 +62,9 @@ DynamicTableCell.prototype.initialize = function() {
 	  });
 	  this.element.mouseenter(function() {
      if(!me.editor) { // && me.verticalTableCell
+       if(me.editClue) {
+         me.removeEditClue();
+       }
        me.cellContents.css("float", "left");
         me.editClue = $('<div />').addClass('dynamictable-editclue').appendTo(me.element).click(
             function(event) {

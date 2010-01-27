@@ -748,3 +748,11 @@ ul.dynamics-error-container {
 .bottom-margin {
   margin-bottom: 2em;
 }
+
+#tooltip {
+	position: absolute;
+	z-index: 3000;
+	border: 1px solid #ccc;
+	background-color: #ffffce;
+	padding: 0.1em;
+}

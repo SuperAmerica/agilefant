@@ -51,7 +51,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         DetachedCriteria crit = DetachedCriteria.forClass(Task.class);
         crit.add(Restrictions.eq("iteration", iteration));
         crit.add(Restrictions.isNull("story"));
-        crit.setFetchMode("responsibles", FetchMode.JOIN);
+        //crit.setFetchMode("responsibles", FetchMode.JOIN);
         return hibernateTemplate.findByCriteria(crit);
     }
 

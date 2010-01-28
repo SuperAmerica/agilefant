@@ -55,59 +55,50 @@ StoryTreeController.prototype.initTree = function() {
   var urlInfo = {
     "project": {
       url: "ajax/getProjectStoryTree.action",
-      idName: "projectId"
+      data: {"projectId": this.id}
     },
     "product": {
       url: "ajax/getProductStoryTree.action",
-      idName: "productId"
+      data: {"productId": this.id}
     }
   };
   
   // Url params
-  var data = {};
-  data[urlInfo[this.type].idName] = this.id;
   var me = this;
-  /*
-  // Ajax request
-  $(this.element).load(urlInfo[this.type].url, data, this.options.refreshCallback);
-  */
-  this.tree = $(this.element).tree({
-    data: {
-      async: false,
-      type: "html",
-      opts: {
-        url: urlInfo[this.type].url + "?" + urlInfo[this.type].idName + "=" + this.id
-      },
+  
+  $.jstree._themes = "static/css/jstree/";
+
+  this.tree = $(this.element).jstree({
+    html_data: {},
+    html_data: {
+      ajax: {
+      async: true,
+      cache: false,
+      dataType: "html",
+      url: urlInfo[this.type].url,
+      data: urlInfo[this.type].data
+    }
+     
     },
-    ui: {
-        dots: false,
-        theme_path: "static/css/jstree/agilefant/style.css",
-        theme_name: "classic"
+    plugins : [ "html_data", "themes", "ui", "move" ],
+    themes: {
+      theme : "agilefant", 
+      dots : true,
+      icons : true,
+      theme_url: "static/css/jstree/agilefant/style.css"
     },
-    callback: {
-        onload: function() { me._onload(); },
-        onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
-        beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); }
-    },
-    types: {
-      story: {
-        draggable: true,
-        clickable: false,
-        creatable: false,
-        deletable: false,
-        renameable: false
-      }
-    },
-    rules: {
-      use_max_children : false,
-      use_max_depth : false
+    move: {
+      drag_n_drop: true,
+      check_move: function() {  }
     }
   });
-  this.tree = jQuery.tree.reference(this.element);
+  $(document).bind("jstree.stop_drag", function(event, data) {
+    console.log("Drop");
+  });
 };
 
 StoryTreeController.prototype._onload = function() {
-  this.tree.open_all();
+  this.tree.jstree("open_all");
   /* Close done stories by default */
   this.element.find('li > a > div.taskStateDONE').parent().parent().removeClass('open').addClass('closed');
   if (this.options.refreshCallback) {

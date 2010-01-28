@@ -4,6 +4,7 @@ import java.util.Collection;
 import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.model.Iteration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
@@ -36,13 +38,16 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.Pair;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 @Service("iterationBusiness")
 @Transactional
@@ -69,6 +74,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private AssignmentBusiness assignmentBusiness;
     @Autowired
     private SettingBusiness settingBusiness;
+    @Autowired 
+    private StoryRankBusiness storyRankBusiness;
 
     public IterationBusinessImpl() {
         super(Iteration.class);
@@ -95,20 +102,58 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     @Transactional(readOnly = true)
     public IterationTO getIterationContents(int iterationId) {
         Iteration iteration = this.iterationDAO.retrieveDeep(iterationId);
-        if(iteration == null) {
+        if (iteration == null) {
             throw new ObjectNotFoundException("Iteration not found");
         }
-        IterationTO iterationTO = transferObjectBusiness.constructIterationTO(iteration);
-        
+        IterationTO iterationTO = new IterationTO(iteration);
+
+        List<Story> stories = this.storyRankBusiness
+                .retrieveByRankingContext(iteration);
+        Map<Integer, StoryMetrics> metricsData = this.iterationDAO
+                .calculateIterationDirectStoryMetrics(iteration);
+        int rank = 0;
+        List<Story> rankedStories = new ArrayList<Story>();
+
+        HashMap<Integer, Story> tmp = new HashMap<Integer, Story>();
+        for (Story story : iteration.getStories()) {
+            tmp.put(story.getId(), story);
+        }
+        for (Story story : stories) {
+            StoryTO storyTO = new StoryTO(tmp.get(story.getId()));
+            if (metricsData.containsKey(story.getId())) {
+                storyTO.setMetrics(metricsData.get(story.getId()));
+            }
+            storyTO.setRank(rank++);
+            rankedStories.add(storyTO);
+        }
+        iterationTO.setRankedStories(rankedStories);
         // Set the tasks without a story
         Collection<Task> tasksWithoutStory = iterationDAO
                 .getTasksWithoutStoryForIteration(iteration);
 
         iterationTO.setTasks(new HashSet<Task>());
 
+        Map<Integer, Long> taskEsData = this.iterationDAO
+                .calculateIterationTaskEffortSpent(iteration);
+
         for (Task task : tasksWithoutStory) {
-            TaskTO taskTO = transferObjectBusiness.constructTaskTO(task);
+            TaskTO taskTO = new TaskTO(task);
             iterationTO.getTasks().add(taskTO);
+            if (taskEsData.containsKey(taskTO.getId())) {
+                taskTO.setEffortSpent(taskEsData.get(taskTO.getId()));
+            }
+        }
+
+        for (Story story : iterationTO.getRankedStories()) {
+            Set<Task> tasks = new HashSet<Task>();
+            for (Task task : story.getTasks()) {
+                TaskTO taskTO = new TaskTO(task);
+                if (taskEsData.containsKey(taskTO.getId())) {
+                    taskTO.setEffortSpent(taskEsData.get(taskTO.getId()));
+                }
+                tasks.add(taskTO);
+            }
+            story.setTasks(tasks);
         }
 
         return iterationTO;
@@ -305,6 +350,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
+    }
+    
+    public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
+        this.storyRankBusiness = storyRankBusiness;
     }
     
     @Transactional(readOnly = true)

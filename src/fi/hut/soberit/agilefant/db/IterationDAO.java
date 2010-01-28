@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.Pair;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 /**
  * Interface for a DAO of an Iteration.
@@ -62,4 +63,9 @@ public interface IterationDAO extends GenericDAO<Iteration> {
     public Iteration retrieveDeep(int iterationId);
 
     List<Iteration> retrieveActiveWithUserAssigned(int userId);
+    
+    public Map<Integer, StoryMetrics> calculateIterationDirectStoryMetrics(
+            Iteration iteration);
+    
+    public Map<Integer, Long> calculateIterationTaskEffortSpent(Iteration iteration);
 }

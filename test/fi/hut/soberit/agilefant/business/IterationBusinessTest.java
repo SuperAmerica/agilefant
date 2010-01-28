@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.Pair;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public class IterationBusinessTest {
 
@@ -53,6 +55,7 @@ public class IterationBusinessTest {
     AssignmentBusiness assignmentBusiness;
     BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     SettingBusiness settingBusiness;
+    StoryRankBusiness storyRankBusiness;
     
     Iteration iteration;
     Project project;
@@ -95,6 +98,9 @@ public class IterationBusinessTest {
         
         settingBusiness = createMock(SettingBusiness.class);
         iterationBusiness.setSettingBusiness(settingBusiness);
+        
+        storyRankBusiness = createStrictMock(StoryRankBusiness.class);
+        iterationBusiness.setStoryRankBusiness(storyRankBusiness);
     }
 
     @Before
@@ -131,55 +137,31 @@ public class IterationBusinessTest {
         verify(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness);
+                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness,
+                storyRankBusiness);
     }
 
     private void replayAll() {
         replay(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness);
+                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness,
+                storyRankBusiness);
     }
 
     @Test
     public void testGetIterationContents() {
-        
-//
-////        expect(transferObjectBusiness.constructBacklogData(
-////                        iteration)).andReturn(storiesList);
-//        for (StoryTO storyTO : storiesList) {
-//            expect(storyBusiness.calculateMetrics(storyTO)).andReturn(null);
-//        }
-//        expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
-//                .andReturn(tasksWithoutStoryList);
-//
-//        expect(transferObjectBusiness.constructTaskTO(task))
-//                .andReturn(taskTO);
-//
-//        replayAll();
-//
-//        IterationTO actualIterationData = iterationBusiness
-//                .getIterationContents(iteration.getId());
-//
-//        assertEquals(expectedIterationData.getStories(), actualIterationData
-//                .getStories());
-//        assertEquals(expectedIterationData.getTasks(),
-//                actualIterationData.getTasks());
-//
-//        assertEquals(1, actualIterationData.getTasks().size());
-//        assertEquals(2, actualIterationData.getStories().size());
-//        assertEquals(storiesList, actualIterationData.getStories());
-//        
-//        verifyAll();
-        
+        List<Story> stories = new ArrayList<Story>();
+        stories.addAll(iteration.getStories());
         
         expect(iterationDAO.retrieveDeep(iteration.getId())).andReturn(iteration);
-        expect(transferObjectBusiness.constructIterationTO(iteration))
-            .andReturn(new IterationTO(iteration));
+        expect(storyRankBusiness.retrieveByRankingContext(iteration)).andReturn(stories);
+        Map<Integer, StoryMetrics> emptyMetricsMap = Collections.emptyMap();
+        expect(iterationDAO.calculateIterationDirectStoryMetrics(iteration)).andReturn(emptyMetricsMap);
         expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
             .andReturn(new ArrayList<Task>(Arrays.asList(new Task(), new Task())));
-        expect(transferObjectBusiness.constructTaskTO(EasyMock.isA(Task.class)))
-            .andReturn(new TaskTO(new Task())).times(2);
+        Map<Integer, Long> emptyTaskMap = Collections.emptyMap();
+        expect(iterationDAO.calculateIterationTaskEffortSpent(iteration)).andReturn(emptyTaskMap);
         
         replayAll();
         

@@ -16,19 +16,24 @@ import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.IterationDAO;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.Pair;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 /**
  * Hibernate implementation of IterationDAO interface using GenericDAOHibernate.
@@ -46,6 +51,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         DetachedCriteria crit = DetachedCriteria.forClass(Task.class);
         crit.add(Restrictions.eq("iteration", iteration));
         crit.add(Restrictions.isNull("story"));
+        crit.setFetchMode("responsibles", FetchMode.JOIN);
         return hibernateTemplate.findByCriteria(crit);
     }
 
@@ -225,6 +231,90 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
 
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return (Iteration) crit.uniqueResult();
+    }
+
+    public Map<Integer, StoryMetrics> calculateIterationDirectStoryMetrics(
+            Iteration iteration) {
+        
+        Criteria taskMetrics = this.getCurrentSession().createCriteria(
+                Task.class);
+        taskMetrics.createCriteria("story", "story").add(
+                Restrictions.eq("backlog", iteration));
+        ProjectionList taskSums = Projections.projectionList();
+        taskSums.add(Projections.groupProperty("story"));
+        taskSums.add(Projections.sum("effortLeft"));
+        taskSums.add(Projections.sum("originalEstimate"));
+        taskMetrics.setProjection(taskSums);
+
+        Criteria storySpentEffort = this.getCurrentSession().createCriteria(
+                StoryHourEntry.class);
+        storySpentEffort.createCriteria("story", "story").add(
+                Restrictions.eq("backlog", iteration));
+        ProjectionList storySpentEffortSums = Projections.projectionList();
+        storySpentEffortSums.add(Projections.groupProperty("story"));
+        storySpentEffortSums.add(Projections.sum("minutesSpent"));
+        storySpentEffort.setProjection(storySpentEffortSums);
+
+        Criteria taskSpentEffort = this.getCurrentSession().createCriteria(
+                TaskHourEntry.class);
+        taskSpentEffort.createCriteria("task", "task").createCriteria("story",
+                "story").add(Restrictions.eq("backlog", iteration));
+        ProjectionList taskSpentEffortSums = Projections.projectionList();
+        taskSpentEffortSums.add(Projections.groupProperty("task.story"));
+        taskSpentEffortSums.add(Projections.sum("minutesSpent"));
+        taskSpentEffort.setProjection(taskSpentEffortSums);
+        
+        List<Object[]> taskData = asList(taskMetrics);
+        List<Object[]> storySpentEffortData = asList(storySpentEffort);
+        List<Object[]> taskSpentEffortData = asList(taskSpentEffort);      
+        
+        Map<Integer, StoryMetrics> result = new HashMap<Integer, StoryMetrics>();
+        
+        for(Object[] row : taskData) {
+            Story story = (Story)row[0];
+            ExactEstimate el = (ExactEstimate)row[1];
+            ExactEstimate oe = (ExactEstimate)row[2];
+            result.put(story.getId(), new StoryMetrics());
+            result.get(story.getId()).setEffortLeft(el.longValue());
+            result.get(story.getId()).setOriginalEstimate(oe.longValue());
+        }
+        
+        for (Object[] row : storySpentEffortData) {
+            Story story = (Story) row[0];
+            if (!result.containsKey(story.getId())) {
+                result.put(story.getId(), new StoryMetrics());
+            }
+            result.get(story.getId()).setEffortSpent((Long) row[1]);
+        }
+
+        for (Object[] row : taskSpentEffortData) {
+            Story story = (Story) row[0];
+            if (!result.containsKey(story.getId())) {
+                result.put(story.getId(), new StoryMetrics());
+            }
+            result.get(story.getId()).setEffortSpent(
+                    (Long) row[1] + result.get(story.getId()).getEffortSpent());
+        }
+        return result;
+    }
+    
+    public Map<Integer, Long> calculateIterationTaskEffortSpent(Iteration iteration) {
+        Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
+        Criteria taskCrit = crit.createCriteria("task");
+        taskCrit.createAlias("story", "story", CriteriaSpecification.LEFT_JOIN);
+        taskCrit.add(Restrictions.or(Restrictions.eq("iteration", iteration), Restrictions.eq("story.backlog", iteration)));
+        ProjectionList sumsProj = Projections.projectionList();
+        sumsProj.add(Projections.groupProperty("task"));
+        sumsProj.add(Projections.sum("minutesSpent"));
+        crit.setProjection(sumsProj);
+        List<Object[]> data = asList(crit);
+        
+        Map<Integer, Long> ret = new HashMap<Integer, Long>();
+        for(Object[] row : data) {
+            Task task = (Task)row[0];
+            ret.put(task.getId(), (Long)row[1]);
+        }
+        return ret;
     }
 
     public List<Iteration> retrieveActiveWithUserAssigned(int userId) {

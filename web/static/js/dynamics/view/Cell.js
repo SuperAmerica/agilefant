@@ -70,6 +70,7 @@ DynamicTableCell.prototype.initialize = function() {
 	    delay: 40,
 	    track: true,
 	    showURL: false,
+	    isBlocked: function() { return !!me.editor; },
 	    bodyHandler: function() { return $("<span>"+editText+"</span>"); }
 	  });
 	} else if(this.config.getDoubleClickCallback()) {

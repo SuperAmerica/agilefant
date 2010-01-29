@@ -52,9 +52,18 @@ IterationRowController.prototype.iterationActionFactory = function(view, model) 
  */
 IterationRowController.prototype.removeIteration = function() {
   var me = this;
-  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this iteration?", function() {
-    me.parentController.removeChildController("iteration", this);
-    me.model.remove();
+  var dialog = new LazyLoadedFormDialog();
+  dialog.init({
+    title: "Delete iteration",
+    url: "ajax/deleteIterationForm.action",
+    data: {
+      IterationId: me.model.getId()
+    },
+    okCallback: function(extraData) {
+      me.model.remove(function() {
+        me.parentController.removeChildController("iteration", me);
+      }, extraData);
+    }
   });
 };
 

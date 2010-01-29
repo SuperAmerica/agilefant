@@ -123,15 +123,16 @@ IterationModel.prototype.reload = function() {
   );
 };
 
-IterationModel.prototype._remove = function(successCallback) {
-  var me = this;
+IterationModel.prototype._remove = function(successCallback, extraData) {
+  var me = this, data = {iterationId: this.getId()};
+  jQuery.extend(data, extraData);
   jQuery.ajax({
       type: "POST",
       url: "ajax/deleteIteration.action",
       async: true,
       cache: false,
       dataType: "text",
-      data: {iterationId: me.getId()},
+      data: data,
       success: function(data,status) {
         MessageDisplay.Ok("Iteration removed");
         if (successCallback) {

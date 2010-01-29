@@ -21,8 +21,8 @@
     }
   
     #loginWrapper {
-      width: 24em;
-      height: 16em;
+      width: 28em;
+      height: 14em;
       margin: -8em 0 0 -12em;
       position: absolute;
       top: 35%;
@@ -36,7 +36,8 @@
     
     #login {
       font-family: Verdana, Arial, Helvetica, sans-serif;
-      margin-top: 1em;
+      margin: 1em auto;
+      width: 25em;
     }
     
     #loginWrapper tr {
@@ -128,10 +129,11 @@
       <form method="post" action="j_spring_security_check">
         <table border="0">
         <tr>
-          <td>Username</td><td><input id="username" name="j_username" size="30" type="text" /></td>
+          <td rowspan="4" style="padding: 0 1em 0 0;"><img src="static/img/agilefant-logo-80px.png" width="80" /></td>
+          <td>Username</td><td><input id="username" name="j_username" type="text" style="width: 150px;"/></td>
         </tr>
         <tr>
-          <td>Password</td><td><input name="j_password" size="30" type="password" /></td>
+          <td>Password</td><td><input name="j_password" type="password" style="width: 150px ;"/></td>
         </tr>
         <tr>
           <td>&nbsp;</td><td>Remember me <input type="checkbox" name="_spring_security_remember_me" /></td>

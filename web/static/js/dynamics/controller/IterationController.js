@@ -379,7 +379,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     });
   }
   config.addColumnConfiguration(TaskController.columnIndices.actions, {
-    minWidth : 35,
+    minWidth : 33,
     autoScale : true,
     cssClass : 'task-row',
     title : "Edit",
@@ -571,7 +571,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     });
   }
   config.addColumnConfiguration(StoryController.columnIndices.actions, {
-    minWidth : 26,
+    minWidth : 33,
     autoScale : true,
     cssClass : 'story-row',
     title : "Edit",

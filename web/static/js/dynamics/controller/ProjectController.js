@@ -398,7 +398,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     }
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.actions, {
-    minWidth : 26,
+    minWidth : 33,
     autoScale : true,
     title : "Edit",
     subViewFactory : IterationRowController.prototype.iterationActionFactory
@@ -557,7 +557,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
   config.addColumnConfiguration(6, {
-    minWidth : 26,
+    minWidth : 35,
     autoScale : true,
     cssClass : 'projectstory-row',
     title : "Edit",

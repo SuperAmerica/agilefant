@@ -16,12 +16,16 @@
 .dynamictable-caption {
 	font-weight:bold;
 	height:19px;
-	padding: 6px 0 0 0.5em;
+	padding: 4px 0 0 0.5em;
 	font-size: 12pt;
 }
 
+.dynamictable-caption div {
+  margin-top: 2px;  
+}
+
 .dynamictable-caption-block {
-  height: 23px !important;
+  height: 25px !important;
   width: auto !important;
 }
 
@@ -165,12 +169,16 @@ div.gear {
   border: 1px solid #FFFFFF;
 }
 
+
 li.dynamictable-captionaction {
-  background-color: #f3f3f3;
+  background-color: #fff !important;
+  background-repeat: repeat-x !important;
+  background-image: url('../img/button_fade.png') !important;
+  background-position: 100% 3px !important;
   float: left !impotant;
-  border: 1px solid black;
+  border: 1px solid #666;
   margin-right: 1em;
-  padding: 1px 7px 1px 2px;	
+  padding: 1px 7px 1px 2px !important;	
   width: 105px;
   color: black;
   font-weight: normal;
@@ -183,9 +191,12 @@ li.dynamictable-captionaction {
 
 .dynamictable-captionaction:hover {
   float: left !impotant;
-  cursor: pointer;
-  color: #e50;
+  cursor: pointer !important;
+  color: black;
+  border-color: black;
+  background-color: #fff;
 }
+
 .dynamictable-captionaction div.create {
   background-image: url('../img/create_new.png');
   background-position: 0%;

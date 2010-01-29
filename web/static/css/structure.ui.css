@@ -158,6 +158,7 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
 #navigationTabsWrapper {
   margin-left: 16em;
   float: left;
+  height: 21px;
 }
 
 #navigationTabsWrapper ul, #navigationTabsWrapper ul li {
@@ -179,23 +180,32 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
   -webkit-border-bottom-left-radius: 0;
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
-  padding: 0.3em 0.5em 0.1em 0.5em; 
+  padding: 0; 
   margin: 0 0.5em 0 0;
   background: #dfeffc url("../img/ui/ui-bg_glass_85_dfeffc_1x400.png") repeat-x scroll 50% 50%;
+  display: block;
+  height: 20px;
+  float: left;
 }
 
 #navigationTabsWrapper ul li.navitab-selected {
   background: #fff;
-  padding-bottom: 2px;  
+  height: 21px;
 }
 
 #navigationTabsWrapper ul li a {
   font-weight: bold !important;
-  color: #2E6E9E !important;  
+  color: #2E6E9E !important;
+  margin: 0 0.7em;
 }
 
 #navigationTabsWrapper ul li.navitab-selected a {
   color: #E17009 !important;  
+}
+
+#navigationTabsWrapper ul li span img {
+  position: relative;
+  top: 2px;  
 }
 
 /**

@@ -238,3 +238,23 @@ div#footerText label {
   margin-right: 2px !important;
   margin-left: 2px !important;
 }
+
+
+/**
+ * SMALL BURNDOWN
+ */
+div.smallBurndown {
+  border: 1px solid #666;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  
+  background-repeat: no-repeat;
+  background-position: -5px -5px;
+  
+  height: 75px;
+  width: 100px;
+  
+  margin: 0 0 1em 3.2em;
+}
+
+

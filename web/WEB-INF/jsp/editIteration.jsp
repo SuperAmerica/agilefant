@@ -19,7 +19,7 @@
   <li class=""><a href="#backlogAssignees"><span><img
     alt="Edit" src="static/img/team.png" /> Workload</span></a></li>
   
-  <li class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1; border-width: 1px !important;">
+  <li class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
   
@@ -33,11 +33,11 @@
 
 
 <div class="details" id="backlogDetails" style="overflow: auto;">
-<div id="detailContainer" style="width: 70%; float: left; padding: 8px;"></div>
+<div id="detailContainer" style="width: 65%; float: left; padding: 8px;"></div>
 <div style="width: 28%; float: right">
-<div class="smallBurndown"><a href="#bigChart"><img
-  id="smallChart"
-  src="drawSmallIterationBurndown.action?backlogId=${iteration.id}" /></a></div>
+<div class="smallBurndown" style="background-image: url('drawSmallIterationBurndown.action?backlogId=${iteration.id}');">
+ &nbsp;
+</div>
 <div id="iterationMetrics"><%@ include
   file="./inc/iterationMetrics.jsp"%></div>
 </div>

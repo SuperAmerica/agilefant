@@ -275,8 +275,10 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
             ExactEstimate el = (ExactEstimate)row[1];
             ExactEstimate oe = (ExactEstimate)row[2];
             result.put(story.getId(), new StoryMetrics());
-            result.get(story.getId()).setEffortLeft(el.longValue());
-            result.get(story.getId()).setOriginalEstimate(oe.longValue());
+            if(el != null)
+                result.get(story.getId()).setEffortLeft(el.longValue());
+            if(oe != null)
+                result.get(story.getId()).setOriginalEstimate(oe.longValue());
         }
         
         for (Object[] row : storySpentEffortData) {

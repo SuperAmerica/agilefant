@@ -39,7 +39,7 @@
   <script type="text/javascript" src="static/js/backlogSelector.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.hotkeys.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.jstree.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-  <script type="text/javascript" src="static/js/jquery.tooltip.min.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/jquery.tooltip.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.autoSuggest.minified.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
   

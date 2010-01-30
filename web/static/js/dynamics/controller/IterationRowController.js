@@ -56,13 +56,21 @@ IterationRowController.prototype.removeIteration = function() {
   dialog.init({
     title: "Delete iteration",
     url: "ajax/deleteIterationForm.action",
+    disableClose: true,
     data: {
       IterationId: me.model.getId()
     },
     okCallback: function(extraData) {
-      me.model.remove(function() {
-        me.parentController.removeChildController("iteration", me);
-      }, extraData);
+      var confirmation = extraData.confirmationString;
+      if (confirmation && confirmation.toLowerCase() == 'yes') {
+        me.model.remove(function() {
+          me.parentController.removeChildController("iteration", me);
+        }, extraData);
+        dialog.close();
+      }
+    },
+    closeCallback: function() {
+      dialog.close();
     }
   });
 };

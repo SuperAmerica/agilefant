@@ -61,6 +61,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
     private SettingBusiness settingBusiness;
     @Mock(strict=true)
     private StoryRankBusiness storyRankBusiness;
+    @Mock(strict=true)
+    private TaskBusiness taskBusiness;
 
     private User user1;
     private User user2;

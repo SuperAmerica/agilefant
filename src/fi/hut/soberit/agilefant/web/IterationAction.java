@@ -42,6 +42,8 @@ public class IterationAction implements
     
     private Set<Integer> assigneeIds = new HashSet<Integer>();
 
+    private String confirmationString;
+    
     @Autowired
     private IterationBusiness iterationBusiness;
 
@@ -68,9 +70,12 @@ public class IterationAction implements
     }
 
     public String delete() {
-        iteration = iterationBusiness.retrieve(iterationId);
-        iterationBusiness.delete(iterationId);
-        return Action.SUCCESS;
+        if(confirmationString.equalsIgnoreCase("yes")) {
+            iterationBusiness.deleteDeep(iterationId);
+            return Action.SUCCESS;
+        } else {
+            return Action.ERROR;
+        }
     }
 
     public String iterationRowMetrics() {
@@ -161,4 +166,9 @@ public class IterationAction implements
     public void setAssigneeIds(Set<Integer> assigneeIds) {
         this.assigneeIds = assigneeIds;
     }
+    
+    public void setConfirmationString(String confirmationString) {
+        this.confirmationString = confirmationString;
+    }
+
 }

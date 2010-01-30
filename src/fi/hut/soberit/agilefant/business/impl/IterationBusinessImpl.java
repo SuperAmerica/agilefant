@@ -28,13 +28,16 @@ import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
@@ -46,8 +49,10 @@ import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Service("iterationBusiness")
 @Transactional
@@ -76,6 +81,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private SettingBusiness settingBusiness;
     @Autowired 
     private StoryRankBusiness storyRankBusiness;
+    @Autowired
+    private TaskBusiness taskBusiness;
 
     public IterationBusinessImpl() {
         super(Iteration.class);
@@ -92,6 +99,35 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         delete(retrieve(id));
     }
 
+    public void deleteDeep(int id) {
+            Iteration iteration = retrieve(id);
+            Set<Task> tasks = iteration.getTasks();
+            for (Task item : tasks) {
+                taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
+            }
+            
+            Set<Story> stories = iteration.getStories();
+            TaskHandlingChoice taskHandlingChoice = TaskHandlingChoice.DELETE;
+            HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
+            HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
+            for (Story item : stories) {
+                storyBusiness.delete(item.getId(), taskHandlingChoice,
+                        storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+            }
+            Set<Assignment> assignments = iteration.getAssignments();
+            for (Assignment item : assignments) {
+                assignmentBusiness.delete(item.getId());
+            }
+            
+            hourEntryBusiness.deleteAll(iteration.getHourEntries());
+            
+            Set<IterationHistoryEntry> historyEntries = iteration.getHistoryEntries();
+            for (IterationHistoryEntry item : historyEntries) {
+                iterationHistoryEntryBusiness.delete(item.getId());
+            }
+            delete(iteration);
+    }
+    
     @Override
     public void delete(Iteration iteration) {
         Backlog project = iteration.getParent();
@@ -524,6 +560,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         } else {
             return null;
         }      
+    }
+
+    public void setTaskBusiness(TaskBusiness taskBusiness) {
+        this.taskBusiness = taskBusiness;
+        
     }
 
 }

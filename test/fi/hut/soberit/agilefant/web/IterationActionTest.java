@@ -82,11 +82,20 @@ public class IterationActionTest {
     
     @Test
     public void testDelete_success() {
-        iterationBusiness.delete(1);
-        expect(iterationBusiness.retrieve(1)).andReturn(new Iteration());
+        iterationBusiness.deleteDeep(1);
         replayAll();
-        
+        iterationAction.setConfirmationString("yes");
         assertEquals(Action.SUCCESS, iterationAction.delete());
+        
+        verifyAll();    
+    }
+    
+    @Test
+    public void testDelete_failure() {
+
+        replayAll();
+        iterationAction.setConfirmationString("no");
+        assertEquals(Action.ERROR, iterationAction.delete());
         
         verifyAll();    
     }
@@ -95,9 +104,10 @@ public class IterationActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testDelete_noSuchIteration() {
         iterationAction.setIterationId(-1);
-        expect(iterationBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        iterationBusiness.deleteDeep(-1);
+        expectLastCall().andThrow(new ObjectNotFoundException());
         replayAll();
-        
+        iterationAction.setConfirmationString("yes");
         iterationAction.delete();
         
         verifyAll();    
@@ -105,11 +115,11 @@ public class IterationActionTest {
     
     @Test(expected = ConstraintViolationException.class)
     public void testDelete_forbidden() {
-        iterationBusiness.delete(1);
+        iterationBusiness.deleteDeep(1);
         expectLastCall().andThrow(new ConstraintViolationException(null, null, null));
         expect(iterationBusiness.retrieve(1)).andReturn(new Iteration());
         replayAll();
-        
+        iterationAction.setConfirmationString("yes");
         iterationAction.delete();
         
         verifyAll(); 
@@ -143,4 +153,5 @@ public class IterationActionTest {
         verifyAll();
         assertSame(assignments, iterationAction.getAssignments());
     }
+    
 }

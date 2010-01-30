@@ -39,8 +39,10 @@ import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 public class IterationBusinessTest {
 
@@ -56,6 +58,7 @@ public class IterationBusinessTest {
     BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     SettingBusiness settingBusiness;
     StoryRankBusiness storyRankBusiness;
+    TaskBusiness taskBusiness;
     
     Iteration iteration;
     Project project;
@@ -101,6 +104,9 @@ public class IterationBusinessTest {
         
         storyRankBusiness = createStrictMock(StoryRankBusiness.class);
         iterationBusiness.setStoryRankBusiness(storyRankBusiness);
+        
+        taskBusiness = createStrictMock(TaskBusiness.class);
+        iterationBusiness.setTaskBusiness(taskBusiness);
     }
 
     @Before
@@ -138,7 +144,7 @@ public class IterationBusinessTest {
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
                 assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness,
-                storyRankBusiness);
+                storyRankBusiness, taskBusiness);
     }
 
     private void replayAll() {
@@ -146,7 +152,7 @@ public class IterationBusinessTest {
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
                 assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness,
-                storyRankBusiness);
+                storyRankBusiness, taskBusiness);
     }
 
     @Test
@@ -581,6 +587,49 @@ public class IterationBusinessTest {
         expect(iterationHistoryEntryDAO.retrieveByDate(iter.getId(), today.minusDays(1))).andReturn(yesterdayHistoryEntry);
         replayAll();
         assertEquals(null, iterationBusiness.calculateVariance(iter));
+        verifyAll();
+    }
+    
+    @Test
+    public void testDeleteIteration() {
+        Iteration iter = new Iteration();
+        Project project = new Project();
+        iter.setParent(project);
+        iter.setId(111);
+        Story story = new Story();
+        Set<Story> stories = new HashSet<Story>();
+        stories.add(story);
+        iter.setStories(stories);
+        Set<Task> tasks = new HashSet<Task>();
+        Task task = new Task();
+        tasks.add(task);
+        iter.setTasks(tasks);
+        Set<Assignment> assignments = new HashSet<Assignment>();
+        Assignment assignment = new Assignment();
+        assignments.add(assignment);
+        iter.setAssignments(assignments);
+        Set<IterationHistoryEntry> historyEntries = new HashSet<IterationHistoryEntry>();
+        IterationHistoryEntry historyEntry = new IterationHistoryEntry();
+        historyEntries.add(historyEntry);
+        iter.setHistoryEntries(historyEntries);
+        Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>();
+        BacklogHourEntry hourEntry = new BacklogHourEntry();
+        hourEntries.add(hourEntry);
+        iter.setHourEntries(hourEntries);
+        
+        expect(iterationDAO.get(iter.getId())).andReturn(iter);
+        
+        storyBusiness.delete(story.getId(), TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        iterationHistoryEntryBusiness.delete(historyEntry.getId());
+        assignmentBusiness.delete(assignment.getId());
+        taskBusiness.delete(task.getId(), HourEntryHandlingChoice.DELETE);
+        hourEntryBusiness.deleteAll(iter.getHourEntries());
+        
+        iterationDAO.remove(iter);
+        backlogHistoryEntryBusiness.updateHistory(iter.getParent().getId());
+        
+        replayAll();
+        iterationBusiness.deleteDeep(iter.getId());
         verifyAll();
     }
 }

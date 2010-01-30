@@ -8,6 +8,7 @@ LazyLoadedDialog.prototype.init = function(options) {
   this.okCallback = options.okCallback;
   this.cancelCallback = options.cancelCallback;
   this.loadCallback = options.loadCallback;
+  this.disableClose = options.disableClose;
   this.contentElement = $('<div><div style="text-align: center"><img src="static/img/pleasewait.gif" alt="Loading..." /></div></div>').appendTo(document.body);
   var me = this;
   this.contentElement.dialog({
@@ -50,13 +51,17 @@ LazyLoadedDialog.prototype._ok = function() {
   if (this.okCallback) {
     this.okCallback();
   }
-  this.close();
+  if (!this.disableClose) {
+    this.close();
+  }
 };
 LazyLoadedDialog.prototype._cancel = function() {
   if (this.closeCallback) {
     this.closeCallback();
   }
-  this.close();
+  if (!this.disableClose) {
+    this.close();
+  }
 };
 
 LazyLoadedDialog.prototype.close = function() {
@@ -78,5 +83,7 @@ LazyLoadedFormDialog.prototype._ok = function() {
     }
     this.okCallback(finalData);
   }
-  this.close();
+  if (!this.disableClose) {
+    this.close();
+  }
 };

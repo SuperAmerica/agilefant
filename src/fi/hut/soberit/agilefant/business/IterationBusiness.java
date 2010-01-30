@@ -13,6 +13,8 @@ import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 public interface IterationBusiness extends GenericBusiness<Iteration> {
 
@@ -37,4 +39,6 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     public float calculateIterationTimeframePercentageLeft(Iteration iter);
     
     public Integer calculateVariance(Iteration iter);
+    
+    void deleteDeep(int id);
 }

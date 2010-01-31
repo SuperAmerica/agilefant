@@ -542,7 +542,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         delete(story);
     }
-
+    
     public void setUserDAO(UserDAO userDAO) {
         this.userDAO = userDAO;
     }

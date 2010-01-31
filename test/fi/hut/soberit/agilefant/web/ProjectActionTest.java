@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,8 +26,9 @@ public class ProjectActionTest {
 
     @Before
     public void setUp_dependencies() {
+        
         projectAction = new ProjectAction();
-
+        projectAction.setProjectId(1);
         projectBusiness = createMock(ProjectBusiness.class);
         projectAction.setProjectBusiness(projectBusiness);
     }
@@ -34,7 +36,7 @@ public class ProjectActionTest {
     @Before
     public void setUp_data() {
         project = new Project();
-        project.setId(123);
+        project.setId(1);
     }
 
     private void verifyAll() {
@@ -91,8 +93,8 @@ public class ProjectActionTest {
 
     @Test
     public void testRetrieve() {
-        projectAction.setProjectId(123);
-        expect(projectBusiness.retrieve(123)).andReturn(project);
+        projectAction.setProjectId(1);
+        expect(projectBusiness.retrieve(1)).andReturn(project);
         replayAll();
         projectAction.retrieve();
         assertEquals(project, projectAction.getProject());
@@ -103,22 +105,58 @@ public class ProjectActionTest {
     public void testStore() {
         Project dummy = new Project();
         projectAction.setProductId(313);
-        projectAction.setProjectId(123);
+        projectAction.setProjectId(1);
         projectAction.setProject(project);
-        expect(projectBusiness.store(123, 313, project, null)).andReturn(dummy);
+        expect(projectBusiness.store(1, 313, project, null)).andReturn(dummy);
         replayAll();
         projectAction.store();
         assertEquals(dummy, projectAction.getProject());
         verifyAll();
     }
-
+    
     @Test
-    public void testDelete() {
-        projectAction.setProjectId(123);
-        projectBusiness.delete(123);
+    public void testDelete_success() {
+        projectBusiness.deleteDeep(1);
         replayAll();
+        projectAction.setConfirmationString("yes");
+        assertEquals(Action.SUCCESS, projectAction.delete());
+        
+        verifyAll();    
+    }
+    
+    @Test
+    public void testDelete_failure() {
+
+        replayAll();
+        projectAction.setConfirmationString("no");
+        assertEquals(Action.ERROR, projectAction.delete());
+        
+        verifyAll();    
+    }
+
+    
+    @Test(expected = ObjectNotFoundException.class)
+    public void testDelete_noSuchIteration() {
+        projectAction.setProjectId(-1);
+        projectBusiness.deleteDeep(-1);
+        expectLastCall().andThrow(new ObjectNotFoundException());
+        replayAll();
+        projectAction.setConfirmationString("yes");
         projectAction.delete();
-        verifyAll();
+        
+        verifyAll();    
+    }
+    
+    @Test(expected = ConstraintViolationException.class)
+    public void testDelete_forbidden() {
+        projectBusiness.deleteDeep(1);
+        expectLastCall().andThrow(new ConstraintViolationException(null, null, null));
+        expect(projectBusiness.retrieve(1)).andReturn(new Project());
+        replayAll();
+        projectAction.setConfirmationString("yes");
+        projectAction.delete();
+        
+        verifyAll(); 
     }
 
     @Test

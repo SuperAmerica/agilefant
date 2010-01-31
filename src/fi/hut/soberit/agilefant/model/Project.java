@@ -13,6 +13,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -60,7 +62,9 @@ public class Project extends Backlog implements Schedulable, Rankable {
     private Status status = Status.GREEN;
     
     private Set<Assignment> assignments = new HashSet<Assignment>();
-        
+    
+    private Set<BacklogHistoryEntry> backlogHistoryEntries = new HashSet<BacklogHistoryEntry>();
+    
     private ExactEstimate baselineLoad = new ExactEstimate(0);
     
     private ExactEstimate backlogSize = new ExactEstimate(0);
@@ -144,5 +148,18 @@ public class Project extends Backlog implements Schedulable, Rankable {
     public void setBaselineLoad(ExactEstimate baselineLoad) {
         this.baselineLoad = baselineLoad;
     }
+
+    @OneToMany(mappedBy="backlog")
+    @Cascade(value = CascadeType.DELETE_ORPHAN)
+    @NotAudited
+    @JSON(include=false)
+    public Set<BacklogHistoryEntry> getBacklogHistoryEntries() {
+        return backlogHistoryEntries;
+        }
+    
+    public void setBacklogHistoryEntries(
+            Set<BacklogHistoryEntry> backlogHistoryEntries) {
+        this.backlogHistoryEntries = backlogHistoryEntries;
+        }
 
 }

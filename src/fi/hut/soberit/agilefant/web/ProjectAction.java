@@ -86,8 +86,7 @@ public class ProjectAction implements CRUDAction, Prefetching {
     }
     
     public String retrieveRootStories() {
-        project = this.projectBusiness.retrieve(projectId);
-        stories = this.projectBusiness.retrievetRootStories(project);
+        stories = this.projectBusiness.retrieveRootStories(projectId);
         return Action.SUCCESS;
     }
     
@@ -180,7 +179,7 @@ public class ProjectAction implements CRUDAction, Prefetching {
     public Integer getRankOverId() {
         return rankOverId;
     }
-    
+   
     public void setConfirmationString(String confirmationString) {
         this.confirmationString = confirmationString;
     }

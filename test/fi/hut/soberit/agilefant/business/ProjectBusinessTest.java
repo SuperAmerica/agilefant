@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.easymock.EasyMock;
 import org.joda.time.DateTime;
@@ -17,7 +18,10 @@ import fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -28,6 +32,8 @@ import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 public class ProjectBusinessTest {
 
@@ -38,7 +44,12 @@ public class ProjectBusinessTest {
     TransferObjectBusiness transferObjectBusiness;
     SettingBusiness settingBusiness;
     RankingBusiness rankingBusiness;
-
+    AssignmentBusiness assignmentBusiness;
+    BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
+    IterationBusiness iterationBusiness;
+    StoryBusiness storyBusiness;
+    HourEntryBusiness hourEntryBusiness;
+    
     Project project;
     Product product;
     User user1;
@@ -65,6 +76,24 @@ public class ProjectBusinessTest {
         
         rankingBusiness = createStrictMock(RankingBusiness.class);
         projectBusiness.setRankingBusiness(rankingBusiness);
+        
+        backlogHistoryEntryBusiness = createMock(BacklogHistoryEntryBusiness.class);
+        projectBusiness.setHistoryEntryBusiness(backlogHistoryEntryBusiness);
+        
+        assignmentBusiness = createMock(AssignmentBusiness.class);
+        projectBusiness.setAssignmentBusiness(assignmentBusiness);
+        
+        settingBusiness = createMock(SettingBusiness.class);
+        projectBusiness.setSettingBusiness(settingBusiness);
+        
+        iterationBusiness = createStrictMock(IterationBusiness.class);
+        projectBusiness.setIterationBusiness(iterationBusiness);
+        
+        storyBusiness = createStrictMock(StoryBusiness.class);
+        projectBusiness.setStoryBusiness(storyBusiness);
+        
+        hourEntryBusiness = createStrictMock(HourEntryBusiness.class);
+        projectBusiness.setHourEntryBusiness(hourEntryBusiness);
     }
 
     @Before
@@ -307,6 +336,49 @@ public class ProjectBusinessTest {
         projectBusiness.rankOverProject(project.getId(), rankOver.getId());
         verifyAll();
         assertEquals(1, project.getId());
+    }
+    
+    @Test
+    public void testDeleteProject() {
+        Product product = new Product();
+        product.setId(123);
+        Iteration iter = new Iteration();
+        Project project = new Project();
+        iter.setParent(project);
+        iter.setId(111);
+        project.setParent(product);
+        project.setId(112);
+        Story story = new Story();
+        Set<Story> stories = new HashSet<Story>();
+        stories.add(story);
+        project.setStories(stories);
+        Set<Assignment> assignments = new HashSet<Assignment>();
+        Assignment assignment = new Assignment();
+        assignments.add(assignment);
+        project.setAssignments(assignments);
+        Set<BacklogHistoryEntry> historyEntries = new HashSet<BacklogHistoryEntry>();
+        BacklogHistoryEntry historyEntry = new BacklogHistoryEntry();
+        historyEntries.add(historyEntry);
+        project.setBacklogHistoryEntries(historyEntries);
+        Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>();
+        BacklogHourEntry hourEntry = new BacklogHourEntry();
+        hourEntries.add(hourEntry);
+        project.setHourEntries(hourEntries);
+        
+        expect(projectDAO.get(project.getId())).andReturn(project);
+        
+        iterationBusiness.delete(iter.getId());
+        
+        storyBusiness.delete(story.getId(), TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        backlogHistoryEntryBusiness.delete(historyEntry.getId());
+        assignmentBusiness.delete(assignment.getId());
+        hourEntryBusiness.deleteAll(project.getHourEntries());
+        
+        projectDAO.remove(project);
+        
+        replayAll();
+        projectBusiness.deleteDeep(project.getId());
+        verifyAll();
     }
 
 }

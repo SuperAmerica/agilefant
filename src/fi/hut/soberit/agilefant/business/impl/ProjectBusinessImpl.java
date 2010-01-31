@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -19,7 +20,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
-import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -31,16 +32,15 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
@@ -58,12 +58,15 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
     private SettingBusiness settingBusiness;
-    private TaskBusiness taskBusiness;
+    private StoryFilterBusiness storyFilterBusiness;
+    @Autowired
     private StoryBusiness storyBusiness;
+    @Autowired
     private HourEntryBusiness hourEntryBusiness;
+    @Autowired
     private IterationBusiness iterationBusiness;
+    @Autowired
     private BacklogHistoryEntryBusiness historyEntryBusiness;
-    
 
     public ProjectBusinessImpl() {
         super(Project.class);
@@ -220,7 +223,9 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         return project;
     }
 
-    public List<Story> retrievetRootStories(Project project) {
+    @Transactional(readOnly = true)
+    public List<Story> retrieveRootStories(int projectId) {
+        Project project = projectDAO.get(projectId);
         return this.storyHierarchyDAO.retrieveProjectRootStories(project);
     }
 
@@ -290,24 +295,19 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     }
     
     public void deleteDeep(int id) {
-        return;
-        
-        /*
 
         Project project = retrieve(id);
         if (project == null)
             return;
-        Set<Backlog> iterations = project.getChildren();
+        Set<Backlog> iterations = new HashSet<Backlog>(project.getChildren());
         
         if (iterations != null) {
-            System.out.println(iterations.size());
             for (Backlog item : iterations) {
-                System.out.println(item.getId());
                 iterationBusiness.deleteDeep(item.getId());
             }
         }
         
-        Set<Story> stories = project.getStories();
+        Set<Story> stories = new HashSet<Story>(project.getStories());
         TaskHandlingChoice taskHandlingChoice = TaskHandlingChoice.DELETE;
         HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
         HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
@@ -318,7 +318,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
                         storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
             }
         }
-        Set<Assignment> assignments = project.getAssignments();
+        Set<Assignment> assignments = new HashSet<Assignment>(project.getAssignments());
         
         if (assignments != null) {
             for (Assignment item : assignments) {
@@ -326,20 +326,51 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
             }
         }
         
-        Set<BacklogHourEntry> hourEntries = project.getHourEntries();
+        Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>(project.getHourEntries());
         
         if (hourEntries != null) {
+            if (hourEntryBusiness == null){
+                System.out.println("Nullia on!");
+            }
             hourEntryBusiness.deleteAll(hourEntries);
         }
         
-        List<BacklogHistoryEntry> historyEntries = projectDAO.getHistoryEntriesForProject(id);
+        
+        List<BacklogHistoryEntry> historyEntries = new ArrayList<BacklogHistoryEntry>(project.getBacklogHistoryEntries());
         for (BacklogHistoryEntry item : historyEntries) {
             historyEntryBusiness.delete(item.getId());
         }
-
-        delete(project);
         
-        */
+        delete(project);
+
     }
 
+    @Transactional(readOnly = true)
+    public List<Story> retrieveRootStories(int projectId,
+            StoryFilters storyFilters) {
+        List<Story> stories = retrieveRootStories(projectId);
+        return storyFilterBusiness.filterStories(stories, storyFilters);
+    }
+
+    public void setAssignmentBusiness(AssignmentBusiness assignmentBusiness) {
+        this.assignmentBusiness = assignmentBusiness;
+    }
+
+    public void setStoryBusiness(StoryBusiness storyBusiness) {
+        this.storyBusiness = storyBusiness;
+    }
+
+    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
+        this.hourEntryBusiness = hourEntryBusiness;
+    }
+
+    public void setIterationBusiness(IterationBusiness iterationBusiness) {
+        this.iterationBusiness = iterationBusiness;
+    }
+
+    public void setHistoryEntryBusiness(
+            BacklogHistoryEntryBusiness historyEntryBusiness) {
+        this.historyEntryBusiness = historyEntryBusiness;
+    }
+    
 }

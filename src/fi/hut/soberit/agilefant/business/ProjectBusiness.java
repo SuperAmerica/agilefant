@@ -10,6 +10,7 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 
 public interface ProjectBusiness extends GenericBusiness<Project> {
 
@@ -26,7 +27,9 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
     
     public ProjectTO getProjectData(int projectId);
     
-    public List<Story> retrievetRootStories(Project project);
+    public List<Story> retrieveRootStories(int projectId);
+
+    public List<Story> retrieveRootStories(int projectId, StoryFilters storyFilters);
 
     Project rankUnderProject(Project project, Project upperProject)
             throws IllegalArgumentException;

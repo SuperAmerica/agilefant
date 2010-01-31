@@ -37,7 +37,6 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
-import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
@@ -101,41 +100,30 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
     public void deleteDeep(int id) {
             Iteration iteration = retrieve(id);
-            System.out.println(iteration.getId());
-            Set<Task> tasks = iteration.getTasks();
-            System.out.println(tasks.size());
+            Set<Task> tasks = new HashSet<Task>(iteration.getTasks());
             for (Task item : tasks) {
-                System.out.println(item.getId());
                 taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
             }
             
-            Set<Story> stories = iteration.getStories();
-            System.out.println(stories.size());
+            Set<Story> stories = new HashSet<Story>(iteration.getStories());
             TaskHandlingChoice taskHandlingChoice = TaskHandlingChoice.DELETE;
             HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
             HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
             for (Story item : stories) {
-                System.out.println(item.getId());
                 storyBusiness.delete(item.getId(), taskHandlingChoice,
                         storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
             }
-            Set<Assignment> assignments = iteration.getAssignments();
-            System.out.println(assignments.size());
+            Set<Assignment> assignments = new HashSet<Assignment>(iteration.getAssignments());
             for (Assignment item : assignments) {
-                System.out.println(item.getId());
                 assignmentBusiness.delete(item.getId());
             }
             
-            Set<BacklogHourEntry> hourEntries = iteration.getHourEntries();
-            
-            System.out.println(hourEntries.size());
+            Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>(iteration.getHourEntries());
             
             hourEntryBusiness.deleteAll(hourEntries);
             
-            Set<IterationHistoryEntry> historyEntries = iteration.getHistoryEntries();
-            System.out.println(historyEntries.size());
+            Set<IterationHistoryEntry> historyEntries = new HashSet<IterationHistoryEntry>(iteration.getHistoryEntries());
             for (IterationHistoryEntry item : historyEntries) {
-                System.out.println(item.getId());
                 iterationHistoryEntryBusiness.delete(item.getId());
             }
             delete(iteration);

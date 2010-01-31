@@ -59,9 +59,7 @@ LazyLoadedDialog.prototype._cancel = function() {
   if (this.closeCallback) {
     this.closeCallback();
   }
-  if (!this.disableClose) {
     this.close();
-  }
 };
 
 LazyLoadedDialog.prototype.close = function() {

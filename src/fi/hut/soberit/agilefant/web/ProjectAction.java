@@ -42,6 +42,8 @@ public class ProjectAction implements CRUDAction, Prefetching {
     
     private boolean assigneesChanged = false;
     
+    private String confirmationString;
+    
     @Autowired
     private ProjectBusiness projectBusiness;
     
@@ -99,8 +101,12 @@ public class ProjectAction implements CRUDAction, Prefetching {
     }
     
     public String delete() {
-        this.projectBusiness.delete(projectId);
-        return Action.SUCCESS;
+        if(confirmationString.equalsIgnoreCase("yes")) {
+            projectBusiness.deleteDeep(projectId);
+            return Action.SUCCESS;
+        } else {
+            return Action.ERROR;
+        }
     }
 
     public void initializePrefetchedData(int objectId) {
@@ -173,6 +179,10 @@ public class ProjectAction implements CRUDAction, Prefetching {
     }
     public Integer getRankOverId() {
         return rankOverId;
+    }
+    
+    public void setConfirmationString(String confirmationString) {
+        this.confirmationString = confirmationString;
     }
     
 }

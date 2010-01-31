@@ -13,6 +13,8 @@ import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
+import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -105,6 +107,14 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         crit = crit.createCriteria("assignments");
         crit = crit.createCriteria("user");
         crit.add(Restrictions.idEq(userId));
+        return asList(crit);
+    }
+    
+    public List<BacklogHistoryEntry> getHistoryEntriesForProject(
+            int projectId) {
+        Criteria crit = getCurrentSession().createCriteria(BacklogHistoryEntry.class);
+        crit.add(Restrictions.eq("backlog.id", projectId));
+        crit.addOrder(Order.asc("timestamp"));
         return asList(crit);
     }
     

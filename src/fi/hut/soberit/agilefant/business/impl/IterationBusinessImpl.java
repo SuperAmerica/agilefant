@@ -101,28 +101,41 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
     public void deleteDeep(int id) {
             Iteration iteration = retrieve(id);
+            System.out.println(iteration.getId());
             Set<Task> tasks = iteration.getTasks();
+            System.out.println(tasks.size());
             for (Task item : tasks) {
+                System.out.println(item.getId());
                 taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
             }
             
             Set<Story> stories = iteration.getStories();
+            System.out.println(stories.size());
             TaskHandlingChoice taskHandlingChoice = TaskHandlingChoice.DELETE;
             HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
             HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
             for (Story item : stories) {
+                System.out.println(item.getId());
                 storyBusiness.delete(item.getId(), taskHandlingChoice,
                         storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
             }
             Set<Assignment> assignments = iteration.getAssignments();
+            System.out.println(assignments.size());
             for (Assignment item : assignments) {
+                System.out.println(item.getId());
                 assignmentBusiness.delete(item.getId());
             }
             
-            hourEntryBusiness.deleteAll(iteration.getHourEntries());
+            Set<BacklogHourEntry> hourEntries = iteration.getHourEntries();
+            
+            System.out.println(hourEntries.size());
+            
+            hourEntryBusiness.deleteAll(hourEntries);
             
             Set<IterationHistoryEntry> historyEntries = iteration.getHistoryEntries();
+            System.out.println(historyEntries.size());
             for (IterationHistoryEntry item : historyEntries) {
+                System.out.println(item.getId());
                 iterationHistoryEntryBusiness.delete(item.getId());
             }
             delete(iteration);

@@ -11,27 +11,38 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.AssignmentBusiness;
+import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
+import fi.hut.soberit.agilefant.business.HourEntryBusiness;
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Service("projectBusiness")
 @Transactional
@@ -47,6 +58,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
     private SettingBusiness settingBusiness;
+    private TaskBusiness taskBusiness;
+    private StoryBusiness storyBusiness;
+    private HourEntryBusiness hourEntryBusiness;
+    private IterationBusiness iterationBusiness;
+    private BacklogHistoryEntryBusiness historyEntryBusiness;
     
 
     public ProjectBusinessImpl() {
@@ -271,6 +287,59 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
             rankUnderProject(project,projects.get(projects.size() - 1));
         }
         
+    }
+    
+    public void deleteDeep(int id) {
+        return;
+        
+        /*
+
+        Project project = retrieve(id);
+        if (project == null)
+            return;
+        Set<Backlog> iterations = project.getChildren();
+        
+        if (iterations != null) {
+            System.out.println(iterations.size());
+            for (Backlog item : iterations) {
+                System.out.println(item.getId());
+                iterationBusiness.deleteDeep(item.getId());
+            }
+        }
+        
+        Set<Story> stories = project.getStories();
+        TaskHandlingChoice taskHandlingChoice = TaskHandlingChoice.DELETE;
+        HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
+        HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
+       
+        if (stories != null) {
+            for (Story item : stories) {
+                storyBusiness.delete(item.getId(), taskHandlingChoice,
+                        storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+            }
+        }
+        Set<Assignment> assignments = project.getAssignments();
+        
+        if (assignments != null) {
+            for (Assignment item : assignments) {
+                assignmentBusiness.delete(item.getId());
+            }
+        }
+        
+        Set<BacklogHourEntry> hourEntries = project.getHourEntries();
+        
+        if (hourEntries != null) {
+            hourEntryBusiness.deleteAll(hourEntries);
+        }
+        
+        List<BacklogHistoryEntry> historyEntries = projectDAO.getHistoryEntriesForProject(id);
+        for (BacklogHistoryEntry item : historyEntries) {
+            historyEntryBusiness.delete(item.getId());
+        }
+
+        delete(project);
+        
+        */
     }
 
 }

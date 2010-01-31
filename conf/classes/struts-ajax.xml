@@ -252,6 +252,12 @@
     	<result type="dispatcher">/WEB-INF/jsp/forms/deleteProjectForm.jsp</result>
     </action>
     
+    <action name="deleteProject" method="delete" class="projectAction">
+			<result name="success" type="httpheader">
+				<param name="status">200</param>
+			</result>
+		</action>
+    
     <!-- /Project actions -->
     
 

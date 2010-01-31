@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 
+import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 
@@ -53,5 +54,6 @@ public interface ProjectDAO extends GenericDAO<Project> {
     void increaseRankedProjectRanks();
 
     List<Project> retrieveActiveWithUserAssigned(int userId);
+    public List<BacklogHistoryEntry> getHistoryEntriesForProject(int id);
 
 }

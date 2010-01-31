@@ -38,4 +38,6 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
     public void moveToRanked(int projectId);
 
     Project rankOverProject(int projectId, int rankOverId);
+    
+    void deleteDeep(int id);
 }

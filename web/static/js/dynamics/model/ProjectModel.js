@@ -135,15 +135,16 @@ ProjectModel.prototype.reload = function() {
   );
 };
 
-ProjectModel.prototype._remove = function(successCallback) {
-  var me = this;
+ProjectModel.prototype._remove = function(successCallback, extraData) {
+  var me = this, data = {projectId: this.getId()};
+  jQuery.extend(data, extraData);
   jQuery.ajax({
       type: "POST",
       url: "ajax/deleteProject.action",
       async: true,
       cache: false,
       dataType: "text",
-      data: {projectId: me.getId()},
+      data: data,
       success: function(data,status) {
         MessageDisplay.Ok("Project removed");
         if (successCallback) {

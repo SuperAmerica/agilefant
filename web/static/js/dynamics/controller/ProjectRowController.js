@@ -47,9 +47,26 @@ ProjectRowController.prototype.projectActionFactory = function(view, model) {
 
 ProjectRowController.prototype.removeProject = function() {
   var me = this;
-  var dialog = new DynamicsConfirmationDialog("Are you sure?", "Are you sure you want to delete this project?", function() {
-    me.parentController.removeChildController("project", this);
-    me.model.remove();
+  var dialog = new LazyLoadedFormDialog();
+  dialog.init({
+    title: "Delete project",
+    url: "ajax/deleteProjectForm.action",
+    disableClose: true,
+    data: {
+      ProjectId: me.model.getId()
+    },
+    okCallback: function(extraData) {
+      var confirmation = extraData.confirmationString;
+      if (confirmation && confirmation.toLowerCase() == 'yes') {
+        me.model.remove(function() {
+          me.parentController.removeChildController("project", me);
+        }, extraData);
+        dialog.close();
+      }
+    },
+    closeCallback: function() {
+      dialog.close();
+    }
   });
 };
 

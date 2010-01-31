@@ -247,6 +247,11 @@
         <param name="status">200</param>
       </result>
     </action>
+    
+    <action name="deleteProjectForm">
+    	<result type="dispatcher">/WEB-INF/jsp/forms/deleteProjectForm.jsp</result>
+    </action>
+    
     <!-- /Project actions -->
     
 

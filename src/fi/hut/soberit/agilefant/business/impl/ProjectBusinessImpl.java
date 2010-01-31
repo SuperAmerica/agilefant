@@ -329,9 +329,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>(project.getHourEntries());
         
         if (hourEntries != null) {
-            if (hourEntryBusiness == null){
-                System.out.println("Nullia on!");
-            }
             hourEntryBusiness.deleteAll(hourEntries);
         }
         

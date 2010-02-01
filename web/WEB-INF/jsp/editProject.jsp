@@ -11,19 +11,13 @@
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
   <li class=""><a href="#backlogAssignees"><span><img
     alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
-  <c:if test="${settings.hourReportingEnabled}">
-  <li class=""><a href="#backlogSpentEffort"><span><img
-    alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
-  </c:if>
-  <li class=""><a href="#backlogHistory"><span><img
-    alt="Edit" src="static/img/timesheets.png" /> History</span></a></li>
+  <li class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
+    Actions
+  </li>
 </ul>
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
 <div class="details" id="backlogAssignees"></div>
-<c:if test="${settings.hourReportingEnabled}">
-  <div class="details" id="backlogSpentEffort"></div>
-</c:if>
 
 </div>
 

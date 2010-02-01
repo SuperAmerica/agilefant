@@ -122,17 +122,11 @@ TaskController.prototype.createSplitTask = function() {
 };
 
 TaskController.prototype.actionColumnFactory = function(view, model) {
-  var actionItems = [ {
-    text: "Details",
-    callback : TaskController.prototype.openDetails
-  }, {
-    text : "Edit",
-    callback : CommonController.prototype.openRowEdit
-  }, {
+  var actionItems = [{
     text : "Split",
     callback : TaskController.prototype.createSplitTask
   }, {
-	text: "Log effort",
+	text: "Spent effort",
 	callback: TaskController.prototype.openLogEffort
   }, {
     text : "Append to my work queue",
@@ -207,8 +201,7 @@ TaskController.prototype.quickLogEffort = function (spentEffort) {
 };
 
 TaskController.prototype.openLogEffort = function() {
-  var dialog = CreateDialog.createById("createNewEffortEntry");
-  dialog.getModel().setParent(this.model);
+  var widget = new SpentEffortWidget(this.model);
 };
 
 TaskController.prototype.retrieveDetails = function(callback) {

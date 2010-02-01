@@ -23,11 +23,6 @@
     Actions
   </li>
   
-  <c:if test="${settings.hourReportingEnabled}">
-    <li class=""><a href="#backlogSpentEffort"><span><img
-      alt="Edit" src="static/img/timesheets.png" /> Spent effort</span></a></li>
-  </c:if>
-  
   
 </ul>
 
@@ -43,10 +38,6 @@
 </div>
 </div>
 <div class="details" id="backlogAssignees"></div>
-
-<c:if test="${settings.hourReportingEnabled}">
-  <div class="details" id="backlogSpentEffort"></div>
-</c:if>
 </div>
 
 <script type="text/javascript">

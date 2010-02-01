@@ -74,7 +74,10 @@ public class AEFFunctions {
         return out(s, newLength, true);
     }
 
-    public static String minutesToString(long minor) {
+    public static String minutesToString(Long minor) {
+        if(minor == null) {
+            return "";
+        }
         return minutesParser.convertToString(minor);
     }
     

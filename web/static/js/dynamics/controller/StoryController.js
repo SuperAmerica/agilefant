@@ -262,20 +262,14 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
  * 
  */
 StoryController.prototype.storyActionFactory = function(view, model) {
-  var actionItems = [  {
-    text: "Details",
-    callback : StoryController.prototype.openDetails
-  },{
-    text : "Edit",
-    callback : CommonController.prototype.openRowEdit
-  }, {
+  var actionItems = [ {
     text : "Move",
     callback : StoryController.prototype.moveStory
   }, {
     text : "Split",
     callback : StoryController.prototype.splitStory
   }, {
-    text: "Log effort",
+    text: "Spent effort",
     callback: StoryController.prototype.openLogEffort
   }, {
     text : "Delete",
@@ -295,10 +289,6 @@ StoryController.prototype.acceptsDraggable = function(model) {
 
 StoryController.prototype.openLogEffort = function() {
   var widget = new SpentEffortWidget(this.model);
-  /*
-  var dialog = CreateDialog.createById("createNewEffortEntry");
-  dialog.getModel().setParent(this.model);
-  */
 };
 
 StoryController.prototype.openQuickLogEffort = function(model, view) {
@@ -471,6 +461,7 @@ StoryController.prototype.storyPointsEditable = function() {
   config.addColumnConfiguration(TaskController.columnIndices.description, {
     fullWidth : true,
     get : TaskModel.prototype.getDescription,
+    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
     cssClass : 'task-data text-editor',
     visible : false,
     editable : true,

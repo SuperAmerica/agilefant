@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
 import static org.easymock.classextension.EasyMock.*;
 import static org.junit.Assert.*;
 
@@ -590,16 +589,24 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     }
     
     @Test
-    public void testExactEstimateToDataItem() {
+    public void testAddTimeSeriesItem() {
         ExactEstimate expectedValue = new ExactEstimate(120);
-        Second expectedInstant = new Second(startDate.toDate());
+        DateTime expectedInstant = new DateTime(2010, 1, 15, 12, 56, 42, 0);
         
-        TimeSeriesDataItem actualDataItem
-            = super.exactEstimateToDataItem(startDate, expectedValue);
+        TimeSeries timeSeries = createMock(TimeSeries.class);
         
-        assertEquals(ExactEstimateUtils.extractMajorUnits(expectedValue),
-                actualDataItem.getValue());
-        assertEquals(0, expectedInstant.compareTo(actualDataItem.getPeriod()));
+        expect(timeSeries.addOrUpdate(
+                new Second(new DateTime(2010, 1, 15, 0,0, 0, 0).toDate()), 2))
+                .andReturn(new TimeSeriesDataItem(new Second(), 0));
+        
+        replay(timeSeries);
+        
+        this.addTimeSeriesItem(expectedInstant, expectedValue, timeSeries);        
+        
+        verify(timeSeries);
+        
+
+        
     }
     
 }

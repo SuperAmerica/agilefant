@@ -511,19 +511,15 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             DateTime endInstant, ExactEstimate endValue) {
         TimeSeries timeSeries = new TimeSeries(seriesKey);
         
-        timeSeries.add(exactEstimateToDataItem(startInstant.toDateMidnight().toDateTime(), startValue));
-        timeSeries.add(exactEstimateToDataItem(endInstant.toDateMidnight().toDateTime(), endValue));
+        addTimeSeriesItem(startInstant, startValue, timeSeries);
+        addTimeSeriesItem(endInstant, endValue, timeSeries);
         
         return timeSeries;
     }
-    
-    /**
-     * Transforms an <code>ExactEstimate</code> to a JFree data item.
-     */
-    protected TimeSeriesDataItem exactEstimateToDataItem(DateTime instant, ExactEstimate value) {
-        Second startInstant = new Second(instant.toDate());
-        return new TimeSeriesDataItem(startInstant, ExactEstimateUtils
-                .extractMajorUnits(value));
+
+    protected void addTimeSeriesItem(DateTime instant, ExactEstimate value, TimeSeries timeSeries) {
+        timeSeries.addOrUpdate(new Second(instant.toDateMidnight().toDateTime()
+                .toDate()), ExactEstimateUtils.extractMajorUnits(value));
     }
 
 }

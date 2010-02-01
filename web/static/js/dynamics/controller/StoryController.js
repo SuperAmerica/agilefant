@@ -294,8 +294,11 @@ StoryController.prototype.acceptsDraggable = function(model) {
 };
 
 StoryController.prototype.openLogEffort = function() {
+  var widget = new SpentEffortWidget(this.model);
+  /*
   var dialog = CreateDialog.createById("createNewEffortEntry");
   dialog.getModel().setParent(this.model);
+  */
 };
 
 StoryController.prototype.openQuickLogEffort = function(model, view) {

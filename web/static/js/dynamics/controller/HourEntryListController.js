@@ -94,12 +94,14 @@ HourEntryListController.prototype.initConfig = function() {
         dataSource : HourEntryListContainer.prototype.getHourEntries,
         caption : "Spent effort"
       });
+  /*
   this.hourEntryTableConfig.addCaptionItem( {
     name : "addHourentry",
     text : "Log effort",
     cssClass : "create",
     callback : HourEntryListController.prototype.openLogEffort
   });
+  */
   this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.date, {
     minWidth : 120,
     autoScale : true,

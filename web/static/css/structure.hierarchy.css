@@ -100,3 +100,48 @@ div.hierarchyContainer {
   cursor: pointer !important;
   color: #E17009 !important;
 }
+
+
+/**
+ * DETAILS BUBBLE
+ */
+.story-details-bubble {
+  position: absolute;
+  min-height:   80px;
+  min-width:    200px;
+  max-width:    400px;
+  padding: 0.5em;
+  z-index:  1000;
+  background: white;
+  border:   1px solid #999;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px; 
+}
+
+.story-details-bubble h3 {
+  margin: 0;  
+}
+
+.story-details-bubble div.details-links {
+  float: right;
+  text-align: right;
+  clear: both;
+}
+
+.story-details-bubble a {
+  font-size: 80%;
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 0.1em 0.3em;
+}
+
+.story-details-bubble table {
+  border-collapse: collapse;
+  margin: 0.5em;
+}
+
+.story-details-bubble th, .story-details-bubble td {
+  /*border: 1px solid #ccc;*/
+  background: transparent;  
+}
+

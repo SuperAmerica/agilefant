@@ -154,58 +154,97 @@ StoryTreeController.prototype._initializeTree = function() {
   var me = this;
   var elem = $(this.parentElement).attr('id');
   
-  /* Show edit button */
-  $('#' + elem + ' li > a').live('mouseover', function() {
-    if (!$(this).children('.editButton').get(0)) {
-      $('.editButton').remove();
-      var button = $('<div />').addClass('editButton').html('Edit &#8711;').appendTo($(this));
-    }
+  /*
+   * Details box
+   */
+  $('#' + elem + ' li > a').live('click', function() {
+    $('.story-details-bubble').remove();
+    var story = $(this);
+    var pos = story.position();
+    story.bubble = $('<div/>').addClass('story-details-bubble').appendTo(document.body);
+    story.bubble.css({
+      'top': pos.top + 20 + 'px',
+      'left': pos.left + 100 + 'px'
+    });
+    story.bubble.mouseleave(function() {
+      $(this).remove();
+    });
+    
+    var links = $('<div />').addClass('details-links').appendTo(story.bubble);
+    
+    var addChild = $('<a>add child</a>').click(function() {
+      story.bubble.remove();
+      MessageDisplay.Warning("Not implemented");
+    }).appendTo(links);
+    
+    var moreLink = $('<a>more...</a>').click(function() {
+      story.bubble.remove();
+      var id = story.parents('li:eq(0)').attr('storyid');
+      me._getStoryForId(id, function(object) {
+        var dialog = new StoryInfoDialog(object, function() {});
+      });
+    }).appendTo(links);
+    
+    $('<h3>Story info</h3>').appendTo(story.bubble);
+    
+    var infoTable = $('<table/>').addClass('infotable').appendTo(story.bubble);
+    
+    infoTable.html('<tr><th>Points</th><td>XX</td></tr><tr><th>Responsibles</th><td>Some people here, Some people here, Some people here, Some people here, Some people here</td></tr>');
+    
   });
   
-  
-  /* Edit menu creation*/
-  $('#' + elem + ' .editButton').live('click', function() {
-    var off = $(this).offset();
-    var menu = $('<ul/>').addClass('editButtonMenu').appendTo($(this));
-    menu.css({
-      "top" : off.top + 18,
-      "left" : off.left - 32,
-      "display": "block"
-    });
-    var editButton = $('<li/>').text('Details').appendTo(menu);
-    var splitButton = $('<li/>').text('Split').appendTo(menu);
-    var deleteButton = $('<li/>').text('Delete').appendTo(menu);
-    
-    /*
-     * Click handler for edit button
-     */
-    editButton.click(function() {
-      var id = $(this).parents('li:eq(0)').attr('storyid');
-      me._getStoryForId(id, function(object) {
-        var dialog = new StoryInfoDialog(object, function() { me.refresh(); });
-      });
-      menu.remove();
-    });
-    
-    /*
-     * Click handler for split button
-     */
-    splitButton.click(function() {
-      var id = $(this).parents('li:eq(0)').attr('storyid');
-      me._getStoryForId(id, function(object) {
-        var dialog = new StorySplitDialog(object, function() { me.refresh(); });
-      });
-      menu.remove();
-    });
-    
-    /*
-     * Click handler for delete button
-     */
-    deleteButton.click(function() {
-      alert("Not implemented");
-      menu.remove();
-    });
-  });
+//  /* Show edit button */
+//  $('#' + elem + ' li > a').live('mouseover', function() {
+//    if (!$(this).children('.editButton').get(0)) {
+//      $('.editButton').remove();
+//      var button = $('<div />').addClass('editButton').html('Edit &#8711;').appendTo($(this));
+//    }
+//  });
+//  
+//  
+//  /* Edit menu creation*/
+//  $('#' + elem + ' .editButton').live('click', function() {
+//    var off = $(this).offset();
+//    var menu = $('<ul/>').addClass('editButtonMenu').appendTo($(this));
+//    menu.css({
+//      "top" : off.top + 18,
+//      "left" : off.left - 32,
+//      "display": "block"
+//    });
+//    var editButton = $('<li/>').text('Details').appendTo(menu);
+//    var splitButton = $('<li/>').text('Split').appendTo(menu);
+//    var deleteButton = $('<li/>').text('Delete').appendTo(menu);
+//    
+//    /*
+//     * Click handler for edit button
+//     */
+//    editButton.click(function() {
+//      var id = $(this).parents('li:eq(0)').attr('storyid');
+//      me._getStoryForId(id, function(object) {
+//        var dialog = new StoryInfoDialog(object, function() { me.refresh(); });
+//      });
+//      menu.remove();
+//    });
+//    
+//    /*
+//     * Click handler for split button
+//     */
+//    splitButton.click(function() {
+//      var id = $(this).parents('li:eq(0)').attr('storyid');
+//      me._getStoryForId(id, function(object) {
+//        var dialog = new StorySplitDialog(object, function() { me.refresh(); });
+//      });
+//      menu.remove();
+//    });
+//    
+//    /*
+//     * Click handler for delete button
+//     */
+//    deleteButton.click(function() {
+//      alert("Not implemented");
+//      menu.remove();
+//    });
+//  });
 
   
 };

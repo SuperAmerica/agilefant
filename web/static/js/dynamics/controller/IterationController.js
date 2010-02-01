@@ -637,7 +637,7 @@ IterationController.prototype.initAssigneeConfiguration = function() {
       {
         rowControllerFactory : BacklogController.prototype.assignmentControllerFactory,
         dataSource : AssignmentContainer.prototype.getAssignments,
-        caption : "Iteration workload by assigned user"
+        caption : "Iteration workload by user"
       }); 
   config.addColumnConfiguration(0, {
     minWidth : 150,
@@ -654,7 +654,7 @@ IterationController.prototype.initAssigneeConfiguration = function() {
   config.addColumnConfiguration(1, {
     minWidth : 100,
     autoScale : true,
-    title : "adjustment",
+    title : "Adjustment",
     get : AssignmentModel.prototype.getPersonalLoad,
     decorator: DynamicsDecorators.exactEstimateDecorator,
     editable: true,
@@ -682,21 +682,21 @@ IterationController.prototype.initAssigneeConfiguration = function() {
   config.addColumnConfiguration(3, {
     minWidth : 100,
     autoScale : true,
-    title : "assigned",
+    title : "Assigned",
     get : AssignmentModel.prototype.getAssignedLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator
   });
   config.addColumnConfiguration(4, {
     minWidth : 100,
     autoScale : true,
-    title : "unassigned",
+    title : "Unassigned",
     get : AssignmentModel.prototype.getUnassignedLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator
   });
   config.addColumnConfiguration(5, {
     minWidth : 100,
     autoScale : true,
-    title : "total",
+    title : "Total",
     get : AssignmentModel.prototype.getTotalLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator,
     sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getTotalLoad)
@@ -704,7 +704,7 @@ IterationController.prototype.initAssigneeConfiguration = function() {
   config.addColumnConfiguration(6, {
     minWidth : 100,
     autoScale : true,
-    title : "worktime",
+    title : "Worktime",
     get : AssignmentModel.prototype.getAvailableWorktime,
     decorator: DynamicsDecorators.exactEstimateEditDecorator,
     sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getAvailableWorktime)
@@ -712,7 +712,7 @@ IterationController.prototype.initAssigneeConfiguration = function() {
   config.addColumnConfiguration(7, {
     minWidth : 100,
     autoScale : true,
-    title : "load",
+    title : "Load",
     get : AssignmentModel.prototype.getLoadPercentage,
     decorator: DynamicsDecorators.appendDecoratorFactory("%"),
     sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getLoadPercentage)

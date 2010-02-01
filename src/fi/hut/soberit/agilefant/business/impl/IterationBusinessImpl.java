@@ -494,7 +494,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
                         (long) (weeksLeft * assignment.getPersonalLoad()
                                 .floatValue()));
             }
-            totalLoad.add(assignment.getBaselineLoad().longValue());
+            if(assignment.getBaselineLoad() != null) {
+                totalLoad.add(assignment.getBaselineLoad().longValue());
+            }
             assignment.setTotalLoad(totalLoad);
             if (iterationWorkHours.longValue() > 0l) {
                 assignment.setLoadPercentage(Math.round(100f

@@ -405,7 +405,7 @@
 	<function>
 	  <name>minutesToString</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String minutesToString(long)</function-signature>
+	  <function-signature>String minutesToString(java.lang.Long)</function-signature>
 	</function> 
 	 	 
 	<function>

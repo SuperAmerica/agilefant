@@ -133,7 +133,8 @@
 }
 
 .actionCell li.actionCell-rowaction-disabled {
-	color: #AAA;
+	/*color: #AAA;*/
+	display: none;
 }
 
 .actionCell li:hover {

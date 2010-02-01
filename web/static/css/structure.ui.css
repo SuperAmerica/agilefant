@@ -258,3 +258,40 @@ div.smallBurndown {
 }
 
 
+/**
+ * SETTINGS PAGE
+ */
+.settings-table {
+  border-collapse: collapse;
+  white-space: nowrap;
+  width: 500px;
+}
+
+.setting-table tr {
+  width: 100%;  
+}
+
+.settings-table tr:nth-child(even) {
+  background: #eee;
+}
+
+.settings-table tr:nth-child(odd) {
+  background: #fff;
+}
+
+
+.settings-table td {
+  background: transparent;
+  width: 50%;
+  border: 1px solid #999;
+  text-align: left;
+  padding: 0.2em 0.5em;
+  height: 2em;
+}
+
+.settings-table tr td:first-child {
+  text-align: right;
+  font-weight: bold;
+}
+
+

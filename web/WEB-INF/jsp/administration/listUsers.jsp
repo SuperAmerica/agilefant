@@ -4,6 +4,8 @@
 
 <jsp:body>
 
+<h2>Users</h2>
+
 <script type="text/javascript">
 $(document).ready(function() {
   var controller = new UserListController({

@@ -4,6 +4,15 @@
 
 <jsp:body>
 
+<c:choose>
+<c:when test="${userId == currentUser.id}">
+  <h2>My account</h2>
+</c:when>
+<c:otherwise>
+  <h2>Edit user</h2>
+</c:otherwise>
+</c:choose>
+
 <script type="text/javascript">
 $(document).ready(function() {
   var controller = new UserController({

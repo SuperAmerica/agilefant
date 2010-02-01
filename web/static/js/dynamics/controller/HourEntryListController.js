@@ -31,11 +31,66 @@ HourEntryListController.prototype.hourEntryControllerFactory = function(view, mo
 HourEntryListController.prototype.paintHourEntryTable = function() {
   this.hourEntryTableView = new DynamicTable(this, this.model, this.hourEntryTableConfig,
       this.hourEntryTableElement);
-  this.hourEntryTableView.render();   
+  
+  //need to extend existing table configuration as that's the only way to get same with to columns
+  var origConf = this.hourEntryTableConfig.getColumns();
+  
+  this.addEntryConfig = [];
+  this.addEntryConfig[HourEntryController.columnIndices.date] = new DynamicTableColumnConfiguration(origConf[0].options);
+  this.addEntryConfig[HourEntryController.columnIndices.user] = new DynamicTableColumnConfiguration(origConf[1].options);
+  this.addEntryConfig[HourEntryController.columnIndices.spentEffort] = new DynamicTableColumnConfiguration(origConf[2].options);
+  this.addEntryConfig[HourEntryController.columnIndices.description] = new DynamicTableColumnConfiguration(origConf[3].options);
+  this.addEntryConfig[HourEntryController.columnIndices.actions] = new DynamicTableColumnConfiguration(origConf[4].options);
+  this.addEntryConfig[HourEntryController.columnIndices.user].options.editable = true;
+  this.addEntryConfig[HourEntryController.columnIndices.user].options.edit = {
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
+      required: true,
+      set: HourEntryModel.prototype.setUsers
+    };
+  this.addEntryConfig[HourEntryController.columnIndices.user].options.get = HourEntryModel.prototype.getUsers;
+  this.addEntryConfig[HourEntryController.columnIndices.user].options.openOnRowEdit = false;  
+  this.addEntryConfig[HourEntryController.columnIndices.user].options.decorator = DynamicsDecorators.userInitialsListDecorator;
+  
+  this.addEntryConfig[HourEntryController.columnIndices.actions].options.subViewFactory = HourEntryController.prototype.saveNewEntryButtonFactory;
+  //TODO: need validators: [HourEntryModel.Validators.usersValidator] for adding new but not for the others
+  //hack the validaiton manager row by row?
+  this.showLogEffortRow();
+  this.hourEntryTableView.render(); 
+  this.logEffortController.openRowEdit();
+};
+HourEntryListController.prototype.showLogEffortRow = function() {
+
+  this.logEffortModel = ModelFactory.createObject(ModelFactory.types.hourEntry);
+  this.logEffortModel.setParent(this.parentModel);
+  this.logEffortModel.setHourEntryList(this.parentModel);
+  this.logEffortModel.setUsers([], [PageController.getInstance().getCurrentUser()]);
+  this.logEffortModel.setDate(new Date());
+ 
+  this.logEffortController = new HourEntryController(this.logEffortModel, null, this);
+  
+  this.logEffortRow = new DynamicTableRow(this.addEntryConfig);
+  this.logEffortController.view = this.logEffortRow ;
+  this.hourEntryTableView._createRow(this.logEffortRow , this.logEffortController, this.logEffortModel, "top");
+  this.logEffortRow .autoCreateCells();
+};
+
+//note: will be called in different context
+HourEntryListController.prototype.logEffort = function() {
+  var me = this.parentController;
+  
+  if(this === me.logEffortController) {
+    me.logEffortRow.remove();
+    me.showLogEffortRow();
+    me.hourEntryTableView.render();
+    me.logEffortController.openRowEdit();
+  }
+
 };
 
 HourEntryListController.prototype.paintHourEntryButtons = function() {
-  this.limited = this.model.getHourEntries().length >= 30;
+  this.limited = this.model.getHourEntries().length >= 5;
   var me = this;
   if(this.limited) {
     this.seeAllButton = new DynamicsButtons(this, [ 
@@ -71,12 +126,6 @@ HourEntryListController.prototype.reload = function() {
   this.model.reload();
 };
 
-HourEntryListController.prototype.openLogEffort = function() {
-  var dialog = CreateDialog.createById("createNewEffortEntry");
-  dialog.getModel().setParent(this.parentModel);
-  dialog.getModel().setHourEntryList(this.model);
-};
-
 HourEntryListController.prototype.showAllEntries = function() {
   this.limited = false;
   this.hourEntryButtonsView.hide();
@@ -92,17 +141,10 @@ HourEntryListController.prototype.initConfig = function() {
       {
         rowControllerFactory : HourEntryListController.prototype.hourEntryControllerFactory,
         dataSource : HourEntryListContainer.prototype.getHourEntries,
-        caption : "Spent effort"
-      });
-  /*
-  this.hourEntryTableConfig.addCaptionItem( {
-    name : "addHourentry",
-    text : "Log effort",
-    cssClass : "create",
-    callback : HourEntryListController.prototype.openLogEffort
+        closeRowCallback: HourEntryListController.prototype.logEffort
   });
-  */
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.date, {
+  
+  var date = {
     minWidth : 120,
     autoScale : true,
     title : "Date",
@@ -110,15 +152,22 @@ HourEntryListController.prototype.initConfig = function() {
     decorator: DynamicsDecorators.dateTimeDecorator,
     sortCallback: HourEntryModel.dateComparator,
     defaultSortColumn: true,
-  });
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.user, {
+    editable: true,
+    edit: {
+      editor: "Date",
+      withTime: true,
+      set : HourEntryModel.prototype.setDate,
+      decorator: DynamicsDecorators.dateTimeDecorator
+    }
+  };
+  var user = {
     minWidth : 120,
     autoScale : true,
     title : "User",
     get : HourEntryModel.prototype.getUser,
     decorator: DynamicsDecorators.userNameDecorator
-  });
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.spentEffort, {
+  };
+  var es = {
     minWidth : 30,
     autoScale : true,
     title : "ES",
@@ -130,15 +179,8 @@ HourEntryListController.prototype.initConfig = function() {
       decorator: DynamicsDecorators.exactEstimateEditDecorator,
       set : HourEntryModel.prototype.setEffortSpent
     }
-  });
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.actions, {
-    minWidth : 50,
-    autoScale : true,
-    cssClass : 'hourEntry-row',
-    title : "Delete",
-    subViewFactory: HourEntryController.prototype.deleteButtonFactory
-  });
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.description, {
+  };
+  var desc = {
     minWidth : 200,
     autoScale : true,
     title : "Comment",
@@ -148,16 +190,19 @@ HourEntryListController.prototype.initConfig = function() {
       editor : "Text",
       set : HourEntryModel.prototype.setDescription
     }
-  });
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.buttons, {
-    fullWidth : true,
-    visible : false,
+  };
+  
+  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.date, date);
+  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.user, user);
+  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.spentEffort, es);
+  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.description, desc);
+  
+  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.actions, {
+    minWidth : 50,
+    autoScale : true,
     cssClass : 'hourEntry-row',
-    subViewFactory : DynamicsButtons.commonButtonFactory
+    title : " ",
+    subViewFactory: HourEntryController.prototype.deleteButtonFactory
   });
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.data, {
-    fullWidth : true,
-    cssClass : 'hourEntry-data',
-    visible : false
-  });
+
 };

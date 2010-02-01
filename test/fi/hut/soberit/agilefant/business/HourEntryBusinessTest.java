@@ -415,7 +415,7 @@ public class HourEntryBusinessTest {
     @Test
     public void testRetrieveBacklogHourEntries_withLimit() {
         List<HourEntry> hourEntries = new ArrayList<HourEntry>();
-        expect(hourEntryDAO.getBacklogHourEntries(10, 30)).andReturn(hourEntries);
+        expect(hourEntryDAO.getBacklogHourEntries(10, HourEntryBusiness.ENTRY_LIMIT)).andReturn(hourEntries);
         replayAll();
         assertSame(hourEntries, hourEntryBusiness.retrieveBacklogHourEntries(10, true));
         verifyAll();
@@ -433,7 +433,7 @@ public class HourEntryBusinessTest {
     @Test
     public void testRetrieveTaskHourEntries_withLimit() {
         List<HourEntry> hourEntries = new ArrayList<HourEntry>();
-        expect(hourEntryDAO.getTaskHourEntries(10, 30)).andReturn(hourEntries);
+        expect(hourEntryDAO.getTaskHourEntries(10, HourEntryBusiness.ENTRY_LIMIT)).andReturn(hourEntries);
         replayAll();
         assertSame(hourEntries, hourEntryBusiness.retrieveTaskHourEntries(10, true));
         verifyAll();
@@ -451,7 +451,7 @@ public class HourEntryBusinessTest {
     @Test
     public void testRetrieveStoryHourEntries_withLimit() {
         List<HourEntry> hourEntries = new ArrayList<HourEntry>();
-        expect(hourEntryDAO.getStoryHourEntries(10, 30)).andReturn(hourEntries);
+        expect(hourEntryDAO.getStoryHourEntries(10, HourEntryBusiness.ENTRY_LIMIT)).andReturn(hourEntries);
         replayAll();
         assertSame(hourEntries, hourEntryBusiness.retrieveStoryHourEntries(10, true));
         verifyAll();

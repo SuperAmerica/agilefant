@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
  */
 public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
 
+    public static int ENTRY_LIMIT = 5;
     /**
      * Create one effort entry for each given user under the given story.
      */

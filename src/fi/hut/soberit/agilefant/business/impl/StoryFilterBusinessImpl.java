@@ -39,7 +39,7 @@ public class StoryFilterBusinessImpl implements StoryFilterBusiness {
     }
     
     private List<Story> filterByName(List<Story> stories, String name) {
-        if (name == null || name.isEmpty()){
+        if (name == null || name.length() == 0){
             return stories;
         }
         List<Story> filteredStories = new ArrayList<Story>();

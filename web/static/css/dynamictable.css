@@ -382,6 +382,8 @@ li.dynamictable-captionaction {
   -webkit-border-radius: 1em;
   padding: 0 0.5em;
   display: inline;
+  width: 1em;
+  text-align: center;
 }
 
 .taskStateNOT_STARTED {

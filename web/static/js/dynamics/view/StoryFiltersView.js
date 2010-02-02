@@ -56,7 +56,7 @@ StoryFiltersView.prototype.initialize = function() {
 StoryFiltersView.prototype.initInputHighlights = function() {
   this.filters.find('input[type="text"]').labelify({
     labelledClass: "inputHighlight"
-  });  
+  });
 };
 StoryFiltersView.prototype.clear = function() {
   this.nameField.val("");
@@ -64,6 +64,7 @@ StoryFiltersView.prototype.clear = function() {
   this.filters.find('.inlineTaskState').fadeTo("fast", 1);
   this.initInputHighlights();
   this.storyStates = this.allStoryStates.slice();
+  this.filter();
 };
 
 StoryFiltersView.prototype.renderAlways = function() {

@@ -5,8 +5,11 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,10 +23,12 @@ import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -144,7 +149,7 @@ public class StoryHierarchyActionTest extends MockedTestCase {
         List<Story> stories = new ArrayList<Story>(Arrays.asList(new Story()));
         
         storyHierarchyAction.setProductId(123);
-        expect(storyHierarchyBusiness.retrieveProductRootStories(123))
+        expect(storyHierarchyBusiness.retrieveProductRootStories(EasyMock.eq(123), EasyMock.isA(StoryFilters.class)))
             .andReturn(stories);
         
         replayAll();

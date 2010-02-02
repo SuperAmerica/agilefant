@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -30,8 +31,8 @@ public class StoryHierarchyAction extends ActionSupport {
     
     private String name;
     private List<Story> stories;
-    private Set<StoryState> statesToKeep;
-    private Set<String> labels;
+    private Set<StoryState> statesToKeep = StoryState.valueSet;
+    private Set<String> labelNames = Collections.emptySet();
     private Integer storyId;
     private Integer projectId;
     private Integer productId;
@@ -73,16 +74,13 @@ public class StoryHierarchyAction extends ActionSupport {
     }
         
     public String retrieveProductRootStories() {
-        stories = storyHierarchyBusiness.retrieveProductRootStories(productId);
+        StoryFilters storyFilters = new StoryFilters(name, labelNames, statesToKeep);
+        stories = storyHierarchyBusiness.retrieveProductRootStories(productId, storyFilters);
         return Action.SUCCESS;
     }
     public String retrieveProjectRootStories() {
-        stories = storyHierarchyBusiness.retrieveProjectRootStories(projectId);
-        return Action.SUCCESS;
-    }
-    
-    public String retrieveFilteredRootStories() {
-        StoryFilters storyFilters = new StoryFilters(name, labels, statesToKeep);
+        StoryFilters storyFilters = new StoryFilters(name, labelNames, statesToKeep);
+        stories = storyHierarchyBusiness.retrieveProjectRootStories(projectId, storyFilters);
         return Action.SUCCESS;
     }
 
@@ -126,9 +124,13 @@ public class StoryHierarchyAction extends ActionSupport {
     public List<Story> getStories() {
         return stories;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
     
-    public void setLabels(Set<String> labels) {
-        this.labels = labels;
+    public void setLabelNames(Set<String> labelNames) {
+        this.labelNames = labelNames;
     }
     
     public void setProductId(Integer productId) {

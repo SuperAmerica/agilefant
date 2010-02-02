@@ -38,6 +38,9 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
     @Mock(strict = true)
     private BacklogBusiness backlogBusiness;
+    
+    @Mock(strict = true)
+    private StoryFilterBusiness storyFilterBusiness;
 
     private List<Story> children;
 

@@ -10,11 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @Service("storyHierarchyBusiness")
 public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
@@ -27,6 +29,9 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
 
     @Autowired
     private BacklogBusiness backlogBusiness;
+
+    @Autowired
+    private StoryFilterBusiness storyFilterBusiness;
     
     @Transactional(readOnly = true)
     public List<Story> retrieveProjectLeafStories(Project project) {
@@ -145,4 +150,19 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
             }
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<Story> retrieveProductRootStories(int productId,
+            StoryFilters storyFilters) {
+        List<Story> stories = retrieveProductRootStories(productId);
+        return storyFilterBusiness.filterStories(stories, storyFilters);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Story> retrieveProjectRootStories(int projectId,
+            StoryFilters storyFilters) {
+        List<Story> stories = retrieveProjectRootStories(projectId);
+        return storyFilterBusiness.filterStories(stories, storyFilters);
+    }
+
 }

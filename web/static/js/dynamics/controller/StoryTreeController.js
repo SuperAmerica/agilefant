@@ -18,6 +18,12 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
     refreshCallback: null,
     disableRootSort: false
   };
+  this.treeParams = {};
+  if (this.type == 'project') {
+    this.treeParams.projectId = this.id;
+  } else if (this.type == 'product') {
+    this.treeParams.productId = this.id;
+  }
   jQuery.extend(this.options, options);
   this.initTree();
   this._initializeTree();
@@ -40,36 +46,33 @@ StoryTreeController.prototype.initHeader = function() {
 };
 
 StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
-  var urlInfo = {
-    "project": {
-      url: "ajax/getFilteredProjectStoryTree.action",
-      data: {"projectId": this.id,"name": name,"labelNames": labelNames,"storyStates": storyStates}
-    },
-    "product": {
-      url: "ajax/getFilteredProductStoryTree.action",
-      data: {"productId": this.id,"name": name,"labelNames": labelNames,"storyStates": storyStates}
-    }
-  };
-  this.tree.jstree({
-    html_data: {
-      ajax: {
-        url: urlInfo[this.type].url,
-        data: urlInfo[this.type].data,
-        type: 'post'
-      }
-    }
-  })
+  var data = this.treeParams;
+  if (name) {
+    data.name = name;
+  } else {
+    delete data.name;
+  }
+  if (labelNames.length > 0) {
+    data.labelNames = labelNames;
+  } else {
+    delete data.labelNames;
+  }
+  if (storyStates.length > 0) {
+    data.statesToKeep = storyStates;
+  } else {
+    delete data.statesToKeep;
+  }
+  this.tree.jstree('destroy');
+  this.initTree();
 };
 
 StoryTreeController.prototype.initTree = function() {
   var urlInfo = {
     "project": {
       url: "ajax/getProjectStoryTree.action",
-      data: {"projectId": this.id}
     },
     "product": {
       url: "ajax/getProductStoryTree.action",
-      data: {"productId": this.id}
     }
   };
   
@@ -85,8 +88,9 @@ StoryTreeController.prototype.initTree = function() {
       async: true,
       cache: false,
       dataType: "html",
+      type: 'post',
       url: urlInfo[this.type].url,
-      data: urlInfo[this.type].data
+      data: this.treeParams
     }
      
     },

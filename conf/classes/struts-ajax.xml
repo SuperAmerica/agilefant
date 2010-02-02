@@ -691,13 +691,13 @@
 	</action>
 	
 	<action name="getProjectStoryTree" class="storyHierarchyAction" method="retrieveProjectRootStories">
-    <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
-  </action>
-	
+      <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
+    </action>
+
 	<action name="getProductStoryTree" class="storyHierarchyAction" method="retrieveProductRootStories">
-    <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
-  </action>
-  
+      <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
+    </action>
+
 	<!-- /Story hierarchy -->
 	
 	<!-- timesheets -->

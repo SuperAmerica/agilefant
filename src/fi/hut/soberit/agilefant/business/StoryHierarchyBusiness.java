@@ -4,6 +4,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 
 
 public interface StoryHierarchyBusiness {
@@ -17,7 +18,7 @@ public interface StoryHierarchyBusiness {
      * @param project id
      * @return list of root stories
      */
-    public List<Story> retrieveProjectRootStories(int projectId);
+    public List<Story> retrieveProjectRootStories(int projectId, StoryFilters storyFilters);
 
     /***
      * Fetch leaf stories that are attached to the given project or any of the
@@ -36,7 +37,7 @@ public interface StoryHierarchyBusiness {
      * @param product id
      * @return
      */
-    public List<Story> retrieveProductRootStories(int productId);
+    public List<Story> retrieveProductRootStories(int productId, StoryFilters storyFilters);
     
     public void moveUnder(Story story, Story refernece);
     

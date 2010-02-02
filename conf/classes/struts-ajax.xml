@@ -690,21 +690,14 @@
     <result type="dispatcher">/WEB-INF/jsp/inc/storyHierarchy.jsp</result>
 	</action>
 	
-	<action name="getProjectStoryTree" class="projectAction" method="retrieveRootStories">
+	<action name="getProjectStoryTree" class="storyHierarchyAction" method="retrieveProjectRootStories">
     <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
   </action>
 	
-	<action name="getProductStoryTree" class="productAction" method="retrieveRootStories">
+	<action name="getProductStoryTree" class="storyHierarchyAction" method="retrieveProductRootStories">
     <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
   </action>
   
-  <action name="filterStories" method="filterStories" class="storyHierarchyAction">
-       <result type="json">
-        <param name="target">stories</param>
-        <param name="patterns">+tasks, +children, +parent, +labels,-labels.creator,-labels.timestamp</param>
-       </result>
-    </action>
-	
 	<!-- /Story hierarchy -->
 	
 	<!-- timesheets -->

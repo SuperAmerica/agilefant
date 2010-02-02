@@ -15,7 +15,6 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
-import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
@@ -102,12 +101,12 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
     }
 
     private void attachRootFilters(Criteria projectCrit,
-            Criteria iterationCrit, Project project) {
+            Criteria iterationCrit, int projectId) {
         LogicalExpression parentInProductBacklog = Restrictions.and(
                 Restrictions.isNotNull("parent"), Restrictions.eqProperty(
                         "parentStory.backlog", "project.parent"));
         // stories attached to the project
-        projectCrit.add(Restrictions.eq("backlog", project));
+        projectCrit.add(Restrictions.eq("backlog.id", projectId));
         projectCrit.createAlias("backlog", "project");
 
         projectCrit.createAlias("parent", "parentStory",
@@ -119,7 +118,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         iterationCrit.createAlias("parent", "parentStory",
                 CriteriaSpecification.LEFT_JOIN);
         iterationCrit.createCriteria("backlog", "iteration").add(
-                Restrictions.eq("parent", project)).createAlias("parent",
+                Restrictions.eq("parent.id", projectId)).createAlias("parent",
                 "project");
         iterationCrit.add(parentFilter);
     }
@@ -128,12 +127,12 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
-    public List<Story> retrieveProjectRootStories(Project project) {
+    public List<Story> retrieveProjectRootStories(int projectId) {
 
         Criteria projectCrit = getCurrentSession().createCriteria(Story.class);
         Criteria iterationCrit = getCurrentSession()
                 .createCriteria(Story.class);
-        this.attachRootFilters(projectCrit, iterationCrit, project);
+        this.attachRootFilters(projectCrit, iterationCrit, projectId);
         List<Story> directProjectRoots = asList(projectCrit);
         List<Story> iterationRoots = asList(iterationCrit);
 
@@ -153,7 +152,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         Criteria projectCrit = getCurrentSession().createCriteria(Story.class);
         Criteria iterationCrit = getCurrentSession()
                 .createCriteria(Story.class);
-        this.attachRootFilters(projectCrit, iterationCrit, project);
+        this.attachRootFilters(projectCrit, iterationCrit, project.getId());
         projectCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));
         iterationCrit.setProjection(Projections.projectionList().add(
@@ -162,15 +161,15 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 (Integer) iterationCrit.uniqueResult());
     }
 
-    public List<Story> retrieveProductRootStories(Product product) {
+    public List<Story> retrieveProductRootStories(int productId) {
         Criteria rootFilter = getCurrentSession().createCriteria(Story.class);
         rootFilter.createAlias(
                 "backlog.parent", "secondParent", CriteriaSpecification.LEFT_JOIN)
                 .createAlias("secondParent.parent", "thirdParent",
                         CriteriaSpecification.LEFT_JOIN);
         rootFilter.add(Restrictions.or(Restrictions.or(Restrictions.eq(
-                "backlog", product), Restrictions.eq("secondParent.id",
-                product.getId())), Restrictions.eq("thirdParent.id", product.getId())));
+                "backlog.id", productId), Restrictions.eq("secondParent.id",
+                productId)), Restrictions.eq("thirdParent.id", productId)));
         rootFilter.add(Restrictions.isNull("parent"));
         rootFilter.addOrder(Order.asc("treeRank"));
         return asList(rootFilter);

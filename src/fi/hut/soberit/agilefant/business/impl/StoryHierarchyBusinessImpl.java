@@ -27,19 +27,20 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
 
     @Autowired
     private BacklogBusiness backlogBusiness;
-
+    
     @Transactional(readOnly = true)
     public List<Story> retrieveProjectLeafStories(Project project) {
         return storyHierarchyDAO.retrieveProjectLeafStories(project);
     }
 
     @Transactional(readOnly = true)
-    public List<Story> retrieveProjectRootStories(Project project) {
-        return storyHierarchyDAO.retrieveProjectRootStories(project);
+    public List<Story> retrieveProjectRootStories(int projectId) {
+        return storyHierarchyDAO.retrieveProjectRootStories(projectId);
     }
 
-    public List<Story> retrieveProductRootStories(Product product) {
-        return storyHierarchyDAO.retrieveProductRootStories(product);
+    @Transactional(readOnly = true)
+    public List<Story> retrieveProductRootStories(int productId) {
+        return storyHierarchyDAO.retrieveProductRootStories(productId);
     }
 
     @Transactional
@@ -120,7 +121,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         } else {
             Product product = backlogBusiness.getParentProduct(story
                     .getBacklog());
-            tmpList.addAll(this.retrieveProductRootStories(product));
+            tmpList.addAll(this.retrieveProductRootStories(product.getId()));
         }
         if (tmpList.contains(story)) {
             tmpList.remove(story);

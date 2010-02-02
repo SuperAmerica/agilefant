@@ -85,11 +85,6 @@ public class ProjectAction implements CRUDAction, Prefetching {
         return Action.SUCCESS;
     }
     
-    public String retrieveRootStories() {
-        stories = this.projectBusiness.retrieveRootStories(projectId);
-        return Action.SUCCESS;
-    }
-    
     public String store() {
        Set<Integer> assignees = null;
        if (assigneesChanged) {

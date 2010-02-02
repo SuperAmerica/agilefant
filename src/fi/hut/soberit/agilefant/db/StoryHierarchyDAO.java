@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.db;
 
 import java.util.List;
 
-import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -12,10 +11,10 @@ public interface StoryHierarchyDAO {
      * iterations under the project. Root story stands for story that either has
      * no parent story or the parent story is in the product backlog.
      * 
-     * @param project
+     * @param project id
      * @return list of root stories
      */
-    public List<Story> retrieveProjectRootStories(Project project);
+    public List<Story> retrieveProjectRootStories(int projectId);
 
     /***
      * Fetch leaf stories that are attached to the given project or any of the
@@ -55,8 +54,8 @@ public interface StoryHierarchyDAO {
      * Retrieve all stories within a given product that do not have 
      * a parent story.
      * 
-     * @param product
+     * @param product id
      * @return list of product root stories
      */
-    public List<Story> retrieveProductRootStories(Product product);
+    public List<Story> retrieveProductRootStories(int productId);
 }

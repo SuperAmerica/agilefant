@@ -20,12 +20,10 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
-import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
-import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
-import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -40,7 +38,6 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
-import fi.hut.soberit.agilefant.util.StoryFilters;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
@@ -52,13 +49,11 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private ProjectDAO projectDAO;
     private BacklogDAO backlogDAO;
     private ProductBusiness productBusiness;
-    private StoryHierarchyDAO storyHierarchyDAO;
     private AssignmentBusiness assignmentBusiness;
     
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
     private SettingBusiness settingBusiness;
-    private StoryFilterBusiness storyFilterBusiness;
     @Autowired
     private StoryBusiness storyBusiness;
     @Autowired
@@ -101,11 +96,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Autowired
     public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;
-    }
-    
-    @Autowired
-    public void setStoryHierarchyDAO(StoryHierarchyDAO storyHierarchyDAO) {
-        this.storyHierarchyDAO = storyHierarchyDAO;
     }
     
     @Autowired
@@ -223,12 +213,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         return project;
     }
 
-    @Transactional(readOnly = true)
-    public List<Story> retrieveRootStories(int projectId) {
-        Project project = projectDAO.get(projectId);
-        return this.storyHierarchyDAO.retrieveProjectRootStories(project);
-    }
-
     @Transactional
     public Project rankUnderProject(int projectId, int rankUnderId) {
         Project project = projectDAO.get(projectId);
@@ -340,13 +324,6 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         
         delete(project);
 
-    }
-
-    @Transactional(readOnly = true)
-    public List<Story> retrieveRootStories(int projectId,
-            StoryFilters storyFilters) {
-        List<Story> stories = retrieveRootStories(projectId);
-        return storyFilterBusiness.filterStories(stories, storyFilters);
     }
 
     public void setAssignmentBusiness(AssignmentBusiness assignmentBusiness) {

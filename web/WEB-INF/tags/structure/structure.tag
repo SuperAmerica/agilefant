@@ -41,6 +41,7 @@
   <script type="text/javascript" src="static/js/jquery.jstree.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.tooltip.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.autoSuggest.minified.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/jquery.labelify.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
   
   <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>

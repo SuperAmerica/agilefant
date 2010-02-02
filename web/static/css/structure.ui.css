@@ -215,6 +215,12 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
   height: 23px !important;  
 }
 
+/**
+ * jQuery labelify
+ */
+input.inputHighlight {
+  color: #999;
+}
 
 /**
  * FOOTER STYLES

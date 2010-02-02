@@ -10,6 +10,7 @@
 var StoryTreeController = function StoryTreeController(id, type, element, options) {
   this.id = id;
   this.type = type;
+  this.filters = [];
   this.parentElement = element;
   this.headerElement = $('<div/>').appendTo(this.parentElement);
   this.element = $('<div/>').appendTo(this.parentElement);
@@ -18,7 +19,7 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
     disableRootSort: false
   };
   jQuery.extend(this.options, options);
-  this.init();
+  this.initTree();
   this._initializeTree();
   this.initHeader();
 };
@@ -30,25 +31,34 @@ StoryTreeController.prototype.refresh = function() {
     this.initTree();
     return;
   }
-  this.tree.refresh();
+  this.tree.jstree("refresh");
 };
 
-
 StoryTreeController.prototype.initHeader = function() {
-  var me = this;
-  
-  var textFilterBox = $('<div>Filter by text: </div>').appendTo(this.headerElement);
-  this.textFilterField = $('<input type="text"/>').appendTo(textFilterBox);
-  
-  this.textFilterField.keyup(function() {
-    me.element.find('li').removeClass("tree-hideByFilter");
-    me.element.find('li a').removeClass("tree-highlightByFilter");
-    var text = $(this).val();
-    if (text) {
-      me.element.find('li').not(":contains('" + text + "')").addClass("tree-hideByFilter");
-      me.element.find('li a:contains("' + text + '")').addClass("tree-highlightByFilter");
+  this.storyFiltersView = new StoryFiltersView({}, this, null, null);
+  this.storyFiltersView.getElement().appendTo(this.headerElement);
+};
+
+StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
+  var urlInfo = {
+    "project": {
+      url: "ajax/getFilteredProjectStoryTree.action",
+      data: {"projectId": this.id,"name": name,"labelNames": labelNames,"storyStates": storyStates}
+    },
+    "product": {
+      url: "ajax/getFilteredProductStoryTree.action",
+      data: {"productId": this.id,"name": name,"labelNames": labelNames,"storyStates": storyStates}
     }
-  });
+  };
+  this.tree.jstree({
+    html_data: {
+      ajax: {
+        url: urlInfo[this.type].url,
+        data: urlInfo[this.type].data,
+        type: 'post'
+      }
+    }
+  })
 };
 
 StoryTreeController.prototype.initTree = function() {

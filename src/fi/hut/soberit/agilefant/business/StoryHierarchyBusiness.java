@@ -2,7 +2,6 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 
-import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -15,10 +14,10 @@ public interface StoryHierarchyBusiness {
      * iterations under the project. Root story stands for story that either has
      * no parent story or the parent story is in the product backlog.
      * 
-     * @param project
+     * @param project id
      * @return list of root stories
      */
-    public List<Story> retrieveProjectRootStories(Project project);
+    public List<Story> retrieveProjectRootStories(int projectId);
 
     /***
      * Fetch leaf stories that are attached to the given project or any of the
@@ -34,10 +33,10 @@ public interface StoryHierarchyBusiness {
      * Retrieve all stories that are in the given product and 
      * which have no parent story.
      * 
-     * @param product
+     * @param product id
      * @return
      */
-    public List<Story> retrieveProductRootStories(Product product);
+    public List<Story> retrieveProductRootStories(int productId);
     
     public void moveUnder(Story story, Story refernece);
     

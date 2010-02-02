@@ -12,7 +12,6 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
-import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
 
@@ -25,9 +24,6 @@ public class ProductAction implements CRUDAction, Prefetching {
     @Autowired
     private ProductBusiness productBusiness;
 
-    @Autowired
-    private StoryHierarchyBusiness storyHierarchyBusiness;
-    
     @PrefetchId
     private int productId;
 
@@ -64,14 +60,6 @@ public class ProductAction implements CRUDAction, Prefetching {
         return Action.SUCCESS;
     }
     
-    public String retrieveRootStories() {
-        product = productBusiness.retrieve(productId);
-        stories = storyHierarchyBusiness.retrieveProductRootStories(product);
-        return Action.SUCCESS;
-    }
-    
-    
-    
     public void initializePrefetchedData(int objectId) {
        product = productBusiness.retrieve(objectId);
     }
@@ -102,11 +90,6 @@ public class ProductAction implements CRUDAction, Prefetching {
 
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
-    }
-
-    public void setStoryHierarchyBusiness(
-            StoryHierarchyBusiness storyHierarchyBusiness) {
-        this.storyHierarchyBusiness = storyHierarchyBusiness;
     }
 
     public List<Story> getStories() {

@@ -88,26 +88,26 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testRetrieveProjectRootStories() {
-        Project proj = new Project();
+        int projectId = 100;
         List<Story> stories = new ArrayList<Story>();
-        expect(storyHierarchyDAO.retrieveProjectRootStories(proj)).andReturn(
+        expect(storyHierarchyDAO.retrieveProjectRootStories(projectId)).andReturn(
                 stories);
         replayAll();
         assertSame(stories, storyHierarchyBusiness
-                .retrieveProjectRootStories(proj));
+                .retrieveProjectRootStories(projectId));
         verifyAll();
     }
 
     @Test
     @DirtiesContext
     public void testRetrieveProductRootStories() {
-        Product prod = new Product();
+        int productId = 100;
         List<Story> stories = new ArrayList<Story>();
-        expect(storyHierarchyDAO.retrieveProductRootStories(prod)).andReturn(
+        expect(storyHierarchyDAO.retrieveProductRootStories(productId)).andReturn(
                 stories);
         replayAll();
         assertSame(stories, storyHierarchyBusiness
-                .retrieveProductRootStories(prod));
+                .retrieveProductRootStories(productId));
         verifyAll();
     }
 
@@ -286,7 +286,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
         expect(backlogBusiness.getParentProduct(story.getBacklog())).andReturn(
                 product);
-        expect(storyHierarchyDAO.retrieveProductRootStories(product))
+        expect(storyHierarchyDAO.retrieveProductRootStories(product.getId()))
                 .andReturn(children);
         expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
 
@@ -322,7 +322,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
         expect(backlogBusiness.getParentProduct(story.getBacklog())).andReturn(
                 product);
-        expect(storyHierarchyDAO.retrieveProductRootStories(product))
+        expect(storyHierarchyDAO.retrieveProductRootStories(product.getId()))
                 .andReturn(children);
 
         replayAll();
@@ -437,7 +437,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
         expect(backlogBusiness.getParentProduct(story.getBacklog())).andReturn(
                 product);
-        expect(storyHierarchyDAO.retrieveProductRootStories(product))
+        expect(storyHierarchyDAO.retrieveProductRootStories(product.getId()))
                 .andReturn(children);
         expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
 
@@ -473,7 +473,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
         expect(backlogBusiness.getParentProduct(story.getBacklog())).andReturn(
                 product);
-        expect(storyHierarchyDAO.retrieveProductRootStories(product))
+        expect(storyHierarchyDAO.retrieveProductRootStories(product.getId()))
                 .andReturn(children);
 
         replayAll();

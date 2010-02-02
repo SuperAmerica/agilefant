@@ -3,6 +3,10 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -14,6 +18,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -133,5 +138,20 @@ public class StoryHierarchyActionTest extends MockedTestCase {
         verifyAll();
     }
 
+    @Test
+    @DirtiesContext
+    public void testRetrieveProductRootStories() {
+        List<Story> stories = new ArrayList<Story>(Arrays.asList(new Story()));
+        
+        storyHierarchyAction.setProductId(123);
+        expect(storyHierarchyBusiness.retrieveProductRootStories(123))
+            .andReturn(stories);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyHierarchyAction.retrieveProductRootStories());
+        verifyAll();
+        
+        assertEquals(stories, storyHierarchyAction.getStories());
+    }
 
 }

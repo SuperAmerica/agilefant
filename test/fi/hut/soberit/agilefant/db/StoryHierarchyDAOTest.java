@@ -42,7 +42,7 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     public void testRetrieveProjectRootStories() {
         executeClassSql();
         Set<Integer> actualStoryIds = new HashSet<Integer>();
-        List<Story> actual = this.testable.retrieveProjectRootStories(project);
+        List<Story> actual = this.testable.retrieveProjectRootStories(project.getId());
         assertEquals(4, actual.size());
         for(Story story : actual) {
             actualStoryIds.add(story.getId());
@@ -73,7 +73,7 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     @Test
     public void testRetrieveProjectRootStories_empty() {
         executeClassSql();
-        List<Story> actual = this.testable.retrieveProjectRootStories(emptyProject);
+        List<Story> actual = this.testable.retrieveProjectRootStories(emptyProject.getId());
         assertEquals(0, actual.size());
 
     }
@@ -120,7 +120,7 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     public void testRetrieveProductRootStories() {
         executeClassSql();
         Set<Integer> actualStoryIds = new HashSet<Integer>();
-        List<Story> actual = this.testable.retrieveProductRootStories(product);
+        List<Story> actual = this.testable.retrieveProductRootStories(product.getId());
         assertEquals(5, actual.size());
         for(Story story : actual) {
             actualStoryIds.add(story.getId());
@@ -135,7 +135,7 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     @Test
     public void testRetrieveProductRootStories_emptyProduct() {
         executeClassSql();
-        List<Story> actual = this.testable.retrieveProductRootStories(emptyProduct);
+        List<Story> actual = this.testable.retrieveProductRootStories(emptyProduct.getId());
         assertEquals(0, actual.size());
     }
 }

@@ -496,7 +496,7 @@ public class IterationBusinessTest {
         iter.setStartDate(startDate.toDateMidnight().toDateTime());
         iter.setEndDate(endDate);
         float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
-        assertEquals(1f, percentage, 0);
+        assertEquals(1f, percentage, 1000);
     }
     
     @Test

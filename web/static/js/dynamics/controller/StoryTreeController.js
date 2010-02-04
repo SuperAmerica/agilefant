@@ -25,7 +25,6 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
     this.treeParams.productId = this.id;
   }
   jQuery.extend(this.options, options);
-  this.initTree();
   this._initializeTree();
   this.initHeader();
 };
@@ -62,8 +61,11 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
   } else {
     delete data.statesToKeep;
   }
-  this.tree.jstree('destroy');
-  this.initTree();
+  var instance = $.jstree._reference(this.tree[0]);
+  var oldSettings = instance.get_settings();
+  oldSettings.html_data.ajax.data = this.treeParams;
+  instance._set_settings(oldSettings);
+  this.refresh();
 };
 
 StoryTreeController.prototype.initTree = function() {
@@ -90,7 +92,10 @@ StoryTreeController.prototype.initTree = function() {
       dataType: "html",
       type: 'post',
       url: urlInfo[this.type].url,
-      data: this.treeParams
+      data: this.treeParams,
+      success: function() {
+        me._treeLoaded();
+      }
     }
      
     },
@@ -109,15 +114,10 @@ StoryTreeController.prototype.initTree = function() {
   $(document).bind("jstree.stop_drag", function(event, data) {
     console.log("Drop");
   });
+  
 };
-
-StoryTreeController.prototype._onload = function() {
+StoryTreeController.prototype._treeLoaded = function() {
   this.tree.jstree("open_all");
-  /* Close done stories by default */
-  this.element.find('li > a > div.taskStateDONE').parent().parent().removeClass('open').addClass('closed');
-  if (this.options.refreshCallback) {
-    this.options.refreshCallback();
-  }
 };
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {
   var myId = $(node).attr("storyid");

@@ -14,7 +14,6 @@
 </ul>
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
-<div class="details" id="backlogHistory"></div>
 </div>
 
 
@@ -40,12 +39,13 @@ $(document).ready(function() {
   var storyTreeController = new StoryTreeController(
     ${product.id}, "product", $('#storyTree'),{});
   storyTreeController.initTree();
-
+/*
   window.setInterval(function() {
     storyTreeController.refresh();
   }, 120000);
-
+*/
 });
+
 </script>
 
 <style type="text/css">

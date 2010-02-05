@@ -26,8 +26,12 @@ StoryInfoDialog.prototype.initDialog = function() {
     modal: true,
     draggable: true,
     resizable: true,
-    title: "Story info: " + this.model.getName(),
-    close: function() { me.close(); }
+    title: this.model.getName(),
+    close: function() { me.close(); },
+    buttons: {
+      "Ok": function() { me.save(); },
+      "Cancel": function() { me.close(); }  
+    }
   });
   
   this.tabsElement = $('<div/>').addClass('story-info').appendTo(this.element);
@@ -38,63 +42,15 @@ StoryInfoDialog.prototype.initDialog = function() {
  * Render the contents.
  */
 StoryInfoDialog.prototype.render = function() {
-  var tabsUl = $('<ul>').appendTo(this.tabsElement);
-  $('<li><a href="#storyinfo-1">Info</a>').appendTo(tabsUl);
-  $('<li><a href="#storyinfo-2">History</a>').appendTo(tabsUl);
-  if(Configuration.isTimesheetsEnabled()) {
-    $('<li><a href="#storyinfo-3">Spent Effort</a>').appendTo(tabsUl);
-  }
-  this.renderInfoTab();
-  this.renderHistoryTab();
-  this.renderSpentEffortTab();
-  this.tabsElement.tabs();
-  var selected = this.tabsElement.tabs('option', 'selected')
-  this.selectTab(selected);
-  var me = this;
-  this.tabsElement.bind('tabsselect', function(event, ui) {
-    me.selectTab(ui.index);
-  });
-};
-
-StoryInfoDialog.prototype.selectTab = function(index) {
-  if (index == 2) {
-    if (this.hourEntryListController) {
-      this.hourEntryListController.reload();
-    } else {
-      this.hourEntryListController = new HourEntryListController({
-        parentModel: this.model,
-        hourEntryListElement: this.spentEffortTabElement
-      });
-    }
-  }
-};
-
-StoryInfoDialog.prototype.renderInfoTab = function() {
-  this.infoTabElement = $('<div id="storyinfo-1"></div>').appendTo(this.tabsElement);
-  this.storyInfoElement = $('<div/>').appendTo(this.infoTabElement);
-  this.storyHierarchyElement = $('<div/>').appendTo(this.infoTabElement);
-  var me = this;
-  jQuery.get("ajax/getStoryHierarchy.action",
-    { "storyId": this.model.getId() },
-    function(data, status) {
-      me.storyHierarchyElement.append(data);
-    },
-    "html"
-  );
-  
-  
+  this.storyInfoElement = $('<div/>').appendTo(this.element);
   this.storyInfoView = new DynamicVerticalTable(
       this,
       this.model,
       this.storyInfoConfig,
       this.storyInfoElement);
+  this.storyInfoView.openFullEdit();
 };
-StoryInfoDialog.prototype.renderHistoryTab = function() {
-  this.historyTabElement = $('<div id="storyinfo-2"></div>').appendTo(this.tabsElement);
-};
-StoryInfoDialog.prototype.renderSpentEffortTab = function() {
-  this.spentEffortTabElement = $('<div id="storyinfo-3"></div>').appendTo(this.tabsElement);
-};
+
 
 
 /**
@@ -102,25 +58,25 @@ StoryInfoDialog.prototype.renderSpentEffortTab = function() {
  */
 StoryInfoDialog.prototype.close = function() {
   this.element.dialog('destroy').remove();
-  if (this.closeCallback) {
-    this.closeCallback();
-  }
+};
+
+StoryInfoDialog.prototype.save = function() {
+  this.storyInfoView.getElement().trigger("storeRequested");
 };
 
 StoryInfoDialog.prototype.initConfig = function() {
+  var me = this;
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
     rightWidth: '75%',
     cssClass: "ui-widget-content ui-corner-all",
-    preventCommit: false,
-    closeRowCallback: null
+    closeRowCallback: function() { me.close(); }
   });
   
   config.addColumnConfiguration(0, {
     title: 'Name',
     get: StoryModel.prototype.getName,
     editable: true,
-    openOnRowEdit: false,
     edit: {
       editor: "Text",
       required: true,
@@ -132,8 +88,8 @@ StoryInfoDialog.prototype.initConfig = function() {
     title: 'Points',
     get: StoryModel.prototype.getStoryPoints,
     editable: true,
-    openOnRowEdit: false,
     edit: {
+      required: false,
       editor: "Number",
       set: StoryModel.prototype.setStoryPoints
     }
@@ -144,7 +100,6 @@ StoryInfoDialog.prototype.initConfig = function() {
     get: StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
     editable: true,
-    openOnRowEdit: false,
     edit: {
       editor: "Selection",
       items: DynamicsDecorators.stateOptions,
@@ -158,6 +113,7 @@ StoryInfoDialog.prototype.initConfig = function() {
     get : StoryModel.prototype.getResponsibles,
     decorator: DynamicsDecorators.userInitialsListDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit : {
       editor : "Autocomplete",
       dialogTitle: "Select users",
@@ -172,11 +128,22 @@ StoryInfoDialog.prototype.initConfig = function() {
     get : StoryModel.prototype.getBacklog,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
+    openOnRowEdit: false,
     edit: {
       editor: "AutocompleteSingle",
       dialogTitle: "Select backlog",
       dataType: "backlogs",
       set : StoryModel.prototype.setBacklogByModel
+    }
+  });
+  config.addColumnConfiguration(5, {
+    title: "Description",
+    get : StoryModel.prototype.getDescription,
+    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    editable : true,
+    edit : {
+      editor : "Wysiwyg",
+      set : StoryModel.prototype.setDescription
     }
   });
   

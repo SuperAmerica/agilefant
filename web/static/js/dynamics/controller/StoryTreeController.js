@@ -36,12 +36,16 @@ StoryTreeController.prototype.refresh = function() {
     this.initTree();
     return;
   }
-  this.tree.jstree("refresh");
+  this.tree.refresh();
 };
 
 StoryTreeController.prototype.initHeader = function() {
   this.storyFiltersView = new StoryFiltersView({}, this, null, null);
   this.storyFiltersView.getElement().appendTo(this.headerElement);
+};
+
+StoryTreeController.prototype._treeParams = function() {
+  return this.treeParams;
 };
 
 StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
@@ -61,10 +65,12 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
   } else {
     delete data.statesToKeep;
   }
+  /*
   var instance = $.jstree._reference(this.tree[0]);
   var oldSettings = instance.get_settings();
   oldSettings.html_data.ajax.data = this.treeParams;
   instance._set_settings(oldSettings);
+  */
   this.refresh();
 };
 
@@ -81,43 +87,46 @@ StoryTreeController.prototype.initTree = function() {
   // Url params
   var me = this;
   
-  $.jstree._themes = "static/css/jstree/";
-
-  this.tree = $(this.element).jstree({
-    html_data: {},
-    html_data: {
-      ajax: {
-      async: true,
-      cache: false,
-      dataType: "html",
-      type: 'post',
-      url: urlInfo[this.type].url,
-      data: this.treeParams,
-      success: function() {
-        me._treeLoaded();
+  this.tree = $(this.element).tree({
+    data: {
+      async: false,
+      type: "html",
+      opts: {
+        method: "post",
+        url: urlInfo[this.type].url + "?" + urlInfo[this.type].idName + "=" + this.id
+      },
+    },
+    ui: {
+        dots: false,
+        theme_path: "static/css/jstree/agilefant/style.css",
+        theme_name: "classic"
+    },
+    callback: {
+        onload: function() { me._treeLoaded(); },
+        onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
+        beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); },
+        beforedata : function() { return me._treeParams(); }
+    },
+    types: {
+      story: {
+        draggable: true,
+        clickable: false,
+        creatable: false,
+        deletable: false,
+        renameable: false
       }
-    }
-     
     },
-    plugins : [ "html_data", "themes", "ui", "move" ],
-    themes: {
-      theme : "agilefant", 
-      dots : true,
-      icons : true,
-      theme_url: "static/css/jstree/agilefant/style.css"
-    },
-    move: {
-      drag_n_drop: true,
-      check_move: function() {  }
+    rules: {
+      use_max_children : false,
+      use_max_depth : false
     }
   });
-  $(document).bind("jstree.stop_drag", function(event, data) {
-    console.log("Drop");
-  });
+  this.tree = jQuery.tree.reference(this.element);
+
   
 };
 StoryTreeController.prototype._treeLoaded = function() {
-  this.tree.jstree("open_all");
+  this.tree.open_all();
 };
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {
   var myId = $(node).attr("storyid");

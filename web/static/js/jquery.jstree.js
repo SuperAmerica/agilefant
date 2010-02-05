@@ -1,47 +1,5 @@
 /*
-BUGS:
-	form issue - keypress / keyup in rename function
-	create did not work if LI node has an empty UL inside (old bug maybe not applicable)
-	firefox 2 - display:inline-block
-	use map function when collecting IDs
-
-FEATURES:
-	drag'n'drop + method to cancel it (dragged with high z-index), make sure OK/CANCEL icon are with !important (so that custom icons are overlapped), or place the icon somewhere else
-	localization - the loading text, maybe default title (maybe per type - override in types plugin)
-	metadata plugin - do what??? maybe just provide support by every plugin?
-	create_node (when creating in async - make sure contents are loaded first) /plugin?
-	maybe use a class on the A nodes (to be able to style other links and not capture the event)
-	add sorting plugin - attach to open/move
-	$.ajax - use $.proxy
-
-PLUGINS & THEMES:
-	* contextmenu 
-	  - do not open if no valid items, 
-	  - maybe option to select node prior to clicking, 
-	  - localization, 
-	  - type based entries? 
-	  - maybe use external plugin? 
-	* themeroller, 
-	* xml_flat, 
-	* xml_nested, 
-	* mvc plugin - a plugin exposing the JSON tree object, and calling refresh (MVC)
-	* rollback - (get_state, set_state) - specify a list of functions to monitor ($.data will be lost - use clone), make steps back a setting
-	REDO ALL THEMES
-	maybe accept position param in json and sort by it - think of sorting all together (alphabetical even?)
-	finish __destroy methods for all plugins so that they remove the classes/events they added
-	IE6 support - single theme or plugin (hook to some events and additional classes)
-	describe dependencies and onload/oninit check if the other plugins are included before the current one
-
-TEST:
-	multiple nodes to be initially open (async)
-	unit testing? (maybe func by func - using each on .fn?)
-	foreign drag'n'drop example
-
-EXAMPLES & DOCS!
-*/
-
-/*
- * jsTree 1.0-beta
+ * jsTree 0.9.9a
  * http://jstree.com/
  *
  * Copyright (c) 2009 Ivan Bozhanov (vakata.com)
@@ -50,1718 +8,2055 @@ EXAMPLES & DOCS!
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Date: 2010-01-14
+ * Date: 2009-10-06
+ *
  */
-// TODO: rethink wrapping of the functions - maybe not at document ready, but first core, then plugin by plugin
-"use strict";
-(function ($) {
-	// private variables 
-	var instances = [],			// instance array (used by $.jstree.reference/create/focused)
-		focused_instance = -1,	// the index in the instance array of the currently focused instance
-		plugins = {};			// list of included plugins
 
-	// jQuery plugin wrapper
-	// thank to jquery UI widget function
-	$.fn.jstree = function (settings) {
-		var isMethodCall = (typeof settings == 'string'), // is this a method call like $().jstree("open_node")
-			args = Array.prototype.slice.call(arguments, 1), 
-			returnValue = this;
+(function($) {
+  // jQuery plugin
+  $.tree = {
+    datastores  : { },
+    plugins   : { },
+    defaults  : {
+      data  : {
+        async : false,    // Are async requests used to load open_branch contents
+        type  : "html",   // One of included datastores
+        opts  : { method: "GET", url: false } // Options passed to datastore
+      },
+      selected  : false,    // FALSE or STRING or ARRAY
+      opened    : [],     // ARRAY OF INITIALLY OPENED NODES
+      languages : [],     // ARRAY of string values (which will be used as CSS classes - so they must be valid)
+      ui    : {
+        dots    : true,   // BOOL - dots or no dots
+        animation : 0,    // INT - duration of open/close animations in miliseconds
+        scroll_spd  : 4,
+        theme_path  : false,  // Path to the theme CSS file - if set to false and theme_name is not false - will lookup jstree-path-here/themes/theme-name-here/style.css
+        theme_name  : "default",// if set to false no theme will be loaded
+        selected_parent_close : "select_parent", // false, "deselect", "select_parent"
+        selected_delete     : "select_previous" // false, "select_previous"
+      },
+      types : {
+        "default" : {
+          clickable : true, // can be function
+          renameable  : true, // can be function
+          deletable : true, // can be function
+          creatable : true, // can be function
+          draggable : true, // can be function
+          max_children  : -1, // -1 - not set, 0 - no children, 1 - one child, etc // can be function
+          max_depth   : -1, // -1 - not set, 0 - no children, 1 - one level of children, etc // can be function
+          valid_children  : "all", // all, none, array of values // can be function
+          icon : {
+            image : false,
+            position : false
+          }
+        }
+      },
+      rules : {
+        multiple  : false,  // FALSE | CTRL | ON - multiple selection off/ with or without holding Ctrl
+        multitree : "none", // all, none, array of tree IDs to accept from
+        type_attr : "rel",  // STRING attribute name (where is the type stored as string)
+        createat  : "bottom", // STRING (top or bottom) new nodes get inserted at top or bottom
+        drag_copy : "ctrl", // FALSE | CTRL | ON - drag to copy off/ with or without holding Ctrl
+        drag_button : "left", // left, right or both
+        use_max_children  : true,
+        use_max_depth   : true,
 
-			// extend settings and allow for multiple hashes and metadata
-			if(!isMethodCall && $.meta) { args.push($.metadata.get(this).jstree); }
-			settings = !isMethodCall && args.length ? $.extend.apply(null, [true, settings].concat(args)) : settings;
-			// block calls to "private" methods
-			if(isMethodCall && settings.substring(0, 1) == '_') { return returnValue; }
+        max_children: -1,
+        max_depth : -1,
+        valid_children : "all"
+      },
+      lang : {
+        new_node  : "New folder",
+        loading   : "Loading ..."
+      },
+      callback  : {
+        beforechange: function(NODE,TREE_OBJ) { return true },
+        beforeopen  : function(NODE,TREE_OBJ) { return true },
+        beforeclose : function(NODE,TREE_OBJ) { return true },
+        beforemove  : function(NODE,REF_NODE,TYPE,TREE_OBJ) { return true }, 
+        beforecreate: function(NODE,REF_NODE,TYPE,TREE_OBJ) { return true }, 
+        beforerename: function(NODE,LANG,TREE_OBJ) { return true }, 
+        beforedelete: function(NODE,TREE_OBJ) { return true }, 
+        beforedata  : function(NODE,TREE_OBJ) { return { id : $(NODE).attr("id") || 0 } }, // PARAMETERS PASSED TO SERVER
+        ondata    : function(DATA,TREE_OBJ) { return DATA; },   // modify data before parsing it
+        onparse   : function(STR,TREE_OBJ) { return STR; },   // modify string before visualizing it
+        onhover   : function(NODE,TREE_OBJ) { },          // node hovered
+        onselect  : function(NODE,TREE_OBJ) { },          // node selected
+        ondeselect  : function(NODE,TREE_OBJ) { },          // node deselected
+        onchange  : function(NODE,TREE_OBJ) { },          // focus changed
+        onrename  : function(NODE,TREE_OBJ,RB) { },       // node renamed
+        onmove    : function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { }, // move completed
+        oncopy    : function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { }, // copy completed
+        oncreate  : function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { }, // node created
+        ondelete  : function(NODE,TREE_OBJ,RB) { },       // node deleted
+        onopen    : function(NODE,TREE_OBJ) { },          // node opened
+        onopen_all  : function(TREE_OBJ) { },           // all nodes opened
+        onclose_all : function(TREE_OBJ) { },           // all nodes closed
+        onclose   : function(NODE,TREE_OBJ) { },          // node closed
+        error   : function(TEXT,TREE_OBJ) { },          // error occured
+        ondblclk  : function(NODE,TREE_OBJ) { TREE_OBJ.toggle_branch.call(TREE_OBJ, NODE); TREE_OBJ.select_branch.call(TREE_OBJ, NODE); },
+        onrgtclk  : function(NODE,TREE_OBJ,EV) { },       // right click - to prevent use: EV.preventDefault(); EV.stopPropagation(); return false
+        onload    : function(TREE_OBJ) { },
+        oninit    : function(TREE_OBJ) { },
+        onfocus   : function(TREE_OBJ) { },
+        ondestroy : function(TREE_OBJ) { },
+        onsearch  : function(NODES, TREE_OBJ) { NODES.addClass("search"); },
+        ondrop    : function(NODE,REF_NODE,TYPE,TREE_OBJ) { },
+        check   : function(RULE,NODE,VALUE,TREE_OBJ) { return VALUE; },
+        check_move  : function(NODE,REF_NODE,TYPE,TREE_OBJ) { return true; }
+      },
+      plugins : { }
+    },
 
-			// if a method call execute the method on all selected instances
-			if(isMethodCall) {
-				this.each(function() {
-					var instance = instances[$.data(this, "jstree-instance-id")],
-						methodValue = (instance && $.isFunction(instance[settings])) ? instance[settings].apply(instance, args) : instance;
-						if(typeof methodValue !== "undefined") { returnValue = methodValue; return false; }
-				});
-			}
-			else {
-				this.each(function() {
-					var instance_id = $.data(this, "jstree-instance-id");
-					// if an instance already exists, destroy it first
-					if(instance_id && instances[instance_id]) { instances[instance_id].destroy(); }
-					// push a new empty object to the instances array
-					instance_id = parseInt(instances.push({}),10) - 1;
-					// store the jstree instance id to the container element
-					$.data(this, "jstree-instance-id", instance_id);
+    create    : function () { return new tree_component(); },
+    focused   : function () { return tree_component.inst[tree_component.focused]; },
+    reference : function (obj) { 
+      var o = $(obj); 
+      if(!o.size()) o = $("#" + obj);
+      if(!o.size()) return null; 
+      o = (o.is(".tree")) ? o.attr("id") : o.parents(".tree:eq(0)").attr("id"); 
+      return tree_component.inst[o] || null; 
+    },
+    rollback  : function (data) {
+      for(var i in data) {
+        if(!data.hasOwnProperty(i)) continue;
+        var tmp = tree_component.inst[i];
+        var lock = !tmp.locked;
 
-					// TEMPORARY FIX
-					var s = $.extend(true, {}, $.jstree.defaults, settings);
-					if(settings.plugins) { s.plugins = settings.plugins; }
+        // if not locked - lock the tree
+        if(lock) tmp.lock(true);
+        // Cancel ongoing rename
+        tmp.inp = false;
+        tmp.container.html(data[i].html).find(".dragged").removeClass("dragged").end().find(".hover").removeClass("hover");
 
-					// push the new object to the instances array (at the same time set the default classes to the container) and init
-					instances[instance_id] = new $.jstree._instance(instance_id, $(this).addClass("jstree jstree-" + instance_id), s); 
-					// init all activated plugins for this instance
-					$.each(instances[instance_id].get_settings().plugins, function (i, val) { instances[instance_id].data[val] = {}; });
-					$.each(instances[instance_id].get_settings().plugins, function (i, val) { plugins[val].__init.apply(instances[instance_id]); });
-					// initialize the instance
-					instances[instance_id].init();
-				});
-			}
-		// return the jquery selection (or if it was a method call that returned a value - the returned value)
-		return returnValue;
-	};
+        if(data[i].selected) {
+          tmp.selected = $("#" + data[i].selected);
+          tmp.selected_arr = [];
+          tmp.container
+            .find("a.clicked").each( function () {
+              tmp.selected_arr.push(tmp.get_node(this));
+            });
+        }
+        // if this function set the lock - unlock
+        if(lock) tmp.lock(false);
 
-	// object to store exposed functions and objects
-	$.jstree			= {};
-	// defaults are exposed, so that the developer can change defaults for all future instances
-	$.jstree.defaults	= { animation : 500 };
+        delete lock;
+        delete tmp;
+      }
+    },
+    drop_mode : function (opts) {
+      opts = $.extend(opts, { show : false, type : "default", str : "Foreign node" });
+      tree_component.drag_drop.foreign  = true;
+      tree_component.drag_drop.isdown   = true;
+      tree_component.drag_drop.moving   = true;
+      tree_component.drag_drop.appended = false;
+      tree_component.drag_drop.f_type   = opts.type;
+      tree_component.drag_drop.f_data   = opts;
 
-	// "private" exposed functions - use with caution
-	// gets the currently focused instance (used internally)
-	$.jstree._focused	= function () { return instances[focused_instance] || null; };
-	// get an instance by node, dom id, reference id
-	$.jstree._reference	= function (needle) { 
-		// get by instance id
-		if(instances[needle]) { return instances[needle]; }
-		// get by DOM (if still no luck - return null
-		var o = $(needle); o = o.length ? o : $("#" + o); if(!o.length) { return null; }
-		// traverse up the DOM for the tree parent
-		o = (o.is(".jstree")) ? o.get(0) : o.parents(".jstree:eq(0)").get(0);
-		o = $.data(o, "jstree-instance-id");
-		return instances[o] || null; 
-	};
-	// the actual instance function (used internally)
-	$.jstree._instance	= function (index, container, settings) { 
-		// for plugins to store data in
-		this.data = { core : {} };
-		this.get_settings	= function () { return $.extend(true, {}, settings); };
-		this.get_index		= function () { return index; };
-		this.get_container	= function () { return container; };
-		this._set_settings	= function (s) { 
-			settings = $.extend(true, {}, settings, s);
-		};
-	};
 
-	// the prototype to attach functions to (all core functions are listed here)
-	$.jstree._fn = $.jstree._instance.prototype = {
-		// initialize and destroy
-		init	: function () { 
-			var _this = this;
-			this.set_focus(); 
-			this.get_container().html("<ul><li class='jstree-last jstree-leaf'><ins>&nbsp;</ins><a class='jstree-loading' href='#'><ins class='icon'>&nbsp;</ins>Loading ...</a></li></ul>");
-			this.data.core.li_height = this.get_container().find("ul li.jstree-closed, ul li.jstree-leaf").eq(0).height() || 18;
-			this.load_node(-1, function () { _this.loaded(); });
-		},
-		destroy	: function () { 
-			var i,
-				n = this.get_index(), 
-				c = this.get_container(),
-				s = this.get_settings(),
-				_this = this;
+      if(!opts.show) {
+        tree_component.drag_drop.drag_help  = false;
+        tree_component.drag_drop.drag_node  = false;
+      }
+      else {
+        tree_component.drag_drop.drag_help  = $("<div id='jstree-dragged' class='tree tree-default'><ul><li class='last dragged foreign'><a href='#'><ins>&nbsp;</ins>" + opts.str + "</a></li></ul></div>");
+        tree_component.drag_drop.drag_node  = tree_component.drag_drop.drag_help.find("li:eq(0)");
+      }
+      if($.tree.drag_start !== false) $.tree.drag_start.call(null, false);
+    },
+    drag_start  : false,
+    drag    : false,
+    drag_end  : false
+  };
+  $.fn.tree = function (opts) {
+    return this.each(function() {
+      var conf = $.extend({},opts);
+      if(tree_component.inst && tree_component.inst[$(this).attr('id')]) tree_component.inst[$(this).attr('id')].destroy();
+      if(conf !== false) new tree_component().init(this, conf);
+    });
+  };
 
-			$.each(s.plugins, function (i, val) {
-				plugins[val].__destroy.apply(_this);
-			});
+  // core
+  function tree_component () {
+    return {
+      cntr : ++tree_component.cntr,
+      settings : $.extend({},$.tree.defaults),
 
-			// set focus to another instance if this one is focused
-			if(this.is_focused()) { 
-				for(i in instances) { 
-					if(instances.hasOwnProperty(i) && i != n) { 
-						instances[i].set_focus(); 
-						break; 
-					} 
-				}
-			}
-			$.removeData(c, "jstree-instance-id");
-			// remove all traces of jstree in the DOM (only the ones set by the core, plugins should clean themselves)
-			c.removeClass("jstree jstree-" + this.get_index() + " jstree-focused");
-			// remove the actual data
-			instances[n] = null;
-			delete instances[n];
-		},
-		// Dummy function to fire after the first load (so that there is a jstree.loaded event)
-		loaded	: function () { },
+      init : function(elem, conf) {
+        var _this = this;
+        this.container = $(elem);
+        if(this.container.size == 0) return false;
+        tree_component.inst[this.cntr] = this;
+        if(!this.container.attr("id")) this.container.attr("id","jstree_" + this.cntr); 
+        tree_component.inst[this.container.attr("id")] = tree_component.inst[this.cntr];
+        tree_component.focused = this.cntr;
+        this.settings = $.extend(true, {}, this.settings, conf);
 
-		// deal with focus
-		set_focus	: function () { 
-			var f = $.jstree._focused();
-			if(f && f !== this) {
-				f.get_container().removeClass("jstree-focused"); 
-			}
-			if(f !== this) {
-				this.get_container().addClass("jstree-focused"); 
-				focused_instance = this.get_index(); 
-			}
-		},
-		is_focused	: function () { 
-			return focused_instance == this.get_index(); 
-		},
+        // DEAL WITH LANGUAGE VERSIONS
+        if(this.settings.languages && this.settings.languages.length) {
+          this.current_lang = this.settings.languages[0];
+          var st = false;
+          var id = "#" + this.container.attr("id");
+          for(var ln = 0; ln < this.settings.languages.length; ln++) {
+            st = tree_component.add_css(id + " ." + this.settings.languages[ln]);
+            if(st !== false) st.style.display = (this.settings.languages[ln] == this.current_lang) ? "" : "none";
+          }
+        }
+        else this.current_lang = false;
+        // THEMES
+        this.container.addClass("tree");
+        if(this.settings.ui.theme_name !== false) {
+          if(this.settings.ui.theme_path === false) {
+            $("script").each(function () { 
+              if(this.src.toString().match(/jquery\.tree.*?js$/)) { _this.settings.ui.theme_path = this.src.toString().replace(/jquery\.tree.*?js$/, "") + "themes/" + _this.settings.ui.theme_name + "/style.css"; return false; }
+            });
+          }
+          if(this.settings.ui.theme_path != "" && $.inArray(this.settings.ui.theme_path, tree_component.themes) == -1) {
+            tree_component.add_sheet({ url : this.settings.ui.theme_path });
+            tree_component.themes.push(this.settings.ui.theme_path);
+          }
+          this.container.addClass("tree-" + this.settings.ui.theme_name);
+        }
+        // TYPE ICONS
+        var type_icons = "";
+        for(var t in this.settings.types) {
+          if(!this.settings.types.hasOwnProperty(t)) continue;
+          if(!this.settings.types[t].icon) continue;
+          if( this.settings.types[t].icon.image || this.settings.types[t].icon.position) {
+            if(t == "default")  type_icons += "#" + this.container.attr("id") + " li > a ins { ";
+            else type_icons += "#" + this.container.attr("id") + " li[rel=" + t + "] > a ins { ";
+            if(this.settings.types[t].icon.image) type_icons += " background-image:url(" + this.settings.types[t].icon.image + "); ";
+            if(this.settings.types[t].icon.position) type_icons += " background-position:" + this.settings.types[t].icon.position + "; ";
+            type_icons += "} ";
+          }
+        }
+        if(type_icons != "") tree_component.add_sheet({ str : type_icons });
 
-		// traverse
-		_get_node		: function (obj) { var $obj = $(obj, this.get_container()); return $obj.is(".jstree") || obj == -1 ? -1 : $obj.closest("li", this.get_container()); },
-		_get_next		: function (obj, strict) {
-			obj = this._get_node(obj);
-			if(!obj.length) { return false; }
-			if(strict) { return (obj.nextAll("li").size() > 0) ? obj.nextAll("li:eq(0)") : false; }
+        if(this.settings.rules.multiple) this.selected_arr = [];
+        this.offset = false;
+        this.hovered = false;
+        this.locked = false;
 
-			if(obj.hasClass("jstree-open")) { return obj.find("li:eq(0)"); }
-			else if(obj.nextAll("li").size() > 0) { return obj.nextAll("li:eq(0)"); }
-			else { return obj.parentsUntil(this.get_container(),"li").next("li").eq(0); }
-		},
-		_get_prev		: function (obj, strict) {
-			obj = this._get_node(obj);
-			if(!obj.length) { return false; }
-			if(strict) { return (obj.prevAll("li").length > 0) ? obj.prevAll("li:eq(0)") : false; }
+        if(tree_component.drag_drop.marker === false) tree_component.drag_drop.marker = $("<div>").attr({ id : "jstree-marker" }).hide().appendTo("body");
+        this.callback("oninit", [this]);
+        this.refresh();
+        this.attach_events();
+        this.focus();
+      },
+      refresh : function (obj) {
+        if(this.locked) return this.error("LOCKED");
+        var _this = this;
+        if(obj && !this.settings.data.async) obj = false;
+        this.is_partial_refresh = obj ? true : false;
 
-			if(obj.prev("li").length) {
-				obj = obj.prev("li").eq(0);
-				while(obj.hasClass("jstree-open")) { obj = obj.children("ul:eq(0)").children("li:last"); }
-				return obj;
-			}
-			else { var o = obj.parentsUntil(this.get_container(),"li:eq(0)"); return o.length ? o : false; }
-		},
-		_get_parent		: function (obj) {
-			obj = this._get_node(obj);
-			if(obj == -1 || !obj.length) { return false; }
-			var o = obj.parentsUntil(this.get_container(), "li:eq(0)");
-			return o.length ? o : -1;
-		},
-		_get_children	: function (obj) {
-			obj = this._get_node(obj);
-			if(obj === -1) { return this.get_container().children("ul:eq(0)").children("li"); }
-			if(!obj.length) { return false; }
-			return obj.children("ul:eq(0)").children("li");
-		},
-		get_path		: function (obj, id_mode) {
-			var p = [],
-				_this = this;
-			obj = this._get_node(obj);
-			if(obj === -1 || !obj || !obj.length) { return false; }
-			obj.parentsUntil(this.get_container(), "li").each(function () {
-				p.push( id_mode ? this.id : _this.get_text(this) );
-			});
-			p.reverse();
-			p.push( id_mode ? obj.attr("id") : this.get_text(obj) );
-			return p;
-		},
+        // SAVE OPENED
+        this.opened = Array();
+        if(this.settings.opened != false) {
+          $.each(this.settings.opened, function (i, item) {
+            if(this.replace(/^#/,"").length > 0) { _this.opened.push("#" + this.replace(/^#/,"")); }
+          });
+          this.settings.opened = false;
+        }
+        else {
+          this.container.find("li.open").each(function (i) { if(this.id) { _this.opened.push("#" + this.id); } });
+        }
 
-		// deal with text
-		get_text	: function (obj) {
-			obj = this._get_node(obj);
-			if(!obj.size()) { return false; }
-			obj = obj.children("a:eq(0)");
-			obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
-			return obj.nodeValue;
-		},
-		set_text	: function (obj, val) {
-			obj = this._get_node(obj);
-			if(!obj.size()) { return false; }
-			obj = obj.children("a:eq(0)");
-			obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
-			return (obj.nodeValue = val);
-		},
+        // SAVE SELECTED
+        if(this.selected) {
+          this.settings.selected = Array();
+          if(obj) {
+            $(obj).find("li:has(a.clicked)").each(function () {
+              if(this.id) _this.settings.selected.push("#" + this.id);
+            });
+          }
+          else {
+            if(this.selected_arr) {
+              $.each(this.selected_arr, function () {
+                if(this.attr("id")) _this.settings.selected.push("#" + this.attr("id"));
+              });
+            }
+            else {
+              if(this.selected.attr("id")) this.settings.selected.push("#" + this.selected.attr("id"));
+            }
+          }
+        }
+        else if(this.settings.selected !== false) {
+          var tmp = Array();
+          if((typeof this.settings.selected).toLowerCase() == "object") {
+            $.each(this.settings.selected, function () {
+              if(this.replace(/^#/,"").length > 0) tmp.push("#" + this.replace(/^#/,""));
+            });
+          }
+          else {
+            if(this.settings.selected.replace(/^#/,"").length > 0) tmp.push("#" + this.settings.selected.replace(/^#/,""));
+          }
+          this.settings.selected = tmp;
+        }
 
-		// open/close
-		open_node	: function (obj, callback) {
-			obj = this._get_node(obj);
-			if(!obj.length) { return false; }
-			if(!this.is_loaded(obj)) {
-				var _this = this;
-				obj.children("a").addClass("jstree-loading");
-				this.load_node(obj, function () { _this.open_node(obj, callback); }, callback);
-				this.open_node.supress_callback = true;
-			}
-			else {
-				this.open_node.supress_callback = false;
-				if(this.get_settings().animation) { obj.children("ul").css("display","none"); }
-				obj.removeClass("jstree-closed").addClass("jstree-open").children("a").removeClass("jstree-loading");
-				if(this.get_settings().animation) { obj.children("ul").slideDown(this.get_settings().animation, function () { this.style.display = ""; }); }
-				if(callback) { callback.call(); }
-			}
-		},
-		close_node	: function (obj) {
-			obj = this._get_node(obj);
-			if(!obj.length) { return false; }
-			if(this.get_settings().animation) { obj.children("ul").attr("style","display:block !important"); }
-			obj.removeClass("jstree-open").addClass("jstree-closed");
-			if(this.get_settings().animation) { obj.children("ul").slideUp(this.get_settings().animation, function () { this.style.display = ""; }); }
-		},
-		toggle_node	: function (obj) {
-			obj = this._get_node(obj);
-			if(obj.hasClass("jstree-closed")) { return this.open_node(obj); }
-			if(obj.hasClass("jstree-open")) { return this.close_node(obj); }
-		},
-		open_all	: function (obj, original_obj) {
-			obj = obj ? this._get_node(obj) : this.get_container();
-			if(original_obj) { 
-				obj = obj.find("li.jstree-closed");
-			}
-			else {
-				original_obj = obj;
-				if(obj.is(".jstree-closed")) { obj = obj.find("li.jstree-closed").andSelf(); }
-				else { obj = obj.find("li.jstree-closed"); }
-			}
-			var _this = this;
-			obj.each(function () { 
-				var __this = this; 
-				_this.open_node(this, function() { _this.open_all(__this, original_obj); });
-			});
-			// so that callback is fired AFTER all tabs are open
-			this.open_all.supress_callback = (!original_obj || original_obj.find('li.jstree-closed').length > 0);
-		},
-		close_all	: function (obj) {
-			var _this = this;
-			obj = obj ? this._get_node(obj) : this.get_container();
-			obj.find("li.jstree-open").andSelf().each(function () { _this.close_node(this); });
-		},
+        if(obj && this.settings.data.async) {
+          this.opened = Array();
+          obj = this.get_node(obj);
+          obj.find("li.open").each(function (i) { _this.opened.push("#" + this.id); });
+          if(obj.hasClass("open")) obj.removeClass("open").addClass("closed");
+          if(obj.hasClass("leaf")) obj.removeClass("leaf");
+          obj.children("ul:eq(0)").html("");
+          return this.open_branch(obj, true, function () { _this.reselect.apply(_this); });
+        }
 
-		clean_node	: function(obj) {
-			obj = obj && obj != -1 ? $(obj) : this.get_container();
-			obj = obj.is("li") ? obj.find("li").andSelf() : obj.find("li");
-			obj.removeClass("jstree-last")
-				.filter("li:last-child").addClass("jstree-last").end()
-				.filter(":has(ul)")
-					.not(".jstree-open").removeClass("jstree-leaf").addClass("jstree-closed");
-			obj.not(".jstree-open, .jstree-closed").addClass("jstree-leaf");
-		},
+        var _this = this;
+        var _datastore = new $.tree.datastores[this.settings.data.type]();
+        if(this.container.children("ul").size() == 0) {
+          this.container.html("<ul class='ltr' style='direction:ltr;'><li class='last'><a class='loading' href='#'><ins>&nbsp;</ins>" + (this.settings.lang.loading || "Loading ...") + "</a></li></ul>");
+        }
+        _datastore.load(this.callback("beforedata",[false,this]),this,this.settings.data.opts,function(data) {
+          data = _this.callback("ondata",[data, _this]);
+          _datastore.parse(data,_this,_this.settings.data.opts,function(str) {
+            str = _this.callback("onparse", [str, _this]);
+            _this.container.empty().append($("<ul class='ltr'>").html(str));
+            _this.container.find("li:last-child").addClass("last").end().find("li:has(ul)").not(".open").addClass("closed");
+            _this.container.find("li").not(".open").not(".closed").addClass("leaf");
+            _this.reselect();
+          });
+        });
+      },
+      reselect : function (is_callback) {
+        var _this = this;
 
-		// rollback
-		get_rollback : function() { 
-			this.get_rollback.supress_callback = true;
-			return { i : this.get_index(), h : this.get_container().children("ul").clone(true), d : this.data }; 
-		},
+        if(!is_callback)  this.cl_count = 0;
+        else        this.cl_count --;
+        // REOPEN BRANCHES
+        if(this.opened && this.opened.length) {
+          var opn = false;
+          for(var j = 0; this.opened && j < this.opened.length; j++) {
+            if(this.settings.data.async) {
+              var tmp = this.get_node(this.opened[j]);
+              if(tmp.size() && tmp.hasClass("closed") > 0) {
+                opn = true;
+                var tmp = this.opened[j].toString().replace('/','\\/');
+                delete this.opened[j];
+                this.open_branch(tmp, true, function () { _this.reselect.apply(_this, [true]); } );
+                this.cl_count ++;
+              }
+            }
+            else this.open_branch(this.opened[j], true);
+          }
+          if(this.settings.data.async && opn) return;
+          if(this.cl_count > 0) return;
+          delete this.opened;
+        } 
+        if(this.cl_count > 0) return;
 
-		// Dummy functions to be overwritten by any datastore plugin included
-		load_node	: function (obj, s_call, e_call) { },
-		is_loaded	: function (obj) { return true; }
-	};
+        // DOTS and RIGHT TO LEFT
+        this.container.css("direction","ltr").children("ul:eq(0)").addClass("ltr");
+        if(this.settings.ui.dots == false)  this.container.children("ul:eq(0)").addClass("no_dots");
 
-	// plugin functionality
-	// a setting to store all active plugins
-	$.jstree.defaults.plugins = [];
-	// function to add plugins by name and values
-	$.jstree.plugin = function (pname, pdata) {
-		// the default empty plugin
-		pdata = $.extend(true, {}, {
-			__init		: function () { }, 
-			__destroy	: function () { },
-			_fn			: { },
-			defaults	: false
-		}, pdata);
-		// push the plugin's name in the loaded plugins array
-		plugins[pname] = pdata;
-		// set the origin on every function and also - the overwritten function (if there is one)
-		$.each(pdata._fn, function (i, val) { 
-			val.plugin = pname; 
-			val.old = $.jstree._fn[i];
-		});
-		// extend the _instance functions by those of the plugin
-		$.extend($.jstree._fn, pdata._fn);
-		// extend the defaults
-		$.jstree.defaults[pname] = pdata.defaults;
-	};
+        // REPOSITION SCROLL
+        if(this.scrtop) {
+          this.container.scrollTop(_this.scrtop);
+          delete this.scrtop;
+        }
+        // RESELECT PREVIOUSLY SELECTED
+        if(this.settings.selected !== false) {
+          $.each(this.settings.selected, function (i) {
+            if(_this.is_partial_refresh)  _this.select_branch($(_this.settings.selected[i].toString().replace('/','\\/'), _this.container), (_this.settings.rules.multiple !== false) );
+            else              _this.select_branch($(_this.settings.selected[i].toString().replace('/','\\/'), _this.container), (_this.settings.rules.multiple !== false && i > 0) );
+          });
+          this.settings.selected = false;
+        }
+        this.callback("onload", [_this]);
+      },
 
-	var rollback = ["open_node","close_node"];
-	$.jstree.rollback = function (rb) {
-		if(rb) {
-			if(!$.isArray(rb)) { rb = [ rb ]; }
-			$.each(rb, function (i, val) {
-				instances[val.i].get_container().empty().append(val.h);
-				instances[val.i].data = val.d;
-			});
-		}
-	};
-	$.jstree.register_rollback = function (i) {
-		i = i.split(" ");
-		$.each(i, function(j,v) { rollback.push(v); });
-	};
+      get : function (obj, format, opts) {
+        if(!format) format = this.settings.data.type;
+        if(!opts) opts = this.settings.data.opts;
+        return new $.tree.datastores[format]().get(obj, this, opts);
+      },
 
-	// wrap functions (for plugins and events)
-	$(function () {
-		$.each($.jstree._fn, function (i, val) {
-			if(!$.isFunction(val)) { return true; }
-			var of = val, 
-				rb = false;
-			$.jstree._fn[i] = function () {
+      attach_events : function () {
+        var _this = this;
 
-				var is_callable = false,
-					ret;
-				do {
-					if(!val.plugin || (val.plugin && $.inArray(val.plugin, this.get_settings().plugins) != -1)) {
-						is_callable = true;
-						break;
-					}
-					val = val.old;
-				} while(val);
-				if(!is_callable) { return; }
+        this.container
+          .bind("mousedown.jstree", function (event) {
+            if(tree_component.drag_drop.isdown) {
+              tree_component.drag_drop.move_type = false;
+              event.preventDefault();
+              event.stopPropagation();
+              event.stopImmediatePropagation();
+              return false;
+            }
+          })
+          .bind("mouseup.jstree", function (event) {
+            setTimeout( function() { _this.focus.apply(_this); }, 5);
+          })
+          .bind("click.jstree", function (event) { 
+            //event.stopPropagation(); 
+            return true;
+          });
+        $("#" + this.container.attr("id") + " li")
+          .live("click", function(event) { // WHEN CLICK IS ON THE ARROW
+            if(event.target.tagName != "LI") return true;
+            _this.off_height();
+            if(event.pageY - $(event.target).offset().top > _this.li_height) return true;
+            _this.toggle_branch.apply(_this, [event.target]);
+            event.stopPropagation();
+            return false;
+          });
+        $("#" + this.container.attr("id") + " li a")
+          .live("click.jstree", function (event) { // WHEN CLICK IS ON THE TEXT OR ICON
+            if(event.which && event.which == 3) return true;
+            if(_this.locked) {
+              event.preventDefault(); 
+              event.target.blur();
+              return _this.error("LOCKED");
+            }
+            _this.select_branch.apply(_this, [event.target, event.ctrlKey || _this.settings.rules.multiple == "on"]);
+            if(_this.inp) { _this.inp.blur(); }
+            event.preventDefault(); 
+            event.target.blur();
+            return false;
+          })
+          .live("dblclick.jstree", function (event) { // WHEN DOUBLECLICK ON TEXT OR ICON
+            if(_this.locked) {
+              event.preventDefault(); 
+              event.stopPropagation();
+              event.target.blur();
+              return _this.error("LOCKED");
+            }
+            _this.callback("ondblclk", [_this.get_node(event.target).get(0), _this]);
+            event.preventDefault(); 
+            event.stopPropagation();
+            event.target.blur();
+          })
+          .live("contextmenu.jstree", function (event) {
+            if(_this.locked) {
+              event.target.blur();
+              return _this.error("LOCKED");
+            }
+            return _this.callback("onrgtclk", [_this.get_node(event.target).get(0), _this, event]);
+          })
+          .live("mouseover.jstree", function (event) {
+            if(_this.locked) {
+              event.preventDefault();
+              event.stopPropagation();
+              return _this.error("LOCKED");
+            }
+            if(_this.hovered !== false && (event.target.tagName == "A" || event.target.tagName == "INS")) {
+              _this.hovered.children("a").removeClass("hover");
+              _this.hovered = false;
+            }
+            _this.callback("onhover",[_this.get_node(event.target).get(0), _this]);
+          })
+          .live("mousedown.jstree", function (event) {
+            if(_this.settings.rules.drag_button == "left" && event.which && event.which != 1) return true;
+            if(_this.settings.rules.drag_button == "right" && event.which && event.which != 3)  return true;
+            _this.focus.apply(_this);
+            if(_this.locked) return _this.error("LOCKED");
+            // SELECT LIST ITEM NODE
+            var obj = _this.get_node(event.target);
+            // IF ITEM IS DRAGGABLE
+            if(_this.settings.rules.multiple != false && _this.selected_arr.length > 1 && obj.children("a:eq(0)").hasClass("clicked")) {
+              var counter = 0;
+              for(var i in _this.selected_arr) {
+                if(!_this.selected_arr.hasOwnProperty(i)) continue;
+                if(_this.check("draggable", _this.selected_arr[i])) {
+                  _this.selected_arr[i].addClass("dragged");
+                  tree_component.drag_drop.origin_tree = _this;
+                  counter ++;
+                }
+              }
+              if(counter > 0) {
+                if(_this.check("draggable", obj)) tree_component.drag_drop.drag_node = obj;
+                else                tree_component.drag_drop.drag_node = _this.container.find("li.dragged:eq(0)");
+                tree_component.drag_drop.isdown   = true;
+                tree_component.drag_drop.drag_help  = $("<div id='jstree-dragged' class='tree " + ( _this.settings.ui.theme_name != "" ? " tree-" + _this.settings.ui.theme_name : "" ) + "' />").append("<ul class='" + _this.container.children("ul:eq(0)").get(0).className + "' />");
+                var tmp = tree_component.drag_drop.drag_node.clone();
+                if(_this.settings.languages.length > 0) tmp.find("a").not("." + _this.current_lang).hide();
+                tree_component.drag_drop.drag_help.children("ul:eq(0)").append(tmp);
+                tree_component.drag_drop.drag_help.find("li:eq(0)").removeClass("last").addClass("last").children("a").html("<ins>&nbsp;</ins>Multiple selection").end().children("ul").remove();
 
-				if(!this[i].supress_callback && i.substring(0, 1) != '_') {
-					if($.inArray(i, rollback) !== -1) { rb = this.get_rollback(); }
-					ret = val.apply(this, arguments);
-					this.get_container().triggerHandler('jstree.' + i, {
-						'arg'	: Array.prototype.slice.call(arguments),
-						'ret'	: ret,
-						'rb'	: rb
-					});
-				}
-				else {
-					ret = val.apply(this, arguments);
-				}
-				val = of;
-				return ret;
-			};
-		});
-	});
+                tree_component.drag_drop.dragged = _this.container.find("li.dragged");
+              }
+            }
+            else {
+              if(_this.check("draggable", obj)) {
+                tree_component.drag_drop.drag_node  = obj;
+                tree_component.drag_drop.drag_help  = $("<div id='jstree-dragged' class='tree " + ( _this.settings.ui.theme_name != "" ? " tree-" + _this.settings.ui.theme_name : "" ) + "' />").append("<ul class='" + _this.container.children("ul:eq(0)").get(0).className + "' />");
+                var tmp = obj.clone();
+                if(_this.settings.languages.length > 0) tmp.find("a").not("." + _this.current_lang).hide();
+                tree_component.drag_drop.drag_help.children("ul:eq(0)").append(tmp);
+                tree_component.drag_drop.drag_help.find("li:eq(0)").removeClass("last").addClass("last");
+                tree_component.drag_drop.isdown   = true;
+                tree_component.drag_drop.foreign  = false;
+                tree_component.drag_drop.origin_tree = _this;
+                obj.addClass("dragged");
 
-	// css functions - used internally
-	$.jstree._css = {
-		get_css : function(rule_name, delete_flag, sheet) {
-			rule_name = rule_name.toLowerCase();
-			var css_rules = sheet.cssRules || sheet.rules,
-				j = 0;
-			do {
-				if(css_rules.length && j > css_rules.length + 5) { return false; }
-				if(css_rules[j].selectorText && css_rules[j].selectorText.toLowerCase() == rule_name) {
-					if(delete_flag === true) {
-						if(sheet.removeRule) { sheet.removeRule(j); }
-						if(sheet.deleteRule) { sheet.deleteRule(j); }
-						return true;
-					}
-					else { return css_rules[j]; }
-				}
-			}
-			while (css_rules[++j]);
-			return false;
-		},
-		add_css : function(rule_name, sheet) {
-			if($.jstree.css.get_css(rule_name, false, sheet)) { return false; }
-			if(sheet.insertRule) { sheet.insertRule(rule_name + ' { }', 0); } else { sheet.addRule(rule_name, null, 0); }
-			return $.jstree.css.get_css(rule_name);
-		},
-		remove_css : function(rule_name, sheet) { 
-			return $.jstree.css.get_css(rule_name, true, sheet); 
-		},
-		add_sheet : function(opts) {
-			var tmp;
-			if(opts.str) {
-				tmp = document.createElement("style");
-				tmp.setAttribute('type',"text/css");
-				if(tmp.styleSheet) {
-					document.getElementsByTagName("head")[0].appendChild(tmp);
-					tmp.styleSheet.cssText = opts.str;
-				}
-				else {
-					tmp.appendChild(document.createTextNode(opts.str));
-					document.getElementsByTagName("head")[0].appendChild(tmp);
-				}
-				return tmp.sheet || tmp.styleSheet;
-			}
-			if(opts.url) {
-				if(document.createStyleSheet) {
-					try { tmp = document.createStyleSheet(opts.url); } catch (e) { }
-				}
-				else {
-					tmp			= document.createElement('link');
-					tmp.rel		= 'stylesheet';
-					tmp.type	= 'text/css';
-					tmp.media	= "all";
-					tmp.href	= opts.url;
-					document.getElementsByTagName("head")[0].appendChild(tmp);
-					return tmp.styleSheet;
-				}
-			}
-		}
-	};
-	// load the css when DOM is ready
-	$(function() {
-		// code is copied form jQuery ($.browser is deprecated + there is a bug in IE)
-		var u = navigator.userAgent.toLowerCase(),
-			v = (u.match( /.+?(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
-			css_string = '' + 
-				'.jstree ul, .jstree li { display:block; margin:0 0 0 0; padding:0 0 0 0; list-style-type:none; } ' + 
-				'.jstree li { display:block; min-height:18px; line-height:18px; white-space:nowrap; margin-left:18px; } ' + 
-				'.jstree > ul > li { margin-left:0px; } ' + 
-				'.jstree ins { display:inline-block; text-decoration:none; width:18px; height:18px; margin:0 0 0 0; padding:0; } ' + 
-				'.jstree a { display:inline-block; line-height:16px; height:16px; color:black; white-space:nowrap; text-decoration:none; padding:1px 2px; margin:0; } ' + 
-				'.jstree a:focus { outline: none; } ' + 
-				'.jstree a > ins { height:16px; width:16px; } ' + 
-				'.jstree a > .icon { margin-right:3px; } ' + 
-				'li.jstree-open > ul { display:block; } ' + 
-				'li.jstree-closed > ul { display:none; } ';
-		// Correct IE 6 (does not support the > CSS selector
-		if(/msie/.test(u) && parseInt(v, 10) == 6) { 
-			css_string += '' + 
-				'.jstree li { height:18px; margin-left:0; } ' + 
-				'.jstree li li { margin-left:18px; } ' + 
-				'li.jstree-open ul { display:block; } ' + 
-				'li.jstree-closed ul { display:none !important; } ' + 
-				'.jstree li a { display:inline; } ' + 
-				'.jstree li a ins { height:16px; width:16px; margin-right:3px; } ';
-		}
-		$.jstree._css.add_sheet({ str : css_string });
-	});
+                tree_component.drag_drop.dragged = _this.container.find("li.dragged");
+              }
+            }
+            tree_component.drag_drop.init_x = event.pageX;
+            tree_component.drag_drop.init_y = event.pageY;
+            obj.blur();
+            event.preventDefault(); 
+            event.stopPropagation();
+            return false;
+          });
+      },
+      focus : function () {
+        if(this.locked) return false;
+        if(tree_component.focused != this.cntr) {
+          tree_component.focused = this.cntr;
+          this.callback("onfocus",[this]);
+        }
+      },
+
+      off_height : function () {
+        if(this.offset === false) {
+          this.container.css({ position : "relative" });
+          this.offset = this.container.offset();
+          var tmp = 0;
+          tmp = parseInt($.curCSS(this.container.get(0), "paddingTop", true),10);
+          if(tmp) this.offset.top += tmp;
+          tmp = parseInt($.curCSS(this.container.get(0), "borderTopWidth", true),10);
+          if(tmp) this.offset.top += tmp;
+          this.container.css({ position : "" });
+        }
+        if(!this.li_height) {
+          var tmp = this.container.find("ul li.closed, ul li.leaf").eq(0);
+          this.li_height = tmp.height();
+          if(tmp.children("ul:eq(0)").size()) this.li_height -= tmp.children("ul:eq(0)").height();
+          if(!this.li_height) this.li_height = 18;
+        }
+      },
+      scroll_check : function (x,y) { 
+        var _this = this;
+        var cnt = _this.container;
+        var off = _this.container.offset();
+
+        var st = cnt.scrollTop();
+        var sl = cnt.scrollLeft();
+        // DETECT HORIZONTAL SCROLL
+        var h_cor = (cnt.get(0).scrollWidth > cnt.width()) ? 40 : 20;
+
+        if(y - off.top < 20)            cnt.scrollTop(Math.max( (st - _this.settings.ui.scroll_spd) ,0)); // NEAR TOP
+        if(cnt.height() - (y - off.top) < h_cor)  cnt.scrollTop(st + _this.settings.ui.scroll_spd);         // NEAR BOTTOM
+        if(x - off.left < 20)           cnt.scrollLeft(Math.max( (sl - _this.settings.ui.scroll_spd),0)); // NEAR LEFT
+        if(cnt.width() - (x - off.left) < 40)   cnt.scrollLeft(sl + _this.settings.ui.scroll_spd);          // NEAR RIGHT
+
+        if(cnt.scrollLeft() != sl || cnt.scrollTop() != st) {
+          tree_component.drag_drop.move_type  = false;
+          tree_component.drag_drop.ref_node = false;
+          tree_component.drag_drop.marker.hide();
+        }
+        tree_component.drag_drop.scroll_time = setTimeout( function() { _this.scroll_check(x,y); }, 50);
+      },
+      scroll_into_view : function (obj) {
+        obj = obj ? this.get_node(obj) : this.selected;
+        if(!obj) return false;
+        var off_t = obj.offset().top;
+        var beg_t = this.container.offset().top;
+        var end_t = beg_t + this.container.height();
+        var h_cor = (this.container.get(0).scrollWidth > this.container.width()) ? 40 : 20;
+        if(off_t + 5 < beg_t) this.container.scrollTop(this.container.scrollTop() - (beg_t - off_t + 5) );
+        if(off_t + h_cor > end_t) this.container.scrollTop(this.container.scrollTop() + (off_t + h_cor - end_t) );
+      },
+
+      get_node : function (obj) {
+        return $(obj).closest("li");
+      },
+      get_type : function (obj) {
+        obj = !obj ? this.selected : this.get_node(obj);
+        if(!obj) return;
+        var tmp = obj.attr(this.settings.rules.type_attr);
+        return tmp || "default";
+      },
+      set_type : function (str, obj) {
+        obj = !obj ? this.selected : this.get_node(obj);
+        if(!obj || !str) return;
+        obj.attr(this.settings.rules.type_attr, str);
+      },
+      get_text : function (obj, lang) {
+        obj = this.get_node(obj);
+        if(!obj || obj.size() == 0) return "";
+        if(this.settings.languages && this.settings.languages.length) {
+          lang = lang ? lang : this.current_lang;
+          obj = obj.children("a." + lang);
+        }
+        else obj = obj.children("a:visible");
+        var val = "";
+        obj.contents().each(function () {
+          if(this.nodeType == 3) { val = this.data; return false; }
+        });
+        return val;
+      },
+
+      check : function (rule, obj) {
+        if(this.locked) return false;
+        var v = false;
+        // if root node
+        if(obj === -1) { if(typeof this.settings.rules[rule] != "undefined") v = this.settings.rules[rule]; }
+        else {
+          obj = !obj ? this.selected : this.get_node(obj);
+          if(!obj) return;
+          var t = this.get_type(obj);
+          if(typeof this.settings.types[t] != "undefined" && typeof this.settings.types[t][rule] != "undefined") v = this.settings.types[t][rule];
+          else if(typeof this.settings.types["default"] != "undefined" && typeof this.settings.types["default"][rule] != "undefined") v = this.settings.types["default"][rule];
+        }
+        if(typeof v == "function") v = v.call(null, obj, this);
+        v = this.callback("check", [rule, obj, v, this]);
+        return v;
+      },
+      check_move : function (nod, ref_node, how) {
+        if(this.locked) return false;
+        if($(ref_node).closest("li.dragged").size()) return false;
+
+        var tree1 = nod.parents(".tree:eq(0)").get(0);
+        var tree2 = ref_node.parents(".tree:eq(0)").get(0);
+        // if different trees
+        if(tree1 && tree1 != tree2) {
+          var m = $.tree.reference(tree2.id).settings.rules.multitree;
+          if(m == "none" || ($.isArray(m) && $.inArray(tree1.id, m) == -1)) return false;
+        }
+
+        var p = (how != "inside") ? this.parent(ref_node) : this.get_node(ref_node);
+        nod = this.get_node(nod);
+        if(p == false) return false;
+        var r = {
+          max_depth : this.settings.rules.use_max_depth ? this.check("max_depth", p) : -1,
+          max_children : this.settings.rules.use_max_children ? this.check("max_children", p) : -1,
+          valid_children : this.check("valid_children", p)
+        };
+        var nod_type = (typeof nod == "string") ? nod : this.get_type(nod);
+        if(typeof r.valid_children != "undefined" && (r.valid_children == "none" || (typeof r.valid_children == "object" && $.inArray(nod_type, $.makeArray(r.valid_children)) == -1))) return false;
+        
+        if(this.settings.rules.use_max_children) {
+          if(typeof r.max_children != "undefined" && r.max_children != -1) {
+            if(r.max_children == 0) return false;
+            var c_count = 1;
+            if(tree_component.drag_drop.moving == true && tree_component.drag_drop.foreign == false) {
+              c_count = tree_component.drag_drop.dragged.size();
+              c_count = c_count - p.find('> ul > li.dragged').size();
+            }
+            if(r.max_children < p.find('> ul > li').size() + c_count) return false;
+          }
+        }
+
+        if(this.settings.rules.use_max_depth) {
+          if(typeof r.max_depth != "undefined" && r.max_depth === 0) return this.error("MOVE: MAX-DEPTH REACHED");
+          // check for max_depth up the chain
+          var mx = (r.max_depth > 0) ? r.max_depth : false;
+          var i = 0;
+          var t = p;
+          while(t !== -1) {
+            t = this.parent(t);
+            i ++;
+            var m = this.check("max_depth",t);
+            if(m >= 0) {
+              mx = (mx === false) ? (m - i) : Math.min(mx, m - i);
+            }
+            if(mx !== false && mx <= 0) return this.error("MOVE: MAX-DEPTH REACHED");
+          }
+          if(mx !== false && mx <= 0) return this.error("MOVE: MAX-DEPTH REACHED");
+          if(mx !== false) { 
+            var incr = 1;
+            if(typeof nod != "string") {
+              var t = nod;
+              // possible async problem - when nodes are not all loaded down the chain
+              while(t.size() > 0) {
+                if(mx - incr < 0) return this.error("MOVE: MAX-DEPTH REACHED");
+                t = t.children("ul").children("li");
+                incr ++;
+              }
+            }
+          }
+        }
+        if(this.callback("check_move", [nod, ref_node, how, this]) == false) return false;
+        return true;
+      },
+
+      hover_branch : function (obj) {
+        if(this.locked) return this.error("LOCKED");
+        var _this = this;
+        var obj = _this.get_node(obj);
+        if(!obj.size()) return this.error("HOVER: NOT A VALID NODE");
+        if(!_this.check("clickable", obj)) return this.error("SELECT: NODE NOT SELECTABLE");
+        if(this.hovered) this.hovered.children("A").removeClass("hover");
+        this.hovered = obj;
+        this.hovered.children("a").addClass("hover");
+        this.scroll_into_view(this.hovered);
+      },
+      select_branch : function (obj, multiple) {
+        if(this.locked) return this.error("LOCKED");
+        if(!obj && this.hovered !== false) obj = this.hovered;
+        var _this = this;
+        obj = _this.get_node(obj);
+        if(!obj.size()) return this.error("SELECT: NOT A VALID NODE");
+        obj.children("a").removeClass("hover");
+        // CHECK AGAINST RULES FOR SELECTABLE NODES
+        if(!_this.check("clickable", obj)) return this.error("SELECT: NODE NOT SELECTABLE");
+        if(_this.callback("beforechange",[obj.get(0),_this]) === false) return this.error("SELECT: STOPPED BY USER");
+        // IF multiple AND obj IS ALREADY SELECTED - DESELECT IT
+        if(this.settings.rules.multiple != false && multiple && obj.children("a.clicked").size() > 0) {
+          return this.deselect_branch(obj);
+        }
+        if(this.settings.rules.multiple != false && multiple) {
+          this.selected_arr.push(obj);
+        }
+        if(this.settings.rules.multiple != false && !multiple) {
+          for(var i in this.selected_arr) {
+            if(!this.selected_arr.hasOwnProperty(i)) continue;
+            this.selected_arr[i].children("A").removeClass("clicked");
+            this.callback("ondeselect", [this.selected_arr[i].get(0), _this]);
+          }
+          this.selected_arr = [];
+          this.selected_arr.push(obj);
+          if(this.selected && this.selected.children("A").hasClass("clicked")) {
+            this.selected.children("A").removeClass("clicked");
+            this.callback("ondeselect", [this.selected.get(0), _this]);
+          }
+        }
+        if(!this.settings.rules.multiple) {
+          if(this.selected) {
+            this.selected.children("A").removeClass("clicked");
+            this.callback("ondeselect", [this.selected.get(0), _this]);
+          }
+        }
+        // SAVE NEWLY SELECTED
+        this.selected = obj;
+        if(this.hovered !== false) {
+          this.hovered.children("A").removeClass("hover");
+          this.hovered = obj;
+        }
+
+        // FOCUS NEW NODE AND OPEN ALL PARENT NODES IF CLOSED
+        this.selected.children("a").addClass("clicked").end().parents("li.closed").each( function () { _this.open_branch(this, true); });
+
+        // SCROLL SELECTED NODE INTO VIEW
+        this.scroll_into_view(this.selected);
+
+        this.callback("onselect", [this.selected.get(0), _this]);
+        this.callback("onchange", [this.selected.get(0), _this]);
+      },
+      deselect_branch : function (obj) {
+        if(this.locked) return this.error("LOCKED");
+        var _this = this;
+        var obj = this.get_node(obj);
+        if(obj.children("a.clicked").size() == 0) return this.error("DESELECT: NODE NOT SELECTED");
+
+        obj.children("a").removeClass("clicked");
+        this.callback("ondeselect", [obj.get(0), _this]);
+        if(this.settings.rules.multiple != false && this.selected_arr.length > 1) {
+          this.selected_arr = [];
+          this.container.find("a.clicked").filter(":first-child").parent().each(function () {
+            _this.selected_arr.push($(this));
+          });
+          if(obj.get(0) == this.selected.get(0)) {
+            this.selected = this.selected_arr[0];
+          }
+        }
+        else {
+          if(this.settings.rules.multiple != false) this.selected_arr = [];
+          this.selected = false;
+        }
+        this.callback("onchange", [obj.get(0), _this]);
+      },
+      toggle_branch : function (obj) {
+        if(this.locked) return this.error("LOCKED");
+        var obj = this.get_node(obj);
+        if(obj.hasClass("closed"))  return this.open_branch(obj);
+        if(obj.hasClass("open"))  return this.close_branch(obj); 
+      },
+      open_branch : function (obj, disable_animation, callback) {
+        var _this = this;
+
+        if(this.locked) return this.error("LOCKED");
+        var obj = this.get_node(obj);
+        if(!obj.size()) return this.error("OPEN: NO SUCH NODE");
+        if(obj.hasClass("leaf")) return this.error("OPEN: OPENING LEAF NODE");
+        if(this.settings.data.async && obj.find("li").size() == 0) {
+          
+          if(this.callback("beforeopen",[obj.get(0),this]) === false) return this.error("OPEN: STOPPED BY USER");
+
+          obj.children("ul:eq(0)").remove().end().append("<ul><li class='last'><a class='loading' href='#'><ins>&nbsp;</ins>" + (_this.settings.lang.loading || "Loading ...") + "</a></li></ul>");
+          obj.removeClass("closed").addClass("open");
+
+          var _datastore = new $.tree.datastores[this.settings.data.type]();
+          _datastore.load(this.callback("beforedata",[obj,this]),this,this.settings.data.opts,function(data){
+            data = _this.callback("ondata", [data, _this]);
+            if(!data || data.length == 0) {
+              obj.removeClass("closed").removeClass("open").addClass("leaf").children("ul").remove();
+              if(callback) callback.call();
+              return;
+            }
+            _datastore.parse(data,_this,_this.settings.data.opts,function(str){
+              str = _this.callback("onparse", [str, _this]);
+              // if(obj.children('ul:eq(0)').children('li').size() > 1) obj.children("ul").find('.loaading').parent().replaceWith(str); else 
+              obj.children("ul:eq(0)").replaceWith($("<ul>").html(str));
+              obj.find("li:last-child").addClass("last").end().find("li:has(ul)").not(".open").addClass("closed");
+              obj.find("li").not(".open").not(".closed").addClass("leaf");
+              _this.open_branch.apply(_this, [obj]);
+              if(callback) callback.call();
+            });
+          });
+          return true;
+        }
+        else {
+          if(!this.settings.data.async) {
+            if(this.callback("beforeopen",[obj.get(0),this]) === false) return this.error("OPEN: STOPPED BY USER");
+          }
+          if(parseInt(this.settings.ui.animation) > 0 && !disable_animation ) {
+            obj.children("ul:eq(0)").css("display","none");
+            obj.removeClass("closed").addClass("open");
+            obj.children("ul:eq(0)").slideDown(parseInt(this.settings.ui.animation), function() {
+              $(this).css("display","");
+              if(callback) callback.call();
+            });
+          } else {
+            obj.removeClass("closed").addClass("open");
+            if(callback) callback.call();
+          }
+          this.callback("onopen", [obj.get(0), this]);
+          return true;
+        }
+      },
+      close_branch : function (obj, disable_animation) {
+        if(this.locked) return this.error("LOCKED");
+        var _this = this;
+        var obj = this.get_node(obj);
+        if(!obj.size()) return this.error("CLOSE: NO SUCH NODE");
+        if(_this.callback("beforeclose",[obj.get(0),_this]) === false) return this.error("CLOSE: STOPPED BY USER");
+        if(parseInt(this.settings.ui.animation) > 0 && !disable_animation && obj.children("ul:eq(0)").size() == 1) {
+          obj.children("ul:eq(0)").slideUp(parseInt(this.settings.ui.animation), function() {
+            if(obj.hasClass("open")) obj.removeClass("open").addClass("closed");
+            $(this).css("display","");
+          });
+        } 
+        else {
+          if(obj.hasClass("open")) obj.removeClass("open").addClass("closed");
+        }
+        if(this.selected && this.settings.ui.selected_parent_close !== false && obj.children("ul:eq(0)").find("a.clicked").size() > 0) {
+          obj.find("li:has(a.clicked)").each(function() {
+            _this.deselect_branch(this);
+          });
+          if(this.settings.ui.selected_parent_close == "select_parent" && obj.children("a.clicked").size() == 0) this.select_branch(obj, (this.settings.rules.multiple != false && this.selected_arr.length > 0) );
+        }
+        this.callback("onclose", [obj.get(0), this]);
+      },
+      open_all : function (obj, callback) {
+        if(this.locked) return this.error("LOCKED");
+        var _this = this;
+        obj = obj ? this.get_node(obj) : this.container;
+
+        var s = obj.find("li.closed").size();
+        if(!callback) this.cl_count = 0;
+        else      this.cl_count --;
+        if(s > 0) {
+          this.cl_count += s;
+          // maybe add .andSelf()
+          obj.find("li.closed").each( function () { var __this = this; _this.open_branch.apply(_this, [this, true, function() { _this.open_all.apply(_this, [__this, true]); } ]); });
+        }
+        else if(this.cl_count == 0) this.callback("onopen_all",[this]);
+      },
+      close_all : function (obj) {
+        if(this.locked) return this.error("LOCKED");
+        var _this = this;
+        obj = obj ? this.get_node(obj) : this.container;
+        // maybe add .andSelf()
+        obj.find("li.open").each( function () { _this.close_branch(this, true); });
+        this.callback("onclose_all",[this]);
+      },
+
+      set_lang : function (i) { 
+        if(!$.isArray(this.settings.languages) || this.settings.languages.length == 0) return false;
+        if(this.locked) return this.error("LOCKED");
+        if(!$.inArray(i,this.settings.languages) && typeof this.settings.languages[i] != "undefined") i = this.settings.languages[i];
+        if(typeof i == "undefined") return false;
+        if(i == this.current_lang) return true;
+        var st = false;
+        var id = "#" + this.container.attr("id");
+        st = tree_component.get_css(id + " ." + this.current_lang);
+        if(st !== false) st.style.display = "none";
+        st = tree_component.get_css(id + " ." + i);
+        if(st !== false) st.style.display = "";
+        this.current_lang = i;
+        return true;
+      },
+      get_lang : function () {
+        if(!$.isArray(this.settings.languages) || this.settings.languages.length == 0) return false;
+        return this.current_lang;
+      },
+
+      create : function (obj, ref_node, position) { 
+        if(this.locked) return this.error("LOCKED");
+        
+        var root = false;
+        if(ref_node == -1) { root = true; ref_node = this.container; }
+        else ref_node = ref_node ? this.get_node(ref_node) : this.selected;
+
+        if(!root && (!ref_node || !ref_node.size())) return this.error("CREATE: NO NODE SELECTED");
+
+        var pos = position;
+
+        var tmp = ref_node; // for type calculation
+        if(position == "before") {
+          position = ref_node.parent().children().index(ref_node);
+          ref_node = ref_node.parents("li:eq(0)");
+        }
+        if(position == "after") {
+          position = ref_node.parent().children().index(ref_node) + 1;
+          ref_node = ref_node.parents("li:eq(0)");
+        }
+        if(!root && ref_node.size() == 0) { root = true; ref_node = this.container; }
+
+        if(!root) {
+          if(!this.check("creatable", ref_node)) return this.error("CREATE: CANNOT CREATE IN NODE");
+          if(ref_node.hasClass("closed")) {
+            if(this.settings.data.async && ref_node.children("ul").size() == 0) {
+              var _this = this;
+              return this.open_branch(ref_node, true, function () { _this.create.apply(_this, [obj, ref_node, position]); } );
+            }
+            else this.open_branch(ref_node, true);
+          }
+        }
+
+        // creating new object to pass to parseJSON
+        var torename = false; 
+        if(!obj)  obj = {};
+        else    obj = $.extend(true, {}, obj);
+        if(!obj.attributes) obj.attributes = {};
+        if(!obj.attributes[this.settings.rules.type_attr]) obj.attributes[this.settings.rules.type_attr] = this.get_type(tmp) || "default";
+        if(this.settings.languages.length) {
+          if(!obj.data) { obj.data = {}; torename = true; }
+          for(var i = 0; i < this.settings.languages.length; i++) {
+            if(!obj.data[this.settings.languages[i]]) obj.data[this.settings.languages[i]] = ((typeof this.settings.lang.new_node).toLowerCase() != "string" && this.settings.lang.new_node[i]) ? this.settings.lang.new_node[i] : this.settings.lang.new_node;
+          }
+        }
+        else {
+          if(!obj.data) { obj.data = this.settings.lang.new_node; torename = true; }
+        }
+
+        obj = this.callback("ondata",[obj, this]);
+        var obj_s = $.tree.datastores.json().parse(obj,this);
+        obj_s = this.callback("onparse", [obj_s, this]);
+        var $li = $(obj_s);
+
+        if($li.children("ul").size()) {
+          if(!$li.is(".open")) $li.addClass("closed");
+        }
+        else $li.addClass("leaf");
+        $li.find("li:last-child").addClass("last").end().find("li:has(ul)").not(".open").addClass("closed");
+        $li.find("li").not(".open").not(".closed").addClass("leaf");
+
+        var r = {
+          max_depth : this.settings.rules.use_max_depth ? this.check("max_depth", (root ? -1 : ref_node) ) : -1,
+          max_children : this.settings.rules.use_max_children ? this.check("max_children", (root ? -1 : ref_node) ) : -1,
+          valid_children : this.check("valid_children", (root ? -1 : ref_node) )
+        };
+        var nod_type = this.get_type($li);
+        if(typeof r.valid_children != "undefined" && (r.valid_children == "none" || ($.isArray(r.valid_children) && $.inArray(nod_type, r.valid_children) == -1))) return this.error("CREATE: NODE NOT A VALID CHILD");
+
+        if(this.settings.rules.use_max_children) {
+          if(typeof r.max_children != "undefined" && r.max_children != -1 && r.max_children >= this.children(ref_node).size()) return this.error("CREATE: MAX_CHILDREN REACHED");
+        }
+
+        if(this.settings.rules.use_max_depth) {
+          if(typeof r.max_depth != "undefined" && r.max_depth === 0) return this.error("CREATE: MAX-DEPTH REACHED");
+          // check for max_depth up the chain
+          var mx = (r.max_depth > 0) ? r.max_depth : false;
+          var i = 0;
+          var t = ref_node;
+
+          while(t !== -1 && !root) {
+            t = this.parent(t);
+            i ++;
+            var m = this.check("max_depth",t);
+            if(m >= 0) {
+              mx = (mx === false) ? (m - i) : Math.min(mx, m - i);
+            }
+            if(mx !== false && mx <= 0) return this.error("CREATE: MAX-DEPTH REACHED");
+          }
+          if(mx !== false && mx <= 0) return this.error("CREATE: MAX-DEPTH REACHED");
+          if(mx !== false) { 
+            var incr = 1;
+            var t = $li;
+            while(t.size() > 0) {
+              if(mx - incr < 0) return this.error("CREATE: MAX-DEPTH REACHED");
+              t = t.children("ul").children("li");
+              incr ++;
+            }
+          }
+        }
+
+        if((typeof position).toLowerCase() == "undefined" || position == "inside") 
+          position = (this.settings.rules.createat == "top") ? 0 : ref_node.children("ul:eq(0)").children("li").size();
+        if(ref_node.children("ul").size() == 0 || (root == true && ref_node.children("ul").children("li").size() == 0) ) {
+          if(!root) var a = this.moved($li,ref_node.children("a:eq(0)"),"inside", true);
+          else    var a = this.moved($li,this.container.children("ul:eq(0)"),"inside", true);
+        }
+        else if(pos == "before" && ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
+          var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", true);
+        else if(pos == "after" &&  ref_node.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").size())
+          var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").children("a:eq(0)"),"after", true);
+        else if(ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
+          var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", true);
+        else
+          var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:last").children("a:eq(0)"),"after",true);
+
+        if(a === false) return this.error("CREATE: ABORTED");
+
+        if(torename) {
+          this.select_branch($li.children("a:eq(0)"));
+          this.rename();
+        }
+        return $li;
+      },
+      rename : function (obj, new_name) {
+        if(this.locked) return this.error("LOCKED");
+        obj = obj ? this.get_node(obj) : this.selected;
+        var _this = this;
+        if(!obj || !obj.size()) return this.error("RENAME: NO NODE SELECTED");
+        if(!this.check("renameable", obj)) return this.error("RENAME: NODE NOT RENAMABLE");
+        if(!this.callback("beforerename",[obj.get(0), _this.current_lang, _this])) return this.error("RENAME: STOPPED BY USER");
+
+        obj.parents("li.closed").each(function () { _this.open_branch(this) });
+        if(this.current_lang) obj = obj.find("a." + this.current_lang);
+        else          obj = obj.find("a:first");
+
+        // Rollback
+        var rb = {}; 
+        rb[this.container.attr("id")] = this.get_rollback();
+
+        var icn = obj.children("ins").clone();
+        if((typeof new_name).toLowerCase() == "string") {
+          obj.text(new_name).prepend(icn);
+          _this.callback("onrename", [_this.get_node(obj).get(0), _this, rb]);
+        }
+        else {
+          var last_value = "";
+          obj.contents().each(function () {
+            if(this.nodeType == 3) { last_value = this.data; return false; }
+          });
+          _this.inp = $("<input type='text' autocomplete='off' />");
+          _this.inp
+            .val(last_value.replace(/&amp;/g,"&").replace(/&gt;/g,">").replace(/&lt;/g,"<"))
+            .bind("mousedown",    function (event) { event.stopPropagation(); })
+            .bind("mouseup",    function (event) { event.stopPropagation(); })
+            .bind("click",      function (event) { event.stopPropagation(); })
+            .bind("keyup",      function (event) { 
+                var key = event.keyCode || event.which;
+                if(key == 27) { this.value = last_value; this.blur(); return }
+                if(key == 13) { this.blur(); return; }
+              });
+          _this.inp.blur(function(event) {
+              if(this.value == "") this.value = last_value; 
+              obj.text(this.value).prepend(icn);
+              obj.get(0).style.display = ""; 
+              obj.prevAll("span").remove(); 
+              _this.inp = false;
+              _this.callback("onrename", [_this.get_node(obj).get(0), _this, rb]);
+            });
+
+          var spn = $("<span />").addClass(obj.attr("class")).append(icn).append(_this.inp);
+          obj.get(0).style.display = "none";
+          obj.parent().prepend(spn);
+          _this.inp.get(0).focus();
+          _this.inp.get(0).select();
+        }
+      },
+      remove : function(obj) {
+        if(this.locked) return this.error("LOCKED");
+        var _this = this;
+
+        // Rollback
+        var rb = {}; 
+        rb[this.container.attr("id")] = this.get_rollback();
+
+        if(obj && (!this.selected || this.get_node(obj).get(0) != this.selected.get(0) )) {
+          obj = this.get_node(obj);
+          if(obj.size()) {
+            if(!this.check("deletable", obj)) return this.error("DELETE: NODE NOT DELETABLE");
+            if(!this.callback("beforedelete",[obj.get(0), _this])) return this.error("DELETE: STOPPED BY USER");
+            $parent = obj.parent();
+            if(obj.find("a.clicked").size()) {
+              var reset_selected = false;
+              _this.selected_arr = [];
+              this.container.find("a.clicked").filter(":first-child").parent().each(function () {
+                if(!reset_selected && this == _this.selected.get(0)) reset_selected = true;
+                if($(this).parents().index(obj) != -1) return true;
+                _this.selected_arr.push($(this));
+              });
+              if(reset_selected) this.selected = this.selected_arr[0] || false;
+            }
+            obj = obj.remove();
+            $parent.children("li:last").addClass("last");
+            if($parent.children("li").size() == 0) {
+              $li = $parent.parents("li:eq(0)");
+              $li.removeClass("open").removeClass("closed").addClass("leaf").children("ul").remove();
+            }
+            this.callback("ondelete", [obj.get(0), this, rb]);
+          }
+        }
+        else if(this.selected) {
+          if(!this.check("deletable", this.selected)) return this.error("DELETE: NODE NOT DELETABLE");
+          if(!this.callback("beforedelete",[this.selected.get(0), _this])) return this.error("DELETE: STOPPED BY USER");
+          $parent = this.selected.parent();
+          var obj = this.selected;
+          if(this.settings.rules.multiple == false || this.selected_arr.length == 1) {
+            var stop = true;
+            var tmp = this.settings.ui.selected_delete == "select_previous" ? this.prev(this.selected) : false;
+          }
+          obj = obj.remove();
+          $parent.children("li:last").addClass("last");
+          if($parent.children("li").size() == 0) {
+            $li = $parent.parents("li:eq(0)");
+            $li.removeClass("open").removeClass("closed").addClass("leaf").children("ul").remove();
+          }
+          if(!stop && this.settings.rules.multiple != false) {
+            var _this = this;
+            this.selected_arr = [];
+            this.container.find("a.clicked").filter(":first-child").parent().each(function () {
+              _this.selected_arr.push($(this));
+            });
+            if(this.selected_arr.length > 0) {
+              this.selected = this.selected_arr[0];
+              this.remove();
+            }
+          }
+          if(stop && tmp) this.select_branch(tmp); 
+          this.callback("ondelete", [obj.get(0), this, rb]);
+        }
+        else return this.error("DELETE: NO NODE SELECTED");
+      },
+
+      next : function (obj, strict) {
+        obj = this.get_node(obj);
+        if(!obj.size()) return false;
+        if(strict) return (obj.nextAll("li").size() > 0) ? obj.nextAll("li:eq(0)") : false;
+
+        if(obj.hasClass("open")) return obj.find("li:eq(0)");
+        else if(obj.nextAll("li").size() > 0) return obj.nextAll("li:eq(0)");
+        else return obj.parents("li").next("li").eq(0);
+      },
+      prev : function(obj, strict) {
+        obj = this.get_node(obj);
+        if(!obj.size()) return false;
+        if(strict) return (obj.prevAll("li").size() > 0) ? obj.prevAll("li:eq(0)") : false;
+
+        if(obj.prev("li").size()) {
+          var obj = obj.prev("li").eq(0);
+          while(obj.hasClass("open")) obj = obj.children("ul:eq(0)").children("li:last");
+          return obj;
+        }
+        else return obj.parents("li:eq(0)").size() ? obj.parents("li:eq(0)") : false;
+      },
+      parent : function(obj) {
+        obj = this.get_node(obj);
+        if(!obj.size()) return false;
+        return obj.parents("li:eq(0)").size() ? obj.parents("li:eq(0)") : -1;
+      },
+      children : function(obj) {
+        if(obj === -1) return this.container.children("ul:eq(0)").children("li");
+
+        obj = this.get_node(obj);
+        if(!obj.size()) return false;
+        return obj.children("ul:eq(0)").children("li");
+      },
+
+      toggle_dots : function () {
+        if(this.settings.ui.dots) {
+          this.settings.ui.dots = false;
+          this.container.children("ul:eq(0)").addClass("no_dots");
+        }
+        else {
+          this.settings.ui.dots = true;
+          this.container.children("ul:eq(0)").removeClass("no_dots");
+        }
+      },
+
+      callback : function (cb, args) {
+        var p = false;
+        var r = null;
+        for(var i in this.settings.plugins) {
+          if(typeof $.tree.plugins[i] != "object") continue;
+          p = $.tree.plugins[i];
+          if(p.callbacks && typeof p.callbacks[cb] == "function") r = p.callbacks[cb].apply(this, args);
+          if(typeof r !== "undefined" && r !== null) {
+            if(cb == "ondata" || cb == "onparse") args[0] = r; // keep the chain if data or parse
+            else return r;
+          }
+        }
+        p = this.settings.callback[cb];
+        if(typeof p == "function") return p.apply(null, args);
+      },
+      get_rollback : function () {
+        var rb = {};
+        rb.html = this.container.html();
+        rb.selected = this.selected ? this.selected.attr("id") : false;
+        return rb;
+      },
+      moved : function (what, where, how, is_new, is_copy, rb) {
+        var what  = $(what);
+        var $parent = $(what).parents("ul:eq(0)");
+        var $where  = $(where);
+        if($where.is("ins")) $where = $where.parent();
+
+        // Rollback
+        if(!rb) {
+          var rb = {}; 
+          rb[this.container.attr("id")] = this.get_rollback();
+          if(!is_new) {
+            var tmp = what.size() > 1 ? what.eq(0).parents(".tree:eq(0)") : what.parents(".tree:eq(0)");
+            if(tmp.get(0) != this.container.get(0)) {
+              tmp = tree_component.inst[tmp.attr("id")];
+              rb[tmp.container.attr("id")] = tmp.get_rollback();
+            }
+            delete tmp;
+          }
+        }
+
+        if(how == "inside" && this.settings.data.async) {
+          var _this = this;
+          if(this.get_node($where).hasClass("closed")) {
+            return this.open_branch(this.get_node($where), true, function () { _this.moved.apply(_this, [what, where, how, is_new, is_copy, rb]); });
+          }
+          if(this.get_node($where).find("> ul > li > a.loading").size() == 1) {
+            setTimeout(function () { _this.moved.apply(_this, [what, where, how, is_new, is_copy]); }, 200);
+            return;
+          }
+        }
+
+
+        // IF MULTIPLE
+        if(what.size() > 1) {
+          var _this = this;
+          var tmp = this.moved(what.eq(0), where, how, false, is_copy, rb);
+          what.each(function (i) {
+            if(i == 0) return;
+            if(tmp) { // if tmp is false - the previous move was a no-go
+              tmp = _this.moved(this, tmp.children("a:eq(0)"), "after", false, is_copy, rb);
+            }
+          });
+          return what;
+        }
+
+        if(is_copy) {
+          _what = what.clone();
+          _what.each(function (i) {
+            this.id = this.id + "_copy";
+            $(this).find("li").each(function () {
+              this.id = this.id + "_copy";
+            });
+            $(this).removeClass("dragged").find("a.clicked").removeClass("clicked").end().find("li.dragged").removeClass("dragged");
+          });
+        }
+        else _what = what;
+        if(is_new) {
+          if(!this.callback("beforecreate", [this.get_node(what).get(0), this.get_node(where).get(0),how,this])) return false;
+        }
+        else {
+          if(!this.callback("beforemove", [this.get_node(what).get(0), this.get_node(where).get(0),how,this])) return false;
+        }
+
+        if(!is_new) {
+          var tmp = what.parents(".tree:eq(0)");
+          // if different trees
+          if(tmp.get(0) != this.container.get(0)) {
+            tmp = tree_component.inst[tmp.attr("id")];
+
+            // if there are languages - otherwise - no cleanup needed
+            if(tmp.settings.languages.length) {
+              var res = [];
+              // if new tree has no languages - use current visible
+              if(this.settings.languages.length == 0) res.push("." + tmp.current_lang);
+              else {
+                for(var i in this.settings.languages) {
+                  if(!this.settings.languages.hasOwnProperty(i)) continue;
+                  for(var j in tmp.settings.languages) {
+                    if(!tmp.settings.languages.hasOwnProperty(j)) continue;
+                    if(this.settings.languages[i] == tmp.settings.languages[j]) res.push("." + this.settings.languages[i]);
+                  }
+                }
+              }
+              if(res.length == 0) return this.error("MOVE: NO COMMON LANGUAGES");
+              _what.find("a").not(res.join(",")).remove();
+            }
+            _what.find("a.clicked").removeClass("clicked");
+          }
+        }
+        what = _what;
+
+        // ADD NODE TO NEW PLACE
+        switch(how) {
+          case "before":
+            $where.parents("ul:eq(0)").children("li.last").removeClass("last");
+            $where.parent().before(what.removeClass("last"));
+            $where.parents("ul:eq(0)").children("li:last").addClass("last");
+            break;
+          case "after":
+            $where.parents("ul:eq(0)").children("li.last").removeClass("last");
+            $where.parent().after(what.removeClass("last"));
+            $where.parents("ul:eq(0)").children("li:last").addClass("last");
+            break;
+          case "inside":
+            if($where.parent().children("ul:first").size()) {
+              if(this.settings.rules.createat == "top") {
+                $where.parent().children("ul:first").prepend(what.removeClass("last")).children("li:last").addClass("last");
+
+                // restored this section
+                var tmp_node = $where.parent().children("ul:first").children("li:first");
+                if(tmp_node.size()) {
+                  how = "before";
+                  where = tmp_node;
+                }
+              }
+              else {
+                // restored this section
+                var tmp_node = $where.parent().children("ul:first").children(".last");
+                if(tmp_node.size()) {
+                  how = "after";
+                  where = tmp_node;
+                }
+
+                $where.parent().children("ul:first").children(".last").removeClass("last").end().append(what.removeClass("last")).children("li:last").addClass("last");
+              }
+            }
+            else {
+              what.addClass("last");
+              $where.parent().removeClass("leaf").append("<ul/>");
+              if(!$where.parent().hasClass("open")) $where.parent().addClass("closed");
+              $where.parent().children("ul:first").prepend(what);
+            }
+            if($where.parent().hasClass("closed")) { this.open_branch($where); }
+            break;
+          default:
+            break;
+        }
+        // CLEANUP OLD PARENT
+        if($parent.find("li").size() == 0) {
+          var $li = $parent.parent();
+          $li.removeClass("open").removeClass("closed").addClass("leaf");
+          if(!$li.is(".tree")) $li.children("ul").remove();
+          $li.parents("ul:eq(0)").children("li.last").removeClass("last").end().children("li:last").addClass("last");
+        }
+        else {
+          $parent.children("li.last").removeClass("last");
+          $parent.children("li:last").addClass("last");
+        }
+
+        // NO LONGER CORRECT WITH position PARAM - if(is_new && how != "inside") where = this.get_node(where).parents("li:eq(0)");
+        if(is_copy)   this.callback("oncopy", [this.get_node(what).get(0), this.get_node(where).get(0), how, this, rb]);
+        else if(is_new) this.callback("oncreate", [this.get_node(what).get(0), ($where.is("ul") ? -1 : this.get_node(where).get(0) ), how, this, rb]);
+        else      this.callback("onmove", [this.get_node(what).get(0), this.get_node(where).get(0), how, this, rb]);
+        return what;
+      },
+      error : function (code) {
+        this.callback("error",[code,this]);
+        return false;
+      },
+      lock : function (state) {
+        this.locked = state;
+        if(this.locked) this.container.children("ul:eq(0)").addClass("locked");
+        else      this.container.children("ul:eq(0)").removeClass("locked");
+      },
+      cut : function (obj) {
+        if(this.locked) return this.error("LOCKED");
+        obj = obj ? this.get_node(obj) : this.container.find("a.clicked").filter(":first-child").parent();
+        if(!obj || !obj.size()) return this.error("CUT: NO NODE SELECTED");
+        tree_component.cut_copy.copy_nodes = false;
+        tree_component.cut_copy.cut_nodes = obj;
+      },
+      copy : function (obj) {
+        if(this.locked) return this.error("LOCKED");
+        obj = obj ? this.get_node(obj) : this.container.find("a.clicked").filter(":first-child").parent();
+        if(!obj || !obj.size()) return this.error("COPY: NO NODE SELECTED");
+        tree_component.cut_copy.copy_nodes = obj;
+        tree_component.cut_copy.cut_nodes = false;
+      },
+      paste : function (obj, position) {
+        if(this.locked) return this.error("LOCKED");
+
+        var root = false;
+        if(obj == -1) { root = true; obj = this.container; }
+        else obj = obj ? this.get_node(obj) : this.selected;
+
+        if(!root && (!obj || !obj.size())) return this.error("PASTE: NO NODE SELECTED");
+        if(!tree_component.cut_copy.copy_nodes && !tree_component.cut_copy.cut_nodes) return this.error("PASTE: NOTHING TO DO");
+
+        var _this = this;
+
+        var pos = position;
+
+        if(position == "before") {
+          position = obj.parent().children().index(obj);
+          obj = obj.parents("li:eq(0)");
+        }
+        else if(position == "after") {
+          position = obj.parent().children().index(obj) + 1;
+          obj = obj.parents("li:eq(0)");
+        }
+        else if((typeof position).toLowerCase() == "undefined" || position == "inside") {
+          position = (this.settings.rules.createat == "top") ? 0 : obj.children("ul:eq(0)").children("li").size();
+        }
+        if(!root && obj.size() == 0) { root = true; obj = this.container; }
+
+        if(tree_component.cut_copy.copy_nodes && tree_component.cut_copy.copy_nodes.size()) {
+          var ok = true;
+          if(!root && !this.check_move(tree_component.cut_copy.copy_nodes, obj.children("a:eq(0)"), "inside")) return false;
+
+          if(obj.children("ul").size() == 0 || (root == true && obj.children("ul").children("li").size() == 0) ) {
+            if(!root) var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("a:eq(0)"),"inside", false, true);
+            else    var a = this.moved(tree_component.cut_copy.copy_nodes,this.container.children("ul:eq(0)"),"inside", false, true);
+          }
+          else if(pos == "before" && obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
+            var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", false, true);
+          else if(pos == "after" && obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").size())
+            var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").children("a:eq(0)"),"after", false, true);
+          else if(obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
+            var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", false, true);
+          else
+            var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:last").children("a:eq(0)"),"after", false, true);
+          tree_component.cut_copy.copy_nodes = false;
+        }
+        if(tree_component.cut_copy.cut_nodes && tree_component.cut_copy.cut_nodes.size()) {
+          var ok = true;
+          obj.parents().andSelf().each(function () {
+            if(tree_component.cut_copy.cut_nodes.index(this) != -1) {
+              ok = false;
+              return false;
+            }
+          });
+          if(!ok) return this.error("Invalid paste");
+          if(!root && !this.check_move(tree_component.cut_copy.cut_nodes, obj.children("a:eq(0)"), "inside")) return false;
+
+          if(obj.children("ul").size() == 0 || (root == true && obj.children("ul").children("li").size() == 0) ) {
+            if(!root) var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("a:eq(0)"),"inside");
+            else    var a = this.moved(tree_component.cut_copy.cut_nodes,this.container.children("ul:eq(0)"),"inside");
+          }
+          else if(pos == "before" && obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
+            var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before");
+          else if(pos == "after" && obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").size())
+            var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").children("a:eq(0)"),"after");
+          else if(obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
+            var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before");
+          else
+            var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:last").children("a:eq(0)"),"after");
+          tree_component.cut_copy.cut_nodes = false;
+        }
+      },
+      search : function(str, func) {
+        var _this = this;
+        if(!str || (this.srch && str != this.srch) ) {
+          this.srch = "";
+          this.srch_opn = false;
+          this.container.find("a.search").removeClass("search");
+        }
+        this.srch = str;
+        if(!str) return;
+
+        if(!func) func = "contains";
+        if(this.settings.data.async) {
+          if(!this.srch_opn) {
+            var dd = $.extend( { "search" : str } , this.callback("beforedata", [false, this] ) );
+            $.ajax({
+              type    : this.settings.data.opts.method,
+              url     : this.settings.data.opts.url, 
+              data    : dd, 
+              dataType  : "text",
+              success   : function (data) {
+                _this.srch_opn = $.unique(data.split(","));
+                _this.search.apply(_this,[str, func]);
+              } 
+            });
+          }
+          else if(this.srch_opn.length) {
+            if(this.srch_opn && this.srch_opn.length) {
+              var opn = false;
+              for(var j = 0; j < this.srch_opn.length; j++) {
+                if(this.get_node("#" + this.srch_opn[j]).size() > 0) {
+                  opn = true;
+                  var tmp = "#" + this.srch_opn[j];
+                  delete this.srch_opn[j];
+                  this.open_branch(tmp, true, function () { _this.search.apply(_this,[str, func]); } );
+                }
+              }
+              if(!opn) {
+                this.srch_opn = [];
+                 _this.search.apply(_this,[str, func]);
+              }
+            }
+          }
+          else {
+            this.srch_opn = false;
+            var selector = "a";
+            // IF LANGUAGE VERSIONS
+            if(this.settings.languages.length) selector += "." + this.current_lang;
+            this.callback("onsearch", [this.container.find(selector + ":" + func + "('" + str + "')"), this]);
+          }
+        }
+        else {
+          var selector = "a";
+          // IF LANGUAGE VERSIONS
+          if(this.settings.languages.length) selector += "." + this.current_lang;
+          var nn = this.container.find(selector + ":" + func + "('" + str + "')");
+          nn.parents("li.closed").each( function () { _this.open_branch(this, true); });
+          this.callback("onsearch", [nn, this]);
+        }
+      },
+      add_sheet : tree_component.add_sheet,
+
+      destroy : function() {
+        this.callback("ondestroy", [this]);
+
+        this.container.unbind(".jstree");
+        $("#" + this.container.attr("id")).die("click.jstree").die("dblclick.jstree").die("mouseover.jstree").die("mouseout.jstree").die("mousedown.jstree");
+        this.container.removeClass("tree ui-widget ui-widget-content tree-default tree-" + this.settings.ui.theme_name).children("ul").removeClass("no_dots ltr locked").find("li").removeClass("leaf").removeClass("open").removeClass("closed").removeClass("last").children("a").removeClass("clicked hover search");
+
+        if(this.cntr == tree_component.focused) {
+          for(var i in tree_component.inst) {
+            if(i != this.cntr && i != this.container.attr("id")) {
+              tree_component.inst[i].focus();
+              break;
+            }
+          }
+        }
+
+        tree_component.inst[this.cntr] = false;
+        tree_component.inst[this.container.attr("id")] = false;
+        delete tree_component.inst[this.cntr];
+        delete tree_component.inst[this.container.attr("id")];
+        tree_component.cntr --;
+      }
+    }
+  };
+
+  // instance manager
+  tree_component.cntr = 0;
+  tree_component.inst = {};
+
+  // themes
+  tree_component.themes = [];
+
+  // drag'n'drop stuff
+  tree_component.drag_drop = {
+    isdown    : false,  // Is there a drag
+    drag_node : false,  // The actual node
+    drag_help : false,  // The helper
+    dragged   : false,
+
+    init_x    : false,
+    init_y    : false,
+    moving    : false,
+
+    origin_tree : false,
+    marker    : false,
+
+    move_type : false,  // before, after or inside
+    ref_node  : false,  // reference node
+    appended  : false,  // is helper appended
+
+    foreign   : false,  // Is the dragged node a foreign one
+    droppable : [],   // Array of classes that can be dropped onto the tree
+
+    open_time : false,  // Timeout for opening nodes
+    scroll_time : false   // Timeout for scrolling
+  };
+  tree_component.mouseup = function(event) {
+    var tmp = tree_component.drag_drop;
+    if(tmp.open_time) clearTimeout(tmp.open_time);
+    if(tmp.scroll_time) clearTimeout(tmp.scroll_time);
+
+    if(tmp.moving && $.tree.drag_end !== false) $.tree.drag_end.call(null, event, tmp);
+
+    if(tmp.foreign === false && tmp.drag_node && tmp.drag_node.size()) {
+      tmp.drag_help.remove();
+      if(tmp.move_type) {
+        var tree1 = tree_component.inst[tmp.ref_node.parents(".tree:eq(0)").attr("id")];
+        if(tree1) tree1.moved(tmp.dragged, tmp.ref_node, tmp.move_type, false, (tmp.origin_tree.settings.rules.drag_copy == "on" || (tmp.origin_tree.settings.rules.drag_copy == "ctrl" && event.ctrlKey) ) );
+      }
+      tmp.move_type = false;
+      tmp.ref_node  = false;
+    }
+    if(tmp.foreign !== false) {
+      if(tmp.drag_help) tmp.drag_help.remove();
+      if(tmp.move_type) {
+        var tree1 = tree_component.inst[tmp.ref_node.parents(".tree:eq(0)").attr("id")];
+        if(tree1) tree1.callback("ondrop",[tmp.f_data, tree1.get_node(tmp.ref_node).get(0), tmp.move_type, tree1]);
+      }
+      tmp.foreign   = false;
+      tmp.move_type = false;
+      tmp.ref_node  = false;
+    }
+    // RESET EVERYTHING
+    if(tree_component.drag_drop.marker) tree_component.drag_drop.marker.hide();
+    if(tmp.dragged && tmp.dragged.size()) tmp.dragged.removeClass("dragged");
+    tmp.dragged   = false;
+    tmp.drag_help = false;
+    tmp.drag_node = false;
+    tmp.f_type    = false;
+    tmp.f_data    = false;
+    tmp.init_x    = false;
+    tmp.init_y    = false;
+    tmp.moving    = false;
+    tmp.appended  = false;
+    tmp.origin_tree = false;
+    if(tmp.isdown) {
+      tmp.isdown = false;
+      event.preventDefault(); 
+      event.stopPropagation();
+      return false;
+    }
+  };
+  tree_component.mousemove = function(event) {
+    var tmp = tree_component.drag_drop;
+    var is_start = false;
+
+    if(tmp.isdown) {
+      if(!tmp.moving && Math.abs(tmp.init_x - event.pageX) < 5 && Math.abs(tmp.init_y - event.pageY) < 5) {
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
+      }
+      else {
+        if(!tmp.moving) {
+          tree_component.drag_drop.moving = true;
+          is_start = true;
+        }
+      }
+
+      if(tmp.open_time) clearTimeout(tmp.open_time);
+
+      if(tmp.drag_help !== false) {
+        if(!tmp.appended) {
+          if(tmp.foreign !== false) tmp.origin_tree = $.tree.focused();
+          $("body").append(tmp.drag_help);
+          tmp.w = tmp.drag_help.width();
+          tmp.appended = true;
+        }
+        tmp.drag_help.css({ "left" : (event.pageX + 5 ), "top" : (event.pageY + 15) });
+      }
+
+      if(is_start && $.tree.drag_start !== false) $.tree.drag_start.call(null, event, tmp);
+      if($.tree.drag !== false) $.tree.drag.call(null, event, tmp);
+
+      if(event.target.tagName == "DIV" && event.target.id == "jstree-marker") return false;
+
+      var et = $(event.target);
+      if(et.is("ins")) et = et.parent();
+      var cnt = et.is(".tree") ? et : et.parents(".tree:eq(0)");
+
+      // if not moving over a tree
+      if(cnt.size() == 0 || !tree_component.inst[cnt.attr("id")]) {
+        if(tmp.scroll_time) clearTimeout(tmp.scroll_time);
+        if(tmp.drag_help !== false) tmp.drag_help.find("li:eq(0) ins").addClass("forbidden");
+        tmp.move_type = false;
+        tmp.ref_node  = false;
+        tree_component.drag_drop.marker.hide();
+        return false;
+      }
+
+      var tree2 = tree_component.inst[cnt.attr("id")];
+      tree2.off_height();
+
+      if(tmp.scroll_time) clearTimeout(tmp.scroll_time);
+      tmp.scroll_time = setTimeout( function() { tree2.scroll_check(event.pageX,event.pageY); }, 50);
+
+      var mov = false;
+      var st = cnt.scrollTop();
+
+      if(event.target.tagName == "A" || event.target.tagName == "INS") {
+        // just in case if hover is over the draggable
+        if(et.is("#jstree-dragged")) return false;
+        if(tree2.get_node(event.target).hasClass("closed")) {
+          tmp.open_time = setTimeout( function () { tree2.open_branch(et); }, 500);
+        }
+
+        var et_off = et.offset();
+        var goTo = { 
+          x : (et_off.left - 1),
+          y : (event.pageY - et_off.top)
+        };
+
+        var arr = [];
+        if(goTo.y < tree2.li_height/3 + 1 )     arr = ["before","inside","after"];
+        else if(goTo.y > tree2.li_height*2/3 - 1 )  arr = ["after","inside","before"];
+        else {
+          if(goTo.y < tree2.li_height/2)      arr = ["inside","before","after"];
+          else                  arr = ["inside","after","before"];
+        }
+        var ok = false;
+        var nn = (tmp.foreign == false) ? tmp.origin_tree.container.find("li.dragged") : tmp.f_type;
+        $.each(arr, function(i, val) {
+          if(tree2.check_move(nn, et, val)) {
+            mov = val;
+            ok = true;
+            return false;
+          }
+        });
+        if(ok) {
+          switch(mov) {
+            case "before":
+              goTo.y = et_off.top - 2;
+              tree_component.drag_drop.marker.attr("class","marker");
+              break;
+            case "after":
+              goTo.y = et_off.top - 2 + tree2.li_height;
+              tree_component.drag_drop.marker.attr("class","marker");
+              break;
+            case "inside":
+              goTo.x -= 2;
+              goTo.y = et_off.top - 2 + tree2.li_height/2;
+              tree_component.drag_drop.marker.attr("class","marker_plus"); 
+              break;
+          }
+          tmp.move_type = mov;
+          tmp.ref_node  = $(event.target);
+          if(tmp.drag_help !== false) tmp.drag_help.find(".forbidden").removeClass("forbidden");
+          tree_component.drag_drop.marker.css({ "left" : goTo.x , "top" : goTo.y }).show();
+        }
+      }
+
+      if( (et.is(".tree") || et.is("ul") ) && et.find("li:eq(0)").size() == 0) {
+        var et_off = et.offset();
+        tmp.move_type = "inside";
+        tmp.ref_node  = cnt.children("ul:eq(0)");
+        if(tmp.drag_help !== false) tmp.drag_help.find(".forbidden").removeClass("forbidden");
+        tree_component.drag_drop.marker.attr("class","marker_plus");
+        tree_component.drag_drop.marker.css({ "left" : (et_off.left + 10) , "top" : et_off.top + 15 }).show();
+      }
+      else if( (event.target.tagName != "A" && event.target.tagName != "INS") || !ok) {
+        if(tmp.drag_help !== false) tmp.drag_help.find("li:eq(0) ins").addClass("forbidden");
+        tmp.move_type = false;
+        tmp.ref_node  = false;
+        tree_component.drag_drop.marker.hide();
+      }
+      event.preventDefault();
+      event.stopPropagation();
+      return false;
+    }
+    return true;
+  };
+  $(function () { 
+    $(document).bind("mousemove.jstree",  tree_component.mousemove); 
+    $(document).bind("mouseup.jstree",    tree_component.mouseup); 
+  });
+
+  // cut, copy, paste stuff
+  tree_component.cut_copy = { 
+    copy_nodes : false,
+    cut_nodes : false
+  };
+
+  // css stuff
+  tree_component.css = false;
+  tree_component.get_css = function(rule_name, delete_flag) {
+    rule_name = rule_name.toLowerCase();
+    var css_rules = tree_component.css.cssRules || tree_component.css.rules;
+    var j = 0;
+    do {
+      if(css_rules.length && j > css_rules.length + 5) return false;
+      if(css_rules[j].selectorText && css_rules[j].selectorText.toLowerCase() == rule_name) {
+        if(delete_flag == true) {
+          if(tree_component.css.removeRule) document.styleSheets[i].removeRule(j);
+          if(tree_component.css.deleteRule) document.styleSheets[i].deleteRule(j);
+          return true;
+        }
+        else return css_rules[j];
+      }
+    }
+    while (css_rules[++j]);
+    return false;
+  };
+  tree_component.add_css = function(rule_name) {
+    if(tree_component.get_css(rule_name)) return false;
+    (tree_component.css.insertRule) ? tree_component.css.insertRule(rule_name + ' { }', 0) : tree_component.css.addRule(rule_name, null, 0);
+    return tree_component.get_css(rule_name);
+  };
+  tree_component.remove_css = function(rule_name) { 
+    return tree_component.get_css(rule_name, true); 
+  };
+  tree_component.add_sheet = function(opts) {
+    if(opts.str) {
+      var tmp = document.createElement("style");
+      tmp.type = "text/css";
+      if(tmp.styleSheet) tmp.styleSheet.cssText = opts.str;
+      else tmp.appendChild(document.createTextNode(opts.str));
+      document.getElementsByTagName("head")[0].appendChild(tmp);
+      return tmp.sheet;
+    }
+    if(opts.url) {
+      if(document.createStyleSheet) {
+        try { document.createStyleSheet(opts.url); } catch (e) { };
+      }
+      else {
+        var newSS = document.createElement('link');
+        newSS.rel = 'stylesheet';
+        newSS.type  = 'text/css';
+        newSS.media = "all";
+        newSS.href  = opts.url;
+        // var styles = "@import url(' " + url + " ');";
+        // newSS.href ='data:text/css,'+escape(styles);
+        document.getElementsByTagName("head")[0].appendChild(newSS);
+        return newSS.styleSheet;
+      }
+    }
+  };
+  $(function () {
+    var u = navigator.userAgent.toLowerCase();
+    var v = (u.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1];
+    /*
+     * 2009-12-17 Reko:   
+     * Changed style attribute ".tree li.closed ul" to ".tree li.closed > ul" 
+     */
+    var css = '/* TREE LAYOUT */ .tree ul { margin:0 0 0 5px; padding:0 0 0 0; list-style-type:none; } .tree li { display:block; min-height:18px; line-height:18px; padding:0 0 0 15px; margin:0 0 0 0; /* Background fix */ clear:left;  } .tree li ul { display:none; } .tree li a, .tree li span { display:inline-block;line-height:16px;height:16px;color:black;white-space:nowrap;text-decoration:none;padding:1px 4px 1px 4px;margin:0; } .tree li a:focus { outline: none; } .tree li a input, .tree li span input { margin:0;padding:0 0;display:inline-block;height:12px !important;border:1px solid white;background:white;font-size:10px;font-family:Verdana; } .tree li a input:not([class="xxx"]), .tree li span input:not([class="xxx"]) { padding:1px 0; } /* FOR DOTS */ .tree .ltr li.last { float:left; } .tree > ul li.last { overflow:visible; } /* OPEN OR CLOSE */ .tree li.open ul { display:block; } .tree li.closed > ul { display:none !important; } /* FOR DRAGGING */ #jstree-dragged { position:absolute; top:-10px; left:-10px; margin:0; padding:0; } #jstree-dragged ul ul ul { display:none; }   /* BACKGROUND DOTS */ .tree li li { overflow:hidden; } .tree > .ltr > li { display:table; } /* ICONS */ .tree ul ins { display:inline-block; text-decoration:none; width:16px; height:16px; } .tree .ltr ins { margin:0 4px 0 0px; } ';
+    if(/msie/.test(u) && !/opera/.test(u)) { 
+      if(parseInt(v) == 6) css += '.tree li { height:18px; zoom:1; } .tree li li { overflow:visible; } .tree .ltr li.last { margin-top: expression( (this.previousSibling && /open/.test(this.previousSibling.className) ) ? "-2px" : "0"); } .marker { width:45px; background-position:-32px top; } .marker_plus { width:5px; background-position:right top; }';
+      if(parseInt(v) == 7) css += '.tree li li { overflow:visible; } .tree .ltr li.last { margin-top: expression( (this.previousSibling && /open/.test(this.previousSibling.className) ) ? "-2px" : "0"); }';
+    }
+    if(/opera/.test(u)) css += '.tree > ul > li.last:after { content:"."; display: block; height:1px; clear:both; visibility:hidden; }';
+    if(/mozilla/.test(u) && !/(compatible|webkit)/.test(u) && v.indexOf("1.8") == 0) css += '.tree .ltr li a { display:inline; float:left; } .tree li ul { clear:both; }';
+    tree_component.css = tree_component.add_sheet({ str : css });
+  });
 })(jQuery);
-//*/
 
-/* 
- * jsTree HTML data 1.0
- * The HTML data store. Datastores are build by replacing the `load_node` and `is_loaded` functions.
- */
+// Datastores
+// HTML and JSON are included here by default
 (function ($) {
-	$.jstree.plugin("html_data", {
-		__init : function () { 
-			this.data.html_data.original_container_html = this.get_container().html().replace(/<\/([^>]+)>\s+</ig,"</$1><").replace(/>\s+<([a-z]{1})/ig,"><$1");
-		},
-		defaults : { 
-			data : false,
-			ajax : false,
-			correct_state : false
-		},
-		_fn : {
-			load_node : function (obj, s_call, e_call) { this.load_node_html(obj, s_call, e_call); },
-			is_loaded : function (obj) { 
-				obj = this._get_node(obj); 
-				return obj == -1 || !obj || !this.get_settings().html_data.ajax || obj.is(".jstree-open, .jstree-leaf") || obj.children("ul").children("li").size() > 0;
-			},
-			load_node_html : function (obj, s_call, e_call) {
-				var d,
-					s = this.get_settings().html_data,
-					error_func = function () {},
-					success_func = function () {};
-				switch(true) {
-					case (!s.data && !s.ajax):
-						if(!obj || obj == -1) {
-							this.get_container()
-								.html(this.data.html_data.original_container_html)
-								.find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='icon'>&nbsp;</ins>");
-							this.clean_node();
-						}
-						if(s_call) { s_call.call(); }
-						break;
-					case (!!s.data && !s.ajax) || (!!s.data && !!s.ajax && (!obj || obj === -1)):
-						if(!obj || obj == -1) {
-							d = $(s.data);
-							if(!d.is("ul")) { d = $("<ul>").append(d); }
-							this.get_container()
-								.append(d)
-								.find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='icon'>&nbsp;</ins>");
-							this.clean_node();
-						}
-						if(s_call) { s_call.call(); }
-						break;
-					case (!s.data && !!s.ajax) || (!!s.data && !!s.ajax && obj && obj !== -1):
-						obj = this._get_node(obj);
-						error_func = function (x, t, e) {
-							var ef = this.get_settings().html_data.ajax.error; 
-							if(ef) { ef.call(this, x, t, e); }
-							if(obj != -1 && obj.length) {
-								obj.children(".jstree-loading").removeClass("jstree-loading");
-								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
-							}
-							if(e_call) { e_call.call(); }
-						};
-						success_func = function (d, t, x) {
-							var sf = this.get_settings().html_data.ajax.success; 
-							if(sf) { d = sf.call(this,d,t,x) || d; }
-							d = $(d);
-							if(!d.is("ul")) { d = $("<ul>").append(d); }
-							if(obj == -1) { this.get_container().html(d).find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='icon'>&nbsp;</ins>"); }
-							else { obj.children(".jstree-loading").removeClass("jstree-loading").append(d).find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='icon'>&nbsp;</ins>"); }
-							this.clean_node(obj);
-							if(s_call) { s_call.call(); }
-						};
-						s.ajax.context = this;
-						s.ajax.error = error_func;
-						s.ajax.success = success_func;
-						if($.isFunction(s.ajax.data)) { s.ajax.data = s.ajax.data.call(null, obj); }
-						$.ajax(s.ajax);
-						break;
-				}
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("html_data");
+  $.extend($.tree.datastores, {
+    "html" : function () {
+      return {
+        get   : function(obj, tree, opts) {
+          return obj && $(obj).size() ? $('<div>').append(tree.get_node(obj).clone()).html() : tree.container.children("ul:eq(0)").html();
+        },
+        parse : function(data, tree, opts, callback) {
+          if(callback) callback.call(null, data);
+          return data;
+        },
+        load  : function(data, tree, opts, callback) {
+          if(opts.url) {
+            $.ajax({
+              'type'    : opts.method,
+              'url'   : opts.url, 
+              'data'    : data, 
+              'dataType'  : "html",
+              'success' : function (d, textStatus) {
+                callback.call(null, d);
+              },
+              'error'   : function (xhttp, textStatus, errorThrown) { 
+                callback.call(null, false);
+                tree.error(errorThrown + " " + textStatus); 
+              }
+            });
+          }
+          else {
+            callback.call(null, opts.static || tree.container.children("ul:eq(0)").html());
+          }
+        }
+      };
+    },
+    "json" : function () {
+      return {
+        get   : function(obj, tree, opts) { 
+          var _this = this;
+          if(!obj || $(obj).size() == 0) obj = tree.container.children("ul").children("li");
+          else obj = $(obj);
+
+          if(!opts) opts = {};
+          if(!opts.outer_attrib) opts.outer_attrib = [ "id", "rel", "class" ];
+          if(!opts.inner_attrib) opts.inner_attrib = [ ];
+
+          if(obj.size() > 1) {
+            var arr = [];
+            obj.each(function () {
+              arr.push(_this.get(this, tree, opts));
+            });
+            return arr;
+          }
+          if(obj.size() == 0) return [];
+
+          var json = { attributes : {}, data : {} };
+          if(obj.hasClass("open")) json.data.state = "open";
+          if(obj.hasClass("closed")) json.data.state = "closed";
+
+          for(var i in opts.outer_attrib) {
+            if(!opts.outer_attrib.hasOwnProperty(i)) continue;
+            var val = (opts.outer_attrib[i] == "class") ? obj.attr(opts.outer_attrib[i]).replace(/(^| )last( |$)/ig," ").replace(/(^| )(leaf|closed|open)( |$)/ig," ") : obj.attr(opts.outer_attrib[i]);
+            if(typeof val != "undefined" && val.toString().replace(" ","").length > 0) json.attributes[opts.outer_attrib[i]] = val;
+            delete val;
+          }
+          
+          if(tree.settings.languages.length) {
+            for(var i in tree.settings.languages) {
+              if(!tree.settings.languages.hasOwnProperty(i)) continue;
+              var a = obj.children("a." + tree.settings.languages[i]);
+              if(opts.force || opts.inner_attrib.length || a.children("ins").get(0).style.backgroundImage.toString().length || a.children("ins").get(0).className.length) {
+                json.data[tree.settings.languages[i]] = {};
+                json.data[tree.settings.languages[i]].title = tree.get_text(obj,tree.settings.languages[i]);
+                if(a.children("ins").get(0).style.className.length) {
+                  json.data[tree.settings.languages[i]].icon = a.children("ins").get(0).style.className;
+                }
+                if(a.children("ins").get(0).style.backgroundImage.length) {
+                  json.data[tree.settings.languages[i]].icon = a.children("ins").get(0).style.backgroundImage.replace("url(","").replace(")","");
+                }
+                if(opts.inner_attrib.length) {
+                  json.data[tree.settings.languages[i]].attributes = {};
+                  for(var j in opts.inner_attrib) {
+                    if(!opts.inner_attrib.hasOwnProperty(j)) continue;
+                    var val = a.attr(opts.inner_attrib[j]);
+                    if(typeof val != "undefined" && val.toString().replace(" ","").length > 0) json.data[tree.settings.languages[i]].attributes[opts.inner_attrib[j]] = val;
+                    delete val;
+                  }
+                }
+              }
+              else {
+                json.data[tree.settings.languages[i]] = tree.get_text(obj,tree.settings.languages[i]);
+              }
+            }
+          }
+          else {
+            var a = obj.children("a");
+            json.data.title = tree.get_text(obj);
+
+            if(a.children("ins").size() && a.children("ins").get(0).className.length) {
+              json.data.icon = a.children("ins").get(0).className;
+            }
+            if(a.children("ins").size() && a.children("ins").get(0).style.backgroundImage.length) {
+              json.data.icon = a.children("ins").get(0).style.backgroundImage.replace("url(","").replace(")","");
+            }
+
+            if(opts.inner_attrib.length) {
+              json.data.attributes = {};
+              for(var j in opts.inner_attrib) {
+                if(!opts.inner_attrib.hasOwnProperty(j)) continue;
+                var val = a.attr(opts.inner_attrib[j]);
+                if(typeof val != "undefined" && val.toString().replace(" ","").length > 0) json.data.attributes[opts.inner_attrib[j]] = val;
+                delete val;
+              }
+            }
+          }
+
+          if(obj.children("ul").size() > 0) {
+            json.children = [];
+            obj.children("ul").children("li").each(function () {
+              json.children.push(_this.get(this, tree, opts));
+            });
+          }
+          return json;
+        },
+        parse : function(data, tree, opts, callback) { 
+          if(Object.prototype.toString.apply(data) === "[object Array]") {
+            var str = '';
+            for(var i = 0; i < data.length; i ++) {
+              if(typeof data[i] == "function") continue;
+              str += this.parse(data[i], tree, opts);
+            }
+            if(callback) callback.call(null, str);
+            return str;
+          }
+
+          if(!data || !data.data) {
+            if(callback) callback.call(null, false);
+            return "";
+          }
+
+          var str = '';
+          str += "<li ";
+          var cls = false;
+          if(data.attributes) {
+            for(var i in data.attributes) {
+              if(!data.attributes.hasOwnProperty(i)) continue;
+              if(i == "class") {
+                str += " class='" + data.attributes[i] + " ";
+                if(data.state == "closed" || data.state == "open") str += " " + data.state + " ";
+                str += "' ";
+                cls = true;
+              }
+              else str += " " + i + "='" + data.attributes[i] + "' ";
+            }
+          }
+          if(!cls && (data.state == "closed" || data.state == "open")) str += " class='" + data.state + "' ";
+          str += ">";
+
+          if(tree.settings.languages.length) {
+            for(var i = 0; i < tree.settings.languages.length; i++) {
+              var attr = {};
+              attr["href"] = "";
+              attr["style"] = "";
+              attr["class"] = tree.settings.languages[i];
+              if(data.data[tree.settings.languages[i]] && (typeof data.data[tree.settings.languages[i]].attributes).toLowerCase() != "undefined") {
+                for(var j in data.data[tree.settings.languages[i]].attributes) {
+                  if(!data.data[tree.settings.languages[i]].attributes.hasOwnProperty(j)) continue;
+                  if(j == "style" || j == "class")  attr[j] += " " + data.data[tree.settings.languages[i]].attributes[j];
+                  else                attr[j]  = data.data[tree.settings.languages[i]].attributes[j];
+                }
+              }
+              str += "<a";
+              for(var j in attr) {
+                if(!attr.hasOwnProperty(j)) continue;
+                str += ' ' + j + '="' + attr[j] + '" ';
+              }
+              str += ">";
+              if(data.data[tree.settings.languages[i]] && data.data[tree.settings.languages[i]].icon) {
+                str += "<ins " + (data.data[tree.settings.languages[i]].icon.indexOf("/") == -1 ? " class='" + data.data[tree.settings.languages[i]].icon + "' " : " style='background-image:url(\"" + data.data[tree.settings.languages[i]].icon + "\");' " ) + ">&nbsp;</ins>";
+              }
+              else str += "<ins>&nbsp;</ins>";
+              str += ( (typeof data.data[tree.settings.languages[i]].title).toLowerCase() != "undefined" ? data.data[tree.settings.languages[i]].title : data.data[tree.settings.languages[i]] ) + "</a>";
+            }
+          }
+          else {
+            var attr = {};
+            attr["href"] = "";
+            attr["style"] = "";
+            attr["class"] = "";
+            if((typeof data.data.attributes).toLowerCase() != "undefined") {
+              for(var i in data.data.attributes) {
+                if(!data.data.attributes.hasOwnProperty(i)) continue;
+                if(i == "style" || i == "class")  attr[i] += " " + data.data.attributes[i];
+                else                attr[i]  = data.data.attributes[i];
+              }
+            }
+            str += "<a";
+            for(var i in attr) {
+              if(!attr.hasOwnProperty(i)) continue;
+              str += ' ' + i + '="' + attr[i] + '" ';
+            }
+            str += ">";
+            if(data.data.icon) {
+              str += "<ins " + (data.data.icon.indexOf("/") == -1 ? " class='" + data.data.icon + "' " : " style='background-image:url(\"" + data.data.icon + "\");' " ) + ">&nbsp;</ins>";
+            }
+            else str += "<ins>&nbsp;</ins>";
+            str += ( (typeof data.data.title).toLowerCase() != "undefined" ? data.data.title : data.data ) + "</a>";
+          }
+          if(data.children && data.children.length) {
+            str += '<ul>';
+            for(var i = 0; i < data.children.length; i++) {
+              str += this.parse(data.children[i], tree, opts);
+            }
+            str += '</ul>';
+          }
+          str += "</li>";
+          if(callback) callback.call(null, str);
+          return str;
+        },
+        load  : function(data, tree, opts, callback) {
+          if(opts.static) {
+            callback.call(null, opts.static);
+          } 
+          else {
+            $.ajax({
+              'type'    : opts.method,
+              'url'   : opts.url, 
+              'data'    : data, 
+              'dataType'  : "json",
+              'success' : function (d, textStatus) {
+                callback.call(null, d);
+              },
+              'error'   : function (xhttp, textStatus, errorThrown) { 
+                callback.call(null, false);
+                tree.error(errorThrown + " " + textStatus); 
+              }
+            });
+          }
+        }
+      }
+    }
+  });
 })(jQuery);
-//*/
-
-/* 
- * jsTree themes plugin 1.0
- * Adds support for themes
- *  Themes are included by the set_theme function.
- *  - the `theme_name` argument should be the class name without the "jstree-" part. 
- *  - the `theme_url` argument should be a path to a CSS file, it defaults to `$.jstree._themes` + `theme_name` + '/style.css'
- *  `$.jstree._themes` defaults to jquery.jstree.js path + '/themes'
- *  you can set `$.jstree._themes` after including this plugin
- */
-(function ($) {
-	var themes_loaded = [];
-	$.jstree._themes = false;
-	$.jstree.plugin("themes", {
-		__init : function () { 
-			this.get_container()
-				.bind("jstree.init", $.proxy(function () {
-					this.data.themes.dots = this.get_settings().themes.dots; 
-					this.data.themes.icons = this.get_settings().themes.icons; 
-					this.set_theme(this.get_settings().themes.theme);
-				}, this));
-		},
-		defaults : { 
-			theme : "default", 
-			dots : true,
-			icons : true
-		},
-		_fn : {
-			set_theme : function (theme_name, theme_url) {
-				if(!theme_name) { return false; }
-				if(!theme_url) { theme_url = $.jstree._themes + theme_name + '/style.css'; }
-				if($.inArray(theme_url, themes_loaded) == -1) {
-					$.jstree._css.add_sheet({ "url" : theme_url, "rel" : "jstree" });
-					themes_loaded.push(theme_url);
-				}
-				if(this.data.theme != theme_name) {
-					this.get_container().removeClass('jstree-' + this.data.theme);
-					this.data.themes.theme = theme_name;
-				}
-				this.get_container().addClass('jstree-' + theme_name);
-
-				if(!this.data.themes.dots) { this.hide_dots(); }
-				else { this.show_dots(); }
-				if(!this.data.themes.icons) { this.hide_icons(); }
-				else { this.show_icons(); }
-			},
-			get_theme	: function () { return this.data.themes.theme; },
-
-			show_dots	: function () { this.data.themes.dots = true; this.get_container().children("ul").removeClass("jstree-no-dots"); },
-			hide_dots	: function () { this.data.themes.dots = false; this.get_container().children("ul").addClass("jstree-no-dots"); },
-			toggle_dots	: function () { if(this.data.themes.dots) { this.hide_dots(); } else { this.show_dots(); } },
-
-			show_icons	: function () { this.data.themes.icons = true; this.get_container().children("ul").removeClass("jstree-no-icons"); },
-			hide_icons	: function () { this.data.themes.icons = false; this.get_container().children("ul").addClass("jstree-no-icons"); },
-			toggle_icons: function () { if(this.data.themes.icons) { this.hide_icons(); } else { this.show_icons(); } }
-		}
-	});
-	$(function () {
-		if($.jstree._themes === false) {
-			$("script").each(function () { 
-				if(this.src.toString().match(/jquery\.jstree[^\/]*?\.js(\?.*)?$/)) { 
-					$.jstree._themes = this.src.toString().replace(/jquery\.jstree[^\/]*?\.js(\?.*)?$/, "") + 'themes/'; 
-					return false; 
-				}
-			});
-		}
-		if($.jstree._themes === false) { $.jstree._themes = "themes/"; }
-	});
-	// Activate the plugin by default
-	$.jstree.defaults.plugins.push("themes");
-})(jQuery);
-//*/
-
-/* 
- * jsTree languages plugin 1.0
- * Adds support for multiple language versions in one tree
- * This basically allows for many titles coexisting in one node, but only one of them being visible at any given time
- * This is useful for maintaining the same structure in many languages (hence the name of the plugin)
- */
-(function ($) {
-	$.jstree.plugin("languages", {
-		__init : function () { this._load_css();  },
-		defaults : [],
-		_fn : {
-			set_lang : function (i) { 
-				var langs = this.get_settings().languages,
-					st = false,
-					selector = ".jstree-" + this.get_index() + ' ul li a';
-				if(!$.isArray(langs) || langs.length === 0) { return false; }
-				if($.inArray(i,langs) == -1) {
-					if(!!langs[i]) { i = langs[i]; }
-					else { return false; }
-				}
-				if(i == this.data.languages.current_language) { return true; }
-				st = $.jstree._css.get_css(selector + "." + this.data.languages.current_language, false, this.data.languages.language_css);
-				if(st !== false) { st.style.display = "none"; }
-				st = $.jstree._css.get_css(selector + "." + i, false, this.data.languages.language_css);
-				if(st !== false) { st.style.display = ""; }
-				this.data.languages.current_language = i;
-				return true;
-			},
-			get_lang : function () {
-				return this.data.languages.current_language;
-			},
-			get_text : function (obj, lang) {
-				obj = this._get_node(obj);
-				if(!obj.size()) { return false; }
-				var langs = this.get_settings().languages;
-				if($.isArray(langs) && langs.length) {
-					lang = (lang && $.inArray(lang,langs) != -1) ? lang : this.data.languages.current_language;
-					obj = obj.children("a." + lang);
-				}
-				else { obj = obj.children("a:eq(0)"); }
-				obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
-				return obj.nodeValue;
-			},
-			set_text : function (obj, val, lang) {
-				obj = this._get_node(obj);
-				if(!obj.size()) { return false; }
-				var langs = this.get_settings().languages;
-				if($.isArray(langs) && langs.length) {
-					lang = (lang && $.inArray(lang,langs) != -1) ? lang : this.data.languages.current_language;
-					obj = obj.children("a." + lang);
-				}
-				else { obj = obj.children("a:eq(0)"); }
-				obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
-				return (obj.nodeValue = val);
-			},
-			_load_css : function () {
-				var langs = this.get_settings().languages,
-					str = "/* languages css */",
-					selector = ".jstree-" + this.get_index() + ' a',
-					ln;
-				if($.isArray(langs) && langs.length) {
-					this.data.languages.current_language = langs[0];
-					for(ln = 0; ln < langs.length; ln++) {
-						str += selector + "." + langs[ln] + " {";
-						if(langs[ln] != this.data.languages.current_language) { str += " display:none; "; }
-						str += " } ";
-					}
-					this.data.language_css = $.jstree._css.add_sheet({ 'str' : str });
-				}
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("languages");
-})(jQuery);
-//*/
-
-/* 
- * jsTree types plugin 1.0
- * Adds support types of nodes
- * You can set an attribute on each li node, that represents its type.
- * According to the type setting the node may get custom icon/validation rules
- */
-// TODO: replace all functions listed in `attach_to`
-// TODO: inside the replaced functions check for this.data.types.enabled, check the rules, then call the original function
-(function ($) {
-	$.jstree.plugin("types", {
-		__init : function () {
-			this.get_container().bind("jstree.init", $.proxy(function (event) { 
-				var types = this.get_settings().types.types, 
-					attr  = this.get_settings().types.type_attr, 
-					icons_css = "", 
-					_this = this, 
-					attach_to = [];
-
-				$.each(types, function (i, tp) {
-					$.each(tp, function (k, v) { 
-						if(!/^(max_depth|max_children|icon|valid_children)$/.test(k)) { attach_to.push(k); }
-					});
-					if(!tp.icon) { return true; }
-					if( tp.icon.image || tp.icon.position) {
-						if(i == "default")	{ icons_css += '.jstree-' + _this.get_index() + ' a > .icon { '; }
-						else				{ icons_css += '.jstree-' + _this.get_index() + ' li[' + attr + '=' + i + '] > a > .icon { '; }
-						if(tp.icon.image)	{ icons_css += ' background-image:url(' + tp.icon.image + '); '; }
-						if(tp.icon.position){ icons_css += ' background-position:' + tp.icon.position + '; '; }
-						else				{ icons_css += ' background-position:0 0; '; }
-						icons_css += '} ';
-					}
-				});
-				if(icons_css != "") { $.jstree._css.add_sheet({ 'str' : icons_css }); }
-
-				// attach to functions here
-
-				this.enable_rules();
-			}, this));
-			if(this.data.move) {
-				var s = this.get_settings(), of = s.move.check_move;
-				s.move.check_move = function (m, is_copy) { 
-					if(this.data.types.enabled && this._check_type_move(m, is_copy) === false) { return false; } 
-					return of.call(this, m, is_copy);
-				};
-				this._set_settings(s);
-			}
-		},
-		defaults : {
-			// defines maximum number of root nodes (-1 means unlimited, -2 means disable max_children checking)
-			max_children		: -1,
-			// defines the maximum depth of the tree (-1 means unlimited, -2 means disable max_depth checking)
-			max_depth			: -1,
-			// defines valid node types for the root nodes
-			valid_children		: "all",
-
-			// where is the type stores (the rel attribute of the LI element)
-			type_attr : "rel",
-			// a list of types
-			types : {
-				// the default type
-				"default" : {
-					"max_children"	: -1,
-					"max_depth"		: -1,
-					"valid_children": "all",
-
-					// Bound functions - you can bind any other function here (using boolean or function)
-					"select_node"	: true,
-					"open_node"		: true,
-					"close_node"	: true,
-
-					"create_node"	: true,
-					"delete_node"	: true,
-					"cut"			: true,
-					"copy"			: true,
-					"paste"			: true
-				}
-			}
-		},
-		_fn : {
-			enable_rules : function () { this.data.types.enabled = true; },
-			disable_rules : function () { this.data.types.enabled = false; },
-
-			get_type : function (obj) {
-				// TODO: maybe cache using data?
-				obj = this._get_node(obj);
-				return (!obj || !obj.length) ? false : obj.attr(this.get_settings().types.type_attr) || "default";
-			},
-			set_type : function (str, obj) {
-				obj = this._get_node(obj);
-				return (!obj.length || !str) ? false : obj.attr(this.get_settings().types.type_attr, str);
-			},
-			_check : function (rule, obj, opts) {
-				// TODO : deal with obj - it may not be the node (create for example)
-				var v = false, t = this.get_type(obj), d = 0, _this = this, s = this.get_settings().types;
-				
-				if(obj === -1) { 
-					if(!!s[rule]) { v = s[rule]; }
-					else { return; }
-				}
-				else {
-					if(t === false) { return; }
-					if(!!s.types[t] && !!s.types[t][rule]) { v = s.types[t][rule]; }
-					else if(!!s.types["default"] && !!s.types["default"][rule]) { v = s.types["default"][rule]; }
-				}
-				if($.isFunction(v)) { v = v.call(null, obj, this); }
-				if(rule === "max_depth" && obj !== -1 && opts !== false && s.max_depth !== -2 && v !== 0) {
-					this._get_node(obj).parentsUntil(this.get_container(),"li").each(function (i) {
-						d = _this._check(rule, this, false);
-						if(d !== -1 && d - (i + 1) <= 0) { v = 0; return false; }
-					});
-				}
-				return v;
-			},
-			_check_type_move : function(m, is_copy) {
-				if(!m.r_t.data.types) { return true; }
-				var s  = m.r_t.get_settings().types,
-					mc = m.r_t._check("max_children", m.cr),
-					md = m.r_t._check("max_depth", m.cr),
-					vc = m.r_t._check("valid_chidren", m.cr),
-					ch = 0, d = 1, t;
-				if(vc === "none") { return false; } 
-				if($.isArray(vc) && m.o_t.get_type) {
-					m.o.each(function () {
-						if(!$.inArray(m.o_t.get_type(this), vc)) { d = false; return false; }
-					});
-					if(d === false) { return false; }
-				}
-				if(s.max_children !== -2 && mc !== -1) {
-					ch = m.cr === -1 ? this.get_container().children("> ul > li").not(m.o).length : m.cr.children("> ul > li").not(m.o).length;
-					if(ch + m.o.length > mc) { return false; }
-				}
-				if(s.max_depth !== -2 && md !== -1) {
-					d = 0;
-					if(md === 0) { return false; }
-					if(typeof m.o.d === "undefined") {
-						// TODO: deal with progressive rendering and async when checking max_depth (how to know the depth of the moved node)
-						t = m.o;
-						while(t.length > 0) {
-							t = t.find("> ul > li");
-							d ++;
-						}
-						m.o.d = d;
-					}
-					if(md - m.o.d < 0) { return false; }
-				}
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("types");
-})(jQuery);
-//*/
-
-/* 
- * jsTree ui plugin 1.0
- * Adds all the neccesary events and functions for user interaction with the tree
- */
-// TODO: create function, rename function (uses set_text at end) 
-// TODO: selected_parent_delete - watch for event and handle - like close_node
-(function ($) {
-	$.jstree.plugin("ui", {
-		__init : function () { 
-			this.data.ui.selected = $(); 
-			this.data.ui.hovered = false;
-
-			this.get_container().bind("mousedown", $.proxy(function () { this.set_focus(); }, this)); // This used to be setTimeout(set_focus,0) - why?
-			$("li > ins", this.get_container()[0]).live("click", $.proxy(function (event) {
-				var trgt = $(event.target);
-				if(trgt.is("ins") && event.pageY - trgt.offset().top < this.data.core.li_height) { this.toggle_node(trgt); }
-			}, this));
-			$("a", this.get_container()[0])
-				.live("click", $.proxy(function (event) {
-						var s = this.get_settings().ui,
-							obj = this._get_node(event.currentTarget),
-							is_multiple = (s.select_multiple_modifier == "on" || (s.select_multiple_modifier !== false && event[s.select_multiple_modifier + "Key"])),
-							is_selected = this.is_selected(obj);
-						switch(true) {
-							case (is_selected && !is_multiple): break;
-							case (!is_selected && !is_multiple): 
-								if(s.select_limit == -1 || s.select_limit > 0) {
-									this.deselect_all();
-									this.select_node(obj);
-								}
-								break;
-							case (is_selected && is_multiple): 
-								this.deselect_node(obj);
-								break;
-							case (!is_selected && is_multiple): 
-								if(s.select_limit == -1 || this.data.ui.selected.length + 1 <= s.select_limit) { this.select_node(obj); }
-								break;
-						}
-						event.preventDefault();
-					}, this))
-				.live("mouseenter", $.proxy(function (event) {
-						this.hover_node(event.target);
-					}, this))
-				.live("mouseleave", $.proxy(function (event) {
-						this.dehover_node(event.target);
-					}, this));
-				// The above two cause problems when moving from/to a scrollbar (bug filed - 5682)
-
-			this.get_container().bind("jstree.loaded", $.proxy(function () { 
-				var s = this.get_settings().ui;
-				this.data.ui.to_open = $.map($.makeArray(s.initially_open), function (n) { return "#" + n.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/'); });
-				this.data.ui.to_select = $.map($.makeArray(s.initially_select), function (n) { return "#" + n.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/'); });
-				this._restore();
-			}, this));
-
-			this.get_container().bind("jstree.close_node", $.proxy(function (event, data) { 
-				var s = this.get_settings().ui,
-					obj = this._get_node(data.arg[0]),
-					clk = (obj && obj.length) ? obj.find(".jstree-clicked") : [],
-					_this = this;
-				if(s.selected_parent_close === false || !clk.length) { return; }
-				clk.each(function () { 
-					_this.deselect_node(this);
-					if(s.selected_parent_close === "select_parent") { _this.select_node(obj); }
-				});
-			}, this));
-		},
-		defaults : {
-			select_limit : -1, // 0, 1, 2 ... or -1 for unlimited
-			select_multiple_modifier : "ctrl", // always on, or ctrl, shift, alt
-			selected_parent_close : "select_parent", // false, "deselect", "select_parent"
-			initially_select : [],
-			initially_open : []
-		},
-		_fn : { 
-			hover_node : function (obj) {
-				obj = this._get_node(obj);
-				if(!obj.length) { return false; }
-				//if(this.data.ui.hovered && obj.get(0) === this.data.ui.hovered.get(0)) { return; }
-				if(!obj.hasClass("jstree-hovered")) { this.dehover_node(); }
-				this.data.ui.hovered = obj.children("a").addClass("jstree-hovered").parent();
-			},
-			dehover_node : function (obj) {
-				if(obj) { obj = this._get_node(obj); }
-				else { obj = this.data.ui.hovered; }
-				if(!obj || !obj.length) { return false; }
-				obj.children("a").removeClass("jstree-hovered");
-			},
-
-			select_node : function (obj) {
-				obj = this._get_node(obj);
-				if(!obj.length) { return false; }
-				if(!this.is_selected(obj)) {
-					obj.children("a").addClass("jstree-clicked");
-					this.data.ui.selected = this.data.ui.selected.add(obj);
-				}
-			},
-			deselect_node : function (obj) {
-				obj = this._get_node(obj);
-				if(!obj.length) { return false; }
-				if(this.is_selected(obj)) {
-					obj.children("a").removeClass("jstree-clicked");
-					this.data.ui.selected = this.data.ui.selected.not(obj);
-				}
-			},
-			toggle_select : function (obj) {
-				obj = this._get_node(obj);
-				if(!obj.length) { return false; }
-				if(this.is_selected(obj)) { this.deselect_node(obj); }
-				else { this.select_node(obj); }
-			},
-			is_selected : function (obj) { return this.data.ui.selected.index(this._get_node(obj)) >= 0; },
-			get_selected : function (context) { 
-				return context ? $(context).find(".jstree-clicked").parent() : this.data.ui.selected; 
-			},
-			deselect_all : function (context) {
-				if(context) { $(context).find(".jstree-clicked").removeClass("jstree-clicked"); } 
-				else { this.get_container().find(".jstree-clicked").removeClass("jstree-clicked"); }
-				this.data.ui.selected = $([]);
-			},
-			refresh : function (obj) {
-				var _this = this,
-					opn = $([]),
-					sel = $([]);
-				obj = !obj || obj == 1 ? -1 : this._get_node(obj);
-				this.data.ui.to_open = [];
-				this.data.ui.to_select = [];
-				opn = (obj == -1) ? this.get_container().find(".jstree-open") : obj.parent().find(".jstree-open");
-				sel = (obj == -1) ? this.get_container().find(".jstree-clicked").parent() : obj.parent().find(".jstree-clicked");
-				opn.each(function () { _this.data.ui.to_open.push("#" + this.id.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/')); });
-				sel.each(function () { _this.data.ui.to_select.push("#" + this.id.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/')); });
-				this.load_node(obj, function () { _this._restore(); });
-			},
-			delete_node : function (obj) {
-				obj = this._get_node(obj);
-				if(!obj.length) { return false; }
-				if(this.is_selected(obj)) { this.deselect_node(obj); }
-				var p = this._get_parent(obj);
-				obj = obj.remove();
-				this.clean_node(p);
-				return obj;
-			},
-
-			_restore : function (is_callback) {
-				var _this = this,
-					reselect = true,
-					current = [],
-					remaining = [];
-				if(this.data.ui.to_open.length) {
-					$.each(this.data.ui.to_open, function (i, val) {
-						if(val == "#") { return true; }
-						if($(val).length && $(val).is(".jstree-closed")) { current.push(val); }
-						else {remaining.push(val); }
-					});
-					if(current.length) {
-						this.data.ui.to_open = remaining;
-						$.each(current, function (i, val) { 
-							_this.open_node(val, function () { _this._restore(true); }); 
-						});
-						reselect = false;
-					}
-				}
-				if(reselect) {
-					$.each(this.data.ui.to_select, function (i, val) {
-						_this.select_node(val);
-					});
-				}
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("ui");
-	$.jstree.register_rollback("select_node deselect_node");
-})(jQuery);
-//*/
-
-/*
- * jsTree cookies plugin 1.0
- * Stores the currently opened/selected nodes in a cookie and then restores them
- * Depends on the ui plugin & the jquery.cookie plugin
- */
-(function ($) {
-	$.jstree.plugin("cookies", {
-		__init : function () {
-			if(typeof $.cookie === "undefined") { throw "jsTree cookie: jQuery cookie plugin not included."; }
-
-			var s = this.get_settings().cookies;
-			if(!!s.open) {
-				this.get_container()
-					.bind("jstree.open_node", $.proxy(function () { this._set_cookie("open"); }, this))
-					.bind("jstree.close_node", $.proxy(function () { this._set_cookie("open"); }, this));
-			}
-			if(!!s.select) {
-				this.get_container()
-					.bind("jstree.select_node", $.proxy(function () { this._set_cookie("select"); }, this))
-					.bind("jstree.deselect_node", $.proxy(function () { this._set_cookie("select"); }, this));
-			}
-		},
-		defaults : {
-			open : "jstree_open",
-			select : "jstree_select",
-			options : { }
-		},
-		_fn : {
-			_restore : function (is_callback) {
-				if(!is_callback) {
-					var s = this.get_settings().cookies, 
-						v = [];
-
-					v = $.cookie(s.open);
-					if(v) {
-						v = v.split(",");
-						if(v.length) { this.data.ui.to_open = v; }
-					}
-					v = $.cookie(s.select);
-					if(v) {
-						v = v.split(",");
-						if(v.length) { this.data.ui.to_select = v; }
-					}
-				}
-				arguments.callee.old.call(this);
-			},
-			_set_cookie : function (t) {
-				var s = this.get_settings().cookies,
-					v = [];
-				if(!!!s[t]) { return; }
-				switch(t) {
-					case "open":
-						this.get_container().find(".jstree-open").each(function () { if(this.id) { v.push("#" + this.id.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/')); } });
-						break;
-					case "select":
-						this.get_container().find(".jstree-clicked").parent().each(function () { if(this.id) { v.push("#" + this.id.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/')); } });
-						break;
-				}
-				$.cookie(s[t], v, s.options);
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("cookies");
-})(jQuery);
-//*/
-
-/*
- * jsTree hotkeys plugin 1.0
- * Enables keyboard navigation for all tree instances
- * Depends on the jstree ui & jquery hotkeys plugins
- */
-(function ($) {
-	var bound = [];
-	function exec(i) {
-		var f = $.jstree._focused();
-		if(f && f.data.hotkeys.enabled) { return f.get_settings().hotkeys[i].apply(f); }
-	}
-	$.jstree.plugin("hotkeys", {
-		__init : function () {
-			if(typeof window.hotkeys == "undefined") { throw "jsTree hotkeys: jQuery hotkeys plugin not included."; }
-			$.each(this.get_settings().hotkeys, function (i, val) {
-				if($.inArray(i, bound) == -1) {
-					$(document).bind("keydown", { combi : i, disableInInput: true }, function (event) { return exec(i); });
-					bound.push(i);
-				}
-			});
-			this.enable_hotkeys();
-		},
-		defaults : {
-			"up"	: function () { 
-				this.hover_node(this._get_prev(this.data.ui.hovered || this.data.ui.selected[this.data.ui.selected.length - 1]));
-				return false; 
-			},
-			"down"	: function () { 
-				this.hover_node(this._get_next(this.data.ui.hovered || this.data.ui.selected[this.data.ui.selected.length - 1]));
-				return false;
-			},
-			"left"	: function () { 
-				var o = this.data.ui.hovered || this.data.ui.selected[this.data.ui.selected.length - 1];
-				if(o) {
-					if(o.hasClass("jstree-open")) { this.close_node(o); }
-					else { this.hover_node(this._get_prev(o)); }
-				}
-				return false;
-			},
-			"right"	: function () { 
-				var o = this.data.ui.hovered || this.data.ui.selected.eq(this.data.ui.selected.length - 1);
-				if(o && o.length) {
-					if(o.hasClass("jstree-closed")) { this.open_node(o); }
-					else { this.hover_node(this._get_next(o)); }
-				}
-				return false;
-			},
-			"space"	: function () { 
-				if(this.data.ui.hovered) { this.data.ui.hovered.children("a:eq(0)").click(); } 
-				return false; 
-			}
-		},
-		_fn : {
-			enable_hotkeys : function () {
-				this.data.hotkeys.enabled = true;
-			},
-			disable_hotkeys : function () {
-				this.data.hotkeys.enabled = false;
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("hotkeys");
-})(jQuery);
-//*/
-
-/*
- * jsTree search plugin 1.0
- * Enables both sync and async search on the tree
- */
-// TODO: work with progressive render?
-(function ($) {
-	$.expr[':'].jstree_contains = function(a,i,m){
-		return (a.textContent || a.innerText || "").toLowerCase().indexOf(m[3].toLowerCase())>=0;
-	};
-	$.jstree.plugin("search", {
-		__init : function () {
-			this.data.search.str = "";
-			this.data.search.result = $([]);
-		},
-		defaults : {
-			ajax : false, // OR ajax object
-			case_insensitive : false
-		},
-		_fn : {
-			search : function (str, skip_async) {
-				var s = this.get_settings().search, 
-					error_func = function () { },
-					success_func = function () { };
-				this.data.search.str = str;
-
-				if(!skip_async && s.ajax !== false && this.get_container().find(".jstree-closed:eq(0)").length > 0) {
-					this.search.supress_callback = true;
-					error_func = function () { };
-					success_func = function (d) {
-						this.data.search.to_open = d;
-						this._search_open();
-					};
-					s.ajax.error = s.ajax.error ? function (x,t,e) { s.ajax.error.call(null,x,t,e); error_func.call(); } : error_func;
-					s.ajax.success = s.ajax.success ? function (d,t,x) { d = s.ajax.success.call(null,d,t,x) || d; success_func.call(this, d); } : success_func;
-					if($.isFunction(s.ajax.data)) { s.ajax.data = s.ajax.data.call(this); }
-					if(!s.ajax.dataType || /^json/.exec(s.ajax.dataType)) { s.ajax.dataType = "json"; }
-					$.ajax(s.ajax);
-					return;
-				}
-				this.search.supress_callback = false;
-				this.clear_search();
-				this.data.search.result = this.get_container().find("a:" + (s.case_insensitive ? "jstree_contains" : "contains") + "(" + this.data.search.str + ")").filter(":visible");
-				this.data.search.result.addClass("jstree-search");
-			},
-			clear_search : function (str) {
-				this.data.search.result.removeClass("jstree-search");
-			},
-			_search_open : function (is_callback) {
-				var _this = this,
-					done = true,
-					current = [],
-					remaining = [];
-				if(this.data.search.to_open.length) {
-					$.each(this.data.search.to_open, function (i, val) {
-						if(val == "#") { return true; }
-						if($(val).length && $(val).is(".jstree-closed")) { current.push(val); }
-						else { remaining.push(val); }
-					});
-					if(current.length) {
-						this.data.search.to_open = remaining;
-						$.each(current, function (i, val) { 
-							_this.open_node(val, function () { _this._search_open(true); }); 
-						});
-						done = false;
-					}
-				}
-				if(done) { this.search(this.data.search.str, true); }
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("search");
-})(jQuery);
-//*/
-
-/*
- * jsTree checkbox plugin 1.0
- * Inserts checkboxes in front of every node
- * Depends on the ui plugin
- */
-(function ($) {
-	$.jstree.plugin("checkbox", {
-		__init : function () {
-			this.get_container()
-				.bind("jstree.open_node", $.proxy(function (event, data) { 
-						this._prepare_checkboxes(data.arg[0]);
-					}, this))
-				.bind("jstree.loaded", $.proxy(function (event) {
-						this._prepare_checkboxes();
-					}, this))
-				.bind("jstree.clean_node", $.proxy(function (event, data) {
-						this._repair_state(data.arg[0]);
-					}, this));
-			if(this.get_settings().checkbox.override_select) {
-				this.hover_node = this.dehover_node = this.select_node = this.deselect_node = this.deselect_all = $.noop;
-				this.get_selected = this.get_checked;
-				$("a", this.get_container())
-					.live("click", $.proxy(function (event) {
-							this.change_state(event.target);
-							event.preventDefault();
-						}, this));
-			}
-			else {
-				$(".checkbox", this.get_container())
-					.live("click", $.proxy(function (event) {
-							this.change_state(event.target);
-							event.stopImmediatePropagation();
-							return false;
-						}, this));
-			}
-		},
-		defaults : {
-			override_select : true
-		},
-		_fn : {
-			_prepare_checkboxes : function (obj) {
-				obj = !obj || obj == -1 ? this.get_container() : this._get_node(obj);
-				var c = obj.is("li") && obj.hasClass("jstree-checked") ? "jstree-checked" : "jstree-unchecked";
-				obj.find("a").not(":has(.checkbox)").prepend("<ins class='checkbox'>&nbsp;</ins>").parent().addClass(c);
-			},
-			change_state : function (obj, state) {
-				obj = this._get_node(obj);
-				state = (state === false || state === true) ? state : obj.hasClass("jstree-checked");
-				if(state) { obj.find("li").andSelf().removeClass("jstree-checked jstree-undetermined").addClass("jstree-unchecked"); }
-				else { obj.find("li").andSelf().removeClass("jstree-unchecked jstree-undetermined").addClass("jstree-checked"); }
-
-				var _this = this;
-				obj.parentsUntil(this.get_container(), "li").each(function () {
-					var $this = $(this);
-					if(state) {
-						if($this.children("ul").children(".jstree-checked").length) {
-							$this.parentsUntil(_this.get_container(), "li").andSelf().removeClass("jstree-checked jstree-unchecked").addClass("jstree-undetermined");
-							return false;
-						}
-						else {
-							$this.removeClass("jstree-checked jstree-undetermined").addClass("jstree-unchecked");
-						}
-					}
-					else {
-						if($this.children("ul").children(".jstree-unchecked, .jstree-undetermined").length) {
-							$this.parentsUntil(_this.get_container(), "li").andSelf().removeClass("jstree-checked jstree-unchecked").addClass("jstree-undetermined");
-							return false;
-						}
-						else {
-							$this.removeClass("jstree-unchecked jstree-undetermined").addClass("jstree-checked");
-						}
-					}
-				});
-			},
-			check_node : function (obj) {
-				this.change_state(obj, false);
-			},
-			uncheck_node : function (obj) {
-				this.change_state(obj, true);
-			},
-			check_all : function () {
-				var _this = this;
-				this.get_container().children("ul").children("li").each(function () {
-					_this.check_node(this, false);
-				});
-			},
-			uncheck_all : function () {
-				var _this = this;
-				this.get_container().children("ul").children("li").each(function () {
-					_this.check_node(this, true);
-				});
-			},
-
-			is_checked : function(obj) {
-				obj = this._get_node(obj);
-				return obj.length ? obj.is(".jstree-checked") : false;
-			},
-			get_checked : function (obj) {
-				obj = !obj || obj === -1 ? this.get_container() : this._get_node(obj);
-				return obj.find("> ul > .jstree-checked, .jstree-undetermined > ul > .jstree-checked");
-			},
-			get_unchecked : function (obj) { 
-				obj = !obj || obj === -1 ? this.get_container() : this._get_node(obj);
-				return obj.find("> ul > .jstree-unchecked, .jstree-undetermined > ul > .jstree-unchecked");
-			},
-
-			show_checkboxes : function () { this.get_container().children("ul").removeClass("jstree-no-checkboxes"); },
-			hide_checkboxes : function () { this.get_container().children("ul").addClass("jstree-no-checkboxes"); },
-
-			_repair_state : function (obj) {
-				obj = this._get_node(obj);
-				if(!obj.length) { return; }
-				var a = obj.find("> ul > .jstree-checked").length,
-					b = obj.find("> ul > li").length;
-				if(b === 0) {
-					if(obj.hasClass("jstree-undetermined")) { this.check_node(obj); }
-				}
-				else if(a === 0) { this.uncheck_node(obj); }
-				else if(a === b) { this.check_node(obj); }
-				else { 
-					obj.parentsUntil(this.get_container(),"li").andSelf().removeClass("jstree-checked jstree-unchecked").addClass("jstree-undetermined");
-				}
-			}
-		}
-	});
-	$.jstree.defaults.plugins.push("checkbox");
-})(jQuery);
-//*/
-
-/*
- * jsTree move plugin 1.0
- * Adds support for moving, copying and pasting nodes in a tree (or across trees)
- */
-// TODO: lang cleanup
-// TODO: default drop-out and drop-in
-// TODO: drag handles? + SCROLLING WHEN NEAR EDGE (look at jQuery UI)
-// TODO: maybe set_drag function, so that checkbox and select may use it (so that all selected or all checked nodes are dragged).
-(function ($) {
-	$.jstree._move = { 
-		data : {},
-		is_down : false,
-		is_drag : false,
-		prepare_drag : function (obj, t, txt, e) {
-			if(!txt) { txt = t ? t.get_text(obj) : "Dragged node"; }
-
-			$.jstree._move.is_down = true;
-			$.jstree._move.data = { 
-				o		: obj, 
-				o_t		: t ? t : false, 
-				hlp		: $("<div id='jstree-dragged'><ins>&nbsp;</ins>" + txt + "</div>").css("opacity", "0.75"), 
-				init_x	: e ? e.pageX : false, 
-				init_y	: e ? e.pageY : false 
-			};
-			$(document).bind("mousemove", $.jstree._move.drag);
-			$(document).bind("mouseup", $.jstree._move.stop_drag);
-		},
-		start_drag : function () {
-			$.jstree._move.is_drag = true;
-			$.jstree._move.data.hlp.appendTo("body");
-			$(document).triggerHandler("jstree.start_drag", { move : $.jstree._move.data });
-		},
-		drag : function (e) {
-			if(!$.jstree._move.is_down) { return; }
-			if(!$.jstree._move.is_drag) {
-				if(Math.abs(e.pageX - $.jstree._move.data.init_x) > 5 || Math.abs(e.pageY - $.jstree._move.data.init_y) > 5) { $.jstree._move.start_drag(); }
-				else { return; }
-			}
-
-			try { 
-				if($.jstree._move.data.state === 1 && e.target.id !== "jstree-marker" && $.jstree._move.data.r && !$.contains($.jstree._move.data.r.get(0), e.target)) { $.jstree._move.data.state = 0; }
-			} catch(err) { }
-			$(document).triggerHandler("jstree.drag", { 'move' : $.jstree._move.data, 'event' : e });
-
-			$.jstree._move.data.hlp.css({ left : (e.pageX + 5) + "px", top : (e.pageY + 10) + "px" }).attr("class", function () {
-				if($.jstree._move.data.state === 1) { return "jstree-ok"; }
-				if($.jstree._move.data.state === 0) { return "jstree-invalid"; }
-			});
-		},
-		stop_drag : function (skip_move) {
-			$.jstree._move.is_down = false;
-
-			if($.jstree._move.is_drag) {
-				$.jstree._move.is_drag = false;
-				$.jstree._move.data.hlp.remove();
-				$(document).unbind("mousemove", $.jstree._move.drag);
-				$(document).unbind("mouseup", $.jstree._move.stop_drag);
-				$(document).triggerHandler("jstree.stop_drag", { move : $.jstree._move.data });
-				if(skip_move !== true && $.jstree._move.data.o_t !== -1 && $.jstree._move.data.r_t !== -1 && $.jstree._move.data.state === 1) { $.jstree._move.data.r_t.move($.jstree._move.data, false, false, false, true, true); }
-			}
-			$.jstree._move.data = { };
-		}
-	};
-	$.jstree.plugin("move", {
-		__init : function () { 
-			var s = this.get_settings().move;
-			this.data.move = {}; 
-			if(s.drag_n_drop) {
-				$("a", this.get_container()[0])
-					.live("mousedown", $.proxy(function (e) { 
-						try {
-							e.currentTarget.unselectable = "on";
-							e.currentTarget.onselectstart = function() { return false; };
-							if(e.currentTarget.style) { e.currentTarget.style.MozUserSelect = "none"; }
-						} catch(err) { }
-						var o = this._get_node(e.currentTarget);
-						$.jstree._move.prepare_drag(o, this, this.get_text(o), e);
-						return false;
-					}, this))
-					.live("mousemove", $.proxy(function (e) { 
-						if(!$.jstree._move.is_drag) { return; }
-						this._check_move(this._prepare_move(false, e.currentTarget, "inside"));
-						// TODO: calculate position & stuff
-					}, this));
-			}
-		},
-		defaults : {
-			move_from : [],
-			move_to : [],
-			// TODO: implement always_copy
-			always_copy : false, // false, true or "multitree"
-			copy_modifier : "ctrl",
-			drag_n_drop : true,
-			default_position : "bottom",
-			check_move : function (m) { }
-		},
-		_fn : {
-			_check_move : function(m) { 
-				var r, os, rs;
-				if(m === false) { return false; }
-				if(m === -1) { $.jstree._move.data.state = -1; return -1; }
-				// TODO: replace with jQuery contains?
-				if(m.r.get(0) === m.o.get(0) || (m.r_t && m.r_t !== 1 && m.o.index(m.r.parentsUntil(m.r_t.get_container(), "li").andSelf())) !== -1) { $.jstree._move.data.state = 0; return false; }
-				
-				if(m.o_t !== m.r_t && m.o_t !== -1) {
-					os = m.o_t.get_settings().move;
-					rs = m.r_t.get_settings().move;
-					if(os.move_to === "none" || os.move_to.length === 0 || rs.move_from === "none" || rs.move_from.length === 0) {
-						$.jstree._move.data.state = 0; 
-						return false;
-					}
-					if(
-						(os.move_to !== "all" && !m.r_t.get_container().is(os.move_to.join(","))) || 
-						(rs.move_from !== "all" && !m.o_t.get_container().is(rs.move_from.join(",")))) {
-						$.jstree._move.data.state = 0; 
-						return false;
-					}
-				}
-				r = this.get_settings().move.check_move.apply(this, arguments);
-				if(r === true) { $.jstree._move.data.state = 1; return true; }
-				if(r === false) { $.jstree._move.data.state = 0; return false; }
-				$.jstree._move.data.state = 1; 
-				return true;
-			},
-			_prepare_move : function (obj, ref, position, callback) { 
-				var m = $.jstree._move.data, 
-					s = this.get_settings().move,
-					_this = this;
-
-				if(!m.o_t) { m.o_t = $.jstree._reference(obj); }
-				if(!m.o_t) { return false; }
-				if(obj) { m.o = m.o_t._get_node(obj); }
-				m.r = ref == -1 ? -1 : this._get_node(ref);
-				if(m.r != -1 && (!m.r || !m.r.length)) { return false; }
-				m.r_t = this;
-				m.p = position || s.default_position;
-
-				// begin calculation
-				if(m.r == -1) {
-					m.cr = -1;
-					switch(m.p) {
-						case "top":
-						case "before":
-							m.cp = 0; 
-							break;
-						case "after":
-						case "bottom":
-							m.cp = m.r_t.get_container().find(" > ul > li").length; 
-							break;
-						default:
-							m.cp = m.p;
-							break;
-					}
-				}
-				else {
-					if(!/^(before|after)$/.test(m.p) && !this.is_loaded(m.r)) {
-						this.load_node(m.r, function () { _this.prepare_move(obj, ref, position, callback); });
-						return false;
-					}
-					switch(m.p) {
-						case "before":
-							m.cp = m.r.index();
-							m.cr = m.r_t._get_parent(m.r);
-							break;
-						case "after":
-							m.cp = m.r.index();
-							m.cr = m.r_t._get_parent(m.r);
-							break;
-						case "inside":
-						case "top":
-							m.cp = 0;
-							m.cr = m.r;
-							break;
-						case "bottom":
-							m.cp = m.r.find(" > ul > li").length; 
-							m.cr = m.r;
-							break;
-						default: 
-							m.cp = m.p;
-							m.cr = m.r;
-							break;
-					}
-				}
-				if(callback) { callback.call(this, m); }
-				return m;
-			},
-			move : function (obj, ref, position, is_copy, skip_check, _is_prepared) { 
-				var _this = this,
-					m, np, op, ul, r, o;
-				this.move.supress_callback = true;
-				if(!_is_prepared) { 
-					this._prepare_move(obj, ref, position, function (d) { _this.move(d, false, false, is_copy, skip_check, true); });
-					return;
-				}
-
-				m = obj;
-				if(!skip_check && this._check_move(m, is_copy) === false) { return; }
-				this.move.supress_callback = false;
-
-				np = m.cr == -1 ? m.r_t.get_container() : m.cr;
-				ul = np.children("ul:eq(0)");
-				if(!ul.length) { ul = $("<ul>").appendTo(np); }
-				op = m.o_t._get_parent(m.o);
-				r = ul.children("li:nth-child(" + (m.cp + 1) + ")");
-				o = false;
-
-				if(is_copy) {
-					o = m.o.clone();
-					o.find("*[id]").andSelf().each(function () {
-						if(this.id) { this.id = "copy_" + this.id; }
-					});
-				}
-				else { o = m.o; }
-
-				if(r.length) { r.before(o); }
-				else { ul.append(o); }
-
-				// TODO: sync type attributes (may be different if different trees)
-
-				try { 
-					m.o_t.clean_node(op);
-					m.r_t.clean_node(np);
-				} catch (e) { }
-			},
-
-			cut : function (obj) { $.jstree._move.data.o = obj; $.jstree._move.data.t = "cut";  },
-			copy : function (obj) { this.cut(obj); $.jstree._move.data.t = "copy"; },
-			paste : function (obj, position) { this.move($.jstree._move.data.o, obj, position, ($.jstree._move.data.t === "copy") ); }
-		}
-	});
-	$(function() {
-		var css_string = '' + 
-			'#jstree-dragged { display:block; margin:0 0 0 0; padding:4px 4px 4px 24px; position:absolute; left:-2000px; top:-2000px; line-height:18px; border:1px solid red; } ' + 
-			'#jstree-dragged ins { background:gray; display:block; text-decoration:none; width:18px; height:18px; margin:0 0 0 0; padding:0; position:absolute; top:4px; left:4px; } ' + 
-			'#jstree-dragged.jstree-ok ins { background:green; } ' + 
-			'#jstree-dragged.jstree-invalid ins { background:red; } ';
-		$.jstree._css.add_sheet({ str : css_string });
-	});
-	$.jstree.defaults.plugins.push("move");
-	$.jstree.register_rollback("move");
-})(jQuery);
-//*/
-
-/* 
- * jsTree JSON 1.0
- * The JSON data store. Datastores are build by overriding the `load_node` and `is_loaded` functions.
- */
-// TODO: create get_json method
-(function ($) {
-	$.jstree.plugin("json_data", {
-		defaults : { 
-			data : false,
-			ajax : false,
-			correct_state : false,
-			progressive_render : false
-		},
-		_fn : {
-			load_node : function (obj, s_call, e_call) { this.load_node_json(obj, s_call, e_call); },
-			is_loaded : function (obj) { 
-				var s = this.get_settings().json_data;
-				obj = this._get_node(obj); 
-				if(obj && obj !== -1 && s.progressive_render) {
-					obj.append(this.parse_json(obj.data("jstree-children")));
-					$.removeData(obj, "jstree-children");
-				}
-				return obj == -1 || !obj || !s.ajax || obj.is(".jstree-open, .jstree-leaf") || obj.children("ul").children("li").size() > 0;
-			},
-			load_node_json : function (obj, s_call, e_call) {
-				var s = this.get_settings().json_data,
-					error_func = function () {},
-					success_func = function () {};
-				switch(true) {
-					case (!s.data && !s.ajax): throw "Neither data nor ajax settings supplied.";
-					case (!!s.data && !s.ajax) || (!!s.data && !!s.ajax && (!obj || obj === -1)):
-						if(!obj || obj == -1) {
-							this.get_container().empty().append(this.parse_json(s.data));
-							this.clean_node();
-						}
-						if(s_call) { s_call.call(); }
-						break;
-					case (!s.data && !!s.ajax) || (!!s.data && !!s.ajax && obj && obj !== -1):
-						obj = this._get_node(obj);
-						error_func = function (x, t, e) {
-							var ef = this.get_settings().json_data.ajax.error; 
-							if(ef) { ef.call(this, x, t, e); }
-							if(obj != -1 && obj.length) {
-								obj.children(".jstree-loading").removeClass("jstree-loading");
-								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
-							}
-							if(e_call) { e_call.call(); }
-						};
-						success_func = function (d, t, x) {
-							var sf = this.get_settings().json_data.ajax.success; 
-							if(sf) { d = sf.call(this,d,t,x) || d; }
-							if(obj == -1) { this.get_container().empty().append(this.parse_json(d)); }
-							else { obj.children(".jstree-loading").removeClass("jstree-loading").parent().append(this.parse_json(d)); }
-							this.clean_node(obj);
-							if(s_call) { s_call.call(); }
-						};
-						s.ajax.context = this;
-						s.ajax.error = error_func;
-						s.ajax.success = success_func;
-						if($.isFunction(s.ajax.data)) { s.ajax.data = s.ajax.data.call(null, obj); }
-						$.ajax(s.ajax);
-						break;
-				}
-			},
-			parse_json : function (js, is_callback) {
-				var d = $(), tmp, i, j, s = this.get_settings().json_data, ul1, ul2;
-				if(!js) { return d; }
-				if($.isFunction(js)) { 
-					js = js.call(this);
-				}
-				if($.isArray(js)) { 
-					for(i = 0, j = js.length; i < j; i++) {
-						tmp = this.parse_json(js[i], true);
-						if(tmp.length) { d = d.add(tmp); }
-					}
-				}
-				else {
-					if(!js.data) { return d; }
-					d = $("<li>");
-					if(js.attr) { d.attr(js.attr); }
-					if(js.state) { d.addClass("jstree-" + js.state); }
-					if(!$.isArray(js.data)) { tmp = js.data; js.data = []; js.data.push(tmp); }
-					$.each(js.data, function (i, m) {
-						tmp = $("<a>");
-						if($.isFunction(m)) { m = m.call(this, js); }
-						if(typeof m == "string") { tmp.attr('href','#').text(m); }
-						else {
-							if(!m.attr) { m.attr = {}; }
-							if(!m.attr.href) { m.attr.href = '#'; }
-							tmp.attr(m.attr).text(m.title);
-							if(m.language) { tmp.addClass(m.language); }
-							if(m.icon) { 
-								if(m.icon.indexOf("/") === -1) { tmp.addClass(m.icon); }
-								else { tmp.children("ins").css("background","url('" + m.icon + "') center center no-repeat;"); }
-							}
-						}
-						tmp.prepend("<ins class='icon'>&nbsp;</ins>");
-						d.append(tmp);
-					});
-					d.prepend("<ins class='icon'>&nbsp;</ins>");
-					if(js.children) { 
-						if(s.progressive_render && js.state !== "open") {
-							d.data("jstree-children", js.children);
-						}
-						else {
-							if($.isFunction(js.children)) {
-								js.children = js.children.call(this, js);
-							}
-							if($.isArray(js.children) && js.children.length) {
-								tmp = this.parse_json(js.children, true);
-								if(tmp.length) {
-									ul2 = $("<ul>");
-									ul2.append(tmp);
-									d.append(ul2);
-									//tmp.wrapAll("ul").appendTo(d);
-								}
-							}
-						}
-					}
-				}
-				if(!is_callback) {
-					ul1 = $("<ul>");
-					ul1.append(d);
-					d = ul1;
-				}
-				return d;
-			}
-		}
-	});
-	// $.jstree.defaults.plugins.push("json_data");
-})(jQuery);
-//*/

@@ -345,6 +345,12 @@
       </result>
     </action>
     
+    <action name="createStoryUndex" method="createStoryUnder" class="storyAction">
+      <result type="json">
+        <param name="target">story</param>
+      </result>
+    </action>
+    
     <action name="storeStory" method="store" class="storyAction">
       <interceptor-ref name="prefetchStack"/>
       <result type="json">

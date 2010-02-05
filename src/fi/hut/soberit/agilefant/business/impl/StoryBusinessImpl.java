@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
@@ -69,6 +70,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private HourEntryBusiness hourEntryBusiness;
     @Autowired
     private TaskBusiness taskBusiness;
+    @Autowired
+    private StoryHierarchyBusiness storyHierarchyBusiness;
 
     public StoryBusinessImpl() {
         super(Story.class);
@@ -247,6 +250,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 story.getResponsibles().add(userDAO.get(userId));
             }
         }
+    }
+    
+    public Story createStoryUnder(int referenceStoryId, Story data, Set<Integer> responsibleIds) {
+        Story referenceStory = this.retrieve(referenceStoryId);
+        Backlog backlog = referenceStory.getBacklog();
+        Story story = this.create(data, backlog.getId(), responsibleIds);
+        this.storyHierarchyBusiness.moveUnder(story,referenceStory);
+        return story;
     }
 
     @Transactional
@@ -605,6 +616,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
         this.storyRankBusiness = storyRankBusiness;
+    }
+    
+    public void setStoryHierarchyBusiness(StoryHierarchyBusiness storyHierarchyBusiness) {
+        this.storyHierarchyBusiness = storyHierarchyBusiness;
     }
 
 }

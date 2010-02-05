@@ -111,8 +111,8 @@ StoryTreeController.prototype.initTree = function() {
       story: {
         draggable: true,
         clickable: false,
-        creatable: false,
-        deletable: false,
+        creatable: true,
+        deletable: true,
         renameable: false
       }
     },
@@ -168,6 +168,43 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
   );
 };
 
+StoryTreeController.prototype.createChild = function(refNode) {
+  var me = this;
+  if(refNode.nodeName != "li") {
+    refNode = $(refNode).parents("li:eq(0)")[0];
+  }
+  var parentStory = $(refNode).attr("storyId");
+  var node = this.tree.create({}, refNode, "inside");
+  var nodeNameEl = node.find("a").hide();
+  var container = $('<div />').appendTo(node);
+  var nameField = $('<input type="text" />').appendTo(container);
+  nameField.width("25ex");
+  var saveStory = function(event) {
+    event.stopPropagation();
+    $.post("ajax/createStoryUndex.action", {storyId: parentStory, "story.name": nameField.val()}, function(data) {
+      var fragment = '<div title="Not Started" class="inlineTaskState taskState'+data.state+'">N</div> '+data.name+' <span style="font-size: 80%;"> ('+data.backlog.name+') </span>';
+      nodeNameEl.html(fragment);
+      node.attr("storyId", data.id);
+      nodeNameEl.show();
+      container.remove();
+    },"json");
+  };
+  var cancelFunc = function() {
+    container.remove();
+    me.tree.remove(node);
+  };
+  $('<input type="button" value="save" />').appendTo(container).click(saveStory);
+  nameField.keyup(function(event) {
+    if(event.keyCode === 13) {
+      saveStory(event);
+    } else if(event.keyCode === 27) {
+      cancelFunc();
+    }
+  });
+  $('<input type="button" value="cancel" />').click(cancelFunc).appendTo(container);
+  nameField.focus();
+};
+
 /**
  * Initializes the tree.
  * 
@@ -209,7 +246,7 @@ StoryTreeController.prototype._initializeTree = function() {
     var links = $('<div />').addClass('details-links').appendTo(story.bubble);
     var addChildLink = $('<a>add child</a>').click(function() {
       story.bubble.remove();
-      MessageDisplay.Warning("Not implemented");
+      me.createChild(story);
     }).appendTo(links);
     var deleteLink = $('<a>delete</a>').click(function() {
       story.bubble.remove();

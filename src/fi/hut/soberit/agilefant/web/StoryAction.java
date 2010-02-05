@@ -142,6 +142,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         return Action.SUCCESS;
     }
     
+    public String createStoryUnder() {
+        story = storyBusiness.createStoryUnder(storyId, story, userIds);
+        return Action.SUCCESS;
+    }
     
     public String storyContents() {
         storyContents = storyBusiness.getStoryContents(storyId, iterationId);

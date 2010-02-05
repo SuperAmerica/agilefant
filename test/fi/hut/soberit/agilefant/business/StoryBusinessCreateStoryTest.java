@@ -70,6 +70,8 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     private HourEntryBusiness hourEntryBusiness;
     @Mock
     private TaskBusiness taskBusiness;
+    @Mock
+    private StoryHierarchyBusiness storyHierarchyBusiness;
 
     
     

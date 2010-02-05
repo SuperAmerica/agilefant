@@ -143,9 +143,9 @@ ProjectController.prototype.storyControllerFactory = function(view, model) {
 ProjectController.prototype.initIterationFilters = function() {
   var me = this;
   var updateFilters = function() {
-    me.iterationSelect.filters["PAST"] = me.iterationSelect.past.is(":checked");
-    me.iterationSelect.filters["ONGOING"] = me.iterationSelect.ongoing.is(":checked");
-    me.iterationSelect.filters["FUTURE"] = me.iterationSelect.future.is(":checked");
+    me.iterationSelect.filters.PAST = me.iterationSelect.past.is(":checked");
+    me.iterationSelect.filters.ONGOING = me.iterationSelect.ongoing.is(":checked");
+    me.iterationSelect.filters.FUTURE = me.iterationSelect.future.is(":checked");
     me.iterationsView.render();
   };
   this.iterationSelect.future.change(updateFilters);

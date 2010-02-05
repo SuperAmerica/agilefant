@@ -6,7 +6,7 @@ var HttpParamSerializer = {
         if (structure.constructor == Array) {
             throw new TypeError("Arrays cannot be serialized as toplevel structures");
         }
-        if (structure == null) {
+        if (structure === null) {
             throw new TypeError("Null cannot be serialized as a toplevel structure");
         }
         return HttpParamSerializer.serializeSubstructure(structure);
@@ -28,42 +28,41 @@ var HttpParamSerializer = {
         var isAnArray = structure.constructor == Array;
 
         for (var k in structure) {
-            if (! structure.hasOwnProperty(k)) {
-                continue;
-            }
-            
-            var v = structure[k];
-            
-            if (v == null) {
-                continue;
-            }
-            var fieldName = prefix;
-            if (isAnArray) {
-                fieldName += '[' + k + ']';
-            }
-            else {
-                if (prefix) {
-                    fieldName += '.' + k;
-                }
-                else { 
-                    fieldName += k;
-                }
-            }
-
-            var type = typeof(v);
-            if (type == 'object' && v) {
-                serializeSubstructure(structure[k], serializedData, fieldName);
-            }
-            else if (type == 'string' || type == 'number' || type == 'boolean') {
-              if(v === null) {
-                serializedData[fieldName] = '';
-              } else {
-                serializedData[fieldName] = '' + v;
+            if (structure.hasOwnProperty(k)) {  
+              
+              var v = structure[k];
+              
+              if (v === null) {
+                  continue;
               }
-            }
-            else {
-                throw new TypeError("Cannot serialize fields of type " + type);
-            }
+              var fieldName = prefix;
+              if (isAnArray) {
+                  fieldName += '[' + k + ']';
+              }
+              else {
+                  if (prefix) {
+                      fieldName += '.' + k;
+                  }
+                  else { 
+                      fieldName += k;
+                  }
+              }
+  
+              var type = typeof(v);
+              if (type == 'object' && v) {
+                  serializeSubstructure(structure[k], serializedData, fieldName);
+              }
+              else if (type === 'string' || type === 'number' || type === 'boolean') {
+                if(v === null) {
+                  serializedData[fieldName] = '';
+                } else {
+                  serializedData[fieldName] = '' + v;
+                }
+              }
+              else {
+                  throw new TypeError("Cannot serialize fields of type " + type);
+              }
+          }
         }
         return serializedData;
     }

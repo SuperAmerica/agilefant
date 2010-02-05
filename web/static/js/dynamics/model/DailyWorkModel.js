@@ -54,12 +54,12 @@ DailyWorkModel.prototype._setData = function(newData) {
 
     if (newData.assignedWork) {
         var stories = newData.assignedWork.stories;
-        if (stories != undefined) {
+        if (stories !== undefined) {
             this._updateRelations(ModelFactory.types.story, stories);
         }
         
         var tasks = newData.assignedWork.tasksWithoutStory;
-        if (tasks != undefined) {
+        if (tasks !== undefined) {
             this._updateRelations(ModelFactory.types.task, tasks);
         }
     }

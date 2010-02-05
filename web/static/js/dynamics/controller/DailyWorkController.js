@@ -290,7 +290,7 @@ DailyWorkController.prototype.initializeTaskListConfig = function() {
         dropOptions: {
             accepts: function(model) {
                 return false;
-                return (model instanceof DailyWorkTaskModel);
+                //return (model instanceof DailyWorkTaskModel);
             },
             callback: function() {
             }
@@ -766,7 +766,7 @@ DailyWorkStoryController.prototype.createTaskListView = function(panel) {
           items: "> .dynamicTableDataRow",
           handle: "." + DynamicTable.cssClasses.dragHandle,
           connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
-        },
+        }
     });
     config.addCaptionItem( {
         name : "showDone",

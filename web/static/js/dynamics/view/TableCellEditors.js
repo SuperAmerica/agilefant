@@ -812,7 +812,7 @@ TableEditors.Selection.prototype.init = function(element, model, options) {
 
 TableEditors.Selection.prototype._parseItems = function() {
   // Check, whether object is a map
-  if (typeof(this.options.items) === "object") {
+  if (typeof this.options.items  === "object") {
     return this.options.items;
   }
   else {

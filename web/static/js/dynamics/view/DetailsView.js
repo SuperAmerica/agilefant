@@ -31,7 +31,7 @@ DetailsView.prototype.initialize = function() {
     this.closeViewListener = function(event) {
         if (me.dialogOpen) {
             me.close();
-        };
+        }
         event.stopPropagation();
         return false;
     };
@@ -39,7 +39,7 @@ DetailsView.prototype.initialize = function() {
     this.propagatingCloseViewListener = function(event) {
         if (me.dialogOpen) {
             me.close();
-        };
+        }
         event.stopPropagation();
         return true;
     };
@@ -47,7 +47,7 @@ DetailsView.prototype.initialize = function() {
     this.closeViewWithDblclickListener = function(event) {
         if (me.dialogOpen) {
             me.close();
-        };
+        }
     };
 
     this.render();
@@ -57,11 +57,12 @@ DetailsView.prototype.initialize = function() {
  * @private
  */
 DetailsView.prototype.render = function() {
+    var contextString;
     if (this.model.getContext) {
-        var contextString = this.model.getContext().name;
+        contextString = this.model.getContext().name;
     }
     else {
-        var contextString = this.model.getBacklog().getName();
+        contextString = this.model.getBacklog().getName();
     }
     
     $("span", this.element).remove();
@@ -81,7 +82,7 @@ DetailsView.prototype.render = function() {
         this.link.appendTo(this.element);
     
         this.link.click(this.toggleViewListener);
-    };
+    }
     
     this.link.text(contextString + ' ∇');
 };
@@ -114,10 +115,9 @@ DetailsView.prototype.open = function() {
         "top" : top,
         "left" : off.left + (width - viewWidth) / 2,
         "width": viewWidth,
-        "min-height": 200,
+        "min-height": 200
     };
     
-    var me = this;
     this.model.retrieveDetails(function(data) {
         me.innerView.html(data);
     });

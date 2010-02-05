@@ -32,7 +32,7 @@ StoryInfoWidget.prototype.initialize = function() {
   config.addColumnConfiguration(1, {
     title: "Parent story",
     get : StoryModel.prototype.getParentStoryName,
-    decorator: DynamicsDecorators.parentStoryDecorator,
+    decorator: DynamicsDecorators.parentStoryDecorator
   });
   config.addColumnConfiguration(2, {
     title: 'Description',

@@ -89,14 +89,14 @@ LabelsView.prototype.renderLabel = function(label, labelContainer) {
   });
   tempLabel.mouseleave(function() {
     deleteButton.hide();
-  })  
+  });
 };
 
 LabelsView.prototype.renderFully = function() {
   var labels = this.model.getLabels();
   var me = this;
   var labelContainer = $('<div></div>').css("float", "left");
-  if (labels.length == 0) {
+  if (labels.length === 0) {
     $('<div class="label-item">This story has no labels</div>').appendTo(labelContainer);
   } else {
     for (var i = 0, len = labels.length; i < len; i++) {
@@ -114,7 +114,7 @@ LabelsView.prototype.addLabels = function(labels) {
   var storyId = this.model.getId();
   $.post("ajax/addStoryLabels.action",{
     storyId:storyId,
-    labelNames: labels,
+    labelNames: labels
   },function(){
     me.model.reload();
     }

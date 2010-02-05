@@ -142,7 +142,7 @@ var DynamicsDecorators = {
   },
   userInitialsListDecorator: function(userList, emptyText) {
     if(!userList || !userList.length) {
-      if (emptyText == null) {
+      if (emptyText === null) {
         return "";
       } else {
         return emptyText;
@@ -249,7 +249,7 @@ var DynamicsDecorators = {
     return function(value) {
       if(!value) {
         return text;
-      } else {
+      } else {
         return value;
       }
     };

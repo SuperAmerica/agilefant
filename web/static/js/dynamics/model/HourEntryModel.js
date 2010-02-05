@@ -165,7 +165,7 @@ HourEntryModel.prototype.getUser = function() {
 };
 HourEntryModel.prototype.setHourEntryList = function(hourEntryList) {
 	this.relations.hourEntryList = hourEntryList;
-}
+};
 HourEntryModel.prototype.setUser = function(user) {
   this.relations.user = user;
 };

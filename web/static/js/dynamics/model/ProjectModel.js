@@ -324,7 +324,7 @@ ProjectModel.prototype.unrank = function() {
   var me = this;
     
   var data = {
-  projectId: me.getId(),
+  projectId: me.getId()
   };  
 
   jQuery.ajax({
@@ -346,7 +346,7 @@ ProjectModel.prototype.rank = function() {
 	  var me = this;
 	    
 	  var data = {
-	  projectId: me.getId(),
+	  projectId: me.getId()
 	  };  
 
 	  jQuery.ajax({

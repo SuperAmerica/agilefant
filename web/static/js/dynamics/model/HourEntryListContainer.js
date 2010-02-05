@@ -46,7 +46,7 @@ HourEntryListContainer.prototype.reload = function() {
 HourEntryListContainer.prototype.fillData = function(callback, limitedEntries) {
   var me = this;
   var url = "";
-  if (limitedEntries == undefined) {
+  if (limitedEntries === undefined) {
     limitedEntries = false;
   }
   if(this.relations.parent instanceof BacklogModel) {
@@ -64,7 +64,7 @@ HourEntryListContainer.prototype.fillData = function(callback, limitedEntries) {
       url,
       params,
       function(data,status) {
-        me.setData(data)
+        me.setData(data);
         if (callback) {
           callback(me);
         }
@@ -73,7 +73,7 @@ HourEntryListContainer.prototype.fillData = function(callback, limitedEntries) {
 
 HourEntryListContainer.prototype.setParent = function(parent) {
   this.relations.parent = parent;
-}
+};
 
 /* GETTERS */
 

@@ -55,7 +55,7 @@ CommonModel.prototype.isEditEventFired = function() {
   var fired = this._editFired;
   this._editFired = false;
   return fired;
-}
+};
 
 /**
  * Check whether one of the special metrics fields has been updated.
@@ -410,12 +410,4 @@ CommonModel.prototype.getCurrentData = function() {
 
 CommonModel.prototype.serializeFields = function(prefix, changedData) {
   return HttpParamSerializer.serializeSubstructure(changedData, {}, prefix);
-  var data = {};
-  for (field in changedData) {
-    if (changedData.hasOwnProperty(field)) {
-      var fieldName = prefix+"." + field;
-      data[fieldName] = changedData[field];
-    }
-  }
-  return data;
 };

@@ -25,14 +25,18 @@ HourEntryController.prototype.removeHourEntry = function() {
   });
 };
 
+
+HourEntryController.prototype.saveNewEntryButtonFactory = function(view, model) {
+  return new DynamicsButtons(this, 
+      [
+       {text: 'Save', callback: function() {
+           view.getElement().trigger("storeRequested"); 
+         }
+       }] ,view);
+};
+
 HourEntryController.prototype.deleteButtonFactory = function(view, model) {
 	return new DynamicsButtons(this, [{text: 'Delete', callback: HourEntryController.prototype.removeHourEntry}] ,view);
-	};
-	
-	HourEntryController.prototype.saveNewEntryButtonFactory = function(view, model){
-	  return new DynamicsButtons(this, [{text: 'Save', callback: function() { 
-	    view.getElement().trigger("storeRequested"); 
-	  }
-	 }] ,view);
-	};
+};
+
 

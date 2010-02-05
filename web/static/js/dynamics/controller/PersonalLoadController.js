@@ -16,7 +16,7 @@ PersonalLoadController.prototype.init = function(options) {
   var me = this;
   this.userLoadView = new UserLoadPlotWidget(this.userId,{ 
     total:{
-          element: options.totalPlot,
+          element: options.totalPlot
       },
     detailed: {
         element: options.detailedPlot,

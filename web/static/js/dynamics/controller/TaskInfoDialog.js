@@ -46,7 +46,7 @@ TaskInfoDialog.prototype.render = function() {
   this.renderHistoryTab();
   this.renderSpentEffortTab();
   this.tabsElement.tabs();
-  var selected = this.tabsElement.tabs('option', 'selected')
+  var selected = this.tabsElement.tabs('option', 'selected');
   this.selectTab(selected);
   var me = this;
   this.tabsElement.bind('tabsselect', function(event, ui) {

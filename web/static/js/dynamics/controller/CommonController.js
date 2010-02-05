@@ -21,7 +21,7 @@ CommonController.prototype.attachModelListener = function() {
     };
     this.model.addListener(this.modelListener);
   }
-}
+};
 
 /**
  * Add a child controller to this controller.

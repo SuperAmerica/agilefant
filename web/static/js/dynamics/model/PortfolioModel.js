@@ -45,7 +45,7 @@ PortfolioModel.prototype._setData = function(newData) {
     for (var i = 0, len = newData.rankedProjects.length; i < len; i++) {
       this.rankedProjects.push(ModelFactory.updateObject(newData.rankedProjects[i]));
     }
-    for (var i = 0, len = newData.unrankedProjects.length; i < len; i++) {
+    for (i = 0, len = newData.unrankedProjects.length; i < len; i++) {
       this.unrankedProjects.push(ModelFactory.updateObject(newData.unrankedProjects[i]));
     }
   }

@@ -19,7 +19,7 @@ AutoSuggest.prototype.initialize = function() {
   this.originalElement = this.selectionsElement.find(".as-original");
   var me = this;
   this.inputElement.keydown(function(e) {
-    if ((e.keyCode == 188 || e.keyCode == 13) && this.value != "") {
+    if ((e.keyCode === 188 || e.keyCode === 13) && this.value !== "") {
       var label = me.inputElement.val();
       
       var existingData = me.valuesElement.val().indexOf(label + ",");
@@ -46,14 +46,14 @@ AutoSuggest.prototype.initialize = function() {
       me.inputElement.val("");
       e.preventDefault();
     }
-    if (e.keyCode == 13) {
+    if (e.keyCode === 13) {
       var selectedResults = me.resultsElement.find(".active").length;
-      if (selectedResults == 0) {
+      if (selectedResults === 0) {
         me.success();
       }
-    } else if (e.keyCode == 27) {
+    } else if (e.keyCode === 27) {
       me.cancel();
-    } else if(e.keyCode == 188 && this.value == "") {
+    } else if(e.keyCode === 188 && this.value === "") {
       e.preventDefault();
     }
   });
@@ -69,6 +69,7 @@ AutoSuggest.prototype.initialize = function() {
 };
 
 AutoSuggest.prototype.success = function() {
+  var prelimData, i, len;
   if (this.options.successCallback) {
     var values = this.valuesElement.val();
     var data = [];
@@ -76,20 +77,20 @@ AutoSuggest.prototype.success = function() {
       var lastChar = values.charAt(values.length - 1);
       // Eliminate last , so that we won't get an empty data in the array
       if (lastChar == ',') {
-        var prelimData = [];
+        prelimData = [];
         prelimData = values.substring(0, values.length - 1).split(',');
-        for (var i = 0, len = prelimData.length; i < len; i++) {
+        for (i = 0, len = prelimData.length; i < len; i++) {
           data.push(prelimData[i].substring(0,255));
         }
       } else {
-        var prelimData = [];
+        prelimData = [];
         prelimData = values.split(',');
-        for (var i = 0, len = prelimData.length; i < len; i++) {
+        for (i = 0, len = prelimData.length; i < len; i++) {
           data.push(prelimData[i].substring(0,255));
         }
       }
     }
-    if((!data.length == 0)){
+    if((!data.length === 0)){
       this.options.successCallback(data);
     } else {
       this.cancel();

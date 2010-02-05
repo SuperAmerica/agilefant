@@ -66,10 +66,10 @@ PortfolioController.prototype._calculateTimelineUnitSize = function() {
   if (dateEnd>dateStart) {
     timeSpan = dateEnd - dateStart;
   } else {
-    timeSpan = 12 - (Math.abs(dateStart-dateEnd));
+    timeSpan = 12 - Math.abs(dateStart-dateEnd);
   }
   return (timelineWidth / timeSpan);
-}
+};
 
 PortfolioController.prototype.paintTimeline = function() {
   this.timelineElement.css("height", (this.model.getRankedProjects().length * 40) + "px");
@@ -201,7 +201,7 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     captionConfig: {
   	  cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all portfolio-unranked-project-table",
+    cssClass: "ui-widget-content ui-corner-all portfolio-unranked-project-table"
   });
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {

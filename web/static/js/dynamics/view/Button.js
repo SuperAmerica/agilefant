@@ -23,7 +23,7 @@ DynamicTableRowButton.prototype.initialize = function() {
 
     this.clickListener = function(event) {
         me.callback();
-    }
+    };
     
     this.button.click(function(event) { me.callback.call(me.controller); });
     this.element = this.container;

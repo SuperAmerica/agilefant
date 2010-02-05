@@ -19,6 +19,6 @@ var ParserUtils = {
       if(isNaN(minutes)) { minutes = 0; }
       if(isNaN(hours)) { hours = 0; }
       if(isNaN(hourDecimals)) { hourDecimals = 0; }
-      return minutes + (Math.round(((hours +hourDecimals)*60)));
+      return minutes + Math.round((hours +hourDecimals)*60);
     }
 };

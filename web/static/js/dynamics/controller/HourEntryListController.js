@@ -130,7 +130,7 @@ HourEntryListController.prototype.showAllEntries = function() {
   this.limited = false;
   this.hourEntryButtonsView.hide();
   this.reload();
-}
+};
 
 /**
  * Initialize <code>DynamicTableConfiguration</code> for the

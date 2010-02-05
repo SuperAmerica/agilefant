@@ -32,7 +32,7 @@ StoryTreeController.prototype = new CommonController();
 
 
 StoryTreeController.prototype.refresh = function() {
-  if(!this.tree) {
+  if(!this.tree) {
     this.initTree();
     return;
   }
@@ -77,10 +77,10 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
 StoryTreeController.prototype.initTree = function() {
   var urlInfo = {
     "project": {
-      url: "ajax/getProjectStoryTree.action",
+      url: "ajax/getProjectStoryTree.action"
     },
     "product": {
-      url: "ajax/getProductStoryTree.action",
+      url: "ajax/getProductStoryTree.action"
     }
   };
   
@@ -94,7 +94,7 @@ StoryTreeController.prototype.initTree = function() {
       opts: {
         method: "post",
         url: urlInfo[this.type].url + "?" + urlInfo[this.type].idName + "=" + this.id
-      },
+      }
     },
     ui: {
         dots: false,

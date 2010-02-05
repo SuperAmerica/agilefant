@@ -511,7 +511,7 @@ ModelFactory.prototype._initProjectPortfolio = function(callback) {
     url: "ajax/projectPortfolioData.action",
     async: true,
     success: function(data,status) {
-      var model = me._constructProjectPortfolioData(data)
+      var model = me._constructProjectPortfolioData(data);
       if (callback) { callback(model); }
     },
     error: function(xhr, status, error) {

@@ -99,14 +99,14 @@ StoryController.prototype.moveStory = function() {
 };
 
 StoryController.prototype.rankStory = function(view, model, newPos) {
-  var previousRow = newPos - 1;
+  var previousRow = newPos - 1, targetStory;
   var targetModel = view.getParentView().getModel();
   if (view.getParentView().getDataRowAt(previousRow)) {
-    var targetStory = view.getParentView().getDataRowAt(previousRow).getModel();
+    targetStory = view.getParentView().getDataRowAt(previousRow).getModel();
     model.rankUnder(targetStory.getId(), targetModel);
   }
   else {
-    var targetStory = view.getParentView().getDataRowAt(1).getModel();
+    targetStory = view.getParentView().getDataRowAt(1).getModel();
     model.rankOver(targetStory.getId(), targetModel);
   }
 };

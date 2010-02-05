@@ -211,9 +211,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     private void createStoryRanks(Story story, Backlog backlog) {
-        this.storyRankBusiness.rankToBottom(story, backlog);
-        if (backlog instanceof Iteration) {
-            this.storyRankBusiness.rankToBottom(story, backlog.getParent());
+        if(!(backlog instanceof Product)) {
+            this.storyRankBusiness.rankToBottom(story, backlog);
+            if (backlog instanceof Iteration) {
+                this.storyRankBusiness.rankToBottom(story, backlog.getParent());
+            }
         }
     }
 
@@ -257,6 +259,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Backlog backlog = referenceStory.getBacklog();
         Story story = this.create(data, backlog.getId(), responsibleIds);
         this.storyHierarchyBusiness.moveUnder(story,referenceStory);
+        return story;
+    }
+    
+    public Story createStorySibling(int referenceStoryId, Story data, Set<Integer> responsibleIds) {
+        Story referenceStory = this.retrieve(referenceStoryId);
+        Backlog backlog = referenceStory.getBacklog();
+        Story story = this.create(data, backlog.getId(), responsibleIds);
+        this.storyHierarchyBusiness.moveAfter(story,referenceStory);
         return story;
     }
 

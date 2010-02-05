@@ -345,7 +345,13 @@
       </result>
     </action>
     
-    <action name="createStoryUndex" method="createStoryUnder" class="storyAction">
+    <action name="createStoryUnder" method="createStoryUnder" class="storyAction">
+      <result type="json">
+        <param name="target">story</param>
+      </result>
+    </action>
+    
+    <action name="createStorySibling" method="createStorySibling" class="storyAction">
       <result type="json">
         <param name="target">story</param>
       </result>

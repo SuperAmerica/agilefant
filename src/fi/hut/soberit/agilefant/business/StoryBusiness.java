@@ -88,4 +88,5 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     void delete(int id, TaskHandlingChoice taskHandlingChoice, HourEntryHandlingChoice storyHourEntryHandlingChoice, HourEntryHandlingChoice taskHourEntryHandlingChoice);
 
     public Story createStoryUnder(int referenceStoryId, Story data, Set<Integer> responsibleIds);
+    public Story createStorySibling(int referenceStoryId, Story data, Set<Integer> responsibleIds);
 }

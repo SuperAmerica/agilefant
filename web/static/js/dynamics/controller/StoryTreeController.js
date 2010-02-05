@@ -168,20 +168,21 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
   );
 };
 
-StoryTreeController.prototype.createChild = function(refNode) {
+StoryTreeController.prototype.createChild = function(refNode, position) {
   var me = this;
   if(refNode.nodeName != "li") {
     refNode = $(refNode).parents("li:eq(0)")[0];
   }
+  var positionToAction = {"inside": "ajax/createStoryUnder.action", "after": "ajax/createStorySibling.action"};
   var parentStory = $(refNode).attr("storyId");
-  var node = this.tree.create({}, refNode, "inside");
+  var node = this.tree.create({}, refNode, position);
   var nodeNameEl = node.find("a").hide();
   var container = $('<div />').appendTo(node);
   var nameField = $('<input type="text" />').appendTo(container);
   nameField.width("25ex");
   var saveStory = function(event) {
     event.stopPropagation();
-    $.post("ajax/createStoryUndex.action", {storyId: parentStory, "story.name": nameField.val()}, function(data) {
+    $.post(positionToAction[position], {storyId: parentStory, "story.name": nameField.val()}, function(data) {
       var fragment = '<div title="Not Started" class="inlineTaskState taskState'+data.state+'">N</div> '+data.name+' <span style="font-size: 80%;"> ('+data.backlog.name+') </span>';
       nodeNameEl.html(fragment);
       node.attr("storyId", data.id);
@@ -246,7 +247,11 @@ StoryTreeController.prototype._initializeTree = function() {
     var links = $('<div />').addClass('details-links').appendTo(story.bubble);
     var addChildLink = $('<a>add child</a>').click(function() {
       story.bubble.remove();
-      me.createChild(story);
+      me.createChild(story,"inside");
+    }).appendTo(links);
+    var addSiblingLink = $('<a>add sibling</a>').click(function() {
+      story.bubble.remove();
+      me.createChild(story,"after");
     }).appendTo(links);
     var deleteLink = $('<a>delete</a>').click(function() {
       story.bubble.remove();

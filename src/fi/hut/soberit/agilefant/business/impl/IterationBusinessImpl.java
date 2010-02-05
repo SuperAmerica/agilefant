@@ -482,9 +482,14 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             assignment.setUnassignedLoad(new ExactEstimate(
                     (long) (assignedPortion * (float) unassignedLoad)));
 
-            ExactEstimate iterationWorkHours = new ExactEstimate(Math
-                    .round(timeframeLeft * iter.getBacklogSize().floatValue()
-                            * assignedPortion));
+            ExactEstimate iterationWorkHours;
+            if(iter.getBacklogSize() != null) {
+                iterationWorkHours = new ExactEstimate(Math
+                        .round(timeframeLeft * iter.getBacklogSize().floatValue()
+                                * assignedPortion));
+            } else {
+                iterationWorkHours = new ExactEstimate(0);
+            }
             assignment.setAvailableWorktime(iterationWorkHours);
             SignedExactEstimate totalLoad = new SignedExactEstimate(0);
             totalLoad.add(assignment.getUnassignedLoad().longValue());

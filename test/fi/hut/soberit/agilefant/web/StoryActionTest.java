@@ -278,4 +278,32 @@ public class StoryActionTest extends MockedTestCase {
         verifyAll();
     }
     
+    @DirtiesContext
+    public void testCreateStoryUnder() {
+        Story data = new Story();
+        Story res = new Story();
+        
+        expect(storyBusiness.createStoryUnder(1, data, null)).andReturn(res);
+        replayAll();
+        storyAction.setStory(data);
+        storyAction.setStoryId(1);
+        storyAction.createStoryUnder();
+        verifyAll();
+        assertEquals(res, storyAction.getStory());
+    }
+    
+    @DirtiesContext
+    public void testCreateStorySibling() {
+        Story data = new Story();
+        Story res = new Story();
+        
+        expect(storyBusiness.createStorySibling(1, data, null)).andReturn(res);
+        replayAll();
+        storyAction.setStory(data);
+        storyAction.setStoryId(1);
+        storyAction.createStorySibling();
+        verifyAll();
+        assertEquals(res, storyAction.getStory());
+    }
+    
 }

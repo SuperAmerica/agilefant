@@ -1,109 +1,157 @@
-/*
- * jsTree agilefant theme 1.0
- * Supported features: dots/no-dots, icons/no-icons, focused, loading
- * Supported plugins: ui (hovered, clicked), checkbox
- */
-.jstree-agilefant li,.jstree-agilefant ins {
-	background-image: url("d.png");
-	background-repeat: no-repeat;
-	background-color: transparent;
+/* LOCKED */
+.tree-classic .locked li a {
+  color: gray;
 }
 
-.jstree-agilefant li {
-	background-position: -90px 0;
-	background-repeat: repeat-y;
+/* DOTS */
+.tree-classic ul {
+  background-position: 6px 1px;
+  background-repeat: repeat-y;
+  background-image:
+    url(data:image/gif;base64,R0lGODlhAgACAIAAAB4dGf///yH5BAEAAAEALAAAAAACAAIAAAICRF4AOw==)
+    ;
+  _background-image: url("dot_for_ie.gif"); *
+  background-image: url("dot_for_ie.gif");
 }
 
-.jstree-agilefant li.jstree-last {
-	background: transparent;
+.tree-classic li {
+  background-position: -64px -16px;
+  background-repeat: no-repeat;
+  background-image: url("icons.png");
+  padding-left: 1em !important;
 }
 
-.jstree-agilefant .jstree-open>ins {
-	background-position: -72px 0;
+/* NO DOTS */
+.tree-classic .no_dots,.tree-classic .no_dots ul {
+  background: transparent;
 }
 
-.jstree-agilefant .jstree-closed>ins {
-	background-position: -54px 0;
+.tree-classic .no_dots li.leaf {
+  background-image: none;
+  background-color: transparent;
 }
 
-.jstree-agilefant .jstree-leaf>ins {
-	background-position: -36px 0;
+/* OPEN or CLOSED */
+.tree-classic li.open {
+  background: url("icons.png") -32px -48px no-repeat;
 }
 
-.jstree-agilefant .jstree-hovered {
-	background: #e7f4f9;
-	border: 1px solid #d8f0fa;
-	padding: 0 1px;
+.tree-classic li.closed,#jstree-dragged.tree-classic li li.open {
+  background: url("icons.png") -48px -32px no-repeat;
 }
 
-.jstree-agilefant .jstree-clicked {
-	background: #beebff;
-	border: 1px solid #99defd;
-	padding: 0 1px;
+#jstree-marker {
+  background-image: url("icons.png");
 }
 
-.jstree-agilefant a .icon {
-	background: transparent;
+/* DEFAULT, HOVER, CLICKED, LOADING STATES */
+.tree-classic li a:hover,.tree-classic li a.hover,.tree-classic li span
+  {
+  /*background: #e7f4f9; border:1px solid #d8f0fa; padding:0px 3px 0px 3px;*/
+  
 }
 
-.jstree-agilefant a.jstree-loading .icon {
-	background: url("throbber.gif") center center no-repeat !important;
+.tree-classic li a.clicked,.tree-classic li a.clicked:hover,.tree-classic li span.clicked
+  {
+  background: navy;
+  border: 1px solid navy;
+  color: white;
+  padding: 0px 3px 0px 3px;
 }
 
-.jstree-agilefant.jstree-focused {
-	
+/* ICONS */
+.tree-classic ins {
+  display: none;
 }
 
-.jstree-agilefant .jstree-no-dots li,.jstree-agilefant .jstree-no-dots .jstree-leaf>ins
-	{
-	background: transparent;
+/*.tree-classic ins { background-image:url("icons.png"); background-position:0 0; background-repeat:no-repeat; }*/
+.tree-classic ul li a.loading ins {
+  background-image: url("throbber.gif") !important;
+  background-position: 0 0 !important;
+}  /* UL is added to make selector stronger */
+.tree-classic li.closed a ins,.tree-classic li.leaf a ins {
+  background-position: 0 0px;
+}  /* UL is added to make selector stronger */
+.tree-classic ul li a.loading ins {
+  background-image: url("throbber.gif");
+  background-position: 0 0;
+}  /* UL is added to make selector stronger */
+.tree-classic li a ins.forbidden {
+  background-position: -16px -16px;
 }
 
-.jstree-agilefant .jstree-no-dots .jstree-open>ins {
-	background-position: -18px 0;
+.tree-classic .locked li a ins {
+  background-position: 0 -48px;
 }
 
-.jstree-agilefant .jstree-no-dots .jstree-closed>ins {
-	background-position: 0 0;
+.tree-classic li span ins {
+  background-position: -16px 0;
 }
 
-.jstree-agilefant .jstree-no-icons a .icon {
-	display: none;
+#jstree-dragged {
+  background: white;
+  border: 1px solid #ccc;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
 
-.jstree-agilefant .jstree-search {
-	font-style: italic;
+#jstree-dragged.tree-classic ins {
+  background: url("icons.png") -16px -32px no-repeat;
+  display: inline-block !important;
 }
 
-.jstree-agilefant .jstree-no-icons .checkbox {
-	display: inline-block;
+#jstree-dragged.tree-classic ins.forbidden {
+  background: url("icons.png") -16px -16px no-repeat !important;
+  display: inline-block !important;
 }
 
-.jstree-agilefant .jstree-no-checkboxes .checkbox {
-	display: none !important;
+/* CONTEXT MENU */
+.tree-classic-context a ins {
+  background-image: url("icons.png");
+  background-repeat: no-repeat;
+  background-position: -64px -64px;
 }
 
-.jstree-agilefant .jstree-checked>a>.checkbox {
-	background-position: -38px -19px;
+.tree-classic-context a ins.create {
+  background-position: 0 -16px;
 }
 
-.jstree-agilefant .jstree-unchecked>a>.checkbox {
-	background-position: -2px -19px;
+.tree-classic-context a ins.rename {
+  background-position: -16px 0px;
 }
 
-.jstree-agilefant .jstree-undetermined>a>.checkbox {
-	background-position: -20px -19px;
+.tree-classic-context a ins.remove {
+  background-position: -32px -16px;
 }
 
-.jstree-agilefant .jstree-checked>a>.checkbox:hover {
-	background-position: -38px -37px;
+/* Markers */
+#jstree-marker.marker {
+  /*display: block !important;*/
+  height: 0.2em !important;
+  width: 10em !important;
+  background: #E17009 !important;
+  margin-top: 3px !important;
 }
 
-.jstree-agilefant .jstree-unchecked>a>.checkbox:hover {
-	background-position: -2px -37px;
+#jstree-marker.marker_plus {
+  margin-top: -3px;
+  width: 12px;
+  height: 12px;
+  background-position: right top;
 }
 
-.jstree-agilefant .jstree-undetermined>a>.checkbox:hover {
-	background-position: -20px -37px;
+#jstree-marker {
+  padding: 0;
+  margin: 0;
+  line-height: 5px;
+  /*font-size: 1px;*/
+  overflow: visible;
+  height: 5px;
+  position: absolute;
+  left: -45px;
+  top: -30px;
+  z-index: 1000;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  display: none;
 }
-/* TODO: IE6 support - the `>` selectors */

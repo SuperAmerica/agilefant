@@ -24,11 +24,21 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   } else if (this.type == 'product') {
     this.treeParams.productId = this.id;
   }
+  this.initialized = false;
   jQuery.extend(this.options, options);
   this._initializeTree();
   this.initHeader();
 };
 StoryTreeController.prototype = new CommonController();
+StoryTreeController.createNodeUrls = {
+    "inside": "ajax/treeCreateStoryUnder.action", 
+    "after": "ajax/treeCreateStorySibling.action"
+};
+StoryTreeController.moveNodeUrls =  {
+    "before": "ajax/moveStoryBefore.action",
+    "after": "ajax/moveStoryAfter.action",
+    "inside": "ajax/moveStoryUnder.action"
+};
 
 
 StoryTreeController.prototype.refresh = function() {
@@ -65,12 +75,6 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
   } else {
     delete data.statesToKeep;
   }
-  /*
-  var instance = $.jstree._reference(this.tree[0]);
-  var oldSettings = instance.get_settings();
-  oldSettings.html_data.ajax.data = this.treeParams;
-  instance._set_settings(oldSettings);
-  */
   this.refresh();
 };
 
@@ -97,7 +101,7 @@ StoryTreeController.prototype.initTree = function() {
       }
     },
     ui: {
-        dots: false,
+        dots: true,
         theme_path: "static/css/jstree/agilefant/style.css",
         theme_name: "classic"
     },
@@ -114,6 +118,13 @@ StoryTreeController.prototype.initTree = function() {
         creatable: true,
         deletable: true,
         renameable: false
+      },
+      iteration_story: {
+        draggable: true,
+        clickable: false,
+        creatable: false,
+        deletable: true,
+        renameable: false
       }
     },
     rules: {
@@ -126,26 +137,26 @@ StoryTreeController.prototype.initTree = function() {
   
 };
 StoryTreeController.prototype._treeLoaded = function() {
-  this.tree.open_all();
+  if(!this.initialized) {
+    this.tree.open_all();
+    this.initialized = true;
+  }
 };
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {
   var myId = $(node).attr("storyid");
   var refId = $(ref_node).attr("storyid");
-  //alert("you moved story " + myId + " " + type + " story " + refId);
   var data = {storyId: myId, referenceStoryId: refId};
-  var urls = {
-      "before": "ajax/moveStoryBefore.action",
-      "after": "ajax/moveStoryAfter.action",
-      "inside": "ajax/moveStoryUnder.action"
-  };
   $.ajax({
-    url: urls[type],
+    url: StoryTreeController.moveNodeUrls[type],
     data: data,
     type: "post",
     async: true
   });
 };
 StoryTreeController.prototype.checkStoryMove = function(node, ref_node, type, tree_obj, rb) {
+  if($(ref_node).attr("rel") === "iteration_story" && type === "inside") {
+    return false;
+  }
   if(this.options.disableRootSort) {
     var ref_parent = tree_obj.parent(ref_node);
     if(ref_parent === -1 && type !== "inside") {
@@ -173,27 +184,24 @@ StoryTreeController.prototype.createChild = function(refNode, position) {
   if(refNode.nodeName != "li") {
     refNode = $(refNode).parents("li:eq(0)")[0];
   }
-  var positionToAction = {"inside": "ajax/createStoryUnder.action", "after": "ajax/createStorySibling.action"};
   var parentStory = $(refNode).attr("storyId");
   var node = this.tree.create({}, refNode, position);
   var nodeNameEl = node.find("a").hide();
   var container = $('<div />').appendTo(node);
-  var nameField = $('<input type="text" />').appendTo(container);
-  nameField.width("25ex");
+  var nameField = $('<input type="text" size="25" />').appendTo(container);
+
   var saveStory = function(event) {
     event.stopPropagation();
-    $.post(positionToAction[position], {storyId: parentStory, "story.name": nameField.val()}, function(data) {
-      var fragment = '<div title="Not Started" class="inlineTaskState taskState'+data.state+'">N</div> '+data.name+' <span style="font-size: 80%;"> ('+data.backlog.name+') </span>';
-      nodeNameEl.html(fragment);
-      node.attr("storyId", data.id);
-      nodeNameEl.show();
+    $.post(StoryTreeController.createNodeUrls[position], {storyId: parentStory, "story.name": nameField.val()}, function(fragment) {
       container.remove();
-    },"json");
+      node.replaceWith(fragment);
+    },"html");
   };
   var cancelFunc = function() {
     container.remove();
     me.tree.remove(node);
   };
+  
   $('<input type="button" value="save" />').appendTo(container).click(saveStory);
   nameField.keyup(function(event) {
     if(event.keyCode === 13) {
@@ -274,8 +282,8 @@ StoryTreeController.prototype._initializeTree = function() {
     
     me._getStoryForId(id, function(object) {
       var points = object.getStoryPoints() || '&mdash;';
-      var responsibles = DynamicsDecorators.userInitialsListDecorator(object.getResponsibles());
-      infoTable.html('<tr><th>Points</th><td>' + points + '</td></tr><tr><th>Responsibles</th><td>' + responsibles + '</td></tr>');
+      var description = object.getDescription();
+      infoTable.html('<tr><th>Points</th><td>' + points + '</td></tr><tr><th>Description</th><td>' + description + '</td></tr>');
     });
   });
   

@@ -357,6 +357,16 @@
       </result>
     </action>
     
+    
+        
+    <action name="treeCreateStoryUnder" method="createStoryUnder" class="storyAction">
+      <result type="dispatcher">/WEB-INF/jsp/fragments/storyTreePart.jsp</result>
+    </action>
+    
+   <action name="treeCreateStorySibling" method="createStorySibling" class="storyAction">
+      <result type="dispatcher">/WEB-INF/jsp/fragments/storyTreePart.jsp</result>
+    </action>
+    
     <action name="storeStory" method="store" class="storyAction">
       <interceptor-ref name="prefetchStack"/>
       <result type="json">
@@ -370,6 +380,10 @@
         <param name="target">story</param>
         <param name="patterns">+responsibles, +tasks, +children, -children.backlog.description, +parent, +labels,-labels.creator,-labels.timestamp</param>
        </result>
+    </action>
+    
+    <action name="treeRetrieveStory" method="retrieve" class="storyAction">
+       <result type="dispatcher">/WEB-INF/jsp/fragments/storyTreePart.jsp</result>
     </action>
     
     <action name="retrieveStoryMetrics" method="retrieve" class="storyAction">
@@ -703,11 +717,11 @@
 	</action>
 	
 	<action name="getProjectStoryTree" class="storyHierarchyAction" method="retrieveProjectRootStories">
-      <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
+      <result type="dispatcher">/WEB-INF/jsp/fragments/storyTree.jsp</result>
     </action>
 
 	<action name="getProductStoryTree" class="storyHierarchyAction" method="retrieveProductRootStories">
-      <result type="dispatcher">/WEB-INF/jsp/inc/storyTree.jsp</result>
+      <result type="dispatcher">/WEB-INF/jsp/fragments/storyTree.jsp</result>
     </action>
 
 	<!-- /Story hierarchy -->

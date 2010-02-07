@@ -9,8 +9,8 @@ var HourEntryListController = function HourEntryListController(options) {
   this.hourEntryListElement = options.hourEntryListElement;
   this.hourEntryTableElement = $('<div></div>').appendTo(this.hourEntryListElement);
   this.parentModel = options.parentModel;
+  this.options = options;
   this.model = null;
-  this.limited = true;
   this.init();
   this.initButtonsView();
   this.initConfig();
@@ -67,13 +67,14 @@ HourEntryListController.prototype.showLogEffortRow = function() {
   this.logEffortModel.setHourEntryList(this.parentModel);
   this.logEffortModel.setUsers([], [PageController.getInstance().getCurrentUser()]);
   this.logEffortModel.setDate(new Date());
+  this.logEffortModel.setHourEntryList(this.model);
  
   this.logEffortController = new HourEntryController(this.logEffortModel, null, this);
   
   this.logEffortRow = new DynamicTableRow(this.addEntryConfig);
   this.logEffortController.view = this.logEffortRow ;
   this.hourEntryTableView._createRow(this.logEffortRow , this.logEffortController, this.logEffortModel, "top");
-  this.logEffortRow .autoCreateCells();
+  this.logEffortRow.autoCreateCells();
 };
 
 //note: will be called in different context
@@ -114,7 +115,12 @@ HourEntryListController.prototype.paint = function() {
     me.model = model;
     me.paintHourEntryTable();
     me.paintHourEntryButtons();
-  }, this.limited);
+    if(me.options.onUpdate) {
+      me.model.addListener(function() {
+        me.options.onUpdate();
+      });
+    }
+  }, true);
 };
 
 HourEntryListController.prototype.initButtonsView = function() {  
@@ -128,6 +134,7 @@ HourEntryListController.prototype.reload = function() {
 
 HourEntryListController.prototype.showAllEntries = function() {
   this.limited = false;
+  this.model.setLimitedEntries(false);
   this.hourEntryButtonsView.hide();
   this.reload();
 };
@@ -141,7 +148,9 @@ HourEntryListController.prototype.initConfig = function() {
       {
         rowControllerFactory : HourEntryListController.prototype.hourEntryControllerFactory,
         dataSource : HourEntryListContainer.prototype.getHourEntries,
-        closeRowCallback: HourEntryListController.prototype.logEffort
+        closeRowCallback: HourEntryListController.prototype.logEffort,
+        cssClass: "ui-widget-content ui-corner-all",
+        caption: "Spent effort on this object"
   });
   
   var date = {

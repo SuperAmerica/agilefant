@@ -19,7 +19,8 @@ var HourEntryListContainer = function HourEntryListContainer() {
 HourEntryListContainer.initializeFor = function(parent, callback, limited) {
   var object = new HourEntryListContainer();
   object.setParent(parent);
-  object.fillData(callback, limited);
+  object.limitedEntries = limited;
+  object.fillData(callback);
 };
 
 HourEntryListContainer.prototype = new CommonModel();
@@ -40,14 +41,13 @@ HourEntryListContainer.prototype._setData = function(newData) {
 HourEntryListContainer.prototype.reload = function() {
   this.fillData();
   this.relationChanged = true;
-  this.relationEvents();
 };
 
-HourEntryListContainer.prototype.fillData = function(callback, limitedEntries) {
+HourEntryListContainer.prototype.fillData = function(callback) {
   var me = this;
   var url = "";
-  if (limitedEntries === undefined) {
-    limitedEntries = false;
+  if (!this.limitedEntries) {
+    this.limitedEntries = false;
   }
   if(this.relations.parent instanceof BacklogModel) {
     url = "ajax/retrieveBacklogHourEntries.action";
@@ -58,7 +58,7 @@ HourEntryListContainer.prototype.fillData = function(callback, limitedEntries) {
   }
   var params = {
     parentObjectId: this.relations.parent.getId(),
-    limited: limitedEntries
+    limited: this.limitedEntries
   };
   jQuery.getJSON(
       url,
@@ -68,7 +68,12 @@ HourEntryListContainer.prototype.fillData = function(callback, limitedEntries) {
         if (callback) {
           callback(me);
         }
+        me.callListeners(new DynamicsEvents.EditEvent(me));
       });
+};
+
+HourEntryListContainer.prototype.setLimitedEntries = function(val) {
+  this.limitedEntries = val;
 };
 
 HourEntryListContainer.prototype.setParent = function(parent) {

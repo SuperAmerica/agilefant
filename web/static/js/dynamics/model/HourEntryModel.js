@@ -101,6 +101,7 @@ HourEntryModel.prototype._saveData = function(id, changedData) {
     dataType: "text",
     success: function(data, status) {
       MessageDisplay.Ok("Effort entry saved");
+      var tmp = me;
       if (me.relations.hourEntryList) {
         me.relations.hourEntryList.reload();
       }

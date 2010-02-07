@@ -1,6 +1,10 @@
 var UserSpentEffortWidget = function UserSpentEffortWidget(element, userId) {
   this.element = element;
   this.userId = userId;
+  this.reload();
+};
+
+UserSpentEffortWidget.prototype.reload = function() {
   var me = this;
   this.element.load("weeklySpentEffort.action",{userId: this.userId}, function() { 
     me._registerSpentEffortEvents(); 

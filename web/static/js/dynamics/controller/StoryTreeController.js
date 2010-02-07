@@ -179,7 +179,7 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
   );
 };
 
-StoryTreeController.prototype.createChild = function(refNode, position) {
+StoryTreeController.prototype.createNode = function(refNode, position) {
   var me = this;
   if(refNode.nodeName != "li") {
     refNode = $(refNode).parents("li:eq(0)")[0];
@@ -255,11 +255,11 @@ StoryTreeController.prototype._initializeTree = function() {
     var links = $('<div />').addClass('details-links').appendTo(story.bubble);
     var addChildLink = $('<a>add child</a>').click(function() {
       story.bubble.remove();
-      me.createChild(story,"inside");
+      me.createNode(story,"inside");
     }).appendTo(links);
     var addSiblingLink = $('<a>add sibling</a>').click(function() {
       story.bubble.remove();
-      me.createChild(story,"after");
+      me.createNode(story,"after");
     }).appendTo(links);
     var deleteLink = $('<a>delete</a>').click(function() {
       story.bubble.remove();

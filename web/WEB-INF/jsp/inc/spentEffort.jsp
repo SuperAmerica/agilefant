@@ -1,12 +1,12 @@
 <%@ include file="./_taglibs.jsp"%>
-<table style="width: 770px;" class="listTable">
+<table style="width: 100%;" class="listTable">
 	<tr>
 		<th rowspan="2" class="spentEffortArrow"><a title="Previous week" 
 			href="weeklySpentEffort.action?userId=${userId}&amp;week=${prevWeek.weekOfWeekyear}&amp;year=${prevWeek.year}">&laquo;</a></th>
 		<c:forEach items="${dailyEffort}" var="dayEffort">
-			<th style="width: 78px;">${dayEffort.date}.${dayEffort.month}.</th>
+			<th style="min-width: 8ex;">${dayEffort.date}.${dayEffort.month}.</th>
 		</c:forEach>
-		<th style="width: 65px;">Total</th>
+		<th style="min-width: 10ex;">Total</th>
 		<th rowspan="2" class="spentEffortArrow"><a title="Next week" 
 			href="weeklySpentEffort.action?userId=${userId}&week=${nextWeek.weekOfWeekyear}&year=${nextWeek.year}">&raquo;</a></th>
 			<td>

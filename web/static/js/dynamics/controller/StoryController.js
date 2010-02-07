@@ -262,19 +262,21 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
  * 
  */
 StoryController.prototype.storyActionFactory = function(view, model) {
-  var actionItems = [ {
+  var actionItems = [];
+  actionItems.push({
     text : "Move",
     callback : StoryController.prototype.moveStory
-  }, {
-    text : "Split",
-    callback : StoryController.prototype.splitStory
-  }, {
-    text: "Spent effort",
-    callback: StoryController.prototype.openLogEffort
-  }, {
+  });
+  if (Configuration.isTimesheetsEnabled()) {
+    actionItems.push({
+      text: "Spent effort",
+      callback: StoryController.prototype.openLogEffort
+    });
+  }
+  actionItems.push({
     text : "Delete",
     callback : StoryController.prototype.removeStory
-  } ];
+  });
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;

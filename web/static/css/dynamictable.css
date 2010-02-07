@@ -334,7 +334,7 @@ li.dynamictable-captionaction {
 	filter: alpha(opacity=40);
 }
 
-.actionColumn .edit {
+.actionColumn .edit, button.dynamics-button {
 	-moz-border-radius:5px;
 	-webkit-border-radius:5px;
 	border-radius: 5px;

@@ -11,11 +11,13 @@ var DynamicsButtons = function DynamicsButtons(controller, options, parent) {
 DynamicsButtons.prototype = new ViewPart();
 
 DynamicsButtons.prototype.initialize = function() {
-  var me = this;
+  var me = this, button, width;
   jQuery.each(this.options, function(i, opt) {
-    var button = $('<button />').appendTo(me.parent.getElement());
+    width = (opt.text.length + 2) + "ex";
+    button = $('<div class="actionColumn"><div class="edit" style="width: ' + width + '">' + opt.text + '</div></div>');
+    button.appendTo(me.parent.getElement());
     me.buttons.push(button);
-    button.text(opt.text);
+    button.text();
     button.click(function(evt) {
       me._click(i);
       return false;

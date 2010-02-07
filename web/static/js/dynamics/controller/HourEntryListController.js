@@ -150,7 +150,9 @@ HourEntryListController.prototype.initConfig = function() {
         dataSource : HourEntryListContainer.prototype.getHourEntries,
         closeRowCallback: HourEntryListController.prototype.logEffort,
         cssClass: "ui-widget-content ui-corner-all",
-        caption: "Spent effort on this object"
+        captionConfig: {
+          cssClasses: "ui-helper-hidden"
+        }
   });
   
   var date = {

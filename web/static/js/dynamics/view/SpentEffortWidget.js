@@ -6,13 +6,11 @@ var SpentEffortWidget = function SpentEffortWidget(model) {
 SpentEffortWidget.prototype.initDialog = function() {
   var me = this;
   this.element = $('<div/>');
+  $('<h2>Effort logger on this element</h2>').appendTo(this.element);
   this.objectEffortEl = $('<div />').appendTo(this.element);
-  
-  var a = $("<div />").addClass("dynamictable").addClass("ui-widget-content").addClass("ui-corner-all");
-  var b = $("<div />").appendTo(a).addClass("dynamictable-caption");
-  $("<div>My spent effort</div>").css({float: "left", width: "30%"}).appendTo(b);
-  this.userEffortEl = $('<div />').addClass("dynamictable-row").appendTo(a);
-  a.appendTo(this.element);
+  $('<h2>My spent effort</h2>').appendTo(this.element);
+  this.userEffortEl = $('<div />').addClass("ui-widget-content").addClass("ui-corner-all")
+    .css({padding: "10px", "margin-bottom": "2em"}).appendTo(this.element);
  
   
   this.element.appendTo(document.body);

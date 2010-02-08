@@ -239,6 +239,7 @@ StoryTreeController.prototype._initializeTree = function() {
   $(selector).live('click', function() {
     /* Remove all other bubbles */
     $('.story-details-bubble').remove();
+//    $('.story-details-bubble-helperarrow').remove();
     
     /* 
      * Get necessary data 
@@ -250,33 +251,38 @@ StoryTreeController.prototype._initializeTree = function() {
     /*
      * Create and position the bubble
      */
+    
     story.bubble = $('<div/>').addClass('story-details-bubble').appendTo(document.body);
     story.bubble.css({
-      'top': pos.top + 20 + 'px',
+      'top': pos.top + 35 + 'px',
       'left': pos.left + 100 + 'px'
     });
-    story.bubble.mouseleave(function() {
-      $(this).remove();
-    });
+    story.bubble.helperarrow = $('<div>&nbsp;</div>').addClass('story-details-bubble-helperarrow').appendTo(story.bubble);
+    
+    var removeBubble = function() {
+      story.bubble.remove();
+    };
+    
+    story.bubble.mouseleave(removeBubble);
     
     /*
      * Add links 'add child' and 'more' 
      */
     var links = $('<div />').addClass('details-links').appendTo(story.bubble);
     var addChildLink = $('<a>add child</a>').click(function() {
-      story.bubble.remove();
+      removeBubble();
       me.createNode(story,"inside");
     }).appendTo(links);
     var addSiblingLink = $('<a>add sibling</a>').click(function() {
-      story.bubble.remove();
+      removeBubble();
       me.createNode(story,"after");
     }).appendTo(links);
     var deleteLink = $('<a>delete</a>').click(function() {
-      story.bubble.remove();
+      removeBubble();
       MessageDisplay.Warning("Not implemented");
     }).appendTo(links);
     var moreLink = $('<a>more...</a>').click(function() {
-      story.bubble.remove();
+      removeBubble();
       me._getStoryForId(id, function(object) {
         var dialog = new StoryInfoDialog(object, function() {});
       });

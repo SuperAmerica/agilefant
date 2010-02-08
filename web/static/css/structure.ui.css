@@ -250,7 +250,10 @@ div#footerText label {
  * SMALL BURNDOWN
  */
 div.smallBurndown {
-  border: 1px solid #666;
+  border-width: 2px;
+  border-style: outset;
+  border-color: #ccc;
+  
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   

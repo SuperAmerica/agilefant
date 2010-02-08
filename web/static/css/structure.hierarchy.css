@@ -51,7 +51,7 @@ div.hierarchyContainer {
 .story-details-bubble {
   position: absolute;
   min-height:   80px;
-  min-width:    200px;
+  min-width:    350px;
   max-width:    400px;
   padding: 0.5em;
   z-index:  1000;
@@ -59,6 +59,16 @@ div.hierarchyContainer {
   border:   1px solid #999;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px; 
+}
+
+.story-details-bubble-helperarrow {
+  background: url('../img/bubble_arrow.png');
+  height: 21px;
+  width: 18px;
+  position: absolute;
+  top: -21px;
+  left: 20px;
+  z-index: 1001;
 }
 
 .story-details-bubble h3 {
@@ -69,6 +79,7 @@ div.hierarchyContainer {
   float: right;
   text-align: right;
   clear: both;
+  color: #1E5EEE;
 }
 
 .story-details-bubble a {

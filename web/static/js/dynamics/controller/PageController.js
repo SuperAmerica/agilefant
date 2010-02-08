@@ -50,7 +50,10 @@ PageController.getInstance = function() {
  */
 PageController.prototype.refreshMenu = function() {
   if (window.menuController) {
-    window.menuController.reload();
+    window.menuController.reload();    
+  }
+  if (window.myAssignmentsMenuController) {
+    window.myAssingmentsMenuController.reload();
   }
 };
 

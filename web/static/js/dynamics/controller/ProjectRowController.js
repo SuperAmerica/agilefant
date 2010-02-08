@@ -60,6 +60,9 @@ ProjectRowController.prototype.removeProject = function() {
       if (confirmation && confirmation.toLowerCase() == 'yes') {
         me.model.remove(function() {
           me.parentController.removeChildController("project", me);
+          if (window.pageController) {
+            window.pageController.refreshMenu();
+          }
         }, extraData);
         dialog.close();
       }

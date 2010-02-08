@@ -38,16 +38,6 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         return storyHierarchyDAO.retrieveProjectLeafStories(project);
     }
 
-    @Transactional(readOnly = true)
-    public List<Story> retrieveProjectRootStories(int projectId) {
-        return storyHierarchyDAO.retrieveProjectRootStories(projectId);
-    }
-
-    @Transactional(readOnly = true)
-    public List<Story> retrieveProductRootStories(int productId) {
-        return storyHierarchyDAO.retrieveProductRootStories(productId);
-    }
-
     @Transactional
     public void moveUnder(Story story, Story reference) {
         Story oldParent = story.getParent();
@@ -126,7 +116,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         } else {
             Product product = backlogBusiness.getParentProduct(story
                     .getBacklog());
-            tmpList.addAll(this.retrieveProductRootStories(product.getId()));
+            tmpList.addAll(this.retrieveProductRootStories(product.getId(), null));
         }
         if (tmpList.contains(story)) {
             tmpList.remove(story);
@@ -154,15 +144,23 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     @Transactional(readOnly = true)
     public List<Story> retrieveProductRootStories(int productId,
             StoryFilters storyFilters) {
-        List<Story> stories = retrieveProductRootStories(productId);
-        return storyFilterBusiness.filterStories(stories, storyFilters);
+        List<Story> stories = storyHierarchyDAO.retrieveProductRootStories(productId);
+        if (storyFilters != null) {
+            return storyFilterBusiness.filterStories(stories, storyFilters);
+        } else {
+            return stories;
+        }
     }
 
     @Transactional(readOnly = true)
     public List<Story> retrieveProjectRootStories(int projectId,
             StoryFilters storyFilters) {
-        List<Story> stories = retrieveProjectRootStories(projectId);
-        return storyFilterBusiness.filterStories(stories, storyFilters);
+        List<Story> stories = storyHierarchyDAO.retrieveProjectRootStories(projectId);
+        if (storyFilters != null) {
+            return storyFilterBusiness.filterStories(stories, storyFilters);
+        } else {
+            return stories;
+        }
     }
 
 }

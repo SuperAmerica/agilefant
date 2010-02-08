@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -97,7 +98,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
                 stories);
         replayAll();
         assertSame(stories, storyHierarchyBusiness
-                .retrieveProjectRootStories(projectId));
+                .retrieveProjectRootStories(projectId, null));
         verifyAll();
     }
 
@@ -110,7 +111,37 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
                 stories);
         replayAll();
         assertSame(stories, storyHierarchyBusiness
-                .retrieveProductRootStories(productId));
+                .retrieveProductRootStories(productId, null));
+        verifyAll();
+    }
+
+    @Test
+    @DirtiesContext
+    public void testRetrieveProjectRootStories_withStoryFilters() {
+        int projectId = 100;
+        StoryFilters storyFilters = new StoryFilters(null, null, null);
+        List<Story> stories = new ArrayList<Story>();
+        expect(storyHierarchyDAO.retrieveProjectRootStories(projectId)).andReturn(
+                stories);
+        expect(storyFilterBusiness.filterStories(stories, storyFilters)).andReturn(stories);
+        replayAll();
+        assertSame(stories, storyHierarchyBusiness
+                .retrieveProjectRootStories(projectId, storyFilters));
+        verifyAll();
+    }
+
+    @Test
+    @DirtiesContext
+    public void testRetrieveProductRootStories_withStoryFilters() {
+        int productId = 100;
+        StoryFilters storyFilters = new StoryFilters(null, null, null);
+        List<Story> stories = new ArrayList<Story>();
+        expect(storyHierarchyDAO.retrieveProductRootStories(productId)).andReturn(
+                stories);
+        expect(storyFilterBusiness.filterStories(stories, storyFilters)).andReturn(stories);
+        replayAll();
+        assertSame(stories, storyHierarchyBusiness
+                .retrieveProductRootStories(productId, storyFilters));
         verifyAll();
     }
 

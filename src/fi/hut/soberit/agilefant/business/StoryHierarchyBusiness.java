@@ -16,6 +16,7 @@ public interface StoryHierarchyBusiness {
      * no parent story or the parent story is in the product backlog.
      * 
      * @param project id
+     * @param storyFilters story filters (or null if no filtering is to be done)
      * @return list of root stories
      */
     public List<Story> retrieveProjectRootStories(int projectId, StoryFilters storyFilters);
@@ -35,6 +36,7 @@ public interface StoryHierarchyBusiness {
      * which have no parent story.
      * 
      * @param product id
+     * @param storyFilters story filters (or null if no filtering is to be done)
      * @return
      */
     public List<Story> retrieveProductRootStories(int productId, StoryFilters storyFilters);

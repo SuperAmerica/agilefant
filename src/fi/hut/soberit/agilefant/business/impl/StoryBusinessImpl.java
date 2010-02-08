@@ -523,23 +523,16 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return storyTo;
     }
 
-    public void deleteDeep(int id, TaskHandlingChoice taskHandlingChoice,
-            HourEntryHandlingChoice storyHourEntryHandlingChoice,
-            HourEntryHandlingChoice taskHourEntryHandlingChoice)  {
-        Story story = retrieve(id);
-        List<Story> stories = new ArrayList<Story>(story.getChildren());
-        if (!stories.isEmpty()){
-            for (Story item : stories) {
-                delete(item.getId(), taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
-            }
-        }
-    }
-    
     public void delete(int id, TaskHandlingChoice taskHandlingChoice,
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
             HourEntryHandlingChoice taskHourEntryHandlingChoice) {
         Story story = retrieve(id);
       
+        for (Story child : story.getChildren()) {
+            child.setParent(null);
+        }
+        story.getChildren().clear();
+
         if (taskHandlingChoice != null) {
             switch (taskHandlingChoice) {
             case DELETE:

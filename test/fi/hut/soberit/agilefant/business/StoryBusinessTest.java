@@ -357,6 +357,23 @@ public class StoryBusinessTest {
     }
 
     @Test
+    public void testDelete_deleteChoices_withChildren() {
+        Story child = new Story();
+        child.setParent(storyInIteration);
+        storyInIteration.getChildren().add(child);
+        expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
+        hourEntryBusiness.deleteAll(storyInIteration.getHourEntries());
+        storyRankBusiness.removeStoryRanks(storyInIteration);
+        storyDAO.remove(storyInIteration);
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
+        replayAll();
+        storyBusiness.delete(storyInIteration.getId(), TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        assertNull(child.getParent());
+        assertTrue(storyInIteration.getChildren().isEmpty());
+        verifyAll();
+    }
+
+    @Test
     public void testDelete_taskChoice_move() {
         Task task = new Task();
         storyInIteration.getTasks().add(task);

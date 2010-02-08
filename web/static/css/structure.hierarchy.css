@@ -39,66 +39,9 @@ div.hierarchyContainer {
   -webkit-border-radius: 2px;
 }
 
-/**
- * EDIT BUTTON
- */
-.tree .editButton {
-  white-space: nowrap;
-  display: inline;
-  margin-left: 1em;
-  padding: 0.1em 0.3em;
-  font-size: 80%;
-  text-align: center;
-  border: 1px solid #ccc;
-  -moz-border-radius: 0.2em;
-  -webkit-border-radius: 0.2em;
-  background: #eee;
-  cursor: pointer;
-}
-
-.tree .editButton:hover {
-  color: #E17009;
-}
-
-.editButtonMenu {
-  display: block !important;
-  position: absolute;
-  
-  z-index: 500;
-  
-  list-style-type: none !important;
-  list-style-image: none !important;
-  
-  background-image: none !important;
-  
-  border: 1px solid #ccc;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  
-  width: 10em !important;
-  background: #fcfcfc !important;
-  margin: -0.2em 0 0 0 !important; 
-  padding: 0 !important;
-  
-  font-size: 125%;
-}
-
-.editButton:hover .editButtonMenu, .editButtonMenu:hover {
-  color: black !important;
-}
-
-.editButtonMenu li {
+.tree span.nodeInfo {
   margin: 0;
-  padding: 0 0 0 1em;
-  text-align: left;
-  list-style-type: none;
-  background-image: none !important;
-}
-
-.editButtonMenu li:hover {
-  background: transparent url(../img/gradient.png) 80% 60% repeat-x !important;
-  cursor: pointer !important;
-  color: #E17009 !important;
+  padding: 0;
 }
 
 

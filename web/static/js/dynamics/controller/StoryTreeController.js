@@ -231,10 +231,12 @@ StoryTreeController.prototype._initializeTree = function() {
   var me = this;
   var elem = $(this.parentElement).attr('id');
   
+  var selector = '#' + elem + ' li a > span';
+
   /*
    * Details box
    */
-  $('#' + elem + ' li > a').live('click', function() {
+  $(selector).live('click', function() {
     /* Remove all other bubbles */
     $('.story-details-bubble').remove();
     
@@ -289,9 +291,10 @@ StoryTreeController.prototype._initializeTree = function() {
     var infoTable = $('<table/>').addClass('infotable').appendTo(story.bubble);
     
     me._getStoryForId(id, function(object) {
+      var name = object.getName();
       var points = object.getStoryPoints() || '&mdash;';
       var description = object.getDescription();
-      infoTable.html('<tr><th>Points</th><td>' + points + '</td></tr><tr><th>Description</th><td>' + description + '</td></tr>');
+      infoTable.html('<tr><th>Name</th><td>' + name + '</td></tr><tr><th>Points</th><td>' + points + '</td></tr><tr><th>Description</th><td>' + description + '</td></tr>');
     });
   });
   

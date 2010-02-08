@@ -15,7 +15,7 @@
   <li storyid="${node.id}" storystate="${node.state}" rel="${nodeType}">
     <a href="#">
     <span class="nodeInfo">
-    <div class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />">${fn:substring(node.state, 0, 1)}</div>
+    <div class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></div>
     <c:out value="${node.name}" /><span style="font-size:80%" title="${node.backlog.name}">(<c:out value="${node.backlog.name}"/>)</span>
     </span>
     </a>

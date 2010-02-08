@@ -75,6 +75,7 @@ li.genericMessage .closeButton:hover {
 }
 
 li.warningMessage {
-  background-color: #ffc;
-  color: #930;
+  background-color: #ffffce;
+  border-color: #f0c000;
+  color: #654;
 }

@@ -181,7 +181,7 @@ MessageDisplay.Warning = function(message, opts) {
  */
 MessageDisplay.WarningMessageClass = function(message, opts) {
   this.options = {
-      displayTime: 2000,
+      displayTime: 3500,
       fadeOutTime: 200
   };
   jQuery.extend(this.options, opts);

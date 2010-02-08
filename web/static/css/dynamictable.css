@@ -121,8 +121,6 @@
 .backlogActions {
   position: absolute;
   z-index: 100;
-  top: 20px;
-  right: 0;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   width: 100px;

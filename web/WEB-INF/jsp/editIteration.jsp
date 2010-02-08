@@ -60,9 +60,15 @@ $(document).ready(function() {
       tabs: $("#backlogInfo")
   });
 
-  $('#iterationActions').mouseenter(function() {
-    var menu = $('<ul class="actionCell backlogActions"/>').appendTo($(this));
+  $('#iterationActions').click(function() {
+    var menu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body);
 
+    var pos = $(this).offset();
+    menu.css({
+      "top": pos.top + 20,
+      "left": pos.left
+    });
+        
     var closeMenu = function() {
       menu.remove();
     };
@@ -77,7 +83,7 @@ $(document).ready(function() {
       controller.removeIteration();
     }).appendTo(menu);
     
-    $(this).mouseleave(function() {
+    menu.mouseleave(function() {
       closeMenu();
     });
   });

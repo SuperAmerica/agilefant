@@ -11,7 +11,7 @@
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
   <li class=""><a href="#backlogAssignees"><span><img
     alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
-  <li class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
+  <li id="projectActions" class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
 </ul>
@@ -56,6 +56,33 @@ $(document).ready(function() {
     }
   });
 
+  $('#projectActions').click(function() {
+    var menu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body);
+    var pos = $(this).offset();
+    menu.css({
+      "top": pos.top + 20,
+      "left": pos.left
+    });
+    
+    var closeMenu = function() {
+      menu.remove();
+    };
+    
+    $('<li/>').text('Spent effort').click(function() {
+      closeMenu();
+      controller.openLogEffort();
+    }).appendTo(menu);
+
+    $('<li/>').text('Delete').click(function() {
+      closeMenu();
+      controller.removeProject();
+    }).appendTo(menu);
+    
+    menu.mouseleave(function() {
+      closeMenu();
+    });
+  });
+  
 });
 </script>
 

@@ -142,9 +142,8 @@
 			<result type="dispatcher">/WEB-INF/jsp/editProject.jsp</result>
 		</action>
 
-		<action name="deleteProject" method="delete"
-			class="projectAction">
-			<result type="redirect">editProduct.action?productId=${productId}</result>
+		<action name="deleteProject" method="delete" class="projectAction">
+      <result type="redirect">editProduct.action?productId=${productId}</result>
 		</action>
 		<!-- /Project actions -->
 

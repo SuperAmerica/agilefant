@@ -8,7 +8,7 @@ var StoryFiltersView = function StoryFiltersView(options, controller, model, par
     { name: "STARTED", "short": "S" },
     { name: "PENDING", "short": "P" },
     { name: "BLOCKED", "short": "B" },
-    { name: "IMPLEMENTED", "short": "I" },
+    { name: "IMPLEMENTED", "short": "R" },
     { name: "DONE", "short": "D" }
   ];
   this.storyStates = this.allStoryStates.slice();

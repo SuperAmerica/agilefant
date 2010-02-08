@@ -131,6 +131,40 @@ ProjectController.columnConfigs = {
   }
 };
 
+
+ProjectController.prototype.removeProject = function() {
+  var me = this;
+  var dialog = new LazyLoadedFormDialog();
+  dialog.init({
+    title: "Delete project",
+    url: "ajax/deleteProjectForm.action",
+    disableClose: true,
+    data: {
+      ProjectId: me.model.getId()
+    },
+    okCallback: function(extraData) {
+      var confirmation = extraData.confirmationString;
+      if (confirmation && confirmation.toLowerCase() == 'yes') {
+        var confirmation = extraData.confirmationString;
+        if (confirmation && confirmation.toLowerCase() == 'yes') {
+          window.location.href = "deleteProject.action?confirmationString=yes&projectId=" + me.model.getId();
+        }
+      }
+    },
+    closeCallback: function() {
+      dialog.close();
+    }
+  });
+};
+
+ProjectController.prototype.openLogEffort = function() {
+  var widget = new SpentEffortWidget(this.model);
+};
+
+
+
+
+
 /**
  * Creates a new story controller.
  */

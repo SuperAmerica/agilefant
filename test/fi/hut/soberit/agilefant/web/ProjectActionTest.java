@@ -11,6 +11,7 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.transfer.ProjectDataContainer;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
@@ -116,11 +117,17 @@ public class ProjectActionTest {
     
     @Test
     public void testDelete_success() {
+        Project proj = new Project();
+        Product parent = new Product();
+        parent.setId(123);
+        proj.setParent(parent);
+        
+        expect(projectBusiness.retrieve(1)).andReturn(proj);
         projectBusiness.deleteDeep(1);
         replayAll();
         projectAction.setConfirmationString("yes");
         assertEquals(Action.SUCCESS, projectAction.delete());
-        
+        assertEquals(123, projectAction.getProductId().intValue());
         verifyAll();    
     }
     
@@ -139,7 +146,7 @@ public class ProjectActionTest {
     public void testDelete_noSuchIteration() {
         projectAction.setProjectId(-1);
         projectBusiness.deleteDeep(-1);
-        expectLastCall().andThrow(new ObjectNotFoundException());
+        expect(projectBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         projectAction.setConfirmationString("yes");
         projectAction.delete();
@@ -149,6 +156,11 @@ public class ProjectActionTest {
     
     @Test(expected = ConstraintViolationException.class)
     public void testDelete_forbidden() {
+        Project proj = new Project();
+        Product prod = new Product();
+        prod.setId(123);
+        proj.setParent(prod);
+        expect(projectBusiness.retrieve(1)).andReturn(proj);
         projectBusiness.deleteDeep(1);
         expectLastCall().andThrow(new ConstraintViolationException(null, null, null));
         expect(projectBusiness.retrieve(1)).andReturn(new Project());

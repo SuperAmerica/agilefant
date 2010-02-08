@@ -96,6 +96,7 @@ public class ProjectAction implements CRUDAction, Prefetching {
     
     public String delete() {
         if(confirmationString.equalsIgnoreCase("yes")) {
+            productId = projectBusiness.retrieve(projectId).getParent().getId();
             projectBusiness.deleteDeep(projectId);
             return Action.SUCCESS;
         } else {
@@ -177,6 +178,10 @@ public class ProjectAction implements CRUDAction, Prefetching {
    
     public void setConfirmationString(String confirmationString) {
         this.confirmationString = confirmationString;
+    }
+
+    public Integer getProductId() {
+        return productId;
     }
     
 }

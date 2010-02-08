@@ -195,7 +195,7 @@ li.dynamictable-captionaction {
   cursor: pointer !important;
   color: black;
   border-color: black;
-  background-color: #fff;
+  background: #eee !important;
 }
 
 .dynamictable-captionaction div.create {
@@ -351,7 +351,22 @@ li.dynamictable-captionaction {
 	white-space:nowrap !important;
 	width:2.8em;
 	text-align: center;
+	
+	cursor: pointer;
 }
+button.dynamics-button {
+  min-height: 1.8em;
+  min-width: 6em;
+  margin-left: 0.5em;
+}
+button.dynamics-button:focus {
+  background: #eed;
+}
+button.dynamics-button:hover {
+  background: #eed;
+}
+
+
 .actionColumn .edit:hover {
 	color: #e50;
 }

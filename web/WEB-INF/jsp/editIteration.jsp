@@ -66,7 +66,7 @@ $(document).ready(function() {
 
 
 
-<p><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
+<p style="text-align: center;"><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
 	id="bigChart" width="780" height="600" /></p>
 
   </jsp:body>

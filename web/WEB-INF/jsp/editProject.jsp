@@ -87,7 +87,7 @@ $(document).ready(function() {
 
 
 
-<p><img src="drawProjectBurnup.action?backlogId=${project.id}"
+<p style="text-align: center;"><img src="drawProjectBurnup.action?backlogId=${project.id}"
 						id="bigChart" width="780" height="600" /></p>
 
 </jsp:body>

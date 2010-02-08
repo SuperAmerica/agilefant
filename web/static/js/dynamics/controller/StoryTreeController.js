@@ -26,7 +26,6 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   }
   this.initialized = false;
   jQuery.extend(this.options, options);
-  this._initializeTree();
   this.initHeader();
 };
 StoryTreeController.prototype = new CommonController();
@@ -109,7 +108,8 @@ StoryTreeController.prototype.initTree = function() {
         onload: function() { me._treeLoaded(); },
         onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
         beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); },
-        beforedata : function() { return me._treeParams(); }
+        beforedata : function() { return me._treeParams(); },
+        onselect: function(node) { return me.openNodeDetails(node);}
     },
     types: {
       story: {
@@ -117,14 +117,16 @@ StoryTreeController.prototype.initTree = function() {
         clickable: false,
         creatable: true,
         deletable: true,
-        renameable: false
+        renameable: false,
+        clickable: true
       },
       iteration_story: {
         draggable: true,
         clickable: false,
         creatable: false,
         deletable: true,
-        renameable: false
+        renameable: false,
+        clickable: true
       }
     },
     rules: {
@@ -227,24 +229,16 @@ StoryTreeController.prototype.createNode = function(refNode, position) {
  * 
  * Will send an ajax request.
  */
-StoryTreeController.prototype._initializeTree = function() {
-  var me = this;
-  var elem = $(this.parentElement).attr('id');
-  
-  var selector = '#' + elem + ' li a > span';
-
-  /*
-   * Details box
-   */
-  $(selector).live('click', function() {
+StoryTreeController.prototype.openNodeDetails= function(node) {
+    var me = this;
     /* Remove all other bubbles */
     $('.story-details-bubble').remove();
     
     /* 
      * Get necessary data 
      */
-    var story = $(this);
-    var id = story.parents('li:eq(0)').attr('storyid');
+    var story = $(node);
+    var id = story.attr('storyid');
     var pos = story.position();
     
     /*
@@ -295,13 +289,12 @@ StoryTreeController.prototype._initializeTree = function() {
     
     var infoTable = $('<table/>').addClass('infotable').appendTo(story.bubble);
     
-    me._getStoryForId(id, function(object) {
+    this._getStoryForId(id, function(object) {
       var name = object.getName();
       var points = object.getStoryPoints() || '&mdash;';
       var description = object.getDescription();
       infoTable.html('<tr><th>Name</th><td>' + name + '</td></tr><tr><th>Points</th><td>' + points + '</td></tr><tr><th>Description</th><td>' + description + '</td></tr>');
     });
-  });
   
 };
 

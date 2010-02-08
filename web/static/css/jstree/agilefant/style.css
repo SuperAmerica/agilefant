@@ -53,10 +53,12 @@
 
 .tree-classic li a.clicked,.tree-classic li a.clicked:hover,.tree-classic li span.clicked
   {
+  /*
   background: navy;
   border: 1px solid navy;
   color: white;
   padding: 0px 3px 0px 3px;
+  */
 }
 
 /* ICONS */

@@ -182,12 +182,8 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
   );
 };
 
-StoryTreeController.prototype.createNode = function(refNode, position) {
+StoryTreeController.prototype.createNode = function(refNode, position, parentStory) {
   var me = this;
-  if(refNode.nodeName != "li") {
-    refNode = $(refNode).parents("li:eq(0)")[0];
-  }
-  var parentStory = $(refNode).attr("storyId");
   if($(refNode).attr("rel") === "iteration_story" && position === "inside") {
     MessageDisplay.Warning("Iteration stories can not have children");
     return false;
@@ -230,45 +226,47 @@ StoryTreeController.prototype.createNode = function(refNode, position) {
  * Will send an ajax request.
  */
 StoryTreeController.prototype.openNodeDetails= function(node) {
-    var me = this;
+    var me = this, story = story = $(node), id, pos, bubble, removeBubble;
     /* Remove all other bubbles */
     $('.story-details-bubble').remove();
     
     /* 
      * Get necessary data 
      */
-    var story = $(node);
-    var id = story.attr('storyid');
-    var pos = story.position();
+    id = story.attr('storyid');
+    if(!id) {
+      return;
+    }
+    pos = story.position();
     
     /*
      * Create and position the bubble
      */
     
-    story.bubble = $('<div/>').addClass('story-details-bubble').appendTo(document.body);
-    story.bubble.css({
+    bubble = $('<div/>').addClass('story-details-bubble');
+    bubble.css({
       'top': pos.top + 35 + 'px',
       'left': pos.left + 100 + 'px'
     });
-    story.bubble.helperarrow = $('<div>&nbsp;</div>').addClass('story-details-bubble-helperarrow').appendTo(story.bubble);
+    $('<div>&nbsp;</div>').addClass('story-details-bubble-helperarrow').appendTo(bubble);
     
-    var removeBubble = function() {
-      story.bubble.remove();
+    removeBubble = function() {
+      bubble.remove();
     };
     
-    story.bubble.mouseleave(removeBubble);
+    bubble.mouseleave(removeBubble);
     
     /*
      * Add links 'add child' and 'more' 
      */
-    var links = $('<div />').addClass('details-links').appendTo(story.bubble);
+    var links = $('<div />').addClass('details-links').appendTo(bubble);
     var addChildLink = $('<a>add child</a>').click(function() {
       removeBubble();
-      me.createNode(story,"inside");
+      me.createNode(story,"inside", id);
     }).appendTo(links);
     var addSiblingLink = $('<a>add sibling</a>').click(function() {
       removeBubble();
-      me.createNode(story,"after");
+      me.createNode(story,"after", id);
     }).appendTo(links);
     var deleteLink = $('<a>delete</a>').click(function() {
       removeBubble();
@@ -285,9 +283,9 @@ StoryTreeController.prototype.openNodeDetails= function(node) {
      * Add the other data.
      */
     
-    $('<h3>Story info</h3>').appendTo(story.bubble);
+    $('<h3>Story info</h3>').appendTo(bubble);
     
-    var infoTable = $('<table/>').addClass('infotable').appendTo(story.bubble);
+    var infoTable = $('<table/>').addClass('infotable').appendTo(bubble);
     
     this._getStoryForId(id, function(object) {
       var name = object.getName();
@@ -295,6 +293,7 @@ StoryTreeController.prototype.openNodeDetails= function(node) {
       var description = object.getDescription();
       infoTable.html('<tr><th>Name</th><td>' + name + '</td></tr><tr><th>Points</th><td>' + points + '</td></tr><tr><th>Description</th><td>' + description + '</td></tr>');
     });
+    bubble.appendTo(document.body);
   
 };
 

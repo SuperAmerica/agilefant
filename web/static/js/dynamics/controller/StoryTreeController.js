@@ -155,6 +155,7 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
 };
 StoryTreeController.prototype.checkStoryMove = function(node, ref_node, type, tree_obj, rb) {
   if($(ref_node).attr("rel") === "iteration_story" && type === "inside") {
+    MessageDisplay.Warning("Iteration stories can not have children");
     return false;
   }
   if(this.options.disableRootSort) {
@@ -185,7 +186,14 @@ StoryTreeController.prototype.createNode = function(refNode, position) {
     refNode = $(refNode).parents("li:eq(0)")[0];
   }
   var parentStory = $(refNode).attr("storyId");
+  if($(refNode).attr("rel") === "iteration_story" && position === "inside") {
+    MessageDisplay.Warning("Iteration stories can not have children");
+    return false;
+  }
   var node = this.tree.create({}, refNode, position);
+  if(!node) {
+    return;
+  }
   var nodeNameEl = node.find("a").hide();
   var container = $('<div />').appendTo(node);
   var nameField = $('<input type="text" size="25" />').appendTo(container);

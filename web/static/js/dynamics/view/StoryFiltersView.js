@@ -19,28 +19,49 @@ StoryFiltersView.prototype = new ViewPart();
 
 StoryFiltersView.prototype.initialize = function() {
   var me = this;
-  this.element = $('<div></div>');
-  this.filters = $('<form><div style="float:left; margin:4px;"><strong>Filtering</strong></div></form>');
-  var nameFieldDiv = $('<div style="float:left; margin:2px;"></div>');
+  this.element = $('<div style="border: 1px solid #999; -moz-border-radius: 5px; -webkit-border-radius: 5px"></div>');
+  this.filters = $('<form><div style="margin:4px;"><strong>Filtering</strong></div></form>');
+  var nameFieldDiv = $('<div style="margin: 0.5em 10px 0;"></div>');
   this.nameField = $('<input type="text" name="filterByNameText" title="by name" />').appendTo(nameFieldDiv);
-  var labelFieldDiv = $('<div style="float:left; margin:2px;"></div>');
-  this.labelField = $('<input type="text" name="filterByLabelText" title="by label" />').appendTo(labelFieldDiv);
+  this.labelAutosuggest = new AutoSuggest("ajax/lookupLabels.action", {
+    startText: "By label",
+    queryParam: "labelName",
+    searchObj: "name",
+    selectedItem: "displayName",
+    disableButtons: true,
+    allowOnlySuggested: true,
+    retrieveComplete: function(data) {
+      var newData = [];
+      for (var i = 0, len = data.length; i < len; i++) {
+        var oneLabel = {
+            value: data[i].name,
+            name: data[i].name,
+            displayName: data[i].displayName
+        };
+        newData[i] = oneLabel;
+      }
+      return newData;
+    },
+    minChars: 3
+  }, this);
 
-  this.filterButton = $('<div style="float:left; margin:2px;"><input type="submit" name="filterButton" value="Filter" /></div>');
-  this.clearButton = $('<div style="float:left; margin:2px;"><input type="button" name="clearButton" value="Clear" /></div>');
-  var emptyElement = $('<div><br/><br/></div>');
+  this.filterButton = $('<input type="submit" name="filterButton" value="Filter" />');
+  this.clearButton = $('<input type="button" name="clearButton" value="Clear" style="margin-left: 1em" />');
   nameFieldDiv.appendTo(this.filters);
-  labelFieldDiv.appendTo(this.filters);
+  this.labelAutosuggest.getElement().css('margin', '0.5em 10px 0').css('width', '300px');
+  this.labelAutosuggest.getElement().appendTo(this.filters);
   
+  this.stateButtons = $('<div style="margin: 0.5em 10px 0; height: 1em; line-height: 1em"></div>').appendTo(this.filters);
   for (var i = 0, len = this.allStoryStates.length; i < len; i++) {
     var state = this.allStoryStates[i];
     me.addStateButton(state);
   }
   
-  this.filterButton.appendTo(this.filters);
-  this.clearButton.appendTo(this.filters);
+  this.actionButtons = $('<div style="margin: 0.5em 10px"></div>').appendTo(this.filters);
+
+  this.filterButton.appendTo(this.actionButtons);
+  this.clearButton.appendTo(this.actionButtons);
   this.filters.appendTo(this.element);
-  emptyElement.appendTo(this.element);
   
   this.filters.submit(function() {
     me.filter();
@@ -60,7 +81,7 @@ StoryFiltersView.prototype.initInputHighlights = function() {
 };
 StoryFiltersView.prototype.clear = function() {
   this.nameField.val("");
-  this.labelField.val("");
+  this.labelAutosuggest.empty();
   this.filters.find('.inlineTaskState').fadeTo("fast", 1);
   this.initInputHighlights();
   this.storyStates = this.allStoryStates.slice();
@@ -82,7 +103,7 @@ StoryFiltersView.prototype.renderFully = function() {
 
 StoryFiltersView.prototype.addStateButton = function(state) {
   var me = this;
-  var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin:2px;">' + state["short"] + '</div>');
+  var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state["short"] + '</div>');
   stateDiv.click(function() {
     if ($.inArray(state, me.storyStates) != -1) {
       stateDiv.fadeTo("fast", 0.5);
@@ -93,7 +114,7 @@ StoryFiltersView.prototype.addStateButton = function(state) {
     }
   });
   
-  stateDiv.appendTo(this.filters);
+  stateDiv.appendTo(this.stateButtons);
 };
 
 StoryFiltersView.prototype.removeStateFilter = function(state){
@@ -114,11 +135,7 @@ StoryFiltersView.prototype.getNameFilter = function() {
   return value;
 };
 StoryFiltersView.prototype.getLabelFilter = function() {
-  var value = this.labelField.val();
-  if (value == "by label") {
-    value = "";
-  }
-  return value;
+  return this.labelAutosuggest.getValues();
 };
 StoryFiltersView.prototype.filter = function() {  
   var storyStates = [];

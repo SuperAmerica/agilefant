@@ -90,7 +90,7 @@ AutoSuggest.prototype.success = function() {
         }
       }
     }
-    if((!data.length === 0)){
+    if(!(data.length === 0)){
       this.options.successCallback(data);
     } else {
       this.cancel();

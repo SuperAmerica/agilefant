@@ -239,7 +239,6 @@ StoryTreeController.prototype._initializeTree = function() {
   $(selector).live('click', function() {
     /* Remove all other bubbles */
     $('.story-details-bubble').remove();
-//    $('.story-details-bubble-helperarrow').remove();
     
     /* 
      * Get necessary data 

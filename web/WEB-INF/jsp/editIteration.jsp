@@ -19,7 +19,7 @@
   <li class=""><a href="#backlogAssignees"><span><img
     alt="Edit" src="static/img/team.png" /> Workload</span></a></li>
   
-  <li class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
+  <li id="iterationActions" class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
   
@@ -42,6 +42,8 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+
+  
   $("#backlogInfo").tabs();
   var controller = new IterationController({
       id: ${iteration.id}, 
@@ -56,6 +58,28 @@ $(document).ready(function() {
       smallBurndownElement: $("#smallChart"),
       burndownElement: $("#bigChart"),
       tabs: $("#backlogInfo")
+  });
+
+  $('#iterationActions').mouseenter(function() {
+    var menu = $('<ul class="actionCell backlogActions"/>').appendTo($(this));
+
+    var closeMenu = function() {
+      menu.remove();
+    };
+    
+    $('<li/>').text('Spent effort').click(function() {
+      closeMenu();
+      controller.openLogEffort();
+    }).appendTo(menu);
+
+    $('<li/>').text('Delete').click(function() {
+      closeMenu();
+      controller.removeIteration();
+    }).appendTo(menu);
+    
+    $(this).mouseleave(function() {
+      closeMenu();
+    });
   });
 });
 </script>

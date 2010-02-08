@@ -71,6 +71,7 @@ public class IterationAction implements
 
     public String delete() {
         if(confirmationString.equalsIgnoreCase("yes")) {
+            parentBacklog = iterationBusiness.retrieve(iterationId).getParent();
             iterationBusiness.deleteDeep(iterationId);
             return Action.SUCCESS;
         } else {

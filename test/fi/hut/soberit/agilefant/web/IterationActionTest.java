@@ -82,17 +82,20 @@ public class IterationActionTest {
     
     @Test
     public void testDelete_success() {
+        Iteration iter = new Iteration();
+        Project parent = new Project(); 
+        iter.setParent(parent);
+        expect(iterationBusiness.retrieve(1)).andReturn(iter);        
         iterationBusiness.deleteDeep(1);
         replayAll();
         iterationAction.setConfirmationString("yes");
         assertEquals(Action.SUCCESS, iterationAction.delete());
-        
+        assertEquals(parent, iterationAction.getParentBacklog());
         verifyAll();    
     }
     
     @Test
     public void testDelete_failure() {
-
         replayAll();
         iterationAction.setConfirmationString("no");
         assertEquals(Action.ERROR, iterationAction.delete());
@@ -105,7 +108,7 @@ public class IterationActionTest {
     public void testDelete_noSuchIteration() {
         iterationAction.setIterationId(-1);
         iterationBusiness.deleteDeep(-1);
-        expectLastCall().andThrow(new ObjectNotFoundException());
+        expect(iterationBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         iterationAction.setConfirmationString("yes");
         iterationAction.delete();

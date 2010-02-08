@@ -131,6 +131,31 @@ IterationController.columnConfigs = {
 
 IterationController.prototype = new BacklogController();
 
+
+IterationController.prototype.removeIteration = function() {
+  var me = this;
+  var dialog = new LazyLoadedFormDialog();
+  dialog.init({
+    title: "Delete iteration",
+    url: "ajax/deleteIterationForm.action",
+    disableClose: true,
+    data: {
+      IterationId: me.model.getId()
+    },
+    okCallback: function(extraData) {
+      var confirmation = extraData.confirmationString;
+      if (confirmation && confirmation.toLowerCase() == 'yes') {
+        window.location.href = "deleteIteration.action?confirmationString=yes&iterationId=" + me.model.getId();
+      }
+    },
+    closeCallback: function() {
+      dialog.close();
+    }
+  });
+};
+
+
+
 IterationController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.MetricsEvent 
       || event instanceof DynamicsEvents.RelationUpdatedEvent) {
@@ -167,6 +192,10 @@ IterationController.prototype.reloadMetrics = function() {
   if(this.isAssigneesTabSelected()) {
     this.selectAssigneesTab();
   }
+};
+
+IterationController.prototype.openLogEffort = function() {
+  var widget = new SpentEffortWidget(this.model);
 };
 
 /**

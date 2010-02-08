@@ -117,19 +117,35 @@
   margin: 0;
   padding: 0;
 }
+
+.backlogActions {
+  position: absolute;
+  z-index: 100;
+  top: 20px;
+  right: 0;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  width: 100px;
+  background: white;
+}
+
 .actionCell {
 	background-color: #fcfcfc;
 	border: 1px solid black;
-	padding: 3px;
+	padding: 0;
 	margin: 0;
 	cursor: pointer;
 }
 
 .actionCell li {
+  float: none !important;
+  display: list-item !important;
+  position: static !important;
 	list-style: none;
-	margin: 0;
-	padding: 2px 2px 0 3px;
-	min-width: 70px;	
+	margin: 3px !important;
+	padding: 0 !important;
+	min-width: 70px;
+	text-align: left;
 }
 
 .actionCell li.actionCell-rowaction-disabled {

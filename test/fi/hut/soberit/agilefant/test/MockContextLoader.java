@@ -76,11 +76,18 @@ public class MockContextLoader extends GenericXmlContextLoader {
 
     @Override
     protected void customizeContext(GenericApplicationContext context) {
+        registerAutowiredAnnotationBeanPostProcessor(context);
         registerAnnotationsAsAutowired(context);
         registerMocks(context);
         registerBeans(context);
 
         super.customizeContext(context);
+    }
+
+    private void registerAutowiredAnnotationBeanPostProcessor(
+            GenericApplicationContext context) {
+        BeanDefinitionBuilder mockAutowiredProcessor = BeanDefinitionBuilder.genericBeanDefinition(MockAutowiredAnnotationBeanPostProcessor.class);
+        context.registerBeanDefinition("autowiredAnnotationBeanPostProcessor", mockAutowiredProcessor.getBeanDefinition());
     }
 
     /**

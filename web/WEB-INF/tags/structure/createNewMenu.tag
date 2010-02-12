@@ -9,6 +9,14 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+  var createNewMenu = $('#createNewMenu');
+  createNewMenu.mouseleave(function() {
+    $(this).hide();
+  });
+  
+  $('#createNewMenuLink').click(function() {
+    createNewMenu.show();
+  });
   $('#createNewMenu a').click(function() {
     CreateDialog.createById($(this).attr('id'));
   });

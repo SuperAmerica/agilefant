@@ -13,7 +13,8 @@ var ProjectModel = function ProjectModel() {
     iteration: [],
     story: [],
     assignment: [],
-    hourEntry: []
+    hourEntry: [],
+    assignees: []
   };
   this.copiedFields = {
     "name":   "name",
@@ -31,7 +32,8 @@ var ProjectModel = function ProjectModel() {
       "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
       "fi.hut.soberit.agilefant.model.Story":         "story",
       "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
-      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry"
+      "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry",
+      "fi.hut.soberit.agilefant.model.User":     "assignees"
   };
   
   
@@ -73,6 +75,9 @@ ProjectModel.prototype._setData = function(newData) {
   //assignments
   if(newData.assignments) {
     this._updateRelations(ModelFactory.types.assignment, newData.assignments);
+  }
+  if(newData.assignees) {
+    this._updateRelations("assignees" , newData.assignees);
   }
   //hour entries
   if(newData.hourEntries) {

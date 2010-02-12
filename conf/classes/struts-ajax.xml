@@ -234,7 +234,7 @@
     <action name="projectData" class="projectAction" method="projectData">
       <result name="success" type="json">
         <param name="target">project</param>
-        <param name="patterns">+leafStories.responsibles, +leafStories.backlog.class, +leafStories.backlog.id, +leafStories.labels, -leafStories.backlog.*, +children, +children.stories, +children.stories, +stories, +stories.responsibles, -stories.backlog, +assignments, +assignments.user</param>
+        <param name="patterns">+leafStories.responsibles, +leafStories.backlog.class, +leafStories.backlog.id, +leafStories.labels, -leafStories.backlog.*, +children, +assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
       </result>
     </action>
     
@@ -289,7 +289,7 @@
     <action name="iterationData" class="iterationAction" method="fetchIterationData">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">-stories, +rankedStories, +rankedStories.tasks, +rankedStories.labels, -rankedStories.backlog, +tasks, +assignments, +hourEntries, +*.user, +*.responsibles, +*.workingOnTask</param>
+        <param name="patterns">-stories, +rankedStories, +rankedStories.tasks, +rankedStories.labels, -rankedStories.backlog, +tasks, +*.user, +*.responsibles, +*.workingOnTask, +assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
       </result>
     </action>
     

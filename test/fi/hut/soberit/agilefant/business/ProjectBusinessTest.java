@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -49,6 +50,7 @@ public class ProjectBusinessTest {
     IterationBusiness iterationBusiness;
     StoryBusiness storyBusiness;
     HourEntryBusiness hourEntryBusiness;
+    StoryRankBusiness storyRankBusiness;
     
     Project project;
     Product product;
@@ -94,6 +96,9 @@ public class ProjectBusinessTest {
         
         hourEntryBusiness = createStrictMock(HourEntryBusiness.class);
         projectBusiness.setHourEntryBusiness(hourEntryBusiness);
+        
+        storyRankBusiness = createStrictMock(StoryRankBusiness.class);
+        projectBusiness.setStoryRankBusiness(storyRankBusiness);
     }
 
     @Before
@@ -124,11 +129,11 @@ public class ProjectBusinessTest {
     }
 
     private void replayAll() {
-        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness);
+        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness, storyRankBusiness);
     }
 
     private void verifyAll() {
-        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness);
+        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness, storyRankBusiness);
     }
 
     @Test
@@ -248,7 +253,13 @@ public class ProjectBusinessTest {
         
         proj.getChildren().addAll(Arrays.asList(pastIteration, currentIteration, futureIteration));
         
+        Story story1 = new Story();
+        Story story2 = new Story();
+        
+        List<Story> leafStories = Arrays.asList(story1, story2);
+        
         expect(projectDAO.get(111)).andReturn(proj);
+        expect(storyRankBusiness.retrieveByRankingContext(proj)).andReturn(leafStories);
         expect(transferObjectBusiness.constructProjectTO(proj)).andReturn(new ProjectTO(proj));
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
             .andReturn(ScheduleStatus.PAST).times(3);
@@ -269,6 +280,8 @@ public class ProjectBusinessTest {
         assertTrue(checkChildByIdAndStatus(123, ScheduleStatus.PAST, transferObjects));
         assertTrue(checkChildByIdAndStatus(333, ScheduleStatus.PAST, transferObjects));
         assertTrue(checkChildByIdAndStatus(444, ScheduleStatus.PAST, transferObjects));
+        assertEquals(0, (int)actual.getLeafStories().get(0).getRank());
+        assertEquals(1, (int)actual.getLeafStories().get(1).getRank());
     }
     
     private boolean checkChildByIdAndStatus(int id, ScheduleStatus status, Collection<IterationTO> children) {

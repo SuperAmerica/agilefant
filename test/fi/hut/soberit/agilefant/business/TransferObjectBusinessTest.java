@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -174,20 +173,7 @@ public class TransferObjectBusinessTest {
         Iteration past = new Iteration();
         past.setStartDate(new DateTime().minusMonths(2));
         past.setEndDate(new DateTime().minusMonths(1));
-        
-        Story s1 = new Story();
-        s1.setId(1);
-        Story s2 = new Story();
-        s2.setId(2);
-        Story s3 = new Story();
-        s3.setId(12);
-        List<Story> stories = new ArrayList<Story>(Arrays.asList(s1, s2, s3));
-        
-        expect(storyRankBusiness.retrieveByRankingContext(past))
-            .andReturn(stories);
-        
-        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class)))
-                .andReturn(new StoryMetrics()).times(3);
+     
         
         replayAll();
         IterationTO actual = transferObjectBusiness.constructIterationTO(past);
@@ -195,12 +181,6 @@ public class TransferObjectBusinessTest {
         
         assertEquals(ScheduleStatus.PAST, actual.getScheduleStatus());
         
-        assertEquals(0, ((StoryTO)actual.getRankedStories().get(0)).getRank().intValue());
-        assertEquals(1, ((StoryTO)actual.getRankedStories().get(1)).getRank().intValue());
-        assertEquals(2, ((StoryTO)actual.getRankedStories().get(2)).getRank().intValue());
-        assertEquals(1, actual.getRankedStories().get(0).getId());
-        assertEquals(2, actual.getRankedStories().get(1).getId());
-        assertEquals(12, actual.getRankedStories().get(2).getId());
     }
     
     @Test
@@ -209,30 +189,12 @@ public class TransferObjectBusinessTest {
         past.setStartDate(new DateTime().minusMonths(2));
         past.setEndDate(new DateTime().minusMonths(1));
         
-        Story s1 = new Story();
-        s1.setId(1);
-        Story s2 = new Story();
-        s2.setId(2);
-        List<Story> stories = new ArrayList<Story>(Arrays.asList(s1, s2));
-        
-        expect(storyRankBusiness.retrieveByRankingContext(past))
-            .andReturn(stories);
-        
-        expect(storyBusiness.calculateMetrics(EasyMock.isA(Story.class)))
-        .andReturn(new StoryMetrics()).times(2);
         
         replayAll();
         ProjectTO actual = transferObjectBusiness.constructProjectTO(past);
         verifyAll();
         
         assertEquals(ScheduleStatus.PAST, actual.getScheduleStatus());
-//        assertTrue(actual.getLeafStories().containsAll(stories));
-        assertEquals(2, actual.getLeafStories().size());
-        
-        assertEquals(0, ((StoryTO)actual.getLeafStories().get(0)).getRank().intValue());
-        assertEquals(1, ((StoryTO)actual.getLeafStories().get(1)).getRank().intValue());
-        assertEquals(1, actual.getLeafStories().get(0).getId());
-        assertEquals(2, actual.getLeafStories().get(1).getId());
     }
     
     

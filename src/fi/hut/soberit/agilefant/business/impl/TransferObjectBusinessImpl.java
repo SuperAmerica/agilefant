@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
@@ -107,8 +108,11 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         IterationTO returned = new IterationTO(iteration);
         returned.setScheduleStatus(this.getBacklogScheduleStatus(iteration));
         
-        returned.setRankedStories(new ArrayList<Story>());
-        returned.getRankedStories().addAll(retrieveListOfRankedStories(iteration));
+        returned.setAssignees(new HashSet<User>());
+        
+        for(Assignment assignment : iteration.getAssignments()) {
+            returned.getAssignees().add(assignment.getUser());
+        }
         
         return returned;
     }
@@ -116,21 +120,14 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     @Transactional(readOnly = true)
     public ProjectTO constructProjectTO(Project project) {
         ProjectTO returned = new ProjectTO(project);
-        returned.setScheduleStatus(this.getBacklogScheduleStatus(project));
-        returned.setLeafStories(retrieveListOfRankedStories(project));
-        return returned;
-    }
-
-    @Transactional(readOnly = true)
-    private List<StoryTO> retrieveListOfRankedStories(Backlog rankingContext) {
-        List<Story> stories = storyRankBusiness.retrieveByRankingContext(rankingContext);
-        List<StoryTO> rankedStories = new ArrayList<StoryTO>();
-        for (int i = 0; i < stories.size(); i++) {
-            StoryTO storyTO = constructStoryTO(stories.get(i));
-            storyTO.setRank(i);
-            rankedStories.add(storyTO);
+        returned.setScheduleStatus(this.getBacklogScheduleStatus(project));        
+        returned.setAssignees(new HashSet<User>());
+        
+        for(Assignment assignment : project.getAssignments()) {
+            returned.getAssignees().add(assignment.getUser());
         }
-        return rankedStories;
+        
+        return returned;
     }
     
     /** {@inheritDoc} */

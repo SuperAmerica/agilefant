@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
@@ -38,6 +39,7 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
@@ -62,6 +64,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private IterationBusiness iterationBusiness;
     @Autowired
     private BacklogHistoryEntryBusiness historyEntryBusiness;
+    @Autowired
+    private StoryRankBusiness storyRankBusiness;
 
     public ProjectBusinessImpl() {
         super(Project.class);
@@ -203,12 +207,23 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Transactional(readOnly = true)
     public ProjectTO getProjectData(int projectId) {
         Project original = this.retrieve(projectId);
+        
+        List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(original);
         ProjectTO project = transferObjectBusiness.constructProjectTO(original);
+        
         project.setChildren(new HashSet<Backlog>());
         for (Backlog backlog : original.getChildren()) {
             IterationTO iter = new IterationTO((Iteration)backlog);
             iter.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
             project.getChildren().add(iter);
+        }
+        List<StoryTO> leafStoriesWithRank = new ArrayList<StoryTO>();
+        project.setLeafStories(leafStoriesWithRank);
+        int rank = 0;
+        for(Story leafStory : leafStories) {
+            StoryTO tmp = new StoryTO(leafStory);
+            tmp.setRank(rank++);
+            leafStoriesWithRank.add(tmp);
         }
         return project;
     }
@@ -345,6 +360,10 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public void setHistoryEntryBusiness(
             BacklogHistoryEntryBusiness historyEntryBusiness) {
         this.historyEntryBusiness = historyEntryBusiness;
+    }
+    
+    public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
+        this.storyRankBusiness = storyRankBusiness;
     }
     
 }

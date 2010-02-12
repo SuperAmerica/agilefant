@@ -65,15 +65,16 @@ BacklogModel.prototype.addTask = function(task) {
   this.relationEvents();
 };
 BacklogModel.prototype.getAssignees = function() {
-  var returned = [];
-  for (var i = 0; i < this.relations.assignment.length; i++) {
-    var assignment = this.relations.assignment[i];
-    returned.push(assignment.getUser());
-  }
-  return returned;
+  return this.relations.assignees;
 };
 
 BacklogModel.prototype.setAssignees = function(assigneeIds, assigneeJson) {
+  var i, len, user;
   this.currentData.assigneeIds = assigneeIds;
+  this.relations.assignees = [];
+  for(i = 0, len = assigneeJson.length; i < len; i++) {
+    user = ModelFactory.updateObject(assigneeJson[i]);
+    this.relations.assignees.push(user);
+  }
   this.currentData.assigneesChanged = true;
 };

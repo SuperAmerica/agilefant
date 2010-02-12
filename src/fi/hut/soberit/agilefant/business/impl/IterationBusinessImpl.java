@@ -142,14 +142,14 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         if (iteration == null) {
             throw new ObjectNotFoundException("Iteration not found");
         }
-        IterationTO iterationTO = new IterationTO(iteration);
+        IterationTO iterationTO = transferObjectBusiness.constructIterationTO(iteration);
 
         List<Story> stories = this.storyRankBusiness
                 .retrieveByRankingContext(iteration);
         Map<Integer, StoryMetrics> metricsData = this.iterationDAO
                 .calculateIterationDirectStoryMetrics(iteration);
         int rank = 0;
-        List<Story> rankedStories = new ArrayList<Story>();
+        List<StoryTO> rankedStories = new ArrayList<StoryTO>();
 
         HashMap<Integer, Story> tmp = new HashMap<Integer, Story>();
         for (Story story : iteration.getStories()) {

@@ -71,10 +71,6 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
     private StoryBusiness storyBusiness;
     
     
-    @Autowired
-    private StoryRankBusiness storyRankBusiness;
-    
-    
     private void fillInEffortSpent(TaskTO taskTO) {
         taskTO.setEffortSpent(hourEntryBusiness.calculateSum(taskTO.getHourEntries()));
     }
@@ -385,9 +381,5 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
 
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
-    }
-
-    public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
-        this.storyRankBusiness = storyRankBusiness;
     }
 }

@@ -46,7 +46,6 @@ public class TransferObjectBusinessTest {
     private ProductBusiness productBusiness;
     private ProjectBusiness projectBusiness;
     private IterationBusiness iterationBusiness;
-    private StoryRankBusiness storyRankBusiness;
     
     Project   project;
     Iteration iteration;
@@ -83,20 +82,18 @@ public class TransferObjectBusinessTest {
         storyBusiness = createMock(StoryBusiness.class);
         transferObjectBusiness.setStoryBusiness(storyBusiness);
         
-        storyRankBusiness = createMock(StoryRankBusiness.class);
-        transferObjectBusiness.setStoryRankBusiness(storyRankBusiness);
     }
     
     private void verifyAll() {
         verify(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness,
                 backlogBusiness, productBusiness, projectBusiness,
-                iterationBusiness, storyRankBusiness);
+                iterationBusiness);
     }
 
     private void replayAll() {
         replay(hourEntryBusiness, userBusiness, storyBusiness, teamBusiness,
                 backlogBusiness, productBusiness, projectBusiness,
-                iterationBusiness, storyRankBusiness);
+                iterationBusiness);
     }
     
     

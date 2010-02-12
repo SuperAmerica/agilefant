@@ -226,7 +226,7 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
  * Will send an ajax request.
  */
 StoryTreeController.prototype.openNodeDetails= function(node) {
-    var me = this, story = story = $(node), id, pos, bubble, removeBubble;
+    var me = this,story = $(node), id, pos, bubble, removeBubble;
     /* Remove all other bubbles */
     $('.story-details-bubble').remove();
     
@@ -270,7 +270,15 @@ StoryTreeController.prototype.openNodeDetails= function(node) {
     }).appendTo(links);
     var deleteLink = $('<a>delete</a>').click(function() {
       removeBubble();
-      MessageDisplay.Warning("Not implemented");
+      me._getStoryForId(id, function(storyModel) {
+        storyModel.addListener(function(evt) {
+          if(evt instanceof DynamicsEvents.DeleteEvent) {
+           story.remove(); 
+          }
+        });
+        var controller = new StoryController(storyModel, null, null);
+        controller.removeStory();
+      });
     }).appendTo(links);
     var moreLink = $('<a>more...</a>').click(function() {
       removeBubble();

@@ -1,5 +1,6 @@
 <%@ include file="../inc/_taglibs.jsp"%>
-
+  <div><img src="static/img/question.png" alt="Are you sure?" style="float: left;" />
+  <div style="margin-left: 90px">
 <c:choose>
 	<c:when test="${empty story.hourEntries && empty story.tasks}">
 		Delete story?
@@ -73,3 +74,5 @@
 		</form>
 	</c:otherwise>
 </c:choose>
+</div>
+</div>

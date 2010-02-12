@@ -160,9 +160,20 @@
 				var cnt = 0;
 				var numSelected = 0;
 				var me = this;
-				$.each(selectedItems, function() { 
-					var data = jsonDataCache.get("subBacklogs", {data: {backlogId: this}}, this);
-					$.each(me.sortBacklogs(data), function() {
+				$.each(selectedItems, function() {
+				  var a = this;
+				  var fetchedData = null;
+				  jQuery.ajax({
+				    url:      "ajax/retrieveSubBacklogs.action",
+				    data:     { backlogId: a },
+				    async:    false,
+				    dataType: 'json',
+				    type:     'POST',
+				    success: function(data, status) {
+				      fetchedData = data;
+				    }
+				  }); 
+					$.each(me.sortBacklogs(fetchedData), function() {
 						if(me.filter(this)) {
 							var opt = $('<option/>').appendTo(container).text(this.name).attr("value",this.id);
 							if($.inArray(this.id,selectedInContainer) != -1 && !selectAllOpt) {

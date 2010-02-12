@@ -10,20 +10,27 @@ start by creating a new object.</p>
 
 <aef:existingObjects />
 
-<ul>
-    <li><ww:url id="createLink" action="createProduct" namespace="ajax" includeParams="none" />
-        <ww:a href="%{createLink}" onclick="return false;" title="Create a new product" cssClass="openCreateDialog openProductDialog">Product &raquo;</ww:a>
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#createNewList a').click(function() {
+    CreateDialog.createById($(this).attr('id'));
+  });
+});
+</script>
+
+
+<ul id="createNewList">
+    <li>
+        <a href="#" id="createNewProduct" onclick="return false;"  title="Create a new product">Product &raquo;</a>
     </li>
 
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="createProject" namespace="ajax" includeParams="none" />
-            <ww:a href="%{createLink}" title="Create a new project" cssClass="openCreateDialog openProjectDialog" onclick="return false;">Project &raquo;</ww:a>
+            <a href="#" id="createNewProject" onclick="return false;" title="Create a new project">Project &raquo;</a>
         </c:when>
         <c:otherwise>
-            <span class="inactive"
-                title="Create a product before creating a project">
+            <span class="inactive" title="Create a product before creating a project">
             Project &raquo;</span>
         </c:otherwise>
     </c:choose>
@@ -32,8 +39,7 @@ start by creating a new object.</p>
     <li>
     <c:choose>
         <c:when test="${hasProjects}">
-            <ww:url id="createLink" action="createIteration" namespace="ajax" includeParams="none" />
-            <ww:a href="%{createLink}"  title="Create a new iteration" cssClass="openCreateDialog openIterationDialog" onclick="return false;">Iteration &raquo;</ww:a>
+            <a href="#" id="createNewIteration" onclick="return false;"  title="Create a new iteration">Iteration &raquo;</a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -41,12 +47,12 @@ start by creating a new object.</p>
         </c:otherwise>
     </c:choose>
     </li>
-
+    
+    
     <li>
     <c:choose>
         <c:when test="${hasProducts}">
-            <ww:url id="createLink" action="createStoryForm" namespace="ajax" includeParams="none" />
-            <ww:a href="%{createLink}" onclick="return false;" title="Create a new story" cssClass="openCreateDialog openStoryDialog">Story &raquo;</ww:a>
+            <a href="#" id="createNewStory" onclick="return false;"  title="Create a new story">Story &raquo;</a>
         </c:when>
         <c:otherwise>
             <span class="inactive"
@@ -55,18 +61,14 @@ start by creating a new object.</p>
         </c:otherwise>
     </c:choose>
     </li>
-       
-    <li><ww:url id="createLink" action="createTeam" namespace="ajax" includeParams="none" />
-        <ww:a href="%{createLink}" onclick="return false;"
-        cssClass="openCreateDialog openTeamDialog"
-        title="Create a new team">Team &raquo;</ww:a>
+         
+    <li>
+      <a href="#" id="createNewTeam" onclick="return false;"  title="Create a new team">Team &raquo;</a>
+    </li>
+ 
+    <li>
+      <a href="#" id="createNewUser" onclick="return false;"  title="Create a new user">User &raquo;</a>
     </li>
     
-    
-    <li><ww:url id="createLink" action="createUser" namespace="ajax" includeParams="none" />
-        <ww:a href="%{createLink}" cssClass="openCreateDialog openUserDialog"
-        title="Create a new user" onclick="return false;">User &raquo;</ww:a>
-    </li>
 </ul>
-
 </struct:htmlWrapper>

@@ -18,7 +18,7 @@ var ValidationMessages = {
     invalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
   },
   exactEstimate: {
-    invalid: "Incorrect format"
+    invalid: "Incorrect format (e.g. 2, 2.5 or 2h 30min)"
   },
   password: {
     empty: "Password is empty"

@@ -131,10 +131,6 @@ public class ProjectAction implements CRUDAction, Prefetching {
         return projectMetrics;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
     public int getProjectId() {
         return projectId;
     }
@@ -180,8 +176,12 @@ public class ProjectAction implements CRUDAction, Prefetching {
         this.confirmationString = confirmationString;
     }
 
-    public Integer getProductId() {
+    public int getProductId() {
         return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
     
 }

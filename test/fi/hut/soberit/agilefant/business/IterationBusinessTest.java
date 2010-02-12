@@ -159,8 +159,10 @@ public class IterationBusinessTest {
     public void testGetIterationContents() {
         List<Story> stories = new ArrayList<Story>();
         stories.addAll(iteration.getStories());
+        IterationTO iterationTO = new IterationTO(iteration);
         
         expect(iterationDAO.retrieveDeep(iteration.getId())).andReturn(iteration);
+        expect(transferObjectBusiness.constructIterationTO(iteration)).andReturn(iterationTO);
         expect(storyRankBusiness.retrieveByRankingContext(iteration)).andReturn(stories);
         Map<Integer, StoryMetrics> emptyMetricsMap = Collections.emptyMap();
         expect(iterationDAO.calculateIterationDirectStoryMetrics(iteration)).andReturn(emptyMetricsMap);

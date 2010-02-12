@@ -22,7 +22,6 @@ Current status of the release:
 - Many features are yet unfinished
  * Daily Work view is only partially implemented
  * Team support is limited
- * Themes have been removed and are replaced with tags in the future
  * Lots of small and medium sized usability and stability issues
  
 - Java stack traces occasionally pop up. These are solely for debugging purposes.
@@ -33,6 +32,15 @@ Current status of the release:
 +--------------------+
 |     CHANGESET      |
 +--------------------+
+
+Changes from Alpha 4
+2010-02-12
++ Labels can be added to stories
++ Iteration workload
++ Story tree improvements, such as creating child and sibling stories
++ Improvements to setting pages
++ New user interface for logging spent effort
+
 
 Changes from Alpha 3
 2010-01-09

@@ -24,7 +24,6 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   } else if (this.type == 'product') {
     this.treeParams.productId = this.id;
   }
-  this.initialized = false;
   jQuery.extend(this.options, options);
   this.initHeader();
 };
@@ -75,6 +74,10 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
     delete data.statesToKeep;
   }
   this.refresh();
+};
+
+StoryTreeController.prototype.hasFilters = function() {
+  return this.treeParams.name || this.treeParams.statesToKeep || this.treeParams.labelNames;
 };
 
 StoryTreeController.prototype.initTree = function() {
@@ -139,9 +142,9 @@ StoryTreeController.prototype.initTree = function() {
   
 };
 StoryTreeController.prototype._treeLoaded = function() {
-  if(!this.initialized) {
-    this.tree.open_all();
-    this.initialized = true;
+  this.tree.open_all();
+  if(!this.hasFilters()) {
+   this.element.find("li[storystate='DONE']:not(.leaf)").removeClass("open").addClass("closed"); 
   }
 };
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {

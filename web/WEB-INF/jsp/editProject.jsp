@@ -3,7 +3,7 @@
 <struct:htmlWrapper navi="backlog">
 <jsp:body>
 
-<h2>Project: <c:out value="${project.name}"/></h2>
+<aef:backlogBreadCrumb backlog="${project}" />
 
 <div class="structure-main-block project-color-header" id="backlogInfo">
 <ul class="backlogTabs">

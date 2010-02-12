@@ -2,7 +2,7 @@
 
 <struct:htmlWrapper navi="backlog">
 
-<h2>Product: <c:out value="${product.name}"/></h2>
+<aef:backlogBreadCrumb backlog="${product}" />
 
 <div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">

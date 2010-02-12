@@ -313,6 +313,10 @@
 		<name>quickReference</name>
 		<path>/WEB-INF/tags/quickReference.tag</path>
 	</tag-file>
+	 <tag-file>
+    <name>backlogBreadCrumb</name>
+    <path>/WEB-INF/tags/backlogBreadCrumb.tag</path>
+  </tag-file>
 	<function>
 	  <name>isProduct</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>

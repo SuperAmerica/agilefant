@@ -3,14 +3,9 @@
 <struct:htmlWrapper navi="backlog">
 <jsp:body>
 
-<h2>Iteration: <c:out value="${iteration.name}"/></h2>
-
+<aef:backlogBreadCrumb backlog="${iteration}" />
 
 <aef:currentBacklog backlogId="${iteration.id}"/>
-
-<script type="text/javascript">
-    var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
-</script>
 
 <div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">

@@ -303,4 +303,15 @@ div.smallBurndown {
   font-weight: bold;
 }
 
+h2 > a {
+	color: #2E6E9E !important;
+}
+
+h2 > a:visited {
+  color: #2E6E9E !important;
+}
+
+h2 > a:hover {
+  color: #2E6E9E !important;
+}
 

@@ -11,6 +11,7 @@ var AdministrationMenuController = function AdministrationMenuController(element
 
 AdministrationMenuController.prototype.init = function(element, toggleElement) {
   this.element = element;
+  this.element.html("");
   this.toggleControl = toggleElement;
   this.tree = null;
   this.initTree();
@@ -54,9 +55,5 @@ AdministrationMenuController.prototype.initTree = function() {
     key: "systemSettings.action"
   });
 };
-  /*
-  
-    
-};*/
 
 AdministrationMenuController.prototype.reload = function() {};

@@ -5,11 +5,11 @@
 
 <div id="menuAccordion">
     <h3 id="menuAccordion-myAssignments"><a href="#">My Assignments</a></h3>
-    <div id="assignmentsMenuTree"></div>
+    <div id="assignmentsMenuTree">&nbsp;</div>
     <h3 id="menuAccordion-products"><a href="#">Products</a></h3>
-    <div id="backlogMenuTree"></div>
+    <div id="backlogMenuTree">&nbsp;</div>
     <h3 id="menuAccordion-administration"><a href="#">Administration</a></h3>
-    <div id="administrationMenu"></div>
+    <div id="administrationMenu">&nbsp;</div>
 </div>
 
 <script type="text/javascript" src="static/js/jquery.dynatree.js"></script>
@@ -17,33 +17,36 @@
 <script type="text/javascript">
 $(document).ready(function() {
   var navi = "${navi}";
+
+  
   
   $("#menuAccordion").accordion({
     autoHeight: false,
     change: function(event, ui) {
-      var index = $("#menuAccordion .ui-accordion-header").index(ui.newHeader);
-      if (index >= 0) {
-        $.cookie('agilefant-menu-accordion', index);
-      }
+    
       var selectedId = ui.newHeader[0].id;
-      if (selectedId == 'menuAccordion-myAssignments') {
+      if (typeof(selectedId) === 'string' && selectedId !== "") {
+        $.cookie('agilefant-menu-accordion', '#' + selectedId);
+      }
+      if (selectedId === 'menuAccordion-myAssignments') {
         if (window.myAssignmentsMenuController == null) {
           window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));
         }
-      } else if (selectedId == 'menuAccordion-products') {
+      } else if (selectedId === 'menuAccordion-products') {
         if (window.menuController == null) {
           window.menuController = new BacklogMenuController($('#backlogMenuTree'), $('#menuControl'));
         }
-    	} else if (selectedId == 'menuAccordion-administration') {
+    	} else if (selectedId === 'menuAccordion-administration') {
         if (window.administrationMenuController == null) {
-          window.administrationMenuController = new AdministrationMenuController($('#administrationMenu'), $('#menuControl'))
+          window.administrationMenuController = new AdministrationMenuController($('#administrationMenu'), $('#menuControl'));
         }
     	}
   	}
   });
-  var activatedSection = parseInt($.cookie('agilefant-menu-accordion'));
+
+  var activatedSection = $.cookie('agilefant-menu-accordion');
   if (navi === "settings") {
-    $('#menuAccordion').accordion('activate', 2);
+    $('#menuAccordion').accordion('activate', '#menuAccordion-administration');
   } else if (!isNaN(activatedSection) && activatedSection != 0) {
     $("#menuAccordion").accordion('activate', activatedSection);
   } else {

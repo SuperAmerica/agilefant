@@ -23,8 +23,7 @@ var StoryModel = function StoryModel() {
     "name": "name",
     "description": "description",
     "state": "state",
-    "storyPoints": "storyPoints",
-    "rank": "rank"
+    "storyPoints": "storyPoints"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "backlog",

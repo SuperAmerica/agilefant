@@ -156,6 +156,9 @@ DynamicTableCell.prototype.setValue = function(value) {
  * @return boolean
  */
 DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
+  if(!this.element.is(":visible")) {
+    return;
+  }
   var editorOptions = this.config.getEditOptions();
   var editorName = editorOptions.editor;
   

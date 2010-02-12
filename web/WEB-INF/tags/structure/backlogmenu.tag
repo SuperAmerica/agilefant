@@ -35,7 +35,7 @@ $(document).ready(function() {
           window.menuController = new BacklogMenuController($('#backlogMenuTree'), $('#menuControl'));
         }
     	} else if (selectedId == 'menuAccordion-administration') {
-        if (window.menuController == null) {
+        if (window.administrationMenuController == null) {
           window.administrationMenuController = new AdministrationMenuController($('#administrationMenu'), $('#menuControl'))
         }
     	}

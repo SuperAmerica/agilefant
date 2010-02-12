@@ -45,8 +45,8 @@ StoryFiltersView.prototype.initialize = function() {
     minChars: 3
   }, this);
 
-  this.filterButton = $('<input type="submit" name="filterButton" value="Filter" />');
-  this.clearButton = $('<input type="button" name="clearButton" value="Clear" style="margin-left: 1em" />');
+  this.filterButton = $('<button name="filterButton" class="dynamics-button">Filter</button>');
+  this.clearButton = $('<button name="clearButton" style="margin-left: 1em" class="dynamics-button">Clear</button>');
   nameFieldDiv.appendTo(this.filters);
   this.labelAutosuggest.getElement().css('margin', '0.5em 10px 0').css('width', '300px');
   this.labelAutosuggest.getElement().appendTo(this.filters);
@@ -56,6 +56,7 @@ StoryFiltersView.prototype.initialize = function() {
     var state = this.allStoryStates[i];
     me.addStateButton(state);
   }
+  
   
   this.actionButtons = $('<div style="margin: 0.5em 10px"></div>').appendTo(this.filters);
 

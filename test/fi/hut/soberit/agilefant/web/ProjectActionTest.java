@@ -127,7 +127,7 @@ public class ProjectActionTest {
         replayAll();
         projectAction.setConfirmationString("yes");
         assertEquals(Action.SUCCESS, projectAction.delete());
-        assertEquals(123, projectAction.getProductId().intValue());
+        assertEquals(123, projectAction.getProductId());
         verifyAll();    
     }
     

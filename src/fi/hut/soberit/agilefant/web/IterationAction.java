@@ -41,6 +41,8 @@ public class IterationAction implements
     private Set<AssignmentTO> assignments;
     
     private Set<Integer> assigneeIds = new HashSet<Integer>();
+    
+    private boolean assigneesChanged = false;
 
     private String confirmationString;
     
@@ -105,7 +107,7 @@ public class IterationAction implements
     */
     public String store() {
         Set<Integer> assignees = null;
-        if(!this.assigneeIds.isEmpty()) {
+        if(this.assigneesChanged) {
             assignees = this.assigneeIds;
         }
         iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees);
@@ -170,6 +172,14 @@ public class IterationAction implements
     
     public void setConfirmationString(String confirmationString) {
         this.confirmationString = confirmationString;
+    }
+
+    public boolean isAssigneesChanged() {
+        return assigneesChanged;
+    }
+
+    public void setAssigneesChanged(boolean assigneesChanged) {
+        this.assigneesChanged = assigneesChanged;
     }
 
 }

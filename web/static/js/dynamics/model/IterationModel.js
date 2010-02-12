@@ -81,7 +81,7 @@ IterationModel.prototype._saveData = function(id, changedData) {
   var data = this.serializeFields("iteration", changedData);
    
   if (changedData.assigneesChanged) {
-    jQuery.extend(data, {assigneeIds: changedData.assigneeIds});
+    jQuery.extend(data, {assigneeIds: changedData.assigneeIds, assigneesChanged: true});
   }
   
   if(ArrayUtils.countObjectFields(data) === 0) {

@@ -18,12 +18,10 @@
 $(document).ready(function() {
   var navi = "${navi}";
 
-  
-  
   $("#menuAccordion").accordion({
+    active: false,
     autoHeight: false,
     change: function(event, ui) {
-    
       var selectedId = ui.newHeader[0].id;
       if (typeof(selectedId) === 'string' && selectedId !== "") {
         $.cookie('agilefant-menu-accordion', '#' + selectedId);
@@ -31,10 +29,15 @@ $(document).ready(function() {
       if (selectedId === 'menuAccordion-myAssignments') {
         if (window.myAssignmentsMenuController == null) {
           window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));
+        } else {
+          window.myAssignmentsMenuController.reload();
         }
       } else if (selectedId === 'menuAccordion-products') {
         if (window.menuController == null) {
           window.menuController = new BacklogMenuController($('#backlogMenuTree'), $('#menuControl'));
+        }
+        else {
+          window.menuController.reload();
         }
     	} else if (selectedId === 'menuAccordion-administration') {
         if (window.administrationMenuController == null) {
@@ -47,7 +50,7 @@ $(document).ready(function() {
   var activatedSection = $.cookie('agilefant-menu-accordion');
   if (navi === "settings") {
     $('#menuAccordion').accordion('activate', '#menuAccordion-administration');
-  } else if (!isNaN(activatedSection) && activatedSection != 0) {
+  } else if (typeof(activatedSection) === 'string' && activatedSection !== "") {
     $("#menuAccordion").accordion('activate', activatedSection);
   } else {
     window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));

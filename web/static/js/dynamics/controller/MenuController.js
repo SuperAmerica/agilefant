@@ -10,19 +10,32 @@ var BacklogMenuController = function BacklogMenuController(element, toggleElemen
 };
 
 BacklogMenuController.prototype.init = function(element, toggleElement) {
-  this.element = element;
+  this.parentElement = element;
+  this.parentElement.html("");
+  this.emptyListNote = $('<div style="margin: 0.5em">There are no backlogs yet</span>').appendTo(this.parentElement).hide();
+  this.element = $('<div/>').appendTo(this.parentElement);
   this.toggleControl = toggleElement;
   this.tree = null;
   this.initTree();
 };
 
 BacklogMenuController.prototype.initTree = function() {
+  var me = this;
   this.element.dynatree({
     keyboard: false,
     autoFocus: false,
     onClick: function(dtnode, event) {
       if ($(event.target).hasClass("ui-dynatree-title")) {
         window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
+      }
+    },
+    onPostInit: function(isReloading, isError) {
+      var rootNode = me.element.dynatree("getRoot");
+      if (rootNode.childList === null) {
+        me.emptyListNote.show();
+      }
+      else {
+        me.emptyListNote.hide();
       }
     },
     initAjax: {

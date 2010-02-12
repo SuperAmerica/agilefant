@@ -18,10 +18,7 @@ UserRowController.prototype = new CommonController();
  * 
  */
 UserRowController.prototype.userActionFactory = function(view, model) {
-  var actionItems = [ {
-    text : "Open user's page",
-    callback : UserRowController.prototype.editUser
-  }, {
+  var actionItems = [{
     text : "Enable",
     callback : UserRowController.prototype.enableUser,
     enabled: UserRowController.prototype.showEnableAction
@@ -107,11 +104,6 @@ UserRowController.prototype.hideDetails = function() {
 
 UserRowController.prototype.showDetails = function() {
   this.view.getCell(UserRowController.columnIndices.password).show();
-};
-
-
-UserRowController.prototype.editUser = function() {
-  window.location = "editUser.action?userId=" + this.model.getId();
 };
 
 UserRowController.prototype.cancelEdit = function() {

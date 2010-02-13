@@ -2,9 +2,11 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -165,20 +167,40 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         if (storyFilters != null) {
             stories = storyFilterBusiness.filterStories(stories, storyFilters);
         }
-        stories = replaceStoryNodesWithRoots(stories);
+        try {
+            stories = replaceStoryNodesWithRoots(stories);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return stories;
     }
 
     public List<Story> replaceStoryNodesWithRoots(List<Story> stories) {
         List<Story> results = new ArrayList<Story>(stories.size());
+        Map<Integer, Story> addedTos = new HashMap<Integer, Story>();
         for (Story story : stories) {
             Story result = story;
             while (result.getParent() != null) {
-                StoryTO to = new StoryTO(result.getParent());
-                to.setChildren(Arrays.asList(result));
-                result = to;
+                Story parent = result.getParent();
+                Story alreadyAdded = addedTos.get(parent.getId());
+                if (alreadyAdded != null) {
+                    List<Story> childList = new ArrayList<Story>(alreadyAdded
+                            .getChildren().size() + 1);
+                    childList.addAll(alreadyAdded.getChildren());
+                    childList.add(result);
+                    alreadyAdded.setChildren(childList);
+                    result = null;
+                    break;
+                } else {
+                    StoryTO to = new StoryTO(parent);
+                    addedTos.put(to.getId(), to);
+                    to.setChildren(Arrays.asList(result));
+                    result = to;
+                }
             }
-            results.add(result);
+            if (result != null) {
+                results.add(result);
+            }
         }
         return results;
     }

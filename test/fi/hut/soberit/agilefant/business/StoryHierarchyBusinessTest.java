@@ -40,7 +40,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
     @Mock(strict = true)
     private BacklogBusiness backlogBusiness;
-    
+
     @Mock(strict = true)
     private StoryFilterBusiness storyFilterBusiness;
 
@@ -95,8 +95,8 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
     public void testRetrieveProjectRootStories() {
         int projectId = 100;
         List<Story> stories = new ArrayList<Story>();
-        expect(storyHierarchyDAO.retrieveProjectRootStories(projectId)).andReturn(
-                stories);
+        expect(storyHierarchyDAO.retrieveProjectRootStories(projectId))
+                .andReturn(stories);
         replayAll();
         assertEquals(stories, storyHierarchyBusiness
                 .retrieveProjectRootStories(projectId, null));
@@ -108,11 +108,11 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
     public void testRetrieveProductRootStories() {
         int productId = 100;
         List<Story> stories = new ArrayList<Story>();
-        expect(storyHierarchyDAO.retrieveProductRootStories(productId)).andReturn(
-                stories);
+        expect(storyHierarchyDAO.retrieveProductRootStories(productId))
+                .andReturn(stories);
         replayAll();
-        assertSame(stories, storyHierarchyBusiness
-                .retrieveProductRootStories(productId, null));
+        assertSame(stories, storyHierarchyBusiness.retrieveProductRootStories(
+                productId, null));
         verifyAll();
     }
 
@@ -122,9 +122,10 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         int projectId = 100;
         StoryFilters storyFilters = new StoryFilters(null, null, null);
         List<Story> stories = new ArrayList<Story>();
-        expect(storyHierarchyDAO.retrieveProjectRootStories(projectId)).andReturn(
-                stories);
-        expect(storyFilterBusiness.filterStories(stories, storyFilters)).andReturn(stories);
+        expect(storyHierarchyDAO.retrieveProjectRootStories(projectId))
+                .andReturn(stories);
+        expect(storyFilterBusiness.filterStories(stories, storyFilters))
+                .andReturn(stories);
         replayAll();
         assertEquals(stories, storyHierarchyBusiness
                 .retrieveProjectRootStories(projectId, storyFilters));
@@ -137,12 +138,13 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         int productId = 100;
         StoryFilters storyFilters = new StoryFilters(null, null, null);
         List<Story> stories = new ArrayList<Story>();
-        expect(storyHierarchyDAO.retrieveProductRootStories(productId)).andReturn(
-                stories);
-        expect(storyFilterBusiness.filterStories(stories, storyFilters)).andReturn(stories);
+        expect(storyHierarchyDAO.retrieveProductRootStories(productId))
+                .andReturn(stories);
+        expect(storyFilterBusiness.filterStories(stories, storyFilters))
+                .andReturn(stories);
         replayAll();
-        assertSame(stories, storyHierarchyBusiness
-                .retrieveProductRootStories(productId, storyFilters));
+        assertSame(stories, storyHierarchyBusiness.retrieveProductRootStories(
+                productId, storyFilters));
         verifyAll();
     }
 
@@ -547,37 +549,70 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         assertEquals(4, story3.getTreeRank());
 
     }
-    
+
     @Test
     @DirtiesContext
     public void testReplaceStoryNodesWithRoots() {
         List<Story> stories = new ArrayList<Story>();
-        StoryTO storyTO1 = new StoryTO(story);
-        StoryTO storyTO2 = new StoryTO(story2);
-        StoryTO storyTO3 = new StoryTO(story3);
-        StoryTO storyTO4 = new StoryTO(story4);
-        storyTO1.setParent(storyTO3);
-        storyTO3.setParent(storyTO4);
-        stories.add(storyTO1);
-        stories.add(storyTO2);
-        stories.add(storyTO3);
-        stories.add(storyTO4);
-        List<Story> results = storyHierarchyBusiness.replaceStoryNodesWithRoots(stories);
-        
-        assertEquals(results.size(), stories.size());
-        assertEquals(results.get(0).getId(), storyTO4.getId());
-        assertEquals(results.get(1).getId(), storyTO2.getId());
-        assertEquals(results.get(2).getId(), storyTO4.getId());
-        assertEquals(results.get(3).getId(), storyTO4.getId());     
+
+        // INPUT:
+        // 1 -> [4]
+        // 1 -> 2 -> [3]
+        // OUTPUT:
+        // 1
+        // \- 2
+        // ___\- 3
+        // \- 4
+        story.getChildren().add(story2);
+        story2.setParent(story);
+        story.getChildren().add(story4);
+        story4.setParent(story);
+        story2.getChildren().add(story3);
+        story3.setParent(story2);
+
+        stories.add(story4);
+        stories.add(story3);
+        List<Story> results = storyHierarchyBusiness
+                .replaceStoryNodesWithRoots(stories);
+        for (Story result : results) {
+            System.out.println(result.getId());
+        }
+
+        assertEquals(1, results.size());
+        Story result1 = results.get(0);
+        assertEquals(story.getId(), result1.getId());
+        assertEquals(2, result1.getChildren().size());
+        Story result1_child1 = result1.getChildren().get(0);
+        Story result1_child2 = result1.getChildren().get(1);
+        Story result2;
+        Story result4;
+        if (result1_child1.getId() == story2.getId()) {
+            result2 = result1_child1;
+            result4 = result1_child2;
+        } else {
+            result2 = result1_child2;
+            result4 = result1_child1;
+        }
+
+        assertEquals(story2.getId(), result2.getId());
+        assertEquals(story4.getId(), result4.getId());
+
+        assertEquals(0, story4.getChildren().size());
+        assertEquals(1, story2.getChildren().size());
+
+        Story result3 = story2.getChildren().get(0);
+
+        assertEquals(story3.getId(), result3.getId());
     }
-    
+
     @Test
     @DirtiesContext
     public void testReplaceStoryNodesWithRoots_emptyList() {
         List<Story> stories = new ArrayList<Story>();
-        List<Story> results = storyHierarchyBusiness.replaceStoryNodesWithRoots(stories);
-        
+        List<Story> results = storyHierarchyBusiness
+                .replaceStoryNodesWithRoots(stories);
+
         assertTrue(results.isEmpty());
     }
-    
+
 }

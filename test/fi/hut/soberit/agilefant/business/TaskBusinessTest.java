@@ -376,30 +376,32 @@ public class TaskBusinessTest {
      */
     
     @Test
-    public void testDelete_underIteration() {
+    public void testDeleteAndUpdateHistory_underIteration() {
         task.setStory(null);
         task.setIteration(iteration);
         
+        expect(taskDAO.get(task.getId())).andReturn(task);
         taskDAO.remove(task.getId());
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         replayAll();
         
-        taskBusiness.delete(task);
+        taskBusiness.deleteAndUpdateHistory(task.getId(), null);
         
         verifyAll();
     }
     
     @Test
-    public void testDelete_underIterationStory() {
+    public void testDeleteAndUpdateHistory_underIterationStory() {
         task.setStory(story);
         task.setIteration(null);
         story.setBacklog(iteration);
         
+        expect(taskDAO.get(task.getId())).andReturn(task);
         taskDAO.remove(task.getId());
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         replayAll();
         
-        taskBusiness.delete(task);
+        taskBusiness.deleteAndUpdateHistory(task.getId(), null);
         
         verifyAll();
     }
@@ -919,7 +921,6 @@ public class TaskBusinessTest {
         expect(taskDAO.get(50)).andReturn(task);
         hourEntryBusiness.deleteAll(task.getHourEntries());
         taskDAO.remove(50);
-        iterationHistoryEntryBusiness.updateIterationHistory(0);
         replayAll();
         taskBusiness.delete(50, HourEntryHandlingChoice.DELETE);
         verifyAll();
@@ -946,7 +947,6 @@ public class TaskBusinessTest {
         expect(taskDAO.get(50)).andReturn(task);
         hourEntryBusiness.moveToBacklog(task.getHourEntries(), task.getIteration());
         taskDAO.remove(50);
-        iterationHistoryEntryBusiness.updateIterationHistory(0);
         replayAll();
         taskBusiness.delete(50, HourEntryHandlingChoice.MOVE);
         verifyAll();

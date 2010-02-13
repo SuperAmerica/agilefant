@@ -624,7 +624,7 @@ public class IterationBusinessTest {
         storyBusiness.delete(story.getId(), TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
         iterationHistoryEntryBusiness.delete(historyEntry.getId());
         assignmentBusiness.delete(assignment.getId());
-        taskBusiness.delete(task.getId(), HourEntryHandlingChoice.DELETE);
+        taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.DELETE);
         hourEntryBusiness.deleteAll(iter.getHourEntries());
         
         iterationDAO.remove(iter);

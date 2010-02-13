@@ -394,7 +394,7 @@ public class StoryBusinessTest {
         storyInIteration.getTasks().add(task);
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
         hourEntryBusiness.moveToBacklog(task.getHourEntries(), storyInIteration.getBacklog());
-        taskBusiness.delete(task.getId(), HourEntryHandlingChoice.MOVE);
+        taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.MOVE);
         storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());

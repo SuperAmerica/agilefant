@@ -72,7 +72,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     public String delete() {
-        taskBusiness.delete(taskId, hourEntryHandlingChoice);
+        taskBusiness.deleteAndUpdateHistory(taskId, hourEntryHandlingChoice);
         return Action.SUCCESS;
     }
     

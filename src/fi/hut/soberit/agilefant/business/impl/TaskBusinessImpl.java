@@ -34,71 +34,72 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
 
     @Autowired
     private IterationBusiness iterationBusiness;
-    
+
     @Autowired
     private StoryBusiness storyBusiness;
 
     @Autowired
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
-    
+
     @Autowired
     private DailyWorkBusiness dailyWorkBusiness;
-    
+
     @Autowired
     private RankingBusiness rankingBusiness;
-    
+
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
-    
+
     private TaskDAO taskDAO;
-    
+
     public TaskBusinessImpl() {
         super(Task.class);
     }
-    
+
     @Autowired
     public void setTaskDAO(TaskDAO taskDAO) {
         this.genericDAO = taskDAO;
         this.taskDAO = taskDAO;
     }
-    
-    
+
     /** {@inheritDoc} */
-    public Task storeTask(Task task, Integer iterationId, Integer storyId) {//, Set<Integer> userIds) {
+    public Task storeTask(Task task, Integer iterationId, Integer storyId) {// ,
+        // Set<Integer>
+        // userIds)
+        // {
         Task storedTask = null;
-        
+
         if (task == null) {
             throw new IllegalArgumentException("Task should be given");
         }
-        
-        //allow storing existing task without relations
-        if(task.getId() == 0 || iterationId != null || storyId != null) {
+
+        // allow storing existing task without relations
+        if (task.getId() == 0 || iterationId != null || storyId != null) {
             assignParentForTask(task, iterationId, storyId);
         }
-               
+
         updateEffortLeftAndOriginalEstimate(task);
-        
-//        populateUserData(task, userIds);
-        
+
+        // populateUserData(task, userIds);
+
         if (task.getId() == 0) {
             int newTaskId = this.create(task);
             storedTask = this.retrieve(newTaskId);
             this.rankToBottom(storedTask, storyId, iterationId);
-        }
-        else {
+        } else {
             this.store(task);
             storedTask = task;
             if (iterationId != null || storyId != null) {
                 this.rankToBottom(task, storyId, iterationId);
             }
         }
-        
+
         updateIterationHistoryIfApplicable(task);
-        
+
         if (task.getState() == TaskState.DONE) {
             dailyWorkBusiness.removeTaskFromWorkQueues(task);
         }
-        
+
         return storedTask;
     }
 
@@ -111,11 +112,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         if (task.getEffortLeft() == null && task.getOriginalEstimate() != null) {
             task.setEffortLeft(task.getOriginalEstimate());
         }
-        
+
         if (task.getOriginalEstimate() == null && task.getEffortLeft() != null) {
             task.setOriginalEstimate(task.getEffortLeft());
         }
-        
+
         if (task.getState() == TaskState.DONE) {
             task.setEffortLeft(new ExactEstimate(0));
         }
@@ -123,17 +124,17 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
 
     /** {@inheritDoc} */
     @Transactional
-    public void assignParentForTask(Task task, Integer iterationId, Integer storyId)
-        throws IllegalArgumentException, ObjectNotFoundException {
+    public void assignParentForTask(Task task, Integer iterationId,
+            Integer storyId) throws IllegalArgumentException,
+            ObjectNotFoundException {
         // 1. Error handling
         checkArgumentsForMoving(task, iterationId, storyId);
-        
+
         // 2. The logic
         if (iterationId != null) {
             task.setIteration(iterationBusiness.retrieve(iterationId));
             task.setStory(null);
-        }
-        else {
+        } else {
             task.setStory(storyBusiness.retrieve(storyId));
             task.setIteration(null);
         }
@@ -143,32 +144,30 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             Integer storyId) {
         if (task == null) {
             throw new IllegalArgumentException("Task should be given.");
-        }
-        else if (iterationId == null && storyId == null) {
+        } else if (iterationId == null && storyId == null) {
             throw new IllegalArgumentException("The parent id should be given");
-        }
-        else if (iterationId != null && storyId != null) {
+        } else if (iterationId != null && storyId != null) {
             throw new IllegalArgumentException("Only one parent can be given");
         }
     }
-    
+
     /** {@inheritDoc} */
     @Transactional
     public Task move(Task task, Integer iterationId, Integer storyId) {
         checkArgumentsForMoving(task, iterationId, storyId);
-        
+
         Integer sourceIterationId = getTaskIterationId(task);
-        
+
         assignParentForTask(task, iterationId, storyId);
         this.store(task);
-        
+
         Integer destinationIterationId = getTaskIterationId(task);
-        
+
         if (sourceIterationId != destinationIterationId) {
             updateIterationHistoryIfNotNull(sourceIterationId);
             updateIterationHistoryIfNotNull(destinationIterationId);
         }
-        
+
         return task;
     }
 
@@ -178,13 +177,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         }
         iterationHistoryEntryBusiness.updateIterationHistory(iterationId);
     }
-    
-    
+
     /**
      * Gets the tasks parent iteration's id.
      * <p>
-     * If task resides under a story, get the story's parent
-     * iteration id.
+     * If task resides under a story, get the story's parent iteration id.
      * 
      * If story's parent backlog is not and iteration, return null.
      */
@@ -192,167 +189,174 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         Integer iterationId = null;
         if (task.getIteration() != null) {
             iterationId = task.getIteration().getId();
-        }
-        else if (task.getStory().getBacklog() instanceof Iteration) {
+        } else if (task.getStory().getBacklog() instanceof Iteration) {
             iterationId = task.getStory().getBacklog().getId();
         }
         return iterationId;
     }
-       
+
     public User getLoggedInUser() {
         User loggedUser = null;
         // May fail if request is multithreaded
         loggedUser = SecurityUtil.getLoggedUser();
         return loggedUser;
     }
-    
+
     /**
      * Populates user ids into tasks responsibles.
      * <p>
      * Will skip not found users.
      */
-//    private void populateUserData(Task task, Set<Integer> userIds) {
-//        if (userIds == null) return;
-//        Set<User> userSet = new HashSet<User>();
-//        
-//        for (Integer userId : userIds) {
-//            User user = userBusiness.retrieveIfExists(userId);
-//            if (user != null) {
-//                userSet.add(user);
-//            }
-//        }
-//        
-//        task.getResponsibles().clear();
-//        task.getResponsibles().addAll(userSet);
-//    }
+    // private void populateUserData(Task task, Set<Integer> userIds) {
+    // if (userIds == null) return;
+    // Set<User> userSet = new HashSet<User>();
+    //        
+    // for (Integer userId : userIds) {
+    // User user = userBusiness.retrieveIfExists(userId);
+    // if (user != null) {
+    // userSet.add(user);
+    // }
+    // }
+    //        
+    // task.getResponsibles().clear();
+    // task.getResponsibles().addAll(userSet);
+    // }
 
     public Task resetOriginalEstimate(int taskId) {
         Task task = retrieve(taskId);
         task.setEffortLeft(null);
         task.setOriginalEstimate(null);
         taskDAO.store(task);
-        
+
         updateIterationHistoryIfApplicable(task);
-        
+
         return task;
-    }
-    
-    @Override
-    public void delete(int id) {        
-        delete(retrieve(id));
-    }
-    
-    public void delete(int id, HourEntryHandlingChoice hourEntryHandlingChoice) {
-        Task task = retrieve(id);
-        if (hourEntryHandlingChoice != null) {
-            switch (hourEntryHandlingChoice) {
-                case DELETE:
-                    hourEntryBusiness.deleteAll(task.getHourEntries());
-                    task.getHourEntries().clear();
-                    break;
-                case MOVE:
-                    if (task.getStory() == null) {
-                        hourEntryBusiness.moveToBacklog(task.getHourEntries(), task.getIteration());
-                    } else {
-                        hourEntryBusiness.moveToStory(task.getHourEntries(), task.getStory());
-                    }
-                    task.getHourEntries().clear();
-                    break;
-            }
-        }        
-        delete(task);
     }
 
     @Override
-    public void delete(Task task) {
-        if(task.getHourEntries().size() != 0) {
-            throw new OperationNotPermittedException("Task contains spent effort entries.");
-        }
-        taskDAO.remove(task.getId());
-        if (task.getIteration() != null) {
-            iterationHistoryEntryBusiness.updateIterationHistory(task.getIteration().getId());  
-        }
-        else if (task.getStory().getBacklog() instanceof Iteration) {
-            iterationHistoryEntryBusiness.updateIterationHistory(task.getStory().getBacklog().getId());
-        }
+    public void delete(int id) {
+        delete(retrieve(id), null);
     }
     
+    @Override
+    public void delete(Task task) {
+        delete(task, null);
+    }
+
+    public void delete(int id, HourEntryHandlingChoice hourEntryHandlingChoice) {
+        delete(retrieve(id), hourEntryHandlingChoice);
+    }
+
+    public void deleteAndUpdateHistory(int id,
+            HourEntryHandlingChoice hourEntryHandlingChoice) {
+        Task task = retrieve(id);
+        delete(task, hourEntryHandlingChoice);
+        if (task.getIteration() != null) {
+            iterationHistoryEntryBusiness.updateIterationHistory(task
+                    .getIteration().getId());
+        } else if (task.getStory().getBacklog() instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(task
+                    .getStory().getBacklog().getId());
+        }
+    }
+
+    public void delete(Task task,
+            HourEntryHandlingChoice hourEntryHandlingChoice) {
+        if (hourEntryHandlingChoice != null) {
+            switch (hourEntryHandlingChoice) {
+            case DELETE:
+                hourEntryBusiness.deleteAll(task.getHourEntries());
+                task.getHourEntries().clear();
+                break;
+            case MOVE:
+                if (task.getStory() == null) {
+                    hourEntryBusiness.moveToBacklog(task.getHourEntries(), task
+                            .getIteration());
+                } else {
+                    hourEntryBusiness.moveToStory(task.getHourEntries(), task
+                            .getStory());
+                }
+                task.getHourEntries().clear();
+                break;
+            }
+        }
+        if (task.getHourEntries().size() != 0) {
+            throw new OperationNotPermittedException(
+                    "Task contains spent effort entries.");
+        }
+        taskDAO.remove(task.getId());
+    }
+
     /* RANKING */
     /** {@inheritDoc} */
     @Transactional
-    public Task rankUnderTask(final Task task, Task upperTask) throws IllegalArgumentException {
+    public Task rankUnderTask(final Task task, Task upperTask)
+            throws IllegalArgumentException {
         if (task == null) {
             throw new IllegalArgumentException("Task should be given");
-        }
-        else if (upperTask != null) {
+        } else if (upperTask != null) {
             if (task.getStory() != upperTask.getStory()) {
-                throw new IllegalArgumentException("The tasks' parent's should be the same");    
-            }
-            else if (task.getIteration() != upperTask.getIteration()) {
-                throw new IllegalArgumentException("The tasks' parent's should be the same");
+                throw new IllegalArgumentException(
+                        "The tasks' parent's should be the same");
+            } else if (task.getIteration() != upperTask.getIteration()) {
+                throw new IllegalArgumentException(
+                        "The tasks' parent's should be the same");
             }
         }
-        
+
         rankingBusiness.rankUnder(task, upperTask, new RankUnderDelegate() {
-            public Collection<? extends Rankable> getWithRankBetween(Integer first,
-                    Integer second) {
-                return taskDAO.getTasksWithRankBetween(
-                        first, second, task.getIteration(), task.getStory());
+            public Collection<? extends Rankable> getWithRankBetween(
+                    Integer first, Integer second) {
+                return taskDAO.getTasksWithRankBetween(first, second, task
+                        .getIteration(), task.getStory());
             }
         });
-        
+
         return task;
     }
-    
 
-    
     /** {@inheritDoc} */
     @Transactional
-    public Task rankToBottom(Task task, Integer parentStoryId, Integer parentIterationId)
-        throws IllegalArgumentException {
+    public Task rankToBottom(Task task, Integer parentStoryId,
+            Integer parentIterationId) throws IllegalArgumentException {
         Story story = null;
         Iteration iter = null;
-        
+
         if (parentStoryId != null) {
             story = storyBusiness.retrieve(parentStoryId);
-        }
-        else if (parentIterationId != null) {
+        } else if (parentIterationId != null) {
             iter = iterationBusiness.retrieve(parentIterationId);
         }
-        
+
         return this.rankToBottom(task, story, iter);
     }
-    
+
     private Task rankToBottom(Task task, Story story, Iteration iteration) {
         if (task == null || (story == null && iteration == null)) {
             throw new IllegalArgumentException();
         }
         Task lastInRank = null;
-        
+
         if (story != null) {
-            lastInRank = taskDAO.getLastTaskInRank(story, null);    
-        }
-        else {
+            lastInRank = taskDAO.getLastTaskInRank(story, null);
+        } else {
             lastInRank = taskDAO.getLastTaskInRank(null, iteration);
         }
-        
+
         rankingBusiness.rankToBottom(task, lastInRank);
-        
+
         return task;
     }
-    
 
-    
-    
     /** {@inheritDoc} */
     @Transactional
     public Task rankAndMove(Task task, Task upperTask, Integer parentStoryId,
             Integer parentIterationId) throws IllegalArgumentException {
-        
+
         assignParentForTask(task, parentIterationId, parentStoryId);
         rankToBottom(task, parentStoryId, parentIterationId);
         rankUnderTask(task, upperTask);
-        
+
         return task;
     }
 
@@ -360,13 +364,12 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         task.getResponsibles().add(user);
     }
 
-    
     // AUTOGENERATED
-    
+
     public void setIterationBusiness(IterationBusiness iterationBusiness) {
         this.iterationBusiness = iterationBusiness;
     }
-    
+
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
     }
@@ -383,7 +386,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     public void setDailyWorkBusiness(DailyWorkBusiness dailyWorkBusiness) {
         this.dailyWorkBusiness = dailyWorkBusiness;
     }
-    
+
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
     }

@@ -541,7 +541,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                         hourEntryBusiness.moveToBacklog(task.getHourEntries(),
                                 story.getBacklog());
                     }
-                    taskBusiness.delete(task.getId(),
+                    taskBusiness.deleteAndUpdateHistory(task.getId(),
                             taskHourEntryHandlingChoice);
                 }
                 break;

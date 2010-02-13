@@ -102,7 +102,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             Iteration iteration = retrieve(id);
             Set<Task> tasks = new HashSet<Task>(iteration.getTasks());
             for (Task item : tasks) {
-                taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
+                taskBusiness.deleteAndUpdateHistory(item.getId(), HourEntryHandlingChoice.DELETE);
             }
             
             Set<Story> stories = new HashSet<Story>(iteration.getStories());

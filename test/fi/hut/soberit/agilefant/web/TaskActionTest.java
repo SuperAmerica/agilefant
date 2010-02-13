@@ -173,7 +173,7 @@ public class TaskActionTest {
     
     @Test
     public void testDeleteTask() {
-       taskBusiness.delete(task.getId(), null);
+       taskBusiness.deleteAndUpdateHistory(task.getId(), null);
        replayAll();
        
        assertEquals(Action.SUCCESS, taskAction.delete());
@@ -184,7 +184,7 @@ public class TaskActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testDeleteTask_noSuchTask() {
         taskAction.setTaskId(-1);
-        taskBusiness.delete(-1, null);
+        taskBusiness.deleteAndUpdateHistory(-1, null);
         expectLastCall().andThrow(new ObjectNotFoundException());        
         replayAll();
         
@@ -196,7 +196,7 @@ public class TaskActionTest {
     @Test
     public void testDeleteTask_moveChoice() {
        taskAction.setHourEntryHandlingChoice(HourEntryHandlingChoice.MOVE);
-       taskBusiness.delete(task.getId(), HourEntryHandlingChoice.MOVE);
+       taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.MOVE);
        replayAll();
        
        assertEquals(Action.SUCCESS, taskAction.delete());
@@ -207,7 +207,7 @@ public class TaskActionTest {
     @Test
     public void testDeleteTask_deleteChoice() {
        taskAction.setHourEntryHandlingChoice(HourEntryHandlingChoice.DELETE);
-       taskBusiness.delete(task.getId(), HourEntryHandlingChoice.DELETE);
+       taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.DELETE);
        replayAll();
        
        assertEquals(Action.SUCCESS, taskAction.delete());

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -42,6 +43,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     private int treeRank = 0;
     private Story parent;
     private List<Story> children = new ArrayList<Story>();
+    
     private Set<Label> labels = new HashSet<Label>();
     
     private Set<User> responsibles = new HashSet<User>();
@@ -202,7 +204,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
         this.labels = labels;
     }
 
-    @OneToMany(mappedBy = "story")
+    @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
     @NotAudited
     @JSON(include = false)
     public Set<Label> getLabels() {

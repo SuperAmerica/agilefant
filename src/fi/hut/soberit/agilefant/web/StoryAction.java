@@ -86,7 +86,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
 
     public String delete() {
-        storyBusiness.delete(storyId, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+        storyBusiness.deleteAndUpdateHistory(storyId, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
         return Action.SUCCESS;
     }
 

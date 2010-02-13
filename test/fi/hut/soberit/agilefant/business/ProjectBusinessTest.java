@@ -382,7 +382,7 @@ public class ProjectBusinessTest {
         
         iterationBusiness.delete(iter.getId());
         
-        storyBusiness.delete(story.getId(), TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        storyBusiness.delete(story, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
         backlogHistoryEntryBusiness.delete(historyEntry.getId());
         assignmentBusiness.delete(assignment.getId());
         hourEntryBusiness.deleteAll(project.getHourEntries());

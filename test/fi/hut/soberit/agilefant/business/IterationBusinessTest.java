@@ -621,7 +621,7 @@ public class IterationBusinessTest {
         
         expect(iterationDAO.get(iter.getId())).andReturn(iter);
         
-        storyBusiness.delete(story.getId(), TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        storyBusiness.delete(story, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
         iterationHistoryEntryBusiness.delete(historyEntry.getId());
         assignmentBusiness.delete(assignment.getId());
         taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.DELETE);

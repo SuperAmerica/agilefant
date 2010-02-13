@@ -171,7 +171,7 @@ public class StoryActionTest extends MockedTestCase {
     @DirtiesContext
     public void testDelete() {
        storyAction.setStoryId(story.getId());
-       storyBusiness.delete(story.getId(), null, null, null);
+       storyBusiness.deleteAndUpdateHistory(story.getId(), null, null, null);
        replayAll();
        
        assertEquals(Action.SUCCESS, storyAction.delete());
@@ -186,7 +186,7 @@ public class StoryActionTest extends MockedTestCase {
        storyAction.setTaskHandlingChoice(TaskHandlingChoice.MOVE);
        storyAction.setStoryHourEntryHandlingChoice(HourEntryHandlingChoice.MOVE);
        storyAction.setTaskHourEntryHandlingChoice(HourEntryHandlingChoice.DELETE);
-       storyBusiness.delete(story.getId(), TaskHandlingChoice.MOVE, HourEntryHandlingChoice.MOVE, HourEntryHandlingChoice.DELETE);
+       storyBusiness.deleteAndUpdateHistory(story.getId(), TaskHandlingChoice.MOVE, HourEntryHandlingChoice.MOVE, HourEntryHandlingChoice.DELETE);
        replayAll();
        
        assertEquals(Action.SUCCESS, storyAction.delete());

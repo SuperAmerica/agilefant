@@ -357,6 +357,18 @@ public class StoryBusinessTest {
     }
 
     @Test
+    public void testDeleteAndUpdateHistory() {
+        expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
+        storyRankBusiness.removeStoryRanks(storyInIteration);        
+        storyDAO.remove(storyInIteration);
+        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
+        replayAll();
+        
+        storyBusiness.deleteAndUpdateHistory(storyInIteration.getId(), null, null, null);
+        verifyAll();
+    }
+    
+    @Test
     public void testDelete_deleteChoices_withChildren() {
         Story child = new Story();
         child.setParent(storyInIteration);
@@ -365,7 +377,6 @@ public class StoryBusinessTest {
         hourEntryBusiness.deleteAll(storyInIteration.getHourEntries());
         storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
-        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
         storyBusiness.delete(storyInIteration.getId(), TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
         assertNull(child.getParent());
@@ -381,7 +392,6 @@ public class StoryBusinessTest {
         expect(taskBusiness.move(task, storyInIteration.getBacklog().getId(), null)).andReturn(task);
         storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
-        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
         storyBusiness.delete(storyInIteration.getId(), TaskHandlingChoice.MOVE, null, null);
         verifyAll();
@@ -397,7 +407,6 @@ public class StoryBusinessTest {
         taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.MOVE);
         storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
-        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
         storyBusiness.delete(storyInIteration.getId(), TaskHandlingChoice.DELETE, null, HourEntryHandlingChoice.MOVE);
         verifyAll();
@@ -412,7 +421,6 @@ public class StoryBusinessTest {
         hourEntryBusiness.moveToBacklog(storyInIteration.getHourEntries(), storyInIteration.getBacklog());
         storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
-        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
         storyBusiness.delete(storyInIteration.getId(), null, HourEntryHandlingChoice.MOVE, null);
         verifyAll();
@@ -425,7 +433,6 @@ public class StoryBusinessTest {
         hourEntryBusiness.deleteAll(storyInIteration.getHourEntries());
         storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
-        blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
         replayAll();
         storyBusiness.delete(storyInIteration.getId(), null, HourEntryHandlingChoice.DELETE, null);
         verifyAll();
@@ -447,10 +454,9 @@ public class StoryBusinessTest {
         storyRankBusiness.rankToBottom(parent, backlog);
         storyRankBusiness.removeStoryRanks(child);
         storyDAO.remove(child);
-        blheBusiness.updateHistory(child.getBacklog().getId());
-
+        expect(storyDAO.get(child.getId())).andReturn(child);
         replayAll();
-        storyBusiness.delete(child);
+        storyBusiness.delete(child.getId(), null, null, null);
         verifyAll();
         assertTrue(parent.getChildren().isEmpty());
         

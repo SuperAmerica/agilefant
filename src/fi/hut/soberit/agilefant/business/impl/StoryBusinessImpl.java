@@ -124,41 +124,28 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     /** {@inheritDoc} */
     @Override
-    @Transactional
     public void delete(int storyId) throws ObjectNotFoundException {
-        Story story = this.retrieve(storyId);
-        this.delete(story);
+        delete(this.retrieve(storyId));
     }
 
     @Override
     public void delete(Story story) {
-        if (story.getHourEntries().size() != 0) {
-            throw new OperationNotPermittedException(
-                    "Story contains spent effort entries.");
-        }
-        if (story.getTasks().size() != 0) {
-            throw new OperationNotPermittedException("Story contains tasks.");
-        }
-        if (story.getChildren().size() > 0) {
-            throw new OperationNotPermittedException("Story has child stories.");
-        }
-        Backlog backlog = story.getBacklog();
-        if (backlog != null) {
-            backlog.getStories().remove(story);
-        }
-
-        Story parentStory = story.getParent();
-
-        // if last child of the parent story is removed the parent story may
-        // need to be ranked
-        if (parentStory != null) {
-            parentStory.getChildren().remove(story);
-            updateStoryRanks(parentStory);
-        }
-        storyRankBusiness.removeStoryRanks(story);
-        super.delete(story);
-        backlogHistoryEntryBusiness.updateHistory(backlog.getId());
-
+        delete(story, null, null, null);
+    }
+    
+    public void delete(int id,TaskHandlingChoice taskHandlingChoice,
+            HourEntryHandlingChoice storyHourEntryHandlingChoice,
+            HourEntryHandlingChoice taskHourEntryHandlingChoice) {
+        delete(this.retrieve(id), taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+    }
+    
+    public void deleteAndUpdateHistory(int id,TaskHandlingChoice taskHandlingChoice,
+            HourEntryHandlingChoice storyHourEntryHandlingChoice,
+            HourEntryHandlingChoice taskHourEntryHandlingChoice) {
+        Story story = retrieve(id);
+        delete(story, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+        backlogHistoryEntryBusiness.updateHistory(story.getBacklog().getId());
+        
     }
 
     /** {@inheritDoc} */
@@ -523,10 +510,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return storyTo;
     }
 
-    public void delete(int id, TaskHandlingChoice taskHandlingChoice,
+    public void delete(Story story, TaskHandlingChoice taskHandlingChoice,
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
             HourEntryHandlingChoice taskHourEntryHandlingChoice) {
-        Story story = retrieve(id);
       
         for (Story child : story.getChildren()) {
             child.setParent(null);
@@ -567,7 +553,30 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             }
             story.getHourEntries().clear();
         }
-        delete(story);
+        if (story.getHourEntries().size() != 0) {
+            throw new OperationNotPermittedException(
+                    "Story contains spent effort entries.");
+        }
+        if (story.getTasks().size() != 0) {
+            throw new OperationNotPermittedException("Story contains tasks.");
+        }
+        if (story.getChildren().size() > 0) {
+            throw new OperationNotPermittedException("Story has child stories.");
+        }
+        Backlog backlog = story.getBacklog();
+        if (backlog != null) {
+            backlog.getStories().remove(story);
+        }
+        Story parentStory = story.getParent();
+
+        // if last child of the parent story is removed the parent story may
+        // need to be ranked
+        if (parentStory != null) {
+            parentStory.getChildren().remove(story);
+            updateStoryRanks(parentStory);
+        }
+        storyRankBusiness.removeStoryRanks(story);
+        super.delete(story);
     }
     
     public void setUserDAO(UserDAO userDAO) {

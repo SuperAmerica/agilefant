@@ -110,7 +110,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
             HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
             for (Story item : stories) {
-                storyBusiness.delete(item.getId(), taskHandlingChoice,
+                storyBusiness.delete(item, taskHandlingChoice,
                         storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
             }
             Set<Assignment> assignments = new HashSet<Assignment>(iteration.getAssignments());

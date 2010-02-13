@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +18,7 @@ import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @Service("storyHierarchyBusiness")
@@ -32,7 +35,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
 
     @Autowired
     private StoryFilterBusiness storyFilterBusiness;
-    
+
     @Transactional(readOnly = true)
     public List<Story> retrieveProjectLeafStories(Project project) {
         return storyHierarchyDAO.retrieveProjectLeafStories(project);
@@ -42,7 +45,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     public void moveUnder(Story story, Story reference) {
         Story oldParent = story.getParent();
 
-        if(oldParent != null) {
+        if (oldParent != null) {
             oldParent.getChildren().remove(story);
         }
         reference.getChildren().add(story);
@@ -52,7 +55,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         updateBacklogRanks(reference);
 
         updateTreeRanks(reference.getChildren());
-        if(oldParent != null) {
+        if (oldParent != null) {
             updateTreeRanks(oldParent.getChildren());
         }
 
@@ -116,14 +119,15 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         } else {
             Product product = backlogBusiness.getParentProduct(story
                     .getBacklog());
-            tmpList.addAll(this.retrieveProductRootStories(product.getId(), null));
+            tmpList.addAll(this.retrieveProductRootStories(product.getId(),
+                    null));
         }
         if (tmpList.contains(story)) {
             tmpList.remove(story);
         }
         return tmpList;
     }
-    
+
     private void updateBacklogRanks(Story story) {
         if (story != null) {
             storyBusiness.updateStoryRanks(story);
@@ -144,7 +148,8 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     @Transactional(readOnly = true)
     public List<Story> retrieveProductRootStories(int productId,
             StoryFilters storyFilters) {
-        List<Story> stories = storyHierarchyDAO.retrieveProductRootStories(productId);
+        List<Story> stories = storyHierarchyDAO
+                .retrieveProductRootStories(productId);
         if (storyFilters != null) {
             return storyFilterBusiness.filterStories(stories, storyFilters);
         } else {
@@ -155,12 +160,27 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     @Transactional(readOnly = true)
     public List<Story> retrieveProjectRootStories(int projectId,
             StoryFilters storyFilters) {
-        List<Story> stories = storyHierarchyDAO.retrieveProjectRootStories(projectId);
+        List<Story> stories = storyHierarchyDAO
+                .retrieveProjectRootStories(projectId);
         if (storyFilters != null) {
-            return storyFilterBusiness.filterStories(stories, storyFilters);
-        } else {
-            return stories;
+            stories = storyFilterBusiness.filterStories(stories, storyFilters);
         }
+        stories = replaceStoryNodesWithRoots(stories);
+        return stories;
+    }
+
+    public List<Story> replaceStoryNodesWithRoots(List<Story> stories) {
+        List<Story> results = new ArrayList<Story>(stories.size());
+        for (Story story : stories) {
+            Story result = story;
+            while (result.getParent() != null) {
+                StoryTO to = new StoryTO(result.getParent());
+                to.setChildren(Arrays.asList(result));
+                result = to;
+            }
+            results.add(result);
+        }
+        return results;
     }
 
 }

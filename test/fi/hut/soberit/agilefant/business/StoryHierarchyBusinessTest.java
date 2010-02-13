@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -97,7 +98,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         expect(storyHierarchyDAO.retrieveProjectRootStories(projectId)).andReturn(
                 stories);
         replayAll();
-        assertSame(stories, storyHierarchyBusiness
+        assertEquals(stories, storyHierarchyBusiness
                 .retrieveProjectRootStories(projectId, null));
         verifyAll();
     }
@@ -125,7 +126,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
                 stories);
         expect(storyFilterBusiness.filterStories(stories, storyFilters)).andReturn(stories);
         replayAll();
-        assertSame(stories, storyHierarchyBusiness
+        assertEquals(stories, storyHierarchyBusiness
                 .retrieveProjectRootStories(projectId, storyFilters));
         verifyAll();
     }
@@ -546,4 +547,37 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         assertEquals(4, story3.getTreeRank());
 
     }
+    
+    @Test
+    @DirtiesContext
+    public void testReplaceStoryNodesWithRoots() {
+        List<Story> stories = new ArrayList<Story>();
+        StoryTO storyTO1 = new StoryTO(story);
+        StoryTO storyTO2 = new StoryTO(story2);
+        StoryTO storyTO3 = new StoryTO(story3);
+        StoryTO storyTO4 = new StoryTO(story4);
+        storyTO1.setParent(storyTO3);
+        storyTO3.setParent(storyTO4);
+        stories.add(storyTO1);
+        stories.add(storyTO2);
+        stories.add(storyTO3);
+        stories.add(storyTO4);
+        List<Story> results = storyHierarchyBusiness.replaceStoryNodesWithRoots(stories);
+        
+        assertEquals(results.size(), stories.size());
+        assertEquals(results.get(0).getId(), storyTO4.getId());
+        assertEquals(results.get(1).getId(), storyTO2.getId());
+        assertEquals(results.get(2).getId(), storyTO4.getId());
+        assertEquals(results.get(3).getId(), storyTO4.getId());     
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testReplaceStoryNodesWithRoots_emptyList() {
+        List<Story> stories = new ArrayList<Story>();
+        List<Story> results = storyHierarchyBusiness.replaceStoryNodesWithRoots(stories);
+        
+        assertTrue(results.isEmpty());
+    }
+    
 }

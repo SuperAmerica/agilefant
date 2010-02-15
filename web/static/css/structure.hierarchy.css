@@ -94,6 +94,10 @@ div.hierarchyContainer {
   margin: 0.5em;
 }
 
+.story-details-bubble .infotable {
+  width: 100%;  
+}
+
 .story-details-bubble th, .story-details-bubble td {
   /*border: 1px solid #ccc;*/
   background: transparent;  

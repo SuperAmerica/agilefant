@@ -52,7 +52,7 @@ StoryTreeController.prototype.initHeader = function() {
   this.storyFiltersView.getElement().appendTo(this.headerElement);
 };
 
-StoryTreeController.prototype._treeParams = function() {
+StoryTreeController.prototype._treeParams = function(node, tree_obj) {
   return this.treeParams;
 };
 
@@ -99,7 +99,7 @@ StoryTreeController.prototype.initTree = function() {
       type: "html",
       opts: {
         method: "post",
-        url: urlInfo[this.type].url + "?" + urlInfo[this.type].idName + "=" + this.id
+        url: urlInfo[this.type].url
       }
     },
     ui: {
@@ -111,7 +111,7 @@ StoryTreeController.prototype.initTree = function() {
         onload: function() { me._treeLoaded(); },
         onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
         beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); },
-        beforedata : function() { return me._treeParams(); },
+        beforedata : function(node, tree) { return me._treeParams(node, tree); },
         onselect: function(node) { return me.openNodeDetails(node);}
     },
     types: {

@@ -11,7 +11,7 @@ var StoryInfoBubble = function StoryInfoBubble(id, treeController, storyElement,
   this.treeController = treeController;
   this.storyElement = storyElement;
   this.parentElement = $('<div/>').addClass('story-details-bubble');
-  this.element = $('<div/>').addClass('collapsed-bubble').appendTo(this.parentElement);
+  this.element = $('<div style="clear: both;"/>').addClass('collapsed-bubble').appendTo(this.parentElement);
   this.model = null;
   this.options = {
     closeCallback: null,
@@ -60,8 +60,8 @@ StoryInfoBubble.prototype.populateContent = function() {
   this.storyInfoConfig = this._createConfig();
   
   // Add the content
-  $('<h3>Story info</h3>').appendTo(this.element);
-  this.storyInfoElement = $('<div/>').appendTo(this.element);
+//  $('<h3>Story info</h3>').appendTo(this.element);
+  this.storyInfoElement = $('<div style="clear: both;"/>').appendTo(this.element);
   
   $('<div style="width: 100%; text-align:center;"><span><img src="static/img/pleasewait.gif" /></span></div>').appendTo(this.storyInfoElement);
   
@@ -80,7 +80,13 @@ StoryInfoBubble.prototype.populateContent = function() {
  */
 StoryInfoBubble.prototype.addLinks = function() {
   var me = this;
-  var links = $('<div />').addClass('details-links').appendTo(this.element);
+  var header = $('<div style="height: 1.5em;"/>').appendTo(this.element);
+  $('<h3 style="float: left; width:80%;">Story info</h3>').appendTo(header);
+  $('<a style="font-size: 120%; text-decoration: none; font-weight: bold; float: right;" title="Close bubble">X</a>').click(function() {
+    me.destroy();
+  }).appendTo(header);
+  
+  var links = $('<div style="height: 1.5em;" />').addClass('details-links').appendTo(this.element);
   
   $('<a>add child</a>').click(function() {
     me.destroy();
@@ -118,6 +124,8 @@ StoryInfoBubble.prototype.addLinks = function() {
     lessLink.hide();
     moreLink.show();
   }).hide().appendTo(links); 
+  
+
 };
 
 StoryInfoBubble.prototype._expand = function() {
@@ -132,7 +140,6 @@ StoryInfoBubble.prototype._collapse = function() {
  * 
  * Will bind:
  *  - custom event destroyBubble
- *  - mouse leave event
  *  
  */
 StoryInfoBubble.prototype.bindEvents = function() {
@@ -144,9 +151,9 @@ StoryInfoBubble.prototype.bindEvents = function() {
     return false;
   });
   
-  this.element.mouseleave(function() {
-    me.destroy();
-  });
+//  this.element.mouseleave(function() {
+//    me.destroy();
+//  });
 };
 
 /**

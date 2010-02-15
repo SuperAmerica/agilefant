@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 

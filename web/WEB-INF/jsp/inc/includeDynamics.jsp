@@ -73,7 +73,6 @@
 <script type="text/javascript" src="static/js/dynamics/controller/StorySplitDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TaskSplitDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/UserController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller/StoryInfoDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/StoryInfoBubble.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/UserListController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/UserRowController.js?<ww:text name="struts.agilefantReleaseId" />"></script>

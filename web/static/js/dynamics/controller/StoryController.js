@@ -204,9 +204,6 @@ StoryController.prototype.hideTasks = function() {
   this.toggleView.collapse();
 };
 
-StoryController.prototype.openDetails = function() {
-  var details = new StoryInfoDialog(this.model);
-};
 /**
  * 
  */

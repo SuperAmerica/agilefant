@@ -35,5 +35,7 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
 
     Project rankOverProject(int projectId, int rankOverId);
     
-    void deleteDeep(int id);
+    void delete(int id);
+    
+    void delete(Project project);
 }

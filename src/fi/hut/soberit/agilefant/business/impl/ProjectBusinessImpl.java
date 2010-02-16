@@ -293,16 +293,20 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         
     }
     
-    public void deleteDeep(int id) {
-
-        Project project = retrieve(id);
+    @Override
+    public void delete(int id) {
+        delete(retrieve(id));
+    }
+    
+    @Override
+    public void delete(Project project) {
         if (project == null)
             return;
         Set<Backlog> iterations = new HashSet<Backlog>(project.getChildren());
         
         if (iterations != null) {
             for (Backlog item : iterations) {
-                iterationBusiness.deleteDeep(item.getId());
+                iterationBusiness.delete(item.getId());
             }
         }
         
@@ -337,7 +341,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
             historyEntryBusiness.delete(item.getId());
         }
         
-        delete(project);
+        super.delete(project);
 
     }
 

@@ -390,7 +390,7 @@ public class ProjectBusinessTest {
         projectDAO.remove(project);
         
         replayAll();
-        projectBusiness.deleteDeep(project.getId());
+        projectBusiness.delete(project.getId());
         verifyAll();
     }
 

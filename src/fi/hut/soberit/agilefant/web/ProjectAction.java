@@ -97,7 +97,7 @@ public class ProjectAction implements CRUDAction, Prefetching {
     public String delete() {
         if(confirmationString.equalsIgnoreCase("yes")) {
             productId = projectBusiness.retrieve(projectId).getParent().getId();
-            projectBusiness.deleteDeep(projectId);
+            projectBusiness.delete(projectId);
             return Action.SUCCESS;
         } else {
             return Action.ERROR;

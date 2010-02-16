@@ -35,7 +35,6 @@ import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
@@ -97,12 +96,20 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     public void delete(int id) {
         delete(retrieve(id));
     }
+    
+    
+    public void deleteAndUpdateHistory(int id) {
+        Iteration iteration = retrieve(id);
+        Backlog project = iteration.getParent();
+        delete(iteration);
+        backlogHistoryEntryBusiness.updateHistory(project.getId());      
+    }
 
-    public void deleteDeep(int id) {
-            Iteration iteration = retrieve(id);
+    @Override
+    public void delete(Iteration iteration) {
             Set<Task> tasks = new HashSet<Task>(iteration.getTasks());
             for (Task item : tasks) {
-                taskBusiness.deleteAndUpdateHistory(item.getId(), HourEntryHandlingChoice.DELETE);
+                taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
             }
             
             Set<Story> stories = new HashSet<Story>(iteration.getStories());
@@ -118,23 +125,17 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
                 assignmentBusiness.delete(item.getId());
             }
             
-            Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>(iteration.getHourEntries());
+            hourEntryBusiness.deleteAll(iteration.getHourEntries());
             
-            hourEntryBusiness.deleteAll(hourEntries);
+            iteration.getHourEntries().clear();
             
             Set<IterationHistoryEntry> historyEntries = new HashSet<IterationHistoryEntry>(iteration.getHistoryEntries());
             for (IterationHistoryEntry item : historyEntries) {
                 iterationHistoryEntryBusiness.delete(item.getId());
             }
-            delete(iteration);
+            super.delete(iteration);
     }
     
-    @Override
-    public void delete(Iteration iteration) {
-        Backlog project = iteration.getParent();
-        super.delete(iteration);
-        backlogHistoryEntryBusiness.updateHistory(project.getId());
-    }
 
     @Transactional(readOnly = true)
     public IterationTO getIterationContents(int iterationId) {

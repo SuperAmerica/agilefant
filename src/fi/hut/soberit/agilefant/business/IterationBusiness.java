@@ -38,5 +38,9 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     
     public Integer calculateVariance(Iteration iter);
     
-    void deleteDeep(int id);
+    void delete(int id);
+    
+    void delete(Iteration iteration);
+    
+    void deleteAndUpdateHistory(int id);
 }

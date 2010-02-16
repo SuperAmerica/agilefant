@@ -123,7 +123,7 @@ public class ProjectActionTest {
         proj.setParent(parent);
         
         expect(projectBusiness.retrieve(1)).andReturn(proj);
-        projectBusiness.deleteDeep(1);
+        projectBusiness.delete(1);
         replayAll();
         projectAction.setConfirmationString("yes");
         assertEquals(Action.SUCCESS, projectAction.delete());
@@ -145,7 +145,7 @@ public class ProjectActionTest {
     @Test(expected = ObjectNotFoundException.class)
     public void testDelete_noSuchIteration() {
         projectAction.setProjectId(-1);
-        projectBusiness.deleteDeep(-1);
+        projectBusiness.delete(-1);
         expect(projectBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         projectAction.setConfirmationString("yes");
@@ -161,7 +161,7 @@ public class ProjectActionTest {
         prod.setId(123);
         proj.setParent(prod);
         expect(projectBusiness.retrieve(1)).andReturn(proj);
-        projectBusiness.deleteDeep(1);
+        projectBusiness.delete(1);
         expectLastCall().andThrow(new ConstraintViolationException(null, null, null));
         expect(projectBusiness.retrieve(1)).andReturn(new Project());
         replayAll();

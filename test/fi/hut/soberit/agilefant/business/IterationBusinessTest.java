@@ -624,14 +624,29 @@ public class IterationBusinessTest {
         storyBusiness.delete(story, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
         iterationHistoryEntryBusiness.delete(historyEntry.getId());
         assignmentBusiness.delete(assignment.getId());
-        taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.DELETE);
+        taskBusiness.delete(task.getId(), HourEntryHandlingChoice.DELETE);
         hourEntryBusiness.deleteAll(iter.getHourEntries());
         
         iterationDAO.remove(iter);
-        backlogHistoryEntryBusiness.updateHistory(iter.getParent().getId());
         
         replayAll();
-        iterationBusiness.deleteDeep(iter.getId());
+        iterationBusiness.delete(iter.getId());
+        verifyAll();
+    }
+    
+    @Test
+    public void testdeleteAndUpdateHistory() {
+        Iteration iteration = new Iteration();
+        iteration.setId(111);
+        Project project = new Project();
+        iteration.setParent(project);
+        project.setId(10);
+        expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
+        hourEntryBusiness.deleteAll(iteration.getHourEntries());
+        iterationDAO.remove(iteration);
+        backlogHistoryEntryBusiness.updateHistory(project.getId());
+        replayAll();
+        iterationBusiness.deleteAndUpdateHistory(111);
         verifyAll();
     }
 }

@@ -184,6 +184,16 @@
         <param name="target">product</param>
       </result>
     </action>
+    
+    <action name="deleteProduct" method="delete" class="productAction">
+	  <result name="success" type="httpheader">
+	    <param name="status">200</param>
+	  </result>
+	</action>
+	
+	<action name="deleteProductForm">
+      <result type="dispatcher">/WEB-INF/jsp/forms/deleteProductForm.jsp</result>
+    </action>
     <!-- /Product actions -->
     
 
@@ -219,11 +229,11 @@
       </result>
     </action>
 
-		<action name="deleteProject" method="delete" class="projectAction">
-			<result name="success" type="httpheader">
-				<param name="status">200</param>
-			</result>
-		</action>
+	<action name="deleteProject" method="delete" class="projectAction">
+	  <result name="success" type="httpheader">
+	    <param name="status">200</param>
+	  </result>
+	</action>
     
    <action name="storeNewProject" method="store" class="projectAction">    
       <result name="success" type="json">
@@ -251,13 +261,7 @@
     <action name="deleteProjectForm">
     	<result type="dispatcher">/WEB-INF/jsp/forms/deleteProjectForm.jsp</result>
     </action>
-    
-    <action name="deleteProject" method="delete" class="projectAction">
-			<result name="success" type="httpheader">
-				<param name="status">200</param>
-			</result>
-		</action>
-    
+ 
     <!-- /Project actions -->
     
 

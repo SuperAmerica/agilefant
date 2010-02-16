@@ -107,7 +107,30 @@ ProductController.prototype.initializeProductDetailsConfig = function() {
   this.productDetailConfig = config;
 };
 
-
+ProductController.prototype.removeProduct = function() {
+  var me = this;
+  var dialog = new LazyLoadedFormDialog();
+  dialog.init({
+    title: "Delete product",
+    url: "ajax/deleteProductForm.action",
+    disableClose: true,
+    data: {
+      ProductId: me.model.getId()
+    },
+    okCallback: function(extraData) {
+      var confirmation = extraData.confirmationString;
+      if (confirmation && confirmation.toLowerCase() == 'yes') {
+        var confirmation = extraData.confirmationString;
+        if (confirmation && confirmation.toLowerCase() == 'yes') {
+          window.location.href = "deleteProduct.action?confirmationString=yes&productId=" + me.model.getId();
+        }
+      }
+    },
+    closeCallback: function() {
+      dialog.close();
+    }
+  });
+};
 
 /**
  * Initialize project list

@@ -515,7 +515,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             HourEntryHandlingChoice taskHourEntryHandlingChoice) {
       
         for (Story child : story.getChildren()) {
-            child.setParent(null);
+            if(child != null ) {
+                child.setParent(null);
+            }
         }
         story.getChildren().clear();
 

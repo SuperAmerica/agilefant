@@ -9,5 +9,9 @@ public interface ProductBusiness extends GenericBusiness<Product> {
     public Collection<Product> retrieveAllOrderByName();
     
     public Product store(int productId, Product productData);
+    
+    void delete(int id);
+    
+    void delete(Product product);
 
 }

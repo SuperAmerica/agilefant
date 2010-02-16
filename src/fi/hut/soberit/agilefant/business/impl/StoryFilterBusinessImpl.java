@@ -20,6 +20,9 @@ public class StoryFilterBusinessImpl implements StoryFilterBusiness {
             StoryFilters storyFilters) {
         List<Story> filteredStories = new ArrayList<Story>();
         for (Story story : stories) {
+            if (story == null) {
+                continue;
+            }
             List<Story> filteredChildren = filterStories(story.getChildren(),
                     storyFilters);
             if (!filteredChildren.isEmpty() || filterStory(story, storyFilters)) {

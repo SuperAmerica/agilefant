@@ -223,6 +223,14 @@ input.inputHighlight {
 }
 
 /**
+ * jQuery autosuggest
+ */
+ 
+input.as-input-starttext {
+  color: #999;
+}
+
+/**
  * FOOTER STYLES
  */
 #footerText a:link, #footerText a:visited, #footerText a:active {

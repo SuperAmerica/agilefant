@@ -22,9 +22,9 @@ StoryFiltersView.prototype.initialize = function() {
   this.element = $('<div style="border: 1px solid #999; -moz-border-radius: 5px; -webkit-border-radius: 5px"></div>');
   this.filters = $('<form><div style="margin:4px;"><strong>Filtering</strong></div></form>');
   var nameFieldDiv = $('<div style="margin: 0.5em 10px 0;"></div>');
-  this.nameField = $('<input type="text" name="filterByNameText" title="by name" />').appendTo(nameFieldDiv);
+  this.nameField = $('<input type="text" name="filterByNameText" title="by name" style="padding: 4px" />').appendTo(nameFieldDiv);
   this.labelAutosuggest = new AutoSuggest("ajax/lookupLabels.action", {
-    startText: "By label",
+    startText: "by label",
     queryParam: "labelName",
     searchObj: "name",
     selectedItem: "displayName",

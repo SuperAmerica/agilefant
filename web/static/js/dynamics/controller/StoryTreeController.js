@@ -18,7 +18,9 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
     refreshCallback: null,
     disableRootSort: false
   };
-  this.treeParams = {};
+  this.treeParams = {
+      statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"]
+  };
   if (this.type == 'project') {
     this.treeParams.projectId = this.id;
   } else if (this.type == 'product') {

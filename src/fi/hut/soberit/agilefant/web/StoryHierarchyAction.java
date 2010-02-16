@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class StoryHierarchyAction extends ActionSupport {
     
     private String name;
     private List<Story> stories;
-    private Set<StoryState> statesToKeep = StoryState.valueSet;
+    private Set<StoryState> statesToKeep = new HashSet<StoryState>();
     private Set<String> labelNames = Collections.emptySet();
     private Integer storyId;
     private Integer projectId;

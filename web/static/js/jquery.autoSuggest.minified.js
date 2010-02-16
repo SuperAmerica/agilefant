@@ -54,6 +54,7 @@
 				opts.start.call(this);
 				var input = $(this);
 				input.attr("autocomplete","off").addClass("as-input").val(opts.startText);
+				input.addClass("as-input-starttext");
 				var input_focus = false;
 				
 				// Setup basic elements and render them to the DOM
@@ -86,6 +87,7 @@
 				input.focus(function(){			
 					if($(this).val() == opts.startText && values_input.val() == ""){
 						$(this).val("");
+						$(this).removeClass("as-input-starttext");
 					} else if(input_focus){
 						$("li.as-selection-item", selections_holder).removeClass("blur");
 						var value = $(this).val();
@@ -101,6 +103,7 @@
 				}).blur(function(){
 					if($(this).val() == "" && values_input.val() == ""){
 						$(this).val(opts.startText);
+						$(this).addClass("as-input-starttext");
 					} else if(input_focus){
 						$("li.as-selection-item", selections_holder).addClass("blur").removeClass("selected");
 						results_holder.hide();

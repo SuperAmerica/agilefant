@@ -69,6 +69,7 @@ AutoSuggest.prototype.initialize = function() {
   this.valuesElement = this.selectionsElement.find(".as-values");
   this.inputElement = this.selectionsElement.find(".as-input");
   this.originalElement = this.selectionsElement.find(".as-original");
+  
   var me = this;
   if (!this.options.allowOnlySuggested) {
     this.addKeydownHandler();

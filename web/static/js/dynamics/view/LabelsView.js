@@ -32,7 +32,7 @@ LabelsView.prototype.initialize = function() {
       var newData = [];
       for (var i = 0, len = data.length; i < len; i++) {
         var oneLabel = {
-            value: data[i].name,
+            value: data[i].displayName,
             name: data[i].name,
             displayName: data[i].displayName
         };

@@ -6,7 +6,7 @@
 		<p>Are you sure you want to delete this iteration and all of its contents?</p>
 		<p style="color: #ff0000">This operation can not be reversed!</p>
 		<div class="confirmation">
-		<input type="checkbox" name="confirmationString" value="yes" /> Yes delete the iteration and all of its contents.
+		<input type="checkbox" name="confirmationString" value="yes" /> Yes, delete the iteration and all of its contents.
 		</div>
 	 </div></div>'
 	</div>

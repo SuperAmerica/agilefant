@@ -476,8 +476,8 @@ Timeplot._Impl.prototype = {
             // Modified for Agilefant
             var elmtCopyright = SimileAjax.Graphics.createTranslucentImage("static/img/simile_copyright.png");
             elmtCopyright.className = "timeplot-copyright";
-            elmtCopyright.title = "SIMILE Timeplot - http://www.simile-widgets.organ/timeplot/";
-            SimileAjax.DOM.registerEvent(elmtCopyright, "click", function() { window.location = "http://www.simile-widgets.organ/timeplot/"; });
+            elmtCopyright.title = "SIMILE Timeplot - http://www.simile-widgets.org/timeplot/";
+            SimileAjax.DOM.registerEvent(elmtCopyright, "click", function() { window.location = "http://www.simile-widgets.org/timeplot/"; });
             containerDiv.appendChild(elmtCopyright);
             
             var timeplot = this;

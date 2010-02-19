@@ -481,8 +481,9 @@ Timeline._Impl.prototype._initialize = function() {
     
     /*
      *  inserting copyright and link to simile
+     *  Modified for Agilefant
      */
-    var elmtCopyright = SimileAjax.Graphics.createTranslucentImage(Timeline.urlPrefix + (this.isHorizontal() ? "images/copyright-vertical.png" : "images/copyright.png"));
+    var elmtCopyright = SimileAjax.Graphics.createTranslucentImage(this.isHorizontal() ? "static/img/simile_tl_copyright-vertical.png" : "static/img/simile_tl_copyright.png");
     elmtCopyright.className = "timeline-copyright";
     elmtCopyright.title = "Timeline copyright SIMILE - www.code.google.com/p/simile-widgets/";
     SimileAjax.DOM.registerEvent(elmtCopyright, "click", function() { window.location = "http://code.google.com/p/simile-widgets/"; });

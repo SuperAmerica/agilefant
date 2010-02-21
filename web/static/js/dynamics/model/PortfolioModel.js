@@ -13,6 +13,7 @@ var PortfolioModel = function PortfolioModel() {
   this.unrankedProjects = [];
   this.rankedProjects = [];
   this.classNameToRelation = {};
+  this.isReloading = false;
 };
 
 PortfolioModel.prototype = new CommonModel();
@@ -52,6 +53,8 @@ PortfolioModel.prototype._setData = function(newData) {
 };
 
 PortfolioModel.prototype.reload = function() {
+  if (this.isReloading) return;
+  this.isReloading = true;
   var me = this;
   jQuery.ajax({
     type: "POST",
@@ -61,6 +64,7 @@ PortfolioModel.prototype.reload = function() {
     success: function(data,status) {
       me.setData(data);
       me.callListeners(new DynamicsEvents.RelationUpdatedEvent(me));
+      me.isReloading = false;
     },
     error: function(xhr, status, error) {
       var msg = MessageDisplay.ErrorMessage("Error loading portfolio.", xhr);

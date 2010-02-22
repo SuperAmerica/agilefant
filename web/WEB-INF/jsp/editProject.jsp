@@ -99,7 +99,8 @@ $(document).ready(function() {
 <form onsubmit="return false;">
   <div class="details" id="stories"></div>
   <div class="details" id="storyTreeContainer">
-    <div id="storyTree">&nbsp;</div>
+    <div id="storyTree" class="storyTreeContainer">&nbsp;</div>
+    <div style="clear:both; width: 100%;">&nbsp;</div>
   </div>
   <div class="details" id="iterations">
     Display 

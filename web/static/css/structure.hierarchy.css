@@ -44,6 +44,44 @@ div.hierarchyContainer {
   padding: 0;
 }
 
+.tree {
+  float: left;
+  width: 20%; /* Hacked for the right hand box */  
+}
+
+.storytree-actions {
+  position: relative;
+  z-index: 500;
+  background: white;
+  margin-left: auto;
+  margin-right: 1em;
+  width: 35ex;
+  border: 1px solid #999;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px
+}
+
+.storytree-actions .headerbar {
+  margin: 0 0 5px;
+  background-image: url('../img/ui/ui-bg_gloss-wave_55_5c9ccc_500x100.png');
+  background-position: 50% 55%;
+  color: white;
+  padding: 2px 4px 2px 10px;
+  font-weight: bold;
+}
+
+.storytree-actions .collapse-handle {
+  cursor: pointer;
+}
+
+.storytree-actions .buttons {
+  margin: 10px;  
+}
+
+.storytree-actions .buttons button {
+  margin: 4px;  
+}
+
 
 /**
  * DETAILS BUBBLE

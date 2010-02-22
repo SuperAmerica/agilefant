@@ -371,15 +371,11 @@ li.dynamictable-captionaction {
 button.dynamics-button {
   min-height: 1.8em;
   min-width: 6em;
-  margin-left: 0.5em;
+  margin-right: 0.5em;
 }
-button.dynamics-button:focus {
+button.dynamics-button:focus, button.dynamics-button:hover {
   background: #eed;
 }
-button.dynamics-button:hover {
-  background: #eed;
-}
-
 
 .actionColumn .edit:hover {
 	color: #e50;

@@ -12,8 +12,8 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   this.type = type;
   this.filters = [];
   this.parentElement = element;
-  this.headerElement = $('<div/>').appendTo(this.parentElement);
   this.element = $('<div/>').appendTo(this.parentElement);
+  this.actionsElement = $('<div/>').addClass('storytree-actions').appendTo(this.parentElement);
   this.options = {
     refreshCallback: null,
     disableRootSort: false
@@ -27,7 +27,7 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
     this.treeParams.productId = this.id;
   }
   jQuery.extend(this.options, options);
-  this.initHeader();
+  this.initActions();
 };
 StoryTreeController.prototype = new CommonController();
 StoryTreeController.createNodeUrls = {
@@ -72,10 +72,37 @@ StoryTreeController.prototype.refreshNode = function(element) {
   );
 };
 
-StoryTreeController.prototype.initHeader = function() {
+
+
+StoryTreeController.prototype.initActions = function() {
+  var me = this;
+  var actionHeader = $('<div/>').text('Actions').addClass('headerbar collapse-handle').appendTo(this.actionsElement);
+  
+  var element = $('<div />').appendTo(this.actionsElement);  
+  var actionList = $('<div />').addClass("buttons").appendTo(element);
+  
+  actionHeader.click(function() {
+    $(this).toggleClass("collapsed");
+    element.toggle("blind", {}, 500);
+  });
+  
+  $('<button style="width: 18ex;">Create a new story</button>')
+    .addClass("dynamics-button").appendTo(actionList);
+  
+  $('<br/>').appendTo(actionList);
+  
+  $('<button style="width: 10ex;">Expand all</button>').attr("disabled", true)
+    .addClass("dynamics-button").appendTo(actionList);
+  
+  $('<button style="width: 12ex;">Collapse all</button>').attr("disabled", true)
+    .addClass("dynamics-button").appendTo(actionList);
+  
   this.storyFiltersView = new StoryFiltersView({}, this, null, null);
-  this.storyFiltersView.getElement().appendTo(this.headerElement);
+  this.storyFiltersView.getElement().appendTo(element);
 };
+
+
+
 
 StoryTreeController.prototype._treeParams = function(node, tree_obj) {
   return this.treeParams;

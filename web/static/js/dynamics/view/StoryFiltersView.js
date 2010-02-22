@@ -19,10 +19,10 @@ StoryFiltersView.prototype = new ViewPart();
 
 StoryFiltersView.prototype.initialize = function() {
   var me = this;
-  this.element = $('<div style="border: 1px solid #999; -moz-border-radius: 5px; -webkit-border-radius: 5px"></div>');
-  this.filters = $('<form><div style="margin:4px;"><strong>Filtering</strong></div></form>');
+  this.element = $('<div></div>');
+  this.filters = $('<form><div class="headerbar">Filters</div></form>');
   var nameFieldDiv = $('<div style="margin: 0.5em 10px 0;"></div>');
-  this.nameField = $('<input type="text" name="filterByNameText" title="by name" style="padding: 4px" />').appendTo(nameFieldDiv);
+  this.nameField = $('<input type="text" name="filterByNameText" title="by name" style="padding: 4px; width: 30ex;" />').appendTo(nameFieldDiv);
   this.labelAutosuggest = new AutoSuggest("ajax/lookupLabels.action", {
     startText: "by label",
     queryParam: "labelName",
@@ -46,19 +46,19 @@ StoryFiltersView.prototype.initialize = function() {
   }, this);
 
   this.filterButton = $('<button name="filterButton" class="dynamics-button">Filter</button>');
-  this.clearButton = $('<button name="clearButton" style="margin-left: 1em" class="dynamics-button">Clear</button>');
+  this.clearButton = $('<button name="clearButton" class="dynamics-button">Clear</button>');
   nameFieldDiv.appendTo(this.filters);
   this.labelAutosuggest.getElement().css('margin', '0.5em 10px 0').css('width', '300px');
   this.labelAutosuggest.getElement().appendTo(this.filters);
   
-  this.stateButtons = $('<div style="margin: 0.5em 10px 0; height: 1em; line-height: 1em"></div>').appendTo(this.filters);
+  this.stateButtons = $('<div style="margin: 0.8em 10px 0; height: 1em; line-height: 1em"></div>').appendTo(this.filters);
   for (var i = 0, len = this.allStoryStates.length; i < len; i++) {
     var state = this.allStoryStates[i];
     me.addStateButton(state);
   }
   
   
-  this.actionButtons = $('<div style="margin: 0.5em 10px"></div>').appendTo(this.filters);
+  this.actionButtons = $('<div style="margin: 0.8em 10px 0.5em"></div>').appendTo(this.filters);
 
   this.filterButton.appendTo(this.actionButtons);
   this.clearButton.appendTo(this.actionButtons);

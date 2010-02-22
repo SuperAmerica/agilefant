@@ -60,7 +60,6 @@ StoryInfoBubble.prototype.populateContent = function() {
   this.storyInfoConfig = this._createConfig();
   
   // Add the content
-//  $('<h3>Story info</h3>').appendTo(this.element);
   this.storyInfoElement = $('<div style="clear: both;"/>').appendTo(this.element);
   
   $('<div style="width: 100%; text-align:center;"><span><img src="static/img/pleasewait.gif" /></span></div>').appendTo(this.storyInfoElement);
@@ -70,6 +69,11 @@ StoryInfoBubble.prototype.populateContent = function() {
     me.storyInfoElement.html('');
     me.storyInfoView = new DynamicVerticalTable(me, me.model, me.storyInfoConfig, me.storyInfoElement);
   });
+  
+  $('<a>more...</a>').click(function() {
+    me._expand();
+    $(this).hide();
+  }).appendTo(this.element);
   
   setTimeout(function() { me._collapse(); }, 100);
 };
@@ -81,12 +85,12 @@ StoryInfoBubble.prototype.populateContent = function() {
 StoryInfoBubble.prototype.addLinks = function() {
   var me = this;
   var header = $('<div style="height: 1.5em;"/>').appendTo(this.element);
-  $('<h3 style="float: left; width:80%;">Story info</h3>').appendTo(header);
-  $('<a style="font-size: 120%; text-decoration: none; font-weight: bold; float: right;" title="Close bubble">X</a>').click(function() {
+  $('<h3 style="float: left; width:30%;">Story info</h3>').appendTo(header);
+  $('<a style="" title="Close bubble">X</a>').addClass('close-button').click(function() {
     me.destroy();
   }).appendTo(header);
   
-  var links = $('<div style="height: 1.5em;" />').addClass('details-links').appendTo(this.element);
+  var links = $('<div style="height: 1.5em;" />').addClass('details-links').appendTo(header);
   
   $('<a>add child</a>').click(function() {
     me.destroy();
@@ -110,22 +114,6 @@ StoryInfoBubble.prototype.addLinks = function() {
       controller.removeStory();
     });
   }).appendTo(links);
-  
-  var moreLink, lessLink;
-  
-  moreLink = $('<a>more...</a>').click(function() {
-    me._expand();
-    lessLink.show();
-    moreLink.hide();
-  }).appendTo(links);
-  
-  lessLink = $('<a>less...</a>').click(function() {
-    me._collapse();
-    lessLink.hide();
-    moreLink.show();
-  }).hide().appendTo(links); 
-  
-
 };
 
 StoryInfoBubble.prototype._expand = function() {
@@ -150,10 +138,6 @@ StoryInfoBubble.prototype.bindEvents = function() {
     event.stopPropagation();
     return false;
   });
-  
-//  this.element.mouseleave(function() {
-//    me.destroy();
-//  });
 };
 
 /**
@@ -187,8 +171,8 @@ StoryInfoBubble.prototype.removeOthersIfNeeded = function() {
  */
 StoryInfoBubble.prototype._createConfig = function() {
   var config = new DynamicTableConfiguration( {
-    leftWidth: '40%',
-    rightWidth: '59%',
+    leftWidth: '25%',
+    rightWidth: '74%',
     closeRowCallback: null,
     validators: [ ]
   });

@@ -78,8 +78,8 @@ div.hierarchyContainer {
 .story-details-bubble div.details-links {
   float: right;
   text-align: right;
-  clear: both;
   color: #1E5EEE;
+  margin-right: 1em;
 }
 
 .story-details-bubble a {
@@ -87,4 +87,19 @@ div.hierarchyContainer {
   text-decoration: underline;
   cursor: pointer;
   margin: 0.1em 0.3em;
+  color: #1E5EEE;
+}
+.story-details-bubble a:hover {
+  color: #e50;
+}
+
+.story-details-bubble a.close-button {
+  font-size: 120%;
+  text-decoration: none;
+  font-weight: bold;
+  float: right;
+  color: #666;
+}
+.story-details-bubble a.close-button:hover {
+  color: black;  
 }

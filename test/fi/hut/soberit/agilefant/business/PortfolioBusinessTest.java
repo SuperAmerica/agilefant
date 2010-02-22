@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
@@ -20,12 +21,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fi.hut.soberit.agilefant.business.impl.PortfolioBusinessImpl;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
+import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.SpringAssertions;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.PortfolioTO;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -59,15 +63,28 @@ public class PortfolioBusinessTest {
     // + retrieve ranked projects from ProjectDAO
     // + retrieve unranked projects from ProjectDAO
     // + return a non-null PortfolioTO that contains
-    // a list of ranked projects and a list of unranked projects
+    // a list of ranked projects as ProjectTOs and a list of unranked projects
+    // as ProjectTOs
     @Test
     @DirtiesContext
     public void testGetPortfolioData() {
         LocalDate today = new LocalDate();
         Period timeSpan = Months.months(6).toPeriod();
         LocalDate endDate = today.plus(timeSpan);
+
+        Project rankedProject = new Project();
+        User user = new User();
+        Assignment assignment = new Assignment();
+        assignment.setUser(user);
+
         List<Project> rankedProjects = new ArrayList<Project>();
+        rankedProject.getAssignments().add(assignment);
+        rankedProjects.add(rankedProject);
+
         List<Project> unrankedProjects = new ArrayList<Project>();
+        Project unrankedProject = new Project();
+        unrankedProject.getAssignments().add(assignment);
+        unrankedProjects.add(unrankedProject);
 
         expect(settingBusiness.getPortfolioTimeSpan()).andReturn(timeSpan);
         expect(projectDAO.getRankedProjects(today, endDate)).andReturn(
@@ -78,8 +95,19 @@ public class PortfolioBusinessTest {
 
         PortfolioTO result = portfolioBusiness.getPortfolioData();
         assertNotNull(result);
-        assertSame(rankedProjects, result.getRankedProjects());
-        assertSame(unrankedProjects, result.getUnrankedProjects());
+        assertEquals(1, result.getRankedProjects().size());
+        ProjectTO rankedTo = (ProjectTO) result.getRankedProjects().get(0);
+
+        assertEquals(1, rankedTo.getAssignees().size());
+        assertSame(user, rankedTo.getAssignees().iterator().next());
+
+        assertEquals(1, result.getUnrankedProjects().size());
+        ProjectTO unrankedTo = (ProjectTO) result.getUnrankedProjects()
+                .iterator().next();
+
+        assertEquals(1, unrankedTo.getAssignees().size());
+        assertSame(user, unrankedTo.getAssignees().iterator().next());
+
         verifyAll();
     }
 

@@ -710,7 +710,7 @@
 		<action name="projectPortfolioData" class="projectPortfolioAction" method="portfolioData">
     	<result name="success" type="json">
 	      <param name="target">portfolioData</param>
-	      <param name="patterns">-class,+rankedProjects.assignments.user,+unrankedProjects.assignments.user</param>
+	      <param name="patterns">-class,+rankedProjects.assignees,+unrankedProjects.assignees</param>
     	</result>
 		</action>
 		<!-- /Dev portfolio -->

@@ -49,6 +49,29 @@ StoryTreeController.prototype.refresh = function() {
   this.tree.refresh();
 };
 
+/**
+ * Updates a single node of the tree.
+ * @attr {jsTree node} element the <li>-element of the node to be refreshed. 
+ */
+StoryTreeController.prototype.refreshNode = function(element) {
+  var node = $(element);
+  jQuery.get(
+      "ajax/treeRetrieveStory.action",
+      {
+        "storyId": parseInt($(node).attr("storyId"))
+      },
+      function(data, textStatus, xhr) {
+        var elem = $(data);
+        var contents = elem.find("a:eq(0)");
+        var rel = elem.attr("rel");
+        
+        // Replace
+        node.attr("rel", rel);
+        node.find("a:eq(0)").replaceWith(contents);
+      }
+  );
+};
+
 StoryTreeController.prototype.initHeader = function() {
   this.storyFiltersView = new StoryFiltersView({}, this, null, null);
   this.storyFiltersView.getElement().appendTo(this.headerElement);

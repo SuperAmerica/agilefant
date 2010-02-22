@@ -14,9 +14,8 @@ var StoryInfoBubble = function StoryInfoBubble(id, treeController, storyElement,
   this.element = $('<div style="clear: both;"/>').appendTo(this.parentElement);
   this.model = null;
   this.options = {
-    closeCallback: null,
-    removeOthers: true,
-    collapsedOnOpen: true
+    closeCallback: function() { treeController.refreshNode(storyElement); },
+    removeOthers: true
   };
   jQuery.extend(this.options, options);  
   this.init();

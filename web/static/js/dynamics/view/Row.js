@@ -30,10 +30,10 @@ DynamicTableRow.prototype.initialize = function() {
     me.hasFocus = false;
   });
   
-  if (this.config) {
-    if (!this.config.visible) {
-      this.element.hide();
-    }
+  
+  // FIGURE A BETTER WAY
+  if (this.config && this.config.hasOwnProperty("visible") && !this.config.visible) {
+    this.element.hide();
   }
 };
 

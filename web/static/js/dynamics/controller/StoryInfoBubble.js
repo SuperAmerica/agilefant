@@ -11,7 +11,7 @@ var StoryInfoBubble = function StoryInfoBubble(id, treeController, storyElement,
   this.treeController = treeController;
   this.storyElement = storyElement;
   this.parentElement = $('<div/>').addClass('story-details-bubble');
-  this.element = $('<div style="clear: both;"/>').addClass('collapsed-bubble').appendTo(this.parentElement);
+  this.element = $('<div style="clear: both;"/>').appendTo(this.parentElement);
   this.model = null;
   this.options = {
     closeCallback: null,
@@ -74,8 +74,6 @@ StoryInfoBubble.prototype.populateContent = function() {
     me._expand();
     $(this).hide();
   }).appendTo(this.element);
-  
-  setTimeout(function() { me._collapse(); }, 100);
 };
 
 
@@ -117,10 +115,8 @@ StoryInfoBubble.prototype.addLinks = function() {
 };
 
 StoryInfoBubble.prototype._expand = function() {
-  this.element.find('.collapsible').parent().show();
-};
-StoryInfoBubble.prototype._collapse = function() {
-  this.element.find('.collapsible').parent().hide();
+  this.element.find('.dynamictable-row').show();
+  this.element.find('.dynamictable-cell').show();
 };
 
 /**
@@ -234,10 +230,9 @@ StoryInfoBubble.prototype._createConfig = function() {
   });
   config.addColumnConfiguration(5, {
     title : "Description",
-    cssClass: "collapsible",
     get : StoryModel.prototype.getDescription,
-    cssClass: "collapsible",
     editable : true,
+    visible: false,
     edit : {
       editor : "Wysiwyg",
       set : StoryModel.prototype.setDescription

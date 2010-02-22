@@ -693,7 +693,7 @@ DynamicVerticalTable.prototype.initialize = function() {
   });
   for ( var i = 0; i < columnConfigs.length; i++) {
     var columnConfig = columnConfigs[i];
-    var row = new DynamicTableRow(null);
+    var row = new DynamicTableRow({ visible: columnConfig.isVisible() });
     row.initWithoutEvents(this.getController(), this.getModel(), this);
     row.getElement().appendTo(this.element);
     columnConfig.options.width = this.config.options.rightWidth;

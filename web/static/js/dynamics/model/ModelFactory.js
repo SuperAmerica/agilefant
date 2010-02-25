@@ -354,8 +354,8 @@ ModelFactory.createObject = function(clazz) {
  * If object with the given id already exists, will overwrite it.
  * Otherwise, creates a new one.
  * 
- * @param {ModelFactory.types} type the type of the object
  * @param {Object} data the object's data, including the id
+ * @param {Boolean} suppressEvents Suppress possible edit events.
  * 
  * @return {CommonModel} returns the object with the corresponding type
  * 
@@ -364,7 +364,7 @@ ModelFactory.createObject = function(clazz) {
  * @see ModelFactory.types
  * @see CommonModel
  */
-ModelFactory.updateObject = function(data) {
+ModelFactory.updateObject = function(data, suppressEvents) {
   if (!data    || typeof data !== "object" ||
       !data.id || typeof data.id !== "number" ||
       !data["class"]) {
@@ -377,7 +377,7 @@ ModelFactory.updateObject = function(data) {
     object.setId(data.id);
     instance._addObject(object);
   }
-  object.setData(data);
+  object.setData(data, suppressEvents);
   return object;
 };
 

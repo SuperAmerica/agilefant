@@ -27,34 +27,15 @@ div.hierarchyContainer {
 .hierarchyContainer ul li span {
   /*cursor: pointer;*/
 }
-
-.tree .tree-hideByFilter {
-  display: none !important;
-}
-
-.tree .tree-highlightByFilter {
-  background: #ffc !important;
-  border: 1px dashed #996;
-  -moz-border-radius: 2px;
-  -webkit-border-radius: 2px;
-}
-
-.tree span.nodeInfo {
-  margin: 0;
-  padding: 0;
-}
-
-.tree {
-  float: left;
-  width: 20%; /* Hacked for the right hand box */  
-}
-
-.storytree-actions {
+.storyTreeContainer {
   position: relative;
+}
+.storytree-actions {
+  position: absolute;
+  top: 1em;
+  right: 0;
   z-index: 500;
   background: white;
-  margin-left: auto;
-  margin-right: 1em;
   width: 35ex;
   border: 1px solid #999;
   -moz-border-radius: 5px;

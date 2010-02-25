@@ -60,11 +60,6 @@ $(document).ready(function() {
       closeMenu();
     });
   });
-/*
-  window.setInterval(function() {
-    storyTreeController.refresh();
-  }, 120000);
-*/
 });
 
 </script>
@@ -74,11 +69,11 @@ $(document).ready(function() {
   background: #f0f;
 }
 </style>
-
-<div class="ui-widget-content ui-corner-all structure-main-block dynamictable">
+<form onsubmit="return false;">
+<div class="ui-widget-content ui-corner-all structure-main-block dynamictable" id="storyTree">
   <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree</div>
-  <form onsubmit="return false;"><div id="storyTree" class="storyTreeContainer">&nbsp;</div></form>
 </div>
+</form>
 
 <form onsubmit="return false;"><div id="projects" class="structure-main-block">&nbsp;</div></form>
 

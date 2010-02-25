@@ -72,10 +72,10 @@ StoryModel.prototype._setData = function(newData) {
     this._updateRelations(ModelFactory.types.story, newData.children);
   }
   if(newData.parent) {
-    this.relations.parent = ModelFactory.updateObject(newData.parent);
+    this.relations.parent = ModelFactory.updateObject(newData.parent, true);
   }
   if(newData.backlog) {
-    this.setBacklog(ModelFactory.updateObject(newData.backlog));
+    this.setBacklog(ModelFactory.updateObject(newData.backlog, true));
   }
   if (newData.labels) {
     this._updateRelations(ModelFactory.types.label, newData.labels);

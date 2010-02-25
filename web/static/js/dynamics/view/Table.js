@@ -668,12 +668,13 @@ var DynamicVerticalTable = function(controller, model, config, parentView) {
   this.init(controller, model, parentView);
   this.config = config;
   this.rows = [];
-  this.initialize();
+  this.initialized = false;
   this.validationManager = new DynamicsValidationManager(this.element, this.config, this.getModel(), this.getController());
 };
 DynamicVerticalTable.prototype = new DynamicView();
 
 DynamicVerticalTable.prototype.initialize = function() {
+  this.initialized = true;
   this.container = $("<div />").appendTo(this.getParentElement()).addClass(
       DynamicTable.cssClasses.verticalTable);
   if (this.config.options.cssClass) {
@@ -716,6 +717,10 @@ DynamicVerticalTable.prototype._addCaption = function() {
 };
 
 DynamicVerticalTable.prototype.render = function() {
+  if(!this.initialized) {
+    this.initialize();
+    return;
+  }
   for ( var i = 0; i < this.rows.length; i++) {
     this.rows[i].render();
   }
@@ -748,4 +753,8 @@ DynamicVerticalTable.prototype.onDelete = function() {
 
 DynamicVerticalTable.prototype.getValidationManager = function() {
   return this.validationManager;
+};
+
+DynamicVerticalTable.prototype.renderAlways = function() {
+  return false;
 };

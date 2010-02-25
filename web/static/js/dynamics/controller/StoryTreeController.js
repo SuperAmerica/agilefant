@@ -12,8 +12,9 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   this.type = type;
   this.filters = [];
   this.parentElement = element;
-  this.element = $('<div/>').appendTo(this.parentElement);
-  this.actionsElement = $('<div/>').addClass('storytree-actions').appendTo(this.parentElement);
+  this.container = $('<div />').addClass("storyTreeContainer").appendTo(this.parentElement);
+  this.element = $('<div/>').appendTo(this.container);
+  this.actionsElement = $('<div/>').addClass('storytree-actions').appendTo(this.container);
   this.options = {
     refreshCallback: null,
     disableRootSort: false

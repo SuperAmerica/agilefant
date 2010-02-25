@@ -35,26 +35,19 @@ CommonModel.prototype.reload = function() {
  * <p>
  * Calls an abstract internal method, which should be overridden.
  */
-CommonModel.prototype.setData = function(newData) {
+CommonModel.prototype.setData = function(newData, suppressEvents) {
   if (!this.preventSetData) {
     if(this._isMetricsDataUpdated(newData)) {
       this.callListeners(new DynamicsEvents.MetricsEvent(this));
     }
     this._setData(newData);
-    if (this._copyFields(newData)) {
+    if (this._copyFields(newData) && !suppressEvents) {
       this.callListeners(new DynamicsEvents.EditEvent(this));
-      this._editFired = true;
     }
 // TODO: Disabled because of tons of ajax requests
 // Uncomment, when works
 // this.relationEvents();
   }
-};
-
-CommonModel.prototype.isEditEventFired = function() {
-  var fired = this._editFired;
-  this._editFired = false;
-  return fired;
 };
 
 /**
@@ -110,7 +103,6 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   // 1. New hash codes to list
   for (var i = 0; i < newData.length; i++) {
     var object = ModelFactory.updateObject(newData[i]);
-    this._editFired = this._editFired || object.isEditEventFired();
     newObjects.push(object);
     newHashes.push(object.getHashCode());
   }
@@ -145,7 +137,6 @@ CommonModel.prototype._updateRelations = function(type, newData) {
 CommonModel.prototype._updateSingleRelation = function(type, newData) {
   var old = this.relations[type];
   var newObj = ModelFactory.updateObject(newData);
-  this._editFired = this._editFired || newObj.isEditEventFired();
   
   if (old !== newObj) {
     // Remove old relation

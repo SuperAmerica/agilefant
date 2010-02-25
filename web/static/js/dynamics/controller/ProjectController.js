@@ -538,19 +538,20 @@ ProjectController.prototype.initializeStoryConfig = function() {
     fullWidth: true,
     visible: false,
     cssClass : 'projectstory-row',
-    get : StoryModel.prototype.getDescription,
+   // get : StoryModel.prototype.getDescription,
     editable : true,
     edit : {
       editor : "Wysiwyg",
       set : StoryModel.prototype.getDescription
     }
   });
-  config.addColumnConfiguration(10, {
+  config.addColumnConfiguration(StoryController.columnIndices.details, {
     fullWidth : true,
     visible : false,
-    subViewFactory : StoryController.prototype.storyDetailsFactory
+    subViewFactory : StoryController.prototype.storyDetailsFactory,
+    delayedRender: true
   });
-  config.addColumnConfiguration(11, {
+  config.addColumnConfiguration(StoryController.columnIndices.details + 1, {
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-data',

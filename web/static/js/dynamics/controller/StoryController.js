@@ -249,7 +249,8 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
   var options = {
     collapse: StoryController.prototype.hideDescriptionColumn,
     expand: StoryController.prototype.showDescriptionColumn,
-    expanded: false
+    expanded: false,
+    targetCells: [StoryController.columnIndices.details]
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;

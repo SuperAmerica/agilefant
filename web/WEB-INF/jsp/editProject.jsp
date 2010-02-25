@@ -76,15 +76,8 @@ $(document).ready(function() {
 
 <form onsubmit="return false;">
   <div class="details" id="stories"></div>
-  <div class="details" id="storyTreeContainer">
-    <div id="storyTree" class="storyTreeContainer">&nbsp;</div>
-    <div style="clear:both; width: 100%;">&nbsp;</div>
-  </div>
+  <div class="details" id="storyTreeContainer"></div>
   <div class="details" id="iterations">
-    Display 
-    <input id="showOngoingIterations" type="checkbox" checked="checked"/> Ongoing
-    <input id="showFutureIterations" type="checkbox"/> Future
-    <input id="showPastIterations" type="checkbox"/> Past Iterations
   		<div id="iterations">&nbsp;</div>
   </div>
 </form>

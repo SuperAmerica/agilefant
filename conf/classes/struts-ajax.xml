@@ -251,14 +251,14 @@
     <action name="projectLeafStories" class="storyListAction" method="projectLeafStories">
       <result name="success" type="json">
         <param name="target">stories</param>
-        <param name="patterns">+story.backlog.name, story.backlog.id, -story.backlog.*, -story.parent,-story.tasks,+story.labels</param>
+        <param name="patterns">+backlog.name, +backlog.class, +backlog.id, -backlog.*, +parent.id, +parent.name, +parent.class, -parent.*, -tasks, +labels.displayName, +labels.class, +labels.id, -labels.*</param>
       </result>
     </action>
     
     <action name="projectIterations" class="projectAction" method="iterationList">
       <result name="success" type="json">
-        <param name="target">project</param>
-        <param name="patterns"></param>
+        <param name="target">iterations</param>
+        <param name="patterns">-tasks, -stories, -assginees</param>
       </result>
     </action>    
     

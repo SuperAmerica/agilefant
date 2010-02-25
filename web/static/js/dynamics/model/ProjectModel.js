@@ -128,9 +128,9 @@ ProjectModel.prototype._saveData = function(id, changedData) {
   });
 };
 
-ProjectModel.prototype.reloadLeafStories = function(filters) {
+ProjectModel.prototype.reloadLeafStories = function(filters, callback) {
   var me = this;
-  var data = {projectId: this.id};
+  var data = {objectId: this.id};
   if(filters) {
     data.storyFilters = filters;
   }
@@ -138,22 +138,34 @@ ProjectModel.prototype.reloadLeafStories = function(filters) {
     url: "ajax/projectLeafStories.action",
     data: data,
     method: "post",
+    dataType: "json",
     success: function(data, type) {
-    
+      me.leafStories = [];
+      $.each(data, function(k,v) {
+        me.leafStories.push(ModelFactory.updateObject(v));
+      });
+  
+      if(callback) {
+        callback();
+      }
     }
   });
   
 };
 
-ProjectModel.prototype.reloadIterations = function() {
+ProjectModel.prototype.reloadIterations = function(filters, callback) {
   var me = this;
   var data = {projectId: this.id};
   jQuery.ajax({
     url: "ajax/projectIterations.action",
     data: data,
     method: "post",
+    dataType: "json",
     success: function(data, type) {
-    
+      me._updateRelations("iteration", data);
+      if(callback) {
+        callback();
+      }
     }
   });
 };

@@ -8,20 +8,11 @@
  */
 var ProjectController = function ProjectController(options) {
   this.id = options.id;
+  this.tabs = options.tabs;
   this.parentView = options.storyListElement;
   this.projectDetailsElement = options.projectDetailsElement;
-  this.assigmentListElement = options.assigmentListElement;
-  this.iterationListElement = options.iterationListElement;
-  this.hourEntryListElement = options.hourEntryListElement;
-  this.iterationSelect = {};
-  this.iterationSelect.ongoing = options.iterationSelectOngoing;
-  this.iterationSelect.future = options.iterationSelectFuture;
-  this.iterationSelect.past = options.iterationSelectPast;
-  this.iterationSelect.filters = {"FUTURE": false, "PAST": false, "ONGOING": true};
   this.init();
-  this.initIterationFilters();
   this.initializeProjectDetailsConfig();
-  this.initAssigneeConfiguration();
   this.initializeIterationListConfig();
   this.initializeStoryConfig();  
   this.paint();
@@ -131,6 +122,57 @@ ProjectController.columnConfigs = {
   }
 };
 
+ProjectController.prototype._paintLeafStories = function(element) {
+  var me = this;
+  if(!this.storyListView) {
+    this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
+        element);
+  }
+  this.model.reloadLeafStories(null, function() {
+    me.storyListView.render();
+  });
+};
+
+ProjectController.prototype._paintIterations = function(element) {
+  var me = this;
+  if(!this.iterationsView) {
+    this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
+        element);
+  }
+  this.model.reloadIterations(null, function() {
+    me.iterationsView.render();
+  });
+};
+
+ProjectController.prototype._paintStoryTree = function(element) {
+  if(!this.storyTreeController) {
+   this.storyTreeController =  new StoryTreeController(this.id, "project", element);
+  } 
+  this.storyTreeController.refresh();
+  
+};
+
+ProjectController.prototype.paint = function() {
+  var me = this;
+  var selectedTab = this.tabs.tabs("option","selected");
+  var tmpSel = (selectedTab === 2) ? 0 : 2;
+  this.tabs.tabs("select", tmpSel);
+  this.tabs.bind("tabsselect", function(event, ui) {
+    if(ui.index === 0) { //leaf stories
+      me._paintLeafStories(ui.panel);
+    } else if(ui.index === 1) { //Story tree
+      me._paintStoryTree(ui.panel);
+    } else if(ui.index === 2) { //iteration list
+      me._paintIterations(ui.panel);
+    }
+  });
+  ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
+      this.id, function(model) {
+        me.model = model;
+        me.paintProjectDetails();
+        me.tabs.tabs("select", selectedTab);
+      });
+};
 
 ProjectController.prototype.removeProject = function() {
   var me = this;
@@ -161,84 +203,22 @@ ProjectController.prototype.openLogEffort = function() {
   var widget = new SpentEffortWidget(this.model);
 };
 
-
-
-
-
-/**
- * Creates a new story controller.
- */
-ProjectController.prototype.storyControllerFactory = function(view, model) {
-  var storyController = new StoryController(model, view, this);
-  this.addChildController("story", storyController);
-  return storyController;
-};
-
-ProjectController.prototype.initIterationFilters = function() {
-  var me = this;
-  var updateFilters = function() {
-    me.iterationSelect.filters.PAST = me.iterationSelect.past.is(":checked");
-    me.iterationSelect.filters.ONGOING = me.iterationSelect.ongoing.is(":checked");
-    me.iterationSelect.filters.FUTURE = me.iterationSelect.future.is(":checked");
-    me.iterationsView.render();
-  };
-  this.iterationSelect.future.change(updateFilters);
-  this.iterationSelect.ongoing.change(updateFilters);
-  this.iterationSelect.past.change(updateFilters);
-};
-
-ProjectController.prototype.filterIterations = function(iterationList) {
-  var ret = [];
-  for(var i = 0; i < iterationList.length; i++) {
-    if(iterationList[i].isScheduledAt(this.iterationSelect.filters)) {
-      ret.push(iterationList[i]);
-    }
-  }
-  return ret;
-};
-ProjectController.prototype.iterationRowControllerFactory = function(view, model) {
-  var iterationController = new IterationRowController(model, view, this);
-  this.addChildController("iteration", iterationController);
-  return iterationController;
-};
-
-ProjectController.prototype.paintStoryList = function() {
-  this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
-      this.parentView);
-  this.addDoneStoriesFilter();
-  this.storyListView.render();
-};
-
 ProjectController.prototype.paintProjectDetails = function() {
   this.projectDetailsView = new DynamicVerticalTable(this, this.model, this.projectDetailConfig,
       this.projectDetailsElement);
   this.projectDetailsView.render();
 };
 
-ProjectController.prototype.paintIterationList = function() {
-  var me = this;
-  this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
-      this.iterationListElement);
-  this.iterationsView.setFilter(function(list) {
-    return me.filterIterations(list);
-  });
-  this.iterationsView.render();
+ProjectController.prototype.iterationRowControllerFactory = function(view, model) {
+  var iterationController = new IterationRowController(model, view, this);
+  this.addChildController("iteration", iterationController);
+  return iterationController;
 };
 
 /**
  * Initialize and render the story list.
  */
-ProjectController.prototype.paint = function() {
-  var me = this;
-  ModelFactory.initializeFor(ModelFactory.initializeForTypes.project,
-      this.id, function(model) {
-        me.model = model;
-        me.paintProjectDetails();
-        me.paintAssigneeList();
-        me.paintStoryList();
-        me.paintIterationList();
-      });
-};
+
 
 /**
  * Populate a new, editable iteration row to the iterations table.
@@ -271,24 +251,16 @@ ProjectController.prototype.createStory = function() {
   controller.openRowEdit();
 };
 
-ProjectController.prototype.filterDoneStories = function(list) {
-  var returned = [];
-  for (var i = 0; i < list.length; i++) {
-    var story = list[i];
-    if (story.getState() !== "DONE") {
-      returned.push(story);
-    }
-  }
-  return returned;
+
+/**
+ * Creates a new story controller.
+ */
+ProjectController.prototype.storyControllerFactory = function(view, model) {
+  var storyController = new StoryController(model, view, this);
+  this.addChildController("story", storyController);
+  return storyController;
 };
-ProjectController.prototype.addDoneStoriesFilter = function() {
-  this.storyListView.setFilter(ProjectController.prototype.filterDoneStories);
-  this.storyListView.render();
-};
-ProjectController.prototype.removeDoneStoriesFilter = function() {
-  this.storyListView.setFilter();
-  this.storyListView.render();
-};
+
 
 /**
  * Get backlogs selectable for a story in the project.
@@ -304,25 +276,6 @@ ProjectController.prototype.getSelectableBacklogs = function() {
   }
   
   return returned;
-};
-
-/**
- * Construct edit buttons.
- */
-ProjectController.prototype.projectActionFactory = function(view, model) {
-  var actionItems = [ {
-    text : "Edit",
-    callback : ProjectController.prototype.editProject
-  }, {
-    text : "Move",
-    callback : ProjectController.prototype.moveProject
-  }, {
-    text : "Delete",
-    callback : ProjectController.prototype.removeProject
-  } ];
-  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
-      view);
-  return actionView;
 };
 
 /**
@@ -482,23 +435,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     cssClass : "create",
     callback : ProjectController.prototype.createStory
   });
-  
-  config.addCaptionItem({
-    name : "filterDoneStories",
-    text : "Hide done",
-    callback: ProjectController.prototype.addDoneStoriesFilter,
-    connectWith : "unfilterDoneStories",
-    visible: false
-  });
-  
-  config.addCaptionItem({
-    name : "unfilterDoneStories",
-    text : "Show done",
-    callback: ProjectController.prototype.removeDoneStoriesFilter,
-    connectWith : "filterDoneStories",
-    visible: true
-  });
-  
   
   config.addColumnConfiguration(0, {
     minWidth : 24,

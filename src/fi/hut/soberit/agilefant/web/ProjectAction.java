@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 @Component("projectAction")
@@ -44,8 +45,15 @@ public class ProjectAction implements CRUDAction, Prefetching {
     
     private String confirmationString;
     
+    private List<IterationTO> iterations;
+    
     @Autowired
     private ProjectBusiness projectBusiness;
+    
+    public String iterationList() {
+        iterations = projectBusiness.retrieveProjectIterations(projectId);
+        return Action.SUCCESS;
+    }
     
     public String rankProject() {
         project = projectBusiness.rankUnderProject(projectId, rankUnderId);
@@ -182,6 +190,14 @@ public class ProjectAction implements CRUDAction, Prefetching {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public List<IterationTO> getIterations() {
+        return iterations;
+    }
+
+    public void setIterations(List<IterationTO> iterations) {
+        this.iterations = iterations;
     }
     
 }

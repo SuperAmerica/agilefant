@@ -30,30 +30,8 @@ $(document).ready(function() {
   $("#releaseContents").tabs();
   var controller = new ProjectController({
     id: ${project.id},
-    projectDetailsElement: $("#backlogDetails"),
-    assigmentListElement: $("#backlogAssignees"),
-    iterationListElement: $("#iterations"),
-    storyListElement: $('#stories'),
-    hourEntryListElement: $("#backlogSpentEffort"),
-    iterationSelectOngoing: $("#showOngoingIterations"),
-    iterationSelectFuture: $("#showFutureIterations"),
-    iterationSelectPast: $("#showPastIterations")
-  });
-  if(Configuration.isTimesheetsEnabled()) {
-  	$("#backlogInfo").bind('tabsselect', function(event, ui) {
-	    if (ui.index == 2) {
-      	controller.selectSpentEffortTab();
-    	}
-  	});
-  }
-
-  var storyTreeController = new StoryTreeController(
-    ${project.id}, "project", $('#storyTree'), {disableRootSort: true});
-
-  $('#releaseContents').bind('tabsselect', function(event, ui) {
-    if (ui.index == 1) {
-      storyTreeController.refresh();
-    }
+    tabs: $("#releaseContents"),
+    projectDetailsElement: $("#backlogDetails")
   });
 
   $('#projectActions').click(function() {

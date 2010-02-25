@@ -23,7 +23,7 @@ var DynamicTable = function DynamicTable(controller, model, config, parentView) 
   } else {
     this.config = new DynamicTableConfiguration();
   }
-  this.debugLevel = 0;
+  this.debugLevel = 5;
   this.initialize();
 };
 

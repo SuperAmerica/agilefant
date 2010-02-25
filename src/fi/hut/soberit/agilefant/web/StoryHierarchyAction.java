@@ -1,10 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -16,7 +13,6 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @Component("storyHierarchyAction")
@@ -30,10 +26,8 @@ public class StoryHierarchyAction extends ActionSupport {
     @Autowired
     private StoryHierarchyBusiness storyHierarchyBusiness;
     
-    private String name;
     private List<Story> stories;
-    private Set<StoryState> statesToKeep = new HashSet<StoryState>();
-    private Set<String> labelNames = Collections.emptySet();
+    private StoryFilters storyFilters = new StoryFilters();
     private Integer storyId;
     private Integer projectId;
     private Integer productId;
@@ -75,12 +69,10 @@ public class StoryHierarchyAction extends ActionSupport {
     }
         
     public String retrieveProductRootStories() {
-        StoryFilters storyFilters = new StoryFilters(name, labelNames, statesToKeep);
         stories = storyHierarchyBusiness.retrieveProductRootStories(productId, storyFilters);
         return Action.SUCCESS;
     }
     public String retrieveProjectRootStories() {
-        StoryFilters storyFilters = new StoryFilters(name, labelNames, statesToKeep);
         stories = storyHierarchyBusiness.retrieveProjectRootStories(projectId, storyFilters);
         return Action.SUCCESS;
     }
@@ -113,25 +105,9 @@ public class StoryHierarchyAction extends ActionSupport {
             StoryHierarchyBusiness storyHierarchyBusiness) {
         this.storyHierarchyBusiness = storyHierarchyBusiness;
     }
-
-    public Set<StoryState> getStatesToKeep() {
-        return statesToKeep;
-    }
-
-    public void setStatesToKeep(Set<StoryState> statesToKeep) {
-        this.statesToKeep = statesToKeep;
-    }
     
     public List<Story> getStories() {
         return stories;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    public void setLabelNames(Set<String> labelNames) {
-        this.labelNames = labelNames;
     }
     
     public void setProductId(Integer productId) {
@@ -140,6 +116,14 @@ public class StoryHierarchyAction extends ActionSupport {
     
     public void setProjectId(Integer projectId) {
         this.projectId = projectId;
+    }
+
+    public StoryFilters getStoryFilters() {
+        return storyFilters;
+    }
+
+    public void setStoryFilters(StoryFilters storyFilters) {
+        this.storyFilters = storyFilters;
     }
 
 }

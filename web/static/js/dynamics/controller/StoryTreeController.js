@@ -18,14 +18,9 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
     refreshCallback: null,
     disableRootSort: false
   };
-  this.treeParams = {
+  this.storyFilters = {
       statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"]
   };
-  if (this.type == 'project') {
-    this.treeParams.projectId = this.id;
-  } else if (this.type == 'product') {
-    this.treeParams.productId = this.id;
-  }
   jQuery.extend(this.options, options);
   this.initActions();
 };
@@ -101,15 +96,27 @@ StoryTreeController.prototype.initActions = function() {
   this.storyFiltersView.getElement().appendTo(element);
 };
 
-
-
-
-StoryTreeController.prototype._treeParams = function(node, tree_obj) {
-  return this.treeParams;
+StoryTreeController.prototype._storyFilters = function(node, tree_obj) {
+  var tmp = {};
+  if(this.storyFilters.name) {
+   tmp["storyFilters.name"] = this.storyFilters.name;
+  }
+  if(this.storyFilters.labelNames) {
+    tmp["storyFilters.labels"] = this.storyFilters.labelNames;
+  }
+  if(this.storyFilters.statesToKeep) {
+    tmp["storyFilters.states"] = this.storyFilters.statesToKeep;
+  }
+  if (this.type == 'project') {
+    tmp.projectId = this.id;
+  } else if (this.type == 'product') {
+    tmp.productId = this.id;
+  }
+  return tmp;
 };
 
 StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
-  var data = this.treeParams;
+  var data = this.storyFilters;
   if (name) {
     data.name = name;
   } else {
@@ -129,7 +136,9 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
 };
 
 StoryTreeController.prototype.hasFilters = function() {
-  return this.treeParams.name || this.treeParams.statesToKeep || this.treeParams.labelNames;
+  return this.storyFilters.name
+      || (this.storyFilters.statesToKeep || (this.storyFilters.statesToKeep && this.storyFilters.statesToKeep.length === 6))
+      || this.storyFilters.labelNames;
 };
 
 StoryTreeController.prototype.initTree = function() {
@@ -163,7 +172,7 @@ StoryTreeController.prototype.initTree = function() {
         onload: function() { me._treeLoaded(); },
         onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
         beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); },
-        beforedata : function(node, tree) { return me._treeParams(node, tree); },
+        beforedata : function(node, tree) { return me._storyFilters(node, tree); },
         onselect: function(node) { return me.openNodeDetails(node);}
     },
     types: {

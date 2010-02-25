@@ -41,6 +41,7 @@ import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Service("projectBusiness")
@@ -207,25 +208,35 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     @Transactional(readOnly = true)
     public ProjectTO getProjectData(int projectId) {
         Project original = this.retrieve(projectId);
-        
-        List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(original);
         ProjectTO project = transferObjectBusiness.constructProjectTO(original);
-        
-        project.setChildren(new HashSet<Backlog>());
-        for (Backlog backlog : original.getChildren()) {
-            IterationTO iter = new IterationTO((Iteration)backlog);
-            iter.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
-            project.getChildren().add(iter);
-        }
+        return project;
+    }
+    
+    @Transactional(readOnly = true)
+    public List<StoryTO> retrieveLeafStories(int projectId, StoryFilters filters) {
+        Project original = this.retrieve(projectId);
+        List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(original);
+
         List<StoryTO> leafStoriesWithRank = new ArrayList<StoryTO>();
-        project.setLeafStories(leafStoriesWithRank);
         int rank = 0;
         for(Story leafStory : leafStories) {
             StoryTO tmp = new StoryTO(leafStory);
             tmp.setRank(rank++);
             leafStoriesWithRank.add(tmp);
         }
-        return project;
+        return leafStoriesWithRank;
+    }
+    
+    @Transactional(readOnly = true)
+    public List<IterationTO> retrieveProjectIterations(int projectId) {
+        Project original = this.retrieve(projectId);
+        List<IterationTO> iterations = new ArrayList<IterationTO>();
+        for (Backlog backlog : original.getChildren()) {
+            IterationTO iter = new IterationTO((Iteration)backlog);
+            iter.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
+            iterations.add(iter);
+        }
+        return iterations;
     }
 
     @Transactional

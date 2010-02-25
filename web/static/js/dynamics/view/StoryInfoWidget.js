@@ -23,7 +23,8 @@ StoryInfoWidget.prototype.initialize = function() {
 
   var config = new DynamicTableConfiguration({
     leftWidth: '10%',
-    rightWidth: '88%'
+    rightWidth: '88%',
+    closeRowCallback: null
   });
   config.addColumnConfiguration(0, {
     title: "Labels",
@@ -56,4 +57,3 @@ StoryInfoWidget.prototype.onEdit = function() {
 StoryInfoWidget.prototype.render = function() {
   this.storyInfo.render();
 };
-

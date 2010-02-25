@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.model.StoryState;
@@ -10,6 +11,12 @@ public class StoryFilters {
     public final Set<StoryState> states;
     public final String name;
 
+    public StoryFilters() {
+        this.name = null;
+        this.labels = new HashSet<String>();
+        this.states = new HashSet<StoryState>();
+    }
+    
     public StoryFilters(String name, Set<String> labels, Set<StoryState> states) {
         this.name = name;
         this.labels = labels;

@@ -128,6 +128,36 @@ ProjectModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+ProjectModel.prototype.reloadLeafStories = function(filters) {
+  var me = this;
+  var data = {projectId: this.id};
+  if(filters) {
+    data.storyFilters = filters;
+  }
+  jQuery.ajax({
+    url: "ajax/projectLeafStories.action",
+    data: data,
+    method: "post",
+    success: function(data, type) {
+    
+    }
+  });
+  
+};
+
+ProjectModel.prototype.reloadIterations = function() {
+  var me = this;
+  var data = {projectId: this.id};
+  jQuery.ajax({
+    url: "ajax/projectIterations.action",
+    data: data,
+    method: "post",
+    success: function(data, type) {
+    
+    }
+  });
+};
+
 ProjectModel.prototype.reload = function() {
   var me = this;
   jQuery.getJSON(

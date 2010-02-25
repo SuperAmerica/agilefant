@@ -265,7 +265,8 @@ ProjectController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
+  row.autoCreateCells([5,6,10]);
+  row.getCell(7).show();
   row.render();
   controller.openRowEdit();
 };
@@ -596,6 +597,17 @@ ProjectController.prototype.initializeStoryConfig = function() {
     cssClass : 'projectstory-row',
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
+  });
+  config.addColumnConfiguration(7, {
+    fullWidth: true,
+    visible: false,
+    cssClass : 'projectstory-row',
+    get : StoryModel.prototype.getDescription,
+    editable : true,
+    edit : {
+      editor : "Wysiwyg",
+      set : StoryModel.prototype.getDescription
+    }
   });
   config.addColumnConfiguration(10, {
     fullWidth : true,

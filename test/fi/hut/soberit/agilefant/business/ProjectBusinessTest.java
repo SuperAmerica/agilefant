@@ -242,56 +242,22 @@ public class ProjectBusinessTest {
         proj.setId(111);
         proj.setName("Foo faa");
                
-        Iteration pastIteration = new Iteration();
-        pastIteration.setId(123);       
-
-        Iteration currentIteration = new Iteration();
-        currentIteration.setId(333);
-
-        Iteration futureIteration = new Iteration();
-        futureIteration.setId(444);
-        
-        proj.getChildren().addAll(Arrays.asList(pastIteration, currentIteration, futureIteration));
-        
+               
         Story story1 = new Story();
         Story story2 = new Story();
         
         List<Story> leafStories = Arrays.asList(story1, story2);
         
         expect(projectDAO.get(111)).andReturn(proj);
-        expect(storyRankBusiness.retrieveByRankingContext(proj)).andReturn(leafStories);
         expect(transferObjectBusiness.constructProjectTO(proj)).andReturn(new ProjectTO(proj));
-        expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
-            .andReturn(ScheduleStatus.PAST).times(3);
         replayAll();
         ProjectTO actual = projectBusiness.getProjectData(111);
         verifyAll();
         
         assertEquals(111, actual.getId());
         assertEquals("Foo faa", actual.getName());
-        
-        assertEquals(3, actual.getChildren().size());
-        
-        Collection<IterationTO> transferObjects = new ArrayList<IterationTO>();
-        for (Backlog blog : actual.getChildren()) {
-            transferObjects.add((IterationTO)blog);
-        }
-        
-        assertTrue(checkChildByIdAndStatus(123, ScheduleStatus.PAST, transferObjects));
-        assertTrue(checkChildByIdAndStatus(333, ScheduleStatus.PAST, transferObjects));
-        assertTrue(checkChildByIdAndStatus(444, ScheduleStatus.PAST, transferObjects));
-        assertEquals(0, (int)actual.getLeafStories().get(0).getRank());
-        assertEquals(1, (int)actual.getLeafStories().get(1).getRank());
     }
     
-    private boolean checkChildByIdAndStatus(int id, ScheduleStatus status, Collection<IterationTO> children) {
-        for (IterationTO child : children) {
-            if (child.getId() == id && child.getScheduleStatus() == status) {
-                return true;
-            }
-        }
-        return false;
-    }
     
     @Test(expected = ObjectNotFoundException.class)
     public void testGetProjectData_noSuchProject() {

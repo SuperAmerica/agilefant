@@ -244,9 +244,23 @@
     <action name="projectData" class="projectAction" method="projectData">
       <result name="success" type="json">
         <param name="target">project</param>
-        <param name="patterns">+leafStories.responsibles, +leafStories.backlog.class, +leafStories.backlog.id, +leafStories.labels, -leafStories.backlog.*, +children, +assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
+        <param name="patterns">+assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
       </result>
     </action>
+    
+    <action name="projectLeafStories" class="storyListAction" method="projectLeafStories">
+      <result name="success" type="json">
+        <param name="target">stories</param>
+        <param name="patterns">+story.backlog.name, story.backlog.id, -story.backlog.*, -story.parent,-story.tasks,+story.labels</param>
+      </result>
+    </action>
+    
+    <action name="projectIterations" class="projectAction" method="iterationList">
+      <result name="success" type="json">
+        <param name="target">project</param>
+        <param name="patterns"></param>
+      </result>
+    </action>    
     
     <action name="projectMetrics" class="projectAction" method="projectMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/projectMetrics.jsp</result>

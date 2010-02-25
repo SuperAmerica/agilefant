@@ -173,6 +173,7 @@ IterationController.prototype.isAssigneesTabSelected = function() {
 
 IterationController.prototype.paintIterationInfo = function() {
   this.iterationInfoView = new DynamicVerticalTable(this, this.model, this.iterationDetailConfig, this.iterationInfoElement);
+  this.iterationInfoView.render();
 };
 
 IterationController.prototype.reloadBurndown = function() {

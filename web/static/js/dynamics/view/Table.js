@@ -654,7 +654,6 @@ DynamicTable.prototype.remove = function() {
 
 DynamicTable.prototype.onRelationUpdate = function(event) {
   if(this.config.getDataType()) {
-    console.log("caught : "+ event.getRelation());
     if(this.config.getDataType() === event.getRelation()) {
       this.render();
     }

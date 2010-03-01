@@ -140,7 +140,7 @@ StoryInfoBubble.prototype.bindEvents = function() {
  */
 StoryInfoBubble.prototype.positionBubble = function() {
   // Position the bubble
-  pos = this.storyElement.position();
+  var pos = this.storyElement.offset();
   this.parentElement.css({
     'top': pos.top + 35 + 'px',
     'left': pos.left + 100 + 'px'

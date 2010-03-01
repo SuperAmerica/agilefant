@@ -138,8 +138,8 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
 
 StoryTreeController.prototype.hasFilters = function() {
   return this.storyFilters.name
-      || (this.storyFilters.statesToKeep || (this.storyFilters.statesToKeep && this.storyFilters.statesToKeep.length === 6))
-      || this.storyFilters.labelNames;
+      || (this.storyFilters.states && this.storyFilters.states.length === 6)
+      || this.storyFilters.labels;
 };
 
 StoryTreeController.prototype.initTree = function() {

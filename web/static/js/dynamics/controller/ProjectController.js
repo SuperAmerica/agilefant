@@ -122,6 +122,14 @@ ProjectController.columnConfigs = {
   }
 };
 
+ProjectController.prototype.handleModelEvents = function(event) {
+  var me = this;
+  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
+    this.model.reloadLeafStories(null, function() {
+      me.storyListView.render();
+    });
+  }
+};
 ProjectController.prototype._paintLeafStories = function(element) {
   var me = this;
   if(!this.storyListView) {
@@ -178,6 +186,7 @@ ProjectController.prototype.paint = function() {
   ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
       this.id, function(model) {
         me.model = model;
+        me.attachModelListener();
         me.paintProjectDetails();
         me.tabs.tabs("select", selectedTab);
       });
@@ -434,7 +443,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
     dataSource : ProjectModel.prototype.getLeafStories,
-    dataType: "leafstory",
+    dataType: "story",
     cssClass: "project-story-table",
     sortCallback: StoryController.prototype.rankStory,
     caption : "Leaf stories"
@@ -552,8 +561,9 @@ ProjectController.prototype.initializeStoryConfig = function() {
    // get : StoryModel.prototype.getDescription,
     editable : true,
     edit : {
+      get: StoryModel.prototype.getDescription,
       editor : "Wysiwyg",
-      set : StoryModel.prototype.getDescription
+      set : StoryModel.prototype.setDescription
     }
   });
   config.addColumnConfiguration(StoryController.columnIndices.details, {

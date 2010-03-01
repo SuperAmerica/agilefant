@@ -11,7 +11,6 @@ var ProjectModel = function ProjectModel() {
   this.relations = {
     product: null,
     iteration: [],
-    leafstory: [],
     story: [],
     assignment: [],
     hourEntry: [],
@@ -31,8 +30,8 @@ var ProjectModel = function ProjectModel() {
       "fi.hut.soberit.agilefant.model.Product":       "product",
       
       "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
-      "fi.hut.soberit.agilefant.model.Story":         "leafstory",
-      "fi.hut.soberit.agilefant.transfer.StoryTO":         "leafstory",
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.transfer.StoryTO":         "story",
       "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
       "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry",
       "fi.hut.soberit.agilefant.model.User":     "assignees"
@@ -55,15 +54,13 @@ ProjectModel.prototype._setData = function(newData) {
   // Set the id
   this.id = newData.id;
   
-  // Set stories
-  if (newData.stories) {
+  if (newData.leafStories) {
+    this._updateRelations("story", newData.leafStories);
+  }
+  else if (newData.stories) {
     this._updateRelations(ModelFactory.types.story, newData.stories);
   }
-  
-  // Leaf stories
-  if (newData.leafStories) {
-    this._updateRelations("leafstory", newData.leafStories);
-  }
+
   
   // Set iterations
   if (newData.children) {
@@ -138,7 +135,7 @@ ProjectModel.prototype.reloadLeafStories = function(filters, callback) {
     method: "post",
     dataType: "json",
     success: function(data, type) {
-      me._updateRelations("leafstory", data);
+      me._updateRelations("story", data);
   
       if(callback) {
         callback();
@@ -277,7 +274,7 @@ ProjectModel.prototype.getIterations = function() {
 };
 
 ProjectModel.prototype.getLeafStories = function() {
-  return this.relations.leafstory;
+  return this.relations.story;
 };
 
 ProjectModel.prototype.getName = function() {

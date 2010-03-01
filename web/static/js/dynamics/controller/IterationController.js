@@ -166,6 +166,12 @@ IterationController.prototype.handleModelEvents = function(event) {
       this.reloadMetricsBox();
     }
   }
+  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
+    var me = this;
+    this.model.reload(function() {
+      me.storyListView.render();
+    });
+  }
 };
 IterationController.prototype.isAssigneesTabSelected = function() {
   return (this.tabs.tabs("option","selected") === 1);
@@ -227,6 +233,7 @@ IterationController.prototype.paint = function() {
   ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration,
       this.id, function(model) {
         me.model = model;
+        me.attachModelListener();
         me.paintIterationInfo();
         me.paintStoryList();
         me.paintTaskList();

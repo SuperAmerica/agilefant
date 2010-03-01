@@ -57,12 +57,12 @@ BacklogModel.prototype.addAssignments = function(userIds) {
 
 BacklogModel.prototype.addStory = function(story) {
   this.addRelation(story);
-  this.relationEvents();
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"story"));
 };
 
 BacklogModel.prototype.addTask = function(task) {
   this.addRelation(task);
-  this.relationEvents();
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"task"));
 };
 BacklogModel.prototype.getAssignees = function() {
   return this.relations.assignees;

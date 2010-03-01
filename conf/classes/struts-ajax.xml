@@ -389,14 +389,14 @@
       <interceptor-ref name="prefetchStack"/>
       <result type="json">
         <param name="target">story</param>
-        <param name="patterns">+responsibles</param>
+        <param name="patterns">+responsibles, -rank</param>
       </result>
     </action>
     
     <action name="retrieveStory" method="retrieve" class="storyAction">
        <result type="json">
         <param name="target">story</param>
-        <param name="patterns">+responsibles, +tasks, +children, -children.backlog.description, +parent, +labels,-labels.creator,-labels.timestamp</param>
+        <param name="patterns">+responsibles, -rank, +tasks, +children, -children.backlog.description, +parent, +labels,-labels.creator,-labels.timestamp</param>
        </result>
     </action>
     
@@ -407,7 +407,7 @@
     <action name="retrieveStoryMetrics" method="retrieve" class="storyAction">
        <result type="json">
         <param name="target">story</param>
-        <param name="patterns">+metrics.*, +id, +class, -*</param>
+        <param name="patterns">-rank, +metrics.*, +id, +class, -*</param>
        </result>
     </action>
     

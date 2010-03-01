@@ -118,13 +118,16 @@ IterationModel.prototype._saveData = function(id, changedData) {
 /**
  * Reload's the iteration's data.
  */
-IterationModel.prototype.reload = function() {
+IterationModel.prototype.reload = function(callback) {
   var me = this;
   jQuery.getJSON(
     "ajax/iterationData.action",
     {iterationId: this.getId()},
     function(data,status) {
       me.setData(data);
+      if(callback) {
+        callback();
+      }
       //me.callListeners(new DynamicsEvents.EditEvent(me));
     }
   );

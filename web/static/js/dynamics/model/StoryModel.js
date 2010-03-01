@@ -11,6 +11,7 @@ var StoryModel = function StoryModel() {
   this.persistedClassName = "fi.hut.soberit.agilefant.model.Story";
   this.relations = {
     backlog: null,
+    project: null,
     task: [],
     hourEntry: [],
     user: [],
@@ -23,11 +24,12 @@ var StoryModel = function StoryModel() {
     "name": "name",
     "description": "description",
     "state": "state",
-    "storyPoints": "storyPoints"
+    "storyPoints": "storyPoints",
+    "rank": "rank"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "backlog",
-      "fi.hut.soberit.agilefant.model.Project":       "backlog",
+      "fi.hut.soberit.agilefant.model.Project":       "project",
       "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
       "fi.hut.soberit.agilefant.model.User":          "user",
       "fi.hut.soberit.agilefant.model.Label":         "label",
@@ -55,11 +57,12 @@ StoryModel.Validators = {
 StoryModel.prototype._setData = function(newData) { 
   // Set the id
   this.id = newData.id;
-    
+    /*
   //set the rank by hand if it exists in the data
   if(newData.rank !== undefined && newData.rank !== null) {
     this.setRank(newData.rank);
   }
+  */
   // Set the tasks
   if (newData.tasks) {
     this._updateRelations(ModelFactory.types.task, newData.tasks);
@@ -109,7 +112,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
   }
   else {
     url = "ajax/createStory.action";
-    data.backlogId = this.relations.backlog.getId();
+    data.backlogId = this.getBacklog().getId();
   }
   
 
@@ -125,7 +128,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
       MessageDisplay.Ok("Story saved successfully");
       var object = ModelFactory.updateObject(data);
       if(!id) {
-        me.relations.backlog.addStory(object);
+        me.getBacklog().addStory(object);
       }
       if (me.relations.backlog) {
         //me.relations.backlog.reload();
@@ -221,9 +224,14 @@ StoryModel.prototype._rank = function(direction, targetStoryId, targetBacklog) {
       MessageDisplay.Ok("Story ranked");
       var oldParent = me.getParent();
       me.setData(data);
-      oldParent.reload();
+      //and again hack!
+      if(me.relations.project) {
+        me.relations.project.callListeners(new DynamicsEvents.RankChanged(me.relations.project,"story"));
+      } else {
+        oldParent.callListeners(new DynamicsEvents.RankChanged(oldParent,"story"));
+      }
       if (oldParent !== targetBacklog) {
-        targetBacklog.reload();
+        targetBacklog.callListeners(new DynamicsEvents.RankChanged(targetBacklog,"story"));
       }
     },
     error: function(xhr) {
@@ -267,6 +275,10 @@ StoryModel.prototype.addTask = function(task) {
 
 // Getters and setters in property alphabetical order
 StoryModel.prototype.getBacklog = function() {
+  //hack! in case of leaf stories story may have multiple backlogs
+  if(this.relations.project && !this.relations.backlog) {
+    return this.relations.project;
+  }
   return this.relations.backlog;
 };
 StoryModel.prototype.setBacklog = function(backlog) {

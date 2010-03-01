@@ -175,3 +175,20 @@ DynamicsEvents.MetricsEvent = function DynamicsEvents_MetricsEvent(origin) {
 };
 DynamicsEvents.MetricsEvent.prototype = new DynamicsEvents.CommonEvent();
 
+/**
+ * 
+ * @constructor
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.RankChanged = function DynamicsEvents_RankChanged(origin, rankedType) {
+  this.initialize();
+  this.type = "RankedEvent";
+  this.object = origin;
+  this.rankedType = rankedType;
+};
+DynamicsEvents.RankChanged.prototype = new DynamicsEvents.CommonEvent();
+
+DynamicsEvents.RankChanged.prototype.getRankedType = function() {
+  return this.rankedType;
+};
+

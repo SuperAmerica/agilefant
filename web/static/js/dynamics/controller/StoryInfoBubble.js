@@ -67,6 +67,7 @@ StoryInfoBubble.prototype.populateContent = function() {
     me.model = object;
     me.storyInfoElement.html('');
     me.storyInfoView = new DynamicVerticalTable(me, me.model, me.storyInfoConfig, me.storyInfoElement);
+    me.storyInfoView.render();
   });
   
   $('<a>more...</a>').click(function() {

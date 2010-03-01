@@ -127,10 +127,15 @@ ProjectController.prototype._paintLeafStories = function(element) {
   if(!this.storyListView) {
     this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
         element);
+    this.model.reloadLeafStories(null, function() {
+     // me.storyListView.render();
+    //  console.log("render");
+    });
+  } else {
+    this.model.reloadLeafStories(null, function() {
+      
+    });
   }
-  this.model.reloadLeafStories(null, function() {
-    me.storyListView.render();
-  });
 };
 
 ProjectController.prototype._paintIterations = function(element) {
@@ -138,10 +143,14 @@ ProjectController.prototype._paintIterations = function(element) {
   if(!this.iterationsView) {
     this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
         element);
+    this.model.reloadIterations(null, function() {
+    //  me.iterationsView.render();
+    });
+  } else {
+    this.model.reloadIterations(null, function() {
+      
+    });
   }
-  this.model.reloadIterations(null, function() {
-    me.iterationsView.render();
-  });
 };
 
 ProjectController.prototype._paintStoryTree = function(element) {
@@ -305,6 +314,7 @@ ProjectController.prototype.initializeIterationListConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.iterationRowControllerFactory,
     dataSource : ProjectModel.prototype.getIterations,
+    dataType: "iteration",
     caption : "Iterations",
     cssClass: "project-iteration-table",
     validators: [ BacklogModel.Validators.dateValidator ]
@@ -424,6 +434,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : ProjectController.prototype.storyControllerFactory,
     dataSource : ProjectModel.prototype.getLeafStories,
+    dataType: "leafstory",
     cssClass: "project-story-table",
     sortCallback: StoryController.prototype.rankStory,
     caption : "Leaf stories"

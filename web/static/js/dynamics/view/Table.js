@@ -653,11 +653,18 @@ DynamicTable.prototype.remove = function() {
 };
 
 DynamicTable.prototype.onRelationUpdate = function(event) {
-  this.render();
-  this.debug("table relation update");
+  if(this.config.getDataType()) {
+    console.log("caught : "+ event.getRelation());
+    if(this.config.getDataType() === event.getRelation()) {
+      this.render();
+    }
+  } else {
+    this.render();
+  }
+  //this.debug("table relation update");
 };
 DynamicTable.prototype.onEdit = function(event) {
-  this.render();
+  //this.render();
   this.debug("table edit");
 };
 DynamicTable.prototype.onDelete = function(event) {

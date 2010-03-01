@@ -79,16 +79,19 @@ DynamicsEvents.DeleteEvent.prototype = new DynamicsEvents.CommonEvent();
  * @constructor
  * @base DynamicsEvents.CommonEvent
  */
-DynamicsEvents.RelationUpdatedEvent = function DynamicsEvents_RelationUpdatedEvent(object) {
+DynamicsEvents.RelationUpdatedEvent = function DynamicsEvents_RelationUpdatedEvent(object, relation) {
   if (!object || !(object instanceof CommonModel)) {
     throw "Invalid argument";
   }
   this.initialize();
   this.type = "relationUpdate";
   this.object = object;
+  this.relation = relation;
 };
 DynamicsEvents.RelationUpdatedEvent.prototype = new DynamicsEvents.CommonEvent();
-
+DynamicsEvents.RelationUpdatedEvent.prototype.getRelation = function() {
+  return this.relation;
+};
 
 /**
  * 

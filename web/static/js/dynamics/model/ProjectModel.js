@@ -11,6 +11,7 @@ var ProjectModel = function ProjectModel() {
   this.relations = {
     product: null,
     iteration: [],
+    leafstory: [],
     story: [],
     assignment: [],
     hourEntry: [],
@@ -30,14 +31,14 @@ var ProjectModel = function ProjectModel() {
       "fi.hut.soberit.agilefant.model.Product":       "product",
       
       "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
-      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.Story":         "leafstory",
+      "fi.hut.soberit.agilefant.transfer.StoryTO":         "leafstory",
       "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
       "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry",
       "fi.hut.soberit.agilefant.model.User":     "assignees"
   };
   
   
-  this.leafStories = [];
 };
 
 ProjectModel.prototype = new BacklogModel();
@@ -61,10 +62,7 @@ ProjectModel.prototype._setData = function(newData) {
   
   // Leaf stories
   if (newData.leafStories) {
-    this.leafStories = [];
-    $.each(newData.leafStories, function(k,v) {
-      me.leafStories.push(ModelFactory.updateObject(v));
-    });
+    this._updateRelations("leafstory", newData.leafStories);
   }
   
   // Set iterations
@@ -140,10 +138,7 @@ ProjectModel.prototype.reloadLeafStories = function(filters, callback) {
     method: "post",
     dataType: "json",
     success: function(data, type) {
-      me.leafStories = [];
-      $.each(data, function(k,v) {
-        me.leafStories.push(ModelFactory.updateObject(v));
-      });
+      me._updateRelations("leafstory", data);
   
       if(callback) {
         callback();
@@ -177,7 +172,7 @@ ProjectModel.prototype.reload = function() {
     {projectId: me.getId()},
     function(data,status) {
       me.setData(data);
-      me.callListeners(new DynamicsEvents.EditEvent(me));
+      //me.callListeners(new DynamicsEvents.EditEvent(me));
     }
   );
 };
@@ -282,7 +277,7 @@ ProjectModel.prototype.getIterations = function() {
 };
 
 ProjectModel.prototype.getLeafStories = function() {
-  return this.leafStories;
+  return this.relations.leafstory;
 };
 
 ProjectModel.prototype.getName = function() {

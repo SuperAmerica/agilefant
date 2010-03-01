@@ -248,3 +248,6 @@ DynamicTableConfiguration.prototype.isTableDroppable = function() {
 DynamicTableConfiguration.prototype.isRowDroppable = function() {
   return this.options.rowDroppable;
 };
+DynamicTableConfiguration.prototype.getDataType = function() {
+  return this.options.dataType;
+};

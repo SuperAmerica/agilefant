@@ -273,6 +273,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
   var config = new DynamicTableConfiguration({
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
     dataSource: IterationModel.prototype.getTasks,
+    dataType: "task",
     caption: "Tasks without story",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
@@ -453,6 +454,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     dataSource : IterationModel.prototype.getStories,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",
+    dataType: "story",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },

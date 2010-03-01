@@ -144,7 +144,7 @@ StoryModel.prototype.reload = function(callback) {
     {storyId: me.getId()},
     function(data,status) {
       me.setData(data);
-      me.callListeners(new DynamicsEvents.EditEvent(me));
+      //me.callListeners(new DynamicsEvents.EditEvent(me));
       if (callback) {
         callback();
       }
@@ -260,7 +260,7 @@ StoryModel.prototype._remove = function(successCallback, extraData) {
 
 StoryModel.prototype.addTask = function(task) {
   this.addRelation(task);
-  this.relationEvents();
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"task"));
 };
 
 

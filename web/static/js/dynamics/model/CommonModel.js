@@ -44,9 +44,6 @@ CommonModel.prototype.setData = function(newData, suppressEvents) {
     if (this._copyFields(newData) && !suppressEvents) {
       this.callListeners(new DynamicsEvents.EditEvent(this));
     }
-// TODO: Disabled because of tons of ajax requests
-// Uncomment, when works
-// this.relationEvents();
   }
 };
 
@@ -63,13 +60,6 @@ CommonModel.prototype._isMetricsDataUpdated = function(newData) {
     }
   }
   return false;
-};
-
-CommonModel.prototype.relationEvents = function() {
-  if(this.relationChanged) {
-    this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this));
-    this.relationChanged = false;
-  }
 };
 
 CommonModel.prototype._setData = function(newData) {
@@ -97,12 +87,14 @@ CommonModel.prototype._updateRelations = function(type, newData) {
     this._updateSingleRelation(type, newData);
     return;
   }
+  this.relationChanged = false;
   var newHashes = [];
   var currentHashes = [];
   var newObjects = [];
+  
   // 1. New hash codes to list
   for (var i = 0; i < newData.length; i++) {
-    var object = ModelFactory.updateObject(newData[i]);
+    var object = ModelFactory.updateObject(newData[i], true);
     newObjects.push(object);
     newHashes.push(object.getHashCode());
   }
@@ -132,11 +124,15 @@ CommonModel.prototype._updateRelations = function(type, newData) {
       this.relationChanged = true;
     }
   }
+  if(this.relationChanged) {
+    this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,type));
+    this.relationChanged = false;
+  }
 };
 
 CommonModel.prototype._updateSingleRelation = function(type, newData) {
   var old = this.relations[type];
-  var newObj = ModelFactory.updateObject(newData);
+  var newObj = ModelFactory.updateObject(newData, true);
   
   if (old !== newObj) {
     // Remove old relation

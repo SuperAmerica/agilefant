@@ -31,7 +31,7 @@ StoryController.prototype.handleModelEvents = function(event) {
   }
   //reload model to update metrics if tasks haven been added or 
   //removed within the story.
-  if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
+  if (event instanceof DynamicsEvents.RelationUpdatedEvent && event.getRelation() === "task") {
     this.model.reloadMetrics();
   }
 };
@@ -324,6 +324,7 @@ StoryController.prototype.storyPointsEditable = function() {
     //cssClass: "dynamicTable-sortable-tasklist",
     rowControllerFactory : StoryController.prototype.taskControllerFactory,
     dataSource : StoryModel.prototype.getTasks,
+    dataType: "task",
     caption: "Tasks",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"

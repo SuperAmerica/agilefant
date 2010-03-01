@@ -128,7 +128,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
         me.relations.backlog.addStory(object);
       }
       if (me.relations.backlog) {
-        me.relations.backlog.reload();
+        //me.relations.backlog.reload();
       }
     },
     error: function(xhr, status, error) {

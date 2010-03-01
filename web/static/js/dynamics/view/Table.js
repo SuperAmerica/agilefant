@@ -675,7 +675,6 @@ var DynamicVerticalTable = function(controller, model, config, parentView) {
   this.config = config;
   this.rows = [];
   this.initialized = false;
-  this.validationManager = new DynamicsValidationManager(this.element, this.config, this.getModel(), this.getController());
 };
 DynamicVerticalTable.prototype = new DynamicView();
 
@@ -710,6 +709,7 @@ DynamicVerticalTable.prototype.initialize = function() {
     title.setValue(columnConfig.getTitle());
     this.rows.push(row);
   }
+  this.validationManager = new DynamicsValidationManager(this.element, this.config, this.getModel(), this.getController());
   this.render();
 };
 

@@ -67,32 +67,41 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
     }
   });
   this.element.bind("storeRequested", function(event, editor) {
-    if(me.isValid()) {
-      if ( !me.configuration.options.preventCommit ) {
-        me.model.commit();
-      }
-      var closeRowCallback = me.configuration.getCloseRowCallback();
-      if (closeRowCallback) {
-        closeRowCallback.call(me.controller);
-      }
-      else if (editor) {
-        editor.close();
-      }
-    }
+    event.stopPropagation();
+    me._storeRequested(event, editor);
     return false;
   });
   this.element.bind("cancelRequested", function(event, editor) {
-    me.model.rollback();
-    me.clear();
-    var closeRowCallback = me.configuration.getCloseRowCallback();
-    if (closeRowCallback) {
-      closeRowCallback.call(me.controller);
-    }
-    if (editor) {
-      editor.close();
-    }
+    event.stopPropagation();
+    me._cancelRequested(event, editor);
     return false;
   });
+};
+DynamicsValidationManager.prototype._storeRequested = function(event, editor) {
+  if(this.isValid()) {
+    if ( !this.configuration.options.preventCommit ) {
+      this.model.commit();
+    }
+    var closeRowCallback = this.configuration.getCloseRowCallback();
+    if (closeRowCallback) {
+      closeRowCallback.call(this.controller);
+    }
+    else if (editor) {
+      editor.close();
+    }
+  }
+};
+
+DynamicsValidationManager.prototype._cancelRequested = function(event, editor) {
+  this.model.rollback();
+  this.clear();
+  var closeRowCallback = this.configuration.getCloseRowCallback();
+  if (closeRowCallback) {
+    closeRowCallback.call(this.controller);
+  }
+  if (editor) {
+    editor.close();
+  }
 };
 
 DynamicsValidationManager.prototype._createErrorContainer = function() {

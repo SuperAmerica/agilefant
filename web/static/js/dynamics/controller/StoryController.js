@@ -26,6 +26,7 @@ StoryController.columnIndices = {
 StoryController.prototype = new CommonController();
 
 StoryController.prototype.handleModelEvents = function(event) {
+  console.log(event.getType());
   if(this.parentController) {
     this.parentController.handleModelEvents(event);
   }
@@ -33,6 +34,10 @@ StoryController.prototype.handleModelEvents = function(event) {
   //removed within the story.
   if (event instanceof DynamicsEvents.RelationUpdatedEvent && event.getRelation() === "task") {
     this.model.reloadMetrics();
+    this.view.render();
+  }
+  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "task") {
+    this.taskListView.resort();
   }
 };
 

@@ -235,9 +235,7 @@ CommonModel.prototype._addOneWayRelation = function(object) {
 CommonModel.prototype.removeRelation = function(object) {
   this._removeOneWayRelation(object);
   object._removeOneWayRelation(this);
-//  this.relationChanged = true;
-  this.relationEvents();
-  object.relationEvents();
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,this.classNameToRelation[object.getPersistedClass()]));
 };
 
 CommonModel.prototype._removeOneWayRelation = function(object) {

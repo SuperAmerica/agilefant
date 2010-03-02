@@ -461,6 +461,24 @@ DynamicTable.prototype._softRender = function() {
 DynamicTable.prototype._hardRender = function(section) {
   var i;
   var rowCount = section.length;
+  this._draw(section);
+  for (i = 0; i < rowCount; i++) {
+    section[i].render();
+  }
+};
+
+DynamicTable.prototype.resort = function() {
+  this._sort();
+  var tableRows = [];;
+  tableRows.concat(this.upperRows,this.middleRows, this.bottomRows); 
+  this.currentTableRows = tableRows;
+  this._draw(this.middleRows);
+  this.element.find("textarea.tableSortListener").trigger("tableSorted");
+};
+
+DynamicTable.prototype._draw = function(section) {
+  var i;
+  var rowCount = section.length;
   
   var focusAt = -1;
   //check for focus
@@ -474,16 +492,13 @@ DynamicTable.prototype._hardRender = function(section) {
     var focusedElement = section[focusAt].getElement().get(0);
     for(i = 0; i < focusAt; i++) {
       section[i].getElement().insertBefore(focusedElement);
-      section[i].render();
     }
     for(i = rowCount - 1; i > focusAt; i--) {
       section[i].getElement().insertAfter(focusedElement);
-      section[i].render();
     }
   } else {
     for (i = 0; i < rowCount; i++) {
       this.element.append(section[i].getElement());
-      section[i].render();
     }
   }
 };

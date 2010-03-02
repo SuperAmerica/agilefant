@@ -210,9 +210,14 @@ TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
       MessageDisplay.Ok("Task ranked successfully.");
       var oldParent = me.getParent();
       me.setData(data);
-      oldParent.reload();
+      if(oldParent === moveUnder) {
+        oldParent.reload(function() {
+          oldParent.callListeners(new DynamicsEvents.RankChanged(oldParent,"task"));
+        });
+      }
       if (oldParent !== moveUnder) {
         moveUnder.reload();
+        oldParent.reload();
       }
     },
     error: function(xhr, status) {

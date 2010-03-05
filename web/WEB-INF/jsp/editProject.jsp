@@ -60,6 +60,10 @@ $(document).ready(function() {
       closeMenu();
     });
   });
+
+  $('#searchByText').labelify({
+    labelledClass: "inputHighlight"
+  });
   
 });
 </script>
@@ -72,6 +76,12 @@ $(document).ready(function() {
 				alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
   <li class=""><a href="#iterations"><span><img
 				alt="Edit" src="static/img/backlog.png" /> Iterations</span></a></li>
+  <li style="float: right;">
+    <div style="border-style: inset; border-width: 2px; border-color: #ccc; -webkit-border-radius: 10px; -moz-border-radius: 10px; overflow: hidden; background: white; background-image: url('static/img/search.png'); background-repeat: no-repeat; background-position: 0 45%; width: 20ex;">
+      <input id="searchByText" type="text" name="searchbox" title="Search..." style="border: none; margin: 0 0 0 20px; width: 15ex;" />
+      <!-- <div style="background-image: url('static/img/delete.png'); background-repeat: no-repeat; width: 20px; height: 20px;">&nbsp;</div> -->
+    </div>
+  </li>
 </ul>
 
 <form onsubmit="return false;">

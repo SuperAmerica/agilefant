@@ -52,6 +52,7 @@ TaskSplitDialog.prototype.render = function() {
       this.model,
       this.taskInfoConfig,
       this.taskInfoElement);
+  this.taskInfoView.render();
   
   this.tasksView = new DynamicTable(
       this,

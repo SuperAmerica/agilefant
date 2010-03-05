@@ -25,6 +25,7 @@ ChangePasswordDialog.prototype.init = function() {
       this.model,
       this.config,
       this.formArea);
+  this.view.render();
   
   this.view.openFullEdit();
 };

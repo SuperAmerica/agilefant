@@ -119,7 +119,7 @@ CreateDialogClass.prototype.initializeForm = function() {
       this.model,
       this.formConfig,
       this.formArea);
-  
+  this.view.render();
   this.view.openFullEdit();
 };
 

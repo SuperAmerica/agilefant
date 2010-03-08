@@ -168,9 +168,9 @@ ProductController.prototype.initializeProjectListConfig = function() {
     dataSource : ProductModel.prototype.getProjects,
     caption : "Projects",
     captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+      cssClasses: ""
     },
-    cssClass: "ui-widget-content ui-corner-all product-project-table",
+    cssClass: "product-project-table",
     validators: [ BacklogModel.Validators.dateValidator ]
   });
 

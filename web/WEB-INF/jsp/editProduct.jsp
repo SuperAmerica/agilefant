@@ -20,11 +20,13 @@
 <script type="text/javascript">
 $(document).ready(function() {
   $("#backlogInfo").tabs();
+  $('#productContents').tabs();
+
   var controller = new ProductController({
     id: ${product.id},
     productDetailsElement: $("#backlogDetails"),
     projectListElement: $("#projects"),
-    storyTreeElement: $('#stories'),
+    storyTreeElement: $('#storyTreeContainer'),
     hourEntryListElement: $("#backlogSpentEffort"),
     searchByTextElement: $('#searchByText')
   });
@@ -35,7 +37,6 @@ $(document).ready(function() {
     	}
   	});
   }
- 
 
   $('#productActions').click(function() {
     var menu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body);
@@ -62,19 +63,22 @@ $(document).ready(function() {
 
 </script>
 
-<style type="text/css">
-.search {
-  background: #f0f;
-}
-</style>
+
+<div style="margin-top: 3em;" class="structure-main-block project-color-header" id="productContents">
+<ul class="backlogTabs">
+  <li class=""><a href="#storyTreeContainer"><span><img
+        alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
+  <li class=""><a href="#projects"><span><img
+        alt="Edit" src="static/img/backlog.png" /> Projects</span></a></li>
+  <li id="searchByText" style="float: right;"> </li>
+</ul>
+
 <form onsubmit="return false;">
-<div class="ui-widget-content ui-corner-all structure-main-block dynamictable" id="storyTree">
-  <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree<div id="searchByText" style="float: right; margin: -2px 5px 0 0;"> </div></div>
-  <div id="stories"></div>
-</div>
+  <div class="details" id="storyTreeContainer"></div>
+  <div class="details" id="projects"></div>
 </form>
 
-<form onsubmit="return false;"><div id="projects" class="structure-main-block">&nbsp;</div></form>
+</div>
 
 
 

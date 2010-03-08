@@ -32,13 +32,12 @@ SearchByTextWidget.prototype.init = function() {
   this.clearButton.click(function() {
     me.input.val('');
     $(this).hide();
+    me._performSearch();
   });
   this.input.keyup(function(e) {
     /* Check for enter and esc */
-    if (e.keyCode === 13 &&
-        me.options.searchCallback &&
-        typeof(me.options.searchCallback) == "function") {
-      me.options.searchCallback(me.input.val());
+    if (e.keyCode === 13) {
+      me._performSearch();
     }
     else if (e.keyCode === 27) {
       me.clearButton.click();
@@ -54,3 +53,10 @@ SearchByTextWidget.prototype.init = function() {
   });
 };
 
+SearchByTextWidget.prototype.getValue = function() {
+  return this.input.val();
+};
+
+SearchByTextWidget.prototype._performSearch = function() {
+  this.options.searchCallback();
+};

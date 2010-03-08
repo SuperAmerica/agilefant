@@ -24,8 +24,9 @@ $(document).ready(function() {
     id: ${product.id},
     productDetailsElement: $("#backlogDetails"),
     projectListElement: $("#projects"),
-    storyListElement: $('#stories'),
-    hourEntryListElement: $("#backlogSpentEffort")
+    storyTreeElement: $('#stories'),
+    hourEntryListElement: $("#backlogSpentEffort"),
+    searchByTextElement: $('#searchByText')
   });
   if(Configuration.isTimesheetsEnabled()) {
   	$("#backlogInfo").bind('tabsselect', function(event, ui) {
@@ -35,9 +36,6 @@ $(document).ready(function() {
   	});
   }
  
-  var storyTreeController = new StoryTreeController(
-    ${product.id}, "product", $('#storyTree'),{});
-  storyTreeController.initTree();
 
   $('#productActions').click(function() {
     var menu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body);
@@ -60,8 +58,6 @@ $(document).ready(function() {
       closeMenu();
     });
   });
-
-  var sbt = new SearchByTextWidget($('#searchByText'), {});
 });
 
 </script>
@@ -74,6 +70,7 @@ $(document).ready(function() {
 <form onsubmit="return false;">
 <div class="ui-widget-content ui-corner-all structure-main-block dynamictable" id="storyTree">
   <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree<div id="searchByText" style="float: right; margin: -2px 5px 0 0;"> </div></div>
+  <div id="stories"></div>
 </div>
 </form>
 

@@ -119,6 +119,7 @@ div.hierarchyContainer {
   font-weight: bold;
   float: right;
   color: #666;
+  font-family: cursive;
 }
 .story-details-bubble a.close-button:hover {
   color: black;  

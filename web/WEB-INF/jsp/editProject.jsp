@@ -28,10 +28,12 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 $(document).ready(function() {
   $("#backlogInfo").tabs();
   $("#releaseContents").tabs();
+  
   var controller = new ProjectController({
     id: ${project.id},
     tabs: $("#releaseContents"),
-    projectDetailsElement: $("#backlogDetails")
+    projectDetailsElement: $("#backlogDetails"),
+    textFilterElement: $('#searchByText')
   });
 
   $('#projectActions').click(function() {
@@ -61,7 +63,7 @@ $(document).ready(function() {
     });
   });
 
-  var sbt = new SearchByTextWidget($('#searchByText'), {});
+  
 });
 </script>
 

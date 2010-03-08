@@ -7,10 +7,18 @@
  * @param {DOMElement} element DOM parent node for the story table. 
  */
 var ProjectController = function ProjectController(options) {
+  var me = this;
   this.id = options.id;
   this.tabs = options.tabs;
   this.parentView = options.storyListElement;
   this.projectDetailsElement = options.projectDetailsElement;
+  
+  this.textFilterElement = options.textFilterElement;
+  this.textFilter = new SearchByTextWidget($('#searchByText'), { searchCallback: function() { me.filter(); } });
+  
+  /* Keep track on which tab is selected for filtering purposes */
+  this.visibleView = "tree";
+  
   this.init();
   this.initializeProjectDetailsConfig();
   this.initializeIterationListConfig();
@@ -18,6 +26,26 @@ var ProjectController = function ProjectController(options) {
   this.paint();
 };
 ProjectController.prototype = new BacklogController();
+
+
+ProjectController.prototype.filter = function() {
+  if (this.visibleView === "tree") {
+    this.storyTreeController.filter(this.getTextFilter(), [] /* The label filters */, this.getStateFilters());
+  }
+  else if (this.visibleView === "leafStories") {
+    // Filtering logic for leaf story list
+  }
+};
+
+ProjectController.prototype.getStateFilters = function() {
+  /* TODO: Add the state filters... where ? */
+  return ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"];
+};
+
+ProjectController.prototype.getTextFilter = function() {
+  return this.textFilter.getValue();
+};
+
 
 /**
  * Indices for column configuration

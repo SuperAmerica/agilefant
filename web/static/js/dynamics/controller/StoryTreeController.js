@@ -15,7 +15,6 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   this.container = $('<div />').addClass("storyTreeContainer").appendTo(this.parentElement);
   this.headerElement = $('<div/>').appendTo(this.container);
   this.element = $('<div/>').appendTo(this.container);
-  this.actionsElement = $('<div/>').addClass('storytree-actions').appendTo(this.container);
   this.options = {
     refreshCallback: null,
     disableRootSort: false
@@ -24,7 +23,7 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
       statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"]
   };
   jQuery.extend(this.options, options);
-  this.initActions();
+  this.initHeader();
 };
 StoryTreeController.prototype = new CommonController();
 StoryTreeController.createNodeUrls = {
@@ -70,32 +69,14 @@ StoryTreeController.prototype.refreshNode = function(element) {
   );
 };
 
-StoryTreeController.prototype.initActions = function() {
-  var me = this;
-  var actionHeader = $('<div/>').text('Actions').addClass('headerbar collapse-handle').appendTo(this.actionsElement);
+StoryTreeController.prototype.initHeader = function() {
+  $('<div class="dynamictable-caption" style="margin-bottom: 1em;">Story tree</div>').appendTo(this.headerElement);
   
-  var element = $('<div />').appendTo(this.actionsElement);  
-  var actionList = $('<div />').addClass("buttons").appendTo(element);
-  
-  actionHeader.click(function() {
-    $(this).toggleClass("collapsed");
-    element.toggle("blind", {}, 500);
-  });
-  
+  /*
   $('<button style="width: 18ex;">Create a new story</button>')
     .addClass("dynamics-button").appendTo(actionList).click(function() {
       me.createNode(-1, 0);
-  });
-  
-  /*
-  $('<br/>').appendTo(actionList);
-  
-  $('<button style="width: 10ex;">Expand all</button>').attr("disabled", true)
-    .addClass("dynamics-button").appendTo(actionList);
-  
-  $('<button style="width: 12ex;">Collapse all</button>').attr("disabled", true)
-    .addClass("dynamics-button").appendTo(actionList);
-  
+  });  
    */
 };
 

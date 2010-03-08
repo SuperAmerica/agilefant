@@ -13,6 +13,12 @@ var ProductController = function ProductController(options) {
   this.iterationListElement = options.iterationListElement;
   this.assigmentListElement = options.assigmentListElement;
   this.hourEntryListElement = options.hourEntryListElement;
+  this.storyTreeElement = options.storyTreeElement;
+  
+  var me = this;
+  this.textFilterElement = options.textFilterElement;
+  this.textFilter = new SearchByTextWidget($('#searchByText'), { searchCallback: function() { me.filter(); } });
+  
   this.init();
   this.initializeProductDetailsConfig();
   this.initializeProjectListConfig();
@@ -20,6 +26,26 @@ var ProductController = function ProductController(options) {
   this.paint();
 };
 ProductController.prototype = new BacklogController();
+
+ProductController.prototype.filter = function() {
+  this.storyTreeController.filter(this.getTextFilter(), [], this.getStateFilters());
+};
+
+ProductController.prototype.getStateFilters = function() {
+  /* TODO: Add the state filters... where ? */
+  return ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"];
+};
+
+ProductController.prototype.getTextFilter = function() {
+  return this.textFilter.getValue();
+};
+
+ProductController.prototype.paintStoryTree = function() {
+  if(!this.storyTreeController) {
+   this.storyTreeController =  new StoryTreeController(this.id, "product", this.storyTreeElement);
+  } 
+  this.storyTreeController.refresh();
+};
 
 ProductController.prototype.projectRowControllerFactory = function(view, model) {
   var projectController = new ProjectRowController(model, view, this);
@@ -55,6 +81,7 @@ ProductController.prototype.paint = function() {
         me.model = model;
         me.paintProductDetails();
         me.paintProjectList();
+        me.paintStoryTree();
       });
 };
 

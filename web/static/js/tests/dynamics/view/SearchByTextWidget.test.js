@@ -2,13 +2,13 @@ $(document).ready(function() {
   module("SearchByText widget", {
     setup: function() {
       this.element = $('<div/>').appendTo(document.body);
-      this.mockControl = new MockControl();
     },
     teardown: function() {
-      this.mockControl.verify();
       this.element.remove();
     }
   });
+  
+  
   
   test("Initialization", function() {
     var sbt = new SearchByTextWidget(this.element, {});
@@ -18,6 +18,8 @@ $(document).ready(function() {
     same(1, this.element.find('.searchByText > .clearButton').size(), "The clear button element is added");
     same(0, this.element.find('.clearButton:visible').size(),         "The clear button is hidden");
   });
+  
+  
   
   test("Show clear button", function() {
     var sbt = new SearchByTextWidget(this.element, {});
@@ -35,6 +37,8 @@ $(document).ready(function() {
     same(0, this.element.find('.clearButton:visible').size(), "The clear button is visible after clearing text");
   });
   
+  
+  
   test("Clear button event", function() {
     var sbt = new SearchByTextWidget(this.element, {});
     var input = sbt.input;
@@ -45,6 +49,40 @@ $(document).ready(function() {
     sbt.clearButton.click();
     
     same("", input.val(), "Input is cleared");
+  });
+  
+  
+  
+  test("Clear on esc key", function() {
+    var sbt = new SearchByTextWidget(this.element, {});
+    
+    var keyEvent = jQuery.Event("keyup");
+    keyEvent.keyCode = 27;
+    
+    sbt.input.val('Test value');
+    sbt.input.trigger(keyEvent);
+    
+    same(sbt.input.val(), '', "The input is cleared");
+  });
+  
+  
+  
+  test("Search callback", function() {
+    var callbackCalled = false;
+    var sbt = new SearchByTextWidget(this.element, {
+      searchCallback: function(value) {
+        callbackCalled = true;
+        same(value, 'Test value', "The value is correct");
+      }
+    });
+    
+    sbt.input.val('Test value')
+    var keyEvent = jQuery.Event("keyup");
+    keyEvent.keyCode = 13;
+    
+    sbt.input.trigger(keyEvent);    
+    
+    ok(callbackCalled, "The search callback is called");
   });
 
 });

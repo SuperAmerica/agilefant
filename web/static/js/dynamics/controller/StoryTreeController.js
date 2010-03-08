@@ -83,8 +83,11 @@ StoryTreeController.prototype.initActions = function() {
   });
   
   $('<button style="width: 18ex;">Create a new story</button>')
-    .addClass("dynamics-button").appendTo(actionList);
+    .addClass("dynamics-button").appendTo(actionList).click(function() {
+      alert("Ääliö");
+  });
   
+  /*
   $('<br/>').appendTo(actionList);
   
   $('<button style="width: 10ex;">Expand all</button>').attr("disabled", true)
@@ -94,7 +97,7 @@ StoryTreeController.prototype.initActions = function() {
     .addClass("dynamics-button").appendTo(actionList);
   
   this.storyFiltersView = new StoryFiltersView({}, this, null, null);
-  this.storyFiltersView.getElement().appendTo(element);
+  this.storyFiltersView.getElement().appendTo(element); */
 };
 
 StoryTreeController.prototype._storyFilters = function(node, tree_obj) {

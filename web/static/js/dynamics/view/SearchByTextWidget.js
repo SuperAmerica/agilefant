@@ -7,7 +7,9 @@
  */
 var SearchByTextWidget = function(element, options) {
   this.parentElement = element;
-  this.options = {};
+  this.options = {
+    searchCallback: function() { alert("Not implemented"); }
+  };
   jQuery.extend(this.options, options);
   this.init();
 };
@@ -29,9 +31,21 @@ SearchByTextWidget.prototype.init = function() {
   var me = this;
   this.clearButton.click(function() {
     me.input.val('');
+    $(this).hide();
   });
-  this.input.keyup(function() {
-    if ($(this).val() != '') {
+  this.input.keyup(function(e) {
+    /* Check for enter and esc */
+    if (e.keyCode === 13 &&
+        me.options.searchCallback &&
+        typeof(me.options.searchCallback) == "function") {
+      me.options.searchCallback(me.input.val());
+    }
+    else if (e.keyCode === 27) {
+      me.clearButton.click();
+    }
+    
+    /* Check whether to show the clear button */
+    if ($(this).val() !== '') {
       me.clearButton.show();
     }
     else {

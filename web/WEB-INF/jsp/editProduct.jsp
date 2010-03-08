@@ -60,6 +60,8 @@ $(document).ready(function() {
       closeMenu();
     });
   });
+
+  var sbt = new SearchByTextWidget($('#searchByText'), {});
 });
 
 </script>
@@ -71,7 +73,7 @@ $(document).ready(function() {
 </style>
 <form onsubmit="return false;">
 <div class="ui-widget-content ui-corner-all structure-main-block dynamictable" id="storyTree">
-  <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree</div>
+  <div class="ui-widget-header ui-corner-all dynamictable-caption-block dynamictable-caption">Story tree<div id="searchByText" style="float: right; margin: -2px 5px 0 0;"> </div></div>
 </div>
 </form>
 

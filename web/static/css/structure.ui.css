@@ -9,6 +9,7 @@
  *  - Navigation tabs
  *  - Footer
  *  - Daily work styles
+ *  - Search by text box
  */
  
 /**
@@ -321,5 +322,55 @@ h2 > a:visited {
 
 h2 > a:hover {
   color: #2E6E9E !important;
+}
+
+
+/**
+ * QUICK SEARCH BOX
+ */
+.searchByText {
+  border-style: inset;
+  border-width: 2px;
+  border-color: #ccc;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  
+  overflow: hidden;
+  background: white;
+  background-image: url('../img/search.png');
+  background-repeat: no-repeat;
+  background-position: 0 45%;
+  
+  width: 20ex;
+  font-size: 10pt;
+}
+
+.searchByText input {
+  float: left;
+  border: none;
+  margin: 0 0 0 3ex;
+  width: 14ex;
+}
+
+.searchByText .clearButton {
+  position: relative;
+  right: 0;
+  float: right;
+  
+  margin: 0;
+  padding: 0;
+   
+  color: #666;
+  height: 16px;
+  width: 16px;
+  
+  cursor: pointer;
+  
+  font-family: cursive;
+  font-weight: bold;
+}
+
+.searchByText .clearButton:hover {
+  color: #000;
 }
 

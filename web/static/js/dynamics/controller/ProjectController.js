@@ -560,8 +560,8 @@ ProjectController.prototype.initializeStoryConfig = function() {
     cssClass : 'projectstory-row',
    // get : StoryModel.prototype.getDescription,
     editable : true,
+    get: StoryModel.prototype.getDescription,
     edit : {
-      get: StoryModel.prototype.getDescription,
       editor : "Wysiwyg",
       set : StoryModel.prototype.setDescription
     }

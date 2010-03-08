@@ -19,10 +19,14 @@ StoryFiltersView.prototype = new ViewPart();
 
 StoryFiltersView.prototype.initialize = function() {
   var me = this;
-  this.element = $('<div></div>');
-  this.filters = $('<form><div class="headerbar">Filters</div></form>');
+  this.element = $('<div/>');
+  this.filters = $('<form/>');
+  this.heading = $('<div>Filters</div>').css({'cursor': 'pointer', 'font-weight': 'bold'}).appendTo(this.filters);
+  this.heading.click(function() { me.element.find('.collapsible').toggle(); });
+  /*
   var nameFieldDiv = $('<div style="margin: 0.5em 10px 0;"></div>');
   this.nameField = $('<input type="text" name="filterByNameText" title="by name" style="padding: 4px; width: 30ex;" />').appendTo(nameFieldDiv);
+  */
   this.labelAutosuggest = new AutoSuggest("ajax/lookupLabels.action", {
     startText: "by label",
     queryParam: "labelName",
@@ -47,18 +51,20 @@ StoryFiltersView.prototype.initialize = function() {
 
   this.filterButton = $('<button name="filterButton" class="dynamics-button">Filter</button>');
   this.clearButton = $('<button name="clearButton" class="dynamics-button">Clear</button>');
-  nameFieldDiv.appendTo(this.filters);
-  this.labelAutosuggest.getElement().css('margin', '0.5em 10px 0').css('width', '300px');
-  this.labelAutosuggest.getElement().appendTo(this.filters);
+  //nameFieldDiv.appendTo(this.filters);
+  this.labelAutosuggest.getElement().addClass('collapsible').css({
+    'margin' : '0.5em 10px 0',
+    'width' : '300px'
+  }).appendTo(this.filters);
   
-  this.stateButtons = $('<div style="margin: 0.8em 10px 0; height: 1em; line-height: 1em"></div>').appendTo(this.filters);
+  this.stateButtons = $('<div style="margin: 0.8em 10px 0; height: 1em; line-height: 1em"></div>').addClass('collapsible').appendTo(this.filters);
   for (var i = 0, len = this.allStoryStates.length; i < len; i++) {
     var state = this.allStoryStates[i];
     me.addStateButton(state);
   }
   
   
-  this.actionButtons = $('<div style="margin: 0.8em 10px 0.5em"></div>').appendTo(this.filters);
+  this.actionButtons = $('<div style="margin: 0.8em 10px 0.5em"></div>').addClass('collapsible').appendTo(this.filters);
 
   this.filterButton.appendTo(this.actionButtons);
   this.clearButton.appendTo(this.actionButtons);

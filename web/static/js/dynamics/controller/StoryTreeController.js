@@ -13,6 +13,7 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   this.filters = [];
   this.parentElement = element;
   this.container = $('<div />').addClass("storyTreeContainer").appendTo(this.parentElement);
+  this.headerElement = $('<div/>').appendTo(this.container);
   this.element = $('<div/>').appendTo(this.container);
   this.actionsElement = $('<div/>').addClass('storytree-actions').appendTo(this.container);
   this.options = {
@@ -27,6 +28,7 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
 };
 StoryTreeController.prototype = new CommonController();
 StoryTreeController.createNodeUrls = {
+    0: "ajax/createStory.action",
     "inside": "ajax/treeCreateStoryUnder.action", 
     "after": "ajax/treeCreateStorySibling.action"
 };
@@ -68,8 +70,6 @@ StoryTreeController.prototype.refreshNode = function(element) {
   );
 };
 
-
-
 StoryTreeController.prototype.initActions = function() {
   var me = this;
   var actionHeader = $('<div/>').text('Actions').addClass('headerbar collapse-handle').appendTo(this.actionsElement);
@@ -84,7 +84,7 @@ StoryTreeController.prototype.initActions = function() {
   
   $('<button style="width: 18ex;">Create a new story</button>')
     .addClass("dynamics-button").appendTo(actionList).click(function() {
-      alert("Ääliö");
+      me.createNode(-1, 0);
   });
   
   /*
@@ -96,8 +96,7 @@ StoryTreeController.prototype.initActions = function() {
   $('<button style="width: 12ex;">Collapse all</button>').attr("disabled", true)
     .addClass("dynamics-button").appendTo(actionList);
   
-  this.storyFiltersView = new StoryFiltersView({}, this, null, null);
-  this.storyFiltersView.getElement().appendTo(element); */
+   */
 };
 
 StoryTreeController.prototype._storyFilters = function(node, tree_obj) {
@@ -207,7 +206,7 @@ StoryTreeController.prototype.initTree = function() {
   
 };
 StoryTreeController.prototype._treeLoaded = function() {
-  this.tree.open_all();
+//  this.tree.open_all();
   if(!this.hasFilters()) {
    this.element.find("li[storystate='DONE']:not(.leaf)").removeClass("open").addClass("closed"); 
   }

@@ -29,6 +29,7 @@ div.hierarchyContainer {
 }
 .storyTreeContainer {
   position: relative;
+  overflow: hidden;
 }
 .storytree-actions {
   position: absolute;

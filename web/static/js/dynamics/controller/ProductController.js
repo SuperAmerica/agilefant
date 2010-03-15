@@ -14,6 +14,7 @@ var ProductController = function ProductController(options) {
   this.assigmentListElement = options.assigmentListElement;
   this.hourEntryListElement = options.hourEntryListElement;
   this.storyTreeElement = options.storyTreeElement;
+  this.tabs = options.tabs;
   
   var me = this;
   this.textFilterElement = options.textFilterElement;
@@ -38,8 +39,7 @@ ProductController.prototype.filter = function() {
 };
 
 ProductController.prototype.getStateFilters = function() {
-  /* TODO: Add the state filters... where ? */
-  return ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"];
+  return this.storyTreeController.storyFilters.statesToKeep;
 };
 
 ProductController.prototype.getTextFilter = function() {
@@ -48,7 +48,7 @@ ProductController.prototype.getTextFilter = function() {
 
 ProductController.prototype.paintStoryTree = function() {
   if(!this.storyTreeController) {
-   this.storyTreeController =  new StoryTreeController(this.id, "product", this.storyTreeElement);
+   this.storyTreeController =  new StoryTreeController(this.id, "product", this.storyTreeElement, {}, this);
   } 
   this.storyTreeController.refresh();
 };

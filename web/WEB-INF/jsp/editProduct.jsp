@@ -28,7 +28,8 @@ $(document).ready(function() {
     projectListElement: $("#projects"),
     storyTreeElement: $('#storyTreeContainer'),
     hourEntryListElement: $("#backlogSpentEffort"),
-    searchByTextElement: $('#searchByText')
+    searchByTextElement: $('#searchByText'),
+    tabs: $('#productContents')
   });
   if(Configuration.isTimesheetsEnabled()) {
   	$("#backlogInfo").bind('tabsselect', function(event, ui) {

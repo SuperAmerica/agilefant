@@ -16,9 +16,6 @@ var ProjectController = function ProjectController(options) {
   this.textFilterElement = options.textFilterElement;
   this.textFilter = new SearchByTextWidget($('#searchByText'), { searchCallback: function() { me.filter(); } });
   
-  /* Keep track on which tab is selected for filtering purposes */
-  this.visibleView = "tree";
-  
   this.init();
   this.initializeProjectDetailsConfig();
   this.initializeIterationListConfig();
@@ -27,13 +24,16 @@ var ProjectController = function ProjectController(options) {
 };
 ProjectController.prototype = new BacklogController();
 
-
 ProjectController.prototype.filter = function() {
-  if (this.visibleView === "tree") {
+  var activeTab = this.tabs.tabs("option","selected");
+  if (activeTab === 0) {
+    MessageDisplay.Warning("Leaf story search not implemented");
+  }
+  else if (activeTab === 1) {
     this.storyTreeController.filter(this.getTextFilter(), [] /* The label filters */, this.getStateFilters());
   }
-  else if (this.visibleView === "leafStories") {
-    // Filtering logic for leaf story list
+  else if (activeTab === 2) {
+    MessageDisplay.Warning("Iteration search not implemented");
   }
 };
 

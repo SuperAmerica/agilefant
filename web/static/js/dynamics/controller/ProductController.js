@@ -28,7 +28,13 @@ var ProductController = function ProductController(options) {
 ProductController.prototype = new BacklogController();
 
 ProductController.prototype.filter = function() {
-  this.storyTreeController.filter(this.getTextFilter(), [], this.getStateFilters());
+  var activeTab = this.tabs.tabs("option","selected");
+  if (activeTab === 0) {
+    this.storyTreeController.filter(this.getTextFilter(), [], this.getStateFilters());
+  }
+  else if (activeTab === 1) {
+    MessageDisplay.Warning("Project search not implemented");
+  }
 };
 
 ProductController.prototype.getStateFilters = function() {

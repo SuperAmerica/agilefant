@@ -376,6 +376,9 @@
     </action>
     
     
+    <action name="treeCreateRootStory" method="create" class="storyAction">
+      <result type="dispatcher">/WEB-INF/jsp/fragments/storyTreePart.jsp</result>
+    </action>
         
     <action name="treeCreateStoryUnder" method="createStoryUnder" class="storyAction">
       <result type="dispatcher">/WEB-INF/jsp/fragments/storyTreePart.jsp</result>

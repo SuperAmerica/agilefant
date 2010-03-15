@@ -27,7 +27,6 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
 };
 StoryTreeController.prototype = new CommonController();
 StoryTreeController.createNodeUrls = {
-    0: "ajax/createStory.action",
     "inside": "ajax/treeCreateStoryUnder.action", 
     "after": "ajax/treeCreateStorySibling.action"
 };
@@ -70,14 +69,15 @@ StoryTreeController.prototype.refreshNode = function(element) {
 };
 
 StoryTreeController.prototype.initHeader = function() {
-  $('<div class="dynamictable-caption" style="margin-bottom: 1em;">Story tree</div>').appendTo(this.headerElement);
+  var me = this;
+  var heading = $('<div class="dynamictable-caption" style="margin-bottom: 1em;"><div style="float: left; width:50%">Story tree</span></div>').appendTo(this.headerElement);
   
-  /*
-  $('<button style="width: 18ex;">Create a new story</button>')
-    .addClass("dynamics-button").appendTo(actionList).click(function() {
-      me.createNode(-1, 0);
-  });  
-   */
+  var actions = $('<ul/>').addClass('dynamictable-captionactions').css({'width': '40%', 'float': 'right'}).appendTo(heading);
+  
+  $('<li>Create story</li>').css({'float': 'right'})
+    .addClass("dynamictable-captionaction create").click(function() {
+      me.createNode(-1, 0, 0);
+  }).appendTo(actions);
 };
 
 StoryTreeController.prototype._storyFilters = function(node, tree_obj) {
@@ -241,15 +241,26 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
     return;
   }
   var nodeNameEl = node.find("a").hide();
+  // Hide the "New folder" line
+  node.find("span").hide();
   var container = $('<div />').appendTo(node);
   var nameField = $('<input type="text" size="25" />').appendTo(container);
 
   var saveStory = function(event) {
     event.stopPropagation();
-    $.post(StoryTreeController.createNodeUrls[position], {storyId: parentStory, "story.name": nameField.val()}, function(fragment) {
-      container.remove();
-      node.replaceWith(fragment);
-    },"html");
+    event.preventDefault();
+    if (parentStory === 0) {
+      $.post("ajax/treeCreateRootStory.action", {backlogId: me.id, "story.name": nameField.val()}, function(fragment) {
+        container.remove();
+        node.replaceWith(fragment);
+      },"html");
+    }
+    else {
+      $.post(StoryTreeController.createNodeUrls[position], {storyId: parentStory, "story.name": nameField.val()}, function(fragment) {
+        container.remove();
+        node.replaceWith(fragment);
+      },"html");
+    }
   };
   var cancelFunc = function() {
     container.remove();
@@ -262,7 +273,7 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
       saveStory(event);
     } else if(event.keyCode === 27) {
       cancelFunc();
-    }
+    }    
   });
   $('<input type="button" value="cancel" />').click(cancelFunc).appendTo(container);
   nameField.focus();

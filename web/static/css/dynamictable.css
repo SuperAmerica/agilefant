@@ -82,6 +82,21 @@
   background-position: 0% 100%;
 }
 
+.dynamictable-filterimg {
+  background-image: url('../img/filter.png');
+  background-position: 0% 0%;
+  width: 16px;
+  height: 16px;
+  float: left;
+  margin-left: 0.5em;
+  display: block; 
+  cursor: pointer;
+}
+
+.dynamictable-filterimg-active {
+  background-position: 16px 0;  
+}
+
 .dynamictable-placeholder {
   margin: 3px 2px 3px 2px;
   background-color: #ffffdd;

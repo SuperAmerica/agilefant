@@ -35,7 +35,8 @@ var DynamicTableColumnConfiguration = function DynamicTableColumnConfiguration(o
 				buttons: null
 				//required: false,
 				//minlength: null
-			}
+			},
+			filter: null
 	};
 	$.extend(this.options,options);
 	this.options.edit.get = this.options.get;
@@ -102,6 +103,12 @@ DynamicTableColumnConfiguration.prototype.isOpenOnRowEdit = function() {
 };
 DynamicTableColumnConfiguration.prototype.isSortable = function() {
 	return this.options.sortCallback !== null;
+};
+DynamicTableColumnConfiguration.prototype.isFilterable = function() {
+  return this.options.filter !== null;
+};
+DynamicTableColumnConfiguration.prototype.getFilter = function() {
+  return this.options.filter;
 };
 DynamicTableColumnConfiguration.prototype.isVisible = function() {
   return this.options.visible;

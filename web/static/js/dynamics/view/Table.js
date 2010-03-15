@@ -40,9 +40,11 @@ DynamicTable.cssClasses = {
   evenRow : "dynamictable-even",
   sortImg : "dynamictable-sortimg",
   sortImgUp : "dynamictable-sortimg-up",
+  sortImgDown : "dynamictable-sortimg-down",
+  filterImg : "dynamictable-filterimg",
+  filterImgActive : "dynamictable-filterimg-active",
   captionActions : "dynamictable-captionactions",
   captionAction : "dynamictable-captionaction",
-  sortImgDown : "dynamictable-sortimg-down",
   fieldError : "invalidValue",
   validationError : "validationError",
   validationErrorContainer : "cellError",
@@ -434,6 +436,36 @@ DynamicTable.prototype._renderHeaderColumn = function(index) {
   if (columnConf.getHeaderTooltip()) {
     columnHeader.attr("title", columnConf.getHeaderTooltip());
   }
+  if (columnConf.isFilterable()) {
+    var filterImg = $('<div/>').addClass(DynamicTable.cssClasses.filterImg).appendTo(columnHeader);
+    me._initFilter(filterImg, columnConf);
+    nameElement.css('float','left');
+  }
+};
+
+DynamicTable.prototype._initFilter = function(element, columnConf) {
+  element.click(function() {
+    if (columnConf.getFilter() === "state") {
+      var bub = new Bubble($(this), {
+        title: "Filter by state",
+        offsetX: -15,
+        minWidth: 100,
+        minHeight: 20
+      });
+      var widget = new StateFilterWidget(bub.getElement(), {
+        callback: function(isActive) {
+          if (isActive) {
+            element.addClass(DynamicTable.cssClasses.filterImgActive);
+          }
+          else {
+            element.removeClass(DynamicTable.cssClasses.filterImgActive);
+          }
+          element.data('activeStates', widget.getFilter());
+        },
+        activeStates: element.data('activeStates')
+      });
+    }
+  });
 };
 
 DynamicTable.prototype.setFilter = function(filter) {

@@ -46,6 +46,9 @@ ProjectController.prototype.getTextFilter = function() {
   return this.textFilter.getValue();
 };
 
+ProjectController.prototype.stateFilterFactory = function() {
+  return new StateFilterWidget();
+};
 
 /**
  * Indices for column configuration
@@ -533,11 +536,12 @@ ProjectController.prototype.initializeStoryConfig = function() {
     minWidth : 70,
     autoScale : true,
     cssClass : 'projectstory-row',
-    title : "State",
+    title : 'State',
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
+    filter: "state",
     edit : {
       editor : "Selection",
       set : StoryModel.prototype.setState,

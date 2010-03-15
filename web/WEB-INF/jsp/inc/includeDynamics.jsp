@@ -32,6 +32,7 @@
 <script type="text/javascript" src="static/js/dynamics/view/SearchByTextWidget.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/StoryInfoWidget.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/StoryFiltersView.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/view/StateFilterWidget.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/SpentEffortWidget.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Bubble.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 

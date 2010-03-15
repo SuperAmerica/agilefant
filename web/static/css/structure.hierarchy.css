@@ -70,8 +70,6 @@ div.hierarchyContainer {
  */
 .infobubble {
   position: absolute;
-  min-height:   80px;
-  min-width:    400px;
   max-width:    700px;
   padding: 0.5em;
   z-index:  1000;

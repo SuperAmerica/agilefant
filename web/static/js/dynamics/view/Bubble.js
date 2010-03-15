@@ -5,7 +5,11 @@ var Bubble = function Bubble(referenceElement, options) {
   this.options = {
     closeCallback: function() { return false; },
     removeOthers: true,
-    title: "Bubble"
+    title:     null,
+    offsetX:   100,
+    offsetY:   35,
+    minWidth:  400,
+    minHeight: 80
   };
   jQuery.extend(this.options, options)
   this.init();
@@ -47,8 +51,13 @@ Bubble.prototype._createElements = function() {
   
   // Header
   var me = this;
-  this.header = $('<div style="height: 1.5em;"><h3 style="float: left;">' + this.options.title + '</h3></div>')
-    .appendTo(this.element);
+  this.header = $('<div style="height: 1.5em;"></div>').appendTo(this.element);
+  
+  // Title
+  if (this.options.title !== null) {
+    $('<h3 style="float: left;">' + this.options.title + '</h3>)').appendTo(this.header);    
+  }
+  
   $('<a title="Close bubble" class="close-button">X</a>').click(function() {
     me.destroy();
   }).appendTo(this.header);
@@ -59,8 +68,10 @@ Bubble.prototype._position = function() {
   // Position the bubble
   var pos = this.referenceElement.offset();
   this.parentElement.css({
-    'top': pos.top + 35 + 'px',
-    'left': pos.left + 100 + 'px'
+    'top': pos.top + this.options.offsetY + 'px',
+    'left': pos.left + this.options.offsetX + 'px',
+    'min-width': this.options.minWidth,
+    'min-height': this.options.minHeight
   });
   // Add to document
   this.parentElement.appendTo(document.body);

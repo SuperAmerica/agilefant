@@ -1,13 +1,11 @@
 /**
  * Story tree controller.
  * 
- * Note: currently works only for project
- * 
  * @constructor
  * @base CommonController
  * @param {DOMElement} element DOM parent node for the story table. 
  */
-var StoryTreeController = function StoryTreeController(id, type, element, options) {
+var StoryTreeController = function StoryTreeController(id, type, element, options, parentController) {
   this.id = id;
   this.type = type;
   this.filters = [];
@@ -15,6 +13,7 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
   this.container = $('<div />').addClass("storyTreeContainer").appendTo(this.parentElement);
   this.headerElement = $('<div/>').appendTo(this.container);
   this.element = $('<div/>').appendTo(this.container);
+  this.parentController = parentController;
   this.options = {
     refreshCallback: null,
     disableRootSort: false
@@ -70,7 +69,33 @@ StoryTreeController.prototype.refreshNode = function(element) {
 
 StoryTreeController.prototype.initHeader = function() {
   var me = this;
-  var heading = $('<div class="dynamictable-caption" style="margin-bottom: 1em;"><div style="float: left; width:50%">Story tree</span></div>').appendTo(this.headerElement);
+  var heading = $('<div class="dynamictable-caption" style="margin-bottom: 1em;"></div>').appendTo(this.headerElement);
+  
+  var title = $('<div style="float: left; width:50%"><span style="float: left;">Story tree</span></div>').appendTo(heading);
+  var filterImg = $('<div/>').addClass(DynamicTable.cssClasses.filterImg).appendTo(title);
+  
+  filterImg.click(function() {
+    var bub = new Bubble($(this), {
+      title: "Filter by state",
+      offsetX: -15,
+      minWidth: 100,
+      minHeight: 20,
+      closeCallback: function() { me.parentController.filter(); }
+    });
+    var widget = new StateFilterWidget(bub.getElement(), {
+      callback: function(isActive) {
+        if (isActive) {
+          filterImg.addClass(DynamicTable.cssClasses.filterImgActive);
+        }
+        else {
+          filterImg.removeClass(DynamicTable.cssClasses.filterImgActive);
+        }
+        me.storyFilters.statesToKeep = widget.getFilter();
+      },
+      activeStates: me.storyFilters.statesToKeep
+    });
+  });
+  
   
   var actions = $('<ul/>').addClass('dynamictable-captionactions').css({'width': '40%', 'float': 'right'}).appendTo(heading);
   

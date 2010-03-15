@@ -19,7 +19,7 @@ SearchByTextWidget.prototype = new ViewPart();
 SearchByTextWidget.prototype.init = function() {
   /* Append necessary elements */
   this.element = $('<div/>').addClass('searchByText').appendTo(this.parentElement);
-  this.input = $('<input type="text" />').attr('title','Search...').appendTo(this.element);
+  this.input = $('<input type="text" />').appendTo(this.element);
   this.clearButton = $('<div/>').text('X').hide().addClass('clearButton').appendTo(this.element);
   
   /* Labelify the input element */

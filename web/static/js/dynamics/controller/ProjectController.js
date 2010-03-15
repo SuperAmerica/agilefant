@@ -14,7 +14,7 @@ var ProjectController = function ProjectController(options) {
   this.projectDetailsElement = options.projectDetailsElement;
   
   this.textFilterElement = options.textFilterElement;
-  this.textFilter = new SearchByTextWidget($('#searchByText'), { searchCallback: function() { me.filter(); } });
+  this.textFilter = new SearchByTextWidget($(options.textFilterElement), { searchCallback: function() { me.filter(); } });
   
   this.init();
   this.initializeProjectDetailsConfig();
@@ -30,7 +30,9 @@ ProjectController.prototype.filter = function() {
     MessageDisplay.Warning("Leaf story search not implemented");
   }
   else if (activeTab === 1) {
-    this.storyTreeController.filter(this.getTextFilter(), [] /* The label filters */, this.getStateFilters());
+    this.storyTreeController.filter(this.getTextFilter(),
+        [], /* The label filters */
+        this.getStateFilters());
   }
   else if (activeTab === 2) {
     MessageDisplay.Warning("Iteration search not implemented");
@@ -38,8 +40,7 @@ ProjectController.prototype.filter = function() {
 };
 
 ProjectController.prototype.getStateFilters = function() {
-  /* TODO: Add the state filters... where ? */
-  return ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"];
+  return this.storyTreeController.storyFilters.statesToKeep;
 };
 
 ProjectController.prototype.getTextFilter = function() {
@@ -194,7 +195,7 @@ ProjectController.prototype._paintIterations = function(element) {
 
 ProjectController.prototype._paintStoryTree = function(element) {
   if(!this.storyTreeController) {
-   this.storyTreeController =  new StoryTreeController(this.id, "project", element);
+   this.storyTreeController =  new StoryTreeController(this.id, "project", element, {}, this);
   } 
   this.storyTreeController.refresh();
   

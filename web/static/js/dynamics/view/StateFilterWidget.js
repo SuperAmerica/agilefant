@@ -54,6 +54,12 @@ StateFilterWidget.prototype.initActiveStates = function() {
   }
 };
 
+StateFilterWidget.prototype.clearFilter = function() {
+  this.parentElement.find('.inlineTaskState').fadeTo("fast", 1);
+  this.activeStates = [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE" ];
+  this.options.callback(this.isActive());
+};
+
 StateFilterWidget.prototype.init = function() {
   this.stateButtons = $('<div style="margin: 0.8em 10px 0; height: 1em; line-height: 1em"></div>').appendTo(this.parentElement);
 
@@ -66,6 +72,11 @@ StateFilterWidget.prototype.init = function() {
     }
   }
   
+  // Add clear button
+  var me = this;
+  $('<a>clear filter</a>').click(function() {
+    me.clearFilter();
+  }).css({'float': 'right', 'margin-top': '0.5em'}).appendTo(this.parentElement);
 };
 
 StateFilterWidget.prototype.addStateButton = function(state) {

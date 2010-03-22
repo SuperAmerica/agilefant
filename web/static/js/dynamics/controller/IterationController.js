@@ -550,6 +550,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
+    filter: "state",
     edit : {
       editor : "Selection",
       set : StoryModel.prototype.setState,

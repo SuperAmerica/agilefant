@@ -385,18 +385,16 @@ h2 > a:hover {
   padding: 0 !important;
   
   color: #246 !important;
-  font-size: 8pt;
+  font-size: 7pt;
   font-family: verdana, arial, sans-serif;
   text-align: center;
-  text-transform: lowercase;
-  font-variant: small-caps;
+  text-transform: uppercase;
   
   width: 36px;
 }
 
 .labelIconMultiple {
   background-position: 0 50%;
-  
 }
 
 .labelIconNoLabel {

@@ -168,6 +168,10 @@ StoryInfoBubble.prototype._createConfig = function() {
     }
   });
   config.addColumnConfiguration(5, {
+    title : "Labels",
+    subViewFactory: StoryInfoBubble.prototype.labelsViewFactory
+  });
+  config.addColumnConfiguration(6, {
     title : "Description",
     get : StoryModel.prototype.getDescription,
     editable : true,
@@ -181,3 +185,6 @@ StoryInfoBubble.prototype._createConfig = function() {
 };
 
 
+StoryInfoBubble.prototype.labelsViewFactory = function(view, model) {
+  return new LabelsView({}, this, model, view); 
+};

@@ -40,7 +40,7 @@ LabelsView.prototype.initialize = function() {
       }
       return newData;
     },
-    minChars: 3
+    minChars: 1
   }, this);
   this.labelsElement.appendTo(this.element);
   this.addButton.appendTo(this.labelsElement);
@@ -74,8 +74,8 @@ LabelsView.prototype.render = function() {
 
 LabelsView.prototype.renderLabel = function(label, labelContainer) {
   var me = this;
-  var tempLabel = $('<div class="label-item">' 
-        + label.getDisplayName() + '</div>').appendTo(labelContainer);
+  var tempLabel = $('<div class="label-item"><span style="float:left;">' 
+        + label.getDisplayName() + '</span></div>').appendTo(labelContainer);
   var deleteButton = $('<div class="as-close" style="display: none">X</div>');
   var deleteButtonContainer = $('<div style="float:right; width: 20px; height: 16px"/>');
   
@@ -83,6 +83,10 @@ LabelsView.prototype.renderLabel = function(label, labelContainer) {
   deleteButtonContainer.appendTo(tempLabel);
   deleteButton.click(function(){
     label.remove();
+    tempLabel.remove();
+    if (me.labelsElement.find('.label-item').length === 0) {
+      $('<div class="label-item">This story has no labels</div>').prependTo(me.labelsElement);
+    }
   });
   tempLabel.mouseenter(function() {
     deleteButton.show(); 

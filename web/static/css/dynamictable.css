@@ -539,7 +539,7 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 .label-item {
 	color: #2b3840;
 	font-size: 13px;
-	font-family: "Lucdia Grande", arial, sans-serif;
+	font-family: arial, verdana, sans-serif;
 	text-shadow: 0 1px 1px #fff;
 	background-color: #ddeefe;
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#ddeefe), to(#bfe0f1));

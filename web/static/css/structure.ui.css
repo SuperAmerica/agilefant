@@ -374,3 +374,31 @@ h2 > a:hover {
   color: #000;
 }
 
+
+/**
+ * LABEL ICONS
+ */
+.labelIcon {
+  background-image: url('../img/labelIcon.png');
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  padding: 0 !important;
+  
+  color: #246 !important;
+  font-size: 8pt;
+  font-family: verdana, arial, sans-serif;
+  text-align: center;
+  text-transform: lowercase;
+  font-variant: small-caps;
+  
+  width: 36px;
+}
+
+.labelIconMultiple {
+  background-position: 0 50%;
+  
+}
+
+.labelIconNoLabel {
+  background-position: 0 100%;  
+}

@@ -54,6 +54,7 @@ $(document).ready(function() {
     $("#menuAccordion").accordion('activate', activatedSection);
   } else {
     window.myAssignmentsMenuController = new MyAssignmentsMenuController($('#assignmentsMenuTree'), $('#menuControl'));
+    $('#menuAccordion').accordion('activate', 0);
   }
 });
 </script>

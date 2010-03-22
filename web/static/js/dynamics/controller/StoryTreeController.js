@@ -103,6 +103,20 @@ StoryTreeController.prototype.initHeader = function() {
     .addClass("dynamictable-captionaction create").click(function() {
       me.createNode(-1, 0, 0);
   }).appendTo(actions);
+  
+  var expand = $('<li>Expand all</li>').css({'float': 'right'}).addClass("dynamictable-captionaction create").appendTo(actions);
+  var collapse = $('<li>Collapse all</li>').css({'float': 'right'}).hide().addClass("dynamictable-captionaction create").appendTo(actions);
+  
+  expand.click(function() {
+    $(this).hide();
+    collapse.show();
+    me.tree.open_all();
+  });
+  collapse.click(function() {
+    $(this).hide();
+    expand.show();
+    me.tree.close_all();
+  });
 };
 
 StoryTreeController.prototype._storyFilters = function(node, tree_obj) {

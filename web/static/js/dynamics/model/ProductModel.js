@@ -97,12 +97,12 @@ ProductModel.prototype.reload = function() {
 
 ProductModel.prototype.addIteration = function(iteration) {
   this.addRelation(iteration);
-  this.relationEvents();
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"iteration"));
 };
 
 ProductModel.prototype.addProject = function(project) {
   this.addRelation(project);
-  this.relationEvents();
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"project"));
 };
 
 /* GETTERS */

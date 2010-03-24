@@ -198,7 +198,7 @@ ProjectModel.prototype._remove = function(successCallback, extraData) {
 
 ProjectModel.prototype.addIteration = function(iteration) {
   this.addRelation(iteration);
-  this.relationEvents();
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"iteration"));
 };
 
 

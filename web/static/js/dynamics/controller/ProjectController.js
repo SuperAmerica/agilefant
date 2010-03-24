@@ -47,9 +47,41 @@ ProjectController.prototype.getTextFilter = function() {
   return this.textFilter.getValue();
 };
 
-ProjectController.prototype.stateFilterFactory = function() {
-  return new StateFilterWidget();
+
+ProjectController.prototype.filterLeafStoriesByState = function(element) {
+  var me = this;
+  var bub = new Bubble(element, {
+    title: "Filter by state",
+    offsetX: -15,
+    minWidth: 100,
+    minHeight: 20
+  });
+  var filterFunc = function(stories) {
+    var ret = [];
+    for(var i = 0 ; i < stories.length; i++) {
+       if(!me.leafStoriesStateFilters || jQuery.inArray(stories[i].getState(), me.leafStoriesStateFilters)) {
+         ret.push(stories[i])
+       }
+    }
+    return ret;
+  };
+  
+  var widget = new StateFilterWidget(bub.getElement(), {
+   callback: function(isActive) {
+      me.leafStoriesStateFilters = widget.getFilter();
+      if(isActive) {
+        me.storyListView.activateColumnFilter("State");
+        me.storyListView.setFilter(filterFunc);
+      } else {
+        me.storyListView.disableColumnFilter("State");
+        me.storyListView.setFilter(null);
+      }
+      me.storyListView.render();
+    },
+    activeStates: me.leafStoriesStateFilters
+  });
 };
+
 
 /**
  * Indices for column configuration
@@ -542,7 +574,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
-    filter: "state",
+    filter: ProjectController.prototype.filterLeafStoriesByState,
     edit : {
       editor : "Selection",
       set : StoryModel.prototype.setState,

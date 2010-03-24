@@ -18,6 +18,7 @@ var DynamicTable = function DynamicTable(controller, model, config, parentView) 
   this.oldMiddleRows = [];
   // headers
   this.headers = null;
+  this.filterButtons = {};
   if (config) {
     this.config = config;
   } else {
@@ -437,35 +438,28 @@ DynamicTable.prototype._renderHeaderColumn = function(index) {
     columnHeader.attr("title", columnConf.getHeaderTooltip());
   }
   if (columnConf.isFilterable()) {
-    var filterImg = $('<div/>').addClass(DynamicTable.cssClasses.filterImg).appendTo(columnHeader);
-    me._initFilter(filterImg, columnConf);
+    var  filterEl  = $('<div/>').addClass(DynamicTable.cssClasses.filterImg).appendTo(columnHeader);
+    this.filterButtons[columnConf.getTitle()] = filterEl;
+    filterEl.click(function() {
+      columnConf.getFilter().call(me.getController(), filterEl);
+      return false;
+    });
     nameElement.css('float','left');
   }
 };
 
-DynamicTable.prototype._initFilter = function(element, columnConf) {
-  element.click(function() {
-    if (columnConf.getFilter() === "state") {
-      var bub = new Bubble($(this), {
-        title: "Filter by state",
-        offsetX: -15,
-        minWidth: 100,
-        minHeight: 20
-      });
-      var widget = new StateFilterWidget(bub.getElement(), {
-        callback: function(isActive) {
-          if (isActive) {
-            element.addClass(DynamicTable.cssClasses.filterImgActive);
-          }
-          else {
-            element.removeClass(DynamicTable.cssClasses.filterImgActive);
-          }
-          element.data('activeStates', widget.getFilter());
-        },
-        activeStates: element.data('activeStates')
-      });
-    }
-  });
+DynamicTable.prototype.activateColumnFilter = function(columnName) {
+  var button = this.filterButtons[columnName];
+  if(button) {
+    button.addClass(DynamicTable.cssClasses.filterImgActive);
+  }
+};
+
+DynamicTable.prototype.disableColumnFilter = function(columnName) {
+  var button = this.filterButtons[columnName];
+  if(button) {
+    button.removeClass(DynamicTable.cssClasses.filterImgActive);
+  }
 };
 
 DynamicTable.prototype.setFilter = function(filter) {

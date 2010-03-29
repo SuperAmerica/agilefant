@@ -59,7 +59,7 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
   var filterFunc = function(stories) {
     var ret = [];
     for(var i = 0 ; i < stories.length; i++) {
-      if(!me.leafStoriesStateFilters || jQuery.inArray(stories[i].getState(), me.leafStoriesStateFilters)) {
+      if(!me.leafStoriesStateFilters || jQuery.inArray(stories[i].getState(), me.leafStoriesStateFilters) !== -1) {
         ret.push(stories[i]);
        }
     }

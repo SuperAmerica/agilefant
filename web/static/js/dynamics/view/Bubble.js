@@ -11,7 +11,7 @@ var Bubble = function Bubble(referenceElement, options) {
     minWidth:  400,
     minHeight: 80
   };
-  jQuery.extend(this.options, options)
+  jQuery.extend(this.options, options);
   this.init();
 };
 Bubble.prototype = new ViewPart();

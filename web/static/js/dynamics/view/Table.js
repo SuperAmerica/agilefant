@@ -495,7 +495,7 @@ DynamicTable.prototype._hardRender = function(section) {
 
 DynamicTable.prototype.resort = function() {
   this._sort();
-  var tableRows = [];;
+  var tableRows = [];
   tableRows.concat(this.upperRows,this.middleRows, this.bottomRows); 
   this.currentTableRows = tableRows;
   this._draw(this.middleRows);

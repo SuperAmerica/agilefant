@@ -153,7 +153,7 @@ ProductController.prototype.removeProduct = function() {
     okCallback: function(extraData) {
       var confirmation = extraData.confirmationString;
       if (confirmation && confirmation.toLowerCase() == 'yes') {
-        var confirmation = extraData.confirmationString;
+        confirmation = extraData.confirmationString;
         if (confirmation && confirmation.toLowerCase() == 'yes') {
           window.location.href = "deleteProduct.action?confirmationString=yes&productId=" + me.model.getId();
         }

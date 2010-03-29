@@ -59,8 +59,8 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
   var filterFunc = function(stories) {
     var ret = [];
     for(var i = 0 ; i < stories.length; i++) {
-       if(!me.leafStoriesStateFilters || jQuery.inArray(stories[i].getState(), me.leafStoriesStateFilters)) {
-         ret.push(stories[i])
+      if(!me.leafStoriesStateFilters || jQuery.inArray(stories[i].getState(), me.leafStoriesStateFilters)) {
+        ret.push(stories[i]);
        }
     }
     return ret;
@@ -238,10 +238,10 @@ ProjectController.prototype.paint = function() {
   var selectedTab = this.tabs.tabs("option","selected");
   var tmpSel = (selectedTab === 2) ? 0 : 2;
   this.tabs.tabs("select", tmpSel);
-  this.tabs.bind("tabsselect", function(event, ui) {
+  this.tabs.bind("tabsselect",function(event, ui){
     if(ui.index === 0) { //leaf stories
       me._paintLeafStories(ui.panel);
-    } else if(ui.index === 1) { //Story tree
+    } else if(ui.index === 1) { //Story tree
       me._paintStoryTree(ui.panel);
     } else if(ui.index === 2) { //iteration list
       me._paintIterations(ui.panel);
@@ -269,7 +269,7 @@ ProjectController.prototype.removeProject = function() {
     okCallback: function(extraData) {
       var confirmation = extraData.confirmationString;
       if (confirmation && confirmation.toLowerCase() == 'yes') {
-        var confirmation = extraData.confirmationString;
+        confirmation = extraData.confirmationString;
         if (confirmation && confirmation.toLowerCase() == 'yes') {
           window.location.href = "deleteProject.action?confirmationString=yes&projectId=" + me.model.getId();
         }

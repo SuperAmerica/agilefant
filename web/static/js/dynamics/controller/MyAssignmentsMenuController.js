@@ -45,7 +45,7 @@ MyAssignmentsMenuController.prototype.initTree = function() {
     },
     persist: true,
     debugLevel: 0,
-    cookieId: "agilefant-my-assignments-menu-dynatree",
+    cookieId: "agilefant-my-assignments-menu-dynatree"
   });
 
   this.tree = this.element.dynatree("getTree");

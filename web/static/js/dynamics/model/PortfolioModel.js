@@ -53,7 +53,7 @@ PortfolioModel.prototype._setData = function(newData) {
 };
 
 PortfolioModel.prototype.reload = function() {
-  if (this.isReloading) return;
+  if (this.isReloading) { return; }
   this.isReloading = true;
   var me = this;
   jQuery.ajax({

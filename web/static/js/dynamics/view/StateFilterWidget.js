@@ -65,7 +65,7 @@ StateFilterWidget.prototype.init = function() {
 
   // Add all the buttons
   for (var i = 0; i < this.allStoryStates.length; i++) {
-    var state = this.allStoryStates[i]
+    var state = this.allStoryStates[i];
     var button = this.addStateButton(state);
     if (jQuery.inArray(state.name, this.activeStates) === -1) {
       button.fadeTo("fast", 0.5);
@@ -81,7 +81,7 @@ StateFilterWidget.prototype.init = function() {
 
 StateFilterWidget.prototype.addStateButton = function(state) {
   var me = this;
-  var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state["short"] + '</div>');
+  var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.short + '</div>');
   stateDiv.click(function() {
     if ($.inArray(state.name, me.activeStates) != -1) {
       stateDiv.fadeTo("fast", 0.5);

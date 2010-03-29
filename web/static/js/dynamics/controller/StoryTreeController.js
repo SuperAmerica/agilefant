@@ -53,7 +53,7 @@ StoryTreeController.prototype.refreshNode = function(element) {
   jQuery.get(
       "ajax/treeRetrieveStory.action",
       {
-        "storyId": parseInt($(node).attr("storyId"))
+        "storyId": parseInt($(node).attr("storyId"), 10)
       },
       function(data, textStatus, xhr) {
         var elem = $(data);

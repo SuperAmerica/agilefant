@@ -77,11 +77,11 @@ TeamListController.prototype.initConfig = function() {
     callback: TeamListController.prototype.createTeam
   });
   
-  var collapse = {
-      minWidth : 24,
-      autoScale : false,
-      subViewFactory: TeamListController.prototype.toggleFactory
-  };
+//  var collapse = {
+//      minWidth : 24,
+//      autoScale : false,
+//      subViewFactory: TeamListController.prototype.toggleFactory
+//  };
   
   var name = {
     minWidth : 200,
@@ -102,17 +102,6 @@ TeamListController.prototype.initConfig = function() {
     autoScale : true,
     title: "Members",
     decorator: DynamicsDecorators.teamUserCountDecorator,
-    get: TeamModel.prototype.getUsers
-  };
-  
-  var members = {
-    minWidth : 80,
-    fullWidth : true,
-    visible : false,
-    autoScale : true,
-    cssClass : 'team-row',
-    title: "Members",
-    decorator: DynamicsDecorators.teamUserListDecorator,
     get: TeamModel.prototype.getUsers,
     editable: true,
     edit: {
@@ -123,8 +112,14 @@ TeamListController.prototype.initConfig = function() {
     }
   };
   
-  this.teamListConfig.addColumnConfiguration(0, collapse);
-  this.teamListConfig.addColumnConfiguration(1, name);
-  this.teamListConfig.addColumnConfiguration(2, memberNo);
-  this.teamListConfig.addColumnConfiguration(3, members);
+  var actions = {
+    minWidth : 30,
+    autoScale : true,
+    title: "Actions",
+    subViewFactory: TeamRowController.prototype.teamActionFactory
+  };
+    
+  this.teamListConfig.addColumnConfiguration(0, name);
+  this.teamListConfig.addColumnConfiguration(1, memberNo);
+//  this.teamListConfig.addColumnConfiguration(2, actions);
 };

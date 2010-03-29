@@ -18,13 +18,13 @@ TeamRowController.prototype = new CommonController();
  * 
  */
 TeamRowController.prototype.teamActionFactory = function(view, model) {
-  var actionItems = [ {
+  var actionItems = [{
     text : "Delete",
-    callback : TeamRowController.prototype.removeTeam
+    callback : TeamRowController.prototype.removeTeam,
+    enabled: false
   } ];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;
 };
-
 

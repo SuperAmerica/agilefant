@@ -26,10 +26,10 @@ UserRowController.prototype.userActionFactory = function(view, model) {
     text : "Disable",
     callback : UserRowController.prototype.disableUser,
     enabled: UserRowController.prototype.showDisableAction
-  }, {
+  }/*, {
     text : "Delete",
     callback : UserRowController.prototype.removeUser
-  } ];
+  } */];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;

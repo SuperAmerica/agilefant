@@ -19,13 +19,14 @@ ProjectRowController.prototype = new BacklogController();
  * @member ProjectRowController
  */
 ProjectRowController.columnIndices = {
-    status: 0,
+    link: 0,
     name: 1,
-    startDate: 2,
-    endDate: 3,
-    actions: 4,
-    description: 5,
-    buttons: 6
+    status: 2,
+    startDate: 3,
+    endDate: 4,
+    actions: 5,
+    description: 6,
+    buttons: 7
 };
 
 

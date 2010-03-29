@@ -415,6 +415,17 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     subViewFactory: IterationRowController.prototype.toggleFactory
   });
 
+  config.addColumnConfiguration(IterationRowController.columnIndices.link, {
+    minWidth : 25,
+    autoScale : true,
+    title : "ID",
+    headerTooltip : 'Iteration id [link to page]',
+    cssClass: "backlog-id-link",
+    get : IterationModel.prototype.getId,
+    decorator: DynamicsDecorators.backlogNameLinkDecorator,
+    sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getId)
+  });
+  
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
     minWidth : 280,
     autoScale : true,

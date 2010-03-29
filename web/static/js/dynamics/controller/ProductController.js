@@ -187,21 +187,16 @@ ProductController.prototype.initializeProjectListConfig = function() {
     callback : ProductController.prototype.createProject
   });
 
-  config.addColumnConfiguration(ProjectRowController.columnIndices.status, {
+
+  config.addColumnConfiguration(ProjectRowController.columnIndices.link, {
     minWidth : 25,
     autoScale : true,
-    cssClass : 'productstory-row',
-    title : "Status",
-    headerTooltip : 'Project status',
-    get : ProjectModel.prototype.getStatus,
-    decorator: DynamicsDecorators.projectStatusDecorator,
-    defaultSortColumn: false,
-    editable : true,
-    edit : {
-      editor : "Selection",
-      set : ProjectModel.prototype.setStatus,
-      items : DynamicsDecorators.projectStates
-    }
+    title : "ID",
+    headerTooltip : 'Project id [link to page]',
+    cssClass: "backlog-id-link",
+    get : ProjectModel.prototype.getId,
+    decorator: DynamicsDecorators.backlogNameLinkDecorator,
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getId)
   });
   config.addColumnConfiguration(ProjectRowController.columnIndices.name, {
     minWidth : 280,
@@ -217,6 +212,22 @@ ProductController.prototype.initializeProjectListConfig = function() {
       editor : "Text",
       set : ProjectModel.prototype.setName,
       required: true
+    }
+  });
+  config.addColumnConfiguration(ProjectRowController.columnIndices.status, {
+    minWidth : 25,
+    autoScale : true,
+    cssClass : 'productstory-row',
+    title : "Status",
+    headerTooltip : 'Project status',
+    get : ProjectModel.prototype.getStatus,
+    decorator: DynamicsDecorators.projectStatusDecorator,
+    defaultSortColumn: false,
+    editable : true,
+    edit : {
+      editor : "Selection",
+      set : ProjectModel.prototype.setStatus,
+      items : DynamicsDecorators.projectStates
     }
   });
   config.addColumnConfiguration(ProjectRowController.columnIndices.startDate, {

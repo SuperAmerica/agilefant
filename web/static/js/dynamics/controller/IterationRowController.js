@@ -20,13 +20,14 @@ IterationRowController.prototype = new BacklogController();
  */
 IterationRowController.columnIndices = {
     expand: 0,
-    name: 1,
-    startDate: 2,
-    endDate: 3,
-    actions: 4,
-    description: 5,
-    buttons: 6,
-    storiesData: 7
+    link:   1,
+    name:   2,
+    startDate: 3,
+    endDate: 4,
+    actions: 5,
+    description: 6,
+    buttons: 7,
+    storiesData: 8
 };
 
 

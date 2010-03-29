@@ -677,7 +677,17 @@ table.project-iteration-metrics {
   background-color: #edf;
 }
 
+.backlog-id-link {
+  font-size: 80%;
+  text-align: right;
+  cursor: pointer;
+}
 
+.backlog-id-link span {
+  color: #1E5EEE;
+  margin-right: 1ex;
+  text-decoration: underline;
+}
 
 /**
  * Portfolio page styles

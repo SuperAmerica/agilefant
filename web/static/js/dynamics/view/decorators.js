@@ -103,6 +103,9 @@ var DynamicsDecorators = {
   hiddenDecorator: function(value) {
     return '';
   },
+  backlogNameLinkDecorator: function(value) {
+    return '<a href="editBacklog.action?backlogId=' + value + '">' + value + '</a>';
+  },
   iterationLinkDecorator: function(value) {
     if (! value) {
       return "(not set)";

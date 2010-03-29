@@ -139,8 +139,8 @@ UserListController.prototype.initConfig = function() {
   
   this.enabledUserListConfig.addColumnConfiguration(0, name);
   this.enabledUserListConfig.addColumnConfiguration(1, initials);
-  this.enabledUserListConfig.addColumnConfiguration(2, email);
-  this.enabledUserListConfig.addColumnConfiguration(3, weekEffort);
+//  this.enabledUserListConfig.addColumnConfiguration(2, email);
+//  this.enabledUserListConfig.addColumnConfiguration(3, weekEffort);
   this.enabledUserListConfig.addColumnConfiguration(4, actions);
   
   this.disabledUserListConfig.addColumnConfiguration(0, name);

@@ -227,6 +227,10 @@
 			<result type="dispatcher">/WEB-INF/jsp/selectBacklog.jsp</result>
 		</action>
 		
+		<action name="help">
+      <result type="dispatcher">/WEB-INF/jsp/help.jsp</result>
+    </action>
+		
 		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
  
 		<action name="newPassword">

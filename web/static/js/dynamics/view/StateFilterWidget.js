@@ -84,11 +84,13 @@ StateFilterWidget.prototype.addStateButton = function(state) {
   var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.short + '</div>');
   stateDiv.click(function() {
     if ($.inArray(state.name, me.activeStates) != -1) {
-      stateDiv.fadeTo("fast", 0.5);
-      me.removeStateFilter(state);
+      stateDiv.fadeTo("fast", 0.5, function() {
+        me.removeStateFilter(state);        
+      });
     } else {
-      stateDiv.fadeTo("fast", 1);
-      me.addStateFilter(state);
+      stateDiv.fadeTo("fast", 1, function() {
+        me.addStateFilter(state);
+      });
     }
   });
   stateDiv.appendTo(this.stateButtons);

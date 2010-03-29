@@ -329,6 +329,7 @@ ProjectController.prototype.createStory = function() {
   controller.view = row;
   row.autoCreateCells([5,6,10]);
   row.getCell(7).show();
+  row.getCell(13).show();
   row.render();
   controller.openRowEdit();
 };
@@ -523,7 +524,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(0, {
     minWidth : 24,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "#",
     headerTooltip : 'Priority',
     defaultSortColumn: true,
@@ -533,7 +533,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(1, {
     minWidth : 280,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "Name",
     headerTooltip : 'Story name',
     get : StoryModel.prototype.getName,
@@ -549,7 +548,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(2, {
     minWidth : 60,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "Responsibles",
     headerTooltip : 'Story responsibles',
     get : StoryModel.prototype.getResponsibles,
@@ -568,7 +566,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(3, {
     minWidth : 70,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : 'State',
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
@@ -584,7 +581,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(4, {
     minWidth : 50,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "Points",
     headerTooltip : 'Estimate in story points',
     get : StoryModel.prototype.getStoryPoints,
@@ -615,15 +611,12 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(6, {
     minWidth : 35,
     autoScale : true,
-    cssClass : 'projectstory-row',
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
   });
   config.addColumnConfiguration(7, {
     fullWidth: true,
     visible: false,
-    cssClass : 'projectstory-row',
-   // get : StoryModel.prototype.getDescription,
     editable : true,
     get: StoryModel.prototype.getDescription,
     edit : {

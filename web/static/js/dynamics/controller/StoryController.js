@@ -26,7 +26,7 @@ StoryController.columnIndices = {
 StoryController.prototype = new CommonController();
 
 StoryController.prototype.handleModelEvents = function(event) {
-  console.log(event.getType());
+//  console.log(event.getType());
   if(this.parentController) {
     this.parentController.handleModelEvents(event);
   }

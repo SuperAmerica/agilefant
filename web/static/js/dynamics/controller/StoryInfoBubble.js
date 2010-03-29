@@ -55,11 +55,12 @@ StoryInfoBubble.prototype.populateContent = function() {
     me.storyInfoView = new DynamicVerticalTable(me, me.model, me.storyInfoConfig, me.storyInfoElement);
     me.storyInfoView.render();
   });
-  
+  /*
   $('<a>more...</a>').click(function() {
     me._expand();
     $(this).hide();
   }).appendTo(this.element);
+  */
 };
 
 
@@ -96,10 +97,15 @@ StoryInfoBubble.prototype.addLinks = function() {
   }).appendTo(links);
 };
 
+/**
+ * Not currently used.
+ */
+/*
 StoryInfoBubble.prototype._expand = function() {
   this.element.find('.dynamictable-row').show();
   this.element.find('.dynamictable-cell').show();
 };
+*/
 
 /**
  * Create the configuration for the dynamic table.
@@ -175,7 +181,7 @@ StoryInfoBubble.prototype._createConfig = function() {
     title : "Description",
     get : StoryModel.prototype.getDescription,
     editable : true,
-    visible: false,
+    decorator: StoryInfoBubble.prototype.descriptionDecorator,
     edit : {
       editor : "Wysiwyg",
       set : StoryModel.prototype.setDescription
@@ -184,6 +190,9 @@ StoryInfoBubble.prototype._createConfig = function() {
   return config;
 };
 
+StoryInfoBubble.prototype.descriptionDecorator = function(value) {
+  return '<div style="max-height: 20em; overflow: auto;">' + value + '</div>';
+};
 
 StoryInfoBubble.prototype.labelsViewFactory = function(view, model) {
   return new LabelsView({}, this, model, view); 

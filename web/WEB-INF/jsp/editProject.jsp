@@ -9,15 +9,15 @@
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
-  <li class=""><a href="#backlogAssignees"><span><img
-    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>
+  <!-- <li class=""><a href="#backlogAssignees"><span><img
+    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>-->
   <li id="projectActions" class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
 </ul>
 
 <div class="details" id="backlogDetails" style="overflow: auto;"></div>
-<div class="details" id="backlogAssignees"></div>
+<!-- <div class="details" id="backlogAssignees"></div> -->
 
 </div>
 

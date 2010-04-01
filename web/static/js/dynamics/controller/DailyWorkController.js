@@ -958,15 +958,8 @@ DailyWorkStoryController.prototype.filterDone = function(state) {
     this.taskListView.render();
 };
 
-DailyWorkStoryController.filterDoneTasks = function(tasks) {
-    var returnedTasks = [];
-    for (var i = 0; i < tasks.length; i++) {
-        if (tasks[i].getState() != "DONE") {
-            returnedTasks.push(tasks[i]);
-        }
-    }
-
-    return returnedTasks;
+DailyWorkStoryController.filterDoneTasks = function(task) {
+  return task.getState() != "DONE";
 };
 
 DailyWorkStoryController.prototype.detailsViewFactory = function(view, model) {

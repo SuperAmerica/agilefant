@@ -364,11 +364,16 @@ DynamicTable.prototype._renderHeader = function() {
   }
 };
 
-DynamicTable.prototype._filter = function(data) {
-  if(this.currentFilter) {
-    data = this.currentFilter(data);
+DynamicTable.prototype.filter = function() {
+  if (this.currentFilter) {
+    for ( var i = 0; i < this.middleRows.length; i++) {
+      if (!this.currentFilter(this.middleRows[i].getModel())) {
+        this.middleRows[i].hide();
+      } else {
+        this.middleRows[i].show();
+      }
+    }
   }
-  return data;
 };
 
 /**
@@ -391,7 +396,6 @@ DynamicTable.prototype.render = function() {
   }
   if (this.config.getDataSource()) {
     var rowData = this.config.getDataSource().call(this.getModel());
-    rowData = this._filter(rowData);
     this._renderFromDataSource(rowData);
   }
   this._sort();
@@ -412,6 +416,7 @@ DynamicTable.prototype.render = function() {
   }
   
   this.layout();
+  this.filter();
 };
 
 DynamicTable.prototype._renderHeaderColumn = function(index) {
@@ -464,6 +469,11 @@ DynamicTable.prototype.disableColumnFilter = function(columnName) {
 
 DynamicTable.prototype.setFilter = function(filter) {
   this.currentFilter = filter;
+  if(!filter) {
+    for(var i = 0; i < this.middleRows.length; i++) {
+      this.middleRows[i].show();
+    }
+  }
 };
 
 /**

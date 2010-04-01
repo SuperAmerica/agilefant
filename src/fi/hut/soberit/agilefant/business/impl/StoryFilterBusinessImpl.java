@@ -35,7 +35,7 @@ public class StoryFilterBusinessImpl implements StoryFilterBusiness {
     }
 
     public boolean filterStory(Story story, StoryFilters storyFilters) {
-        if (!filterByState(story, storyFilters)) {
+        if (storyFilters.states != null && !filterByState(story, storyFilters)) {
             return false;
         }
         if (!filterByName(story, storyFilters)) {
@@ -66,7 +66,7 @@ public class StoryFilterBusinessImpl implements StoryFilterBusiness {
     }
 
     public boolean filterByLabels(Story story, StoryFilters storyFilters) {
-        if (storyFilters.labels.isEmpty()) {
+        if (storyFilters.labels == null || storyFilters.labels.isEmpty()) {
             return true;
         }
         for (Label label : story.getLabels()) {

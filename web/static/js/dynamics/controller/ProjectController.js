@@ -27,7 +27,7 @@ ProjectController.prototype = new BacklogController();
 ProjectController.prototype.filter = function() {
   var activeTab = this.tabs.tabs("option","selected");
   if (activeTab === 0) {
-    MessageDisplay.Warning("Leaf story search not implemented");
+    this.model.reloadLeafStories({name: this.getTextFilter()});
   }
   else if (activeTab === 1) {
     this.storyTreeController.filter(this.getTextFilter(),
@@ -56,14 +56,8 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
     minWidth: 100,
     minHeight: 20
   });
-  var filterFunc = function(stories) {
-    var ret = [];
-    for(var i = 0 ; i < stories.length; i++) {
-      if(!me.leafStoriesStateFilters || jQuery.inArray(stories[i].getState(), me.leafStoriesStateFilters) !== -1) {
-        ret.push(stories[i]);
-       }
-    }
-    return ret;
+  var filterFunc = function(story) {
+    return (!me.leafStoriesStateFilters || jQuery.inArray(story.getState(), me.leafStoriesStateFilters) !== -1);
   };
   
   var widget = new StateFilterWidget(bub.getElement(), {
@@ -76,7 +70,7 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
         me.storyListView.disableColumnFilter("State");
         me.storyListView.setFilter(null);
       }
-      me.storyListView.render();
+      me.storyListView.filter();
     },
     activeStates: me.leafStoriesStateFilters
   });
@@ -200,8 +194,6 @@ ProjectController.prototype._paintLeafStories = function(element) {
     this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
         element);
     this.model.reloadLeafStories(null, function() {
-     // me.storyListView.render();
-    //  console.log("render");
     });
   } else {
     this.model.reloadLeafStories(null, function() {
@@ -216,7 +208,6 @@ ProjectController.prototype._paintIterations = function(element) {
     this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
         element);
     this.model.reloadIterations(null, function() {
-    //  me.iterationsView.render();
     });
   } else {
     this.model.reloadIterations(null, function() {

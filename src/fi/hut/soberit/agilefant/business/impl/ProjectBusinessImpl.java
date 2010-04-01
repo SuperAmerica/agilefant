@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.business.RankUnderDelegate;
 import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -67,6 +68,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private BacklogHistoryEntryBusiness historyEntryBusiness;
     @Autowired
     private StoryRankBusiness storyRankBusiness;
+    @Autowired
+    private StoryFilterBusiness storyFilterBusiness;
 
     public ProjectBusinessImpl() {
         super(Project.class);
@@ -216,7 +219,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public List<StoryTO> retrieveLeafStories(int projectId, StoryFilters filters) {
         Project original = this.retrieve(projectId);
         List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(original);
-
+        leafStories = storyFilterBusiness.filterStories(leafStories, filters);
         List<StoryTO> leafStoriesWithRank = new ArrayList<StoryTO>();
         int rank = 0;
         for(Story leafStory : leafStories) {

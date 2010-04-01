@@ -127,12 +127,12 @@ ProjectModel.prototype.reloadLeafStories = function(filters, callback) {
   var me = this;
   var data = {objectId: this.id};
   if(filters) {
-    data.storyFilters = filters;
+    $.extend(data, this.serializeFields("storyFilters", filters));
   }
   jQuery.ajax({
     url: "ajax/projectLeafStories.action",
     data: data,
-    method: "post",
+    type: "post",
     dataType: "json",
     success: function(data, type) {
       me._updateRelations("story", data);
@@ -151,7 +151,7 @@ ProjectModel.prototype.reloadIterations = function(filters, callback) {
   jQuery.ajax({
     url: "ajax/projectIterations.action",
     data: data,
-    method: "post",
+    type: "post",
     dataType: "json",
     success: function(data, type) {
       me._updateRelations("iteration", data);

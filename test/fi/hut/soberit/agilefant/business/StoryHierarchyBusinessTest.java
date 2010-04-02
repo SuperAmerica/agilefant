@@ -119,7 +119,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
     @DirtiesContext
     public void testRetrieveProjectRootStories_withStoryFilters() {
         int projectId = 100;
-        StoryFilters storyFilters = new StoryFilters(null, null, null);
+        StoryFilters storyFilters = new StoryFilters(null, null);
         List<Story> stories = new ArrayList<Story>();
         expect(storyHierarchyDAO.retrieveProjectRootStories(projectId))
                 .andReturn(stories);
@@ -135,7 +135,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
     @DirtiesContext
     public void testRetrieveProductRootStories_withStoryFilters() {
         int productId = 100;
-        StoryFilters storyFilters = new StoryFilters(null, null, null);
+        StoryFilters storyFilters = new StoryFilters(null, null);
         List<Story> stories = new ArrayList<Story>();
         expect(storyHierarchyDAO.retrieveProductRootStories(productId))
                 .andReturn(stories);

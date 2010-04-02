@@ -31,11 +31,10 @@ ProjectController.prototype.filter = function() {
   }
   else if (activeTab === 1) {
     this.storyTreeController.filter(this.getTextFilter(),
-        [], /* The label filters */
         this.getStateFilters());
   }
   else if (activeTab === 2) {
-    MessageDisplay.Warning("Iteration search not implemented");
+    this.iterationsView.filter();
   }
 };
 
@@ -205,8 +204,32 @@ ProjectController.prototype._paintLeafStories = function(element) {
 ProjectController.prototype._paintIterations = function(element) {
   var me = this;
   if(!this.iterationsView) {
+    this.iterationFilters = ["ONGOING", "FUTURE", "PAST"];
+    $('<span>Show <input type="checkbox" name="ONGOING" checked="checked"/>' + 
+        'Ongoing <input type="checkbox" name="FUTURE" checked="checked"/> ' +
+        'Future <input type="checkbox" name="PAST" checked="checked"/> ' +
+        'Past iterations </span>').appendTo(element).find("input")
+        .click(function(event) {
+          var el = $(this);
+          var type = el.attr("name");
+          if(el.is(":checked") && jQuery.inArray(me.iterationFilters, type) === -1) {
+            me.iterationFilters.push(type);
+          } else {
+            ArrayUtils.remove(me.iterationFilters, type);
+          }
+          me.iterationsView.filter();
+    });
     this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
         element);
+    this.iterationsView.setFilter(function(iterationObj) {
+      if(jQuery.inArray(iterationObj.getScheduleStatus(), me.iterationFilters) === -1) {
+        return false;
+      }
+      if(me.getTextFilter().length > 0 && iterationObj.getName().indexOf(me.getTextFilter()) === -1) {
+        return false;
+      }
+      return true;
+    });
     this.model.reloadIterations(null, function() {
     });
   } else {

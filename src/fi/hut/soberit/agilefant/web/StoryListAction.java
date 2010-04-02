@@ -16,7 +16,7 @@ import fi.hut.soberit.agilefant.util.StoryFilters;
 @Scope("prototype")
 public class StoryListAction {
     
-    private StoryFilters storyFilters = new StoryFilters(null, null, null);
+    private StoryFilters storyFilters = new StoryFilters(null, null);
     private List<StoryTO> stories;
     private int objectId;
     @Autowired

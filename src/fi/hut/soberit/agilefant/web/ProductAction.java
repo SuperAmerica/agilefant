@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @Component("productAction")
 @Scope("prototype")
@@ -30,6 +31,8 @@ public class ProductAction implements CRUDAction, Prefetching {
     private Product product = new Product();
 
     private Collection<Product> products = new ArrayList<Product>();
+    
+    private List<ProjectTO> childBacklogs = new ArrayList<ProjectTO>();
     
     private List<Story> stories = new ArrayList<Story>();
 
@@ -60,6 +63,11 @@ public class ProductAction implements CRUDAction, Prefetching {
         return Action.SUCCESS;
     }
     
+    public String retrieveProjects() {
+        this.product = this.productBusiness.retrieve(productId);
+        this.childBacklogs = this.productBusiness.retrieveProjects(product);
+        return Action.SUCCESS;
+    }
     public void initializePrefetchedData(int objectId) {
        product = productBusiness.retrieve(objectId);
     }
@@ -94,6 +102,10 @@ public class ProductAction implements CRUDAction, Prefetching {
 
     public List<Story> getStories() {
         return stories;
+    }
+
+    public List<ProjectTO> getChildBacklogs() {
+        return childBacklogs;
     }
 
 }

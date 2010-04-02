@@ -162,7 +162,14 @@
     <action name="retrieveProduct" method="retrieve" class="productAction">
       <result name="success" type="json">
         <param name="target">product</param>
-        <param name="patterns">+stories, +stories.responsibles, +projects</param>
+        <param name="patterns">-stories, -projects, -children</param>
+      </result>
+    </action>
+    
+   <action name="retrieveProductProjects" method="retrieveProjects" class="productAction">
+      <result name="success" type="json">
+        <param name="target">childBacklogs</param>
+        <param name="patterns">-stories, -children</param>
       </result>
     </action>
     

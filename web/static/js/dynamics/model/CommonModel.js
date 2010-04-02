@@ -111,8 +111,10 @@ CommonModel.prototype._updateRelations = function(type, newData) {
       currentHashes.push(old.getHashCode());
     }    
   });
+  //do not use removeRelation directly to the list as it will fire additional relation updated events
   $.each(removeRelations, function(k, item) {
-    me.removeRelation(item);
+    me._removeOneWayRelation(item);
+    item._removeOneWayRelation(me);
   });
   
   // 3. Update the new relations

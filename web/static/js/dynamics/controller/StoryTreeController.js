@@ -124,9 +124,6 @@ StoryTreeController.prototype._storyFilters = function(node, tree_obj) {
   if(this.storyFilters.name) {
    tmp["storyFilters.name"] = this.storyFilters.name;
   }
-  if(this.storyFilters.labelNames) {
-    tmp["storyFilters.labels"] = this.storyFilters.labelNames;
-  }
   if(this.storyFilters.statesToKeep) {
     tmp["storyFilters.states"] = this.storyFilters.statesToKeep;
   }
@@ -138,17 +135,12 @@ StoryTreeController.prototype._storyFilters = function(node, tree_obj) {
   return tmp;
 };
 
-StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
+StoryTreeController.prototype.filter = function(name, storyStates) {
   var data = this.storyFilters;
   if (name) {
     data.name = name;
   } else {
     delete data.name;
-  }
-  if (labelNames.length > 0) {
-    data.labelNames = labelNames;
-  } else {
-    delete data.labelNames;
   }
   if (storyStates.length > 0) {
     data.statesToKeep = storyStates;
@@ -160,8 +152,7 @@ StoryTreeController.prototype.filter = function(name, labelNames, storyStates) {
 
 StoryTreeController.prototype.hasFilters = function() {
   return this.storyFilters.name
-      || (this.storyFilters.states && this.storyFilters.states.length === 6)
-      || this.storyFilters.labels;
+      || (this.storyFilters.states && this.storyFilters.states.length === 6);
 };
 
 StoryTreeController.prototype.initTree = function() {

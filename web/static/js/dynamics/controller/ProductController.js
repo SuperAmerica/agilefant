@@ -31,10 +31,10 @@ ProductController.prototype = new BacklogController();
 ProductController.prototype.filter = function() {
   var activeTab = this.tabs.tabs("option","selected");
   if (activeTab === 0) {
-    this.storyTreeController.filter(this.getTextFilter(), [], this.getStateFilters());
+    this.storyTreeController.filter(this.getTextFilter(), this.getStateFilters());
   }
   else if (activeTab === 1) {
-    MessageDisplay.Warning("Project search not implemented");
+    this.projectListView.filter();
   }
 };
 
@@ -49,6 +49,7 @@ ProductController.prototype.getTextFilter = function() {
 ProductController.prototype.paintStoryTree = function() {
   if(!this.storyTreeController) {
    this.storyTreeController =  new StoryTreeController(this.id, "product", this.storyTreeElement, {}, this);
+   
   } 
   this.storyTreeController.refresh();
 };
@@ -72,9 +73,37 @@ ProductController.prototype.paintIterationList = function() {
 };
 
 ProductController.prototype.paintProjectList = function() {
-  this.projectListView = new DynamicTable(this, this.model, this.projectListConfig,
-      this.projectListElement);
-  this.projectListView.render();
+  var me = this;
+  if(!me.projectListView) {
+    me.projectFilters = ["ONGOING","FUTURE"];
+    $('<span>Show <input type="checkbox" name="ONGOING" checked="checked"/>' + 
+        'Ongoing <input type="checkbox" name="FUTURE" checked="checked"/> ' +
+        'Future <input type="checkbox" name="PAST" /> ' +
+        'Past projects </span>').appendTo(this.projectListElement).find("input")
+        .click(function(event) {
+          var el = $(this);
+          var type = el.attr("name");
+          if(el.is(":checked") && jQuery.inArray(me.projectFilters, type) === -1) {
+            me.projectFilters.push(type);
+          } else {
+            ArrayUtils.remove(me.projectFilters, type);
+          }
+          me.projectListView.filter();
+    });
+    this.projectListView = new DynamicTable(this, this.model, this.projectListConfig,
+        this.projectListElement);
+    this.projectListView.setFilter(function(projectObj) {
+      if(jQuery.inArray(projectObj.getScheduleStatus(), me.projectFilters) === -1) {
+        return false;
+      }
+      var text = me.getTextFilter();
+      if(text.length > 0 && projectObj.getName().indexOf(text) === -1) {
+        return false;
+      }
+      return true;
+    });
+  }
+  this.model.reloadProjects();
 };
 
 /**
@@ -82,13 +111,25 @@ ProductController.prototype.paintProjectList = function() {
  */
 ProductController.prototype.paint = function() {
   var me = this;
+  var tab = this.tabs.tabs("option","selected");
   ModelFactory.initializeFor(ModelFactory.initializeForTypes.product,
       this.id, function(model) {
         me.model = model;
         me.paintProductDetails();
-        me.paintProjectList();
-        me.paintStoryTree();
+        if(tab === 1) {
+          me.paintProjectList();
+        }
       });
+  if(tab === 0) {
+    this.paintStoryTree();
+  }
+  this.tabs.bind("tabsselect",function(event, ui){
+    if(ui.index === 0) {
+      me.paintStoryTree();
+    } else if(ui.index === 1) {
+      me.paintProjectList();
+    }
+  });
 };
 
 /**

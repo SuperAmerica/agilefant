@@ -219,7 +219,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public List<StoryTO> retrieveLeafStories(int projectId, StoryFilters filters) {
         Project original = this.retrieve(projectId);
         List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(original);
-        leafStories = storyFilterBusiness.filterStories(leafStories, filters);
+        leafStories = storyFilterBusiness.filterStoryList(leafStories, filters);
         List<StoryTO> leafStoriesWithRank = new ArrayList<StoryTO>();
         int rank = 0;
         for(Story leafStory : leafStories) {

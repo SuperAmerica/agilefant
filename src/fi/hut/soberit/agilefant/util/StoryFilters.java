@@ -7,19 +7,16 @@ import fi.hut.soberit.agilefant.model.StoryState;
 
 public class StoryFilters {
 
-    public final Set<String> labels;
     public final Set<StoryState> states;
     public final String name;
 
     public StoryFilters() {
         this.name = null;
-        this.labels = new HashSet<String>();
         this.states = new HashSet<StoryState>();
     }
     
-    public StoryFilters(String name, Set<String> labels, Set<StoryState> states) {
+    public StoryFilters(String name, Set<StoryState> states) {
         this.name = name;
-        this.labels = labels;
         this.states = states;
     }
 
@@ -27,7 +24,6 @@ public class StoryFilters {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((labels == null) ? 0 : labels.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((states == null) ? 0 : states.hashCode());
         return result;
@@ -42,11 +38,6 @@ public class StoryFilters {
         if (getClass() != obj.getClass())
             return false;
         StoryFilters other = (StoryFilters) obj;
-        if (labels == null) {
-            if (other.labels != null)
-                return false;
-        } else if (!labels.equals(other.labels))
-            return false;
         if (name == null) {
             if (other.name != null)
                 return false;

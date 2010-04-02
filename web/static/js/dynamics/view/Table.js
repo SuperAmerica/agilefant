@@ -24,7 +24,7 @@ var DynamicTable = function DynamicTable(controller, model, config, parentView) 
   } else {
     this.config = new DynamicTableConfiguration();
   }
-  this.debugLevel = 5;
+  this.debugLevel = false;
   this.initialize();
 };
 
@@ -64,12 +64,13 @@ DynamicTable.constants = {
  */
 DynamicTable.prototype.initialize = function() {
   var me = this;
-  this.container = $("<div />").appendTo(this.getParentElement()).addClass(
+  this.container = $('<div id="'+ "container_" + this.getViewId() + '"/>').appendTo(this.getParentElement()).addClass(
       DynamicTable.cssClasses.table);
-  this.container.attr("id", "container_" + this.getViewId());
   if (this.config.options.cssClass) {
     this.container.addClass(this.config.options.cssClass);
   }
+  this.infoElement = $('<div style="position: relative; margin: auto; height: 0px;"><div class="dynamictable-infobox">&nbsp;</div>').
+    appendTo(this.container).find(".dynamictable-infobox").hide();
   this.element = $("<div />").appendTo(this.container);
   this._setViewId();
   this._computeColumns();
@@ -380,43 +381,49 @@ DynamicTable.prototype.filter = function() {
  * Render all table rows
  */
 DynamicTable.prototype.render = function() {
-  //look for rows with invalid configuration
-  var rowConfig = this.config.getColumns();
-  var rowsWithInvalidConfig = [];
-  for(var i = 0; i < this.middleRows.length; i++) {
-    if(this.middleRows[i].config != rowConfig) {
-      rowsWithInvalidConfig.push(this.middleRows[i]);
+  this.infoElement.show().text("Refreshing, please wait...");
+  var me = this;
+  //run render in separate thread to avoid browser stalling
+  setTimeout(function() {
+    //look for rows with invalid configuration
+    var rowConfig = me.config.getColumns();
+    var rowsWithInvalidConfig = [];
+    for(var i = 0; i < me.middleRows.length; i++) {
+      if(me.middleRows[i].config != rowConfig) {
+        rowsWithInvalidConfig.push(me.middleRows[i]);
+      }
     }
-  }
-  if(rowsWithInvalidConfig.length > 0) {
-    //remove invalid ones
-    $.each(rowsWithInvalidConfig, function() {
-      this.remove();
-    });
-  }
-  if (this.config.getDataSource()) {
-    var rowData = this.config.getDataSource().call(this.getModel());
-    this._renderFromDataSource(rowData);
-  }
-  this._sort();
-  var tableRows = [];
-  //concat different sections together
-  tableRows = tableRows.concat(this.upperRows,this.middleRows, this.bottomRows); 
-  if(!ArrayUtils.compare(tableRows, this.currentTableRows)) { //row order has changed
-    this.currentTableRows = tableRows;
-    this._hardRender(this.currentTableRows);
-    this.element.find("textarea.tableSortListener").trigger("tableSorted");
-  } else { //row order hasn't changed
-    this._softRender();
-  }
-  if (this.rowCount() === 0) {
-    this.header.hide();
-  } else {
-    this.header.show();
-  }
-  
-  this.layout();
-  this.filter();
+    if(rowsWithInvalidConfig.length > 0) {
+      //remove invalid ones
+      $.each(rowsWithInvalidConfig, function() {
+        me.remove();
+      });
+    }
+    if (me.config.getDataSource()) {
+      var rowData = me.config.getDataSource().call(me.getModel());
+      me._renderFromDataSource(rowData);
+    }
+    me._sort();
+    var tableRows = [];
+    //concat different sections together
+    tableRows = tableRows.concat(me.upperRows,me.middleRows, me.bottomRows); 
+    if(!ArrayUtils.compare(tableRows, me.currentTableRows)) { //row order has changed
+      me.currentTableRows = tableRows;
+      me._hardRender(me.currentTableRows);
+      me.element.find("textarea.tableSortListener").trigger("tableSorted");
+    } else { //row order hasn't changed
+      me._softRender();
+    }
+    if (me.rowCount() === 0) {
+      me.header.hide();
+    } else {
+      me.header.show();
+    }
+    
+    me.layout();
+    me.filter();
+    me.infoElement.hide();
+  }, 40);
 };
 
 DynamicTable.prototype._renderHeaderColumn = function(index) {
@@ -711,7 +718,7 @@ DynamicTable.prototype.onRelationUpdate = function(event) {
   } else {
     this.render();
   }
-  //this.debug("table relation update");
+  this.debug("table relation update + " + event.getObject().getHashCode());
 };
 DynamicTable.prototype.onEdit = function(event) {
   //this.render();

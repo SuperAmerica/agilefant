@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
 import fi.hut.soberit.agilefant.model.Label;
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
@@ -34,43 +33,56 @@ public class StoryFilterBusinessImpl implements StoryFilterBusiness {
         return filteredStories;
     }
 
-    public boolean filterStory(Story story, StoryFilters storyFilters) {
-        if (storyFilters.states != null && !filterByState(story, storyFilters)) {
-            return false;
-        }
-        if (!filterByName(story, storyFilters)) {
-            return false;
-        }
-        if (!filterByLabels(story, storyFilters)) {
-            return false;
-        }
-        return true;
-    }
-
-    public boolean filterByState(Story story, StoryFilters storyFilters) {
-        for (StoryState storyState : storyFilters.states) {
-            if (story.getState() == storyState) {
-                return true;
+    public List<Story> filterStoryList(List<Story> stories, StoryFilters filters) {
+        List<Story> result = new ArrayList<Story>();
+        for(Story story : stories) {
+            if(filterStory(story, filters)) {
+                result.add(story);
             }
+        }
+        return result;
+    }
+    public boolean filterStory(Story story, StoryFilters storyFilters) {
+        if (!filterByState(story, storyFilters)) {
+            return false;
+        }
+        if(storyFilters.name == null) {
+            return true;
+        }
+        if (filterByName(story, storyFilters) || filterByLabels(story, storyFilters.name) || filterByBacklogName(story, storyFilters.name)) {
+            return true;
         }
         return false;
     }
 
+    public boolean filterByState(Story story, StoryFilters storyFilters) {
+        if(storyFilters.states == null || storyFilters.states.isEmpty()) {
+            return true;
+        }
+        return storyFilters.states.contains(story.getState());
+    }
+
     public boolean filterByName(Story story, StoryFilters storyFilters) {
         String name = storyFilters.name;
-        if (name == null || name.length() == 0) {
-            return true;
+        if(story.getName() == null) {
+            return false;
         }
         return story.getName().toLowerCase(Locale.ENGLISH).contains(
                 name.toLowerCase(Locale.ENGLISH));
     }
-
-    public boolean filterByLabels(Story story, StoryFilters storyFilters) {
-        if (storyFilters.labels == null || storyFilters.labels.isEmpty()) {
-            return true;
+    
+    public boolean filterByBacklogName(Story story, String backlogName) {
+        if(story.getBacklog() == null) {
+            return false;
         }
+        String lowerCaseName = backlogName.toLowerCase();
+        return story.getBacklog().getName().toLowerCase().contains(lowerCaseName);    
+    }
+
+    public boolean filterByLabels(Story story, String labelName) {
+        String lowerCaseName = labelName.toLowerCase();
         for (Label label : story.getLabels()) {
-            if (storyFilters.labels.contains(label.getName())) {
+            if(label.getName().contains(lowerCaseName)) {
                 return true;
             }
         }

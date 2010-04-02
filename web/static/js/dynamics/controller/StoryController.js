@@ -297,7 +297,8 @@ StoryController.prototype.openLogEffort = function() {
 };
 
 StoryController.prototype.openQuickLogEffort = function(model, view) {
-  view.openEditor(false, null, true);
+  this.openLogEffort();
+  //view.openEditor(false, null, true);
 };
 
 /**

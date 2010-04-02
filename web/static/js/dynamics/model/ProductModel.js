@@ -55,6 +55,23 @@ ProductModel.prototype._setData = function(newData) {
   
 };
 
+ProductModel.prototype.reloadProjects = function(filters, callback) {
+  var me = this;
+  var data = {productId: this.id};
+  jQuery.ajax({
+    url: "ajax/retrieveProductProjects.action",
+    data: data,
+    type: "post",
+    dataType: "json",
+    success: function(data, type) {
+      me._updateRelations("project", data);
+      if(callback) {
+        callback();
+      }
+    }
+  });
+};
+
 ProductModel.prototype._saveData = function(id, changedData) {
   var me = this;
   

@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
@@ -20,6 +23,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @Service("productBusiness")
 @Transactional
@@ -35,6 +39,8 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
     private StoryBusiness storyBusiness;
     @Autowired
     private HourEntryBusiness hourEntryBusiness;
+    @Autowired
+    private TransferObjectBusiness transferObjectBusiness;
 
     public ProductBusinessImpl() {
         super(Product.class);
@@ -76,6 +82,16 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
         }
     }
     
+    public List<ProjectTO> retrieveProjects(Product product) {
+        List<ProjectTO> projects = new ArrayList<ProjectTO>();
+        for(Backlog child : product.getChildren()) {
+            if(child instanceof Project) {
+                projects.add(transferObjectBusiness.constructProjectTO((Project)child));
+            }
+        }
+        return projects;
+    }
+
     @Override
     public void delete(int id) {
         delete(retrieve(id));

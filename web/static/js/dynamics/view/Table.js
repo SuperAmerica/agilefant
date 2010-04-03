@@ -381,49 +381,43 @@ DynamicTable.prototype.filter = function() {
  * Render all table rows
  */
 DynamicTable.prototype.render = function() {
-  this.infoElement.show().text("Refreshing, please wait...");
-  var me = this;
-  //run render in separate thread to avoid browser stalling
-  setTimeout(function() {
-    //look for rows with invalid configuration
-    var rowConfig = me.config.getColumns();
-    var rowsWithInvalidConfig = [];
-    for(var i = 0; i < me.middleRows.length; i++) {
-      if(me.middleRows[i].config != rowConfig) {
-        rowsWithInvalidConfig.push(me.middleRows[i]);
-      }
+  //look for rows with invalid configuration
+  var rowConfig = this.config.getColumns();
+  var rowsWithInvalidConfig = [];
+  for(var i = 0; i < this.middleRows.length; i++) {
+    if(this.middleRows[i].config != rowConfig) {
+      rowsWithInvalidConfig.push(this.middleRows[i]);
     }
-    if(rowsWithInvalidConfig.length > 0) {
-      //remove invalid ones
-      $.each(rowsWithInvalidConfig, function() {
-        me.remove();
-      });
-    }
-    if (me.config.getDataSource()) {
-      var rowData = me.config.getDataSource().call(me.getModel());
-      me._renderFromDataSource(rowData);
-    }
-    me._sort();
-    var tableRows = [];
-    //concat different sections together
-    tableRows = tableRows.concat(me.upperRows,me.middleRows, me.bottomRows); 
-    if(!ArrayUtils.compare(tableRows, me.currentTableRows)) { //row order has changed
-      me.currentTableRows = tableRows;
-      me._hardRender(me.currentTableRows);
-      me.element.find("textarea.tableSortListener").trigger("tableSorted");
-    } else { //row order hasn't changed
-      me._softRender();
-    }
-    if (me.rowCount() === 0) {
-      me.header.hide();
-    } else {
-      me.header.show();
-    }
-    
-    me.layout();
-    me.filter();
-    me.infoElement.hide();
-  }, 40);
+  }
+  if(rowsWithInvalidConfig.length > 0) {
+    //remove invalid ones
+    $.each(rowsWithInvalidConfig, function() {
+      this.remove();
+    });
+  }
+  if (this.config.getDataSource()) {
+    var rowData = this.config.getDataSource().call(this.getModel());
+    this._renderFromDataSource(rowData);
+  }
+  this._sort();
+  var tableRows = [];
+  //concat different sections together
+  tableRows = tableRows.concat(this.upperRows,this.middleRows, this.bottomRows); 
+  if(!ArrayUtils.compare(tableRows, this.currentTableRows)) { //row order has changed
+    this.currentTableRows = tableRows;
+    this._hardRender(this.currentTableRows);
+    this.element.find("textarea.tableSortListener").trigger("tableSorted");
+  } else { //row order hasn't changed
+    this._softRender();
+  }
+  if (this.rowCount() === 0) {
+    this.header.hide();
+  } else {
+    this.header.show();
+  }
+  
+  this.layout();
+  this.filter();
 };
 
 DynamicTable.prototype._renderHeaderColumn = function(index) {
@@ -688,6 +682,16 @@ DynamicTable.prototype._sort = function() {
   }
 };
 
+DynamicTable.prototype.showInfoMessage = function(text) {
+  this.infoElement.show().text(text).width(text.length + "ex");
+};
+
+DynamicTable.prototype.hideInfoMessage = function(text) {
+  if(!text || text === this.infoElement.text()) {
+    this.infoElement.hide();
+  }
+};
+
 /**
  * Remove row from the table
  */
@@ -711,13 +715,19 @@ DynamicTable.prototype.remove = function() {
 };
 
 DynamicTable.prototype.onRelationUpdate = function(event) {
-  if(this.config.getDataType()) {
-    if(this.config.getDataType() === event.getRelation()) {
-      this.render();
+  this.showInfoMessage("Refreshing, please wait...");
+  var me = this;
+  //run render in separate thread to avoid browser stalling
+  setTimeout(function() {
+    if(me.config.getDataType()) {
+      if(me.config.getDataType() === event.getRelation()) {
+        me.render();
+      }
+    } else {
+      me.render();
     }
-  } else {
-    this.render();
-  }
+    me.hideInfoMessage();
+  }, 20);
   this.debug("table relation update + " + event.getObject().getHashCode());
 };
 DynamicTable.prototype.onEdit = function(event) {

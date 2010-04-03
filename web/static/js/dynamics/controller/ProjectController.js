@@ -25,9 +25,13 @@ var ProjectController = function ProjectController(options) {
 ProjectController.prototype = new BacklogController();
 
 ProjectController.prototype.filter = function() {
+  var me = this;
   var activeTab = this.tabs.tabs("option","selected");
   if (activeTab === 0) {
-    this.model.reloadLeafStories({name: this.getTextFilter()});
+    this.storyListView.showInfoMessage("Searching...");
+    this.model.reloadLeafStories({name: this.getTextFilter()}, function() {
+      me.storyListView.hideInfoMessage("Searching...");
+    });
   }
   else if (activeTab === 1) {
     this.storyTreeController.filter(this.getTextFilter(),
@@ -192,13 +196,11 @@ ProjectController.prototype._paintLeafStories = function(element) {
   if(!this.storyListView) {
     this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
         element);
-    this.model.reloadLeafStories(null, function() {
-    });
-  } else {
-    this.model.reloadLeafStories(null, function() {
-      
-    });
   }
+  this.storyListView.showInfoMessage("Loading...");
+  this.model.reloadLeafStories(null, function() {
+      me.storyListView.hideInfoMessage("Loading...");
+  });
 };
 
 ProjectController.prototype._paintIterations = function(element) {
@@ -230,13 +232,11 @@ ProjectController.prototype._paintIterations = function(element) {
       }
       return true;
     });
-    this.model.reloadIterations(null, function() {
-    });
-  } else {
-    this.model.reloadIterations(null, function() {
-      
-    });
   }
+  this.iterationsView.showInfoMessage("Loading...");
+  this.model.reloadIterations(null, function() {
+    me.iterationsView.hideInfoMessage("Loading...");
+  });
 };
 
 ProjectController.prototype._paintStoryTree = function(element) {

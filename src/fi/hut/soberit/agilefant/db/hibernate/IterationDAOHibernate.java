@@ -213,10 +213,11 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
     public Iteration retrieveDeep(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
 
-        Criteria iterationTasksCrit = crit.createCriteria("tasks", CriteriaSpecification.LEFT_JOIN);
+        //doesn't work: will cause the same task responsible to be inserted too many times
+        //Criteria iterationTasksCrit = crit.createCriteria("tasks", CriteriaSpecification.LEFT_JOIN);
 
-        iterationTasksCrit.setFetchMode("responsibles", FetchMode.JOIN);
-        iterationTasksCrit.setFetchMode("whatsNextEntries", FetchMode.JOIN);
+        //iterationTasksCrit.setFetchMode("responsibles", FetchMode.JOIN);
+        //iterationTasksCrit.setFetchMode("whatsNextEntries", FetchMode.JOIN);
 
         Criteria storiesCrit = crit.createCriteria("stories", CriteriaSpecification.LEFT_JOIN);
 

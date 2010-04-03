@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
+import fi.hut.soberit.agilefant.business.StoryRankBusiness;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
@@ -17,14 +19,21 @@ import fi.hut.soberit.agilefant.util.StoryFilters;
 public class StoryListAction {
     
     private StoryFilters storyFilters = new StoryFilters(null, null);
-    private List<StoryTO> stories;
+    private List<? extends Story> stories;
     private int objectId;
     @Autowired
     private ProjectBusiness projectBusiness;
+    @Autowired
+    private StoryRankBusiness storyRankBusiness;
     
     
     public String projectLeafStories() {
         stories = projectBusiness.retrieveLeafStories(objectId, storyFilters);
+        return Action.SUCCESS;
+    }
+    
+    public String rankedStoriesByContext() {
+        stories = storyRankBusiness.retrieveByRankingContext(objectId);
         return Action.SUCCESS;
     }
 
@@ -39,7 +48,7 @@ public class StoryListAction {
     }
 
 
-    public List<StoryTO> getStories() {
+    public List<? extends Story> getStories() {
         return stories;
     }
 

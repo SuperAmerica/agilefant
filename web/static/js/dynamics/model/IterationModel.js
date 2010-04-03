@@ -115,6 +115,23 @@ IterationModel.prototype._saveData = function(id, changedData) {
   });
 };
 
+IterationModel.prototype.reloadStoryRanks = function(callback) {
+  var me = this;
+  var data = {objectId: this.id};
+  jQuery.ajax({
+    url: "ajax/retrieveRankedStories.action",
+    data: data,
+    type: "post",
+    dataType: "json",
+    success: function(data, type) {
+      me._updateRelations("story", data);
+      if(callback) {
+        callback(); 
+      }
+    }
+  });
+};
+
 /**
  * Reload's the iteration's data.
  */

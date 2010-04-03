@@ -8,11 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.db.StoryRankDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryRank;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 @Service("storyRankBusiness")
 @Transactional
@@ -20,6 +22,8 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
 
     @Autowired
     private StoryRankDAO storyRankDAO;
+    @Autowired
+    private BacklogBusiness backlogBusiness;
 
     /**
      * {@inheritDoc}
@@ -123,6 +127,20 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
             rankBelow(rank, prevRank);
         }
 
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<StoryTO> retrieveByRankingContext(int backlogId) {
+        List<StoryTO> ret = new ArrayList<StoryTO>();
+        int current = 0;
+        for(Story story : this.retrieveByRankingContext(this.backlogBusiness.retrieve(backlogId))) {
+            StoryTO storyto = new StoryTO(story);
+            storyto.setRank(current++);
+            ret.add(storyto);
+        }
+        return ret;
     }
 
     /**

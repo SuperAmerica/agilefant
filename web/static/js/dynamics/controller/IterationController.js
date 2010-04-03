@@ -168,8 +168,8 @@ IterationController.prototype.handleModelEvents = function(event) {
   }
   if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
     var me = this;
-    this.model.reload(function() {
-      me.storyListView.render();
+    this.model.reloadStoryRanks(function() {
+      me.storyListView.resort();
     });
   }
 };

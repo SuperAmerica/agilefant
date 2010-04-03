@@ -4,6 +4,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 public interface StoryRankBusiness {
 
@@ -43,5 +44,9 @@ public interface StoryRankBusiness {
      */
     void rankToHead(Story story, Backlog backlog);
     
+    /**
+     * @see retrieveByRankingContext(Backlog backlog);
+     */
+    public List<StoryTO> retrieveByRankingContext(int backlogId);
 
 }

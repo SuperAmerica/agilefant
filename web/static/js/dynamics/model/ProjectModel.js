@@ -145,6 +145,23 @@ ProjectModel.prototype.reloadLeafStories = function(filters, callback) {
   
 };
 
+ProjectModel.prototype.reloadStoryRanks = function(callback) {
+  var me = this;
+  var data = {objectId: this.id};
+  jQuery.ajax({
+    url: "ajax/retrieveRankedStories.action",
+    data: data,
+    type: "post",
+    dataType: "json",
+    success: function(data, type) {
+      me._updateRelations("story", data);
+      if(callback) {
+        callback();
+      }
+    }
+  });
+};
+
 ProjectModel.prototype.reloadIterations = function(filters, callback) {
   var me = this;
   var data = {projectId: this.id};

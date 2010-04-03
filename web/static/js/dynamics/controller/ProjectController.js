@@ -186,8 +186,8 @@ ProjectController.columnConfigs = {
 ProjectController.prototype.handleModelEvents = function(event) {
   var me = this;
   if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
-    this.model.reloadLeafStories(null, function() {
-      me.storyListView.render();
+    this.model.reloadStoryRanks(null, function() {
+      me.storyListView.resort();
     });
   }
 };

@@ -24,6 +24,11 @@ MyAssignmentsMenuController.prototype.initTree = function() {
   this.element.dynatree({
     keyboard: false,
     autoFocus: false,
+    onClick: function(dtnode, event) {
+      if ($(event.target).hasClass("ui-dynatree-title")) {
+        window.location.href = event.target.href;
+      }
+    },
     onPostInit: function(isReloading, isError) {
       me.element.find("a.ui-dynatree-title").each(function(key, item) {
         item.href = "editBacklog.action?backlogId=" + $(item.parentNode).attr("dtnode").data.id;

@@ -24,14 +24,11 @@ BacklogMenuController.prototype.initTree = function() {
   this.element.dynatree({
     keyboard: false,
     autoFocus: false,
-    /*
     onClick: function(dtnode, event) {
       if ($(event.target).hasClass("ui-dynatree-title")) {
-        $(event.target).attr("href", "editBacklog.action?backlogId=" + dtnode.data.id);
-//        window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
+        window.location.href = event.target.href;
       }
     },
-    */
     onPostInit: function(isReloading, isError) {
       //hack to get clicking the backlog name properly working
       me.element.find("a.ui-dynatree-title").each(function(key, item) {

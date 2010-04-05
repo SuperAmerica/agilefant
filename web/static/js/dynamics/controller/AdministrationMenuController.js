@@ -21,6 +21,11 @@ AdministrationMenuController.prototype.initTree = function() {
   this.element.dynatree({
     keyboard: false,
     autoFocus: false,
+    onClick: function(dtnode, event) {
+      if ($(event.target).hasClass("ui-dynatree-title")) {
+        window.location.href = event.target.href;
+      }
+    },
     debugLevel: 0
   });
 

@@ -24,12 +24,19 @@ BacklogMenuController.prototype.initTree = function() {
   this.element.dynatree({
     keyboard: false,
     autoFocus: false,
+    /*
     onClick: function(dtnode, event) {
       if ($(event.target).hasClass("ui-dynatree-title")) {
-        window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
+        $(event.target).attr("href", "editBacklog.action?backlogId=" + dtnode.data.id);
+//        window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
       }
     },
+    */
     onPostInit: function(isReloading, isError) {
+      //hack to get clicking the backlog name properly working
+      me.element.find("a.ui-dynatree-title").each(function(key, item) {
+        item.href = "editBacklog.action?backlogId=" + $(item.parentNode).attr("dtnode").data.id;
+      });
       var rootNode = me.element.dynatree("getRoot");
       if (rootNode.childList === null) {
         me.emptyListNote.show();

@@ -24,14 +24,10 @@ MyAssignmentsMenuController.prototype.initTree = function() {
   this.element.dynatree({
     keyboard: false,
     autoFocus: false,
-    onClick: function(dtnode, event) {
-      if ($(event.target).hasClass("ui-dynatree-title")) {
-        if (dtnode.data.id > 0) {
-          window.location.href = "editBacklog.action?backlogId=" + dtnode.data.id;
-        }
-      }
-    },
     onPostInit: function(isReloading, isError) {
+      me.element.find("a.ui-dynatree-title").each(function(key, item) {
+        item.href = "editBacklog.action?backlogId=" + $(item.parentNode).attr("dtnode").data.id;
+      });
       var rootNode = me.element.dynatree("getRoot");
       if (rootNode.childList === null) {
         me.emptyListNote.show();

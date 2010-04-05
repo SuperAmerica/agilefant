@@ -21,9 +21,6 @@ AdministrationMenuController.prototype.initTree = function() {
   this.element.dynatree({
     keyboard: false,
     autoFocus: false,
-    onClick: function(dtnode, event) {
-      window.location.href = dtnode.data.key;
-    },
     debugLevel: 0
   });
 
@@ -36,7 +33,6 @@ AdministrationMenuController.prototype.initTree = function() {
     icon: false,
     key: "editUser.action"
   });
-  
   rootNode.addChild({
     title: "Users",
     icon: false,
@@ -53,6 +49,9 @@ AdministrationMenuController.prototype.initTree = function() {
     title: "System settings",
     icon: false,
     key: "systemSettings.action"
+  });
+  this.element.find("a.ui-dynatree-title").each(function(key, item) {
+    item.href = $(item.parentNode).attr("dtnode").data.key;
   });
 };
 

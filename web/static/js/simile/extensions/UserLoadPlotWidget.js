@@ -1,5 +1,6 @@
 window.Timeline.DateTime = window.SimileAjax.DateTime;
 Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
+Timeplot.urlPrefix = "static/img/timeline/";
 var UserLoadPlotWidget = function UserLoadPlotWidget(userId, plots) {
   this.userId = userId;
   this.plotConf = {total: null, detailed: null};
@@ -23,8 +24,8 @@ var UserLoadPlotWidget = function UserLoadPlotWidget(userId, plots) {
 }
 
 UserLoadPlotWidget.prototype.paint = function() {
-  this.paintTotal();
   this.paintDetailed();
+  this.paintTotal();
   this.rendered = true;
 };
 

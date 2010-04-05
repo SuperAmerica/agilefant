@@ -59,23 +59,22 @@ AutoSuggest.prototype.initialize = function() {
       var label = me.inputElement.val();
       var existingData = me.valuesElement.val().indexOf(label + ",");
 
-      if (existingData > -1) {
-        return;
+      if (existingData === -1) {
+  
+        me.valuesElement.val(me.valuesElement.val() + label +",");
+        var item = $('<li class="as-selection-item"></li>').click(function(){
+          me.selectionsElement.children().removeClass("selected");
+          $(this).addClass("selected");
+        });
+        
+        var close = $('<a class="as-close">&times;</a>').click(function(){
+          me.valuesElement.val(me.valuesElement.val().replace(label + ",", ""));
+          item.remove();
+          me.inputElement.focus();
+          return false;
+        });
+        me.originalElement.before(item.html(label).prepend(close));
       }
-
-      me.valuesElement.val(me.valuesElement.val() + label +",");
-      var item = $('<li class="as-selection-item"></li>').click(function(){
-        me.selectionsElement.children().removeClass("selected");
-        $(this).addClass("selected");
-      });
-      
-      var close = $('<a class="as-close">&times;</a>').click(function(){
-        me.valuesElement.val(me.valuesElement.val().replace(label + ",", ""));
-        item.remove();
-        me.inputElement.focus();
-        return false;
-      });
-      me.originalElement.before(item.html(label).prepend(close));
       me.resultsElement.hide();
       me.inputElement.val("");
       me.success();

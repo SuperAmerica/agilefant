@@ -31,6 +31,7 @@ var IterationController = function IterationController(options) {
       me.selectAssigneesTab();
     }
   });
+  window.pageController.setMainController(this);
 };
 IterationController.columnIndices = {
   name: 0,

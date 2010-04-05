@@ -108,4 +108,8 @@ CommonController.prototype.handleModelEvents = function(event) {
   
 };
 
+CommonController.prototype.pageControllerDispatch = function(event) {
+  
+};
+
 

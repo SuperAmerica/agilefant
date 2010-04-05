@@ -95,15 +95,22 @@ PageController.prototype._updateMenuCookie = function(isClosed) {
 /**
  * Listen to all events from <code>ModelFactory</code>.
  * <p>
- * Reloads menu if catches an <code>EditEvent</code> or <code>DeleteEvent</code>
- * targeting a backlog.
+ * Reloads the menu when backlogs are added or deleted.
+ * Dispatches all add and delete events to current main controller,
+ * if the main controller is set.
  */
 PageController.prototype.pageListener = function(event) {
-  if ((event instanceof DynamicsEvents.EditEvent ||
-      event instanceof DynamicsEvents.DeleteEvent) &&
-      event.getObject() instanceof BacklogModel) {
-//    this.refreshMenu();
+  if (this.mainController && (event instanceof DynamicsEvents.AddEvent ||
+      event instanceof DynamicsEvents.DeleteEvent)) {
+    this.mainController.pageControllerDispatch(event);
   }
+  if(event instanceof DynamicsEvents.AddEvent && event.getObject() instanceof BacklogModel) {
+    this.refreshMenu();
+  }
+};
+
+PageController.prototype.setMainController = function(controller) {
+  this.mainController = controller;
 };
 
 

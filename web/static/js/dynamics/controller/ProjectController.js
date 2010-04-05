@@ -21,6 +21,7 @@ var ProjectController = function ProjectController(options) {
   this.initializeIterationListConfig();
   this.initializeStoryConfig();  
   this.paint();
+  window.pageController.setMainController(this);
 };
 ProjectController.prototype = new BacklogController();
 
@@ -186,7 +187,7 @@ ProjectController.columnConfigs = {
 ProjectController.prototype.handleModelEvents = function(event) {
   var me = this;
   if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
-    this.model.reloadStoryRanks(null, function() {
+    this.model.reloadStoryRanks(function() {
       me.storyListView.resort();
     });
   }
@@ -206,10 +207,10 @@ ProjectController.prototype._paintLeafStories = function(element) {
 ProjectController.prototype._paintIterations = function(element) {
   var me = this;
   if(!this.iterationsView) {
-    this.iterationFilters = ["ONGOING", "FUTURE", "PAST"];
+    this.iterationFilters = ["ONGOING", "FUTURE"];
     $('<span>Show <input type="checkbox" name="ONGOING" checked="checked"/>' + 
         'Ongoing <input type="checkbox" name="FUTURE" checked="checked"/> ' +
-        'Future <input type="checkbox" name="PAST" checked="checked"/> ' +
+        'Future <input type="checkbox" name="PAST" /> ' +
         'Past iterations </span>').appendTo(element).find("input")
         .click(function(event) {
           var el = $(this);
@@ -224,7 +225,7 @@ ProjectController.prototype._paintIterations = function(element) {
     this.iterationsView = new DynamicTable(this, this.model, this.iterationListConfig,
         element);
     this.iterationsView.setFilter(function(iterationObj) {
-      if(jQuery.inArray(iterationObj.getScheduleStatus(), me.iterationFilters) === -1) {
+      if(iterationObj.getScheduleStatus() && jQuery.inArray(iterationObj.getScheduleStatus(), me.iterationFilters) === -1) {
         return false;
       }
       if(me.getTextFilter().length > 0 && iterationObj.getName().indexOf(me.getTextFilter()) === -1) {
@@ -253,6 +254,7 @@ ProjectController.prototype.paint = function() {
   var tmpSel = (selectedTab === 2) ? 0 : 2;
   this.tabs.tabs("select", tmpSel);
   this.tabs.bind("tabsselect",function(event, ui){
+    me.textFilter.clear();
     if(ui.index === 0) { //leaf stories
       me._paintLeafStories(ui.panel);
     } else if(ui.index === 1) { //Story tree

@@ -25,6 +25,7 @@ var ProductController = function ProductController(options) {
   this.initializeProjectListConfig();
   this.initAssigneeConfiguration();
   this.paint();
+  window.pageController.setMainController(this);
 };
 ProductController.prototype = new BacklogController();
 
@@ -93,7 +94,7 @@ ProductController.prototype.paintProjectList = function() {
     this.projectListView = new DynamicTable(this, this.model, this.projectListConfig,
         this.projectListElement);
     this.projectListView.setFilter(function(projectObj) {
-      if(jQuery.inArray(projectObj.getScheduleStatus(), me.projectFilters) === -1) {
+      if(projectObj.getScheduleStatus() && jQuery.inArray(projectObj.getScheduleStatus(), me.projectFilters) === -1) {
         return false;
       }
       var text = me.getTextFilter();
@@ -124,6 +125,7 @@ ProductController.prototype.paint = function() {
     this.paintStoryTree();
   }
   this.tabs.bind("tabsselect",function(event, ui){
+    me.textFilter.clear();
     if(ui.index === 0) {
       me.paintStoryTree();
     } else if(ui.index === 1) {
@@ -214,6 +216,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     rowControllerFactory : ProductController.prototype.projectRowControllerFactory,
     dataSource : ProductModel.prototype.getProjects,
     caption : "Projects",
+    dataType: "project",
     captionConfig: {
       cssClasses: ""
     },

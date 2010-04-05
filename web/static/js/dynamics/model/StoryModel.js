@@ -129,6 +129,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
       var object = ModelFactory.updateObject(data);
       if(!id) {
         me.getBacklog().addStory(object);
+        object.callListeners(new DynamicsEvents.AddEvent(object));
       }
       if (me.relations.backlog) {
         //me.relations.backlog.reload();
@@ -226,12 +227,13 @@ StoryModel.prototype._rank = function(direction, targetStoryId, targetBacklog) {
       me.setData(data);
       //and again hack!
       if(me.relations.project) {
+        //the story is being ranked in the project context in which the stories may have different parent backlogs
         me.relations.project.callListeners(new DynamicsEvents.RankChanged(me.relations.project,"story"));
       } else {
         oldParent.callListeners(new DynamicsEvents.RankChanged(oldParent,"story"));
-      }
-      if (oldParent !== targetBacklog) {
-        targetBacklog.callListeners(new DynamicsEvents.RankChanged(targetBacklog,"story"));
+        if (oldParent !== targetBacklog) {
+          targetBacklog.callListeners(new DynamicsEvents.RankChanged(targetBacklog,"story"));
+        }
       }
     },
     error: function(xhr) {

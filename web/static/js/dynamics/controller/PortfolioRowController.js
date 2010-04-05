@@ -7,15 +7,12 @@ var PortfolioRowController = function PortfolioRowController(model, view, parent
 PortfolioRowController.prototype = new CommonController();
 
 PortfolioRowController.columnIndices = {
-  name: 0,
-  assignees: 1,
-  startDate: 2,
-  endDate: 3,
-  actions: 4,
-  rankedStatus: 0,
-  rankedName: 1,
-  rankedAssignees: 2,
-  rankedActions: 3
+  status: 0,
+  name: 1,
+  assignees: 2,
+  startDate: 3,
+  endDate: 4,
+  actions: 5
 };
 
 PortfolioRowController.prototype.handleModelEvents = function(event) {

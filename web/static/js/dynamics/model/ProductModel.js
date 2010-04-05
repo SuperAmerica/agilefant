@@ -92,6 +92,9 @@ ProductModel.prototype._saveData = function(id, changedData) {
     success: function(data, status) {
       MessageDisplay.Ok("Product saved successfully");
       var object = ModelFactory.updateObject(data);
+      if(!id) {
+        object.callListeners(new DynamicsEvents.AddEvent(object));
+      }
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving product", xhr);

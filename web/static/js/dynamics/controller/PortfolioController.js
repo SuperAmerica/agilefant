@@ -4,8 +4,7 @@ var PortfolioController = function PortfolioController(options) {
   this.timelineElement = options.timelineElement;
   
   this.init();
-  this.initRankedProjectsConfig();
-  this.initUnrankedProjectsConfig();
+  this.initConfig();
   this.paint();
 };
 
@@ -120,7 +119,7 @@ PortfolioController.prototype.portfolioRowControllerFactory = function(view, mod
   return rowController;
 };
 
-PortfolioController.prototype.initRankedProjectsConfig = function() {
+PortfolioController.prototype.initConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
     dataSource : PortfolioModel.prototype.getRankedProjects,
@@ -136,15 +135,17 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     }
   });
+  var columns = [];
   
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedStatus, {
+  columns.push({
     minWidth : 3,
     autoScale : true,
     title : "Status",
     headerTooltip : 'Project status',
     get : ProjectModel.prototype.getStatus,
     decorator: DynamicsDecorators.projectStatusDecorator,
-    defaultSortColumn: false,
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getRank),
+    defaultSortColumn: true,
     editable : true,
     edit : {
       editor : "Selection",
@@ -152,8 +153,8 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
       items : DynamicsDecorators.projectStates
     }
   }); 
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedName, {
-    minWidth : 23,
+  columns.push({
+    minWidth : 26,
     autoScale : true,
     title : "Name",
     headerTooltip : 'Project name',
@@ -166,8 +167,8 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
       required : true
     }
   });
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedAssignees, {
-	    minWidth : 34,
+  columns.push({
+	    minWidth : 16,
 	    autoScale : true,
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
@@ -181,18 +182,59 @@ PortfolioController.prototype.initRankedProjectsConfig = function() {
         set : BacklogModel.prototype.setAssignees
       }
 	  });
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.rankedActions, {
+  columns.push({
+    minWidth : 10,
+    autoScale : true,
+    title : "Start date",
+    headerTooltip : 'Start date',
+    get : ProjectModel.prototype.getStartDate,
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getStartDate),
+    decorator: DynamicsDecorators.dateTimeDecorator,
+    defaultSortColumn: false,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateTimeDecorator,
+      set : ProjectModel.prototype.setStartDate,
+      withTime: true,
+      required: true
+    }
+  }); 
+  columns.push({
+    minWidth : 10,
+    autoScale : true,
+    title : "End date",
+    headerTooltip : 'End date',
+    get : ProjectModel.prototype.getEndDate,
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getEndDate),
+    decorator: DynamicsDecorators.dateTimeDecorator,
+    defaultSortColumn: false,
+    editable : true,
+    edit : {
+      editor : "Date",
+      decorator: DynamicsDecorators.dateTimeDecorator,
+      set : ProjectModel.prototype.setEndDate,
+      withTime: true,
+      required: true
+    }
+  });
+  
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.status, columns[0]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.name, columns[1]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, columns[2]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, columns[3]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, columns[4]);   
+  
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.actions,{
 	    minWidth : 6,
 	    autoScale : true,
 	    title : "Unrank",
 	    headerTooltip : 'Move to unranked projects',
 	    subViewFactory: PortfolioRowController.prototype.moveToUnrankedButtonFactory
 	  });
-	  
-  this.rankedProjectsConfig = config; 
-};
 
-PortfolioController.prototype.initUnrankedProjectsConfig = function() {
+  this.rankedProjectsConfig = config; 
+  
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
     dataSource : PortfolioModel.prototype.getUnrankedProjects,
@@ -203,71 +245,12 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
     },
     cssClass: "ui-widget-content ui-corner-all portfolio-unranked-project-table"
   });
-  
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.name, {
-    minWidth : 26,
-    autoScale : true,
-    title : "Name",
-    headerTooltip : 'Project name',
-    get : ProjectModel.prototype.getName,
-    editable : true,
-    edit : {
-      editor : "Text",
-      set : ProjectModel.prototype.setName,
-      required : true
-    }
-}); 
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, {
-	    minWidth : 16,
-	    autoScale : true,
-	    title : "Assignees",
-	    headerTooltip : 'Project assignees',
-      get : BacklogModel.prototype.getAssignees,
-      decorator: DynamicsDecorators.assigneesDecorator,
-      editable: true,
-      edit: {
-        editor : "Autocomplete",
-        dialogTitle: "Select users",
-        dataType: "usersAndTeams",
-        set : BacklogModel.prototype.setAssignees
-      }
-	  }); 
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, {
-    minWidth : 10,
-    autoScale : true,
-    title : "Start date",
-    headerTooltip : 'Start date',
-    get : ProjectModel.prototype.getStartDate,
-    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getStartDate),
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    defaultSortColumn: true,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      set : ProjectModel.prototype.setStartDate,
-      withTime: true,
-      required: true
-    }
-  }); 
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, {
-    minWidth : 10,
-    autoScale : true,
-    title : "End date",
-    headerTooltip : 'End date',
-    get : ProjectModel.prototype.getEndDate,
-    sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getEndDate),
-    decorator: DynamicsDecorators.dateTimeDecorator,
-    defaultSortColumn: true,
-    editable : true,
-    edit : {
-      editor : "Date",
-      decorator: DynamicsDecorators.dateTimeDecorator,
-      set : ProjectModel.prototype.setEndDate,
-      withTime: true,
-      required: true
-    }
-  });
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.status, columns[0]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.name, columns[1]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, columns[2]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, columns[3]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, columns[4]);  
+
   config.addColumnConfiguration(PortfolioRowController.columnIndices.actions, {
 	    minWidth : 6,
 	    autoScale : true,
@@ -275,6 +258,6 @@ PortfolioController.prototype.initUnrankedProjectsConfig = function() {
 	    headerTooltip : 'Move to ranked projects',
 	    subViewFactory: PortfolioRowController.prototype.moveToRankedButtonFactory
 	  }); 
-  
+    
   this.unrankedProjectsConfig = config;
 };

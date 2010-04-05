@@ -104,8 +104,9 @@ IterationModel.prototype._saveData = function(id, changedData) {
     success: function(data, status) {
       MessageDisplay.Ok("Iteration saved successfully");
       var object = ModelFactory.updateObject(data);
-      if(id === null || id === undefined) {
+      if(!id) {
         me.getParent().addIteration(object);
+        object.callListeners(new DynamicsEvents.AddEvent(object));
       }
     },
     error: function(xhr, status, error) {

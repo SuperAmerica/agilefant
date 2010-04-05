@@ -40,14 +40,19 @@ PortfolioModel.Validators = {
  * @see CommonModel#setData
  */
 PortfolioModel.prototype._setData = function(newData) {
+  var obj;
   if (newData) {
     this.unrankedProjects = [];
     this.rankedProjects = [];
     for (var i = 0, len = newData.rankedProjects.length; i < len; i++) {
-      this.rankedProjects.push(ModelFactory.updateObject(newData.rankedProjects[i]));
+      obj = ModelFactory.updateObject(newData.rankedProjects[i]);
+      obj.setRank(i);
+      this.rankedProjects.push(obj);
     }
     for (i = 0, len = newData.unrankedProjects.length; i < len; i++) {
-      this.unrankedProjects.push(ModelFactory.updateObject(newData.unrankedProjects[i]));
+      obj = ModelFactory.updateObject(newData.unrankedProjects[i]);
+      obj.setRank(obj.getStartDate());
+      this.unrankedProjects.push(obj);
     }
   }
 };

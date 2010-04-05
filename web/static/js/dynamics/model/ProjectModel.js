@@ -114,6 +114,7 @@ ProjectModel.prototype._saveData = function(id, changedData) {
       var object = ModelFactory.updateObject(data);
       if(!id) {
         me.getParent().addProject(object);
+        object.callListeners(new DynamicsEvents.AddEvent(object));
       }
     },
     error: function(xhr, status, error) {
@@ -322,6 +323,13 @@ ProjectModel.prototype.getStatus = function() {
 };
 ProjectModel.prototype.setStatus = function(status) {
   this.currentData.status = status;
+};
+
+ProjectModel.prototype.getRank = function() {
+  return this.rank;
+};
+ProjectModel.prototype.setRank = function(rank) {
+  this.rank = rank;
 };
 
 ProjectModel.prototype.getStories = function() {

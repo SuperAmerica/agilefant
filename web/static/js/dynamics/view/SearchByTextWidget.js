@@ -53,6 +53,10 @@ SearchByTextWidget.prototype.init = function() {
   });
 };
 
+SearchByTextWidget.prototype.clear = function() {
+  this.input.val("");
+};
+
 SearchByTextWidget.prototype.getValue = function() {
   return this.input.val();
 };

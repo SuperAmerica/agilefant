@@ -54,6 +54,19 @@ DynamicsEvents.EditEvent = function DynamicsEvents_EditEvent(object) {
 };
 DynamicsEvents.EditEvent.prototype = new DynamicsEvents.CommonEvent();
 
+/**
+ * Constructor for the add event.
+ * 
+ * @param {function} object The events target object
+ * @constructor
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.AddEvent = function DynamicsEvents_AddEvent(object) {
+  this.initialize();
+  this.type = "add";
+  this.object = object;
+};
+DynamicsEvents.AddEvent.prototype = new DynamicsEvents.CommonEvent();
 
 /**
  * Constructor for the delete event.

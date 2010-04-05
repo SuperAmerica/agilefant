@@ -36,6 +36,12 @@ StoryTreeController.moveNodeUrls =  {
 };
 
 
+StoryTreeController.prototype.resetFilter = function() {
+  this.storyFilters = {
+      statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"]
+  };
+};
+
 StoryTreeController.prototype.refresh = function() {
   if(!this.tree) {
     this.initTree();
@@ -104,17 +110,19 @@ StoryTreeController.prototype.initHeader = function() {
       me.createNode(-1, 0, 0);
   }).appendTo(actions);
   
-  var expand = $('<li>Expand all</li>').css({'float': 'right'}).addClass("dynamictable-captionaction create").appendTo(actions);
-  var collapse = $('<li>Collapse all</li>').css({'float': 'right'}).hide().addClass("dynamictable-captionaction create").appendTo(actions);
+  this.expandButton = $('<li>Expand all</li>').css({'float': 'right'}).addClass("dynamictable-captionaction create").appendTo(actions);
+  this.collapseButton = $('<li>Collapse all</li>').css({'float': 'right'}).hide().addClass("dynamictable-captionaction create").appendTo(actions);
   
-  expand.click(function() {
+  this.expandButton.click(function() {
     $(this).hide();
-    collapse.show();
+    me.collapseButton.show();
+    me.treeExpanded = true;
     me.tree.open_all();
   });
-  collapse.click(function() {
+  me.collapseButton.click(function() {
     $(this).hide();
-    expand.show();
+    me.expandButton.show();
+    me.treeExpanded = false;
     me.tree.close_all();
   });
 };
@@ -217,9 +225,11 @@ StoryTreeController.prototype.initTree = function() {
   
 };
 StoryTreeController.prototype._treeLoaded = function() {
-//  this.tree.open_all();
-  if(!this.hasFilters()) {
-   this.element.find("li[storystate='DONE']:not(.leaf)").removeClass("open").addClass("closed"); 
+  if(this.treeExpanded) {
+    this.tree.open_all();
+  }
+  if(this.hasFilters()) {
+    this.expandButton.click();
   }
 };
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {

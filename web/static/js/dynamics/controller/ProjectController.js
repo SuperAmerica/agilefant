@@ -255,6 +255,9 @@ ProjectController.prototype.paint = function() {
   this.tabs.tabs("select", tmpSel);
   this.tabs.bind("tabsselect",function(event, ui){
     me.textFilter.clear();
+    if(me.storyTreeController) {
+      me.storyTreeController.resetFilter();
+    }
     if(ui.index === 0) { //leaf stories
       me._paintLeafStories(ui.panel);
     } else if(ui.index === 1) { //Story tree

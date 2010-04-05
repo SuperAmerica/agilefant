@@ -126,6 +126,9 @@ ProductController.prototype.paint = function() {
   }
   this.tabs.bind("tabsselect",function(event, ui){
     me.textFilter.clear();
+    if(me.storyTreeController) {
+      me.storyTreeController.resetFilter();
+    }
     if(ui.index === 0) {
       me.paintStoryTree();
     } else if(ui.index === 1) {

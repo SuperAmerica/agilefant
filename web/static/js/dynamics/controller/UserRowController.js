@@ -35,6 +35,12 @@ UserRowController.prototype.userActionFactory = function(view, model) {
   return actionView;
 };
 
+UserRowController.prototype.handleModelEvents = function(event) {
+  if(this.parentController) {
+    this.parentController.handleModelEvents(event);
+  }
+};
+
 UserRowController.prototype.showEnableAction = function() {
   return !this.model.isEnabled();
 };

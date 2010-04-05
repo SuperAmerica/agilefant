@@ -11,6 +11,9 @@ var TeamListController = function TeamListController(options) {
   this.init();
   this.initConfig();
   this.paint();
+  if(window.pageController) {
+    window.pageController.setMainController(this);
+  }
 };
 TeamListController.prototype = new CommonController();
 
@@ -29,6 +32,12 @@ TeamListController.prototype.paintTeamList = function() {
   this.teamListView = new DynamicTable(this, this.model, this.teamListConfig,
       this.teamListElement);
   this.teamListView.render();
+};
+
+TeamListController.prototype.pageControllerDispatch = function(event) {
+  if((event instanceof DynamicsEvents.AddEvent || event instanceof DynamicsEvents.DeleteEvent) && event.getObject() instanceof TeamModel) {
+    this.model.reload();
+  }
 };
 
 /**

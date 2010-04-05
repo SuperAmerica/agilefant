@@ -12,8 +12,24 @@ var UserListController = function UserListController(options) {
   this.init();
   this.initConfig();
   this.paint();
+  if(window.pageContoller) {
+    window.pageController.setMainController(this);
+  }
 };
 UserListController.prototype = new CommonController();
+
+UserListController.prototype.pageControllerDispatch = function(event) {
+  if((event instanceof DynamicsEvents.AddEvent || event instanceof DynamicsEvents.DeleteEvent) && event.getObject() instanceof UserModel) {
+    this.model.reload();
+  }
+};
+
+UserListController.prototype.handleModelEvents = function(event) {
+  if(event instanceof DynamicsEvents.EditEvent && event.getObject() instanceof UserModel) {
+    this.userListView.render();
+    this.disabledUserListView.render();
+  }
+};
 
 /**
  * Creates a new story controller.
@@ -51,13 +67,6 @@ UserListController.prototype.paint = function() {
         me.model = model;
         me.paintEnabledUserList();
         me.paintDisabledUserList();
-        
-        me.model.addListener(function(event) {
-          if (event instanceof DynamicsEvents.EditEvent) {
-            me.userListView.render();
-            me.disabledUserListView.render();
-          }
-        });
       });
 };
 

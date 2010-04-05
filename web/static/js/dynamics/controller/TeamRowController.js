@@ -28,3 +28,9 @@ TeamRowController.prototype.teamActionFactory = function(view, model) {
   return actionView;
 };
 
+
+TeamRowController.prototype.handleModelEvents = function(event) {
+  if(this.parentController) {
+    this.parentController.handleModelEvents(event);
+  }
+};

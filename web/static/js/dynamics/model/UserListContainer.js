@@ -26,23 +26,6 @@ UserListContainer.prototype._setData = function(newData) {
   if (newData) {
     this._updateRelations(ModelFactory.types.user, newData);
   }
-  
-  var me = this;
-  jQuery.each(this.relations.user, function(k, user) {
-    if (jQuery.inArray(me.listener, user.listeners) === -1) {
-      user.addListener(function(event) { me.listener(event); });
-    }
-  });
-};
-
-/**
- * Listens to changes in user models.
- */
-UserListContainer.prototype.listener = function(event) {
-  if (event instanceof DynamicsEvents.EditEvent &&
-      event.getObject() instanceof UserModel) {
-    this.callListeners(new DynamicsEvents.EditEvent(this));
-  }
 };
 
 /**

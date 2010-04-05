@@ -66,7 +66,10 @@ TeamModel.prototype._saveData = function(id, changedData) {
     dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Team saved successfully");  
-      ModelFactory.updateObject(data);
+      var object = ModelFactory.updateObject(data);
+      if(!id) {
+        object.callListeners(new DynamicsEvents.AddEvent(object));
+      }
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving team", xhr);

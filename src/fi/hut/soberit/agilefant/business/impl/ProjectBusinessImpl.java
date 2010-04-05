@@ -164,6 +164,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
                     assignmentBusiness.delete(assignment.getId());
                 }
             }
+            project.getAssignments().clear();
             assignmentBusiness.addMultiple(project, assigneeIds);
         }
     }

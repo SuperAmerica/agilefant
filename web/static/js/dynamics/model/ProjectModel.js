@@ -326,10 +326,10 @@ ProjectModel.prototype.setStatus = function(status) {
 };
 
 ProjectModel.prototype.getRank = function() {
-  return this.rank;
+  return this.projectRank;
 };
 ProjectModel.prototype.setRank = function(rank) {
-  this.rank = rank;
+  this.projectRank = rank;
 };
 
 ProjectModel.prototype.getStories = function() {

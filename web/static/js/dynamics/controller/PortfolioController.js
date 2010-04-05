@@ -6,6 +6,9 @@ var PortfolioController = function PortfolioController(options) {
   this.init();
   this.initConfig();
   this.paint();
+  if(window.pageController) {
+    window.pageController.setMainController(this);
+  }
 };
 
 PortfolioController.prototype = new CommonController();
@@ -21,14 +24,40 @@ PortfolioController.prototype.paint = function() {
     me.paintUnrankedProjects();
     me.paintTimeline();
     me.attachModelListener();
+    me.pageLayout();
   });
+};
+
+PortfolioController.prototype.pageControllerDispatch = function(event) {
+  if(event instanceof DynamicsEvents.AddEvent && event.getObject() instanceof ProjectModel) {
+    this.model.reload();
+  }
+};
+
+PortfolioController.prototype.pageLayout = function() {
+  if(this.model.getRankedProjects().length === 0) {
+    this.timelineElement.parent().hide();
+    this.rankedProjectsElement.hide();
+  } else {
+    this.timelineElement.parent().show();
+    this.rankedProjectsElement.show();
+  }
+  
+  if(this.model.getUnrankedProjects().length === 0) {
+    this.unrankedProjectsElement.hide();
+  } else {
+    this.unrankedProjectsElement.show();
+  }
 };
 
 PortfolioController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.RelationUpdatedEvent) {
-    this.timelineElement.css("height", (this.model.getRankedProjects().length * 40) + "px");
-    this.eventSource.loadData();
-    this.timeline.layout();
+    this.pageLayout();
+    if(this.model.getRankedProjects().length !== 0) {
+      this.timelineElement.css("height", (this.model.getRankedProjects().length * 32 + 20) + "px");
+      this.eventSource.loadData();
+      this.timeline.layout();
+    }
   } else if (event instanceof DynamicsEvents.EditEvent) {
     this.eventSource.loadData();
   }
@@ -71,7 +100,7 @@ PortfolioController.prototype._calculateTimelineUnitSize = function() {
 };
 
 PortfolioController.prototype.paintTimeline = function() {
-  this.timelineElement.css("height", (this.model.getRankedProjects().length * 40) + "px");
+  this.timelineElement.css("height", (this.model.getRankedProjects().length * 32 + 20) + "px");
   this.model.startDate = new Date();
   this.model.endDate = new Date();
   this.model.startDate.zeroTime();

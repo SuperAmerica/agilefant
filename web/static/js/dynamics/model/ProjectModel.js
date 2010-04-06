@@ -37,7 +37,7 @@ var ProjectModel = function ProjectModel() {
       "fi.hut.soberit.agilefant.model.User":     "assignees"
   };
   
-  
+  this.iterationsLoaded = false;
 };
 
 ProjectModel.prototype = new BacklogModel();
@@ -173,6 +173,7 @@ ProjectModel.prototype.reloadIterations = function(filters, callback) {
     dataType: "json",
     success: function(data, type) {
       me._updateRelations("iteration", data);
+      this.iterationsLoaded = true;
       if(callback) {
         callback();
       }

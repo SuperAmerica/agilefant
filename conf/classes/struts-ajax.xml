@@ -259,7 +259,7 @@
     <action name="projectData" class="projectAction" method="projectData">
       <result name="success" type="json">
         <param name="target">project</param>
-        <param name="patterns">+assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
+        <param name="patterns">+assignees.id, +assignees.initials, +assignees.class, -assignees.*, +children.id, +children.class, +children.name, -children.*</param>
       </result>
     </action>
     

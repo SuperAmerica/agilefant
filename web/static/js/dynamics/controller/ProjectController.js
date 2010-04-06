@@ -237,6 +237,7 @@ ProjectController.prototype._paintIterations = function(element) {
   this.iterationsView.showInfoMessage("Loading...");
   this.model.reloadIterations(null, function() {
     me.iterationsView.hideInfoMessage("Loading...");
+    me.iterationsView.render();
   });
 };
 

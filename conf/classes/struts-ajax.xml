@@ -266,7 +266,7 @@
     <action name="projectLeafStories" class="storyListAction" method="projectLeafStories">
       <result name="success" type="json">
         <param name="target">stories</param>
-        <param name="patterns">+backlog.name, +backlog.class, +backlog.id, -backlog.*, +parent.id, +parent.name, +parent.class, -parent.*, -tasks, +labels.displayName, +labels.class, +labels.id, -labels.*</param>
+        <param name="patterns">+responsibles.class, +responsibles.id, +responsibles.initials, -responsibles.*, +backlog.name, +backlog.class, +backlog.id, -backlog.*, +parent.id, +parent.name, +parent.class, -parent.*, -tasks, +labels.displayName, +labels.class, +labels.id, -labels.*</param>
       </result>
     </action>
     
@@ -384,6 +384,7 @@
     <action name="createStory" method="create" class="storyAction">
       <result type="json">
         <param name="target">story</param>
+        <param name="patterns">+responsibles</param>
       </result>
     </action>
     
@@ -764,12 +765,12 @@
 	</action>
 	
 	<action name="getProjectStoryTree" class="storyHierarchyAction" method="retrieveProjectRootStories">
-      <result type="dispatcher">/WEB-INF/jsp/fragments/storyTree.jsp</result>
-    </action>
+    <result type="dispatcher">/WEB-INF/jsp/fragments/storyTree.jsp</result>
+  </action>
 
 	<action name="getProductStoryTree" class="storyHierarchyAction" method="retrieveProductRootStories">
-      <result type="dispatcher">/WEB-INF/jsp/fragments/storyTree.jsp</result>
-    </action>
+    <result type="dispatcher">/WEB-INF/jsp/fragments/storyTree.jsp</result>
+  </action>
 
 	<!-- /Story hierarchy -->
 	

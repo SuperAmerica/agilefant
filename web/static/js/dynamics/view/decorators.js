@@ -104,7 +104,10 @@ var DynamicsDecorators = {
     return '';
   },
   backlogNameLinkDecorator: function(value) {
-    return '<a href="editBacklog.action?backlogId=' + value + '">' + value + '</a>';
+    if (value) {
+      return '<a href="editBacklog.action?backlogId=' + value + '">' + value + '</a>';
+    }
+    return "";
   },
   iterationLinkDecorator: function(value) {
     if (! value) {

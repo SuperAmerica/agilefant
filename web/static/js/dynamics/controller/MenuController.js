@@ -29,6 +29,11 @@ BacklogMenuController.prototype.initTree = function() {
         window.location.href = event.target.href;
       }
     },
+    onExpand: function(flag, dtnode) {
+      me.element.find("a.ui-dynatree-title").each(function(key, item) {
+        item.href = "editBacklog.action?backlogId=" + $(item.parentNode).attr("dtnode").data.id;
+      });
+    },
     onPostInit: function(isReloading, isError) {
       //hack to get clicking the backlog name properly working
       me.element.find("a.ui-dynatree-title").each(function(key, item) {
@@ -46,6 +51,7 @@ BacklogMenuController.prototype.initTree = function() {
       url: "ajax/menuData.action"
     },
     persist: true,
+    clickFolderMode: 1,
     debugLevel: 0,
     cookieId: "agilefant-menu-dynatree"
   });

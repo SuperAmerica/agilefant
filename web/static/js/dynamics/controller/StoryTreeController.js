@@ -324,7 +324,7 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
  * 
  * Will send an ajax request.
  */
-StoryTreeController.prototype.openNodeDetails= function(node) {
+StoryTreeController.prototype.openNodeDetails = function(node) {
   var bubble = new StoryInfoBubble($(node).attr('storyid'), this, $(node), {});
 };
 

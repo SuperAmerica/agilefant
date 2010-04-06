@@ -178,6 +178,7 @@ ProductController.prototype.initializeProductDetailsConfig = function() {
     title : "Description",
     get : ProductModel.prototype.getDescription,
     editable : true,
+    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
     edit : {
       editor : "Wysiwyg",
       set: ProductModel.prototype.setDescription

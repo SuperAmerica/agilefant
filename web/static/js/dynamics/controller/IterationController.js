@@ -287,7 +287,7 @@ IterationController.prototype.filterStoriesByState = function(element) {
     minHeight: 20
   });
   var filterFunc = function(story) {
-    return (!me.stateFilters || jQuery.inArray(story.getState(), me.stateFilters) !== -1);
+    return (!me.stateFilters || jQuery.inArray(story.getState(), me.stateFilters) !== -1);
   };
   
   var widget = new StateFilterWidget(bub.getElement(), {

@@ -45,7 +45,7 @@ PortfolioController.prototype.pageLayout = function() {
   
   if(this.model.getUnrankedProjects().length === 0) {
     this.unrankedProjectsElement.hide();
-  } else {
+  } else {
     this.unrankedProjectsElement.show();
   }
 };
@@ -264,7 +264,7 @@ PortfolioController.prototype.initConfig = function() {
 
   this.rankedProjectsConfig = config; 
   
-  var config = new DynamicTableConfiguration( {
+  config = new DynamicTableConfiguration( {
     rowControllerFactory : PortfolioController.prototype.portfolioRowControllerFactory,
     dataSource : PortfolioModel.prototype.getUnrankedProjects,
     validators: [ PortfolioModel.Validators.dateValidator ],

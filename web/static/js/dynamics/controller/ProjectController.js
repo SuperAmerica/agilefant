@@ -61,7 +61,7 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
     minHeight: 20
   });
   var filterFunc = function(story) {
-    return (!me.leafStoriesStateFilters || jQuery.inArray(story.getState(), me.leafStoriesStateFilters) !== -1);
+    return (!me.leafStoriesStateFilters || jQuery.inArray(story.getState(), me.leafStoriesStateFilters) !== -1);
   };
   
   var widget = new StateFilterWidget(bub.getElement(), {

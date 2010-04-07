@@ -47,7 +47,7 @@ var DynamicsDecorators = {
     if (typeof (value) === 'string') {
       return value;
     }
-    if(value === null || value === undefined) {
+    if(!value) {
       return "&mdash;";
     } else if(value === 0) {
       return "0h";

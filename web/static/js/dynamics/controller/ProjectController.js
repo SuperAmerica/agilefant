@@ -618,6 +618,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
     editable : true,
     editableCallback: StoryController.prototype.storyPointsEditable,
+    decorator: DynamicsDecorators.estimateDecorator,
     edit : {
       editor : "Estimate",
       set : StoryModel.prototype.setStoryPoints

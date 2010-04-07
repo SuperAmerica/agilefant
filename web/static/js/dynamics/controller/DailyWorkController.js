@@ -576,6 +576,7 @@ DailyWorkController.prototype.initializeStoryConfig = function() {
         headerTooltip : 'Estimate in story points',
         get : StoryModel.prototype.getStoryPoints,
         sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+        decorator: DynamicsDecorators.estimateDecorator,
         editable : true,
         editableCallback: StoryController.prototype.storyPointsEditable,
         edit : {

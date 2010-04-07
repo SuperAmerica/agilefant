@@ -38,7 +38,7 @@ AutoSuggest.prototype.addKeydownHandler = function() {
       e.preventDefault();
     }
     if (e.keyCode === 13) {
-      var selectedResults = me.resultsElement.find(".active").length;
+      var selectedResults = me.resultsElement.find(".active").removeClass('active').length;
       if (selectedResults === 0) {
         me.success();
       }

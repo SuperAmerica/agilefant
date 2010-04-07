@@ -29,6 +29,11 @@ MyAssignmentsMenuController.prototype.initTree = function() {
         window.location.href = event.target.href;
       }
     },
+    onExpand: function(flag, dtnode) {
+      me.element.find("a.ui-dynatree-title").each(function(key, item) {
+        item.href = "editBacklog.action?backlogId=" + $(item.parentNode).attr("dtnode").data.id;
+      });
+    },
     onPostInit: function(isReloading, isError) {
       me.element.find("a.ui-dynatree-title").each(function(key, item) {
         item.href = "editBacklog.action?backlogId=" + $(item.parentNode).attr("dtnode").data.id;

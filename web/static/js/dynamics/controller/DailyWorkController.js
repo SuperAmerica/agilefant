@@ -27,8 +27,15 @@ DailyWorkController.prototype.paint = function() {
         function(model) {
             me.model = model;
             me.createLists();
+            me.attachModelListener();
         }
     );
+};
+
+DailyWorkController.prototype.handleModelEvents = function(event) {
+  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "dailyWorkTask") {
+    this.workQueueView.resort();
+  }
 };
 
 DailyWorkController.prototype.createLists = function() {

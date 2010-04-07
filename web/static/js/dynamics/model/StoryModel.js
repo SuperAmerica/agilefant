@@ -173,11 +173,6 @@ StoryModel.prototype.moveStory = function(backlogId) {
   var me = this;
   var oldBacklog = this.relations.backlog;
   var oldProject = this.relations.project;
-  console.log("Before move: ");
-  console.log("old project ");
-  console.log(oldProject);
-  console.log("old backlog ");
-  console.log(oldBacklog);
   
   jQuery.ajax({
     url: "ajax/moveStory.action",

@@ -35,14 +35,17 @@ DailyWorkModel.prototype = new CommonModel();
 /**
  * Reload's the daily work data.
  */
-DailyWorkModel.prototype.reload = function() {
+DailyWorkModel.prototype.reload = function(callback) {
   var me = this;
   jQuery.getJSON(
     "ajax/dailyWorkData.action",
     {userId: this.getUserId()},
     function(data,status) {
       me.setData(data);
-      me.callListeners(new DynamicsEvents.EditEvent(me));
+      //me.callListeners(new DynamicsEvents.EditEvent(me));
+      if (callback) {
+        callback();
+      }
     }
   );
 };

@@ -86,7 +86,9 @@ DailyWorkTaskModel.prototype.rankDailyUnder = function(rankUnderId, moveUnder) {
         success: function(data, status) {
             MessageDisplay.Ok("Task ordered successfully.");
             
-            moveUnder.reload();
+            moveUnder.reload(function() {
+              moveUnder.callListeners(new DynamicsEvents.RankChanged(oldParent,"dailyWorkTask"));
+            });
             if (me.getDailyWork) {
                 var oldParent = me.getDailyWork();
                 if (oldParent != moveUnder) {

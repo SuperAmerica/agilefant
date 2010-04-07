@@ -22,7 +22,7 @@
   
     #loginWrapper {
       width: 28em;
-      height: 14em;
+      height: 15em;
       margin: -8em 0 0 -12em;
       position: absolute;
       top: 35%;
@@ -146,7 +146,7 @@
     </div>
     
     <div id="disclaimer" class="ui-widget-content ui-corner-all">
-      <p>This is an early <strong>Alpha</strong> version.<br/>
+      <p>This is a <strong>Beta</strong> version.<br/> Expect to encounter some errors. 
       Please report found bugs at <a href="http://www.agilefant.org/mantis/">http://www.agilefant.org/mantis/</a></p>
     </div>
   </div>

@@ -168,7 +168,8 @@ UserController.prototype._initSettingsConfig = function() {
     caption: "User specific settings",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    }
+    },
+    closeRowCallback: null
   });
 
   

@@ -108,6 +108,8 @@ Autocomplete.prototype.initialize = function() {
     this.element.addClass('autocomplete-recent-visible');
     this._initializeRecent();
   }
+  
+  this.searchBox.focus();
 };
 
 Autocomplete.prototype._initializeMultiSelect = function() {

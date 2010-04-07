@@ -60,6 +60,11 @@ BacklogModel.prototype.addStory = function(story) {
   this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"story"));
 };
 
+BacklogModel.prototype.removeStory = function(story) {
+  this.removeRelation(story);
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"story"));
+};
+
 BacklogModel.prototype.addTask = function(task) {
   this.addRelation(task);
   this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"task"));

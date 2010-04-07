@@ -804,7 +804,7 @@ TableEditors.Selection.prototype.init = function(element, model, options) {
   var value = this.options.get.call(this.model);
   var items = this._parseItems();
   jQuery.each(items, function(key, val) {
-    var el = $('<option/>').val(key).text(val).appendTo(me.selectBox);
+    var el = $('<option/>').text(val).val(key).appendTo(me.selectBox);
   });
   
   this._registerEditField(this.selectBox);
@@ -825,6 +825,7 @@ TableEditors.Selection.prototype._registerEditField = function(field) {
   field.change(function() {
     me._requestSaveIfNotInRowEdit();
   });
+  
   TableEditors.CommonEditor.prototype._registerEditField.call(this, field);
 };
 
@@ -844,13 +845,12 @@ TableEditors.Selection.prototype.setEditorValue = function(value) {
   if (!value) {
     value = this.options.get.call(this.model);
   }
-  jQuery.each(this.selectBox.children(), function(k,v) {
-    var elem = $(v);
-    var val = v.value;
-    if (val === value) {
-      elem.attr("selected","selected");
-    }
-  });
+  if (value instanceof CommonModel) {
+    this.selectBox.val(value.getId());
+  }
+  else {
+    this.selectBox.val(value);
+  }
 };
 
 TableEditors.Selection.prototype._validate = function() {

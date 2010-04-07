@@ -127,6 +127,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
     success: function(data, status) {
       MessageDisplay.Ok("Story saved successfully");
       var object = ModelFactory.updateObject(data);
+      
       if(!id) {
         me.getBacklog().addStory(object);
         object.callListeners(new DynamicsEvents.AddEvent(object));
@@ -170,7 +171,14 @@ StoryModel.prototype.reloadMetrics = function() {
 
 StoryModel.prototype.moveStory = function(backlogId) {
   var me = this;
-  var oldParent = this.getBacklog();
+  var oldBacklog = this.relations.backlog;
+  var oldProject = this.relations.project;
+  console.log("Before move: ");
+  console.log("old project ");
+  console.log(oldProject);
+  console.log("old backlog ");
+  console.log(oldBacklog);
+  
   jQuery.ajax({
     url: "ajax/moveStory.action",
     data: {storyId: me.getId(), backlogId: backlogId},
@@ -179,10 +187,22 @@ StoryModel.prototype.moveStory = function(backlogId) {
     async: true,
     cache: false,
     success: function(data,status) {
+      me.relations.backlog = null;
+      me.relations.project = null;
       me._setData(data);
-      MessageDisplay.Ok("Story moved");
-      oldParent.reload();
+      
+      //remove unneccesary old backlog relations
+      if (oldProject && oldProject !== me.relations.project) {
+        oldProject.removeStory(me);
+        //LEAF STORIES: moved to another project
+        oldProject.reloadStoryRanks();
+      }
+      if (oldBacklog && oldBacklog !== me.relations.backlog) {        
+        oldBacklog.removeStory(me);
+      }
+     
       me.callListeners(new DynamicsEvents.EditEvent(me));
+      MessageDisplay.Ok("Story moved");
     },
     error: function(xhr) {
       MessageDisplay.Error("An error occurred moving the story", xhr);

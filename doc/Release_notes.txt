@@ -1,13 +1,10 @@
-Agilefant 2.0 Alpha 4
+Agilefant 2.0 Beta 1
 Release notes
-2010-01-07
+2010-04-09
 --
 
 
-This is an early alpha version of Agilefant 2.0. Alpha version is not recommended for production use and is rather intended for the curious. Use at your own risk!
-
-Agilefant 2.0 has its own blog for progress reports at http://www.agilefant.org/blog
-
+This is an beta version of Agilefant 2.0.
 
 Current status of the release:
 
@@ -33,6 +30,16 @@ Current status of the release:
 |     CHANGESET      |
 +--------------------+
 
+Changes from Alpha 5
+2010-04-09
++ Story tree improvements
+	- Editing story labels
+	- Creating stories to empty story trees
+	- Improved filtering and search capabilities
++ Performance improvements in project and iteration views
++ Ability to delete iterations, projects and products
+
+ 
 Changes from Alpha 4
 2010-02-12
 + Labels can be added to stories

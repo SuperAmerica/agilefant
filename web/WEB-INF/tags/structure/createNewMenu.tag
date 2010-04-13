@@ -10,15 +10,32 @@
 <script type="text/javascript">
 $(document).ready(function() {
   var createNewMenu = $('#createNewMenu');
+
+  /* Close the menu if the mouse is not moved over it in five seconds */
+  var closeMenu = function() {
+    createNewMenu.fadeOut('fast');
+  };
+  var closeTimer = setTimeout(closeMenu, 5000);
+  
+  /* Remove the close timer */
+  createNewMenu.mouseenter(function() {
+    MessageDisplay.Ok("Timer cleared");
+    clearTimeout(closeTimer);
+  });
+
+  /* Set the close timer */
   createNewMenu.mouseleave(function() {
-    $(this).hide();
+    closeTimer = setTimeout(closeMenu, 5000);
   });
   
   $('#createNewMenuLink').click(function() {
     createNewMenu.show();
   });
+  
   $('#createNewMenu a').click(function() {
+    createNewMenu.hide();
     CreateDialog.createById($(this).attr('id'));
+    clearTimeout(closeTimer);
   });
 });
 </script>

@@ -161,5 +161,17 @@ levels of planning. Product backlog is maintained as a story tree.</p>
 </div>
 
 
+<div class="structure-main-block">
+<div class="dynamictable ui-widget-content ui-corner-all" id="storiesAndTasks">
+
+<div class="ui-widget-header dynamictable-caption dynamictable-caption-block ui-corner-all">
+5. Additional Views
+</div>
+
+
+</div>
+</div>
+
+
 
 </struct:htmlWrapper>

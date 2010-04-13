@@ -1,6 +1,6 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 
-<struct:htmlWrapper navi="backlog">
+<struct:htmlWrapper navi="none">
 
 <h2>Agilefant help page</h2>
 

@@ -15,21 +15,21 @@ $(document).ready(function() {
   var closeMenu = function() {
     createNewMenu.fadeOut('fast');
   };
-  var closeTimer = setTimeout(closeMenu, 5000);
+  var closeTimer = null;
   
   /* Remove the close timer */
   createNewMenu.mouseenter(function() {
-    MessageDisplay.Ok("Timer cleared");
     clearTimeout(closeTimer);
   });
 
   /* Set the close timer */
   createNewMenu.mouseleave(function() {
-    closeTimer = setTimeout(closeMenu, 5000);
+    closeTimer = setTimeout(closeMenu, 2000);
   });
   
   $('#createNewMenuLink').click(function() {
     createNewMenu.show();
+    closeTimer = setTimeout(closeMenu, 4000);
   });
   
   $('#createNewMenu a').click(function() {

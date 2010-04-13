@@ -246,7 +246,7 @@
 		<!-- Actions for changing settings -->
 		<action name="settings">
 		  <result type="redirectAction">
-        <param name="actionName">editUser</param>
+        <param name="actionName">systemSettings</param>
       </result>
 		</action>
 		
@@ -255,7 +255,7 @@
 		</action>
 		
 		<action name="storeSettings" class="settingAction" method="storeSettings">
-			<result name="success" type="dispatcher">/WEB-INF/jsp/administration/settings.jsp</result>
+			<result name="success" type="redirectAction">systemSettings</result>
 		</action>
 		
 		<!-- timesheet actions -->

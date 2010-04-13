@@ -31,6 +31,8 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     
     //setting keys
     public static final String SETTING_NAME_HOUR_REPORTING = "HourReporting";
+    public static final String SETTING_NAME_DAILY_WORK = "DailyWork";
+    public static final String SETTING_NAME_DEV_PORTFOLIO = "DevPortfolio";
     public static final String SETTING_NAME_RANGE_LOW = "RangeLow";
     public static final String SETTING_NAME_RANGE_HIGH = "RangeHigh";
     public static final String SETTING_NAME_OPTIMAL_LOW = "OptimalLow";
@@ -103,6 +105,38 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     public void setHourReporting(boolean mode) {
         this.storeSetting(SETTING_NAME_HOUR_REPORTING, mode);
 
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean isDailyWork() {
+        Setting setting = this.retrieveByName(SETTING_NAME_DAILY_WORK);
+
+        if (setting == null) {
+            return false;
+        }
+
+        return setting.getValue().equals("true");
+    }
+
+    @Transactional
+    public void setDailyWork(boolean mode) {
+        this.storeSetting(SETTING_NAME_DAILY_WORK, mode);
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean isDevPortfolio() {
+        Setting setting = this.retrieveByName(SETTING_NAME_DEV_PORTFOLIO);
+
+        if (setting == null) {
+            return false;
+        }
+
+        return setting.getValue().equals("true");
+    }
+
+    @Transactional
+    public void setDevPortfolio(boolean mode) {
+        this.storeSetting(SETTING_NAME_DEV_PORTFOLIO, mode);
     }
 
     /**

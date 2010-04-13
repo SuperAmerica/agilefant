@@ -6,6 +6,23 @@
 
 <h2>System settings</h2>
 
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+  var dwc = $('#dailyWorkCheckbox');
+
+  if (dwc.attr('checked')) {
+    $('#thresholdDiv').show();
+  }
+
+  dwc.change(function() {
+    $('#thresholdDiv').toggle();
+  });
+  
+});
+//-->
+</script>
+
 <div class="structure-main-block">
 <div class="dynamictable ui-widget-content ui-corner-all">
 
@@ -26,27 +43,24 @@
     <table class="settings-table">
     <tr>
       <td><label for="dailyWorkEnabled">Enable Daily Work</label></td>
-      <td><ww:checkbox disabled="true" name="dailyWorkEnabled" fieldValue="true" value="%{dailyWorkEnabled}"></ww:checkbox></td>
-      <td ><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What is daily work?</a></td>
+      <td><ww:checkbox id="dailyWorkCheckbox" name="dailyWorkEnabled" fieldValue="true" value="%{dailyWorkEnabled}"></ww:checkbox></td>
+      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What is daily work?</a></td>
     </tr>
     <tr>
       <td><label for="devPortfolioEnabled">Enable Dev Portfolio</label></td>
-      <td><ww:checkbox disabled="true" name="devPortfolioEnabled" fieldValue="true" value="%{devPortfolioEnabled}"></ww:checkbox></td>
-      <td ><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What is Dev Portfolio?</a></td>
+      <td><ww:checkbox name="devPortfolioEnabled" fieldValue="true" value="%{devPortfolioEnabled}"></ww:checkbox></td>
+      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What is Dev Portfolio?</a></td>
     </tr>
     <tr>
       <td><label for="hourReportingEnabled">Enable Timesheets</label></td>
-      <td><ww:checkbox name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox></td>
-      <td ><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What are Timesheets?</a></td>
+      <td><ww:checkbox  name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox></td>
+      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What are Timesheets?</a></td>
     </tr>
     
     </table>
     
     
-    
-    <c:if test="${dailyWorkEnabled}">
-    
-    
+    <div style="margin: 0; padding: 0; display: none;" id="thresholdDiv">
     
     <h3>Load thresholds</h3>
     
@@ -80,8 +94,9 @@
       <td style="background: rgba(130, 180, 244, 0.7);">&nbsp;</td>
     </tr>
     </table>
+    
+    </div>
   
-    </c:if>
   
     <ww:submit value="Save"></ww:submit>
     

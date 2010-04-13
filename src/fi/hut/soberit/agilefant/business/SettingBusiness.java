@@ -31,6 +31,26 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
     void setHourReporting(boolean mode);
     
     /**
+     * Is dev portfolio enabled
+     */
+    boolean isDevPortfolio();
+    
+    /**
+     * Set dev portfolio mode
+     */
+    void setDevPortfolio(boolean mode);
+    
+    /**
+     * Is daily work enabled
+     */
+    boolean isDailyWork();
+    
+    /**
+     * Set daily work mode
+     */
+    void setDailyWork(boolean mode);
+    
+    /**
      * Set value range low limit for load meter
      * @param value
      */

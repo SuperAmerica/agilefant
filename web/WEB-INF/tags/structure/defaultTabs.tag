@@ -14,6 +14,8 @@ $(document).ready(function() {
 <ul>
 
 <!-- Daily Work -->
+<c:if test="${settings.dailyWork}">
+
 <li id="navitab-dailyWork">
   <a href="contextView.action?contextName=dailyWork&resetContextView=true">
   <span>
@@ -22,6 +24,7 @@ $(document).ready(function() {
   </span>
   </a>
 </li>
+</c:if>
 
 <!-- Backlogs -->
 <li id="navitab-backlog">
@@ -47,6 +50,7 @@ $(document).ready(function() {
 </c:if>
 
 <!-- Dev Portfolio -->
+<c:if test="${settings.devPortfolio}">
 <li id="navitab-portfolio">
   <a href="contextView.action?contextName=projectPortfolio&resetContextView=true">
   <span>
@@ -55,6 +59,7 @@ $(document).ready(function() {
   </span>
   </a>
 </li>
+</c:if>
 
 <%-- Settings --%>
 <li id="navitab-settings">

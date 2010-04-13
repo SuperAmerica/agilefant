@@ -19,7 +19,9 @@ public class SettingAction extends ActionSupport {
     private int optimalLow = -1;
     private int optimalHigh = -1;
     private int criticalLow = -1;
-    private boolean hourReportingEnabled = false;;
+    private boolean hourReportingEnabled = false;
+    private boolean dailyWorkEnabled = false;
+    private boolean devPortfolioEnabled = false;
     
     @Autowired
     private SettingBusiness settingBusiness;
@@ -31,6 +33,8 @@ public class SettingAction extends ActionSupport {
         this.rangeHigh = this.settingBusiness.getRangeHigh();
         this.rangeLow = this.settingBusiness.getRangeLow();
         this.hourReportingEnabled = this.settingBusiness.isHourReportingEnabled();
+        this.devPortfolioEnabled = this.settingBusiness.isDevPortfolio();
+        this.dailyWorkEnabled = this.settingBusiness.isDailyWork();
         return Action.SUCCESS;
     }
     
@@ -45,6 +49,8 @@ public class SettingAction extends ActionSupport {
         settingBusiness.setOptimalHigh(optimalHigh);
         settingBusiness.setCriticalLow(criticalLow);
         settingBusiness.setHourReporting(hourReportingEnabled);
+        settingBusiness.setDevPortfolio(devPortfolioEnabled);
+        settingBusiness.setDailyWork(dailyWorkEnabled);
         return Action.SUCCESS;
     }
     
@@ -132,6 +138,22 @@ public class SettingAction extends ActionSupport {
 
     public void setHourReportingEnabled(boolean hourReportingEnabled) {
         this.hourReportingEnabled = hourReportingEnabled;
+    }
+
+    public boolean isDailyWorkEnabled() {
+        return dailyWorkEnabled;
+    }
+
+    public void setDailyWorkEnabled(boolean dailyWorkEnabled) {
+        this.dailyWorkEnabled = dailyWorkEnabled;
+    }
+
+    public boolean isDevPortfolioEnabled() {
+        return devPortfolioEnabled;
+    }
+
+    public void setDevPortfolioEnabled(boolean devPortfolioEnabled) {
+        this.devPortfolioEnabled = devPortfolioEnabled;
     }
 
     public void setSettingBusiness(SettingBusiness settingBusiness) {

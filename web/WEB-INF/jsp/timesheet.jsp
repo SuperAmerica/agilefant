@@ -151,7 +151,12 @@ function tsToggle(caller) {
 }
 </script>
 
-<h2>Timesheets</h2>
+<div class="structure-main-block">
+<div class="dynamictable ui-widget-content ui-corner-all" id="changingPassword">
+
+<div class="ui-widget-header dynamictable-caption dynamictable-caption-block ui-corner-all">
+Timesheets
+</div>
 
 <table>
 	<tbody>
@@ -254,8 +259,24 @@ function tsToggle(caller) {
 		</tr>
 	</tbody>
 </table>
-<div style="width: 800px;">
+
+</div>
+</div>
+
+
+
+
 <c:if test="${!empty products}">
+
+<div class="structure-main-block">
+<div class="dynamictable ui-widget-content ui-corner-all" id="changingPassword">
+
+<div class="ui-widget-header dynamictable-caption dynamictable-caption-block ui-corner-all">
+Results
+</div>
+
+<div style="margin: 1em 1em;">
+
 	<aef:timesheetBacklogNode nodes="${products}" />
 	<table class="reportTable" style="width: 100%;">
 	 <tr>
@@ -263,10 +284,28 @@ function tsToggle(caller) {
 	   <td class="effortCol">${aef:minutesToString(effortSum)}</td>
 	  </tr>
 	 </table>
+
+</div>
+
+</div>
+</div>
+
+
 </c:if>
 <c:if test="${empty products && !empty selectedBacklogs}">
-<p>No matching effort entries were found.</p>
-</c:if>
+
+<div class="structure-main-block">
+<div class="dynamictable ui-widget-content ui-corner-all" id="changingPassword">
+
+<div class="ui-widget-header dynamictable-caption dynamictable-caption-block ui-corner-all">
+Results
 </div>
+
+<p>No matching effort entries were found.</p>
+
+</div>
+</div>
+
+</c:if>
 
 </struct:htmlWrapper>

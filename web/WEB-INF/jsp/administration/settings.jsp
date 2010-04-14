@@ -8,6 +8,16 @@
 
 <script type="text/javascript">
 <!--
+function openHelpPopup(link, title, url) {
+  var bub = new Bubble($(link), {
+    offsetX: 0,
+    title: title,
+    maxWidth: 450
+  });
+  var content = $('<div/>').appendTo(bub.getElement());
+  content.load(url);
+};
+
 $(document).ready(function() {
   var dwc = $('#dailyWorkCheckbox');
 
@@ -44,17 +54,17 @@ $(document).ready(function() {
     <tr>
       <td><label for="dailyWorkEnabled">Enable Daily Work</label></td>
       <td><ww:checkbox id="dailyWorkCheckbox" name="dailyWorkEnabled" fieldValue="true" value="%{dailyWorkEnabled}"></ww:checkbox></td>
-      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What is daily work?</a></td>
+      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="openHelpPopup(this,'Daily Work','static/html/help/dailyWorkPopup.html'); return false;">What is Daily Work?</a></td>
     </tr>
     <tr>
       <td><label for="devPortfolioEnabled">Enable Dev Portfolio</label></td>
       <td><ww:checkbox name="devPortfolioEnabled" fieldValue="true" value="%{devPortfolioEnabled}"></ww:checkbox></td>
-      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What is Dev Portfolio?</a></td>
+      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="openHelpPopup(this,'Dev Portfolio','static/html/help/devPortfolioPopup.html'); return false;">What is Dev Portfolio?</a></td>
     </tr>
     <tr>
       <td><label for="hourReportingEnabled">Enable Timesheets</label></td>
       <td><ww:checkbox  name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox></td>
-      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;">What are Timesheets?</a></td>
+      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="openHelpPopup(this,'Timesheets','static/html/help/timesheetsPopup.html'); return false;">What are Timesheets?</a></td>
     </tr>
     
     </table>

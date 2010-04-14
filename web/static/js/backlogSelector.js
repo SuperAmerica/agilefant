@@ -5,8 +5,8 @@
 			selectedProject: null,
 			selectedIteration: null,
 			onSelect: function() {},
-			selectStory: false,
-		};
+			selectStory: false
+    };
 		this.element = element;
 		$.extend(this.options, options);
 		this.init();

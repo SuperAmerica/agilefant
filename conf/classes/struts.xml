@@ -51,6 +51,18 @@
 		</action>
 		<!-- Context view -->
 		
+		<action name="loginContext" class="loginContextAction">
+		  <result name="dailyWork" type="redirectAction">
+		    <param name="actionName">dailyWork</param>
+		  </result>
+		  <result name="help" type="redirectAction">
+        <param name="actionName">help</param>
+      </result>
+      <result name="selectBacklog" type="redirectAction">
+        <param name="actionName">selectBacklog</param>
+      </result>
+		</action>
+		
 		<action name="contextView" class="contextViewAction">
 			<result type="redirectAction">
 				<param name="actionName">selectBacklog</param>

@@ -32,8 +32,8 @@ PersonalLoadController.prototype.init = function(options) {
   $(window).resize(function() {
     me.userLoadView.paint();
   });
-  //this.tabs.tabs("select", 1);
-  //this.tabs.tabs("select", 0);
+  this.tabs.tabs("select", 1);
+  this.tabs.tabs("select", 0);
 };
 
 PersonalLoadController.prototype._selectuserSpentEffortElement = function() {

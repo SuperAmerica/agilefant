@@ -91,6 +91,14 @@
 .structure-main-block ul.backlogTabs {
   height: 24px !important;  
 }
+
+ul.backlogTabs li a {
+  height: 20px;
+}
+ul.backlogTabs li a img{
+  vertical-align: middle;
+}
+
 .structure-main-block div.details {
   min-height: 200px;
 }

@@ -72,7 +72,7 @@ $(document).ready(function() {
   <li class=""><a href="#storyTreeContainer"><span><img
         alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
   <li class=""><a href="#stories"><span><img
-				alt="Edit" src="static/img/info.png" /> Leaf stories</span></a></li>
+				alt="Edit" src="static/img/leaf_stories.png" /> Leaf stories</span></a></li>
   <li class=""><a href="#iterations"><span><img
 				alt="Edit" src="static/img/backlog.png" /> Iterations</span></a></li>
   <li id="searchByText" style="float: right;"> </li>

@@ -28,13 +28,13 @@ ProjectController.prototype = new BacklogController();
 ProjectController.prototype.filter = function() {
   var me = this;
   var activeTab = this.tabs.tabs("option","selected");
-  if (activeTab === 0) {
+  if (activeTab === 1) {
     this.storyListView.showInfoMessage("Searching...");
     this.model.reloadLeafStories({name: this.getTextFilter()}, function() {
       me.storyListView.hideInfoMessage("Searching...");
     });
   }
-  else if (activeTab === 1) {
+  else if (activeTab === 0) {
     this.storyTreeController.filter(this.getTextFilter(),
         this.getStateFilters());
   }
@@ -259,9 +259,9 @@ ProjectController.prototype.paint = function() {
     if(me.storyTreeController) {
       me.storyTreeController.resetFilter();
     }
-    if(ui.index === 0) { //leaf stories
+    if(ui.index === 1) { //leaf stories
       me._paintLeafStories(ui.panel);
-    } else if(ui.index === 1) { //Story tree
+    } else if(ui.index === 0) { //Story tree
       me._paintStoryTree(ui.panel);
     } else if(ui.index === 2) { //iteration list
       me._paintIterations(ui.panel);

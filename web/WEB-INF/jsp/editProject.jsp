@@ -69,18 +69,18 @@ $(document).ready(function() {
 
 <div style="margin-top: 3em;" class="structure-main-block project-color-header" id="releaseContents">
 <ul class="backlogTabs">
-  <li class=""><a href="#stories"><span><img
-				alt="Edit" src="static/img/info.png" /> Stories</span></a></li>
   <li class=""><a href="#storyTreeContainer"><span><img
-				alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
+        alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
+  <li class=""><a href="#stories"><span><img
+				alt="Edit" src="static/img/info.png" /> Leaf stories</span></a></li>
   <li class=""><a href="#iterations"><span><img
 				alt="Edit" src="static/img/backlog.png" /> Iterations</span></a></li>
   <li id="searchByText" style="float: right;"> </li>
 </ul>
 
 <form onsubmit="return false;">
-  <div class="details" id="stories"></div>
   <div class="details" id="storyTreeContainer"></div>
+  <div class="details" id="stories"></div>
   <div class="details" id="iterations">
   		<div id="iterations">&nbsp;</div>
   </div>

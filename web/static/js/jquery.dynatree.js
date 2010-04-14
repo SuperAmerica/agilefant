@@ -23,7 +23,7 @@
  *	Debug functions
  */
 
-var _canLog = true;
+var _canLog = false;
 
 function _log(mode, msg) {
 	/**
@@ -1385,7 +1385,7 @@ DynaTree.prototype = {
 		// instance members
 		this.phase = "init";
 		this.$widget = $widget;
-		this.options = $widget.options;
+		this.options = $.extend(true, {}, $widget.options);
 		this.$tree = $widget.element;
 		// find container element
 		this.divTree = this.$tree.get(0);

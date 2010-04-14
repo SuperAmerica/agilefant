@@ -12,7 +12,6 @@
     <div id="administrationMenu">&nbsp;</div>
 </div>
 
-<script type="text/javascript" src="static/js/jquery.dynatree.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {

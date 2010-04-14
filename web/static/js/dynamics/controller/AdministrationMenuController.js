@@ -26,7 +26,8 @@ AdministrationMenuController.prototype.initTree = function() {
         window.location.href = event.target.href;
       }
     },
-    debugLevel: 0
+    debugLevel: 0,
+    initAjax: null
   });
 
   this.tree = this.element.dynatree("getTree");

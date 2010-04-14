@@ -16,6 +16,24 @@ p.infoBox {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
+
+div.rightHandImage {
+  float: right;
+  margin: 1em;
+}
+
+div.rightHandImage img {
+  border: 1px solid #ccc;
+  padding: 1em;
+  
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px; 
+}
+
+div.rightHandImage p {
+  text-align: center;
+  font-style: italic;
+}
 </style>
 
 <p>
@@ -28,6 +46,7 @@ This is a quick start guide on using Agilefant. More detailed instructions and o
   <li><a href="#creatingUsers">Creating New Users</a></li>
   <li><a href="#backlogStructure">Backlog Structure</a></li>
   <li><a href="#storiesAndTasks">Stories and Tasks</a></li>
+  <li><a href="#additionalViews">Additional Views</a></li>
 </ol>
 
 
@@ -38,8 +57,8 @@ This is a quick start guide on using Agilefant. More detailed instructions and o
 1. Changing Your Password
 </div>
 
-<div style="float: right; margin: 1em;">
-  <img src="static/img/help/change_password.png" style="border: 1px solid #ccc; padding: 1em; -moz-border-radius: 5px; -webkit-border-radius: 5px; "/>
+<div class="rightHandImage">
+  <img src="static/img/help/change_password.png" style=""/>
   <!-- <br/>
   <p style="text-align: center; font-style: italic;">The change password button</p>-->
 </div>
@@ -65,10 +84,10 @@ This is a quick start guide on using Agilefant. More detailed instructions and o
 2. Creating New Users
 </div>
 
-<div style="float: right; margin: 1em;">
-  <img src="static/img/help/create_user.png" style="border: 1px solid #ccc; padding: 1em; -moz-border-radius: 5px; -webkit-border-radius: 5px; "/>
+<div class="rightHandImage">
+  <img src="static/img/help/create_user.png" alt="Left hand menu"/>
   <br/>
-  <p style="text-align: center; font-style: italic;">Navigating with the left hand menu</p>
+  <p>Navigating with the left hand menu</p>
 </div>
 
 <p class="infoBox">
@@ -99,10 +118,10 @@ Also, if you would like to implement this (or an other) feature to Agilefant, pl
 3. Backlog Structure
 </div>
 
-<div style="float: right; margin: 1em;">
-  <img src="static/img/help/create_product.png" style="border: 1px solid #ccc; padding: 1em; -moz-border-radius: 5px; -webkit-border-radius: 5px; "/>
+<div class="rightHandImage">
+  <img src="static/img/help/create_product.png" alt="Create new menu" />
   <br/>
-  <p style="text-align: center; font-style: italic;">The create new menu</p>
+  <p>The create new menu</p>
 </div>
 
 <h3>Creating a backlog</h3>
@@ -120,6 +139,10 @@ Also, if you would like to implement this (or an other) feature to Agilefant, pl
 levels of planning. Product backlog is maintained as a story tree.</p>
 
 <p>Please note that you can not create iterations before projects, or projects before products.</p>
+
+<h4>Products</h4>
+<h4>Projects</h4>
+<h4>Iterations</h4>
 
 <div style="width:40%; border: 1px solid #ccc; margin: 1em; -moz-border-radius: 5px; -webkit-border-radius: 5px;">
 <h4>Example</h4>
@@ -162,12 +185,20 @@ levels of planning. Product backlog is maintained as a story tree.</p>
 
 
 <div class="structure-main-block">
-<div class="dynamictable ui-widget-content ui-corner-all" id="storiesAndTasks">
+<div class="dynamictable ui-widget-content ui-corner-all" id="additionalViews">
 
 <div class="ui-widget-header dynamictable-caption dynamictable-caption-block ui-corner-all">
 5. Additional Views
 </div>
 
+<div class="rightHandImage">
+  <img src="static/img/help/additional_views.png" alt="Additional Views" />
+  <br/>
+  <p>Additional view settings</p>
+</div>
+
+<p>Beside the basic functionality of managing backlogs, Agilefant has the possibility
+to toggle some specialized views on or off on the system settings page.</p>
 
 </div>
 </div>

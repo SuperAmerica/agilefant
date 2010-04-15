@@ -183,6 +183,7 @@ StoryController.prototype.showDescriptionColumn = function() {
   if (cell) {
     cell.show();
   }
+  this.view.getElement().addClass("bottom-margin");
 };
 
 /**
@@ -193,6 +194,7 @@ StoryController.prototype.hideDescriptionColumn = function() {
   if (cell) {
     cell.hide();
   }
+  this.view.getElement().removeClass("bottom-margin")
 };
 
 /**

@@ -39,6 +39,10 @@ Bubble.prototype.init = function() {
  */
 Bubble.prototype.destroy = function() {
   this.parentElement.remove();
+  
+  //Remove the esc listener
+  $(document).unbind('keydown', this.keypressListener);
+  
   if (this.options.closeCallback) {
     this.options.closeCallback();
   }
@@ -94,5 +98,14 @@ Bubble.prototype._bindEvents = function() {
     event.stopPropagation();
     return false;
   });
+  
+  // Add esc press listener
+  this.keypressListener = function(event) {
+    if (event.keyCode === 27) {      
+      me.destroy();
+    }
+  };
+  
+  $(document).keydown(this.keypressListener);
 };
 

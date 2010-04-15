@@ -68,7 +68,7 @@ $(document).ready(function() {
 <div style="margin-top: 3em;" class="structure-main-block project-color-header" id="productContents">
 <ul class="backlogTabs">
   <li class=""><a href="#storyTreeContainer"><span><img
-        alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
+        alt="Edit" src="static/img/story_tree.png" /> Story tree</span></a></li>
   <li class=""><a href="#projects"><span><img
         alt="Edit" src="static/img/backlog.png" /> Projects</span></a></li>
   <li id="searchByText" style="float: right;"> </li>

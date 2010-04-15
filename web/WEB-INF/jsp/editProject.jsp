@@ -70,7 +70,7 @@ $(document).ready(function() {
 <div style="margin-top: 3em;" class="structure-main-block project-color-header" id="releaseContents">
 <ul class="backlogTabs">
   <li class=""><a href="#storyTreeContainer"><span><img
-        alt="Edit" src="static/img/info.png" /> Story tree</span></a></li>
+        alt="Edit" src="static/img/story_tree.png" /> Story tree</span></a></li>
   <li class=""><a href="#stories"><span><img
 				alt="Edit" src="static/img/leaf_stories.png" /> Leaf stories</span></a></li>
   <li class=""><a href="#iterations"><span><img

@@ -188,7 +188,8 @@ StoryTreeController.prototype.initTree = function() {
     ui: {
         dots: true,
         theme_path: "static/css/jstree/agilefant/style.css",
-        theme_name: "classic"
+        theme_name: "classic",
+        selected_delete: false
     },
     callback: {
         onload: function() { me._treeLoaded(); },
@@ -221,8 +222,6 @@ StoryTreeController.prototype.initTree = function() {
     }
   });
   this.tree = jQuery.tree.reference(this.element);
-
-  
 };
 StoryTreeController.prototype._treeLoaded = function() {
   if(this.treeExpanded) {
@@ -284,7 +283,7 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
   // Hide the "New folder" line
   node.find("span").hide();
   var container = $('<div />').appendTo(node);
-  var nameField = $('<input type="text" size="50" />').appendTo(container);
+  var nameField = $('<input type="text" size="75" />').appendTo(container);
 
   var saveStory = function(event) {
     event.stopPropagation();

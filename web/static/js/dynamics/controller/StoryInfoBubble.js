@@ -191,6 +191,9 @@ StoryInfoBubble.prototype._createConfig = function() {
 };
 
 StoryInfoBubble.prototype.descriptionDecorator = function(value) {
+  if (!value) {
+    return DynamicsDecorators.emptyDescriptionDecorator();
+  }
   return '<div style="max-height: 20em; overflow: auto;">' + value + '</div>';
 };
 

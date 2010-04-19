@@ -259,5 +259,9 @@ var DynamicsDecorators = {
         return value;
       }
     };
+  },
+  emptyDescriptionDecorator: function(value) {
+    var f = DynamicsDecorators.onEmptyDecoratorFactory('<span style="color: #666; font-size: 80%;">(Empty description)</span>');
+    return f(value);
   }
 };

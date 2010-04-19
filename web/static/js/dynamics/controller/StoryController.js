@@ -470,7 +470,7 @@ StoryController.prototype.storyPointsEditable = function() {
   config.addColumnConfiguration(TaskController.columnIndices.description, {
     fullWidth : true,
     get : TaskModel.prototype.getDescription,
-    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    decorator: DynamicsDecorators.emptyDescriptionDecorator,
     cssClass : 'task-data text-editor',
     visible : false,
     editable : true,

@@ -38,7 +38,7 @@ StoryInfoWidget.prototype.initialize = function() {
   config.addColumnConfiguration(2, {
     title: 'Description',
     get : StoryModel.prototype.getDescription,
-    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    decorator: DynamicsDecorators.emptyDescriptionDecorator,
     editable : true,
     edit : {
       editor : "Wysiwyg",

@@ -176,7 +176,7 @@ ProjectController.columnConfigs = {
     title : "Description",
     get : ProjectModel.prototype.getDescription,
     editable : true,
-    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    decorator: DynamicsDecorators.emptyDescriptionDecorator,
     edit : {
       editor : "Wysiwyg",
       set: ProjectModel.prototype.setDescription

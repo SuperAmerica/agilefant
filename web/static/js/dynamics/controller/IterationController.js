@@ -122,7 +122,7 @@ IterationController.columnConfigs = {
     title : "Description",
     get : IterationModel.prototype.getDescription,
     editable : true,
-    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    decorator: DynamicsDecorators.emptyDescriptionDecorator,
     edit : {
       editor : "Wysiwyg",
       set: IterationModel.prototype.setDescription
@@ -458,7 +458,7 @@ IterationController.prototype.initializeTaskListConfig = function() {
     get : TaskModel.prototype.getDescription,
     cssClass : 'task-data',
     visible : false,
-    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    decorator: DynamicsDecorators.emptyDescriptionDecorator,
     editable : true,
     edit : {
       editor : "Wysiwyg",
@@ -651,7 +651,7 @@ IterationController.prototype.initializeStoryConfig = function() {
     fullWidth : true,
     visible : false,
     get : StoryModel.prototype.getDescription,
-    decorator: DynamicsDecorators.onEmptyDecoratorFactory("(Empty description)"),
+    decorator: DynamicsDecorators.emptyDescriptionDecorator,
     editable : true,
     edit : {
       editor : "Wysiwyg",

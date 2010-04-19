@@ -16,11 +16,13 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
@@ -65,6 +67,9 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private StoryBusiness storyBusiness;
     
     @Autowired
+    private StoryRankBusiness storyRankBusiness;
+    
+    @Autowired
     private BacklogBusiness backlogBusiness;
     
     private HourEntryHandlingChoice taskHourEntryHandlingChoice;
@@ -82,6 +87,11 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     
     public String create() {
         story = this.storyBusiness.create(story, backlogId, userIds);
+        int rank = storyRankBusiness.getRankByBacklog(story, story.getBacklog());
+        
+        story = new StoryTO(story);
+        ((StoryTO)story).setRank(rank);
+        
         return Action.SUCCESS;
     }
 

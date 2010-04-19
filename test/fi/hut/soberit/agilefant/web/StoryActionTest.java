@@ -19,8 +19,10 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.LabelBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.test.Mock;
@@ -46,6 +48,9 @@ public class StoryActionTest extends MockedTestCase {
     
     @Mock
     BacklogBusiness backlogBusiness;
+    
+    @Mock
+    StoryRankBusiness storyRankBusiness;
     
     Story story;
     Iteration iter;
@@ -91,12 +96,19 @@ public class StoryActionTest extends MockedTestCase {
     @DirtiesContext
     public void testCreate() {
         Story returnedStory = new Story();
+        returnedStory.setName("Tested story");
+        returnedStory.setBacklog(new Project());
+        
         expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), storyAction.getUserIds())).andReturn(returnedStory);
+        expect(storyRankBusiness.getRankByBacklog(returnedStory, returnedStory.getBacklog())).andReturn(222);
+        
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.create());
         verifyAll();
         
-        assertEquals(storyAction.getStory(), returnedStory);
+        assertTrue(storyAction.getStory() instanceof StoryTO);
+        assertSame("Tested story", storyAction.getStory().getName());
+        assertEquals(new Integer(222), ((StoryTO)storyAction.getStory()).getRank());
     }
     
     

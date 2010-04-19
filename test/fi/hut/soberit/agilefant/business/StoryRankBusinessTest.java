@@ -98,6 +98,19 @@ public class StoryRankBusinessTest {
     }
 
     @Test
+    public void testGetRankByBacklog() {
+        Backlog backlog = new Project();
+        StoryRank rank = new StoryRank();
+        rank.setRank(556);
+        expect(storyRankDAO.retrieveByBacklogAndStory(backlog, story)).andReturn(rank);
+        
+        replayAll();
+        assertEquals(556, storyRankBusiness.getRankByBacklog(story, backlog));
+        verifyAll();
+    }
+    
+    
+    @Test
     public void testRankAbove() {
         Story ref = new Story();
 

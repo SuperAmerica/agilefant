@@ -16,6 +16,11 @@ public interface StoryRankBusiness {
     List<Story> retrieveByRankingContext(Backlog backlog);
 
     /**
+     * Get the story's rank in the given backlog.
+     */
+    int getRankByBacklog(Story story, Backlog backlog);
+    
+    /**
      * Rank the given story below the given upper story with in the backlog
      * context.
      */

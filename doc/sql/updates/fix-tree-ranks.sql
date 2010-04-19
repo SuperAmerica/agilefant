@@ -26,7 +26,6 @@ BEGIN
       LEAVE childLoop;
     END IF;
 
-    SELECT child_id AS id, current_rank_no;
     UPDATE stories SET treeRank=current_rank_no WHERE id=child_id;
     SET current_rank_no = current_rank_no + 1;
   END LOOP;

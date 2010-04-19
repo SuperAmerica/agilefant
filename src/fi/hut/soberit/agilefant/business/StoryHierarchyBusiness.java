@@ -46,5 +46,12 @@ public interface StoryHierarchyBusiness {
     public void moveAfter(Story story, Story reference);
     
     public void moveBefore(Story story, Story reference);
+    
+    /**
+     * Fixes the indexes of the treeRank-field.
+     * Call this e.g. when deleting a story
+     * @param story the story, whose children are to be reordered
+     */
+    public void updateChildrenTreeRanks(Story story);
 
 }

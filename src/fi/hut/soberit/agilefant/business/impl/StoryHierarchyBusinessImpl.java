@@ -204,5 +204,18 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         }
         return results;
     }
+    
+    
+    @Transactional
+    /** {@inheritDoc} */
+    public void updateChildrenTreeRanks(Story story) {
+        if (story == null) {
+            throw new IllegalArgumentException("No null stories allowed");
+        }
+        int newRank = 0;
+        for (Story tmpStory : story.getChildren()) {
+            tmpStory.setTreeRank(newRank++);
+        }
+    } 
 
 }

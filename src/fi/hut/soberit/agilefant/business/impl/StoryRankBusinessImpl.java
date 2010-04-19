@@ -103,8 +103,7 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
 
     private LinkedList<StoryRank> retrieveLinkedList(StoryRank rank) {
         LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();
-        ranks.addAll(this.storyRankDAO
-                .retrieveRanksByBacklog(rank.getBacklog()));
+        ranks.addAll(this.storyRankDAO.retrieveRanksByBacklog(rank.getBacklog()));
         return ranks;
     }
 

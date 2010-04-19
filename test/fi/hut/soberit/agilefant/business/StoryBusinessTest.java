@@ -51,6 +51,7 @@ public class StoryBusinessTest {
     HourEntryDAO hourEntryDAO;
     TaskBusiness taskBusiness;
     HourEntryBusiness hourEntryBusiness;
+    StoryHierarchyBusiness storyHierarchyBusiness;
     
     
     Backlog backlog;
@@ -120,6 +121,8 @@ public class StoryBusinessTest {
         hourEntryBusiness = createMock(HourEntryBusiness.class);
         storyBusiness.setHourEntryBusiness(hourEntryBusiness);
         
+        storyHierarchyBusiness = createMock(StoryHierarchyBusiness.class);
+        storyBusiness.setStoryHierarchyBusiness(storyHierarchyBusiness);
     }
     
     @Before
@@ -147,11 +150,11 @@ public class StoryBusinessTest {
     }
 
     private void replayAll() {
-        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness);
+        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness, storyHierarchyBusiness);
     }
     
     private void verifyAll() {
-        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness);
+        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness, storyHierarchyBusiness);
     }
 
     
@@ -453,6 +456,7 @@ public class StoryBusinessTest {
         
         storyRankBusiness.rankToBottom(parent, backlog);
         storyRankBusiness.removeStoryRanks(child);
+        storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         storyDAO.remove(child);
         expect(storyDAO.get(child.getId())).andReturn(child);
         replayAll();

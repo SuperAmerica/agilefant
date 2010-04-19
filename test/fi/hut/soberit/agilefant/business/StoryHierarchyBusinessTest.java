@@ -4,6 +4,7 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -613,5 +614,38 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
         assertTrue(results.isEmpty());
     }
-
+    
+    
+    @Test
+    @DirtiesContext
+    public void testUpdateParentStoryTreeRanks() {
+        Story parent = new Story();
+        
+        Story child1 = new Story();
+        Story child2 = new Story();
+        Story child3 = new Story();
+        child1.setTreeRank(0);
+        child2.setTreeRank(2);
+        child3.setTreeRank(3);
+        
+        parent.setChildren(new ArrayList<Story>(Arrays.asList(child1, child2,
+                child3)));
+        
+        replayAll();
+        storyHierarchyBusiness.updateChildrenTreeRanks(parent);
+        verifyAll();
+        
+        assertEquals(0, child1.getTreeRank());
+        assertEquals(1, child2.getTreeRank());
+        assertEquals(2, child3.getTreeRank());
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    @DirtiesContext
+    public void testUpdateParentStoryTreeRanks_nullStory() {
+        replayAll();
+        storyHierarchyBusiness.updateChildrenTreeRanks(null);
+        verifyAll();
+    }
+    
 }

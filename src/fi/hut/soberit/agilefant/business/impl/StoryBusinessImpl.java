@@ -571,14 +571,18 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         Story parentStory = story.getParent();
 
-        // if last child of the parent story is removed the parent story may
-        // need to be ranked
+        /* if last child of the parent story is removed the parent story may
+           need to be ranked.
+           The parent story's children's treeRanks are also updated
+        */
         if (parentStory != null) {
             parentStory.getChildren().remove(story);
             updateStoryRanks(parentStory);
+            storyHierarchyBusiness.updateChildrenTreeRanks(parentStory);
         }
         storyRankBusiness.removeStoryRanks(story);
         super.delete(story);
+        
     }
     
     public void setUserDAO(UserDAO userDAO) {

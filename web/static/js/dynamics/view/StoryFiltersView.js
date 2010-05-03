@@ -4,12 +4,12 @@ var StoryFiltersView = function StoryFiltersView(options, controller, model, par
   this.parentView = parentView;
   this.storyStates = [];
   this.allStoryStates = [
-    { name: "NOT_STARTED", "short": "N" },
-    { name: "STARTED", "short": "S" },
-    { name: "PENDING", "short": "P" },
-    { name: "BLOCKED", "short": "B" },
-    { name: "IMPLEMENTED", "short": "R" },
-    { name: "DONE", "short": "D" }
+    { name: "NOT_STARTED", abbr: "N" },
+    { name: "STARTED", abbr: "S" },
+    { name: "PENDING", abbr: "P" },
+    { name: "BLOCKED", abbr: "B" },
+    { name: "IMPLEMENTED", abbr: "R" },
+    { name: "DONE", abbr: "D" }
   ];
   this.storyStates = this.allStoryStates.slice();
   this.initialize();
@@ -110,7 +110,7 @@ StoryFiltersView.prototype.renderFully = function() {
 
 StoryFiltersView.prototype.addStateButton = function(state) {
   var me = this;
-  var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.short + '</div>');
+  var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.abbr + '</div>');
   stateDiv.click(function() {
     if ($.inArray(state, me.storyStates) != -1) {
       stateDiv.fadeTo("fast", 0.5);

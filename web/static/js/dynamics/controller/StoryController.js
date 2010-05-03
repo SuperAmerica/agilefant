@@ -194,7 +194,7 @@ StoryController.prototype.hideDescriptionColumn = function() {
   if (cell) {
     cell.hide();
   }
-  this.view.getElement().removeClass("bottom-margin")
+  this.view.getElement().removeClass("bottom-margin");
 };
 
 /**

@@ -188,7 +188,8 @@ HourEntryListController.prototype.initConfig = function() {
     edit : {
       editor : "ExactEstimate",
       decorator: DynamicsDecorators.exactEstimateEditDecorator,
-      set : HourEntryModel.prototype.setEffortSpent
+      set : HourEntryModel.prototype.setEffortSpent,
+      required: true
     }
   };
   var desc = {

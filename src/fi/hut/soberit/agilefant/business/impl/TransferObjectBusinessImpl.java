@@ -254,37 +254,12 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return autocompleteData; 
     }
 
-    /** {@inheritDoc} */
-
-    private void fillInDailyWorkItemContextData(DailyWorkTaskTO transferObj) {
-        Backlog backlog = null;
-        Story story = transferObj.getStory();
-
-        String contextName = null;
-        int parentStoryId = 0;
-        int backlogId = 0;
-
-        if (story != null) {
-            parentStoryId = story.getId();
-
-            // the story must have a backlog.
-            backlog = story.getBacklog();
-            contextName  = "" + String.valueOf(backlog.getName()) + " > " + String.valueOf(story.getName());
-            backlogId = backlog.getId();
-        }
-        else {
-            backlog = transferObj.getIteration();
-            contextName  = "" + String.valueOf(backlog.getName());
-            backlogId = backlog.getId();
-        }
-    }
     
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public DailyWorkTaskTO constructQueuedDailyWorkTaskTO(WhatsNextEntry entry) {
         Task task = entry.getTask();
         DailyWorkTaskTO toReturn = new DailyWorkTaskTO(task);
-        fillInDailyWorkItemContextData(toReturn);
         fillInEffortSpent(toReturn);
         toReturn.setWorkQueueRank(entry.getRank());
 

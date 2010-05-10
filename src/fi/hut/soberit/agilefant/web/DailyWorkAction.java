@@ -52,7 +52,6 @@ public class DailyWorkAction extends ActionSupport {
     private int  rankUnderId;
     private Task task;
 
-    
     /**
      * Retrieve for JSON data.
      * @return

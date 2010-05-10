@@ -197,7 +197,7 @@
 		<!-- /Team actions -->
 
 		<!-- Daily work -->
-		<action name="dailyWork" class="dailyWorkAction" method="retrieve">
+		<action name="dailyWork" class="dailyWorkAction">
 			<result type="dispatcher">/WEB-INF/jsp/dailyWork.jsp</result>
 		</action>
 		<!-- /Daily work -->

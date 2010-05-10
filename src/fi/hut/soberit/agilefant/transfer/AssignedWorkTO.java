@@ -1,6 +1,6 @@
 package fi.hut.soberit.agilefant.transfer;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Story;
@@ -8,8 +8,8 @@ import fi.hut.soberit.agilefant.model.Task;
 import flexjson.JSON;
 
 public class AssignedWorkTO {
-    private List<Story> stories           = Collections.emptyList();
-    private List<Task>  tasksWithoutStory = Collections.emptyList();
+    private List<Story> stories           = new ArrayList<Story>();
+    private List<Task>  tasksWithoutStory = new ArrayList<Task>();
 
     public void setStories(List<Story> stories) {
         this.stories = stories;

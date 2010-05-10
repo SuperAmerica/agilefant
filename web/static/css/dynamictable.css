@@ -528,6 +528,10 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 .task-table .dynamictable-row {
   background: #eee;  
 }
+.dynamictable-row .task-data span {
+  margin: 0.5em;
+}
+
 .story-table {
   background: white;  
 }

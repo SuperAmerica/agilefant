@@ -492,7 +492,3 @@ StoryController.prototype.storyPointsEditable = function() {
   });
   StoryController.taskListConfig = config;
 })();
-
-StoryController.prototype.retrieveDetails = function(callback) {
-  this.model.retrieveDetails(callback);
-};

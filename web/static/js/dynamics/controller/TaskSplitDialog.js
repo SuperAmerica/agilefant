@@ -203,15 +203,8 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
       set: TaskModel.prototype.setName
     }
   });
-  
+   
   config.addColumnConfiguration(1, {
-    openOnRowEdit: false,
-    title: "Context",
-    decorator: DynamicsDecorators.plainContextDecorator,
-    get: DailyWorkTaskModel.prototype.getContext
-  });
-  
-  config.addColumnConfiguration(2, {
       openOnRowEdit: false,
       title : "Effort left",
       headerTooltip : 'Effort left in hours',
@@ -225,7 +218,7 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
       }
     });
 
-    config.addColumnConfiguration(3, {
+    config.addColumnConfiguration(2, {
       title: 'Original estimate',
       get : TaskModel.prototype.getOriginalEstimate,
       decorator: DynamicsDecorators.exactEstimateDecorator,
@@ -237,7 +230,7 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
       }
   });
   
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(3, {
     title: 'State',
     get: TaskModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
@@ -249,7 +242,7 @@ TaskSplitDialog.prototype._initOriginalTaskConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(4, {
      minWidth : 60,
      autoScale : true,
      title : "Responsibles",

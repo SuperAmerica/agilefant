@@ -149,7 +149,7 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
 };
 
 TaskController.prototype.addToQueueEnabled = function(model, parentView) {
-  if (model.getState() == "DONE") {
+  if (model.getState() === "DONE") {
     return false;
   }
   
@@ -157,7 +157,7 @@ TaskController.prototype.addToQueueEnabled = function(model, parentView) {
 };
 
 TaskController.prototype.removeFromQueueEnabled = function(model, parentView) {
-  if (model.getState() == "DONE") {
+  if (model.getState() === "DONE") {
     return false;
   }
   
@@ -205,6 +205,3 @@ TaskController.prototype.openLogEffort = function() {
   var widget = new SpentEffortWidget(this.model);
 };
 
-TaskController.prototype.retrieveDetails = function(callback) {
-  this.model.retrieveDetails(callback);
-};

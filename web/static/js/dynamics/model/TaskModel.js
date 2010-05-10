@@ -43,13 +43,7 @@ var TaskModel = function TaskModel() {
 
 TaskModel.prototype = new CommonModel();
 
-TaskModel.Validators = {
-    backlogValidator: function(model) {
-        if (!model.getContext().backlogId) {
-            throw "Please select an iteration for the task";
-        }
-    }
-};
+TaskModel.Validators = {};
 
 
 TaskModel.prototype._setData = function(newData) {
@@ -242,12 +236,7 @@ TaskModel.prototype.getIteration = function() {
 
 TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
     var me = this;
-    var dailyWork = null;
-
-    if (me.getDailyWork) {
-        dailyWork = me.getDailyWork();
-    }
-    
+   
     jQuery.ajax({
         type: "POST",
         url: "ajax/addToWorkQueue.action",
@@ -259,11 +248,7 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
         },
         success: function(data,status) {
             MessageDisplay.Ok("Task appended to your work queue");
-            
             me.setData(data);
-            if (dailyWork) {
-                dailyWork.reload();
-            }
             if (successCallback) {
                successCallback();
             }
@@ -277,12 +262,7 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
 
 TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
     var me = this;
-    var dailyWork = null;
 
-    if (me.getDailyWork) {
-        dailyWork = me.getDailyWork();
-    }
-    
     jQuery.ajax({
         type: "POST",
         url: "ajax/deleteFromWorkQueue.action",
@@ -296,10 +276,6 @@ TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
             MessageDisplay.Ok("Task removed from your work queue");
             
             me.setData(data);
-            if (dailyWork) {
-                dailyWork.reload();
-            }
-            
             if (successCallback) {
                successCallback();
             }
@@ -430,16 +406,6 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
   this.currentData.responsiblesChanged = true;
 };
 
-TaskModel.prototype.setIterationToSave = function(iteration) {
-  this.setIteration(iteration);
-
-  this.currentData.iterationChanged = true;
- 
-  if (this.getDailyWork) {
-    this.getDailyWork().reload();
-  }
-};
-
 TaskModel.prototype.isWorkingOnTask = function(user) {
   var userId = user.getId();
   return $.inArray(userId, this.transientData.workingOnTaskIds) != -1;
@@ -466,52 +432,5 @@ TaskModel.prototype.getEffortSpent = function() {
   return this.currentData.effortSpent;
 };
 
-TaskModel.prototype.getContext = function() {
-    if (this.relations.backlog) {
-        return {
-            name: this.relations.backlog.getName(),
-            storyId: 0,
-            backlogId: this.relations.backlog.getId(),
-            taskId: this.getId()
-        };
-    }
 
-    else if (this.currentData.parentStoryId || this.currentData.backlogId) {
-        return {
-            name: this.currentData.contextName,
-            storyId: this.currentData.parentStoryId,
-            backlogId: this.currentData.backlogId,
-            taskId: this.getId()
-        };
-    }
-
-    else if (this.relations.story) {
-        return {
-            name: this.relations.story.getName(),
-            storyId: this.relations.story.getId(),
-            backlogId: 0,
-            taskId: this.getId()
-        };
-    }
-    
-    else {
-        return {
-            name: undefined,
-            storyId: undefined,
-            backlogId: 0,
-            taskId: this.getId()
-        };
-    }
-};
-
-TaskModel.prototype.retrieveDetails = function(callback) {
-    var task = this;
-    jQuery.get(
-         "ajax/dailyWorkContextInfo.action",
-         { taskId: task.getId() },
-         function(data, status) {
-             callback(data);
-         }
-    );
-};
 

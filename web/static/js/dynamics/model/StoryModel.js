@@ -409,14 +409,4 @@ StoryModel.prototype.getLabels = function() {
   return this.relations.label;
 };
 
-StoryModel.prototype.retrieveDetails = function(callback) {
-    var story = this;
-    jQuery.get(
-         "ajax/dailyWorkContextInfo.action",
-         { storyId: story.getId() },
-         function(data, status) {
-             callback(data);
-         }
-    );
-};
 

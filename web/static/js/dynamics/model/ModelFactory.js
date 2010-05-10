@@ -12,8 +12,6 @@ ModelFactory = function ModelFactory() {
     
     story: {},
     task: {},
-    dailyWorkTask: {},
-    dailyWork: {},
     
     assignment: {},
     hourEntry: {},
@@ -49,8 +47,6 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.transfer.StoryTO":   "story",
   "fi.hut.soberit.agilefant.model.Task":         "task",
   "fi.hut.soberit.agilefant.transfer.TaskTO":    "task",
-  "fi.hut.soberit.agilefant.model.DailyWork":          "dailyWork",
-  "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": "dailyWorkTask",
     
   "fi.hut.soberit.agilefant.model.User":         "user",
   "fi.hut.soberit.agilefant.model.Team":         "team",
@@ -84,10 +80,7 @@ ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.transfer.StoryTO":      StoryModel,
     "fi.hut.soberit.agilefant.model.Task":            TaskModel,
     "fi.hut.soberit.agilefant.transfer.TaskTO":       TaskModel,
-    
-    "fi.hut.soberit.agilefant.model.DailyWork":          DailyWorkModel,
-    "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": DailyWorkTaskModel,
-    
+        
     "fi.hut.soberit.agilefant.model.User":            UserModel,
     "fi.hut.soberit.agilefant.model.Team":            TeamModel,
       
@@ -108,8 +101,6 @@ ModelFactory.typeToClassName = {
     product:    "fi.hut.soberit.agilefant.model.Product",
     project:    "fi.hut.soberit.agilefant.model.Project",
     
-    dailyWork:     "fi.hut.soberit.agilefant.model.DailyWork",
-    dailyWorkTask: "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO",
 
     story:      "fi.hut.soberit.agilefant.model.Story",
     task:       "fi.hut.soberit.agilefant.model.Task",
@@ -158,10 +149,6 @@ ModelFactory.types = {
     story:      "story",
     /** @member ModelFactory */
     task:       "task",
-    
-    dailyWork:     "dailyWork",
-    
-    dailyWorkTask: "dailyWorkTask",
     
     /** @member ModelFactory */
     user:       "user",
@@ -591,12 +578,11 @@ ModelFactory.prototype._constructProduct = function(id, data) {
 
 /**
  * Internal function to construct a daily work model
+ * 
+ * TODO: Write this
  */
 ModelFactory.prototype._constructDailyWork = function(id, data) {
-  var a = new DailyWorkModel();
-  a.setData(data);
-  ModelFactory.getInstance().rootObject = a;
-	return a;
+	return null;
 };
 
 

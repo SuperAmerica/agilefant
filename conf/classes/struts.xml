@@ -202,13 +202,7 @@
 		</action>
 		<!-- /Daily work -->
 
-	<!-- Daily work context info -->
-	<action name="dailyWorkContextInfo" class="dailyWorkContextInfoAction" method="retrieve">
-		<result type="dispatcher">/WEB-INF/jsp/dailyWorkContextInfo.jsp</result>
-	</action>
-	<!-- /Daily work -->
-
-		<!-- Dev portfolio -->
+    <!-- Dev portfolio -->
 		<action name="projectPortfolio" class="projectPortfolioAction" method="retrieve">
 			<result type="dispatcher">/WEB-INF/jsp/projectPortfolio.jsp</result>
 		</action>

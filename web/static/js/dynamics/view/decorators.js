@@ -81,25 +81,6 @@ var DynamicsDecorators = {
     date.setTime(value);
     return date.asString();
   },
-  contextDecorator: function(value) {
-    if (! value || (! value.backlogId && ! value.storyId)) {
-        return "(not set)";
-    }
-    var uri = "";
-    if (value.backlogId) {
-        uri = "editBacklog.action?backlogId=" + value.backlogId;
-
-        if (value.storyId) {
-            uri += "&storyId=" + value.storyId;
-        }
-
-        if (value.taskId) {
-            uri += "&taskId=" + value.taskId;
-        }
-    }
-    
-    return ('<a class="daily-work-task-context" href="' + uri + '">' + value.name + '</a>');
-  },
   hiddenDecorator: function(value) {
     return '';
   },
@@ -108,17 +89,6 @@ var DynamicsDecorators = {
       return '<a href="editBacklog.action?backlogId=' + value + '">' + value + '</a>';
     }
     return "";
-  },
-  iterationLinkDecorator: function(value) {
-    if (! value) {
-      return "(not set)";
-    }
-    var id = value.getId();
-    if (id) {
-      uri = "editBacklog.action?backlogId=" + id;
-    }
-      
-    return ('<a class="daily-work-story-context" href="' + uri + '">' + value.getName() + '</a>');
   },
   plainContextDecorator: function(value) {
     if (! value || (! value.backlogId && ! value.storyId)) {
@@ -205,7 +175,7 @@ var DynamicsDecorators = {
       $.each(annotatedList, function (k, v) {
           var i = v.user.getInitials();
           if (v.workingOnTask) {
-              i = '<strong class="user-initials-next-assigned">' + i + '</strong>';
+              i = '<strong>' + i + '</strong>';
           }
           initials.push(i);
       });

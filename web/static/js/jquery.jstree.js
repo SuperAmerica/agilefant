@@ -1640,7 +1640,8 @@
 			if(event.target.tagName == "DIV" && event.target.id == "jstree-marker") return false;
 
 			var et = $(event.target);
-			if(et.is("ins")) et = et.parent();
+			if(et.is("ins") || et.is("span") || et.is("div")) et = et.parent();
+			
 			var cnt = et.is(".tree") ? et : et.parents(".tree:eq(0)");
 
 			// if not moving over a tree
@@ -1662,7 +1663,7 @@
 			var mov = false;
 			var st = cnt.scrollTop();
 
-			if(event.target.tagName == "A" || event.target.tagName == "INS") {
+			if(event.target.tagName == "A" || event.target.tagName == "INS" || event.target.tagName == "SPAN") {
 				// just in case if hover is over the draggable
 				if(et.is("#jstree-dragged")) return false;
 				if(tree2.get_node(event.target).hasClass("closed")) {
@@ -1722,7 +1723,7 @@
 				tree_component.drag_drop.marker.attr("class","marker_plus");
 				tree_component.drag_drop.marker.css({ "left" : (et_off.left + 10) , "top" : et_off.top + 15 }).show();
 			}
-			else if( (event.target.tagName != "A" && event.target.tagName != "INS") || !ok) {
+			else if( (event.target.tagName != "A" && event.target.tagName != "INS" && event.target.tagName != "SPAN") || !ok) {
 				if(tmp.drag_help !== false) tmp.drag_help.find("li:eq(0) ins").addClass("forbidden");
 				tmp.move_type	= false;
 				tmp.ref_node	= false;

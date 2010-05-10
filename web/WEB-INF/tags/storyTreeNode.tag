@@ -14,7 +14,7 @@
 </c:choose>
   <li storyid="${node.id}" storystate="${node.state}" rel="${nodeType}">
     <a href="#">
-    <div class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></div>
+    <span class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></span>
     
     <c:choose>
     <c:when test="${fn:length(node.labels) == 0}">

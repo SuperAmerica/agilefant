@@ -420,7 +420,7 @@ button.dynamics-button:focus, button.dynamics-button:hover {
   border: 1px solid rgba(0,0,0,0.3);
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
-  padding: 0 0.5em;
+  padding: 0 0.3em !important;
   display: inline;
   width: 1em;
   text-align: center;

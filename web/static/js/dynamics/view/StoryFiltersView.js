@@ -110,7 +110,7 @@ StoryFiltersView.prototype.renderFully = function() {
 
 StoryFiltersView.prototype.addStateButton = function(state) {
   var me = this;
-  var stateDiv = $('<div class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.abbr + '</div>');
+  var stateDiv = $('<span class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.abbr + '</div>');
   stateDiv.click(function() {
     if ($.inArray(state, me.storyStates) != -1) {
       stateDiv.fadeTo("fast", 0.5);

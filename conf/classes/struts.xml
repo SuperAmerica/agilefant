@@ -216,21 +216,21 @@
 
 		<action name="drawProjectBurnup" method="getProjectBurnup" class="chartAction">
 			<result name="success" type="stream">
-				<param name="contentType">${contentType}</param>
+				<param name="contentType">image/png</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
 
 		<action name="drawIterationBurndown" method="getIterationBurndown" class="chartAction">
 			<result name="success" type="stream">
-				<param name="contentType">${contentType}</param>
+				<param name="contentType">image/png</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
 		
     <action name="drawSmallIterationBurndown" method="getSmallIterationBurndown" class="chartAction">
       <result name="success" type="stream">
-        <param name="contentType">${contentType}</param>
+        <param name="contentType">image/png</param>
         <param name="inputName">inputStream</param>
       </result>
     </action>

@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -46,12 +47,25 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<User> enabledUsers                 = new ArrayList<User>();
     private Collection<DailyWorkTaskTO> queuedTasks = new ArrayList<DailyWorkTaskTO>();
-    private AssignedWorkTO assignedWork;
+    private Collection<Story> stories = new ArrayList<Story>();
+    private Collection<Task> tasksWithoutStory = new ArrayList<Task>();
 
     private int  taskId;
     private int  rankUnderId;
     private Task task;
 
+    
+    @Override
+    public String execute() {
+        if (userId == 0) {
+            userId = getStoredDailyWorkUserId();
+        }
+
+        user = getDefaultUser();
+
+        enabledUsers.addAll(userBusiness.getEnabledUsers());
+        return Action.SUCCESS;
+    }
     /**
      * Retrieve for JSON data.
      * @return
@@ -68,11 +82,12 @@ public class DailyWorkAction extends ActionSupport {
 
         user = getDefaultUser();
 
-        enabledUsers.addAll(userBusiness.getEnabledUsers());
         Collections.sort(enabledUsers, new UserComparator());
 
         queuedTasks = dailyWorkBusiness.getQueuedTasksForUser(user);
-        assignedWork = dailyWorkBusiness.getAssignedWorkFor(user);
+        AssignedWorkTO assignedWork = dailyWorkBusiness.getAssignedWorkFor(user);
+        this.stories = assignedWork.getStories();
+        this.tasksWithoutStory = assignedWork.getTasksWithoutStory();
         
         return Action.SUCCESS;
     }
@@ -189,7 +204,11 @@ public class DailyWorkAction extends ActionSupport {
         this.transferObjectBusiness = transferObjectBusiness;
     }
 
-    public AssignedWorkTO getAssignedWork() {
-        return assignedWork;
+    public Collection<Story> getStories() {
+        return stories;
+    }
+
+    public Collection<Task> getTasksWithoutStory() {
+        return tasksWithoutStory;
     }
 }

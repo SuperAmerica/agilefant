@@ -3,10 +3,8 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -79,12 +77,7 @@ public class DailyWorkActionTest {
             new DailyWorkTaskTO(new Task(), 4)
         );
 
-        List<User> users = getUserList();
-        User u1 = users.get(0);
-        User u2 = users.get(1);
-
         expect(userBusiness.retrieve(USER_ID)).andReturn(user);
-        expect(userBusiness.getEnabledUsers()).andReturn(users);
         expect(dailyWorkBusiness.getQueuedTasksForUser(user))
             .andReturn(returnedList);
 
@@ -99,15 +92,11 @@ public class DailyWorkActionTest {
         verifyAll();
 
         assertEquals(returnedList,  testable.getAssignedTasks());
-        
-        Collection<User> usersReturned = testable.getEnabledUsers();
-        assertEquals(usersReturned.size(), 2);
-        assertTrue(usersReturned.contains(u1));
-        assertTrue(usersReturned.contains(u2));
-        
+                
         assertEquals(user, testable.getUser());
         assertEquals(USER_ID, testable.getUserId());
-        assertSame(assignedWork, testable.getAssignedWork());
+        assertSame(assignedWork.getStories(), testable.getStories());
+        assertSame(assignedWork.getTasksWithoutStory(), testable.getTasksWithoutStory());
     }
 
     @Test(expected=ObjectNotFoundException.class)
@@ -199,20 +188,4 @@ public class DailyWorkActionTest {
         
         verifyAll();
     }
-
-    private List<User> getUserList() {
-        List<User> users = new ArrayList<User>();
-        User u1 = new User();
-        u1.setId(5);
-        u1.setFullName("Antti Haapala Sr");
-
-        User u2 = new User();
-        u1.setId(9);
-        u1.setFullName("Antti Haapala Jr");
-
-        users.add(u1);
-        users.add(u2);
-        return users;
-    }
-    
 }

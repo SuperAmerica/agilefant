@@ -582,7 +582,10 @@ ModelFactory.prototype._constructProduct = function(id, data) {
  * TODO: Write this
  */
 ModelFactory.prototype._constructDailyWork = function(id, data) {
-	return null;
+  var obj = new DailyWorkModel();
+  obj.setData(data);
+  ModelFactory.getInstance().rootObject = obj;
+  return obj;
 };
 
 

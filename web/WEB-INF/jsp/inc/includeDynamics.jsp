@@ -55,6 +55,7 @@
 <script type="text/javascript" src="static/js/dynamics/model/HourEntryListContainer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/PortfolioModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/LabelModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model/DailyWorkModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/ModelFactory.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 

@@ -11,8 +11,8 @@ var DailyWorkModel = function DailyWorkModel() {
         "fi.hut.soberit.agilefant.transfer.DailyWorkTask":  "assignedTasks",
         "fi.hut.soberit.agilefant.transfer.StoryTO":  "stories",
         "fi.hut.soberit.agilefant.model.Story":  "stories",
-        "fi.hut.soberit.agilefant.transfer.TaskTO":  "tasksWithoutStories",
-        "fi.hut.soberit.agilefant.model.Task":  "tasksWithoutStories"
+        "fi.hut.soberit.agilefant.transfer.TaskTO":  "tasksWithoutStory",
+        "fi.hut.soberit.agilefant.model.Task":  "tasksWithoutStory"
     };
 };
 
@@ -21,6 +21,7 @@ DailyWorkModel.prototype = new CommonModel();
 DailyWorkModel.prototype._setData = function(newData) {
   this._updateRelations("stories", newData.stories);
   this._updateRelations("tasksWithoutStory", newData.tasksWithoutStory);
+
  // this._updateRelations("assignedTasks", newData.assignedTasks);
 };
 

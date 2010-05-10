@@ -29,6 +29,18 @@
     </c:otherwise>
     </c:choose>
     
+    <span class="treeStoryPoints" title="Story points">
+    <c:choose>
+    <c:when test="${node.storyPoints != null}">
+      ${node.storyPoints}
+    </c:when>
+    <c:otherwise>
+      &ndash;
+    </c:otherwise>
+    </c:choose>
+    
+    </span>
+    
     <c:out value="${node.name}" /><span style="font-size:80%" title="${node.backlog.name}">(<c:out value="${node.backlog.name}"/>)</span>
     </a>
     <c:if test="${!empty node.children}">

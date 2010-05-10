@@ -39,7 +39,6 @@ import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
-import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 
 @Service("transferObjectBusiness")
 @Transactional(readOnly = true)
@@ -278,10 +277,6 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             contextName  = "" + String.valueOf(backlog.getName());
             backlogId = backlog.getId();
         }
-        
-        transferObj.setBacklogId(backlogId);
-        transferObj.setContextName(contextName);
-        transferObj.setParentStoryId(parentStoryId);
     }
     
     /** {@inheritDoc} */
@@ -292,7 +287,6 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         fillInDailyWorkItemContextData(toReturn);
         fillInEffortSpent(toReturn);
         toReturn.setWorkQueueRank(entry.getRank());
-        toReturn.setTaskClass(TaskClass.NEXT_ASSIGNED);
 
         return toReturn;
     }

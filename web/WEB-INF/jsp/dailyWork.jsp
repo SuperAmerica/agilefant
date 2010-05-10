@@ -4,10 +4,7 @@
 
 <link rel="stylesheet" href="static/css/dailywork.css" type="text/css"/>
 
-
-<c:set var="currentAction" value="dailyWork" scope="session" />
-<c:set var="dailyWorkUserId" value="${userId}" scope="session" />
-
+<!-- User selector -->
 <ww:form method="get">
 <h2>The daily work of <ww:select list="enabledUsers"
     listKey="id" listValue="fullName" name="userId" value="%{user.id}"
@@ -16,58 +13,27 @@
 
 <%@ include file="./inc/_userLoad.jsp" %>
 
-<c:choose>
-<c:when test="${!(empty assignedTasks) or !(empty assignedWork.stories) or !(empty assignedWork.tasksWithoutStory)}" >
-
 <script type="text/javascript">
-
-var dailyWorkController = null;
-var nextWorkController = null;
-
 $(document).ready(function() {
-    $("#backlogInfo").tabs();
-    dailyWorkController = new DailyWorkController({
-        id: '${userId}', 
-        type: 'current',
-        workQueueElement: $("#work-queue-div"),
-        workQueueContainer: $("#work-queue-all-container"),
-        storyListElement: $("#story-list-div"),
-        taskListElement: $("#task-list-div"),
-        detailsElement: $("#details-pane")
-    });
+  var controller = new DailyWorkController({
+    userId:                   ${user.id},
+    workQueueElement:         $('#work-queue'),
+    assignedStoriesElement:   $('#story-list'),
+    tasksWithoutStoryElement: $('#task-list')
+  });
 });
 </script>
 
-<div id="work-queue-all-container" class="details-contracted structure-main-block">
-<div id="work-queue-container">
-<div id="work-queue-details-div" class="ui-widget-content ui-corner-all">
-<div id="details-container" >
-<div class="dynamictable-caption-block dynamictable-caption ui-widget-header ui-corner-all">
-<div>Details</div>
-</div>
-<div id="details-pane"></div>
-</div>
-</div>
-<div id="work-queue-div"></div>
-</div>
-</div>
-<div id="story-list-div" class="structure-main-block"></div>
-<div id="task-list-div" class="structure-main-block"></div>
 
-</c:when>
-<c:otherwise>
 
-<ww:url id="backlogsLink" action="contextView" includeParams="none">
-    <ww:param name="contextName" value="%{currentBacklogContext}" />
-    <ww:param name="contextObjectId" value="%{currentBacklogId}" />
-    <ww:param name="resetContextView" value="true" />
-</ww:url>
+<!-- Work queue -->
+<form onsubmit="return false;"><div id="work-queue" class="structure-main-block"></div></form>
 
-<%-- TODO: fix link --%>
-<p>There are no stories or tasks assigned to user <c:out value="${user.fullName}" />.</p> 
-<p>Explore <a href="contextView.action?contextName=${currentBacklogContext}&contextObjectId=${currentBacklogId}&resetContextView=true">backlogs</a> to find some items.</p>
+<!-- Assigned stories -->
+<form onsubmit="return false;"><div id="story-list" class="structure-main-block"></div></form>
 
-</c:otherwise>
-</c:choose>
+<!-- Tasks without story -->
+<form onsubmit="return false;"><div id="task-list" class="structure-main-block"></div></form>
+
 
 </struct:htmlWrapper>

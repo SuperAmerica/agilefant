@@ -74,9 +74,9 @@ public class DailyWorkActionTest {
         testable.setUserId(USER_ID);
 
         Collection<DailyWorkTaskTO> returnedList  = Arrays.asList(
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 1), 
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 2), 
-            new DailyWorkTaskTO(new Task(), DailyWorkTaskTO.TaskClass.NEXT, 4)
+            new DailyWorkTaskTO(new Task(), 1), 
+            new DailyWorkTaskTO(new Task(), 2), 
+            new DailyWorkTaskTO(new Task(), 4)
         );
 
         List<User> users = getUserList();

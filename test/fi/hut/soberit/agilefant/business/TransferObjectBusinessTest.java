@@ -33,7 +33,6 @@ import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
-import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO.TaskClass;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 public class TransferObjectBusinessTest {
@@ -533,14 +532,8 @@ public class TransferObjectBusinessTest {
         task.setResponsibles(Arrays.asList(new User[] { user } ));
 
         DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
-        assertEquals("iter > story", transferObj.getContextName());
         assertEquals(2, transferObj.getWorkQueueRank());
-        assertEquals(3, transferObj.getParentStoryId());
-        assertEquals(4, transferObj.getBacklogId());
         assertEquals(5, transferObj.getId());
-        
-        
-        assertEquals(TaskClass.NEXT_ASSIGNED, transferObj.getTaskClass());
     };
 
     @Test
@@ -559,14 +552,10 @@ public class TransferObjectBusinessTest {
         task.setIteration(iteration);
 
         DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
-        assertEquals("iter", transferObj.getContextName());
         assertEquals(5, transferObj.getWorkQueueRank());
-        assertEquals(0, transferObj.getParentStoryId());
-        assertEquals(4, transferObj.getBacklogId());
         assertEquals(5, transferObj.getId());
         
         
-        assertEquals(TaskClass.NEXT_ASSIGNED, transferObj.getTaskClass());
     };
 
     @SuppressWarnings("unchecked")

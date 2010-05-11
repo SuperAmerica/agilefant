@@ -11,6 +11,8 @@ var DailyWorkController = function(options) {
   
   this.init();
   this.initialize();
+
+  window.pageController.setMainController(this);
 };
 DailyWorkController.prototype = new CommonController();
 

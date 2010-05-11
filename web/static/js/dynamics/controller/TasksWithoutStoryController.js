@@ -54,13 +54,9 @@ TasksWithoutStoryController.columnConfig.context = {
     autoScale : true,
     title : "Context",
     headerTooltip : 'Task context',
-    get : function() { return "Ei oo"; },
-    editable : false,
-    edit : {
-      editor : "Selection",
-      set : TaskModel.prototype.setState,
-      items : DynamicsDecorators.stateOptions
-    }
+    get : TaskModel.prototype.getContext,
+    decorator: DynamicsDecorators.taskContextDecorator,
+    editable : false
   };
 TasksWithoutStoryController.columnConfig.responsibles = {
   minWidth : 60,

@@ -9,7 +9,8 @@ DailyWorkStoryListController.columnConfig.context = {
   minWidth: 120,
   autoScale: true,
   title: "Context",
-  get: function() { return "Ei oo"; }
+  get: StoryModel.prototype.getParent,
+  decorator: DynamicsDecorators.storyContextDecorator
 };
 
 DailyWorkStoryListController.columnNames =

@@ -824,3 +824,18 @@ ul.dynamics-error-container {
 	background-color: #ffffce;
 	padding: 0.1em;
 }
+
+/**
+ * Daily Work context links
+ */
+a.context, span.context {
+  color: ;
+  font-size: 80%;
+  white-space: nowrap;
+}
+
+.context-story {
+  margin-left: 2ex;  
+}
+
+

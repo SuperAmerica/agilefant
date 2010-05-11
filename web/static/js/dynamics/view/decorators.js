@@ -90,11 +90,27 @@ var DynamicsDecorators = {
     }
     return "";
   },
+  
   plainContextDecorator: function(value) {
     if (! value || (! value.backlogId && ! value.storyId)) {
       return "(not set)";
     }
     return value.name;
+  },
+  storyContextDecorator: function(value) {
+    return '<a class="context" title="Backlog: ' + value.getName() + '" href="' + value.getId() + '">' + value.getName() + '</a>';
+  },
+  taskContextDecorator: function(value) {
+    var returned = "";
+    
+    if (value.backlog) {
+      returned += '<a class="context" title="Backlog: ' + value.backlog.getName() + '" href="editBacklog.action?backlogId=' + value.backlog.getId() + '">' + value.backlog.getName() + '</a>';
+    }
+    if (value.story) {
+      returned += '<br/><span title="Story: ' + value.story.getName() + '" class="context context-story">' + value.story.getName() + '</a>';
+    }
+    
+    return returned;
   },
   backlogSelectDecorator: function(backlog) {
     if (!backlog) {

@@ -433,4 +433,18 @@ TaskModel.prototype.getEffortSpent = function() {
 };
 
 
+/**
+ * Get context info.
+ * Used at Daily Work
+ */
+TaskModel.prototype.getContext = function() {
+  var parent = this.getParent();
+  if (parent instanceof IterationModel) {
+    return {"backlog": parent, "story": null};
+  }
+  else if (this.getParent() instanceof StoryModel) {
+    return {"backlog": parent.getParent(), "story": parent};
+  }
+  return {"backlog": null, "story": null};
+};
 

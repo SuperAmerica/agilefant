@@ -94,7 +94,7 @@ public class DailyWorkActionTest {
 
         verifyAll();
 
-        assertEquals(returnedList,  testable.getAssignedTasks());
+        assertEquals(returnedList,  testable.getQueuedTasks());
                 
         assertEquals(user, testable.getUser());
         assertEquals(USER_ID, testable.getUserId());
@@ -206,7 +206,7 @@ public class DailyWorkActionTest {
 
         verifyAll();
 
-        assertEquals(returnedList,  testable.getAssignedTasks());
+        assertEquals(returnedList,  testable.getQueuedTasks());
     }
     
     @Test

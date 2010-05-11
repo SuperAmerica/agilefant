@@ -306,6 +306,7 @@ StoryController.prototype.quickLogEffort = function(spentEffort) {
  */
 StoryController.prototype.storyPointsEditable = function() {
   if (this.model.getState() === "DONE") {
+    MessageDisplay.Warning("Changing story points is not allowed for done stories");
     return false;
   }
   return true;

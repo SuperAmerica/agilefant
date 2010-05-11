@@ -75,9 +75,9 @@ li.genericMessage .closeButton:hover {
 }
 
 li.warningMessage {
-  background-color: #ffffce;
-  border-color: #f0c000;
-  color: #654;
+  background-color: #ff9;
+  border-color: #f90;
+  color: #630;
 }
 
 div.dynamictable-infobox {

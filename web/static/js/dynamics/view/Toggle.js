@@ -19,14 +19,22 @@ DynamicTableToggleView.prototype = new ViewPart();
 DynamicTableToggleView.collapsed = 1;
 DynamicTableToggleView.expanded = 2;
 
+DynamicTableToggleView.prototype._getCell = function(cell) {
+  if(typeof cell === "number") {
+    return this.parentView.getRow().getCell(cell);
+  } else {
+    return this.parentView.getRow().getCellByName(cell);
+  }
+};
+
 DynamicTableToggleView.prototype.render = function() {
   if(this.parentView instanceof DynamicTableCell) {
     if(this.options.targetCell) {
-      this.targetViews = [this.parentView.getRow().getCell(this.options.targetCell)];
+      this.targetViews = [this._getCell(this.options.targetCell)];
     } else if(this.options.targetCells) {
       this.targetViews = [];
       for(var i = 0, len = this.options.targetCells.length; i < len; i++) {
-        this.targetViews.push(this.parentView.getRow().getCell(this.options.targetCells[i]));
+        this.targetViews.push(this._getCell(this.options.targetCells[i]));
       }
     }
   }

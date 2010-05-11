@@ -233,7 +233,7 @@ StoryController.prototype.taskToggleFactory = function(view, model) {
     collapse : function() { me.getCurrentView().getElement().removeClass("bottom-margin"); },
     expand : function() { me.getCurrentView().getElement().addClass("bottom-margin"); },
     expanded: false,
-    targetCells: [StoryController.columnIndices.tasksData, StoryController.columnIndices.details]
+    targetCells: ["tasksData", "details"]
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;

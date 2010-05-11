@@ -64,7 +64,9 @@ TaskModel.prototype._setData = function(newData) {
     
     this.transientData.workingOnTaskIds = workingOnTaskIds;
   }
-  
+  if(newData.story) {
+    this._updateRelations(ModelFactory.types.story, newData.story);
+  }
   if (newData.iteration) {
     this._updateRelations(ModelFactory.types.iteration, newData.iteration);
   }

@@ -208,14 +208,7 @@ IterationController.prototype.openLogEffort = function() {
   var widget = new SpentEffortWidget(this.model);
 };
 
-/**
- * Creates a new story controller.
- */
-IterationController.prototype.storyControllerFactory = function(view, model) {
-  var storyController = new StoryController(model, view, this);
-  this.addChildController("story", storyController);
-  return storyController;
-};
+
 
 IterationController.prototype.initializeStoryList = function() {
   this.storyListController = new StoryListController(this.model,

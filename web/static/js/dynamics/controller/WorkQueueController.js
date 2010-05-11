@@ -6,7 +6,7 @@ extendObject(WorkQueueController, TasksWithoutStoryController);
 
 WorkQueueController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration({
-    caption: "My work Queue",
+    caption: "My work queue",
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },

@@ -38,6 +38,9 @@ DailyWorkTasksWithoutStoryController.prototype._addColumnConfigs = function(conf
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.prio, TasksWithoutStoryController.columnConfig.prio);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.name, TasksWithoutStoryController.columnConfig.name);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.state, TasksWithoutStoryController.columnConfig.state);
+  
+  config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.context, TasksWithoutStoryController.columnConfig.context);
+  
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.responsibles, TasksWithoutStoryController.columnConfig.responsibles);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.el, TasksWithoutStoryController.columnConfig.effortLeft);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.oe, TasksWithoutStoryController.columnConfig.originalEstimate);

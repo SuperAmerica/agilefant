@@ -65,8 +65,8 @@ StoryController.prototype.removeStory = function() {
 
 
 StoryController.prototype.editDescription = function() {
-  var descriptionCell = this.view.getCell(StoryController.columnIndices.description);
-  var data = this.view.getCell(StoryController.columnIndices.tasksData);
+  var descriptionCell = this.getCurrentView().getCellByName("description");
+  var data = this.getCurrentView().getCellByName("tasksData");
   var taskDataVisible = data.isVisible();
   data.hide();
   descriptionCell.show();
@@ -139,8 +139,8 @@ StoryController.prototype.storyTaskListFactory = function(view, model) {
  * 
  */
 StoryController.prototype.showTaskColumn = function() {
-  var cell = this.view.getCell(StoryController.columnIndices.tasksData);
-  var cell2 = this.view.getCell(StoryController.columnIndices.details);
+  var cell = this.getCurrentView().getCellByName("tasksData");
+  var cell2 = this.getCurrentView().getCell("details");
   if (cell) {
     cell.show();
   }
@@ -153,8 +153,8 @@ StoryController.prototype.showTaskColumn = function() {
  * 
  */
 StoryController.prototype.hideTaskColumn = function() {
-  var cell = this.view.getCell(StoryController.columnIndices.tasksData);
-  var cell2 = this.view.getCell(StoryController.columnIndices.details);
+  var cell = this.getCurrentView().getCellByName("tasksData");
+  var cell2 = this.getCurrentView().getCell("details");
   if (cell) {
     cell.hide();
   }
@@ -167,22 +167,22 @@ StoryController.prototype.hideTaskColumn = function() {
  * 
  */
 StoryController.prototype.showDescriptionColumn = function() {
-  var cell = this.view.getCell(StoryController.columnIndices.description);
+  var cell = this.getCurrentView().getCellByName("description");
   if (cell) {
     cell.show();
   }
-  this.view.getElement().addClass("bottom-margin");
+  this.getCurrentView().getElement().addClass("bottom-margin");
 };
 
 /**
  * 
  */
 StoryController.prototype.hideDescriptionColumn = function() {
-  var cell = this.view.getCell(StoryController.columnIndices.description);
+  var cell = this.getCurrentView().getCellByName("description");
   if (cell) {
     cell.hide();
   }
-  this.view.getElement().removeClass("bottom-margin");
+  this.getCurrentView().getElement().removeClass("bottom-margin");
 };
 
 /**
@@ -230,8 +230,8 @@ StoryController.prototype.createTask = function() {
 StoryController.prototype.taskToggleFactory = function(view, model) {
   var me = this;
   var options = {
-    collapse : function() { me.view.getElement().removeClass("bottom-margin"); },
-    expand : function() { me.view.getElement().addClass("bottom-margin"); },
+    collapse : function() { me.getCurrentView().getElement().removeClass("bottom-margin"); },
+    expand : function() { me.getCurrentView().getElement().addClass("bottom-margin"); },
     expanded: false,
     targetCells: [StoryController.columnIndices.tasksData, StoryController.columnIndices.details]
   };

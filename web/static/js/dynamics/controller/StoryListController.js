@@ -10,6 +10,7 @@ var StoryListController = function(model, element, parentController) {
 };
 
 
+
 StoryListController.columnConfig = {};
 StoryListController.columnConfig.prio = {
   minWidth : 24,
@@ -130,6 +131,7 @@ StoryListController.columnConfig.actions = {
   subViewFactory : StoryController.prototype.storyActionFactory
 };
 StoryListController.columnConfig.description = {
+  columnName: "description",
   fullWidth : true,
   visible : false,
   get : StoryModel.prototype.getDescription,
@@ -147,6 +149,7 @@ StoryListController.columnConfig.buttons = {
   subViewFactory : DynamicsButtons.commonButtonFactory
 };
 StoryListController.columnConfig.details = {
+  columnName: "details",
   fullWidth : true,
   visible : false,
   targetCell: StoryController.columnIndices.details,
@@ -154,6 +157,7 @@ StoryListController.columnConfig.details = {
   delayedRender: true
 };
 StoryListController.columnConfig.tasks = {
+  columnName: "tasksData",
   fullWidth : true,
   visible : false,
   cssClass : 'story-task-container',
@@ -181,6 +185,15 @@ StoryListController.prototype.initConfig = function() {
 };
 
 /**
+ * Creates a new story controller.
+ */
+StoryListController.prototype.storyControllerFactory = function(view, model) {
+  var storyController = new StoryController(model, view, this);
+  this.addChildController("story", storyController);
+  return storyController;
+};
+
+/**
  * Populate a new, editable story row to the story table. 
  */
 StoryListController.prototype.createStory = function() {
@@ -192,7 +205,7 @@ StoryListController.prototype.createStory = function() {
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
   controller.openRowEdit();
-  row.getCell(StoryController.columnIndices.tasksData).hide();
+  row.getCellByName("tasksData").hide();
 };
 
 /**
@@ -211,7 +224,7 @@ IterationController.prototype.hideTasks = function() {
 
 StoryListController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration( {
-    rowControllerFactory : IterationController.prototype.storyControllerFactory,
+    rowControllerFactory : StoryListController.prototype.storyControllerFactory,
     dataSource : IterationModel.prototype.getStories,
     sortCallback: StoryController.prototype.rankStory,
     caption : "Stories",

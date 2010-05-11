@@ -46,6 +46,24 @@ TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
   }
 };
 
+TaskController.prototype.rankInWorkQueue = function(view, model, newPos) {
+  if (!(model instanceof WorkQueueTaskModel)) {
+    return;
+  }
+  
+  var previousRow = newPos - 1;
+  var previousTaskId = -1;
+  
+  console.log(previousRow);
+  
+  var previousRow = view.getParentView().getDataRowAt(previousRow);
+  if (previousRow) {
+    previousTaskId = previousRow.getModel().getId();
+  }
+  
+  model.rankInWorkQueue(previousTaskId);
+};
+
 TaskController.prototype.moveTask = function(targetModel) {
   this.model.rankUnder(-1, targetModel);
 };

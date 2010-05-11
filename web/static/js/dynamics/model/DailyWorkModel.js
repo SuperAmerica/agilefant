@@ -34,7 +34,7 @@ DailyWorkModel.prototype.reload = function() {
   
 };
 
-DailyWorkModel.prototype.reloadWorkQueue = function(userId) {
+DailyWorkModel.prototype.reloadWorkQueue = function(userId, callback) {
   var me = this;
   $.ajax({
     url: "ajax/workQueue.action",
@@ -44,6 +44,9 @@ DailyWorkModel.prototype.reloadWorkQueue = function(userId) {
     success: function(data, status) {
       if(data) {
         me._updateRelations("queuedTasks", data);
+      }
+      if (callback) {
+        callback();
       }
     },
     error: function(xhr, status) {

@@ -10,6 +10,7 @@ WorkQueueController.prototype._getTableConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
+    rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
     dataSource: DailyWorkModel.prototype.getWorkQueue
   });
   return config;

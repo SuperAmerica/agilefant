@@ -172,7 +172,7 @@ public class DailyWorkAction extends ActionSupport {
         this.userId = userId;
     }
 
-    public Collection<DailyWorkTaskTO> getAssignedTasks() {
+    public Collection<DailyWorkTaskTO> getQueuedTasks() {
         return queuedTasks;
     }
     

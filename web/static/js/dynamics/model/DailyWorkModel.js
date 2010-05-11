@@ -2,13 +2,13 @@ var DailyWorkModel = function DailyWorkModel() {
   this.initialize();
   this.persistedClassName = "non.existent.DailyWork";
   this.relations = {
-      workQueueTask: [],
-      stories: [],
       tasksWithoutStory: [],
+      stories: [],
+      queuedTasks: [],
     };
     this.copiedFields = { };
     this.classNameToRelation = {
-        "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO":  "workQueueTask",
+        "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO":  "queuedTasks",
         "fi.hut.soberit.agilefant.transfer.StoryTO":  "stories",
         "fi.hut.soberit.agilefant.model.Story":  "stories",
         "fi.hut.soberit.agilefant.transfer.TaskTO":  "tasksWithoutStory",
@@ -19,10 +19,15 @@ var DailyWorkModel = function DailyWorkModel() {
 DailyWorkModel.prototype = new CommonModel();
 
 DailyWorkModel.prototype._setData = function(newData) {
-  this._updateRelations("stories", newData.stories);
-  this._updateRelations("tasksWithoutStory", newData.tasksWithoutStory);
-
-  this._updateRelations("workQueueTask", newData.assignedTasks);
+  if(newData.stories) {
+    this._updateRelations("stories", newData.stories);
+  }
+  if(newData.tasksWithoutStory) {
+    this._updateRelations("tasksWithoutStory", newData.tasksWithoutStory);
+  }
+  if(newData.queuedTasks) {
+    this._updateRelations("queuedTasks", newData.queuedTasks);
+  }
 };
 
 DailyWorkModel.prototype.reload = function() {
@@ -34,7 +39,7 @@ DailyWorkModel.prototype.reloadWorkQueue = function() {
 };
 
 DailyWorkModel.prototype.getWorkQueue = function() {
-  return this.relations.workQueueTask;
+  return this.relations.queuedTasks;
 };
 DailyWorkModel.prototype.getAssignedStories = function() {
   return this.relations.stories;

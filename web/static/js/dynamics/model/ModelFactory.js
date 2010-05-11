@@ -19,7 +19,9 @@ ModelFactory = function ModelFactory() {
     user: {},
     team: {},
     
-    label: {}
+    label: {},
+    
+    workQueueTask: {}
   };
 };
 
@@ -59,7 +61,9 @@ ModelFactory.classNameToType = {
   "fi.hut.soberit.agilefant.model.StoryHourEntry":  "hourEntry",
   "fi.hut.soberit.agilefant.model.TaskHourEntry":   "hourEntry",
   
-  "fi.hut.soberit.agilefant.model.Label": "label"
+  "fi.hut.soberit.agilefant.model.Label": "label",
+  
+  "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": "workQueueTask"
 };
 
 /**
@@ -91,7 +95,9 @@ ModelFactory.classNameToJsClass = {
     "fi.hut.soberit.agilefant.model.BacklogHourEntry": HourEntryModel,
     "fi.hut.soberit.agilefant.model.StoryHourEntry":  HourEntryModel,
     "fi.hut.soberit.agilefant.model.TaskHourEntry":   HourEntryModel,
-    "fi.hut.soberit.agilefant.model.Label": LabelModel
+    "fi.hut.soberit.agilefant.model.Label": LabelModel,
+    
+    "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO": WorkQueueTaskModel
 };
 
 ModelFactory.typeToClassName = {

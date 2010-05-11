@@ -80,6 +80,29 @@ public class DailyWorkAction extends ActionSupport {
         
         return Action.SUCCESS;
     }
+    
+    public String retrieveWorkQueue() {
+        user = this.userBusiness.retrieve(userId);
+        queuedTasks = dailyWorkBusiness.getQueuedTasksForUser(user);
+       
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveAssignedStories() {
+        user = this.userBusiness.retrieve(userId);
+        AssignedWorkTO assignedWork = dailyWorkBusiness.getAssignedWorkFor(user);
+        this.stories = assignedWork.getStories();
+        
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveAssignedTasks() {
+        user = this.userBusiness.retrieve(userId);
+        AssignedWorkTO assignedWork = dailyWorkBusiness.getAssignedWorkFor(user);
+        this.tasksWithoutStory = assignedWork.getTasksWithoutStory();
+        
+        return Action.SUCCESS;
+    }
 
     public String deleteFromWorkQueue() {
         User thisUser = getDefaultUser();

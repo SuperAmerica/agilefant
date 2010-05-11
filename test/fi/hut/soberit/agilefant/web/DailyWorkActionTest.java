@@ -1,7 +1,11 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,7 +19,6 @@ import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
@@ -179,5 +182,77 @@ public class DailyWorkActionTest {
         testable.rankQueueTaskAndMoveUnder();
         
         verifyAll();
+    }
+    
+    @Test
+    public void testRetrieveWorkQueue() {
+        final int USER_ID = 42;
+        User user = new User(); 
+        testable.setUserId(USER_ID);
+
+        Collection<DailyWorkTaskTO> returnedList  = Arrays.asList(
+            new DailyWorkTaskTO(new Task(), 1), 
+            new DailyWorkTaskTO(new Task(), 2), 
+            new DailyWorkTaskTO(new Task(), 4)
+        );
+
+        expect(userBusiness.retrieve(USER_ID)).andReturn(user);
+        expect(dailyWorkBusiness.getQueuedTasksForUser(user))
+            .andReturn(returnedList);
+        
+        replayAll();
+
+        assertEquals(Action.SUCCESS, testable.retrieveWorkQueue());
+
+        verifyAll();
+
+        assertEquals(returnedList,  testable.getAssignedTasks());
+    }
+    
+    @Test
+    public void testRetrieveAssignedTasks() {
+        final int USER_ID = 42;
+        User user = new User(); 
+        testable.setUserId(USER_ID);
+
+        expect(userBusiness.retrieve(USER_ID)).andReturn(user);
+
+        AssignedWorkTO assignedWork = new AssignedWorkTO();
+        expect(dailyWorkBusiness.getAssignedWorkFor(user))
+            .andReturn(assignedWork);
+        
+        replayAll();
+
+        assertEquals(Action.SUCCESS, testable.retrieveAssignedStories());
+
+        verifyAll();
+                
+        assertEquals(user, testable.getUser());
+        assertEquals(USER_ID, testable.getUserId());
+        assertSame(assignedWork.getStories(), testable.getStories());
+    }
+    
+    @Test
+    public void testRetrieveAssignedStories() {
+        final int USER_ID = 42;
+        User user = new User(); 
+        testable.setUserId(USER_ID);
+
+        expect(userBusiness.retrieve(USER_ID)).andReturn(user);
+
+        AssignedWorkTO assignedWork = new AssignedWorkTO();
+        expect(dailyWorkBusiness.getAssignedWorkFor(user))
+            .andReturn(assignedWork);
+        
+        replayAll();
+
+        assertEquals(Action.SUCCESS, testable.retrieveAssignedTasks());
+
+        verifyAll();
+
+                
+        assertEquals(user, testable.getUser());
+        assertEquals(USER_ID, testable.getUserId());
+        assertSame(assignedWork.getTasksWithoutStory(), testable.getTasksWithoutStory());
     }
 }

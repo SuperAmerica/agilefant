@@ -6,22 +6,10 @@ var StoryController = function StoryController(model, view, backlogController) {
   this.autohideCells = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons ]; 
 };
 
-StoryController.columnIndices = {
-  priority : 0,
-  name : 1,
-  points: 2,
-  state : 3,
-  context: 4,
-  responsibles : 5,
-  el : 6,
-  oe : 7,
-  es : 8,
-  actions : 9,
-  description : 10,
-  buttons : 11,
-  details: 12,
-  tasksData : 13
-};
+StoryController.columnNames =
+  ["priority", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
+StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
+
 
 StoryController.prototype = new CommonController();
 

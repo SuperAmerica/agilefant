@@ -10,7 +10,6 @@ var DailyWorkController = function(options) {
   jQuery.extend(this.options, options);
   
   this.init();
-//  this.initConfigs();
   this.initialize();
 };
 DailyWorkController.prototype = new CommonController();
@@ -30,8 +29,10 @@ DailyWorkController.prototype.initialize = function() {
 DailyWorkController.prototype._paintLists = function() {
   this.tasksWithoutStoryController = new DailyWorkTasksWithoutStoryController(
       this.model, this.options.tasksWithoutStoryElement, this);
-  this.assignedStoriesConfig = new DailyWorkStoryListController(this.model,
+  this.assignedStoriesController = new DailyWorkStoryListController(this.model,
       this.options.assignedStoriesElement, this);
+  this.workQueueController = new WorkQueueController(this.model,
+      this.options.workQueueElement, this);
 };
 
 
@@ -39,14 +40,6 @@ DailyWorkController.prototype._paintLists = function() {
  * Configuration initialization for work queue.
  */
 DailyWorkController.prototype.initWorkQueueConfig = function() {
-  var config = new DynamicTableConfiguration({
-    caption: "Work Queue",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    dataSource: DailyWorkModel.prototype.getWorkQueue
-  });
-
   config.addColumnConfiguration(0, DailyWorkController.columnConfig.task.dailyWorkRank);
   config.addColumnConfiguration(1, DailyWorkController.columnConfig.task.name);
   config.addColumnConfiguration(2, DailyWorkController.columnConfig.task.state);

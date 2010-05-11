@@ -1,0 +1,16 @@
+
+var WorkQueueController = function(model, element, parentController) {
+  TasksWithoutStoryController.call(this, model, element, parentController);
+};
+extendObject(WorkQueueController, TasksWithoutStoryController);
+
+WorkQueueController.prototype._getTableConfig = function() {
+  var config = new DynamicTableConfiguration({
+    caption: "My work Queue",
+    captionConfig: {
+      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+    },
+    dataSource: DailyWorkModel.prototype.getWorkQueue
+  });
+  return config;
+};

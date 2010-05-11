@@ -64,6 +64,7 @@ public class DailyWorkAction extends ActionSupport {
         user = getDefaultUser();
 
         enabledUsers.addAll(userBusiness.getEnabledUsers());
+        Collections.sort(enabledUsers, new UserComparator());
         return Action.SUCCESS;
     }
     /**
@@ -71,19 +72,7 @@ public class DailyWorkAction extends ActionSupport {
      * @return
      */
     public String retrieve() {
-        /*
-         * Get the user id from session variables. This enables the Daily Work
-         * page to remember the selected user.
-         */
-        
-        if (userId == 0) {
-            userId = getStoredDailyWorkUserId();
-        }
-
-        user = getDefaultUser();
-
-        Collections.sort(enabledUsers, new UserComparator());
-
+        user = this.userBusiness.retrieve(userId);
         queuedTasks = dailyWorkBusiness.getQueuedTasksForUser(user);
         AssignedWorkTO assignedWork = dailyWorkBusiness.getAssignedWorkFor(user);
         this.stories = assignedWork.getStories();

@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -62,7 +63,7 @@ public class User {
     
     private Collection<Story> stories = new HashSet<Story>();
     
-    private Collection<Task> tasks = new HashSet<Task>();
+    private Set<Task> tasks = new HashSet<Task>();
     
     private ExactEstimate weekEffort = new ExactEstimate(0);
     
@@ -253,7 +254,7 @@ public class User {
         return stories;
     }
     
-    public void setTasks(Collection<Task> tasks) {
+    public void setTasks(Set<Task> tasks) {
         this.tasks = tasks;
     }
 
@@ -262,7 +263,7 @@ public class User {
             targetEntity = fi.hut.soberit.agilefant.model.Task.class,
             fetch = FetchType.LAZY)
     @NotAudited
-    public Collection<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
     }
     

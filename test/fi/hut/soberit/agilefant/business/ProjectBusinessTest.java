@@ -119,7 +119,7 @@ public class ProjectBusinessTest {
 
         Task task = new Task();
         task.setId(86);
-        task.setResponsibles(Arrays.asList(user1));
+        task.setResponsibles(new HashSet<User>(Arrays.asList(user1)));
         story1.setTasks(new HashSet<Task>(Arrays.asList(task)));
     }
 

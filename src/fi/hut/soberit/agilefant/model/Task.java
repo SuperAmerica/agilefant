@@ -1,8 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
@@ -54,7 +52,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     
     private ExactEstimate effortLeft;
     private ExactEstimate originalEstimate;
-    private List<User> responsibles = new ArrayList<User>();
+    private Set<User> responsibles = new HashSet<User>();
     private Set<TaskHourEntry> hourEntries = new HashSet<TaskHourEntry>();
     private Set<WhatsNextEntry> whatsNextEntries;
 
@@ -150,11 +148,11 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     )
     @OrderBy("initials asc")
     @JSON(include = false)
-    public List<User> getResponsibles() {
+    public Set<User> getResponsibles() {
         return responsibles;
     }
     
-    public void setResponsibles(List<User> responsibles) {
+    public void setResponsibles(Set<User> responsibles) {
         this.responsibles = responsibles;
     }
 

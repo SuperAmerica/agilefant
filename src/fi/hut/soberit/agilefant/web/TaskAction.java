@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -47,7 +47,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         this.responsiblesChanged = responsiblesChanged;
     }
 
-    private List<User> newResponsibles = new ArrayList<User>();
+    private Set<User> newResponsibles = new HashSet<User>();
 
     // CRUD
     public String create() {
@@ -146,12 +146,12 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         this.storyId = storyId;
     }
     
-    public List<User> getNewResponsibles() {
+    public Set<User> getNewResponsibles() {
         return this.newResponsibles;
     }
 
-    public void setNewResponsibles(List<User> newResponsibles) {
-        this.newResponsibles = new ArrayList<User>(newResponsibles);
+    public void setNewResponsibles(Set<User> newResponsibles) {
+        this.newResponsibles = new HashSet<User>(newResponsibles);
     }
 
     public void setRankUnderId(int rankUnderId) {

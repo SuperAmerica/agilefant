@@ -122,7 +122,7 @@ public class TransferObjectBusinessTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testConstructTaskTO() {
-        List<User> responsibles = Arrays.asList(assignedUser, notAssignedUser);
+        Set<User> responsibles = new HashSet<User>(Arrays.asList(assignedUser, notAssignedUser));
         
         task.setIteration(iteration);
         task.setResponsibles(responsibles);
@@ -529,7 +529,7 @@ public class TransferObjectBusinessTest {
         story.setBacklog(iteration);
         
         task.setStory(story);
-        task.setResponsibles(Arrays.asList(new User[] { user } ));
+        task.setResponsibles(new HashSet<User>(Arrays.asList(new User[] { user } )));
 
         DailyWorkTaskTO transferObj = transferObjectBusiness.constructQueuedDailyWorkTaskTO(entry);
         assertEquals(2, transferObj.getWorkQueueRank());

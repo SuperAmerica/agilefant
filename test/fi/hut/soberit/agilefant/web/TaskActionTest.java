@@ -10,6 +10,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -135,7 +136,7 @@ public class TaskActionTest {
     public void testStoreTask_dontUpdateUsers() {
         taskAction.setResponsiblesChanged(false);
         taskAction.setIterationId(2);
-        taskAction.setNewResponsibles(Arrays.asList(user1, user2));
+        taskAction.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
@@ -153,7 +154,7 @@ public class TaskActionTest {
     public void testStoreTask_updateUsers() {
         taskAction.setResponsiblesChanged(true);
         taskAction.setIterationId(2);
-        taskAction.setNewResponsibles(Arrays.asList(user1, user2));
+        taskAction.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);

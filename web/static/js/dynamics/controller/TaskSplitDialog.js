@@ -372,6 +372,7 @@ TaskSplitDialog.prototype._initTaskListConfig = function() {
   });
 
   config.addColumnConfiguration(TaskController.columnIndices.description, {
+    columnName: "description",
     fullWidth : true,
     visible : false,
     get : TaskModel.prototype.getDescription,

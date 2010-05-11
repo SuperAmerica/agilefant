@@ -4,10 +4,7 @@ var TasksWithoutStoryController = function TasksWithoutStoryController(model, el
   this.model = model;
   this.element = element;
   this.parentController = parentController;
-  this.init();
-  
-  this.taskControllerDescriptionColumn = TaskController.columnIndices.description;
-  
+  this.init();  
   this.initConfig();
   
   this.initializeView();
@@ -115,6 +112,7 @@ TasksWithoutStoryController.columnConfig.effortSpent = {
   }
 };
 TasksWithoutStoryController.columnConfig.actions = {
+  columnName: "actions",
   minWidth : 33,
   autoScale : true,
   title : "Edit",
@@ -123,6 +121,7 @@ TasksWithoutStoryController.columnConfig.actions = {
 TasksWithoutStoryController.columnConfig.description = {
   fullWidth : true,
   get : TaskModel.prototype.getDescription,
+  columnName: "description",
   visible : false,
   decorator: DynamicsDecorators.emptyDescriptionDecorator,
   editable : true,
@@ -132,6 +131,7 @@ TasksWithoutStoryController.columnConfig.description = {
   }
 };
 TasksWithoutStoryController.columnConfig.buttons = {
+  columnName: "buttons",
   fullWidth : true,
   visible : false,
   subViewFactory : DynamicsButtons.commonButtonFactory
@@ -154,7 +154,6 @@ TasksWithoutStoryController.prototype.getCurrentConfig = function() {
 
 TasksWithoutStoryController.prototype.taskControllerFactory = function(view, model) {
   var taskController = new TaskController(model, view, this);
-  taskController.descriptionColumnNo = this.taskControllerDescriptionColumn;
   this.addChildController("task", taskController);
   return taskController;
 };
@@ -169,12 +168,14 @@ TasksWithoutStoryController.prototype.createTask = function() {
   }
   
   var controller = new TaskController(mockModel, null, this);
-  controller.descriptionColumnNo = this.taskControllerDescriptionColumn;
   var row = this.getCurrentView().createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells();
+  row.autoCreateCells([0]); //hide priority column
   row.render();
   controller.openRowEdit();
+  row.getCellByName("actions").hide();
+  row.getCellByName("buttons").show();
+  row.getCellByName("description").hide();
 };
 
 

@@ -456,6 +456,7 @@ StoryController.prototype.storyPointsEditable = function() {
     subViewFactory: TaskController.prototype.actionColumnFactory
   });
   config.addColumnConfiguration(TaskController.columnIndices.description, {
+    columnName: "description",
     fullWidth : true,
     get : TaskModel.prototype.getDescription,
     decorator: DynamicsDecorators.emptyDescriptionDecorator,

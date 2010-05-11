@@ -1,7 +1,7 @@
 
 var DailyWorkTasksWithoutStoryController = function(model, element, parentController) { 
   TasksWithoutStoryController.call(this, model, element, parentController);
-  this.taskControllerDescriptionColumn = DailyWorkTasksWithoutStoryController.columnIndices.description;
+  this.autohideCells = [ DailyWorkTasksWithoutStoryController.columnIndices.description,  DailyWorkTasksWithoutStoryController.columnIndices.actions];
 };
 extendObject(DailyWorkTasksWithoutStoryController, TasksWithoutStoryController);
 

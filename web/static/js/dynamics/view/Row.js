@@ -7,6 +7,7 @@ var DynamicTableRow = function DynamicTableRow(config) {
   this.config = config;
   this.cells = [];
   this.cellIndex = {};
+  this.nameToCell = {};
   this.initialize();
   this.dynamicCssClasses = [];
   this.cssClassResolver = null;
@@ -130,11 +131,17 @@ DynamicTableRow.prototype.autoCreateCells = function(disabledSubViews) {
     }
     var cell = this.createCell(cellConfig);
     this.cellIndex[i] = cell;
+    if(cellConfig.getColumnName()) {
+      this.nameToCell[cellConfig.getColumnName()] = cell;
+    }
   }
 };
 
 DynamicTableRow.prototype.getCell = function(index) {
   return this.cellIndex[index];
+};
+DynamicTableRow.prototype.getCellByName = function(name) {
+  return this.nameToCell[name];
 };
 /**
  * Remove row

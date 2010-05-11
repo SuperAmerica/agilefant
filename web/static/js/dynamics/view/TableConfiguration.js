@@ -27,6 +27,7 @@ var DynamicTableColumnConfiguration = function DynamicTableColumnConfiguration(o
 			draggableOnly: false,
 			cssClassResolver: null,
 			openOnRowEdit: true,
+			columnName: null,
 			edit: {
 				decorator: null,
 				items: null,
@@ -124,6 +125,9 @@ DynamicTableColumnConfiguration.prototype.getSubViewFactory = function() {
 };
 DynamicTableColumnConfiguration.prototype.getDoubleClickCallback = function() {
   return this.options.onDoubleClick;
+};
+DynamicTableColumnConfiguration.prototype.getColumnName = function() {
+  return this.options.columnName;
 };
 
 DynamicTableCaptionItemConfiguration = function(options) {

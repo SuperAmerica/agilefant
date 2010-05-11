@@ -3,7 +3,6 @@ var TaskController = function TaskController(model, view, parentController) {
   this.view = view;
   this.parentController = parentController;
   this.init();
-  this.descriptionColumnNo = TaskController.columnIndices.description;
   this.autohideCells = [ TaskController.columnIndices.buttons ];
 };
 
@@ -88,14 +87,14 @@ TaskController.prototype.removeTask = function() {
 };
 
 TaskController.prototype.showDetails = function() {
-  var cell = this.view.getCell(this.descriptionColumnNo);
+  var cell = this.view.getCellByName("description");
   if (cell) {
     cell.show();
   }
 };
 
 TaskController.prototype.hideDetails = function() {
-  var cell = this.view.getCell(this.descriptionColumnNo);
+  var cell = this.view.getCellByName("description");
   if (cell) {
     cell.hide();
   }

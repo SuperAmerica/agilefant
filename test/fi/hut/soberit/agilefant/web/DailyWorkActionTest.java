@@ -98,14 +98,6 @@ public class DailyWorkActionTest {
         assertSame(assignedWork.getStories(), testable.getStories());
         assertSame(assignedWork.getTasksWithoutStory(), testable.getTasksWithoutStory());
     }
-
-    @Test(expected=ObjectNotFoundException.class)
-    public void testRetrieve_withDefaultUserAndUserNotFound() {
-        expect(userBusiness.retrieve(LOGGED_IN_USER)).andThrow(new ObjectNotFoundException());
-        replayAll();
-        testable.retrieve();
-        verifyAll();
-    }
     
     @Test
     public void testDeleteFromQueue() {

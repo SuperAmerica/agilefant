@@ -21,8 +21,9 @@ var IterationController = function IterationController(options) {
   this.initAssigneeConfiguration();
   this.initializeStoryConfig();
   this.initIterationInfoConfig();
-  this.initializeTaskListConfig();
-  this.paint();
+  
+  this.initialize();
+  
   var me = this;
   this.tabs.bind('tabsselect', function(event, ui) {
     if (Configuration.isTimesheetsEnabled() && ui.index === 2) {
@@ -281,144 +282,6 @@ IterationController.storyColumnConfigs.tasks = {
   delayedRender: true
 };
 
-IterationController.taskColumnConfig = {};
-IterationController.taskColumnConfig.prio = {
-  minWidth : 24,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "#",
-  headerTooltip : 'Priority',
-  sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
-  defaultSortColumn: true,
-  subViewFactory: TaskController.prototype.toggleFactory
-};
-IterationController.taskColumnConfig.name = {
-  minWidth : 200,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "Name",
-  headerTooltip : 'Task name',
-  get : TaskModel.prototype.getName,
-  editable : true,
-  dragHandle: true,
-  edit : {
-    editor : "Text",
-    set : TaskModel.prototype.setName,
-    required: true
-  }
-};
-IterationController.taskColumnConfig.state = {
-  minWidth : 60,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "State",
-  headerTooltip : 'Task state',
-  get : TaskModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
-  editable : true,
-  edit : {
-    editor : "Selection",
-    set : TaskModel.prototype.setState,
-    items : DynamicsDecorators.stateOptions
-  }
-};
-IterationController.taskColumnConfig.responsibles = {
-  minWidth : 60,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "Responsibles",
-  headerTooltip : 'Task responsibles',
-  get : TaskModel.prototype.getResponsibles,
-  getView : TaskModel.prototype.getAnnotatedResponsibles,
-  decorator: DynamicsDecorators.annotatedUserInitialsListDecorator,
-  editable : true,
-  openOnRowEdit: false,
-  edit : {
-    editor : "Autocomplete",
-    dialogTitle: "Select users",
-    dataType: "usersAndTeams",
-    set : TaskModel.prototype.setResponsibles
-  }
-};
-IterationController.taskColumnConfig.effortLeft = {
-  minWidth : 30,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "EL",
-  headerTooltip : 'Effort left',
-  get : TaskModel.prototype.getEffortLeft,
-  decorator: DynamicsDecorators.exactEstimateDecorator,
-  editable : true,
-  editableCallback: TaskController.prototype.effortLeftEditable,
-  edit : {
-    editor : "ExactEstimate",
-    decorator: DynamicsDecorators.exactEstimateEditDecorator,
-    set : TaskModel.prototype.setEffortLeft
-  }
-};
-IterationController.taskColumnConfig.originalEstimate = {
-  minWidth : 30,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "OE",
-  headerTooltip : 'Original estimate',
-  get : TaskModel.prototype.getOriginalEstimate,
-  decorator: DynamicsDecorators.exactEstimateDecorator,
-  editable : true,
-  editableCallback: TaskController.prototype.originalEstimateEditable,
-  edit : {
-    editor : "ExactEstimate",
-    decorator: DynamicsDecorators.exactEstimateEditDecorator,
-    set : TaskModel.prototype.setOriginalEstimate
-  }
-};
-IterationController.taskColumnConfig.effortSpent = {
-  minWidth : 30,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "ES",
-  headerTooltip : 'Effort spent',
-  get : TaskModel.prototype.getEffortSpent,
-  decorator: DynamicsDecorators.exactEstimateDecorator,
-  editable : false,
-  onDoubleClick: TaskController.prototype.openQuickLogEffort,
-  edit : {
-    editor : "ExactEstimate",
-    decorator: DynamicsDecorators.empty,
-    set : TaskController.prototype.quickLogEffort
-  }
-};
-IterationController.taskColumnConfig.actions = {
-  minWidth : 33,
-  autoScale : true,
-  cssClass : 'task-row',
-  title : "Edit",
-  subViewFactory: TaskController.prototype.actionColumnFactory
-};
-IterationController.taskColumnConfig.description = {
-  fullWidth : true,
-  get : TaskModel.prototype.getDescription,
-  cssClass : 'task-data',
-  visible : false,
-  decorator: DynamicsDecorators.emptyDescriptionDecorator,
-  editable : true,
-  edit : {
-    editor : "Wysiwyg",
-    set : TaskModel.prototype.setDescription
-  }
-};
-IterationController.taskColumnConfig.buttons = {
-  fullWidth : true,
-  visible : false,
-  cssClass : 'task-row',
-  subViewFactory : DynamicsButtons.commonButtonFactory
-};
-IterationController.taskColumnConfig.data = {
-  fullWidth : true,
-  visible : false,
-  cssClass : 'task-data',
-  visible : false
-};
 IterationController.prototype = new BacklogController();
 
 
@@ -510,15 +373,14 @@ IterationController.prototype.paintStoryList = function() {
   this.storyListView.render();
 };
 
-IterationController.prototype.paintTaskList = function() {
-  this.taskListView = new DynamicTable(this, this.model, this.taskListConfig,
-      this.taskListElement);
-  this.taskListView.render();
+IterationController.prototype.initializeTaskList = function() {
+  this.tasksWithoutStoryController = new TasksWithoutStoryController(
+      this.model, this.taskListElement, this);
 };
 /**
  * Initialize and render the story list.
  */
-IterationController.prototype.paint = function() {
+IterationController.prototype.initialize = function() {
   var me = this;
   ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration,
       this.id, function(model) {
@@ -526,7 +388,7 @@ IterationController.prototype.paint = function() {
         me.attachModelListener();
         me.paintIterationInfo();
         me.paintStoryList();
-        me.paintTaskList();
+        me.initializeTaskList();
       });
   this.assigneeContainer = new AssignmentContainer(this.id);
   this.assigneeListView = new DynamicTable(this, this.assigneeContainer, this.assigneeListConfiguration,
@@ -595,54 +457,7 @@ IterationController.prototype.filterStoriesByState = function(element) {
   });
 };
 
-IterationController.prototype.initializeTaskListConfig = function() {
-  var config = new DynamicTableConfiguration({
-    rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
-    dataSource: IterationModel.prototype.getTasks,
-    dataType: "task",
-    caption: "Tasks without story",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table tasksWithoutStory-table",
-    sortCallback: TaskController.prototype.sortAndMoveTask,
-    sortOptions: {
-      items: "> .dynamicTableDataRow",
-      handle: "." + DynamicTable.cssClasses.dragHandle,
-      connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
-    },
-    tableDroppable: true,
-    dropOptions: {
-      accepts: function(model) {
-        return (model instanceof TaskModel);
-      },
-      callback: TaskController.prototype.moveTask
-    }
-  });
-  
-  config.addCaptionItem({
-    name : "createTask",
-    text : "Create task",
-    cssClass : "create",
-    callback : TasksWithoutStoryController.prototype.createTask
-  });
 
-  config.addColumnConfiguration(TaskController.columnIndices.prio, IterationController.taskColumnConfig.prio);
-  config.addColumnConfiguration(TaskController.columnIndices.name, IterationController.taskColumnConfig.name);
-  config.addColumnConfiguration(TaskController.columnIndices.state, IterationController.taskColumnConfig.state);
-  config.addColumnConfiguration(TaskController.columnIndices.responsibles, IterationController.taskColumnConfig.responsibles);
-  config.addColumnConfiguration(TaskController.columnIndices.el, IterationController.taskColumnConfig.effortLeft);
-  config.addColumnConfiguration(TaskController.columnIndices.oe, IterationController.taskColumnConfig.originalEstimate);
-  if (Configuration.isTimesheetsEnabled()) {
-    config.addColumnConfiguration(TaskController.columnIndices.es, IterationController.taskColumnConfig.effortSpent);
-  }
-  config.addColumnConfiguration(TaskController.columnIndices.actions, IterationController.taskColumnConfig.actions);
-  config.addColumnConfiguration(TaskController.columnIndices.description, IterationController.taskColumnConfig.description);
-  config.addColumnConfiguration(TaskController.columnIndices.buttons, IterationController.taskColumnConfig.buttons);
-  config.addColumnConfiguration(TaskController.columnIndices.data, IterationController.taskColumnConfig.data);
-  
-  this.taskListConfig = config;
-};
 
 
 /**

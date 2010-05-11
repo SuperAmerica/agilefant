@@ -10,7 +10,7 @@ var DailyWorkController = function(options) {
   jQuery.extend(this.options, options);
   
   this.init();
-  this.initConfigs();
+//  this.initConfigs();
   this.initialize();
 };
 DailyWorkController.prototype = new CommonController();
@@ -28,16 +28,21 @@ DailyWorkController.prototype.initialize = function() {
 };
 
 DailyWorkController.prototype._paintLists = function() {
-  this.workQueueView = new DynamicTable(this, this.model, this.workQueueConfig,
-      this.options.workQueueElement);
-  this.assignedStoriesView = new DynamicTable(this, this.model, this.assignedStoriesConfig,
-      this.options.assignedStoriesElement);
-  this.tasksWithoutStoryView = new DynamicTable(this, this.model, this.taskWithoutStoryConfig,
-      this.options.tasksWithoutStoryElement);
-
-  this.tasksWithoutStoryView.render();
-  this.workQueueView.render();
-  this.assignedStoriesView.render();
+  this.tasksWithoutStoryController = new DailyWorkTasksWithoutStoryController(
+      this.model, this.options.tasksWithoutStoryElement, this);
+//  this.workQueueView = new DynamicTable(this, this.model, this.workQueueConfig,
+//      this.options.workQueueElement);
+//  this.assignedStoriesView = new DynamicTable(this, this.model, this.assignedStoriesConfig,
+//      this.options.assignedStoriesElement);
+//  this.tasksWithoutStoryView = new DynamicTable(this, this.model, this.taskWithoutStoryConfig,
+//      this.options.tasksWithoutStoryElement);
+//
+//  this.tasksWithoutStoryView.render();
+//  this.workQueueView.render();
+//  this.assignedStoriesView.render();
+//  
+//  // For TaskWithoutStoryController.createTask
+//  this.taskListView = this.tasksWithoutStoryView;
 };
 
 DailyWorkController.prototype.initConfigs = function() {
@@ -107,47 +112,4 @@ DailyWorkController.prototype.initAssignedStoriesConfig = function() {
   this.assignedStoriesConfig = config;
 };
 
-/**
- * Configuration initialization for tasks without story.
- */
-DailyWorkController.prototype.initTasksWithoutStoryConfig = function() {
-  var config = new DynamicTableConfiguration({
-    caption: "My tasks without story",
-    dataType: "stories",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table tasksWithoutStory-table",
-    dataType: "tasksWithoutStory",
-    rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
-    dataSource: DailyWorkModel.prototype.getTasksWithoutStory
-  });
-  
-  config.addColumnConfiguration(TaskController.columnIndices.prio, IterationController.taskColumnConfig.prio);
-  config.addColumnConfiguration(TaskController.columnIndices.name, IterationController.taskColumnConfig.name);
-  config.addColumnConfiguration(TaskController.columnIndices.state, IterationController.taskColumnConfig.state);
-  config.addColumnConfiguration(TaskController.columnIndices.responsibles, IterationController.taskColumnConfig.responsibles);
-  config.addColumnConfiguration(TaskController.columnIndices.el, IterationController.taskColumnConfig.effortLeft);
-  config.addColumnConfiguration(TaskController.columnIndices.oe, IterationController.taskColumnConfig.originalEstimate);
-  if (Configuration.isTimesheetsEnabled()) {
-    config.addColumnConfiguration(TaskController.columnIndices.es, IterationController.taskColumnConfig.effortSpent);
-  }
-  config.addColumnConfiguration(TaskController.columnIndices.actions, IterationController.taskColumnConfig.actions);
-  config.addColumnConfiguration(TaskController.columnIndices.description, IterationController.taskColumnConfig.description);
-  config.addColumnConfiguration(TaskController.columnIndices.buttons, IterationController.taskColumnConfig.buttons);
-  
-  this.taskWithoutStoryConfig = config;
-};
 
-
-
-/**
- * Column configs
- */
-DailyWorkController.columnConfig = {
-  task: {
-  
-  },
-  story: {
-  }
-};

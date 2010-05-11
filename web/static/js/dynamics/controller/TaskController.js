@@ -3,23 +3,14 @@ var TaskController = function TaskController(model, view, parentController) {
   this.view = view;
   this.parentController = parentController;
   this.init();
+  this.descriptionColumnNo = TaskController.columnIndices.description;
   this.autohideCells = [ TaskController.columnIndices.buttons ];
 };
 
-TaskController.columnIndices = {
-    prio: 0,
-    name: 1,
-    state: 2,
-    context: 3,
-    responsibles: 4,
-    el: 5,
-    oe: 6,
-    es: 7,
-    actions: 8,
-    description: 9,
-    buttons: 10,
-    data: 11
-};
+TaskController.columnNames =
+  ["prio", "name", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons"];
+TaskController.columnIndices = CommonController.createColumnIndices(TaskController.columnNames);
+
 
 TaskController.prototype = new CommonController();
 
@@ -97,14 +88,14 @@ TaskController.prototype.removeTask = function() {
 };
 
 TaskController.prototype.showDetails = function() {
-  var cell = this.view.getCell(TaskController.columnIndices.description);
+  var cell = this.view.getCell(this.descriptionColumnNo);
   if (cell) {
     cell.show();
   }
 };
 
 TaskController.prototype.hideDetails = function() {
-  var cell = this.view.getCell(TaskController.columnIndices.description);
+  var cell = this.view.getCell(this.descriptionColumnNo);
   if (cell) {
     cell.hide();
   }

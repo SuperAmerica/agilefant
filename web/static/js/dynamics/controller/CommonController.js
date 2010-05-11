@@ -7,6 +7,14 @@ var CommonController = function CommonController() {
 
 };
 
+CommonController.createColumnIndices = function(list) {
+  var i, result = {};
+  for (i = 0; i < list.length; i++) {
+    result[list[i]] = i;
+  }
+  return result;
+};
+
 CommonController.prototype.init = function() {
   this.childControllers = {};
   this.autohideCells = [];
@@ -76,12 +84,12 @@ CommonController.prototype.callChildcontrollers = function(type,
 CommonController.prototype.openRowEdit = function() {
   for (var i = 0; i < this.autohideCells.length; i++) {
     var num = this.autohideCells[i];
-    var cell = this.view.getCell(num);
+    var cell = this.getCurrentView().getCell(num);
     if (cell) {
       cell.show();
     }
   }
-  this.view.openFullEdit();
+  this.getCurrentView().openFullEdit();
 };
 
 
@@ -90,18 +98,18 @@ CommonController.prototype.openRowEdit = function() {
  */
 CommonController.prototype.closeRowEdit = function() {
   if(!this.model.getId()) {
-    this.view.remove();
+    this.getCurrentView().remove();
     this.model.removeListener(this.modelListener);
     return;
   }
   for (var i = 0; i < this.autohideCells.length; i++) {
     var num = this.autohideCells[i];
-    var cell = this.view.getCell(num);
+    var cell = this.getCurrentView().getCell(num);
     if (cell) {
       cell.hide();
     }
   }
-  this.view.closeRowEdit();
+  this.getCurrentView().closeRowEdit();
 };
 
 CommonController.prototype.handleModelEvents = function(event) {
@@ -112,4 +120,11 @@ CommonController.prototype.pageControllerDispatch = function(event) {
   
 };
 
+CommonController.prototype.getCurrentView = function() {
+  return this.view;
+};
+
+CommonController.prototype.getCurrentConfig = function() {
+  throw new Error("Abstract method call");
+};
 

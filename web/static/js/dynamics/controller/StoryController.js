@@ -231,10 +231,9 @@ StoryController.prototype.createTask = function() {
   var controller = new TaskController(mockModel, null, this);
   var row = this.taskListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([TaskController.columnIndices.actions, TaskController.columnIndices.data]);
+  row.autoCreateCells([TaskController.columnIndices.actions]);
   row.render();
   controller.openRowEdit();
-  row.getCell(TaskController.columnIndices.data).hide();
 };
 
 /**
@@ -484,11 +483,6 @@ StoryController.prototype.storyPointsEditable = function() {
     visible : false,
     cssClass : 'task-row',
     subViewFactory : DynamicsButtons.commonButtonFactory
-  });
-  config.addColumnConfiguration(TaskController.columnIndices.data, {
-    fullWidth : true,
-    cssClass : 'task-data',
-    visible : false
   });
   StoryController.taskListConfig = config;
 })();

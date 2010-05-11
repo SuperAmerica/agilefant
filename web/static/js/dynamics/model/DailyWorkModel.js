@@ -34,8 +34,22 @@ DailyWorkModel.prototype.reload = function() {
   
 };
 
-DailyWorkModel.prototype.reloadWorkQueue = function() {
-  
+DailyWorkModel.prototype.reloadWorkQueue = function(userId) {
+  var me = this;
+  $.ajax({
+    url: "ajax/workQueue.action",
+    type: "post",
+    dataType: "json",
+    data: {userId: userId},
+    success: function(data, status) {
+      if(data) {
+        me._updateRelations("queuedTasks", data);
+      }
+    },
+    error: function(xhr, status) {
+      MessageDisplay.Error("Unable to refresh work queue.", xhr);
+    }
+  });
 };
 
 DailyWorkModel.prototype.getWorkQueue = function() {

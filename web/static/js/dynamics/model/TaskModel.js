@@ -255,6 +255,7 @@ TaskModel.prototype.addToMyWorkQueue = function(successCallback) {
                successCallback();
             }
             me.callListeners(new DynamicsEvents.EditEvent(me));
+            me.callListeners(new DynamicsEvents.NamedEvent(me, "addedToWorkQueue"));
         },
         error: function(xhr,status) {
             MessageDisplay.Error("Error adding task to work queue.", xhr);
@@ -282,6 +283,7 @@ TaskModel.prototype.removeFromMyWorkQueue = function(successCallback) {
                successCallback();
             }
             me.callListeners(new DynamicsEvents.EditEvent(me));
+            me.callListeners(new DynamicsEvents.NamedEvent(me, "removedFromWorkQueue"));
         },
         error: function(xhr,status) {
             MessageDisplay.Error("Error removing task from work queue.", xhr);

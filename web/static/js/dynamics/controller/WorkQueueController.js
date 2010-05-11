@@ -12,8 +12,8 @@ WorkQueueController.prototype._getTableConfig = function() {
     },
     cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table tasksWithoutStory-table",
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
+    dataType: "queuedTasks",
     dataSource: DailyWorkModel.prototype.getWorkQueue
   });
   return config;
 };
-

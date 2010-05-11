@@ -16,6 +16,15 @@ var DailyWorkController = function(options) {
 };
 DailyWorkController.prototype = new CommonController();
 
+DailyWorkController.prototype.handleModelEvents = function(event) {
+  console.log(event);
+  if(event instanceof DynamicsEvents.NamedEvent) {
+    var eventName = event.getEventName();
+    if(eventName === "removedFromWorkQueue" || eventName === "addedToWorkQueue") {
+      this.model.reloadWorkQueue(this.options.userId);
+    }
+  }
+};
 
 DailyWorkController.prototype.initialize = function() {
   var me = this;

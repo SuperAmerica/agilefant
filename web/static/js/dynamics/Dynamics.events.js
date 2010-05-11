@@ -205,3 +205,19 @@ DynamicsEvents.RankChanged.prototype.getRankedType = function() {
   return this.rankedType;
 };
 
+/**
+ * 
+ * @constructor
+ * @base DynamicsEvents.CommonEvent
+ */
+DynamicsEvents.NamedEvent = function DynamicsEvents_NamedEvent(origin, eventName) {
+  this.initialize();
+  this.type = "NamedEvent";
+  this.object = origin;
+  this.eventName = eventName;
+};
+DynamicsEvents.NamedEvent.prototype = new DynamicsEvents.CommonEvent();
+
+DynamicsEvents.NamedEvent.prototype.getEventName = function() {
+  return this.eventName;
+};

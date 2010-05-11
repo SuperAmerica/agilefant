@@ -150,6 +150,12 @@ TasksWithoutStoryController.columnConfig.buttons = {
 TasksWithoutStoryController.prototype = new CommonController();
 
 
+TasksWithoutStoryController.prototype.handleModelEvents = function(event) {
+  if(this.parentController) {
+    this.parentController.handleModelEvents(event);
+  }   
+};
+
 TasksWithoutStoryController.prototype.initializeView = function() {
   this.view = new DynamicTable(this, this.model, this.getCurrentConfig(),
       this.element);

@@ -168,6 +168,11 @@ StoryListController.columnConfig.tasks = {
 
 StoryListController.prototype = new CommonController();
 
+StoryListController.prototype.handleModelEvents = function(event) {
+  if(this.parentController) {
+    this.parentController.handleModelEvents(event);
+  }   
+};
 
 StoryListController.prototype.initializeView = function() {
   this.view = new DynamicTable(this, this.model, this.getCurrentConfig(),

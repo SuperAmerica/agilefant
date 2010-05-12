@@ -95,14 +95,14 @@ StoryListController.prototype.createStory = function() {
 /**
  * Show all tasks lists.
  */
-IterationController.prototype.showTasks = function() {
+StoryListController.prototype.showTasks = function() {
   this.callChildcontrollers("story", StoryController.prototype.showTasks);
 };
 
 /**
  * Hide all task lists.
  */
-IterationController.prototype.hideTasks = function() {
+StoryListController.prototype.hideTasks = function() {
   this.callChildcontrollers("story", StoryController.prototype.hideTasks);
 };
 

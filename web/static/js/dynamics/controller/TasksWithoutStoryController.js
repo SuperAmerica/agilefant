@@ -17,10 +17,9 @@ TasksWithoutStoryController.columnConfig.prio = {
   autoScale : true,
   title : "#",
   headerTooltip : 'Priority',
-  get: TaskModel.prototype.getId,
   sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
-  defaultSortColumn: true/*,
-  subViewFactory: TaskController.prototype.toggleFactory*/
+  defaultSortColumn: true,
+  subViewFactory: TaskController.prototype.toggleFactory
 };
 TasksWithoutStoryController.columnConfig.name = {
   minWidth : 200,

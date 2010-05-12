@@ -157,15 +157,24 @@ DynamicTable.prototype._bindEvents = function() {
 };
 
 DynamicTable.prototype._bindSortEvents = function() {
-    this.element.bind("sortover", function(event, ui) {
-        event.stopPropagation();
-        ui.item.data("sortactive", true);
-    });
-    
-    this.element.bind("sortout", function(event, ui) {
-        event.stopPropagation();
-        ui.item.data("sortactive", false);
-    });
+  var me = this;
+  
+  this.element.bind("sortstart", function(event, ui) {
+    me.debug(" sort start " + me.getElement().parents('.ui-droppable:eq(0)').attr("id"));
+    event.stopPropagation();
+    ui.item.data("sortactive", me.getElement().parents('.ui-droppable:eq(0)').attr("id"));
+  });
+  this.element.bind("sortover", function(event, ui) {
+    me.debug(" sort over " + me.getElement().parents('.ui-droppable:eq(0)').attr("id"));
+    event.stopPropagation();
+    ui.item.data("sortactive", me.getElement().parents('.ui-droppable:eq(0)').attr("id"));
+  });
+  
+  this.element.bind("sortout", function(event, ui) {
+    me.debug(" sort out " + me.getViewId());
+    event.stopPropagation();
+    ui.item.data("sortactive", false);
+  });
 };
 
 DynamicTable.prototype._bindSortEventsForAlwaysDrop = function() {
@@ -247,6 +256,7 @@ DynamicTable.prototype.layout = function() {
     var opts = this.config.getSortOptions();
     jQuery.extend(opts, {
       stop: function(event, ui) {
+        me.debug(" sort stop ");
         if(ui.item.data("dropComplete")) {
           //reset flag and return
           ui.item.data("dropComplete", false);
@@ -288,9 +298,12 @@ DynamicTable.prototype._toggleSortable = function() {
 DynamicTable.prototype._registerDropFor = function(target) {
   var dropOptions = this.config.getDropOptions();
   var tableMe = this;
-  var opt = { 
+  var targetId = target.attr("id");
+  var opt = {
+      greedy: true,
       drop: function(event, ui) {
-        if (ui.draggable.data("sortactive")) {
+        tableMe.debug("drop: " + ui.draggable.data("sortactive") + " === " + targetId);
+        if (ui.draggable.data("sortactive") === targetId) {
           return false; 
         }
         event.preventDefault();
@@ -311,25 +324,32 @@ DynamicTable.prototype._registerDropFor = function(target) {
         ui.draggable.data("dropComplete", true);
     },
     accept: function(draggable) {
-       if (draggable.data("sortactive")) {
-         return false; 
-       }
-       var rowObj = draggable.data("row");
-       if(!rowObj) {
-         return false;
-       }
-       var dropTarget;
-       var me = $(this);
-       if(me.data("row")) {
-         dropTarget = me.data("row");
-       } else {
-         dropTarget = me.data("table");
-       }
-       if(!dropTarget) {
-         return false;
-       }
-       var model = rowObj.getModel();
-       return dropOptions.accepts.call(dropTarget.getController(), model);
+      tableMe.debug("Accepts: " + draggable.data("sortactive") + " === " + targetId);
+      if (draggable.data("sortactive") === targetId) {
+        return false; 
+      }
+      var rowObj = draggable.data("row");
+      if(!rowObj) {
+        return false;
+      }
+      var dropTarget;
+      var me = $(this);
+      if(me.data("row")) {
+        dropTarget = me.data("row");
+      } else {
+        dropTarget = me.data("table");
+      }
+      if(!dropTarget) {
+        return false;
+      }
+      var model = rowObj.getModel();
+      return dropOptions.accepts.call(dropTarget.getController(), model);
+    },
+    over: function(event, ui) {
+      tableMe.debug("drop over " + ui.draggable.data("row").getViewId());
+    },
+    out: function(event, ui) {
+      tableMe.debug("drop out " + ui.draggable.data("row").getViewId());
     }
   };
   target.droppable(opt);

@@ -116,13 +116,12 @@ StoryListController.prototype._getTableConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all iteration-story-table"
-      /*,
+    cssClass: "ui-widget-content ui-corner-all iteration-story-table",
     rowDroppable: true,
     dropOptions: {
       callback: TaskController.prototype.moveTask,
       accepts: StoryController.prototype.acceptsDraggable
-    }*/
+    }
   });
 
   config.addCaptionItem( {

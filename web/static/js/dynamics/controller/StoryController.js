@@ -346,10 +346,9 @@ StoryController.prototype.storyPointsEditable = function() {
     cssClass : 'task-row',
     title : "#",
     headerTooltip : 'Priority',
-    get: TaskModel.prototype.getId,
     sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
-    defaultSortColumn: true/*,
-    subViewFactory: TaskController.prototype.toggleFactory*/
+    defaultSortColumn: true,
+    subViewFactory: TaskController.prototype.toggleFactory
   });
   config.addColumnConfiguration(TaskController.columnIndices.name, {
     minWidth : 180,

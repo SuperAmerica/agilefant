@@ -151,6 +151,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
         else if (me.relations.backlog instanceof IterationModel) {
           me.relations.backlog.addTask(object);
         }
+        object.callListeners(new DynamicsEvents.AddEvent(object));
       }
     },
     error: function(xhr, status, error) {

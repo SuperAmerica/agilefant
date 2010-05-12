@@ -17,6 +17,15 @@ var DailyWorkController = function(options) {
 };
 DailyWorkController.prototype = new CommonController();
 
+DailyWorkController.prototype.pageControllerDispatch = function(event) {
+  //new task is added to user's tasks without story
+  if(event instanceof DynamicsEvents.AddEvent && event.getObject() instanceof TaskModel && event.getObject().getParent() instanceof BacklogModel) {
+    this.model.addTask(event.getObject());
+    if(event.getObject().getOriginalEstimate() > 0) {
+      this.options.onUserLoadUpdate();
+    }
+  }
+};
 DailyWorkController.prototype.handleModelEvents = function(event) {
   if(event instanceof DynamicsEvents.NamedEvent) {
     var eventName = event.getEventName();

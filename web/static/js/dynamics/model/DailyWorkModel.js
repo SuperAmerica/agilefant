@@ -55,6 +55,11 @@ DailyWorkModel.prototype.reloadWorkQueue = function(userId, callback) {
   });
 };
 
+DailyWorkModel.prototype.addTask = function(task) {
+  this.relations.tasksWithoutStory.push(task);
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this, "tasksWithoutStory"));
+};
+
 DailyWorkModel.prototype.getWorkQueue = function() {
   return this.relations.queuedTasks;
 };

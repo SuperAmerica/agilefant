@@ -91,11 +91,10 @@ StoryController.prototype.moveStory = function() {
   });
 };
 
-StoryController.prototype.rankStory = function(view, model, newPos) {
-  var previousRow = newPos - 1, targetStory;
+StoryController.prototype.rankStory = function(view, model, previousModel) {
   var targetModel = view.getParentView().getModel();
-  if (view.getParentView().getDataRowAt(previousRow)) {
-    targetStory = view.getParentView().getDataRowAt(previousRow).getModel();
+  if (previousModel) {
+    targetStory = previousModel
     model.rankUnder(targetStory.getId(), targetModel);
   }
   else {

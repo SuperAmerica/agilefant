@@ -252,10 +252,10 @@ DynamicTable.prototype.layout = function() {
           ui.item.data("dropComplete", false);
           return;
         }
-        var newPos = me._stackPosition(ui.item);
+        var previousRowModel = me._stackPosition(ui.item);
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();
-        me.config.getSortCallback().call(targetView.getController(), targetView, targetModel, newPos);
+        me.config.getSortCallback().call(targetView.getController(), targetView, targetModel, previousRowModel);
         return false;
       },
       helper: function(event, target) {
@@ -339,9 +339,8 @@ DynamicTable.prototype.getDataRowAt = function(index) {
 };
 
 DynamicTable.prototype._stackPosition = function(rowElement) {
-  var prevDataRows = rowElement.prevAll("div.dynamicTableDataRow");
-  var position = prevDataRows.length;
-  return position;
+  var prevDataRow = rowElement.prev("div.dynamicTableDataRow");
+  return prevDataRow.data("row").getModel();
 };
 
 DynamicTable.prototype.show = function() {

@@ -133,6 +133,11 @@ IterationModel.prototype.reloadStoryRanks = function(callback) {
   });
 };
 
+/** TODO: Write this */
+IterationModel.prototype.reloadTasksWithoutStory = function(callback) {
+  this.reload(callback);
+};
+
 /**
  * Reload's the iteration's data.
  */

@@ -114,7 +114,7 @@ DynamicTable.prototype.renderAlways = function() {
 DynamicTable.prototype._bindEvents = function() {
   var me = this;
  
-  this.element.bind("sortbeforeStop", function(event, ui) {
+  this.element.bind("sortbeforestop", function(event, ui) {
     event.stopPropagation();
     me.middleRows = [];
     me.rowHashes = [];

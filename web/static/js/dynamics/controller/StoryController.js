@@ -92,6 +92,7 @@ StoryController.prototype.moveStory = function() {
 };
 
 StoryController.prototype.rankStory = function(view, model, previousModel) {
+  var targetStory = null;
   var targetModel = view.getParentView().getModel();
   if (previousModel) {
     targetStory = previousModel
@@ -325,7 +326,7 @@ StoryController.prototype.storyPointsEditable = function() {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
     sortCallback: TaskController.prototype.sortAndMoveTask,
-    cssClass: "corner-border task-table",
+    cssClass: "corner-border task-table dynamicTable-sortable-tasklist",
     sortOptions: {
       items: "> .dynamicTableDataRow",
       handle: "." + DynamicTable.cssClasses.dragHandle,
@@ -345,9 +346,10 @@ StoryController.prototype.storyPointsEditable = function() {
     cssClass : 'task-row',
     title : "#",
     headerTooltip : 'Priority',
+    get: TaskModel.prototype.getId,
     sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
-    defaultSortColumn: true,
-    subViewFactory: TaskController.prototype.toggleFactory
+    defaultSortColumn: true/*,
+    subViewFactory: TaskController.prototype.toggleFactory*/
   });
   config.addColumnConfiguration(TaskController.columnIndices.name, {
     minWidth : 180,

@@ -116,12 +116,13 @@ StoryListController.prototype._getTableConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "ui-widget-content ui-corner-all iteration-story-table",
+    cssClass: "ui-widget-content ui-corner-all iteration-story-table"
+      /*,
     rowDroppable: true,
     dropOptions: {
       callback: TaskController.prototype.moveTask,
       accepts: StoryController.prototype.acceptsDraggable
-    }
+    }*/
   });
 
   config.addCaptionItem( {
@@ -179,13 +180,13 @@ StoryListController.columnConfig.prio = {
   autoScale : true,
   title : "#",
   headerTooltip : 'Priority',
-  get: StoryModel.prototype.getRank,
+  /*get: StoryModel.prototype.getRank,*/
   sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
   defaultSortColumn: true,
   subViewFactory : StoryController.prototype.taskToggleFactory
 };
 StoryListController.columnConfig.name = {
-  minWidth : 280,
+  minWidth : 250,
   autoScale : true,
   title : "Name",
   headerTooltip : 'Story name',

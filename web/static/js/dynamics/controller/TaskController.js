@@ -25,25 +25,35 @@ TaskController.prototype.handleModelEvents = function(event) {
     }
   }
 };
-TaskController.prototype.sortAndMoveTask = function(view, model, newPos) {
-  var previousRow      = newPos - 1;
-  var targetModel      = view.getParentView().getModel();
-  var targetController = view.getParentView().getController();
-  var previousTaskId   = -1;
-  var previousTask     = null;
-  
-  if (view.getParentView().getDataRowAt(previousRow)) {
-    previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
-    previousTaskId = previousTask.getId();
-  }
-
-  // Intercept ranking requests for certain controllers
-  if (targetController.rankTaskUnder) {
-    targetController.rankTaskUnder(model, previousTaskId);
+TaskController.prototype.sortAndMoveTask = function(view, model, previousModel) {
+  console.log("Sort and move task");
+  var targetTask = null;
+  var targetModel = view.getParentView().getModel();
+  if (previousModel) {
+    targetTask = previousModel
+    model.rankUnder(targetTask.getId(), targetModel);
   }
   else {
-    model.rankUnder(previousTaskId, targetModel);
+    model.rankUnder(-1, targetModel);
   }
+//  var previousRow      = newPos - 1;
+//  var targetModel      = view.getParentView().getModel();
+//  var targetController = view.getParentView().getController();
+//  var previousTaskId   = -1;
+//  var previousTask     = null;
+//  
+//  if (view.getParentView().getDataRowAt(previousRow)) {
+//    previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
+//    previousTaskId = previousTask.getId();
+//  }
+//
+//  // Intercept ranking requests for certain controllers
+//  if (targetController.rankTaskUnder) {
+//    targetController.rankTaskUnder(model, previousTaskId);
+//  }
+//  else {
+//    model.rankUnder(previousTaskId, targetModel);
+//  }
 };
 
 TaskController.prototype.rankInWorkQueue = function(view, model, newPos) {

@@ -50,4 +50,7 @@ DailyWorkStoryListController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.buttons, StoryListController.columnConfig.buttons);
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.details, StoryListController.columnConfig.details);
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.tasksData, StoryListController.columnConfig.tasks);
+  
+  /* Overwrite some rules */
+  config.columns[DailyWorkStoryListController.columnIndices.name].options.dragHandle = false;
 };

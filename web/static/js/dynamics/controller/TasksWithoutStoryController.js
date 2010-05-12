@@ -9,7 +9,7 @@ var TasksWithoutStoryController = function TasksWithoutStoryController(model, el
   
   this.initializeView();
 };
-
+TasksWithoutStoryController.prototype = new CommonController();
 
 TasksWithoutStoryController.columnConfig = {};
 TasksWithoutStoryController.columnConfig.prio = {
@@ -17,9 +17,10 @@ TasksWithoutStoryController.columnConfig.prio = {
   autoScale : true,
   title : "#",
   headerTooltip : 'Priority',
+  get: TaskModel.prototype.getId,
   sortCallback: DynamicsComparators.valueComparatorFactory(TaskModel.prototype.getRank),
-  defaultSortColumn: true,
-  subViewFactory: TaskController.prototype.toggleFactory
+  defaultSortColumn: true/*,
+  subViewFactory: TaskController.prototype.toggleFactory*/
 };
 TasksWithoutStoryController.columnConfig.name = {
   minWidth : 200,
@@ -147,13 +148,18 @@ TasksWithoutStoryController.columnConfig.buttons = {
 };
 
 
-TasksWithoutStoryController.prototype = new CommonController();
 
 
 TasksWithoutStoryController.prototype.handleModelEvents = function(event) {
   if(this.parentController) {
     this.parentController.handleModelEvents(event);
-  }   
+  }
+  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "task") {
+    var me = this;
+    this.model.reloadTasksWithoutStory(function() {
+      me.getCurrentView().resort();
+    });
+  }
 };
 
 TasksWithoutStoryController.prototype.initializeView = function() {

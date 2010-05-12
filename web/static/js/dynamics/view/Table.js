@@ -339,8 +339,11 @@ DynamicTable.prototype.getDataRowAt = function(index) {
 };
 
 DynamicTable.prototype._stackPosition = function(rowElement) {
-  var prevDataRow = rowElement.prev("div.dynamicTableDataRow");
-  return prevDataRow.data("row").getModel();
+  var prevData = rowElement.prev("div.dynamicTableDataRow").data("row");
+  if (prevData) {
+    return prevData.getModel();
+  }
+  return null;
 };
 
 DynamicTable.prototype.show = function() {

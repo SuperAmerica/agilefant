@@ -424,8 +424,6 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
   
   this.currentData.responsibles = userIds;
   this.currentData.responsiblesChanged = true;
-  
-  console.log(this.currentData.responsibles);
 };
 
 TaskModel.prototype.isWorkingOnTask = function(user) {

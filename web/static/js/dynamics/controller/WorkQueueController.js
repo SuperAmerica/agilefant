@@ -42,7 +42,7 @@ WorkQueueController.prototype._getTableConfig = function() {
     captionConfig: {
       cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
     },
-    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table tasksWithoutStory-table",
+    cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table",
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
     dataType: "queuedTasks",
     dataSource: DailyWorkModel.prototype.getWorkQueue,

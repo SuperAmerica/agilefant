@@ -8,164 +8,6 @@ var StoryListController = function(model, element, parentController) {
   this.initConfig();
   this.initializeView();
 };
-
-
-
-StoryListController.columnConfig = {};
-StoryListController.columnConfig.prio = {
-  minWidth : 24,
-  autoScale : true,
-  cssClass : 'story-row',
-  title : "#",
-  headerTooltip : 'Priority',
-  /*get: StoryModel.prototype.getRank,*/
-  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
-  defaultSortColumn: true,
-  subViewFactory : StoryController.prototype.taskToggleFactory
-};
-StoryListController.columnConfig.name = {
-  minWidth : 280,
-  autoScale : true,
-  cssClass : 'story-row',
-  title : "Name",
-  headerTooltip : 'Story name',
-  get : StoryModel.prototype.getName,
-  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
-  defaultSortColumn: true,
-  editable : true,
-  dragHandle: true,
-  edit : {
-    editor : "Text",
-    set : StoryModel.prototype.setName,
-    required: true
-  }
-};
-StoryListController.columnConfig.points = {
-  minWidth : 50,
-  autoScale : true,
-  cssClass : 'story-row',
-  title : "Points",
-  headerTooltip : 'Estimate in story points',
-  get : StoryModel.prototype.getStoryPoints,
-  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
-  decorator: DynamicsDecorators.estimateDecorator,
-  editable : true,
-  editableCallback: StoryController.prototype.storyPointsEditable,
-  edit : {
-    editor : "Estimate",
-    set : StoryModel.prototype.setStoryPoints
-  }
-};
-StoryListController.columnConfig.state = {
-  minWidth : 70,
-  autoScale : true,
-  cssClass : 'story-row',
-  title : "State",
-  headerTooltip : 'Story state',
-  get : StoryModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
-  editable : true,
-  filter: IterationController.prototype.filterStoriesByState,
-  edit : {
-    editor : "Selection",
-    set : StoryModel.prototype.setState,
-    items : DynamicsDecorators.stateOptions
-  }
-};
-StoryListController.columnConfig.responsibles = {
-  minWidth : 60,
-  autoScale : true,
-  cssClass : 'story-row',
-  title : "Responsibles",
-  headerTooltip : 'Story responsibles',
-  get : StoryModel.prototype.getResponsibles,
-  decorator: DynamicsDecorators.userInitialsListDecorator,
-  editable : true,
-  openOnRowEdit: false,
-  edit : {
-    editor : "Autocomplete",
-    dialogTitle: "Select users",
-    dataType: "usersAndTeams",
-    set : StoryModel.prototype.setResponsibles
-  }
-};
-StoryListController.columnConfig.effortLeft = {
-  minWidth : 30,
-  autoScale : true,
-  cssClass : 'sum-column',
-  title : "Σ(EL)",
-  headerTooltip : "Total sum of stories' tasks' effort left estimates",
-  decorator: DynamicsDecorators.exactEstimateSumDecorator,
-  get : StoryModel.prototype.getTotalEffortLeft
-};
-StoryListController.columnConfig.originalEstimate = {
-  minWidth : 30,
-  autoScale : true,
-  cssClass : 'sum-column',
-  title : "Σ(OE)",
-  headerTooltip : 'Total task original estimate',
-  decorator: DynamicsDecorators.exactEstimateSumDecorator,
-  get : StoryModel.prototype.getTotalOriginalEstimate
-};
-StoryListController.columnConfig.effortSpent = {
-  minWidth : 30,
-  autoScale : true,
-  cssClass : 'story-row',
-  title : "ES",
-  headerTooltip : 'Total task effort spent',
-  decorator: DynamicsDecorators.exactEstimateDecorator,
-  get : StoryModel.prototype.getTotalEffortSpent,
-  editable : false,
-  onDoubleClick: StoryController.prototype.openQuickLogEffort,
-  edit : {
-    editor : "ExactEstimate",
-    decorator: DynamicsDecorators.empty,
-    set : StoryController.prototype.quickLogEffort
-  }
-};
-StoryListController.columnConfig.actions = {
-  minWidth : 33,
-  autoScale : true,
-  cssClass : 'story-row',
-  title : "Edit",
-  subViewFactory : StoryController.prototype.storyActionFactory
-};
-StoryListController.columnConfig.description = {
-  columnName: "description",
-  fullWidth : true,
-  visible : false,
-  get : StoryModel.prototype.getDescription,
-  decorator: DynamicsDecorators.emptyDescriptionDecorator,
-  editable : true,
-  edit : {
-    editor : "Wysiwyg",
-    set : StoryModel.prototype.setDescription
-  }
-};
-StoryListController.columnConfig.buttons = {
-  fullWidth : true,
-  visible : false,
-  cssClass : 'story-row',
-  subViewFactory : DynamicsButtons.commonButtonFactory
-};
-StoryListController.columnConfig.details = {
-  columnName: "details",
-  fullWidth : true,
-  visible : false,
-  targetCell: StoryController.columnIndices.details,
-  subViewFactory : StoryController.prototype.storyDetailsFactory,
-  delayedRender: true
-};
-StoryListController.columnConfig.tasks = {
-  columnName: "tasksData",
-  fullWidth : true,
-  visible : false,
-  cssClass : 'story-task-container',
-  targetCell: StoryController.columnIndices.tasksData,
-  subViewFactory : StoryController.prototype.storyTaskListFactory,
-  delayedRender: true
-};
-
 StoryListController.prototype = new CommonController();
 
 StoryListController.prototype.handleModelEvents = function(event) {
@@ -188,6 +30,37 @@ StoryListController.prototype.initConfig = function() {
   this.storyListConfig = this._getTableConfig();
   this._addColumnConfigs(this.storyListConfig);
 };
+
+
+StoryListController.prototype.filterStoriesByState = function(element) {
+  var me = this;
+  var bub = new Bubble(element, {
+    title: "Filter by state",
+    offsetX: -15,
+    minWidth: 100,
+    minHeight: 20
+  });
+  var filterFunc = function(story) {
+    return (!me.stateFilters || jQuery.inArray(story.getState(), me.stateFilters) !== -1);
+  };
+  
+  var widget = new StateFilterWidget(bub.getElement(), {
+   callback: function(isActive) {
+      me.stateFilters = widget.getFilter();
+      if(isActive) {
+        me.getCurrentView().activateColumnFilter("State");
+        me.getCurrentView().setFilter(filterFunc);
+      } else {
+        me.getCurrentView().disableColumnFilter("State");
+        me.getCurrentView().setFilter(null);
+      }
+      me.getCurrentView().filter();
+    },
+    activeStates: me.stateFilters
+  });
+};
+
+
 
 /**
  * Creates a new story controller.
@@ -272,6 +145,7 @@ StoryListController.prototype._getTableConfig = function() {
 };
 
 StoryListController.prototype._addColumnConfigs = function(config) {
+  var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
@@ -293,4 +167,150 @@ StoryListController.prototype._addColumnConfigs = function(config) {
 
 
 
+StoryListController.columnConfig = {};
+StoryListController.columnConfig.prio = {
+  minWidth : 24,
+  autoScale : true,
+  title : "#",
+  headerTooltip : 'Priority',
+  /*get: StoryModel.prototype.getRank,*/
+  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
+  defaultSortColumn: true,
+  subViewFactory : StoryController.prototype.taskToggleFactory
+};
+StoryListController.columnConfig.name = {
+  minWidth : 280,
+  autoScale : true,
+  title : "Name",
+  headerTooltip : 'Story name',
+  get : StoryModel.prototype.getName,
+  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
+  defaultSortColumn: true,
+  editable : true,
+  dragHandle: true,
+  edit : {
+    editor : "Text",
+    set : StoryModel.prototype.setName,
+    required: true
+  }
+};
+StoryListController.columnConfig.points = {
+  minWidth : 50,
+  autoScale : true,
+  title : "Points",
+  headerTooltip : 'Estimate in story points',
+  get : StoryModel.prototype.getStoryPoints,
+  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+  decorator: DynamicsDecorators.estimateDecorator,
+  editable : true,
+  editableCallback: StoryController.prototype.storyPointsEditable,
+  edit : {
+    editor : "Estimate",
+    set : StoryModel.prototype.setStoryPoints
+  }
+};
+StoryListController.columnConfig.state = {
+  minWidth : 70,
+  autoScale : true,
+  title : "State",
+  headerTooltip : 'Story state',
+  get : StoryModel.prototype.getState,
+  decorator: DynamicsDecorators.stateColorDecorator,
+  filter: StoryListController.prototype.filterStoriesByState,
+  editable : true,
+  edit : {
+    editor : "Selection",
+    set : StoryModel.prototype.setState,
+    items : DynamicsDecorators.stateOptions
+  }
+};
+StoryListController.columnConfig.responsibles = {
+  minWidth : 60,
+  autoScale : true,
+  title : "Responsibles",
+  headerTooltip : 'Story responsibles',
+  get : StoryModel.prototype.getResponsibles,
+  decorator: DynamicsDecorators.userInitialsListDecorator,
+  editable : true,
+  openOnRowEdit: false,
+  edit : {
+    editor : "Autocomplete",
+    dialogTitle: "Select users",
+    dataType: "usersAndTeams",
+    set : StoryModel.prototype.setResponsibles
+  }
+};
+StoryListController.columnConfig.effortLeft = {
+  minWidth : 30,
+  autoScale : true,
+  cssClass : 'sum-column',
+  title : "Σ(EL)",
+  headerTooltip : "Total sum of stories' tasks' effort left estimates",
+  decorator: DynamicsDecorators.exactEstimateSumDecorator,
+  get : StoryModel.prototype.getTotalEffortLeft
+};
+StoryListController.columnConfig.originalEstimate = {
+  minWidth : 30,
+  autoScale : true,
+  cssClass : 'sum-column',
+  title : "Σ(OE)",
+  headerTooltip : 'Total task original estimate',
+  decorator: DynamicsDecorators.exactEstimateSumDecorator,
+  get : StoryModel.prototype.getTotalOriginalEstimate
+};
+StoryListController.columnConfig.effortSpent = {
+  minWidth : 30,
+  autoScale : true,
+  title : "ES",
+  headerTooltip : 'Total task effort spent',
+  decorator: DynamicsDecorators.exactEstimateDecorator,
+  get : StoryModel.prototype.getTotalEffortSpent,
+  editable : false,
+  onDoubleClick: StoryController.prototype.openQuickLogEffort,
+  edit : {
+    editor : "ExactEstimate",
+    decorator: DynamicsDecorators.empty,
+    set : StoryController.prototype.quickLogEffort
+  }
+};
+StoryListController.columnConfig.actions = {
+  minWidth : 33,
+  autoScale : true,
+  title : "Edit",
+  subViewFactory : StoryController.prototype.storyActionFactory
+};
+StoryListController.columnConfig.description = {
+  columnName: "description",
+  fullWidth : true,
+  visible : false,
+  get : StoryModel.prototype.getDescription,
+  decorator: DynamicsDecorators.emptyDescriptionDecorator,
+  editable : true,
+  edit : {
+    editor : "Wysiwyg",
+    set : StoryModel.prototype.setDescription
+  }
+};
+StoryListController.columnConfig.buttons = {
+  fullWidth : true,
+  visible : false,
+  subViewFactory : DynamicsButtons.commonButtonFactory
+};
+StoryListController.columnConfig.details = {
+  columnName: "details",
+  fullWidth : true,
+  visible : false,
+  targetCell: StoryController.columnIndices.details,
+  subViewFactory : StoryController.prototype.storyDetailsFactory,
+  delayedRender: true
+};
+StoryListController.columnConfig.tasks = {
+  columnName: "tasksData",
+  fullWidth : true,
+  visible : false,
+  cssClass : 'story-task-container',
+  targetCell: StoryController.columnIndices.tasksData,
+  subViewFactory : StoryController.prototype.storyTaskListFactory,
+  delayedRender: true
+};
 

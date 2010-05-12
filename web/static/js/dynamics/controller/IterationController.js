@@ -246,39 +246,6 @@ IterationController.prototype.selectAssigneesTab = function() {
 
 
 
-IterationController.prototype.filterStoriesByState = function(element) {
-  var me = this;
-  var bub = new Bubble(element, {
-    title: "Filter by state",
-    offsetX: -15,
-    minWidth: 100,
-    minHeight: 20
-  });
-  var filterFunc = function(story) {
-    return (!me.stateFilters || jQuery.inArray(story.getState(), me.stateFilters) !== -1);
-  };
-  
-  var widget = new StateFilterWidget(bub.getElement(), {
-   callback: function(isActive) {
-      me.stateFilters = widget.getFilter();
-      if(isActive) {
-        me.storyListView.activateColumnFilter("State");
-        me.storyListView.setFilter(filterFunc);
-      } else {
-        me.storyListView.disableColumnFilter("State");
-        me.storyListView.setFilter(null);
-      }
-      me.storyListView.filter();
-    },
-    activeStates: me.stateFilters
-  });
-};
-
-
-
-
-
-
 IterationController.prototype.initIterationInfoConfig = function() {
   var config = new DynamicTableConfiguration( {
     leftWidth: '20%',

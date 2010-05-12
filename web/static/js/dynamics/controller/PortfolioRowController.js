@@ -24,14 +24,14 @@ PortfolioRowController.prototype.handleModelEvents = function(event) {
 };
 
 // Drag'n'drop related
-PortfolioRowController.prototype.rankAndMoveProject = function(view, model, previousProjec) {
+PortfolioRowController.prototype.rankAndMoveProject = function(view, model, previousProject) {
 	  var previousProjectId   = -1;
 	  var nextProjectId = -1;
 	  
-	  if (previousProjec) {
-	    previousProjectId = previousProjec.getId();
+	  if (previousProject) {
+	    previousProjectId = previousProject.getId();
 	  } else {
-	    var nextProject = view.getParentView().getDataRowAt(0);
+	    var nextProject = view.getParentView().getDataRowAt(1).getModel();
 	    nextProjectId = nextProject.getId();
 	  }
 

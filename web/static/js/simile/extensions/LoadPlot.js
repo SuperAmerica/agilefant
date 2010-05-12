@@ -179,7 +179,9 @@ Timeplot.ColumnSource.prototype.dispose = function() {
   this.removeListener(this._processingListener);
   this._clear();
 };
-
+Timeplot.DevSource.prototype.reset = function() {
+  this._process();
+};
 Timeplot.DevSource.prototype._process = function() {
   var count = this._eventSource.getCount();
   var times = new Array(count);

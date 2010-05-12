@@ -23,6 +23,23 @@ var UserLoadPlotWidget = function UserLoadPlotWidget(userId, plots) {
   this.updateData();
 }
 
+UserLoadPlotWidget.prototype.reset = function() {
+  this.eventSource.clear();
+  var me = this;
+  this.detailedPlot.update();
+  this.detailedPlot.repaint();
+  this.detailedDataSource._process();
+  this.totalDataSource._process();
+  this.updateData(function() {
+    me.detailedDataSource._process();
+    me.totalDataSource._process();
+    me.valueGeometry._calculateGrid();
+    me.totalPlot.update();
+    me.totalPlot.repaint();
+    me.detailedPlot.update();
+    me.detailedPlot.repaint();
+  });
+};
 UserLoadPlotWidget.prototype.paint = function() {
   this.paintDetailed();
   this.paintTotal();
@@ -35,9 +52,10 @@ UserLoadPlotWidget.prototype.paintTotal = function() {
   }
   if(!this.totalPlot) {
     var stepValues = this._calculateTotalStepValues();
+    this.totalDataSource = new Timeplot.ColumnSource(this.eventSource,3);
     var cfg = [Timeplot.createLoadInfo({
       id: "plot1",
-      dataSource: new Timeplot.ColumnSource(this.eventSource,3),
+      dataSource: this.totalDataSource,
       timeGeometry: this.timeGeometry,
       valueGeometry: this.valueGeometry,
       lineColor: "#ff0000",
@@ -57,9 +75,10 @@ UserLoadPlotWidget.prototype.paintDetailed = function() {
     return;
   }
   if(!this.detailedPlot) {
+    this.detailedDataSource = new Timeplot.DevSource(this.eventSource,3,5);
     var cfg = [Timeplot.createLoadInfo({
       id: "plot2",
-      dataSource: new Timeplot.DevSource(this.eventSource,3,5),
+      dataSource: this.detailedDataSource,
       timeGeometry: this.timeGeometry,
       valueGeometry: this.valueGeometry,
       lineColor: "#ff0000",
@@ -70,6 +89,7 @@ UserLoadPlotWidget.prototype.paintDetailed = function() {
     })];
     this.detailedPlot = Timeplot.create(this.plotConf.detailed.element.get(0), cfg);
   } else {
+    this.detailedPlot.update();
     this.detailedPlot.repaint();
   }
 };
@@ -95,7 +115,7 @@ UserLoadPlotWidget.prototype._calculateTotalStepValues = function() {
    ];
 };
 
-UserLoadPlotWidget.prototype.updateData = function() {
+UserLoadPlotWidget.prototype.updateData = function(callback) {
   var me = this;
   $.ajax({
 	    url: "ajax/defaultUserLoad.action",
@@ -105,7 +125,9 @@ UserLoadPlotWidget.prototype.updateData = function() {
 	    type: "post",
 	    success: function(data) {
         me.eventSource.userLoadData(data.loadContainers);
-        if(me.rendered) {
+        if(callback) {
+          callback();
+        } else if(me.rendered) {
           me.paint();
         }
 	 }});

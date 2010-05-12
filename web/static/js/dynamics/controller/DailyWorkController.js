@@ -5,7 +5,8 @@ var DailyWorkController = function(options) {
     userId: null,
     workQueueElement: null,
     assignedStoriesElement: null,
-    tasksWithoutStoryElement: null
+    tasksWithoutStoryElement: null,
+    onUserLoadUpdate: function() {}
   };
   jQuery.extend(this.options, options);
   
@@ -22,6 +23,14 @@ DailyWorkController.prototype.handleModelEvents = function(event) {
     if(eventName === "removedFromWorkQueue" || eventName === "addedToWorkQueue") {
       this.model.reloadWorkQueue(this.options.userId);
     }
+  }
+  //task oe/el changed
+  if(event instanceof DynamicsEvents.MetricsEvent && event.getObject() instanceof TaskModel) {
+    this.options.onUserLoadUpdate();
+  }
+  //task responsibles changed
+  if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof TaskModel && event.getRelation() === "user") {
+    this.options.onUserLoadUpdate();
   }
 };
 

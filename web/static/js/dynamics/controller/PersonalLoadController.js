@@ -43,6 +43,10 @@ PersonalLoadController.prototype._selectuserSpentEffortElement = function() {
   }
 };
 
+PersonalLoadController.prototype.updateLoadGraph = function() {
+  this.userLoadView.reset();
+};
+
 PersonalLoadController.prototype._tabSelect = function(ui) {
   if(ui.index === PersonalLoadController.userSpentEffortElementIndex) {
     this._selectuserSpentEffortElement();

@@ -19,7 +19,8 @@ $(document).ready(function() {
     userId:                   ${user.id},
     workQueueElement:         $('#work-queue'),
     assignedStoriesElement:   $('#story-list'),
-    tasksWithoutStoryElement: $('#task-list')
+    tasksWithoutStoryElement: $('#task-list'),
+    onUserLoadUpdate: function() { window.personalLoadController.updateLoadGraph(); }
   });
 });
 </script>

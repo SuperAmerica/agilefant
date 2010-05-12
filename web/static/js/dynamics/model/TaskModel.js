@@ -43,7 +43,13 @@ var TaskModel = function TaskModel() {
 
 TaskModel.prototype = new CommonModel();
 
-TaskModel.Validators = {};
+TaskModel.Validators = {
+  backlogSelectedValidator: function(model) {
+    if (!model.relations.backlog) {
+      throw "Please select a backlog";
+    }
+  }
+};
 
 
 TaskModel.prototype._setData = function(newData) {
@@ -78,14 +84,17 @@ TaskModel.prototype._saveData = function(id, changedData) {
   var url = "ajax/storeTask.action";
   var data = {};
   
-  data.task = changedData; 
+  var responsibleData = {};
 
   if (changedData.responsiblesChanged) {
-    data.responsiblesChanged = true;
-    data.newResponsibles     = changedData.responsibles;
+    responsibleData.responsiblesChanged = true;
+    responsibleData.newResponsibles     = changedData.responsibles;
     delete changedData.responsiblesChanged;
     delete changedData.responsibles;
   }
+  
+  data.task = changedData;
+
   
   if (id) {
     data.taskId = id;
@@ -118,6 +127,12 @@ TaskModel.prototype._saveData = function(id, changedData) {
   }
   
   data = HttpParamSerializer.serialize(data); 
+  
+  if (responsibleData.responsiblesChanged) {
+    data.responsiblesChanged = true;
+    data.newResponsibles     = responsibleData.newResponsibles;
+  }
+
   
   jQuery.ajax({
     type: "POST",
@@ -406,8 +421,11 @@ TaskModel.prototype.setResponsibles = function(userIds, userJson) {
       ModelFactory.updateObject(v);    
     });
   }
+  
   this.currentData.responsibles = userIds;
   this.currentData.responsiblesChanged = true;
+  
+  console.log(this.currentData.responsibles);
 };
 
 TaskModel.prototype.isWorkingOnTask = function(user) {

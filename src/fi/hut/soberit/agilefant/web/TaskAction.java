@@ -39,15 +39,12 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     
     private Integer iterationId;
     private Integer storyId;
-    private boolean    responsiblesChanged = false;
+    private boolean responsiblesChanged = false;
+    
+    private Set<User> newResponsibles = new HashSet<User>();
     
     private HourEntryHandlingChoice hourEntryHandlingChoice;
     
-    public void setResponsiblesChanged(boolean responsiblesChanged) {
-        this.responsiblesChanged = responsiblesChanged;
-    }
-
-    private Set<User> newResponsibles = new HashSet<User>();
 
     // CRUD
     public String create() {
@@ -164,6 +161,10 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     public HourEntryHandlingChoice getHourEntryHandlingChoice() {
         return hourEntryHandlingChoice;
+    }
+    
+    public void setResponsiblesChanged(boolean responsiblesChanged) {
+        this.responsiblesChanged = responsiblesChanged;
     }
     
 }

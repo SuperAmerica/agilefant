@@ -56,7 +56,15 @@ TasksWithoutStoryController.columnConfig.context = {
     headerTooltip : 'Task context',
     get : TaskModel.prototype.getContext,
     decorator: DynamicsDecorators.taskContextDecorator,
-    editable : false
+    editable : true,
+    editableCallback: TaskController.prototype.contextEditable,
+    openOnRowEdit: false,
+    edit: {
+      editor: "AutocompleteSingle",
+      dataType: "currentIterations",
+      dialogTitle: "Select parent iteration",
+      set: TaskModel.prototype.setIteration
+    }
   };
 TasksWithoutStoryController.columnConfig.responsibles = {
   minWidth : 60,

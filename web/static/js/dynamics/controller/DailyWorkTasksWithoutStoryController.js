@@ -21,7 +21,8 @@ DailyWorkTasksWithoutStoryController.prototype._getTableConfig = function() {
     cssClass: "dynamicTable-sortable-tasklist ui-widget-content ui-corner-all task-table tasksWithoutStory-table",
     dataType: "tasksWithoutStory",
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
-    dataSource: DailyWorkModel.prototype.getTasksWithoutStory
+    dataSource: DailyWorkModel.prototype.getTasksWithoutStory,
+    validators: [ TaskModel.Validators.backlogSelectedValidator ]
   });
 
   config.addCaptionItem({

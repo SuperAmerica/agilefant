@@ -165,6 +165,13 @@ TaskController.prototype.resetOriginalEstimate = function() {
   });
 };
 
+TaskController.prototype.contextEditable = function() {
+  if (this.getCurrentView().isInRowEdit) {
+    return true;
+  }
+  return false;
+};
+
 TaskController.prototype.effortLeftEditable = function() {
   if (this.model.getState() === "DONE") {
     return false;

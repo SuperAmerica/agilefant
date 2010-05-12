@@ -223,12 +223,6 @@ var DynamicsDecorators = {
     var img = "<img src=\"" + src +"\" alt=\"Status\"/>";
     return img;
   },
-  parentStoryDecorator: function(parentStory) {
-    if(!parentStory) {
-      return "";
-    }
-    return "Is a child story of \"" + parentStory + '"';
-  },
   empty: function() {
     return "";
   },

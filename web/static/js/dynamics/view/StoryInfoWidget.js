@@ -32,8 +32,7 @@ StoryInfoWidget.prototype.initialize = function() {
   });
   config.addColumnConfiguration(1, {
     title: "Parent story",
-    get : StoryModel.prototype.getParentStoryName,
-    decorator: DynamicsDecorators.parentStoryDecorator
+    get : StoryModel.prototype.getParentStoryName
   });
   config.addColumnConfiguration(2, {
     title: 'Description',

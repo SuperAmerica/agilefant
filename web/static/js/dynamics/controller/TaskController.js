@@ -26,7 +26,6 @@ TaskController.prototype.handleModelEvents = function(event) {
   }
 };
 TaskController.prototype.sortAndMoveTask = function(view, model, previousModel) {
-  console.log("Sort and move task");
   var targetTask = null;
   var targetModel = view.getParentView().getModel();
   if (previousModel) {
@@ -36,42 +35,19 @@ TaskController.prototype.sortAndMoveTask = function(view, model, previousModel) 
   else {
     model.rankUnder(-1, targetModel);
   }
-//  var previousRow      = newPos - 1;
-//  var targetModel      = view.getParentView().getModel();
-//  var targetController = view.getParentView().getController();
-//  var previousTaskId   = -1;
-//  var previousTask     = null;
-//  
-//  if (view.getParentView().getDataRowAt(previousRow)) {
-//    previousTask = view.getParentView().getDataRowAt(previousRow).getModel();
-//    previousTaskId = previousTask.getId();
-//  }
-//
-//  // Intercept ranking requests for certain controllers
-//  if (targetController.rankTaskUnder) {
-//    targetController.rankTaskUnder(model, previousTaskId);
-//  }
-//  else {
-//    model.rankUnder(previousTaskId, targetModel);
-//  }
 };
 
-TaskController.prototype.rankInWorkQueue = function(view, model, newPos) {
+TaskController.prototype.rankInWorkQueue = function(view, model, previousModel) {
   if (!(model instanceof WorkQueueTaskModel)) {
     return;
   }
   
-  var previousRow = newPos - 1;
-  var previousTaskId = -1;
-  
-  console.log(previousRow);
-  
-  var previousRow = view.getParentView().getDataRowAt(previousRow);
-  if (previousRow) {
-    previousTaskId = previousRow.getModel().getId();
+  if (previousModel) {
+    model.rankInWorkQueue(previousModel.getId());
   }
-  
-  model.rankInWorkQueue(previousTaskId);
+  else {
+    model.rankInWorkQueue(-1);
+  }
 };
 
 TaskController.prototype.moveTask = function(targetModel) {

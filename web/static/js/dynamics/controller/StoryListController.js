@@ -13,7 +13,13 @@ StoryListController.prototype = new CommonController();
 StoryListController.prototype.handleModelEvents = function(event) {
   if(this.parentController) {
     this.parentController.handleModelEvents(event);
-  }   
+  }
+  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
+    var me = this;
+    this.model.reloadStoryRanks(function() {
+      me.getCurrentView().resort();
+    });
+  }
 };
 
 StoryListController.prototype.initializeView = function() {
@@ -173,7 +179,7 @@ StoryListController.columnConfig.prio = {
   autoScale : true,
   title : "#",
   headerTooltip : 'Priority',
-  /*get: StoryModel.prototype.getRank,*/
+  get: StoryModel.prototype.getRank,
   sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
   defaultSortColumn: true,
   subViewFactory : StoryController.prototype.taskToggleFactory

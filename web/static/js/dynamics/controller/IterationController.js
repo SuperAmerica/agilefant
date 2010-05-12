@@ -169,12 +169,7 @@ IterationController.prototype.handleModelEvents = function(event) {
       this.reloadMetricsBox();
     }
   }
-  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
-    var me = this;
-    this.model.reloadStoryRanks(function() {
-      me.storyListView.resort();
-    });
-  }
+
 };
 IterationController.prototype.isAssigneesTabSelected = function() {
   return (this.tabs.tabs("option","selected") === 1);

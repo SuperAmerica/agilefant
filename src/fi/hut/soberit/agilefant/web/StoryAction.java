@@ -61,8 +61,11 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private StoryMetrics metrics;
         
     private List<HistoryRowTO> storyHistory;
+    
+    private boolean tasksToDone = false;
 
     
+
     @Autowired
     private StoryBusiness storyBusiness;
     
@@ -121,7 +124,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         if (usersChanged) {
             users = this.userIds;
         }
-        story = storyBusiness.store(storyId, story, null, users);
+        story = storyBusiness.store(storyId, story, null, users, tasksToDone);
 //        story = this.toTransferObject(story);
         return Action.SUCCESS;
     }
@@ -313,5 +316,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     public HourEntryHandlingChoice getTaskHourEntryHandlingChoice() {
         return taskHourEntryHandlingChoice;
     }
-    
+    public void setTasksToDone(boolean tasksToDone) {
+        this.tasksToDone = tasksToDone;
+    }
 }

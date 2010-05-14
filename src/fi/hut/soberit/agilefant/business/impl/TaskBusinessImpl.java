@@ -102,6 +102,13 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
 
         return storedTask;
     }
+        
+    public void setTaskToDone(Task task) {
+        task.setState(TaskState.DONE);
+        updateEffortLeftAndOriginalEstimate(task);
+        dailyWorkBusiness.removeTaskFromWorkQueues(task);
+        this.store(task);
+    }
 
     private void updateIterationHistoryIfApplicable(Task task) {
         Integer iterationId = getTaskIterationId(task);

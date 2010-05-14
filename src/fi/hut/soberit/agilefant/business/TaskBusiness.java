@@ -27,6 +27,12 @@ public interface TaskBusiness extends GenericBusiness<Task> {
     public Task move(Task task, Integer iterationId, Integer storyId);
 
     /**
+     * Sets the task to done and removes all corresponding work queue entries.
+     * @param task
+     */
+    public void setTaskToDone(Task task);
+    
+    /**
      * Sets the tasks parent.
      * <p>
      * Parent can be either a story or an iteration. Only one of the parameters:

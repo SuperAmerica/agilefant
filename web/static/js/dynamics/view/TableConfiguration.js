@@ -192,6 +192,7 @@ var DynamicTableConfiguration = function(options) {
 			sortCallback: null,
 			editableCallback: function() { return true; },
 	    validators: [ ],
+	    beforeCommitFunction: null,
 	    preventCommit: false,
 			sortOptions: {
 			  items: "> div.dynamicTableDataRow",

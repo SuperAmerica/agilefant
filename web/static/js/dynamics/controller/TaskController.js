@@ -180,8 +180,10 @@ TaskController.prototype.effortLeftEditable = function() {
 };
 
 TaskController.prototype.originalEstimateEditable = function() {
-  if (this.model.getState() === "DONE" || this.model.getOriginalEstimate()
-      || this.model.getEffortLeft()) {
+  if (this.model.getState() === "DONE") {
+    MessageDisplay.Warning("Editing original estimate is not allowed for done tasks.");
+    return false;
+  } else if(this.model.getOriginalEstimate() || this.model.getEffortLeft()) {
     this.resetOriginalEstimate();
     return false;
   }

@@ -118,8 +118,9 @@ public class StoryActionTest extends MockedTestCase {
         storyAction.setStory(story);
         storyAction.setStoryId(story.getId());
         storyAction.setUsersChanged(false);
+        storyAction.setTasksToDone(true);
         
-        expect(storyBusiness.store(story.getId(), story, null, null))
+        expect(storyBusiness.store(story.getId(), story, null, null, true))
                 .andReturn(story);
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.store());
@@ -132,8 +133,9 @@ public class StoryActionTest extends MockedTestCase {
         storyAction.setStory(story);
         storyAction.setStoryId(story.getId());
         storyAction.setUsersChanged(true);
+        storyAction.setTasksToDone(false);
         
-        expect(storyBusiness.store(story.getId(), story, null, storyAction.getUserIds()))
+        expect(storyBusiness.store(story.getId(), story, null, storyAction.getUserIds(), false))
                 .andReturn(story);
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.store());

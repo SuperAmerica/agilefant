@@ -20,11 +20,12 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     /**
      * Copies the dataItem's data to the persisted <code>Story</code> object.
+     * @param tasksToDone TODO
      * 
      * @return the newly persisted story
      */
     Story store(Integer storyId, Story dataItem, Integer backlogId,
-            Set<Integer> responsibleIds) throws ObjectNotFoundException,
+            Set<Integer> responsibleIds, boolean tasksToDone) throws ObjectNotFoundException,
             IllegalArgumentException;
 
     /**

@@ -80,7 +80,12 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
 DynamicsValidationManager.prototype._storeRequested = function(event, editor) {
   if(this.isValid()) {
     if ( !this.configuration.options.preventCommit ) {
-      this.model.commit();
+      if (this.configuration.options.beforeCommitFunction && typeof this.configuration.options.beforeCommitFunction === 'function') {
+        this.configuration.options.beforeCommitFunction(this.model);
+      }
+      else {
+        this.model.commit();
+      }
     }
     var closeRowCallback = this.configuration.getCloseRowCallback();
     if (closeRowCallback) {

@@ -29,6 +29,7 @@ import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -285,7 +286,7 @@ public class StoryBusinessTest {
         
         replayAll();
         Story actual = storyBusiness.store(storyInIteration.getId(),
-                dataItem, null, new HashSet<Integer>(Arrays.asList(123, 222)));
+                dataItem, null, new HashSet<Integer>(Arrays.asList(123, 222)), false);
         verifyAll();
         
         assertSame("The backlogs don't match", backlog, actual.getBacklog());
@@ -299,11 +300,64 @@ public class StoryBusinessTest {
         assertFalse(storyBacklogUpdated);
     }
     
+    @Test
+    public void testStore_tasksToDone() {
+        Task task1 = new Task();
+        task1.setId(11);
+        task1.setState(TaskState.BLOCKED);
+        
+        Task task2 = new Task();
+        task2.setId(12);
+        task2.setState(TaskState.PENDING);
+        
+        story1.setBacklog(iteration);
+        story1.setTasks(new HashSet<Task>(Arrays.asList(task1, task2)));
+        
+        expect(storyDAO.get(story1.getId())).andReturn(story1);
+        storyDAO.store(story1);
+        
+        taskBusiness.setTaskToDone(task1);
+        taskBusiness.setTaskToDone(task2);
+        iheBusiness.updateIterationHistory(story1.getBacklog().getId());
+        
+        blheBusiness.updateHistory(story1.getBacklog().getId());
+        
+        replayAll();
+        storyBusiness.store(story1.getId(), story1, null, null, true);
+        verifyAll();
+    }
+    
+    @Test
+    public void testStore_dontSetTasksToDone() {
+        Task task1 = new Task();
+        task1.setId(11);
+        task1.setState(TaskState.BLOCKED);
+        
+        Task task2 = new Task();
+        task2.setId(12);
+        task2.setState(TaskState.BLOCKED);
+        
+        story1.setBacklog(iteration);
+        story1.setTasks(new HashSet<Task>(Arrays.asList(task1, task2)));
+        
+        expect(storyDAO.get(story1.getId())).andReturn(story1);
+        storyDAO.store(story1);
+        blheBusiness.updateHistory(story1.getBacklog().getId());
+        
+        replayAll();
+        Story actual = storyBusiness.store(story1.getId(), story1, null, null, false);
+        verifyAll();
+        
+        for (Task t : actual.getTasks()) {
+            assertEquals(TaskState.BLOCKED, t.getState());
+        }
+    }
+    
     
     @Test(expected = IllegalArgumentException.class)
     public void testStore_nullStoryId() {
         this.store_createMockStoryBusiness();
-        storyBusiness.store(null, new Story(), 123, new HashSet<Integer>());
+        storyBusiness.store(null, new Story(), 123, new HashSet<Integer>(), false);
     }
     
     
@@ -312,7 +366,7 @@ public class StoryBusinessTest {
         this.store_createMockStoryBusiness();
         expect(storyDAO.get(222)).andReturn(null);
         replayAll();
-        storyBusiness.store(222, new Story(), 123, new HashSet<Integer>());
+        storyBusiness.store(222, new Story(), 123, new HashSet<Integer>(), false);
         verifyAll();
     }
     
@@ -334,7 +388,7 @@ public class StoryBusinessTest {
         
         replayAll();
         Story actual = storyBusiness.store(storyInIteration.getId(),
-                new Story(), newBacklog.getId(), new HashSet<Integer>());
+                new Story(), newBacklog.getId(), new HashSet<Integer>(), false);
         verifyAll();
         
         assertEquals(0, actual.getResponsibles().size());

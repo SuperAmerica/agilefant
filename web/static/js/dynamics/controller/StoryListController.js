@@ -106,6 +106,27 @@ StoryListController.prototype.hideTasks = function() {
   this.callChildcontrollers("story", StoryController.prototype.hideTasks);
 };
 
+StoryListController.prototype.confirmTasksToDone = function(model) {
+  var changedData = model.getChangedData();
+  console.log(changedData);
+  if (changedData.state && changedData.state === "DONE") {
+    var msg = new DynamicsConfirmationDialog(
+        "Set all tasks' states to done?",
+        "Do you want to mark all tasks as done as well?",
+        function() {
+          model.currentData.tasksToDone = true;
+          model.commit();
+        },
+        function() {
+          model.commit();
+        }
+      );
+  }
+  else {
+    model.commit();
+  }
+};
+
 StoryListController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : StoryListController.prototype.storyControllerFactory,
@@ -121,7 +142,8 @@ StoryListController.prototype._getTableConfig = function() {
     dropOptions: {
       callback: TaskController.prototype.moveTask,
       accepts: StoryController.prototype.acceptsDraggable
-    }
+    },
+    beforeCommitFunction: StoryListController.prototype.confirmTasksToDone
   });
 
   config.addCaptionItem( {

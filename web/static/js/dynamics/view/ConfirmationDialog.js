@@ -1,7 +1,8 @@
-var DynamicsConfirmationDialog = function DynamicsConfirmationDialog(title, message, callback) {
+var DynamicsConfirmationDialog = function DynamicsConfirmationDialog(title, message, okCallback, cancelCallback) {
   this.title = title;
   this.message = message;
-  this.callback = callback;
+  this.okCallback = okCallback;
+  this.cancelCallback = cancelCallback;
   this._show();
 };
 
@@ -27,10 +28,13 @@ DynamicsConfirmationDialog.prototype._show = function() {
   });
 };
 DynamicsConfirmationDialog.prototype._ok = function() {
-  this.callback();
+  this.okCallback();
   this.close();
 };
 DynamicsConfirmationDialog.prototype._cancel = function() {
+  if (this.cancelCallback) {
+    this.cancelCallback();
+  }
   this.close();
 };
 DynamicsConfirmationDialog.prototype.close = function() {

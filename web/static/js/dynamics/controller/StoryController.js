@@ -26,6 +26,9 @@ StoryController.prototype.handleModelEvents = function(event) {
   if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "task") {
     this.taskListView.resort();
   }
+  if (event instanceof DynamicsEvents.NamedEvent && event.getEventName() === "taskListUpdated") {
+    this.taskListView.render();
+  }
 };
 
 /**

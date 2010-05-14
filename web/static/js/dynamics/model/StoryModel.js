@@ -101,14 +101,23 @@ StoryModel.prototype._saveData = function(id, changedData) {
     jQuery.extend(data, {userIds: changedData.userIds, usersChanged: true});
     delete changedData.userIds;
     delete changedData.usersChanged;
+    delete this.currentData.userIds;
+    delete this.currentData.usersChanged;
   }
+  
+  if (changedData.tasksToDone) {
+    data.tasksToDone = true;
+    delete changedData.tasksToDone;
+    delete this.currentData.tasksToDone;
+  }
+
   jQuery.extend(data, this.serializeFields("story", changedData));
   if(ArrayUtils.countObjectFields(data) === 0) {
     return;
   }
   // Add the id
   if (id) {
-    data.storyId = id;    
+    data.storyId = id;
   }
   else {
     url = "ajax/createStory.action";
@@ -124,9 +133,9 @@ StoryModel.prototype._saveData = function(id, changedData) {
     cache: false,
     data: data,
     dataType: "json",
-    success: function(data, status) {
+    success: function(newData, status) {
       MessageDisplay.Ok("Story saved successfully");
-      var object = ModelFactory.updateObject(data);
+      var object = ModelFactory.updateObject(newData);
       
       if(!id) {
         me.getBacklog().addStory(object);
@@ -134,6 +143,16 @@ StoryModel.prototype._saveData = function(id, changedData) {
       }
       if (me.relations.backlog) {
         //me.relations.backlog.reload();
+      }
+      if (data.tasksToDone) {
+        /**
+         * Suppress events prevents the rendering of task list
+         * on reloading the story. Force rendering the tasklist.
+         * @see StoryController.handleModelEvents 
+         */
+        me.reload(function() {
+          me.callListeners(new DynamicsEvents.NamedEvent(me, "taskListUpdated"));
+        });
       }
     },
     error: function(xhr, status, error) {

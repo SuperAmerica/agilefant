@@ -151,7 +151,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     /** {@inheritDoc} */
     @Transactional
     public Story store(Integer storyId, Story dataItem, Integer backlogId,
-            Set<Integer> responsibleIds) throws ObjectNotFoundException,
+            Set<Integer> responsibleIds, boolean tasksToDone) throws ObjectNotFoundException,
             IllegalArgumentException {
         if (storyId == null) {
             throw new IllegalArgumentException("Story id should be given");
@@ -165,6 +165,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // Store the story
         storyDAO.store(persisted);
 
+        if (tasksToDone && persisted.getBacklog() instanceof Iteration) {
+            for (Task t : persisted.getTasks()) {
+                taskBusiness.setTaskToDone(t);
+            }
+            iterationHistoryEntryBusiness.updateIterationHistory(persisted
+                    .getBacklog().getId());
+        }
+        
         // Set the backlog if backlogId given
         if (backlogId != null) {
             this.moveStoryToBacklog(persisted, backlogBusiness
@@ -177,7 +185,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
         backlogHistoryEntryBusiness.updateHistory(persisted.getBacklog()
                 .getId());
-
+        
         return persisted;
     }
 

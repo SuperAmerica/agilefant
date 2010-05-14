@@ -20,6 +20,7 @@ CommonModel.prototype.initialize = function() {
   this.classNameToRelation = {};
   this.metricFields = [];
   this.preventSetData = false;
+  this.suppressEvents = true;
 };
 
 
@@ -35,8 +36,9 @@ CommonModel.prototype.reload = function() {
  * <p>
  * Calls an abstract internal method, which should be overridden.
  */
-CommonModel.prototype.setData = function(newData, suppressEvents) {
+CommonModel.prototype.setData = function(newData, suppressEvents, forceRecursiveEvents) {
   if (!this.preventSetData) {
+    this.suppressEvents = !forceRecursiveEvents;
     if(this._isMetricsDataUpdated(newData)) {
       this.callListeners(new DynamicsEvents.MetricsEvent(this));
     }
@@ -44,6 +46,7 @@ CommonModel.prototype.setData = function(newData, suppressEvents) {
     if (this._copyFields(newData) && !suppressEvents) {
       this.callListeners(new DynamicsEvents.EditEvent(this));
     }
+    this.suppressEvents = true;
   }
 };
 
@@ -94,7 +97,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   
   // 1. New hash codes to list
   for (var i = 0; i < newData.length; i++) {
-    var object = ModelFactory.updateObject(newData[i], true);
+    var object = ModelFactory.updateObject(newData[i], this.suppressEvents);
     newObjects.push(object);
     newHashes.push(object.getHashCode());
   }

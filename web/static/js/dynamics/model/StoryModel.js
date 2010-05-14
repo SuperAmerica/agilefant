@@ -145,14 +145,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
         //me.relations.backlog.reload();
       }
       if (data.tasksToDone) {
-        /**
-         * Suppress events prevents the rendering of task list
-         * on reloading the story. Force rendering the tasklist.
-         * @see StoryController.handleModelEvents 
-         */
-        me.reload(function() {
-          me.callListeners(new DynamicsEvents.NamedEvent(me, "taskListUpdated"));
-        });
+        me.reload();
       }
     },
     error: function(xhr, status, error) {
@@ -167,7 +160,7 @@ StoryModel.prototype.reload = function(callback) {
     "ajax/retrieveStory.action",
     {storyId: me.getId()},
     function(data,status) {
-      me.setData(data);
+      me.setData(data, false, true);
       //me.callListeners(new DynamicsEvents.EditEvent(me));
       if (callback) {
         callback();

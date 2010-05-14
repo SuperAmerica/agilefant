@@ -257,7 +257,7 @@ StoryTreeController.prototype.checkStoryMove = function(node, ref_node, type, tr
   return true;
 };
 StoryTreeController.prototype._getStoryForId = function(id, callback) {
-  var model = ModelFactory.getOrRetrieveObject(
+  var model = ModelFactory.getInstance().retrieveLazily(
     ModelFactory.types.story,
     id,
     function(type, id, object) {

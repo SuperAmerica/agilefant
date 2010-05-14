@@ -316,7 +316,7 @@ ModelFactory.getOrRetrieveObject = function(type, id, callback, error) {
     
     var object = factory._getObject(objectType, id);
     if (! object) {
-        object = factory._retrieveLazily(type, id, callback, error);
+        object = factory.retrieveLazily(type, id, callback, error);
     }
     else {
         callback(type, id, object);
@@ -626,7 +626,7 @@ ModelFactory.listener = function(event) {
   }
 };
 
-ModelFactory.prototype._retrieveLazily = function(type, id, callback, errorCallback) {
+ModelFactory.prototype.retrieveLazily = function(type, id, callback, errorCallback) {
     var urlInfo = ModelFactory.typeToLazyLoadingUri[type];
     
     if (! urlInfo) {

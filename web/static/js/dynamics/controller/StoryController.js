@@ -19,11 +19,11 @@ StoryController.prototype.handleModelEvents = function(event) {
   }
   //reload model to update metrics if tasks haven been added or 
   //removed within the story.
-  if (event instanceof DynamicsEvents.RelationUpdatedEvent && event.getRelation() === "task") {
+  if (event instanceof DynamicsEvents.RelationUpdatedEvent && event.getRelation() === "task" && this.view) {
     this.model.reloadMetrics();
     this.view.render();
   }
-  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "task") {
+  if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "task" && this.taskListView) {
     this.taskListView.resort();
   }
 };
@@ -55,9 +55,14 @@ StoryController.prototype.removeStory = function() {
       });
     },
     okCallback: function(extraData) {
-      me.model.remove(function() {
-        me.parentController.removeChildController("story", me);
-      }, extraData);
+      if (me.parentController) {
+        me.model.remove(function() {
+          me.parentController.removeChildController("story", me);
+        }, extraData);
+      }
+      else {
+       me.model.remove(null, extraData);
+      }
     }
   });
 };

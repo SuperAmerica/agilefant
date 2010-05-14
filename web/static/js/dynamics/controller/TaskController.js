@@ -160,7 +160,7 @@ TaskController.prototype.removeFromQueueEnabled = function(model, parentView) {
 
 TaskController.prototype.resetOriginalEstimate = function() {
   var me = this;
-  var msg = new DynamicsConfirmationDialog("Reset original estimate?", "Really reset task's original estimate?", function() {
+  var msg = new DynamicsConfirmationDialog("Reset original estimate?", "Do you want to reset the task's original estimate?", function() {
     me.model.resetOriginalEstimate();  
   });
 };
@@ -182,6 +182,7 @@ TaskController.prototype.effortLeftEditable = function() {
 TaskController.prototype.originalEstimateEditable = function() {
   if (this.model.getState() === "DONE" || this.model.getOriginalEstimate()
       || this.model.getEffortLeft()) {
+    this.resetOriginalEstimate();
     return false;
   }
   return true;

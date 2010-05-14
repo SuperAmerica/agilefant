@@ -166,7 +166,7 @@ TaskController.prototype.resetOriginalEstimate = function() {
 };
 
 TaskController.prototype.contextEditable = function() {
-  if (this.getCurrentView().isInRowEdit) {
+  if (this.getCurrentView().isInRowEdit()) {
     return true;
   }
   return false;

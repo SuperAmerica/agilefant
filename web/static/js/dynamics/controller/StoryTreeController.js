@@ -290,8 +290,10 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
     event.preventDefault();
     if (parentStory === 0) {
       $.post("ajax/treeCreateRootStory.action", {backlogId: me.id, "story.name": nameField.val()}, function(fragment) {
-        container.remove();
-        node.replaceWith(fragment);
+        node.remove();
+        var lastNode = me.element.find('> ul > li').last();
+        var newNode = me.tree.create(0,lastNode,"after");
+        newNode.replaceWith(fragment);
       },"html");
     }
     else {

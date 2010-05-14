@@ -186,12 +186,12 @@ TasksWithoutStoryController.prototype.taskControllerFactory = function(view, mod
   return taskController;
 };
 
-TasksWithoutStoryController.prototype.createTask = function() {
+TasksWithoutStoryController.prototype.createTask = function(forceAssignCurrentUser) {
   var mockModel = ModelFactory.createObject(ModelFactory.types.task);
   mockModel.setIteration(this.model);
   // Check whether to add the current user as a responsible.
   var currentUser = PageController.getInstance().getCurrentUser(); 
-  if (currentUser.isAutoassignToTasks()) {
+  if (currentUser.isAutoassignToTasks() || forceAssignCurrentUser) {
     mockModel.addResponsible(currentUser.getId());
   }
   

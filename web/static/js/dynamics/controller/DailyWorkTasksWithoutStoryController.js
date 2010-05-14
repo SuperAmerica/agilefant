@@ -11,6 +11,11 @@ DailyWorkTasksWithoutStoryController.columnNames =
 DailyWorkTasksWithoutStoryController.columnIndices = CommonController.createColumnIndices(DailyWorkTasksWithoutStoryController.columnNames);
 
 
+DailyWorkTasksWithoutStoryController.prototype.createTask = function() {
+  TasksWithoutStoryController.prototype.createTask.call(this, true);
+};
+
+
 DailyWorkTasksWithoutStoryController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration({
     caption: "My tasks without story",
@@ -29,7 +34,7 @@ DailyWorkTasksWithoutStoryController.prototype._getTableConfig = function() {
     name:   "createTask",
     text:   "Create task",
     cssClass:"create",
-    callback: TasksWithoutStoryController.prototype.createTask
+    callback: DailyWorkTasksWithoutStoryController.prototype.createTask
   });
   
   return config;

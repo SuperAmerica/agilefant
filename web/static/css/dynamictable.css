@@ -437,14 +437,14 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 }
 .taskStateBLOCKED {
 	background-color: #e33;
-	color: #eee;
+	color: #eee !important;
 }
 .taskStateIMPLEMENTED {
 	background-color: #99ff99;
 }
 .taskStateDONE {
 	background-color: #00bb44;
-	color: #eee;
+	color: #eee !important;
 }
 .storyState {
 	display: block;

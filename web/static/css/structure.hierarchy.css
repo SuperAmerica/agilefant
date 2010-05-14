@@ -73,10 +73,10 @@ div.hierarchyContainer {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   text-align: center;
-  vertical-align: middle;
-  line-height: 80%;
+  vertical-align: middle !important;
+  line-height: 14px !important;
   font-size: 80%;
-  height: 80%;
+  height: 14px !important;
 }
 
 /**

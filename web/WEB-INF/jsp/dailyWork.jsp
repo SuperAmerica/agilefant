@@ -20,12 +20,17 @@ $(document).ready(function() {
     workQueueElement:         $('#work-queue'),
     assignedStoriesElement:   $('#story-list'),
     tasksWithoutStoryElement: $('#task-list'),
+    emptyDailyWorkNoteBox:    $('#empty-note'),
     onUserLoadUpdate: function() { window.personalLoadController.updateLoadGraph(); }
   });
 });
 </script>
 
-
+<div id="empty-note" class="warning-note" style="display: none;">
+<strong>Note!</strong><br/>
+You don't currently have any stories or tasks assigned to you.<br/>
+<a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="HelpUtils.openHelpPopup(this,'Daily Work','static/html/help/dailyWorkPopup.html'); return false;">What is Daily Work?</a>
+</div>
 
 <!-- Work queue -->
 <form onsubmit="return false;"><div id="work-queue" class="structure-main-block"></div></form>

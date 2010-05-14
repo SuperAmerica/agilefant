@@ -6,6 +6,7 @@ var DailyWorkController = function(options) {
     workQueueElement: null,
     assignedStoriesElement: null,
     tasksWithoutStoryElement: null,
+    emptyDailyWorkNoteBox: null,
     onUserLoadUpdate: function() {}
   };
   jQuery.extend(this.options, options);
@@ -49,9 +50,18 @@ DailyWorkController.prototype.initialize = function() {
     this.options.userId,
     function(model) {
       me.model = model;
+      me._showNoteBox();
       me._paintLists();
     }
   );
+};
+
+DailyWorkController.prototype._showNoteBox = function() {
+  if (this.model.getWorkQueue().length === 0 &&
+      this.model.getAssignedStories().length === 0 &&
+      this.model.getTasksWithoutStory().length === 0) {
+    this.options.emptyDailyWorkNoteBox.show();
+  }
 };
 
 DailyWorkController.prototype._paintLists = function() {

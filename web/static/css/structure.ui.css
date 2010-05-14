@@ -10,13 +10,9 @@
  *  - Footer
  *  - Daily work styles
  *  - Search by text box
- */
- 
-/**
+ */ /**
  * OVERALL LAYOUT
- */
-  
-/**
+ */ /**
  * Should be used for all main level blocks. 
  */
 .structure-main-block {
@@ -27,7 +23,6 @@
 /**
  * MENU HIDING 
  */
-
 .menu-collapsed #navigationTabsWrapper {
   margin-left: 3em;
 }
@@ -44,14 +39,15 @@
 }
 
 .menu-collapsed #bodyWrapper {
-  margin: 0 0 0 2em !important;  
+  margin: 0 0 0 2em !important;
 }
 
 .menu-collapsed #menuToggleControl {
-  background-position: 100% 0%;  
+  background-position: 100% 0%;
 }
+
 .menu-collapsed #menuToggleControl:hover {
-  background-position: 100% 100%;  
+  background-position: 100% 100%;
 }
 
 /**
@@ -59,43 +55,43 @@
  */
 #menuContent ul {
   margin: 0;
-  padding: 1em;  
+  padding: 1em;
 }
 
 #menuContent ul li {
-  list-style-type: none;  
+  list-style-type: none;
 }
 
 #menuAccordion .ui-accordion-header {
-	margin-bottom: 1px;
+  margin-bottom: 1px;
 }
 
 #menuAccordion .ui-state-active {
-	border-bottom-color: #d0e6f6 !important;
+  border-bottom-color: #d0e6f6 !important;
 }
 
 #menuAccordion .ui-accordion-header .ui-icon {
-	left: auto;
+  left: auto;
 }
 
 #menuAccordion .ui-accordion-header a {
-	padding: 0.3em 0.3em 0.3em 1.5em;
+  padding: 0.3em 0.3em 0.3em 1.5em;
 }
 
 #menuAccordion .ui-accordion-content {
-	padding: 0 0 1em 0;
+  padding: 0 0 1em 0;
 }
 
 /* BACKLOG INFO TABLES */
- 
 .structure-main-block ul.backlogTabs {
-  height: 24px !important;  
+  height: 24px !important;
 }
 
 ul.backlogTabs li a {
   height: 20px;
 }
-ul.backlogTabs li a img{
+
+ul.backlogTabs li a img {
   vertical-align: middle;
 }
 
@@ -104,13 +100,12 @@ ul.backlogTabs li a img{
 }
 
 .structure-main-block th {
-  background-color: white;  
-} 
+  background-color: white;
+}
 
 /**
  * CREATE NEW -menu
  */
- 
 #createNewMenuWrapper {
   margin-right: 1em;
   float: right;
@@ -126,8 +121,7 @@ ul#createNewMenu {
   width: 9em;
   z-index: 300;
   overflow: hidden;
-  
-  -moz-border-radius:    5px;
+  -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
 
@@ -143,7 +137,7 @@ ul#createNewMenu li:hover {
   background-color: #ccc;
 }
 
-ul#createNewMenu a, ul#createNewMenu span.inactive {
+ul#createNewMenu a,ul#createNewMenu span.inactive {
   text-decoration: none !important;
   display: block;
   padding-left: 8px;
@@ -151,7 +145,7 @@ ul#createNewMenu a, ul#createNewMenu span.inactive {
   height: 100%;
 }
 
-ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
+ul#createNewMenu li.separator,ul#createNewMenu li.separator:hover {
   display: block;
   background: #aaa;
   width: 100%;
@@ -163,35 +157,35 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
 /**
  * NAVIGATION TABS
  */
-
 #navigationTabsWrapper {
   margin-left: 16em;
   float: left;
   height: 21px;
 }
 
-#navigationTabsWrapper ul, #navigationTabsWrapper ul li {
+#navigationTabsWrapper ul,#navigationTabsWrapper ul li {
   display: inline;
   margin: 0;
   padding: 0;
-  list-style-type: none;  
+  list-style-type: none;
 }
 
 #navigationTabsWrapper ul li {
   border-width: 1px 1px 0 1px;
   border-color: #A6C9E2;
   border-style: solid;
-  -moz-border-radius-bottomleft:  0;
+  -moz-border-radius-bottomleft: 0;
   -moz-border-radius-bottomright: 0;
   -moz-border-radius-topleft: 5px;
   -moz-border-radius-topright: 5px;
-  -webkit-border-bottom-right-radius:  0;
+  -webkit-border-bottom-right-radius: 0;
   -webkit-border-bottom-left-radius: 0;
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
-  padding: 0; 
+  padding: 0;
   margin: 0 0.5em 0 0;
-  background: #dfeffc url("../img/ui/ui-bg_glass_85_dfeffc_1x400.png") repeat-x scroll 50% 50%;
+  background: #dfeffc url("../img/ui/ui-bg_glass_85_dfeffc_1x400.png")
+    repeat-x scroll 50% 50%;
   display: block;
   height: 20px;
   float: left;
@@ -209,19 +203,19 @@ ul#createNewMenu li.separator, ul#createNewMenu li.separator:hover {
 }
 
 #navigationTabsWrapper ul li.navitab-selected a {
-  color: #E17009 !important;  
+  color: #E17009 !important;
 }
 
 #navigationTabsWrapper ul li span img {
   position: relative;
-  top: 2px;  
+  top: 2px;
 }
 
 /**
  * JQUERY TABS FIXES
  */
 .ui-tabs-nav {
-  height: 23px !important;  
+  height: 23px !important;
 }
 
 /**
@@ -234,7 +228,6 @@ input.inputHighlight {
 /**
  * jQuery autosuggest
  */
- 
 input.as-input-starttext {
   color: #999;
 }
@@ -242,26 +235,25 @@ input.as-input-starttext {
 /**
  * FOOTER STYLES
  */
-#footerText a:link, #footerText a:visited, #footerText a:active {
+#footerText a:link,#footerText a:visited,#footerText a:active {
   color: #444;
   text-decoration: none;
-  cursor: pointer;  
+  cursor: pointer;
 }
 
 #footerText a:hover {
-  color: #e50;  
+  color: #e50;
 }
 
 div#footerText label {
   cursor: pointer;
 }
 
-
-#menuAccordion .ui-accordion-header, #menuAccordion .ui-accordion-content {
+#menuAccordion .ui-accordion-header,#menuAccordion .ui-accordion-content
+  {
   margin-right: 2px !important;
   margin-left: 2px !important;
 }
-
 
 /**
  * SMALL BURNDOWN
@@ -270,19 +262,14 @@ div.smallBurndown {
   border-width: 2px;
   border-style: outset;
   border-color: #ccc;
-  
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
-  
   background-repeat: no-repeat;
   background-position: -5px -5px;
-  
   height: 75px;
   width: 100px;
-  
   margin: 0 0 1em 3.2em;
 }
-
 
 /**
  * SETTINGS PAGE
@@ -294,7 +281,7 @@ div.smallBurndown {
 }
 
 .setting-table tr {
-  width: 100%;  
+  width: 100%;
 }
 
 .settings-table tr:nth-child(even) {
@@ -304,7 +291,6 @@ div.smallBurndown {
 .settings-table tr:nth-child(odd) {
   background: #fff;
 }
-
 
 .settings-table td {
   background: transparent;
@@ -320,6 +306,16 @@ div.smallBurndown {
   font-weight: bold;
 }
 
+/**
+ * WARNING / NOTE BOX
+ */
+.warning-note {
+  width: 30em;
+  border: 1px solid rgb(240, 192, 0);
+  background: rgb(255, 255, 206);
+  padding: 1em;
+  margin: 0.3em;
+}
 
 /**
  * QUICK SEARCH BOX
@@ -330,13 +326,11 @@ div.smallBurndown {
   border-color: #ccc;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
-  
   overflow: hidden;
   background: white;
   background-image: url('../img/search.png');
   background-repeat: no-repeat;
   background-position: 0 45%;
-  
   width: 20ex;
   font-size: 10pt;
 }
@@ -352,16 +346,12 @@ div.smallBurndown {
   position: relative;
   right: 0;
   float: right;
-  
   margin: 0;
   padding: 0;
-   
   color: #666;
   height: 16px;
   width: 16px;
-  
   cursor: pointer;
-  
   font-family: cursive;
   font-weight: bold;
 }
@@ -369,7 +359,6 @@ div.smallBurndown {
 .searchByText .clearButton:hover {
   color: #000;
 }
-
 
 /**
  * LABEL ICONS
@@ -379,13 +368,11 @@ div.smallBurndown {
   background-position: 0 0;
   background-repeat: no-repeat;
   padding: 0 !important;
-  
   color: #246 !important;
   font-size: 7pt;
   font-family: verdana, arial, sans-serif;
   text-align: center;
   text-transform: uppercase;
-  
   width: 36px;
 }
 
@@ -394,5 +381,5 @@ div.smallBurndown {
 }
 
 .labelIconNoLabel {
-  background-position: 0 100%;  
+  background-position: 0 100%;
 }

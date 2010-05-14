@@ -45,6 +45,11 @@ SpentEffortWidget.prototype.entriesChanged = function() {
  */
 SpentEffortWidget.prototype.close = function() {
   this.element.dialog('destroy').remove();
+  if(this.model instanceof TaskModel) {
+    this.model.reload();
+  } else if(this.model instanceof StoryModel) {
+    this.model.reloadMetrics();
+  }
 };
 
 

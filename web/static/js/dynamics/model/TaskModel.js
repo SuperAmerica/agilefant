@@ -78,6 +78,20 @@ TaskModel.prototype._setData = function(newData) {
   }
 };
 
+TaskModel.prototype.reload = function() {
+  var me = this;
+  $.ajax({
+    type: "POST",
+    url: "ajax/retrieveTask.action",
+    async: true,
+    cache: false,
+    data: {taskId: this.id},
+    dataType: "json",
+    success: function(data, type) {
+      me.setData(data, false, true);
+    }
+  });
+};
 TaskModel.prototype._saveData = function(id, changedData) {
   var me = this;
   

@@ -4,6 +4,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 public interface StoryRankBusiness {
@@ -18,7 +19,7 @@ public interface StoryRankBusiness {
     /**
      * Get the story's rank in the given backlog.
      */
-    int getRankByBacklog(Story story, Backlog backlog);
+    StoryRank getRankByBacklog(Story story, Backlog backlog);
     
     /**
      * Rank the given story below the given upper story with in the backlog

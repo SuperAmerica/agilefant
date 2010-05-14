@@ -348,8 +348,9 @@ ProjectController.prototype.createStory = function() {
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
   row.autoCreateCells([5,6,10]);
-  row.getCell(7).show();
-  row.getCell(13).show();
+  row.getCellByName("description").show();
+  row.getCellByName("buttons").show();
+//  row.getCell(13).show();
   row.render();
   controller.openRowEdit();
 };
@@ -647,6 +648,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     subViewFactory : StoryController.prototype.storyActionFactory
   });
   config.addColumnConfiguration(7, {
+    columnName: "description",
     fullWidth: true,
     visible: false,
     editable : true,
@@ -663,6 +665,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     delayedRender: true
   });
   config.addColumnConfiguration(StoryController.columnIndices.details + 1, {
+    columnName: "buttons",
     fullWidth : true,
     visible : false,
     cssClass : 'projectstory-data',

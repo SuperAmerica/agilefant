@@ -47,6 +47,8 @@ public interface StoryHierarchyBusiness {
     
     public void moveBefore(Story story, Story reference);
     
+    public void moveToBottom(Story story);
+    
     /**
      * Fixes the indexes of the treeRank-field.
      * Call this e.g. when deleting a story

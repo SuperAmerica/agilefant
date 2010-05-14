@@ -105,6 +105,8 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         dataItem.setStoryPoints(22);
         dataItem.setState(StoryState.STARTED);
         
+        storyHierarchyBusiness.moveToBottom(returnedStory);
+        
         replayAll();
         Story actual = this.storyBusiness.create(dataItem, 5, null);
         verifyAll();
@@ -140,6 +142,8 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         
         Story returnedStory = new Story();
         expect(storyDAO.get(88)).andReturn(returnedStory);
+        
+        storyHierarchyBusiness.moveToBottom(returnedStory);
         
         replayAll();
         Story actual = this.storyBusiness.create(new Story(), 5,

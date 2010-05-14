@@ -24,6 +24,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -99,8 +100,11 @@ public class StoryActionTest extends MockedTestCase {
         returnedStory.setName("Tested story");
         returnedStory.setBacklog(new Project());
         
+        StoryRank rank = new StoryRank();
+        rank.setRank(222);
+        
         expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), storyAction.getUserIds())).andReturn(returnedStory);
-        expect(storyRankBusiness.getRankByBacklog(returnedStory, returnedStory.getBacklog())).andReturn(222);
+        expect(storyRankBusiness.getRankByBacklog(returnedStory, returnedStory.getBacklog())).andReturn(rank);
         
         replayAll();
         assertEquals(Action.SUCCESS, storyAction.create());

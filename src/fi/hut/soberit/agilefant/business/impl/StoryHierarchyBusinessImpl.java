@@ -105,6 +105,14 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         }
     }
 
+    @Transactional
+    public void moveToBottom(Story story) {
+        Product prod = backlogBusiness.getParentProduct(story.getBacklog());
+        int maxRank = storyHierarchyDAO.getMaximumTreeRank(prod.getId());
+        story.setTreeRank(maxRank + 1);
+    }
+    
+    
     private LinkedList<Story> retrieveChildListAndMoveStory(Story story,
             Story oldParent, Story parent) {
         LinkedList<Story> tmpList = new LinkedList<Story>();

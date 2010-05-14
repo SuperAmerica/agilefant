@@ -19,6 +19,7 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
@@ -90,10 +91,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     
     public String create() {
         story = this.storyBusiness.create(story, backlogId, userIds);
-        int rank = storyRankBusiness.getRankByBacklog(story, story.getBacklog());
+        StoryRank rank = storyRankBusiness.getRankByBacklog(story, story.getBacklog());
         
         story = new StoryTO(story);
-        ((StoryTO)story).setRank(rank);
+        if (rank != null) ((StoryTO)story).setRank(rank.getRank());
         
         return Action.SUCCESS;
     }

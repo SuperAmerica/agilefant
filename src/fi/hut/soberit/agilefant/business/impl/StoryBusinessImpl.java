@@ -252,7 +252,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public Story createStoryUnder(int referenceStoryId, Story data, Set<Integer> responsibleIds) {
         Story referenceStory = this.retrieve(referenceStoryId);
         Backlog backlog = referenceStory.getBacklog();
-        Story story = this.create(data, backlog.getId(), responsibleIds);
+        Story story = this.persistNewStory(data, backlog.getId(), responsibleIds);
         this.storyHierarchyBusiness.moveUnder(story,referenceStory);
         return story;
     }
@@ -260,14 +260,23 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public Story createStorySibling(int referenceStoryId, Story data, Set<Integer> responsibleIds) {
         Story referenceStory = this.retrieve(referenceStoryId);
         Backlog backlog = referenceStory.getBacklog();
-        Story story = this.create(data, backlog.getId(), responsibleIds);
+        Story story = this.persistNewStory(data, backlog.getId(), responsibleIds);
         this.storyHierarchyBusiness.moveAfter(story,referenceStory);
         return story;
     }
 
+    public Story create(Story dataItem, Integer backlogId,
+            Set<Integer> responsibleIds) throws IllegalArgumentException,
+            ObjectNotFoundException {
+        
+        Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);        
+        storyHierarchyBusiness.moveToBottom(persisted);
+        return persisted;
+    }
+    
     @Transactional
     /* * {@inheritDoc} */
-    public Story create(Story dataItem, Integer backlogId,
+    private Story persistNewStory(Story dataItem, Integer backlogId,
             Set<Integer> responsibleIds) throws IllegalArgumentException,
             ObjectNotFoundException {
         if (dataItem == null || backlogId == null) {
@@ -286,7 +295,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         story.setBacklog(backlog);
 
         int newId = create(story);
-        return storyDAO.get(newId);
+        Story persisted = storyDAO.get(newId);
+        
+        return persisted;
     }
 
     @Transactional

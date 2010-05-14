@@ -58,4 +58,13 @@ public interface StoryHierarchyDAO {
      * @return list of product root stories
      */
     public List<Story> retrieveProductRootStories(int productId);
+    
+    /**
+     * Get a rank number for a new root story.
+     * <p>
+     * Will return the count of the root stories.
+     * @param productId
+     * @return
+     */
+    public int getMaximumTreeRank(int productId);
 }

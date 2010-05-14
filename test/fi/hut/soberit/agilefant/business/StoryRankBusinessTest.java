@@ -105,7 +105,7 @@ public class StoryRankBusinessTest {
         expect(storyRankDAO.retrieveByBacklogAndStory(backlog, story)).andReturn(rank);
         
         replayAll();
-        assertEquals(556, storyRankBusiness.getRankByBacklog(story, backlog));
+        assertEquals(556, storyRankBusiness.getRankByBacklog(story, backlog).getRank());
         verifyAll();
     }
     

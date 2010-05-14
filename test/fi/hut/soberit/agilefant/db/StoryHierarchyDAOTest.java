@@ -40,19 +40,21 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
     
     @Test
     public void testRetrieveProjectRootStories() {
-        executeClassSql();
-        Set<Integer> actualStoryIds = new HashSet<Integer>();
-        List<Story> actual = this.testable.retrieveProjectRootStories(project.getId());
-        assertEquals(4, actual.size());
-        for(Story story : actual) {
-            actualStoryIds.add(story.getId());
-        }
+       executeClassSql();
+       Set<Integer> actualStoryIds = new HashSet<Integer>();
+       List<Story> actual = this.testable.retrieveProjectRootStories(project.getId());
+       assertEquals(4, actual.size());
+       for(Story story : actual) {
+           actualStoryIds.add(story.getId());
+       }
        assertTrue(actualStoryIds.contains(21));
        assertTrue(actualStoryIds.contains(24));
        assertTrue(actualStoryIds.contains(33));
        assertTrue(actualStoryIds.contains(34));
 
     }
+    
+
     
     @Test
     public void testRetrieveProjectLeafStories() {
@@ -137,5 +139,11 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
         executeClassSql();
         List<Story> actual = this.testable.retrieveProductRootStories(emptyProduct.getId());
         assertEquals(0, actual.size());
+    }
+    
+    @Test
+    public void testMaximumTreeRank() {
+        executeClassSql();
+        assertEquals(5, this.testable.getMaximumTreeRank(product.getId()));
     }
 }

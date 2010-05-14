@@ -27,8 +27,8 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
 
     
     /** {@inheritDoc} */
-    public int getRankByBacklog(Story story, Backlog backlog) {
-        return storyRankDAO.retrieveByBacklogAndStory(backlog, story).getRank();
+    public StoryRank getRankByBacklog(Story story, Backlog backlog) {
+        return storyRankDAO.retrieveByBacklogAndStory(backlog, story);
     }
     
     /**

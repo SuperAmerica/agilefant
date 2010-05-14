@@ -161,7 +161,23 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 (Integer) iterationCrit.uniqueResult());
     }
 
+    /** {@inheritDoc} */
     public List<Story> retrieveProductRootStories(int productId) {
+        Criteria rootFilter = getRootStoryCriteria(productId);
+        rootFilter.addOrder(Order.asc("treeRank"));
+        return asList(rootFilter);
+    }
+
+    /** {@inheritDoc} */
+    public int getMaximumTreeRank(int productId) {
+        Criteria rootFilter = getRootStoryCriteria(productId);
+        rootFilter.addOrder(Order.desc("treeRank"));
+        rootFilter.setMaxResults(1);
+        Story story = (Story)uniqueResult(rootFilter);
+        return story.getTreeRank();
+    }
+    
+    private Criteria getRootStoryCriteria(int productId) {
         Criteria rootFilter = getCurrentSession().createCriteria(Story.class);
         rootFilter.createAlias(
                 "backlog.parent", "secondParent", CriteriaSpecification.LEFT_JOIN)
@@ -171,8 +187,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 "backlog.id", productId), Restrictions.eq("secondParent.id",
                 productId)), Restrictions.eq("thirdParent.id", productId)));
         rootFilter.add(Restrictions.isNull("parent"));
-        rootFilter.addOrder(Order.asc("treeRank"));
-        return asList(rootFilter);
+        return rootFilter;
     }
 
 }

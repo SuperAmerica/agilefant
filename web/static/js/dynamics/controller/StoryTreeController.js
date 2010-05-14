@@ -282,7 +282,7 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
   var nodeNameEl = node.find("a").hide();
   // Hide the "New folder" line
   node.find("span").hide();
-  var container = $('<div />').appendTo(node);
+  var container = $('<div />').css('white-space','nowrap').appendTo(node);
   var nameField = $('<input type="text" size="75" />').appendTo(container);
 
   var saveStory = function(event) {

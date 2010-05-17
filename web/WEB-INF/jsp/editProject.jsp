@@ -27,7 +27,9 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 
 $(document).ready(function() {
   $("#backlogInfo").tabs();
-  $("#releaseContents").tabs();
+  $("#releaseContents").tabs({
+    cookie: { name: 'agilefant-project-tabs' }
+  });
   
   var controller = new ProjectController({
     id: ${project.id},

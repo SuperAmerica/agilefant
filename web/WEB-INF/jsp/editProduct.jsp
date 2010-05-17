@@ -20,7 +20,9 @@
 <script type="text/javascript">
 $(document).ready(function() {
   $("#backlogInfo").tabs();
-  $('#productContents').tabs();
+  $('#productContents').tabs({
+    cookie: { name: 'agilefant-product-tabs' }
+  });
 
   var controller = new ProductController({
     id: ${product.id},

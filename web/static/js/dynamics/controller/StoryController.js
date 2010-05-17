@@ -99,7 +99,7 @@ StoryController.prototype.rankStory = function(view, model, previousModel) {
   var targetStory = null;
   var targetModel = view.getParentView().getModel();
   if (previousModel) {
-    targetStory = previousModel
+    targetStory = previousModel;
     model.rankUnder(targetStory.getId(), targetModel);
   }
   else {

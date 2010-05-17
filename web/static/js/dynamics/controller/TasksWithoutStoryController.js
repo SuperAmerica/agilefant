@@ -210,7 +210,7 @@ TasksWithoutStoryController.prototype.createTask = function(forceAssignCurrentUs
 TasksWithoutStoryController.prototype.initConfig = function() {
   this.taskListConfig = this._getTableConfig();
   this._addColumnConfigs(this.taskListConfig);
-}
+};
 
 
 TasksWithoutStoryController.prototype._getTableConfig = function() {

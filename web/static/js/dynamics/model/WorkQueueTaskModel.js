@@ -3,7 +3,7 @@ var WorkQueueTaskModel = function WorkQueueTaskModel() {
   this.copiedFields.workQueueRank = "workQueueRank";
   this.persistedClassName = "fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO";
 };
-extendObject(WorkQueueTaskModel, TaskModel)
+extendObject(WorkQueueTaskModel, TaskModel);
 WorkQueueTaskModel.prototype.getWorkQueueRank = function() {
   return this.currentData.workQueueRank;
 };

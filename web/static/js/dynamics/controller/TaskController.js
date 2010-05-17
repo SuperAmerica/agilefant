@@ -29,7 +29,7 @@ TaskController.prototype.sortAndMoveTask = function(view, model, previousModel) 
   var targetTask = null;
   var targetModel = view.getParentView().getModel();
   if (previousModel) {
-    targetTask = previousModel
+    targetTask = previousModel;
     model.rankUnder(targetTask.getId(), targetModel);
   }
   else {

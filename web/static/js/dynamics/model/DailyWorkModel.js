@@ -4,7 +4,7 @@ var DailyWorkModel = function DailyWorkModel() {
   this.relations = {
       tasksWithoutStory: [],
       stories: [],
-      queuedTasks: [],
+      queuedTasks: []
     };
     this.copiedFields = { };
     this.classNameToRelation = {

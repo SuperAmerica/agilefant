@@ -265,31 +265,18 @@ IterationController.prototype.initAssigneeConfiguration = function() {
     autoScale : true,
     title : "User",
     get : AssignmentModel.prototype.getUser,
+    defaultSortColumn: true,
+    sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getId),
     decorator: DynamicsDecorators.conditionColorDecorator(
         AssignmentModel.prototype.isUnassigned, 
         function(v) { if(v) { return 'red'; } }, 
         DynamicsDecorators.userNameDecorator)
   });
   
-  
   config.addColumnConfiguration(1, {
     minWidth : 100,
     autoScale : true,
-    title : "Adjustment",
-    get : AssignmentModel.prototype.getPersonalLoad,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
-    editable: true,
-    edit: {
-      editor: "ExactEstimate",
-      acceptNegative: true,
-      set: AssignmentModel.prototype.setPersonalLoad,
-      decorator: DynamicsDecorators.exactEstimateEditDecorator
-    }
-  });
-  config.addColumnConfiguration(2, {
-    minWidth : 80,
-    autoScale : true,
-    title : "Availability",
+    title : "Iteration availability",
     get : AssignmentModel.prototype.getAvailability,
     decorator: DynamicsDecorators.appendDecoratorFactory("%"),
     editable: true,
@@ -300,20 +287,35 @@ IterationController.prototype.initAssigneeConfiguration = function() {
       set: AssignmentModel.prototype.setAvailability
     }
   });
+  config.addColumnConfiguration(2, {
+    minWidth : 100,
+    autoScale : true,
+    title : "Personal adjustment",
+    get : AssignmentModel.prototype.getPersonalLoad,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    edit: {
+      editor: "ExactEstimate",
+      acceptNegative: true,
+      set: AssignmentModel.prototype.setPersonalLoad,
+      decorator: DynamicsDecorators.exactEstimateEditDecorator
+    }
+  });
   config.addColumnConfiguration(3, {
     minWidth : 100,
     autoScale : true,
-    title : "Assigned",
+    title : "Assigned effort sum",
     get : AssignmentModel.prototype.getAssignedLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator
   });
   config.addColumnConfiguration(4, {
     minWidth : 100,
     autoScale : true,
-    title : "Unassigned",
+    title : "Unassigned effort sum",
     get : AssignmentModel.prototype.getUnassignedLoad,
     decorator: DynamicsDecorators.exactEstimateEditDecorator
   });
+  /*
   config.addColumnConfiguration(5, {
     minWidth : 100,
     autoScale : true,
@@ -338,5 +340,6 @@ IterationController.prototype.initAssigneeConfiguration = function() {
     decorator: DynamicsDecorators.appendDecoratorFactory("%"),
     sortCallback: DynamicsComparators.valueComparatorFactory(AssignmentModel.prototype.getLoadPercentage)
   });
+  */
   this.assigneeListConfiguration = config;
 };

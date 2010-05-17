@@ -10,10 +10,8 @@
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
-  <!-- 
-  <li class=""><a href="#backlogAssignees"><span><img
+  <li class=""><a href="#backlogAssignees_cont"><span><img
     alt="Edit" src="static/img/team.png" /> Workload</span></a></li>
-   -->
   <li id="iterationActions" class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
@@ -32,7 +30,12 @@
   file="./inc/iterationMetrics.jsp"%></div>
 </div>
 </div>
-<div class="details" id="backlogAssignees" style="display:none;"></div>
+<div class="details" id="backlogAssignees_cont">
+    <div class="details" id="backlogAssignees"></div>
+    Iteration availability denotes how unassigned load should bee divided within this iteration. If all assignees have the same iteration availability they will receive the same amount of unassigned load.
+    <br/>
+    Personal adjustment adjusts the iteration baseline load for each user.
+  </div>
 </div>
 
 <script type="text/javascript">

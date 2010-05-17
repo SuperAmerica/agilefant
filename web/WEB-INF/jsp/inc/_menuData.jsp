@@ -17,12 +17,9 @@
         </c:if>
     },
     {
-        <ww:url id="editLink" namespace="/" action="contextView" includeParams="none">
-            <ww:param name="resetContextView" value="true" />
-            <ww:param name="contextName" value="teams" />
-        </ww:url>
+        <ww:url id="editLink" namespace="/" action="listTeams" includeParams="none"></ww:url>
         
-        "text": '<a href="${editLink}&amp;contextName=teams">Teams</a>',
+        "text": '<a href="${editLink}">Teams</a>',
         "hasChildren": false,
         
         <c:if test="${subnavi == 'teams'}">
@@ -30,11 +27,9 @@
         </c:if>
     },    
     {
-        <ww:url id="editLink" namespace="/" action="contextView" includeParams="none">
-            <ww:param name="resetContextView" value="true" />
-        </ww:url>
+        <ww:url id="editLink" namespace="/" action="listUsers" includeParams="none"></ww:url>
         
-        "text": '<a href="${editLink}&amp;contextName=users">Users</a>',
+        "text": '<a href="${editLink}">Users</a>',
         "hasChildren": false,
         
         <c:if test="${subnavi == 'users'}">
@@ -93,13 +88,12 @@
 
     {
         <%-- Create the link url --%>
-        <ww:url id="editLink" namespace="/" action="contextView" includeParams="none">
-            <ww:param name="contextObjectId">${item.id}</ww:param>
-            <ww:param name="resetContextView" value="true" />
+        <ww:url id="editLink" namespace="/" action="backlogAction" includeParams="none">
+            <ww:param name="backlogId">${item.id}</ww:param>
         </ww:url>
     
         <%-- Create the text --%>
-        "text": '<a href="${editLink}&amp;contextName=${menuData.objectTypes[item]}"><c:out value="${item.name}" /></a>',
+        "text": '<a href="${editLink}"><c:out value="${item.name}" /></a>',
         
         <%-- Check for children --%>
         <c:choose>
@@ -113,12 +107,11 @@
 	                <c:forEach items="${subMenuData.menuItems}" var="subItem">
 	                   <c:set var="subCount" value="${subCount + 1}" />
 	                   { 
-                            <ww:url id="subEditLink" namespace="/" action="contextView" includeParams="none">
-                                <ww:param name="contextObjectId">${subItem.id}</ww:param>
-                                <ww:param name="resetContextView" value="true" />
+                            <ww:url id="subEditLink" namespace="/" action="backlogAction" includeParams="none">
+                                <ww:param name="backlogId">${subItem.id}</ww:param>
                             </ww:url>
 
-                            "text": '<a href="${subEditLink}&amp;contextName=${subMenuData.objectTypes[subItem]}"><c:out value="${subItem.name}" /></a>',
+                            "text": '<a href="${subEditLink}"><c:out value="${subItem.name}" /></a>',
                             
                             <c:choose>
                             <c:when test="${aef:listContains(openBacklogs, subItem)}">
@@ -132,12 +125,11 @@
                                 <c:forEach items="${subsubMenuData.menuItems}" var="subsubItem">
                                     <c:set var="subsubCount" value="${subsubCount + 1}"/>
                                     {
-                                        <ww:url id="subsubEditLink" namespace="/" action="contextView" includeParams="none">
-                                            <ww:param name="contextObjectId">${subsubItem.id}</ww:param>
-                                            <ww:param name="resetContextView" value="true" />
+                                        <ww:url id="subsubEditLink" namespace="/" action="backlogAction" includeParams="none">
+                                            <ww:param name="backlogId">${subsubItem.id}</ww:param>
                                         </ww:url>            
                                     
-                                        "text": '<a href="${subsubEditLink}&amp;contextName=${subsubMenuData.objectTypes[subsubItem]}"><c:out value="${subsubItem.name}" /></a>',
+                                        "text": '<a href="${subsubEditLink}"><c:out value="${subsubItem.name}" /></a>',
                                         
                                         <c:choose>
                                         <c:when test="${subsubItem.id == currentIterationId}">

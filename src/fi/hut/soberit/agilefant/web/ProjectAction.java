@@ -20,7 +20,7 @@ import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 @Component("projectAction")
 @Scope("prototype")
-public class ProjectAction implements CRUDAction, Prefetching {
+public class ProjectAction implements CRUDAction, Prefetching, ContextAware {
     
     private static final long serialVersionUID = -4636900464606739866L;
 
@@ -120,6 +120,15 @@ public class ProjectAction implements CRUDAction, Prefetching {
         this.projectBusiness.moveToRanked(projectId);
         return Action.SUCCESS;
     }
+    
+    public String getContextName() {
+        return "backlog";
+    }
+    
+    public int getContextObjectId() {
+        return projectId;
+    }
+    
     
     //GETTERS AND SETTERS
     

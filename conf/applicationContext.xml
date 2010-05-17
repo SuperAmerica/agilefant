@@ -81,9 +81,6 @@
 		<property name="hibernateProperties" ref="applicationProperties" />
 	</bean>
 
-	<bean name="contextViewManager"
-		class="fi.hut.soberit.agilefant.web.context.DefaultContextViewManager" />
-
 	<bean name="aefFunctions" class="fi.hut.soberit.agilefant.web.function.AEFFunctions">
 		<property name="maxStrLength" value="15" />
 	</bean>

@@ -6,7 +6,6 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 /**
@@ -35,38 +34,22 @@ public class ContextViewAction extends ActionSupport implements SessionAware {
 
     private static final long serialVersionUID = 1992243588151483793L;
 
-    public static final String CONTEXT_NAME = "contextName";
-
-    public static final String CONTEXT_OBJECT_ID = "contextObjectId";
-
     private String contextName;
-
-    private int contextObjectId;
+    private Integer contextObjectId;
 
     @SuppressWarnings("unchecked")
     private Map session;
 
-    @SuppressWarnings("unchecked")
     public String execute() {
-        String existingContext = (String) session.get(CONTEXT_NAME);
-        if (contextName != null && !contextName.equals(existingContext)) {
-            session.remove(CONTEXT_OBJECT_ID);
+        if (contextName == null) {
+            contextName = (String)session.get(ContextAware.CONTEXT_NAME);
+            if (contextName == null) {
+                return "success_noContext";
+            }
         }
-        if (contextName != null) {
-            session.put(CONTEXT_NAME, contextName);
-        }
-        if (contextObjectId > 0) {
-            session.put(CONTEXT_OBJECT_ID, contextObjectId);
-        }
-
-        if (session.get(CONTEXT_OBJECT_ID) != null) {
-            contextObjectId = (Integer) session.get(CONTEXT_OBJECT_ID);
-        }
-
-        String currentContext = (String) session.get(CONTEXT_NAME);
-
-        return (currentContext == null) ? Action.SUCCESS : Action.SUCCESS + "_"
-                + currentContext;
+        contextObjectId = (Integer)session.get(ContextAware.CONTEXT_OBJECT_ID_AFFIX + contextName);
+        
+        return "success_" + contextName;
     }
 
     @SuppressWarnings("unchecked")
@@ -82,11 +65,7 @@ public class ContextViewAction extends ActionSupport implements SessionAware {
         this.contextName = contextName;
     }
 
-    public int getContextObjectId() {
+    public Integer getContextObjectId() {
         return contextObjectId;
-    }
-
-    public void setContextObjectId(int contextObjectId) {
-        this.contextObjectId = contextObjectId;
     }
 }

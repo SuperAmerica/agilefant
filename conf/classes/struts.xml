@@ -24,7 +24,7 @@
 				<interceptor-ref name="settings" />
 				<interceptor-ref name="validation">
           <param name="validateAnnotatedMethodOnly">true</param>
-      </interceptor-ref>
+        </interceptor-ref>
 			</interceptor-stack>
 			<interceptor-stack name="noAuthenticationStack">
 				<interceptor-ref name="exception" />
@@ -64,55 +64,35 @@
 		</action>
 		
 		<action name="contextView" class="contextViewAction">
-			<result type="redirectAction">
-				<param name="actionName">selectBacklog</param>
+			<result name="success_backlog" type="redirectAction">
+				<param name="actionName">editBacklog</param>
+				<param name="backlogId">${contextObjectId}</param>
 			</result>
-			<result name="success_iteration" type="redirectAction">
-				<param name="actionName">editIteration</param>
-				<param name="iterationId">${contextObjectId}</param>
-			</result>
-			<result name="success_project" type="redirectAction">
-				<param name="actionName">editProject</param>
-				<param name="projectId">${contextObjectId}</param>
-			</result>
-			<result name="success_product" type="redirectAction">
-				<param name="actionName">editProduct</param>
-				<param name="productId">${contextObjectId}</param>
-			</result>
+			
+			
 			<result name="success_dailyWork" type="redirectAction">
 				<param name="actionName">dailyWork</param>
 			</result>
-			
 			<result name="success_users" type="redirectAction">
 				<param name="actionName">listUsers</param>
 			</result>
 			<result name="success_teams" type="redirectAction">
         <param name="actionName">listTeams</param>
       </result>
-			
 			<result name="success_settings" type="redirectAction">
 				<param name="actionName">settings</param>
 			</result>
-				
 			<result name="success_timesheet" type="redirectAction">
 				<param name="actionName">timesheet</param>
 			</result>
-			
-			<result name="success_projectTypes"
-				type="redirectAction">
-				<param name="actionName">listProjectTypes</param>
-			</result>
-			<result name="success_businessThemes"
-				type="redirectAction">
-				<param name="actionName">listBusinessThemes</param>
-			</result>
-			<result name="success_globalThemes" type="redirectAction">
-        <param name="actionName">globalThemes</param>
-      </result>
 			<result name="success_projectPortfolio"
 				type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
+			
+			<result name="success_noContext" type="redirectAction">
+        <param name="actionName">loginContext</param>
+      </result>
 			<result name="success_" type="redirectAction">
 				<param name="actionName">selectBacklog</param>
 			</result>
@@ -132,6 +112,9 @@
         <param name="actionName">editIteration</param>
         <param name="iterationId">${backlogId}</param>
       </result>
+      <result name="selectBacklog" type="redirectAction">
+        <param name="actionName">selectBacklog</param>
+      </result>
     </action>
 
     <!-- /Backlog actions -->
@@ -143,7 +126,9 @@
 		</action>
 		
     <action name="deleteProduct" method="delete" class="productAction">
-			<result type="redirectAction">selectBacklog</result>
+			<result type="redirectAction">
+			  <param name="actionName">selectBacklog</param>
+			</result>
 		</action>
 		
 
@@ -155,7 +140,10 @@
 		</action>
 
 		<action name="deleteProject" method="delete" class="projectAction">
-      <result type="redirect">editProduct.action?productId=${productId}</result>
+      <result name="success" type="redirectAction">
+        <param name="actionName">editBacklog</param>
+        <param name="backlogId">${productId}</param>
+      </result>
 		</action>
 		<!-- /Project actions -->
 
@@ -168,7 +156,10 @@
 		</action>
 	 
     <action name="deleteIteration" method="delete" class="iterationAction">
-			<result type="redirect">editBacklog.action?backlogId=${parentBacklog.id}</result>
+			<result name="success" type="redirectAction">
+        <param name="actionName">editBacklog</param>
+        <param name="backlogId">${parentBacklog.id}</param>
+      </result>
 		</action>
 		
 		

@@ -18,7 +18,7 @@ import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @Component("productAction")
 @Scope("prototype")
-public class ProductAction implements CRUDAction, Prefetching {
+public class ProductAction implements CRUDAction, Prefetching, ContextAware {
 
     private static final long serialVersionUID = 1834399750050895118L;
 
@@ -71,6 +71,15 @@ public class ProductAction implements CRUDAction, Prefetching {
     public void initializePrefetchedData(int objectId) {
        product = productBusiness.retrieve(objectId);
     }
+    
+    public String getContextName() {
+        return "backlog";
+    }
+    
+    public int getContextObjectId() {
+        return productId;
+    }
+    
 
     public Product getProduct() {
         return product;

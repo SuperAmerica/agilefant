@@ -66,7 +66,7 @@ public class BacklogAction extends ActionSupport {
 
 
     public String resolveResult() {
-        backlog = backlogBusiness.retrieve(backlogId);
+        backlog = backlogBusiness.retrieveIfExists(backlogId);
         if (backlog instanceof Product) {
             return "product";
         }
@@ -76,7 +76,7 @@ public class BacklogAction extends ActionSupport {
         else if (backlog instanceof Iteration) {
             return "iteration";
         }
-        return Action.ERROR;
+        return "selectBacklog";
     }
     
     

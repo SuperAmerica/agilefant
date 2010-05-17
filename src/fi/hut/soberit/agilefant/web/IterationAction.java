@@ -20,8 +20,7 @@ import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 
 @Component("iterationAction")
 @Scope("prototype")
-public class IterationAction implements
-        CRUDAction, Prefetching {
+public class IterationAction implements CRUDAction, Prefetching, ContextAware {
 
     private static final long serialVersionUID = -448825368336871703L;
 
@@ -112,6 +111,14 @@ public class IterationAction implements
         }
         iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees);
         return Action.SUCCESS;
+    }
+    
+    public String getContextName() {
+        return "backlog";
+    }
+    
+    public int getContextObjectId() {
+        return iterationId;
     }
     
     public void initializePrefetchedData(int objectId) {

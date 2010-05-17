@@ -5,7 +5,6 @@
 
 <aef:backlogBreadCrumb backlog="${iteration}" />
 
-<aef:currentBacklog backlogId="${iteration.id}"/>
 
 <div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">

@@ -17,7 +17,7 @@ $(document).ready(function() {
 <c:if test="${settings.dailyWork}">
 
 <li id="navitab-dailyWork">
-  <a href="contextView.action?contextName=dailyWork&resetContextView=true">
+  <a href="dailyWork.action">
   <span>
   <img src="static/img/dailyWork.png" alt="Daily Work" />
   Daily Work
@@ -28,7 +28,7 @@ $(document).ready(function() {
 
 <!-- Backlogs -->
 <li id="navitab-backlog">
-  <a href="contextView.action?contextName=${currentBacklogContext}&contextObjectId=${currentBacklogId}&resetContextView=true">
+  <a href="contextView.action?contextName=backlog">
   <span>
   <img src="static/img/backlog.png" alt="Backlogs" />
   Backlogs
@@ -40,7 +40,7 @@ $(document).ready(function() {
 <%-- Timesheet --%>
 <c:if test="${settings.hourReportingEnabled}">
 <li id="navitab-timesheet">
-  <a href="contextView.action?contextName=timesheet&resetContextView=true">
+  <a href="timesheet.action">
   <span>
   <img src="static/img/timesheets.png" alt="Timesheets" />
   Timesheets
@@ -52,10 +52,10 @@ $(document).ready(function() {
 <!-- Dev Portfolio -->
 <c:if test="${settings.devPortfolio}">
 <li id="navitab-portfolio">
-  <a href="contextView.action?contextName=projectPortfolio&resetContextView=true">
+  <a href="projectPortfolio.action">
   <span>
   <img src="static/img/portfolio.png" alt="Dev Portfolio" />
-  Dev Portfolio
+  Portfolio
   </span>
   </a>
 </li>
@@ -63,7 +63,7 @@ $(document).ready(function() {
 
 <%-- Settings --%>
 <li id="navitab-settings">
-    <a href="contextView.action?contextName=settings&resetContextView=true">
+    <a href="settings.action">
     <span>
     <img src="static/img/settings.png" alt="Administration" />
     Administration

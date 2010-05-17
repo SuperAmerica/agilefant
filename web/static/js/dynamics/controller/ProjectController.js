@@ -301,10 +301,6 @@ ProjectController.prototype.removeProject = function() {
   });
 };
 
-ProjectController.prototype.openLogEffort = function() {
-  var widget = new SpentEffortWidget(this.model);
-};
-
 ProjectController.prototype.paintProjectDetails = function() {
   this.projectDetailsView = new DynamicVerticalTable(this, this.model, this.projectDetailConfig,
       this.projectDetailsElement);

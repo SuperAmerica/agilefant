@@ -199,11 +199,6 @@ IterationController.prototype.reloadMetrics = function() {
   }
 };
 
-IterationController.prototype.openLogEffort = function() {
-  var widget = new SpentEffortWidget(this.model);
-};
-
-
 
 IterationController.prototype.initializeStoryList = function() {
   this.storyListController = new StoryListController(this.model,

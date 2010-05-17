@@ -51,6 +51,11 @@ $(document).ready(function() {
       menu.remove();
     };
 
+    $('<li/>').text('Spent effort').click(function() {
+      closeMenu();
+      controller.openLogEffort();
+    }).appendTo(menu);
+
     $('<li/>').text('Delete').click(function() {
       closeMenu();
       controller.removeProduct();

@@ -40,6 +40,10 @@ BacklogController.prototype._saveAssignees = function(userIds) {
   this.model.addAssignments(userIds);
 };
 
+BacklogController.prototype.openLogEffort = function() {
+  var widget = new SpentEffortWidget(this.model);
+};
+
 BacklogController.prototype.initAssigneeConfiguration = function() {
   var config = new DynamicTableConfiguration(
       {

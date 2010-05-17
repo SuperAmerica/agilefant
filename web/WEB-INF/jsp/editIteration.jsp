@@ -10,9 +10,10 @@
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
+  <!-- 
   <li class=""><a href="#backlogAssignees"><span><img
     alt="Edit" src="static/img/team.png" /> Workload</span></a></li>
-  
+   -->
   <li id="iterationActions" class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
@@ -31,7 +32,7 @@
   file="./inc/iterationMetrics.jsp"%></div>
 </div>
 </div>
-<div class="details" id="backlogAssignees"></div>
+<div class="details" id="backlogAssignees" style="display:none;"></div>
 </div>
 
 <script type="text/javascript">

@@ -26,6 +26,8 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -135,8 +137,8 @@ public class ProductBusinessTest {
         prod.getStories().add(story1);
         prod.getStories().add(story2);
         expect(productDAO.get(prod.getId())).andReturn(prod);
-        storyBusiness.delete(story1.getId());
-        storyBusiness.delete(story2.getId());
+        storyBusiness.delete(story1, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        storyBusiness.delete(story2, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
         hourEntryBusiness.deleteAll(prod.getHourEntries());
         productDAO.remove(prod);
         replayAll();

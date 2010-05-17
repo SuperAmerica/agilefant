@@ -24,6 +24,8 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Service("productBusiness")
 @Transactional
@@ -116,7 +118,9 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
         Set<Story> stories = new HashSet<Story>(product.getStories());
         if (stories != null) {
             for (Story item : stories) {
-                storyBusiness.delete(item.getId());
+                storyBusiness.delete(item, TaskHandlingChoice.DELETE,
+                        HourEntryHandlingChoice.DELETE,
+                        HourEntryHandlingChoice.DELETE);
             }
         }
         

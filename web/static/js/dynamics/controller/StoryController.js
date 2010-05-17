@@ -171,10 +171,6 @@ StoryController.prototype.hideTaskColumn = function() {
  * 
  */
 StoryController.prototype.showDescriptionColumn = function() {
-  var cell = this.getCurrentView().getCellByName("description");
-  if (cell) {
-    cell.show();
-  }
   this.getCurrentView().getElement().addClass("bottom-margin");
 };
 
@@ -182,10 +178,6 @@ StoryController.prototype.showDescriptionColumn = function() {
  * 
  */
 StoryController.prototype.hideDescriptionColumn = function() {
-  var cell = this.getCurrentView().getCellByName("description");
-  if (cell) {
-    cell.hide();
-  }
   this.getCurrentView().getElement().removeClass("bottom-margin");
 };
 
@@ -248,7 +240,7 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
     collapse: StoryController.prototype.hideDescriptionColumn,
     expand: StoryController.prototype.showDescriptionColumn,
     expanded: false,
-    targetCells: [StoryController.columnIndices.details]
+    targetCells: [StoryController.columnIndices.details ]
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;

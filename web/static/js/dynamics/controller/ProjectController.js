@@ -343,7 +343,7 @@ ProjectController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([5,6,10]);
+  row.autoCreateCells([0,5,6,10]);
   row.getCellByName("description").show();
   row.getCellByName("buttons").show();
 //  row.getCell(13).show();

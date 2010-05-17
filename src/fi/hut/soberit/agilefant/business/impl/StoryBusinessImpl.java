@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -145,7 +146,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Story story = retrieve(id);
         delete(story, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
         backlogHistoryEntryBusiness.updateHistory(story.getBacklog().getId());
-        
+        if (story.getBacklog() instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(story.getBacklog().getId());
+        }
     }
 
     /** {@inheritDoc} */
@@ -548,8 +551,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                         hourEntryBusiness.moveToBacklog(task.getHourEntries(),
                                 story.getBacklog());
                     }
-                    taskBusiness.deleteAndUpdateHistory(task.getId(),
-                            taskHourEntryHandlingChoice);
+                    taskBusiness.delete(task.getId(), taskHourEntryHandlingChoice);
                 }
                 break;
             case MOVE:
@@ -602,6 +604,25 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         storyRankBusiness.removeStoryRanks(story);
         super.delete(story);
         
+    }
+    
+    public void forceDelete(Story story) {
+        // Remove children (set parent to null)
+        for (Story s : story.getChildren()) {
+            s.setParent(null);
+        }
+        story.getChildren().clear();
+        
+        // Remove tasks
+        Set<Task> tasks = new HashSet<Task>(story.getTasks());
+        for (Task t : tasks) {
+            taskBusiness.delete(t, HourEntryHandlingChoice.DELETE);
+        }
+        
+        // Remove own hour entries
+        hourEntryBusiness.deleteAll(story.getHourEntries());
+        
+        super.delete(story.getId());
     }
     
     public void setUserDAO(UserDAO userDAO) {

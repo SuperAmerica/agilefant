@@ -1,10 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.Collection;
-import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
-import fi.hut.soberit.agilefant.model.Iteration;
-
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +33,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
@@ -44,13 +42,13 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
+import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
-import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Service("iterationBusiness")
 @Transactional
@@ -107,33 +105,34 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
     @Override
     public void delete(Iteration iteration) {
-            Set<Task> tasks = new HashSet<Task>(iteration.getTasks());
-            for (Task item : tasks) {
-                taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
-            }
-            
-            Set<Story> stories = new HashSet<Story>(iteration.getStories());
-            TaskHandlingChoice taskHandlingChoice = TaskHandlingChoice.DELETE;
-            HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
-            HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
-            for (Story item : stories) {
-                storyBusiness.delete(item, taskHandlingChoice,
-                        storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
-            }
-            Set<Assignment> assignments = new HashSet<Assignment>(iteration.getAssignments());
-            for (Assignment item : assignments) {
-                assignmentBusiness.delete(item.getId());
-            }
-            
-            hourEntryBusiness.deleteAll(iteration.getHourEntries());
-            
-            iteration.getHourEntries().clear();
-            
-            Set<IterationHistoryEntry> historyEntries = new HashSet<IterationHistoryEntry>(iteration.getHistoryEntries());
-            for (IterationHistoryEntry item : historyEntries) {
-                iterationHistoryEntryBusiness.delete(item.getId());
-            }
-            super.delete(iteration);
+
+        storyRankBusiness.removeBacklogRanks(iteration);
+        
+        Set<Task> tasks = new HashSet<Task>(iteration.getTasks());
+        for (Task item : tasks) {
+            taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
+        }
+
+        Set<Story> stories = new HashSet<Story>(iteration.getStories());
+        for (Story item : stories) {
+            storyBusiness.forceDelete(item);
+        }
+        Set<Assignment> assignments = new HashSet<Assignment>(iteration
+                .getAssignments());
+        for (Assignment item : assignments) {
+            assignmentBusiness.delete(item.getId());
+        }
+
+        hourEntryBusiness.deleteAll(iteration.getHourEntries());
+
+        iteration.getHourEntries().clear();
+
+        Set<IterationHistoryEntry> historyEntries = new HashSet<IterationHistoryEntry>(
+                iteration.getHistoryEntries());
+        for (IterationHistoryEntry item : historyEntries) {
+            iterationHistoryEntryBusiness.delete(item.getId());
+        }
+        super.delete(iteration);
     }
     
 

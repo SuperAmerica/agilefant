@@ -177,8 +177,18 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      */
     public void removeStoryRanks(Story story) {
         for (StoryRank rank : story.getStoryRanks()) {
-            skipRank(rank);
-            this.storyRankDAO.remove(rank);
+            try {
+                skipRank(rank);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+            try {
+                this.storyRankDAO.remove(rank);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
 
     }
@@ -188,9 +198,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      */
     public void removeBacklogRanks(Backlog backlog) {
         for (StoryRank rank : backlog.getStoryRanks()) {
-            skipRank(rank);
+            rank.getStory().getStoryRanks().remove(rank);
             this.storyRankDAO.remove(rank);
         }
+        backlog.getStoryRanks().clear();
     }
 
     /**

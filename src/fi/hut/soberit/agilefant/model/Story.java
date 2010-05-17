@@ -181,7 +181,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     
     @JSON(include=false)
     @NotAudited
-    @OneToMany(fetch = FetchType.LAZY, targetEntity=StoryRank.class, mappedBy="story")
+    @OneToMany(fetch = FetchType.LAZY, targetEntity=StoryRank.class, mappedBy="story", cascade=CascadeType.REMOVE )
     public Set<StoryRank> getStoryRanks() {
         return storyRanks;
     }

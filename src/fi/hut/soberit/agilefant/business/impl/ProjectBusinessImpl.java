@@ -41,9 +41,7 @@ import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
-import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryFilters;
-import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @Service("projectBusiness")
 @Transactional
@@ -317,6 +315,9 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public void delete(Project project) {
         if (project == null)
             return;
+        
+        storyRankBusiness.removeBacklogRanks(project);
+        
         Set<Backlog> iterations = new HashSet<Backlog>(project.getChildren());
         
         if (iterations != null) {
@@ -326,14 +327,10 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         }
         
         Set<Story> stories = new HashSet<Story>(project.getStories());
-        TaskHandlingChoice taskHandlingChoice = TaskHandlingChoice.DELETE;
-        HourEntryHandlingChoice storyHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
-        HourEntryHandlingChoice taskHourEntryHandlingChoice = HourEntryHandlingChoice.DELETE;
        
         if (stories != null) {
             for (Story item : stories) {
-                storyBusiness.delete(item.getId(), taskHandlingChoice,
-                        storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+                storyBusiness.forceDelete(item);
             }
         }
         Set<Assignment> assignments = new HashSet<Assignment>(project.getAssignments());

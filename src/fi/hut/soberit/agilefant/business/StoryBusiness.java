@@ -111,6 +111,8 @@ public interface StoryBusiness extends GenericBusiness<Story> {
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
             HourEntryHandlingChoice taskHourEntryHandlingChoice);
 
+    void forceDelete(Story story);
+    
     public Story createStoryUnder(int referenceStoryId, Story data,
             Set<Integer> responsibleIds);
 

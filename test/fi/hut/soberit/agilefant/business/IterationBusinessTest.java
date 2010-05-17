@@ -42,7 +42,6 @@ import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
-import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 public class IterationBusinessTest {
 
@@ -621,7 +620,9 @@ public class IterationBusinessTest {
         
         expect(iterationDAO.get(iter.getId())).andReturn(iter);
         
-        storyBusiness.delete(story, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        storyRankBusiness.removeBacklogRanks(iter);
+        
+        storyBusiness.forceDelete(story);
         iterationHistoryEntryBusiness.delete(historyEntry.getId());
         assignmentBusiness.delete(assignment.getId());
         taskBusiness.delete(task.getId(), HourEntryHandlingChoice.DELETE);
@@ -642,6 +643,9 @@ public class IterationBusinessTest {
         iteration.setParent(project);
         project.setId(10);
         expect(iterationDAO.get(iteration.getId())).andReturn(iteration);
+        
+        storyRankBusiness.removeBacklogRanks(iteration);
+        
         hourEntryBusiness.deleteAll(iteration.getHourEntries());
         iterationDAO.remove(iteration);
         backlogHistoryEntryBusiness.updateHistory(project.getId());

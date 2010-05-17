@@ -1,9 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,8 +24,6 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.TestedBean;
-import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
-import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -137,8 +133,8 @@ public class ProductBusinessTest {
         prod.getStories().add(story1);
         prod.getStories().add(story2);
         expect(productDAO.get(prod.getId())).andReturn(prod);
-        storyBusiness.delete(story1, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
-        storyBusiness.delete(story2, TaskHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE, HourEntryHandlingChoice.DELETE);
+        storyBusiness.forceDelete(story1);
+        storyBusiness.forceDelete(story2);
         hourEntryBusiness.deleteAll(prod.getHourEntries());
         productDAO.remove(prod);
         replayAll();

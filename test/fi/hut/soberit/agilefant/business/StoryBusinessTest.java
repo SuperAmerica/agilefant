@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -419,6 +420,7 @@ public class StoryBusinessTest {
         storyRankBusiness.removeStoryRanks(storyInIteration);        
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
+        iheBusiness.updateIterationHistory(storyInIteration.getBacklog().getId());
         replayAll();
         
         storyBusiness.deleteAndUpdateHistory(storyInIteration.getId(), null, null, null);
@@ -461,7 +463,7 @@ public class StoryBusinessTest {
         storyInIteration.getTasks().add(task);
         expect(storyDAO.get(storyInIteration.getId())).andReturn(storyInIteration);
         hourEntryBusiness.moveToBacklog(task.getHourEntries(), storyInIteration.getBacklog());
-        taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.MOVE);
+        taskBusiness.delete(task.getId(), HourEntryHandlingChoice.MOVE);
         storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
         replayAll();
@@ -661,4 +663,44 @@ public class StoryBusinessTest {
         storyBusiness.updateStoryRanks(story);
         verifyAll();
     }
+    
+    
+    /**
+     * TEST FORCE DELETING
+     */
+    
+    @Test
+    public void testForceDelete() {
+        Story story = new Story();
+        story.setId(1);
+        
+        Story child = new Story();
+        child.setParent(story);
+        story.setChildren(new ArrayList<Story>(Arrays.asList(child)));
+        
+        story.setTasks(new HashSet<Task>(Arrays.asList(new Task(), new Task())));
+        story.setHourEntries(new HashSet<StoryHourEntry>(Arrays.asList(new StoryHourEntry(), new StoryHourEntry(), new StoryHourEntry())));
+        
+        taskBusiness.delete(EasyMock.isA(Task.class), EasyMock.same(HourEntryHandlingChoice.DELETE));
+        expectLastCall().times(2);
+        
+        hourEntryBusiness.deleteAll(story.getHourEntries());
+        
+        storyDAO.remove(1);
+        
+        replayAll();
+        storyBusiness.forceDelete(story);
+        verifyAll();
+        
+        assertNull("Child story's parent not null", child.getParent());
+        assertEquals("Parent story's children not empty", 0, story.getChildren().size());
+    }
+
+    
+    
+    
+    
+    
+    
+    
 }

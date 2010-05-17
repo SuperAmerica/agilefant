@@ -114,9 +114,8 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
         this.assignments = assignments;
     }
  
-    @OneToMany(mappedBy = "iteration")
+    @OneToMany(mappedBy = "iteration", cascade=javax.persistence.CascadeType.REMOVE)
     @JSON(include = false)
-    @Cascade(CascadeType.DELETE)
     @NotAudited
     public Set<IterationHistoryEntry> getHistoryEntries() {
         return historyEntries;

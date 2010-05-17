@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.model;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -175,7 +176,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     @JSON(include=false)
     @NotAudited
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="backlog", targetEntity=StoryRank.class)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="backlog", targetEntity=StoryRank.class, cascade=CascadeType.REMOVE)
     public Set<StoryRank> getStoryRanks() {
         return storyRanks;
     }

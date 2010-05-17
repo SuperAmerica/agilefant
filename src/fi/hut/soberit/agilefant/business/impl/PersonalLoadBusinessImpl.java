@@ -190,15 +190,35 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         List<Iteration> emptyIterations = this.iterationDAO
                 .retrieveEmptyIterationsWithPlannedSize(interval.getStart(),
                         interval.getEnd(), user);
+        Set<Integer> iterationIds = new HashSet<Integer>();
+        for(Iteration iter : emptyIterations) {
+            iterationIds.add(iter.getId());
+        }
+        
+        Map<Integer, Integer> totalAvailabilities = this.iterationDAO
+        .getTotalAvailability(iterationIds);
+        
         for (Iteration iter : emptyIterations) {
+            int availability = lookupAvailability(user, iter);
+            int totalAvailability = totalAvailabilities.get(iter.getId());
+            double fraction = (double)availability/(double)totalAvailability;
             if (!iterationEffortData.containsKey(iter.getId())) {
                 IterationLoadContainer newContainer = new IterationLoadContainer();
                 newContainer.setIteration(iter);
                 iterationEffortData.put(iter.getId(), newContainer);
             }
             iterationEffortData.get(iter.getId()).setTotalFutureLoad(
-                    iter.getBacklogSize().longValue());
+                    (long)(fraction*(double)iter.getBacklogSize().longValue()));
         }
+    }
+
+    private int lookupAvailability(User user, Iteration iter) {
+        for(Assignment assign : iter.getAssignments()) {
+            if(assign.getUser() == user) {
+                return assign.getAvailability();
+            }
+        }
+        return 1;
     }
 
     /**

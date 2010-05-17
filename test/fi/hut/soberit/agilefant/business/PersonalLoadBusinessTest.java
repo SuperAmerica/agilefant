@@ -162,12 +162,24 @@ public class PersonalLoadBusinessTest {
 
     @Test
     public void testCalculateIterationFutureLoad() {
+        Assignment assign1 = new Assignment(user, null);
+        assign1.setAvailability(100);
+        Assignment assign2 = new Assignment(user, null);
+        assign2.setAvailability(100);
+        
         Iteration iter1 = new Iteration();
         iter1.setBacklogSize(new ExactEstimate(400L));
         iter1.setId(1);
         Iteration iter2 = new Iteration();
         iter2.setBacklogSize(new ExactEstimate(500L));
         iter2.setId(2);
+        
+        iter1.setAssignments(new HashSet<Assignment>(Arrays.asList(assign1)));
+        iter2.setAssignments(new HashSet<Assignment>(Arrays.asList(assign2)));
+        
+        HashMap<Integer, Integer> availabilitySums = new HashMap<Integer, Integer>();
+        availabilitySums.put(1, 100);
+        availabilitySums.put(2, 200);
         
         Interval interval = new Interval(new DateTime(2009,6,1,0,0,0,0), new DateTime(2009,10,1,0,0,0,0));
         
@@ -176,13 +188,14 @@ public class PersonalLoadBusinessTest {
         Map<Integer, IterationLoadContainer> iterationEffortData = new HashMap<Integer, IterationLoadContainer>();
 
         iterationEffortData.put(1, existing);
-        
+        Capture<Set<Integer>> iterationIds = new Capture<Set<Integer>>();
         expect(iterationDAO.retrieveEmptyIterationsWithPlannedSize(interval.getStart(), interval.getEnd(), user)).andReturn(Arrays.asList(iter1, iter2));
+        expect(iterationDAO.getTotalAvailability(EasyMock.capture(iterationIds))).andReturn(availabilitySums);
         replayAll();
         personalLoadBusiness.calculateIterationFutureLoad(iterationEffortData, user, interval);
         verifyAll();
         assertEquals(400L, iterationEffortData.get(1).getTotalFutureLoad());
-        assertEquals(500L, iterationEffortData.get(2).getTotalFutureLoad());
+        assertEquals(250L, iterationEffortData.get(2).getTotalFutureLoad());
     }
 
     @Test

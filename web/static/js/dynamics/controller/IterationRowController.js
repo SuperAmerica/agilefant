@@ -38,10 +38,10 @@ IterationRowController.prototype.iterationActionFactory = function(view, model) 
   var actionItems = [ {
     text : "Edit",
     callback : CommonController.prototype.openRowEdit
-  }, {
+  }/*, {
     text : "Delete",
     callback : IterationRowController.prototype.removeIteration
-  } ];
+  } */];
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;
@@ -96,6 +96,7 @@ IterationRowController.prototype.showDetails = function() {
     var data = {
         iterationId: this.model.id
     };
+    cell.getElement().html('<img src="static/img/working.gif" alt="Please wait..."/>"');
     cell.element.load("ajax/iterationRowMetrics.action", data);
     cell.show();
   }

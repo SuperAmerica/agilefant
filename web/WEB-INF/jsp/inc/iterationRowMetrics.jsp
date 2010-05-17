@@ -3,7 +3,7 @@
 <div class="project-iteration-row-metrics-left">
 	<table class="project-iteration-metrics">
 		<tr>
-		<td style="padding-left: 10px; padding-right: 10px">
+		<td style="padding-left: 10px; padding-right: 10px" colspan="2">
 				<h4>Story states by count</h4>
         <div>
           ${iterationRowMetrics.doneStoryCount} / ${iterationRowMetrics.storyCount} (${iterationRowMetrics.doneStoryPercentage} %) done
@@ -16,13 +16,15 @@
           </div>
         </c:if>
 		</td>
+    
+    <%--
 		<td style="padding-left: 10px; padding-right: 10px">
 			<h4>Burndown chart</h4>
 		<img id="smallChart" src="drawSmallIterationBurndown.action?backlogId=${iterationId}" />
 		</td>
-		</tr>		
-		<tr>
-			<td style="padding-left: 10px; padding-right: 10px">
+     --%>
+
+			<td style="padding-left: 10px; padding-right: 10px" colspan="2">
 				<h4>Time left in iteration</h4>
         <div>
           ${iterationRowMetrics.daysLeft} / ${iterationRowMetrics.totalDays} (${iterationRowMetrics.daysLeftPercentage} %) days
@@ -34,34 +36,68 @@
           </div>
         </c:if>
 		</td>
-		<td style="padding-left: 10px; padding-right: 10px">
-		<div>
-			<table>
-			<td style="padding-right: 4px"><b>Effort left</b></td>
-			<td><c:out value="${aef:minutesToString(iterationRowMetrics.effortLeft.minorUnits)}" /></td>
-		</tr>
-		<tr>
-		<td style="padding-right: 4px"><b>Original estimate</b></td>
-			<td><c:out value="${aef:minutesToString(iterationRowMetrics.originalEstimate.minorUnits)}" /></td>
-		</tr>
-		<c:if test="${iterationRowMetrics.timesheetsEnabled}">
-		<tr>
-			<td style="padding-right: 4px"><b>Effort Spent</b></td>
-			<td><c:out value="${aef:minutesToString(iterationRowMetrics.spentEffort.minorUnits)}" /></td>
-		</tr>
-		</c:if>
-		<tr>
-			<td style="padding-right: 4px"><b>Schedule Variance</b></td>
-			<td>
-		<c:choose>
-			<c:when test="${iterationRowMetrics.variance != null}">
-				<c:out value="${iterationRowMetrics.variance}" />
-			</c:when><c:otherwise>
-				&mdash;
-			</c:otherwise>
-		</c:choose>
-			</td>
-		</tr>
+    </tr>   
+    
+    
+    <tr>
+      <td style="padding: 0 10px;"><b>Effort left</b></td>
+      <td>
+        <c:choose>
+        <c:when test="${iterationRowMetrics.effortLeft.minorUnits  != 0}">
+          <c:out value="${aef:minutesToString(iterationRowMetrics.effortLeft.minorUnits)}" />
+        </c:when>
+        <c:otherwise>
+          &mdash;
+        </c:otherwise>
+        </c:choose>
+      </td>
+      <td style="padding-right: 4px"><b>Schedule Variance</b></td>
+      <td>
+        <c:choose>
+        <c:when test="${iterationRowMetrics.variance != null}">
+          <c:out value="${iterationRowMetrics.variance}" />
+        </c:when>
+        <c:otherwise>
+          &mdash;
+        </c:otherwise>
+        </c:choose>
+      </td>
+    </tr>
+    
+    <tr>
+      <td style="padding: 0 10px;"><b>Original estimate</b></td>
+      <td>
+        <c:choose>
+        <c:when test="${iterationRowMetrics.originalEstimate.minorUnits  != 0}">
+          <c:out value="${aef:minutesToString(iterationRowMetrics.originalEstimate.minorUnits)}" />
+        </c:when>
+        <c:otherwise>
+          &mdash;
+        </c:otherwise>
+        </c:choose>
+      </td>
+      <c:choose>
+      <c:when test="${iterationRowMetrics.timesheetsEnabled}">
+      <td style="padding-right: 4px"><b>Effort spent</b></td>
+      <td>
+        <c:choose>
+        <c:when test="${iterationRowMetrics.spentEffort.minorUnits != 0}">
+          <c:out value="${aef:minutesToString(iterationRowMetrics.spentEffort.minorUnits)}" />
+        </c:when>
+        <c:otherwise>
+          &mdash;
+        </c:otherwise>
+        </c:choose>
+      </td>
+      </c:when>
+      <c:otherwise>
+        <td></td>
+        <td></td>
+      </c:otherwise>
+      </c:choose>
+    </tr>
+    
+
 			</table>
 		</div>
 		</tr>

@@ -145,7 +145,8 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     enabled : TaskController.prototype.removeFromQueueEnabled
   }, {
     text: "Spent effort",
-    callback: TaskController.prototype.openLogEffort
+    callback: TaskController.prototype.openLogEffort,
+    enabled: function() { return Configuration.isTimesheetsEnabled(); }
   }, {
     text : "Reset original estimate",
     callback : TaskController.prototype.resetOriginalEstimate

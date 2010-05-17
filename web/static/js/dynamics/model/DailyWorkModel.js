@@ -55,6 +55,27 @@ DailyWorkModel.prototype.reloadWorkQueue = function(userId, callback) {
   });
 };
 
+DailyWorkModel.prototype.reloadTasksWithoutStory = function(userId, callback) {
+  var me = this;
+  $.ajax({
+    url: "ajax/dailyWorkTasks.action",
+    type: "post",
+    dataType: "json",
+    data: {userId: userId},
+    success: function(data, status) {
+      if(data) {
+        me._updateRelations("tasksWithoutStory", data);
+      }
+      if (callback) {
+        callback();
+      }
+    },
+    error: function(xhr, status) {
+      MessageDisplay.Error("Unable to refresh tasks without story.", xhr);
+    }
+  });
+};
+
 DailyWorkModel.prototype.addTask = function(task) {
   this.relations.tasksWithoutStory.push(task);
   this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this, "tasksWithoutStory"));

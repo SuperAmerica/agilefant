@@ -398,7 +398,7 @@
             +*.workingOnTask, +*.workingOnTask.id, -*.workingOnTask.*,
             +*.responsibles, +*.responsibles.id, +*.responsibles.initials, -*.responsibles.*
             +*.parent.id, +*.parent.name, -*.parent.*, -*.parent.responsibles,
-            +*.backlog.id, +*.backlog.name, -*.backlog.*
+            +*.iteration.id, +*.iteration.name, -*.iteration.*
         </param>        
       </result>
     </action>
@@ -626,6 +626,9 @@
     <action name="moveTask" method="move" class="taskAction">
       <result name="success" type="json">
         <param name="target">task</param>
+        <param name="patterns">
+          +iteration
+        </param>
       </result>
     </action>
    

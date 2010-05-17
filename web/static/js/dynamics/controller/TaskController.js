@@ -37,6 +37,16 @@ TaskController.prototype.sortAndMoveTask = function(view, model, previousModel) 
   }
 };
 
+TaskController.prototype.moveToIteration = function() {
+  var me = this;
+  $(window).autocompleteSingleDialog({
+    dataType: "currentIterations",
+    cancel: function() { return; },
+    callback: function(id) { me.model.moveToIteration(id); },
+    title: "Select iteration to move to"
+  });
+};
+
 TaskController.prototype.rankInWorkQueue = function(view, model, previousModel) {
   if (!(model instanceof WorkQueueTaskModel)) {
     return;
@@ -120,8 +130,11 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     text : "Split",
     callback : TaskController.prototype.createSplitTask
   }, {
-	text: "Spent effort",
-	callback: TaskController.prototype.openLogEffort
+    text : "Move",
+    callback : TaskController.prototype.moveToIteration
+  },{
+    text : "Delete",
+    callback : TaskController.prototype.removeTask
   }, {
     text : "Append to my work queue",
     callback : TaskController.prototype.addToMyWorkQueue,
@@ -131,8 +144,8 @@ TaskController.prototype.actionColumnFactory = function(view, model) {
     callback : TaskController.prototype.removeFromMyWorkQueue,
     enabled : TaskController.prototype.removeFromQueueEnabled
   }, {
-    text : "Delete",
-    callback : TaskController.prototype.removeTask
+    text: "Spent effort",
+    callback: TaskController.prototype.openLogEffort
   }, {
     text : "Reset original estimate",
     callback : TaskController.prototype.resetOriginalEstimate

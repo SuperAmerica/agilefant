@@ -38,10 +38,23 @@ DailyWorkController.prototype.handleModelEvents = function(event) {
   if(event instanceof DynamicsEvents.MetricsEvent && event.getObject() instanceof TaskModel) {
     this.options.onUserLoadUpdate();
   }
-  //task responsibles changed
-  if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof TaskModel && event.getRelation() === "user") {
-    this.options.onUserLoadUpdate();
+  
+  if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof TaskModel) {
+    //task responsibles changed
+    if (event.getRelation() === "user") {
+      this.options.onUserLoadUpdate();
+    }
+    //task moved
+    if (event.getRelation() === "parent") {
+      var me = this;
+      this.model.reloadWorkQueue(this.options.userId, function() {
+        me.workQueueController.getCurrentView().render();
+      });
+      this.model.reloadTasksWithoutStory(this.options.userId);
+    }
   }
+
+  
 };
 
 DailyWorkController.prototype.initialize = function() {

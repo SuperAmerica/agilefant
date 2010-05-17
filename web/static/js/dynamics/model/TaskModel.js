@@ -199,6 +199,45 @@ TaskModel.prototype._remove = function(successCallback, extraData) {
   });
 };
 
+TaskModel.prototype.moveToIteration = function(iterationId) {
+  var oldParent = this.getParent();
+  
+  var me = this;
+  var data = {
+    "taskId": this.getId(),
+    "iterationId": iterationId
+  };
+  
+  jQuery.ajax({
+    type:     "POST",
+    url:      "ajax/moveTask.action",
+    async:    true,
+    cache:    false,
+    dataType: "json",
+    data:     data,
+    success:  function(data, status) {
+      MessageDisplay.Ok("Task moved");  
+      
+      me.relations.backlog = null;
+      me.relations.story = null;
+
+      me._setData(data);
+      
+      var newParent = me.getParent();
+      
+      oldParent.removeRelation(me);
+      newParent.callListeners(new DynamicsEvents.RelationUpdatedEvent(newParent, "task"));
+      
+      me.callListeners(new DynamicsEvents.RelationUpdatedEvent(me, "parent"));
+      
+      me.callListeners(new DynamicsEvents.EditEvent(me));
+    },
+    error: function(xhr, status) {
+      MessageDisplay.Error("Error moving task.", xhr);
+    }
+  });
+};
+
 TaskModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   var me = this;
   

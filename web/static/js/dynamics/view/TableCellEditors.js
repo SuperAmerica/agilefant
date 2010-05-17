@@ -951,20 +951,19 @@ TableEditors.Wysiwyg.prototype.close = function() {
  */
 TableEditors.Wysiwyg.prototype._registerEditField = function(element) {
   this.actualElement.wysiwyg("getFrame").data("editor", this).addClass("dynamics-editor-element");
-  
   var me = this;
   element.keydown(function(event) {
     me._handleKeyEvent(event);
     return true;
   });
   element.blur(function(event) {
-    if(me.element.find(event.target).length === 0) {
+    if(me.element.find(event.target).length === 0 && !me.actualElement.wysiwyg("getKeepEditorOpen")) {
       me._requestSaveIfNotInRowEdit();
       me.element.trigger("DynamicsBlur");
       me.focused = false;
     }
   });
-  element.focus(function() {
+  element.focus(function(event) {
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });

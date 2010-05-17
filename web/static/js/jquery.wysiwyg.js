@@ -166,8 +166,11 @@
                     self.editorDoc.execCommand('unlink', false, []);
                     self.editorDoc.execCommand('createLink', false, szURL);
                 }
-                else if ( self.options.messages.nonSelection )
-                    alert(self.options.messages.nonSelection);
+                else if ( self.options.messages.nonSelection ) {
+                  self.preventBlur = true;
+                  alert(self.options.messages.nonSelection);
+                  self.preventBlur = false;
+                }
             }
         },
 
@@ -186,6 +189,10 @@
         getDocument: function() {
           var self = $.data(this, 'wysiwyg');
           return self.editorDoc;
+        },
+        getKeepEditorOpen: function() {
+          var self = $.data(this, 'wysiwyg');
+          return self.preventBlur;
         },
         remove : function() {
           var self = $.data(this, 'wysiwyg');
@@ -251,8 +258,9 @@
                             this.editorDoc.execCommand('createLink', true, null);
                         else
                         {
+                            this.preventBlur = true;
                             var szURL = prompt('URL', 'http://');
-
+                            this.preventBlur = false;
                             if ( szURL && szURL.length > 0 )
                             {
                                 this.editorDoc.execCommand('unlink', false, []);
@@ -260,8 +268,11 @@
                             }
                         }
                     }
-                    else if ( this.options.messages.nonSelection )
-                        alert(this.options.messages.nonSelection);
+                    else if ( this.options.messages.nonSelection ) {
+                      this.preventBlur = true;
+                      alert(this.options.messages.nonSelection);
+                      this.preventBlur = false;
+                    }
                 },
 
                 tags : ['a']
@@ -275,8 +286,10 @@
                         this.editorDoc.execCommand('insertImage', true, null);
                     else
                     {
+                        this.preventBlur = true;
                         var szURL = prompt('URL', 'http://');
-
+                        this.preventBlur = false;
+                        
                         if ( szURL && szURL.length > 0 )
                             this.editorDoc.execCommand('insertImage', false, szURL);
                     }
@@ -636,7 +649,9 @@
 
             $('<li></li>').append(
                 $('<a><!-- --></a>').attr({'title': self.camelcaseToTooltip(cmd)}).addClass(className || cmd)
-            ).mousedown(function() {
+            ).mousedown(function(event) {
+                event.stopPropagation();
+                event.preventDefault();
                 if ( fn ) fn.apply(self); else self.editorDoc.execCommand(cmd, false, args);
                 if ( self.options.autoSave ) self.saveContent();
                 return false;

@@ -10,7 +10,6 @@ var PageController = function PageController(currentUserJson) {
   if (currentUserJson) {
     this.currentUser = ModelFactory.updateObject(currentUserJson);
   }
-  this._init();
 };
 
 /**
@@ -20,7 +19,7 @@ PageController.initialize = function(currentUserJson) {
   window.pageController = new PageController(currentUserJson);
 };
 
-PageController.prototype._init = function() {
+PageController.prototype.init = function() {
   var me = this;
   $('#menuToggleControl').click(function() {
     me.toggleMenu();

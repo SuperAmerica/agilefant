@@ -12,7 +12,7 @@ var UserListController = function UserListController(options) {
   this.init();
   this.initConfig();
   this.paint();
-  if(window.pageContoller) {
+  if(window.pageController) {
     window.pageController.setMainController(this);
   }
 };

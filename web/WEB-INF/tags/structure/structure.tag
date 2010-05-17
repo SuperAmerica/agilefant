@@ -50,13 +50,16 @@
   </script>
   </c:if>
   
+  <%@include file="../../jsp/inc/includeDynamics.jsp" %>
+  
   <script type="text/javascript">
+  PageController.initialize(${currentUserJson});
   $(document).ready(function() {
-    PageController.initialize(${currentUserJson});
+    window.pageController.init();
   });
   </script>
   
-  <%@include file="../../jsp/inc/includeDynamics.jsp" %>
+  
 
 
 </head>

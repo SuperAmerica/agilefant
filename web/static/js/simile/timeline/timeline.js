@@ -528,7 +528,7 @@ Timeline._Impl.prototype._initialize = function() {
     containerDiv.appendChild(message.containerDiv);
     
     message.contentDiv.className = "timeline-message";
-    message.contentDiv.innerHTML = "<img src='" + Timeline.urlPrefix + "images/progress-running.gif' /> Loading...";
+    message.contentDiv.innerHTML = " Loading..."; //"<img src='" + Timeline.urlPrefix + "images/progress-running.gif' /> Loading...";
     
     this.showLoadingMessage = function() { message.containerDiv.style.display = "block"; };
     this.hideLoadingMessage = function() { message.containerDiv.style.display = "none"; };

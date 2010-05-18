@@ -7,14 +7,13 @@ extendObject(DailyWorkTasksWithoutStoryController, TasksWithoutStoryController);
 
 
 DailyWorkTasksWithoutStoryController.columnNames =
-  [ "prio", "name", "state", "context", "responsibles", "el", "oe", "es", "actions", "description", "buttons"];
+  [ "prio", "name", "state", "context", "detailedContext", "responsibles", "el", "oe", "es", "actions", "description", "buttons"];
 DailyWorkTasksWithoutStoryController.columnIndices = CommonController.createColumnIndices(DailyWorkTasksWithoutStoryController.columnNames);
 
 
 DailyWorkTasksWithoutStoryController.prototype.createTask = function() {
   TasksWithoutStoryController.prototype.createTask.call(this, true);
 };
-
 
 DailyWorkTasksWithoutStoryController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration({

@@ -35,6 +35,7 @@
 <script type="text/javascript" src="static/js/dynamics/view/StateFilterWidget.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/SpentEffortWidget.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/view/Bubble.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/view/CellBubble.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 <script type="text/javascript" src="static/js/dynamics/model/CommonModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/BacklogModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>

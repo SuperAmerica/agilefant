@@ -34,6 +34,13 @@ WorkQueueController.prototype.handleModelEvents = function(event) {
   }
 };
 
+WorkQueueController.prototype.taskContextFactory = function(cellView, taskModel) {
+  return new CellBubble({
+    title: 'Context',
+    url: 'taskContext.action?objectId=' + taskModel.getId(),
+    text: '<strong style="font-size: 80%">[?]</strong>'
+  }, cellView);
+};
 
 
 WorkQueueController.prototype._getTableConfig = function() {
@@ -62,6 +69,7 @@ WorkQueueController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.state, TasksWithoutStoryController.columnConfig.state);
   
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.context, TasksWithoutStoryController.columnConfig.context);
+  config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.detailedContext, WorkQueueController.columnConfigs.detailedContext);
   
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.responsibles, TasksWithoutStoryController.columnConfig.responsibles);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.el, TasksWithoutStoryController.columnConfig.effortLeft);
@@ -73,3 +81,12 @@ WorkQueueController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.description, TasksWithoutStoryController.columnConfig.description);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.buttons, TasksWithoutStoryController.columnConfig.buttons);
 };
+
+WorkQueueController.columnConfigs = {};
+WorkQueueController.columnConfigs.detailedContext = {
+    minWidth : 15,
+    autoScale : true,
+    title : "",
+    headerTooltip : '',
+    subViewFactory: WorkQueueController.prototype.taskContextFactory
+  };

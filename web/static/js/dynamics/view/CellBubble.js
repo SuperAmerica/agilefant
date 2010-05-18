@@ -18,7 +18,7 @@ CellBubble.prototype.render = function() {
       title: me.options.title,
       maxWidth: me.options.width
     });
-    var content = $('<div/>').appendTo(bub.getElement());
+    var content = $('<div><div style="text-align: center;"><img src="static/img/pleasewait.gif" /></div></div>').appendTo(bub.getElement());
     content.load(me.options.url);
   }).appendTo(this.parent.getElement()).css("cursor","pointer");
 };

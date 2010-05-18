@@ -1,22 +1,21 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.HashSet;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.opensymphony.xwork2.Action;
 
+import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -24,76 +23,81 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.test.Mock;
+import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
-public class TaskActionTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = MockContextLoader.class)
+public class TaskActionTest extends MockedTestCase {
 
-    private TaskAction taskAction = new TaskAction();
+    @TestedBean
+    private TaskAction testable;
+    
+    @Mock
     private TaskBusiness taskBusiness;
+    
+    @Mock
     private TransferObjectBusiness transferObjectBusiness;
+    
+    @Mock
+    private StoryHierarchyBusiness storyHierarchyBusiness;
+    
     private Task task;
     private User user2;
     private User user1;
     
+    
     @Before
-    public void setUp_dependencies() {
-        transferObjectBusiness = createMock(TransferObjectBusiness.class);
-        taskAction.setTransferObjectBusiness(transferObjectBusiness);
-        
-        taskBusiness = createMock(TaskBusiness.class);
-        taskAction.setTaskBusiness(taskBusiness);
-        
+    public void setUp() {
         user1 = new User();
         user1.setId(1);
         
         user2 = new User();
         user2.setId(2);
-    }
-    
-    private void replayAll() {
-        replay(transferObjectBusiness, taskBusiness);
-    }
-    
-    private void verifyAll() {
-        verify(transferObjectBusiness, taskBusiness);
-    }
-    
-    @Before
-    public void setUp() {
+        
         task = new Task();
         task.setId(444);
-        taskAction.setTask(task);
-        taskAction.setTaskId(task.getId());
+        testable.setTask(task);
+        testable.setTaskId(task.getId());
     }
     
     private void expectPopulateJsonData() {
         expect(transferObjectBusiness.constructTaskTO(task)).andReturn(new TaskTO(task));
     }
     
+
+    
+    
     /*
      * TEST RETRIEVING.
      */
     @Test
+    @DirtiesContext
     public void testRetrieve() {
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expectPopulateJsonData();
         replayAll();
         
-        assertEquals(Action.SUCCESS, taskAction.retrieve());
-        assertTrue(taskAction.getTask() instanceof TaskTO);
+        assertEquals(Action.SUCCESS, testable.retrieve());
+        assertTrue(testable.getTask() instanceof TaskTO);
         
         verifyAll(); 
     }
 
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testRetrieve_noSuchTask() {
-        taskAction.setTaskId(-1);
+        testable.setTaskId(-1);
         expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         
-        taskAction.retrieve();
+        testable.retrieve();
         
         verifyAll();
     }
@@ -104,39 +108,42 @@ public class TaskActionTest {
      */
     
     @Test
+    @DirtiesContext
     public void testAjaxStoreTask_newTask() {
-        taskAction.setStoryId(null);
-        taskAction.setIterationId(2);
-        taskAction.setResponsiblesChanged(true);
+        testable.setStoryId(null);
+        testable.setIterationId(2);
+        testable.setResponsiblesChanged(true);
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
         expectPopulateJsonData();
         replayAll();
         
-        assertEquals(Action.SUCCESS, taskAction.store());
+        assertEquals(Action.SUCCESS, testable.store());
         
         verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testAjaxStoreTask_error() {
-        taskAction.setIterationId(2);
-        taskAction.setResponsiblesChanged(true);
+        testable.setIterationId(2);
+        testable.setResponsiblesChanged(true);
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
         replayAll();
         
-        taskAction.store();
+        testable.store();
         
         verifyAll();
     }
     
     @Test
+    @DirtiesContext
     public void testStoreTask_dontUpdateUsers() {
-        taskAction.setResponsiblesChanged(false);
-        taskAction.setIterationId(2);
-        taskAction.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
+        testable.setResponsiblesChanged(false);
+        testable.setIterationId(2);
+        testable.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
@@ -144,17 +151,18 @@ public class TaskActionTest {
         expectPopulateJsonData();
         
         replayAll();
-        taskAction.store();
+        testable.store();
         verifyAll();
         
         assertEquals(0, task.getResponsibles().size());
     }
     
     @Test
+    @DirtiesContext
     public void testStoreTask_updateUsers() {
-        taskAction.setResponsiblesChanged(true);
-        taskAction.setIterationId(2);
-        taskAction.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
+        testable.setResponsiblesChanged(true);
+        testable.setIterationId(2);
+        testable.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
         
         expect(taskBusiness.storeTask(task, 2, null))
             .andReturn(task);
@@ -162,7 +170,7 @@ public class TaskActionTest {
         expectPopulateJsonData();
         
         replayAll();
-        taskAction.store();
+        testable.store();
         verifyAll();
         
         assertEquals(2, task.getResponsibles().size());
@@ -173,45 +181,49 @@ public class TaskActionTest {
      */
     
     @Test
+    @DirtiesContext
     public void testDeleteTask() {
        taskBusiness.deleteAndUpdateHistory(task.getId(), null);
        replayAll();
        
-       assertEquals(Action.SUCCESS, taskAction.delete());
+       assertEquals(Action.SUCCESS, testable.delete());
        
        verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testDeleteTask_noSuchTask() {
-        taskAction.setTaskId(-1);
+        testable.setTaskId(-1);
         taskBusiness.deleteAndUpdateHistory(-1, null);
         expectLastCall().andThrow(new ObjectNotFoundException());        
         replayAll();
         
-        taskAction.delete();
+        testable.delete();
         
         verifyAll();
     }
     
     @Test
+    @DirtiesContext
     public void testDeleteTask_moveChoice() {
-       taskAction.setHourEntryHandlingChoice(HourEntryHandlingChoice.MOVE);
+       testable.setHourEntryHandlingChoice(HourEntryHandlingChoice.MOVE);
        taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.MOVE);
        replayAll();
        
-       assertEquals(Action.SUCCESS, taskAction.delete());
+       assertEquals(Action.SUCCESS, testable.delete());
        
        verifyAll();
     }
 
     @Test
+    @DirtiesContext
     public void testDeleteTask_deleteChoice() {
-       taskAction.setHourEntryHandlingChoice(HourEntryHandlingChoice.DELETE);
+       testable.setHourEntryHandlingChoice(HourEntryHandlingChoice.DELETE);
        taskBusiness.deleteAndUpdateHistory(task.getId(), HourEntryHandlingChoice.DELETE);
        replayAll();
        
-       assertEquals(Action.SUCCESS, taskAction.delete());
+       assertEquals(Action.SUCCESS, testable.delete());
        
        verifyAll();
     }
@@ -220,69 +232,73 @@ public class TaskActionTest {
      * TEST MOVING
      */
     @Test
+    @DirtiesContext
     public void testMoveTask_toStory() {
         Story story = new Story();
         story.setId(3);
         
-        taskAction.setStoryId(story.getId());
-        taskAction.setIterationId(null);
-        taskAction.setTaskId(task.getId());
+        testable.setStoryId(story.getId());
+        testable.setIterationId(null);
+        testable.setTaskId(task.getId());
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.move(task, null, story.getId())).andReturn(task);
         expectPopulateJsonData();
         
-        replay(taskBusiness, transferObjectBusiness);
+        replayAll();
 
-        assertEquals(Action.SUCCESS, taskAction.move());
-        assertTrue(taskAction.getTask() instanceof TaskTO);
+        assertEquals(Action.SUCCESS, testable.move());
+        assertTrue(testable.getTask() instanceof TaskTO);
         
         verifyAll();
     }
     
     @Test
+    @DirtiesContext
     public void testMoveTask_toIteration() {
         Iteration iter = new Iteration();
         iter.setId(333);
         
-        taskAction.setStoryId(null);
-        taskAction.setIterationId(iter.getId());
-        taskAction.setTaskId(task.getId());
+        testable.setStoryId(null);
+        testable.setIterationId(iter.getId());
+        testable.setTaskId(task.getId());
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.move(task, iter.getId(), null)).andReturn(task);
         expectPopulateJsonData();
         
-        replay(taskBusiness, transferObjectBusiness);
+        replayAll();
 
-        assertEquals(Action.SUCCESS, taskAction.move());
-        assertTrue(taskAction.getTask() instanceof TaskTO);
+        assertEquals(Action.SUCCESS, testable.move());
+        assertTrue(testable.getTask() instanceof TaskTO);
         
         verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testMoveTask_noSuchTask() {
-        taskAction.setTaskId(-1);
+        testable.setTaskId(-1);
         expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         
-        taskAction.move();
+        testable.move();
         
         verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testMoveTask_bothIdsGiven() {
-        taskAction.setTaskId(task.getId());
-        taskAction.setStoryId(123);
-        taskAction.setIterationId(1233);
+        testable.setTaskId(task.getId());
+        testable.setStoryId(123);
+        testable.setIterationId(1233);
         
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.move(task, 1233, 123)).andThrow(new ObjectNotFoundException());
         replayAll();
         
-        taskAction.move();
+        testable.move();
         
         verifyAll();
     }
@@ -291,24 +307,26 @@ public class TaskActionTest {
      * TEST RESETING ORIGINAL ESTIMATE
      */
     @Test
+    @DirtiesContext
     public void testResetOriginalEstimate() {
         expect(taskBusiness.retrieve(task.getId())).andReturn(task);
         expect(taskBusiness.resetOriginalEstimate(task.getId())).andReturn(task);
         expectPopulateJsonData();
         replayAll();
         
-        assertEquals(Action.SUCCESS, taskAction.resetOriginalEstimate());
+        assertEquals(Action.SUCCESS, testable.resetOriginalEstimate());
         
         verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testResetOriginalEstimate_noSuchTask() {
-        taskAction.setTaskId(-1);
+        testable.setTaskId(-1);
         expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         
-        taskAction.resetOriginalEstimate();
+        testable.resetOriginalEstimate();
         
         verifyAll();
     }
@@ -319,23 +337,25 @@ public class TaskActionTest {
      */
     
     @Test
+    @DirtiesContext
     public void testInitializePrefetchedData_happyCase() {
         Task expected = new Task();
         expect(taskBusiness.retrieve(123)).andReturn(expected);
         replayAll();
         
-        taskAction.initializePrefetchedData(123);
-        assertEquals(expected, taskAction.getTask());
+        testable.initializePrefetchedData(123);
+        assertEquals(expected, testable.getTask());
         
         verifyAll();
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testInitializePrefetchedData_objectNotFound() {
         expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         
-        taskAction.initializePrefetchedData(-1);
+        testable.initializePrefetchedData(-1);
         
         verifyAll();
     }
@@ -344,11 +364,12 @@ public class TaskActionTest {
      * TEST RANKING 
      */
     @Test
+    @DirtiesContext
     public void testRankUnder_noParentChange() {
-        taskAction.setTaskId(222);
-        taskAction.setRankUnderId(651);
-        taskAction.setIterationId(null);
-        taskAction.setStoryId(null);
+        testable.setTaskId(222);
+        testable.setRankUnderId(651);
+        testable.setIterationId(null);
+        testable.setStoryId(null);
         
         Task returned = new Task();
         
@@ -360,38 +381,77 @@ public class TaskActionTest {
         
         replayAll();
         
-        assertEquals(Action.SUCCESS, taskAction.rankUnder());
-        assertSame(returned, taskAction.getTask());
+        assertEquals(Action.SUCCESS, testable.rankUnder());
+        assertSame(returned, testable.getTask());
         
         verifyAll();
     }
     
     @Test
+    @DirtiesContext
     public void testRankUnder_iteration() {
         
     }
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testRankUnder_objectNotFound() {
-        taskAction.setTaskId(-1);
+        testable.setTaskId(-1);
         expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
         
         replayAll();
         
-        taskAction.rankUnder();
+        testable.rankUnder();
         
         verifyAll();
     }
     
     @Test
+    @DirtiesContext
     public void testDeleteTaskForm() {
-        taskAction.setTaskId(10);
+        testable.setTaskId(10);
         expect(taskBusiness.retrieve(10)).andReturn(task);
         
         replayAll();
         
-        assertEquals(Action.SUCCESS, taskAction.deleteTaskForm());
+        assertEquals(Action.SUCCESS, testable.deleteTaskForm());
         
         verifyAll();
+    }
+    
+    /*
+     * TEST CONTEXT FETCHING
+     */
+    @Test
+    @DirtiesContext
+    public void testGetTaskContext_underStory() {
+        Story parent = new Story();
+        StoryTO parentTo = new StoryTO(parent);
+        task.setStory(parent);
+        task.setIteration(null);
+        
+        expect(taskBusiness.retrieve(task.getId())).andReturn(task);
+        expect(storyHierarchyBusiness.recurseHierarchy(parent)).andReturn(parentTo);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, testable.getTaskContext());
+        verifyAll();
+        
+        assertEquals(parentTo, testable.getParentStory());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGetTaskContext_underIteration() {
+        task.setStory(null);
+        task.setIteration(new Iteration());
+        
+        expect(taskBusiness.retrieve(task.getId())).andReturn(task);
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, testable.getTaskContext());
+        verifyAll();
+        
+        assertNull(testable.getParentStory());
     }
 }

@@ -647,6 +647,10 @@
     <action name="deleteTaskForm" method="deleteTaskForm" class="taskAction">
     	<result type="dispatcher">/WEB-INF/jsp/forms/deleteTaskForm.jsp</result>
     </action>
+    
+    <action name="getTaskContext" class="taskAction" method="getTaskContext">
+	    <result type="dispatcher">/WEB-INF/jsp/inc/taskHierarchy.jsp</result>
+	  </action>
     <!-- /Task actions -->
 
     <!-- Daily work actions -->

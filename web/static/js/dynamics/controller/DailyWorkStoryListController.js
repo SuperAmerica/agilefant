@@ -24,7 +24,7 @@ DailyWorkStoryListController.prototype._getTableConfig = function() {
 
 DailyWorkStoryListController.prototype.storyContextFactory = function(cellView, storyModel) {
   return new CellBubble({
-    title: 'Context',
+    title: "Story's context",
     url: 'ajax/getStoryHierarchy.action?storyId=' + storyModel.getId(),
     text: '<strong style="font-size: 80%">[?]</strong>'
   }, cellView);

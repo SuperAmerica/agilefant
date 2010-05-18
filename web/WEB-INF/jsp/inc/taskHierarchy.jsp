@@ -1,19 +1,27 @@
 <%@include file="./_taglibs.jsp" %>
 <div class="hierarchyContainer">
 
+<c:if test="${parentStory != null}">
 <h2>Story hierarchy</h2>
-
 <div class="storyTreeContainer">
   <div class="tree">
     <ul>
-      <aef:storyTreeNode node="${topmostStory}" forceOpen="true"/>
+      <aef:storyTreeNode node="${parentStory}" forceOpen="true"/>
     </ul>
   </div>
 </div>
+</c:if>
 
 <h2>Backlog hierarchy</h2>
 
-<c:set var="backlog" value="${story.backlog}"/>
+<c:choose>
+<c:when test="${task.iteration != null}">
+  <c:set var="backlog" value="${task.iteration}"/>
+</c:when>
+<c:otherwise>
+  <c:set var="backlog" value="${task.story.backlog}"/>
+</c:otherwise>
+</c:choose>
 
 <ul>
 <c:choose>

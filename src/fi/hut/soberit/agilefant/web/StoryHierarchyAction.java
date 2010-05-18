@@ -32,16 +32,17 @@ public class StoryHierarchyAction extends ActionSupport {
     private Integer projectId;
     private Integer productId;
     private Story story;
+    private Story topmostStory;
     private Integer referenceStoryId;
 
     private List<Story> hierarchy = new ArrayList<Story>();
 
     public String recurseHierarchyAsList() {
         story = storyBusiness.retrieve(storyId);
-        story = storyHierarchyBusiness.recurseHierarchy(story);
+        topmostStory = storyHierarchyBusiness.recurseHierarchy(story);
         return Action.SUCCESS;
     }
-
+    
     public String moveStoryUnder() {
         Story target = this.storyBusiness.retrieve(storyId);
         Story reference = this.storyBusiness.retrieve(referenceStoryId);
@@ -119,6 +120,10 @@ public class StoryHierarchyAction extends ActionSupport {
 
     public void setStoryFilters(StoryFilters storyFilters) {
         this.storyFilters = storyFilters;
+    }
+
+    public Story getTopmostStory() {
+        return topmostStory;
     }
 
 }

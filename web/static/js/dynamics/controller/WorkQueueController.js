@@ -37,7 +37,7 @@ WorkQueueController.prototype.handleModelEvents = function(event) {
 WorkQueueController.prototype.taskContextFactory = function(cellView, taskModel) {
   return new CellBubble({
     title: 'Context',
-    url: 'taskContext.action?objectId=' + taskModel.getId(),
+    url: 'ajax/getTaskContext.action?taskId=' + taskModel.getId(),
     text: '<strong style="font-size: 80%">[?]</strong>'
   }, cellView);
 };

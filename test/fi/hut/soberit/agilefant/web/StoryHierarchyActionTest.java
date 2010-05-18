@@ -53,9 +53,8 @@ public class StoryHierarchyActionTest extends MockedTestCase {
         assertEquals(Action.SUCCESS, storyHierarchyAction.recurseHierarchyAsList());
         verifyAll();
 
-        assertEquals(expected, storyHierarchyAction.getStory());
+        assertEquals(expected, storyHierarchyAction.getTopmostStory());
     }
-
     
     @Test
     @DirtiesContext

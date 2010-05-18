@@ -4,6 +4,9 @@
 
 <%@ attribute type="fi.hut.soberit.agilefant.model.Story"
   name="node"%>
+
+<%@ attribute type="java.lang.Boolean" name="forceOpen" %>
+
 <c:choose>
   <c:when test="${aef:isIteration(node.backlog)}">
     <c:set var="nodeType" value="iteration_story"/>
@@ -12,7 +15,9 @@
     <c:set var="nodeType" value="story" />
   </c:otherwise>
 </c:choose>
-  <li storyid="${node.id}" storystate="${node.state}" rel="${nodeType}">
+  <c:if test="${forceOpen}"><c:set var="forcedClass" value="open" /></c:if>
+
+  <li storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="${forcedClass}">
     <a href="#">
     <span class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></span>
     
@@ -47,7 +52,7 @@
     <c:if test="${!empty node.children}">
     <ul>
       <c:forEach items="${node.children}" var="childStory">
-       <aef:storyTreeNode node="${childStory}"/>
+       <aef:storyTreeNode node="${childStory}" forceOpen="${forceOpen}"/>
       </c:forEach>
     </ul>
     </c:if>

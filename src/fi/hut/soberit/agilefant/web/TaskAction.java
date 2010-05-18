@@ -11,8 +11,10 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.annotations.PrefetchId;
+import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -30,6 +32,9 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
     
+    @Autowired
+    private StoryHierarchyBusiness storyHierarchyBusiness;
+    
     // Helper fields
     private Task task;
     @PrefetchId
@@ -40,6 +45,8 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private Integer iterationId;
     private Integer storyId;
     private boolean responsiblesChanged = false;
+    
+    private Story parentStory;
     
     private Set<User> newResponsibles = new HashSet<User>();
     
@@ -74,6 +81,14 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     }
     
     // OTHER FUNCTIONS
+    
+    public String getTaskContext() {
+        task = taskBusiness.retrieve(taskId);
+        if (task.getStory() != null) {
+            parentStory = storyHierarchyBusiness.recurseHierarchy(task.getStory());
+        }
+        return Action.SUCCESS;
+    }
     
     public String move() {
         task = taskBusiness.retrieve(taskId);
@@ -165,6 +180,10 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     
     public void setResponsiblesChanged(boolean responsiblesChanged) {
         this.responsiblesChanged = responsiblesChanged;
+    }
+
+    public Story getParentStory() {
+        return parentStory;
     }
     
 }

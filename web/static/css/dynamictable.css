@@ -276,6 +276,8 @@ li.dynamictable-captionaction {
   list-style: none;
   list-style-type: none;
   width: 60%;
+  overflow: visible;
+  height: 1px;
 }
 
 .dynamictable-expand {

@@ -24,6 +24,13 @@
   
   <link rel="shortcut icon" href="static/img/favicon.png" type="image/png" />
   
+  <script type="text/javascript">
+  if (!console) {
+    var console = { log: function() {}; }; 
+  }
+  </script>
+  
+  
   <script type="text/javascript" src="static/js/jquery.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.cookie.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery-ui.min.js?<ww:text name="struts.agilefantReleaseId" />"></script>

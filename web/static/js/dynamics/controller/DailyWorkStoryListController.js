@@ -4,22 +4,6 @@ var DailyWorkStoryListController = function(model, element, parentController) {
 };
 extendObject(DailyWorkStoryListController, StoryListController);
 
-DailyWorkStoryListController.columnConfig = {};
-DailyWorkStoryListController.columnConfig.context = {
-  minWidth: 120,
-  autoScale: true,
-  title: "Context",
-  get: StoryModel.prototype.getParent,
-  decorator: DynamicsDecorators.storyContextDecorator
-};
-DailyWorkStoryListController.columnConfig.detailedContext = {
-  minWidth : 15,
-  autoScale : true,
-  title : "",
-  headerTooltip : '',
-  subViewFactory: DailyWorkStoryListController.prototype.storyContextFactory
-};
-
 DailyWorkStoryListController.columnNames =
   ["priority", "name", "points", "context", "detailedContext", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
 DailyWorkStoryListController.columnIndices = CommonController.createColumnIndices(DailyWorkStoryListController.columnNames);
@@ -69,4 +53,21 @@ DailyWorkStoryListController.prototype._addColumnConfigs = function(config) {
   
   /* Overwrite some rules */
   config.columns[DailyWorkStoryListController.columnIndices.name].options.dragHandle = false;
+};
+
+
+DailyWorkStoryListController.columnConfig = {};
+DailyWorkStoryListController.columnConfig.context = {
+  minWidth: 120,
+  autoScale: true,
+  title: "Context",
+  get: StoryModel.prototype.getParent,
+  decorator: DynamicsDecorators.storyContextDecorator
+};
+DailyWorkStoryListController.columnConfig.detailedContext = {
+  minWidth : 15,
+  autoScale : true,
+  title : "",
+  headerTooltip : '',
+  subViewFactory: DailyWorkStoryListController.prototype.storyContextFactory
 };

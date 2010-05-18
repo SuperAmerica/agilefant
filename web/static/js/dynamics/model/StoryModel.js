@@ -160,7 +160,7 @@ StoryModel.prototype.reload = function(callback) {
     "ajax/retrieveStory.action",
     {storyId: me.getId()},
     function(data,status) {
-      me.setData(data, false, true);
+      me.setData(data, false);
       //me.callListeners(new DynamicsEvents.EditEvent(me));
       if (callback) {
         callback();

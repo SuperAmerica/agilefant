@@ -38,9 +38,9 @@ CommonModel.prototype.reload = function() {
  * <p>
  * Calls an abstract internal method, which should be overridden.
  */
-CommonModel.prototype.setData = function(newData, suppressEvents, forceRecursiveEvents) {
+CommonModel.prototype.setData = function(newData, suppressEvents) {
   if (!this.preventSetData) {
-    this.suppressEvents = !forceRecursiveEvents;
+    this.suppressEvents = suppressEvents;
     if(this._isMetricsDataUpdated(newData)) {
       this.callListeners(new DynamicsEvents.MetricsEvent(this));
     }

@@ -90,7 +90,7 @@ TaskModel.prototype.reload = function() {
     data: {taskId: this.id},
     dataType: "json",
     success: function(data, type) {
-      me.setData(data, false, true);
+      me.setData(data, false);
     }
   });
 };

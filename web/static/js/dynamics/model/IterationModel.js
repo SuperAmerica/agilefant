@@ -147,7 +147,7 @@ IterationModel.prototype.reload = function(callback) {
     "ajax/iterationData.action",
     {iterationId: this.getId()},
     function(data,status) {
-      me.setData(data, false, true);
+      me.setData(data, false);
       if(callback) {
         callback();
       }

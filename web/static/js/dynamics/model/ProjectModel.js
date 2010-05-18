@@ -187,7 +187,7 @@ ProjectModel.prototype.reload = function() {
     "ajax/projectData.action",
     {projectId: me.getId()},
     function(data,status) {
-      me.setData(data, false, true);
+      me.setData(data, false);
       //me.callListeners(new DynamicsEvents.EditEvent(me));
     }
   );

@@ -329,7 +329,7 @@ ProjectController.prototype.createIteration = function() {
   var controller = new IterationRowController(mockModel, null, this);
   var row = this.iterationsView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([IterationRowController.columnIndices.actions]);
+  row.autoCreateCells([0, IterationRowController.columnIndices.actions]);
   row.render();
   controller.openRowEdit();
 };

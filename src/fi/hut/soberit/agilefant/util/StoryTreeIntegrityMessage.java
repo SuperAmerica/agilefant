@@ -6,23 +6,25 @@ public class StoryTreeIntegrityMessage {
 
     private Story source;
     private Story target;
-    private String message;
-    
-    public StoryTreeIntegrityMessage(Story source, Story target, String message) {
+    private StoryHierarchyIntegrityViolationType message;
+
+    public StoryTreeIntegrityMessage(Story source, Story target,
+            StoryHierarchyIntegrityViolationType message) {
         this.source = source;
         this.target = target;
         this.message = message;
     }
-    
+
     public Story getSource() {
         return source;
     }
-    public String getMessage() {
+
+    public StoryHierarchyIntegrityViolationType getMessage() {
         return message;
     }
 
     public Story getTarget() {
         return target;
     }
-    
+
 }

@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.util.StoryHierarchyIntegrityViolationType;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 
 
@@ -36,8 +37,8 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             /*
              * Can't move to different branch, if the story has children.
              */
-            Set<Backlog> allowed = getAllowedBacklogsForChildren(newBacklog);
-            checkChildBacklogRule(story, messages, allowed, "story.constraint.childInWrongBranch");
+            Set<Backlog> allowed = getAllowedBacklogsForChildren(newBacklog); 
+            checkChildBacklogRule(story, messages, allowed, StoryHierarchyIntegrityViolationType.CHILD_IN_WRONG_BRANCH);
         }
         
         // If story has a parent
@@ -72,7 +73,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
     }
 
     private void checkChildBacklogRule(Story parent, List<StoryTreeIntegrityMessage> messages,
-            Set<Backlog> allowedBacklogs, String message) {
+            Set<Backlog> allowedBacklogs, StoryHierarchyIntegrityViolationType message) {
         
         for (Story child : parent.getChildren()) {
             
@@ -89,7 +90,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             List<StoryTreeIntegrityMessage> messages) {
         if (newBacklog instanceof Iteration) {
             messages.add(new StoryTreeIntegrityMessage(story, null,
-                    "story.constraint.moveToIterationHasChildren"));
+                    StoryHierarchyIntegrityViolationType.MOVE_TO_ITERATION_HAS_CHILDREN));
         }
     }
     
@@ -103,7 +104,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         for (Story parent = story.getParent(); parent != null; parent = parent.getParent()) {
             if (parent.getBacklog() instanceof Project) {
                 messages.add(new StoryTreeIntegrityMessage(story, parent,
-                        "story.constraint.parentDeeperInHierarchy"));
+                        StoryHierarchyIntegrityViolationType.PARENT_DEEPER_IN_HIERARCHY));
             }
         }
     }
@@ -127,7 +128,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         for (Story parent = story.getParent(); parent != null; parent = parent.getParent()) {
            if (!allowedBacklogsForParents.contains(parent.getBacklog())) {
                 messages.add(new StoryTreeIntegrityMessage(story, parent,
-                        "story.constraint.parentInWrongBranch"));
+                        StoryHierarchyIntegrityViolationType.PARENT_IN_WRONG_BRANCH));
            }
         }
         
@@ -161,7 +162,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             
             checkTargetBacklogInWrongBranch(story, newParent, messages, allowedBacklogs);
             
-            checkChildBacklogRule(story, messages, allowedBacklogs, "story.constraint.targetParentInWrongBranch");
+            checkChildBacklogRule(story, messages, allowedBacklogs, StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_WRONG_BRANCH);
         }
         
         
@@ -172,10 +173,10 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             List<StoryTreeIntegrityMessage> messages,
             Set<Backlog> allowedBacklogs) {
         if (story.getBacklog() instanceof Product) {
-            messages.add(new StoryTreeIntegrityMessage(story, newParent, "story.constraint.targetParentDeeperInHierarchy"));
+            messages.add(new StoryTreeIntegrityMessage(story, newParent, StoryHierarchyIntegrityViolationType.TARGET_PARENT_DEEPER_IN_HIERARCHY));
         }
         else if (!(allowedBacklogs.contains(story.getBacklog()))) {
-            messages.add(new StoryTreeIntegrityMessage(story, newParent, "story.constraint.targetParentInWrongBranch"));
+            messages.add(new StoryTreeIntegrityMessage(story, newParent, StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_WRONG_BRANCH));
         }
     }
 
@@ -183,7 +184,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             List<StoryTreeIntegrityMessage> messages) {
         if (newParent.getBacklog() instanceof Iteration) {
             messages.add(new StoryTreeIntegrityMessage(story, newParent,
-                    "story.constraint.targetParentInIteration"));
+                    StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_ITERATION));
         }
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 
@@ -55,5 +56,15 @@ public interface StoryHierarchyBusiness {
      * @param story the story, whose children are to be reordered
      */
     public void updateChildrenTreeRanks(Story story);
+    
+    /**
+     * Recurses hierarchy to topmost level.
+     * <p>
+     * Will not include any children except the straight hierarchy
+     * from the given story to it's topmost ancestor.
+     * @param story
+     * @return
+     */
+    public StoryTO recurseHierarchy(Story story);
 
 }

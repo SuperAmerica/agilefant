@@ -226,4 +226,27 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         }
     } 
 
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public StoryTO recurseHierarchy(Story story) {
+        StoryTO returned = null;
+        StoryTO transfer = null;
+        StoryTO old = null;
+        
+        for (Story iterator = story; iterator != null; iterator = iterator.getParent()) {
+            transfer = new StoryTO(iterator);
+            
+            if (old != null) {
+                transfer.setChildren(new ArrayList<Story>(Arrays.asList(old)));
+            }
+            else {
+                transfer.setChildren(new ArrayList<Story>());
+            }
+            
+            old = transfer;
+            returned = transfer;
+        }
+        return returned;
+    }
 }

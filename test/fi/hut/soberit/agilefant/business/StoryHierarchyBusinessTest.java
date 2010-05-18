@@ -23,6 +23,7 @@ import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -647,5 +648,41 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         storyHierarchyBusiness.updateChildrenTreeRanks(null);
         verifyAll();
     }
+    
+    
+    @Test
+    @DirtiesContext
+    public void testRecurseHierarchy_topmostStory() {
+        story1.setParent(null);
+        story1.setChildren(Arrays.asList(story2));
+        story2.setParent(story1);
+        
+        replayAll();
+        StoryTO actual = storyHierarchyBusiness.recurseHierarchy(story1);
+        verifyAll();
+        
+        assertNull("Story's parent not null", actual.getParent());
+        assertEquals("Story's children not empty", 0, actual.getChildren().size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRecurseHierarchy() {
+        story1.setParent(null);
+        story1.setChildren(Arrays.asList(story2, story4));
+        story4.setParent(story1);
+        story2.setParent(story1);
+        story2.setChildren(Arrays.asList(story3));
+        story3.setParent(story3);
+        
+        replayAll();
+        StoryTO actual = storyHierarchyBusiness.recurseHierarchy(story2);
+        verifyAll();
+        
+        assertNull("Story's parent not null", actual.getParent());
+        assertEquals("Story's children empty", 1, actual.getChildren().size());
+        assertEquals("Child story's children not empty", 0, actual.getChildren().get(0).getChildren().size());
+    }
+    
     
 }

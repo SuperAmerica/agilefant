@@ -3,42 +3,46 @@
 
 <h2>Story hierarchy</h2>
 
-<%--
-Link to backlog:
+<aef:storyTreeNode node="${story}" />
 
-<a href="editBacklog.action?backlogId=${story.backlog.id}">
-</a>
- --%>
+<h2>Backlog hierarchy</h2>
 
-<ul>
-<c:set var="indent" value="0"/>
-<c:set var="itemNumber" value="${fn:length(hierarchy)}" />
-<c:set var="count" value="0" />
+<c:set var="backlog" value="${story.backlog}"/>
 
-<c:forEach items="${hierarchy}" var="item">
-  <c:set var="count" value="${count + 1}" />
-  <c:choose>
-  <c:when test="${story == item}">
-    <c:set var="cssClass" value="currentItem" />
-  </c:when>
-  <c:otherwise>
-    <c:set var="cssClass" value="" />  
-  </c:otherwise>
-  </c:choose>
+<c:choose>
+  <c:when test="${aef:isIteration(backlog)}">
+    <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
+    <a href="editBacklog.action?backlogId=${backlog.parent.parent.id}">
+      <c:out value="${backlog.parent.parent.name}" />
+    </a>
+    </li>
     
-  <li style="margin-left: ${indent}px;" class="${cssClass}"><c:out value="${item.name}" /> <span style="font-size: 80%">(<c:out value="${item.backlog.name}" />)</span></li>
+    <li style="margin-left: 1em; list-style-image: url('static/img/hierarchy_arrow.png');">
+    <a href="editBacklog.action?backlogId=${backlog.parent.id}">
+      <c:out value="${backlog.parent.name}" />
+    </a>
+    </li> 
+    
+    <li style="margin-left: 2em; list-style-image: url('static/img/hierarchy_arrow.png');">
+      <c:out value="${backlog.name}" />
+    </li>
+  </c:when>
   
+  <c:when test="${aef:isProject(backlog)}">   
+    <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
+    <a href="editBacklog.action?backlogId=${backlog.parent.id}">
+      <c:out value="${backlog.parent.name}" />
+    </a>
+    </li> 
+    
+    <li style="margin-left: 1em; list-style-image: url('static/img/hierarchy_arrow.png');">
+      <c:out value="${backlog.name}" />
+    </li>
+  </c:when>
   
-  <c:set var="indent" value="${indent + 10}"/>
-  
-  <c:if test="${count == itemNumber}">
-    <c:forEach items="${item.children}" var="child">
-      <li style="margin-left: ${indent}px;"><c:out value="${child.name}" /> <span style="font-size: 80%">(<c:out value="${item.backlog.name}" />)</span></li>        
-    </c:forEach>
-  </c:if>
-  
-</c:forEach>
-</ul>
-
-
-</div>
+  <c:when test="${aef:isProduct(backlog)}">
+    <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
+      <c:out value="${backlog.name}" />
+    </li>
+  </c:when>
+</c:choose>

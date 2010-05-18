@@ -38,12 +38,7 @@ public class StoryHierarchyAction extends ActionSupport {
 
     public String recurseHierarchyAsList() {
         story = storyBusiness.retrieve(storyId);
-
-        Story iterator = story;
-        while (iterator != null) {
-            hierarchy.add(0, iterator);
-            iterator = iterator.getParent();
-        }
+        story = storyHierarchyBusiness.recurseHierarchy(story);
         return Action.SUCCESS;
     }
 

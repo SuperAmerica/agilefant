@@ -18,12 +18,12 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
-import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -43,53 +43,19 @@ public class StoryHierarchyActionTest extends MockedTestCase {
     @DirtiesContext
     public void testRecurseHierarchyAsList() {
         Story story = new Story();
-        Story parent = new Story();
-        Story ancestor = new Story();
-        parent.setParent(ancestor);
-        story.setParent(parent);
+        StoryTO expected = new StoryTO(story);
         storyHierarchyAction.setStoryId(123);
         
         expect(storyBusiness.retrieve(123)).andReturn(story);
+        expect(storyHierarchyBusiness.recurseHierarchy(story)).andReturn(expected);
         
         replayAll();
         assertEquals(Action.SUCCESS, storyHierarchyAction.recurseHierarchyAsList());
         verifyAll();
-        
-        assertEquals(3, storyHierarchyAction.getHierarchy().size());
-        assertSame(ancestor, storyHierarchyAction.getHierarchy().get(0));
-        assertSame(parent, storyHierarchyAction.getHierarchy().get(1));
-        assertSame(story, storyHierarchyAction.getHierarchy().get(2));
-        
-        assertSame(story, storyHierarchyAction.getStory());
+
+        assertEquals(expected, storyHierarchyAction.getStory());
     }
-    
-    @Test
-    @DirtiesContext
-    public void testRecurseHierarchyAsList_noParent() {
-        Story story = new Story();
-        storyHierarchyAction.setStoryId(123);
-        
-        expect(storyBusiness.retrieve(123)).andReturn(story);
-        
-        replayAll();
-        assertEquals(Action.SUCCESS, storyHierarchyAction.recurseHierarchyAsList());
-        verifyAll();
-        
-        assertEquals(1, storyHierarchyAction.getHierarchy().size());
-        assertSame(story, storyHierarchyAction.getHierarchy().get(0));
-    }
-    
-    @Test(expected = ObjectNotFoundException.class)
-    @DirtiesContext
-    public void testRecurseHierarchyAsList_noSuchStory() {
-        storyHierarchyAction.setStoryId(-1);
-        
-        expect(storyBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
-        
-        replayAll();
-        storyHierarchyAction.recurseHierarchyAsList();
-        verifyAll();
-    }
+
     
     @Test
     @DirtiesContext

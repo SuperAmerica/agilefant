@@ -12,9 +12,16 @@ DailyWorkStoryListController.columnConfig.context = {
   get: StoryModel.prototype.getParent,
   decorator: DynamicsDecorators.storyContextDecorator
 };
+DailyWorkStoryListController.columnConfig.detailedContext = {
+  minWidth : 15,
+  autoScale : true,
+  title : "",
+  headerTooltip : '',
+  subViewFactory: DailyWorkStoryListController.prototype.storyContextFactory
+};
 
 DailyWorkStoryListController.columnNames =
-  ["priority", "name", "points", "context", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
+  ["priority", "name", "points", "context", "detailedContext", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
 DailyWorkStoryListController.columnIndices = CommonController.createColumnIndices(DailyWorkStoryListController.columnNames);
 
 DailyWorkStoryListController.prototype._getTableConfig = function() {
@@ -31,6 +38,14 @@ DailyWorkStoryListController.prototype._getTableConfig = function() {
   return config;
 };
 
+DailyWorkStoryListController.prototype.storyContextFactory = function(cellView, storyModel) {
+  return new CellBubble({
+    title: 'Context',
+    url: 'ajax/getStoryHierarchy.action?storyId=' + storyModel.getId(),
+    text: '<strong style="font-size: 80%">[?]</strong>'
+  }, cellView);
+};
+
 DailyWorkStoryListController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.priority, StoryListController.columnConfig.prio);
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.name, StoryListController.columnConfig.name);
@@ -38,6 +53,7 @@ DailyWorkStoryListController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.state, StoryListController.columnConfig.state);
   
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.context, DailyWorkStoryListController.columnConfig.context);
+  config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.detailedContext, DailyWorkStoryListController.columnConfig.detailedContext);
   
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.responsibles, StoryListController.columnConfig.responsibles);
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.el, StoryListController.columnConfig.effortLeft);

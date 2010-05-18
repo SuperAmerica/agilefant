@@ -26,7 +26,7 @@
   
   <script type="text/javascript">
   if (!console) {
-    var console = { log: function() {}; }; 
+    var console = { log: function() {} }; 
   }
   </script>
   

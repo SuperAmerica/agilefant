@@ -81,6 +81,11 @@ DailyWorkModel.prototype.addTask = function(task) {
   this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this, "tasksWithoutStory"));
 };
 
+DailyWorkModel.prototype.addStory = function(story) {
+  this.relations.stories.push(story);
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this, "stories"));
+};
+
 DailyWorkModel.prototype.getWorkQueue = function() {
   return this.relations.queuedTasks;
 };

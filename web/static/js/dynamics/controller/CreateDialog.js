@@ -328,7 +328,8 @@ CreateDialog.Story.columnIndices = {
   backlog:    1,
   state:      2,
   storyPoints:3,
-  description:4
+  responsibles:4,
+  description:5
 };
 CreateDialog.Story.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -383,6 +384,20 @@ CreateDialog.Story.prototype.initFormConfig = function() {
       editor: "Number",
       required: false,
       set: StoryModel.prototype.setStoryPoints
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.responsibles,{
+    title : "Responsibles",
+    get : StoryModel.prototype.getResponsibles,
+    decorator: DynamicsDecorators.emptyValueWrapper(DynamicsDecorators.userInitialsListDecorator, "(Select users)"),
+    editable : true,
+    openOnRowEdit: false,
+    edit : {
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
+      set : StoryModel.prototype.setResponsibles
     }
   });
 

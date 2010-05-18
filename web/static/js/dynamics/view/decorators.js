@@ -43,6 +43,15 @@ var DynamicsDecorators = {
       return value + str;
     };
   },
+  emptyValueWrapper: function(decorator, emptyText) {
+    return function(value) {
+      var retval = decorator(value);
+      if (!retval || !retval.length) {
+        return emptyText;
+      }
+      return retval;
+    }
+  }, 
   exactEstimateDecorator: function(value) {
     if (typeof (value) === 'string') {
       return value;
@@ -90,7 +99,6 @@ var DynamicsDecorators = {
     }
     return "";
   },
-  
   plainContextDecorator: function(value) {
     if (! value || (! value.backlogId && ! value.storyId)) {
       return "(not set)";

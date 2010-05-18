@@ -21,6 +21,8 @@ CommonModel.prototype.initialize = function() {
   this.metricFields = [];
   this.preventSetData = false;
   this.suppressEvents = true;
+  
+  this.clonedModelTypes = [];
 };
 
 

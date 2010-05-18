@@ -155,15 +155,18 @@ ModelFactory.types = {
     story:      "story",
     /** @member ModelFactory */
     task:       "task",
+    /** @member ModelFactory */
+    workQueueTask: "workQueueTask",
     
     /** @member ModelFactory */
     user:       "user",
+    /** @member ModelFactory */
     team:       "team",
-    
+    /** @member ModelFactory */
     hourEntry: "hourEntry",
-    
+    /** @member ModelFactory */
     assignment: "assignment",
-    
+    /** @member ModelFactory */
     label: "label"
 };
 
@@ -371,6 +374,10 @@ ModelFactory.updateObject = function(data, suppressEvents) {
     instance._addObject(object);
   }
   object.setData(data, suppressEvents);
+  
+  // Update clone models
+  instance._updateCloneModels(object, data);
+  
   return object;
 };
 
@@ -388,6 +395,17 @@ ModelFactory.initProjectPortfolio = function(callback) {
   ModelFactory.getInstance()._initProjectPortfolio(callback);
 };
 /* OBJECT METHODS */
+
+
+ModelFactory.prototype._updateCloneModels = function(object, data) {
+  for (var i = 0; i < object.clonedModelTypes.length; i++) {
+    var cloneType = object.clonedModelTypes[i];
+    var clone = this._getObject(cloneType, object.getId());
+    if (clone) {
+      clone.setData(data);
+    }
+  }
+};
 
 /**
  * Internal function to add objects to the dataset.

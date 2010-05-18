@@ -39,6 +39,8 @@ var TaskModel = function TaskModel() {
   };
   this.transientData.workingOnTaskIds = [];
   this.metricFields = ["effortLeft", "originalEstimate", "effortSpent"];
+  
+  this.clonedModelTypes = [ ModelFactory.types.workQueueTask ];
 };
 
 TaskModel.prototype = new CommonModel();

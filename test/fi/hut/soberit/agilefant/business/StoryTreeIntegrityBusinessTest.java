@@ -32,19 +32,9 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     @TestedBean
     private StoryTreeIntegrityBusinessImpl testable;
     
-
-    
-//    @Test
-//    @DirtiesContext
-//    public void testChangeBacklog_happyCase() {
-//        
-//        replayAll();
-//        Collection<StoryTreeIntegrityMessage> messages = testable
-//                .checkChangeBacklog(null, null);
-//        verifyAll();
-//        
-//        assertEquals(0, messages.size());
-//    }
+    /*
+     * CHANGING BACKLOG
+     */
     
     @Test
     @DirtiesContext
@@ -52,11 +42,11 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
 
         replayAll();
         List<StoryTreeIntegrityMessage> messages = testable
-                .checkChangeBacklog(story_inProject1, iteration);
+                .checkChangeBacklog(story_31, iteration);
         verifyAll();
         
         assertNumberOfMessages(messages, 1);
-        assertMessagesContain(messages, "story.constraint.moveToIterationHasChildren", story_inProject1);
+        assertMessagesContain(messages, "story.constraint.moveToIterationHasChildren", story_31, null);
     }
     
     @Test
@@ -65,12 +55,13 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
 
         replayAll();
         List<StoryTreeIntegrityMessage> messages = testable.checkChangeBacklog(
-                story_inProduct, project2);
+                story_21, project2);
         verifyAll();
         
-        assertNumberOfMessages(messages, 2);
-        assertMessagesContain(messages, "story.constraint.childInWrongBranch", story_inProduct);
-        assertMessagesContain(messages, "story.constraint.childInWrongBranch", story_inProduct);
+        assertNumberOfMessages(messages, 3);
+        assertMessagesContain(messages, "story.constraint.childInWrongBranch", story_21, story_31);
+        assertMessagesContain(messages, "story.constraint.childInWrongBranch", story_31, story_41);
+        assertMessagesContain(messages, "story.constraint.childInWrongBranch", story_21, story_32);
     }
     
     @Test
@@ -80,11 +71,11 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
 
         replayAll();
         List<StoryTreeIntegrityMessage> messages = testable.checkChangeBacklog(
-                story_inIteration, product);
+                story_41, product);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
-        assertMessagesContain(messages, "story.constraint.parentDeeperInHierarchy", story_inIteration);
+        assertMessagesContain(messages, "story.constraint.parentDeeperInHierarchy", story_41, story_31);
     }
     
     @Test
@@ -93,29 +84,100 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
 
         replayAll();
         List<StoryTreeIntegrityMessage> messages = testable.checkChangeBacklog(
-                story_leaf_inProject2, project1);
+                story_33, project1);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
-        assertMessagesContain(messages, "story.constraint.parentInWrongBranch", story_leaf_inProject2);
+        assertMessagesContain(messages, "story.constraint.parentInWrongBranch", story_33, story_22);
     }
 
     
+    /*
+     * CHANGING PARENT STORY
+     */
+    
+    @Test
+    @DirtiesContext
+    public void testChangeParent_moveUnderIterationStory() {
+        // 32 -> 41
+        
+        replayAll();
+        List<StoryTreeIntegrityMessage> messages =
+            testable.checkChangeParentStory(story_32, story_41);
+        verifyAll();
+
+        assertNumberOfMessages(messages, 1);
+        assertMessagesContain(messages, "story.constraint.targetParentInIteration", story_32, story_41);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testChangeParent_moveToDifferentBranch() {
+        // 41 -> 22
+        
+        replayAll();
+        List<StoryTreeIntegrityMessage> messages =
+            testable.checkChangeParentStory(story_41, story_22);
+        verifyAll();
+
+        assertNumberOfMessages(messages, 1);
+        assertMessagesContain(messages, "story.constraint.targetParentInWrongBranch", story_41, story_22);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testChangeParent_moveProductStoryUnderProjectStory() {
+        // 23 -> 22
+        // 34 vaihtaa branchia
+        
+        replayAll();
+        List<StoryTreeIntegrityMessage> messages =
+            testable.checkChangeParentStory(story_23, story_22);
+        verifyAll();
+
+        assertNumberOfMessages(messages, 1);
+        assertMessagesContain(messages, "story.constraint.targetParentDeeperInHierarchy", story_23, story_22);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testChangeParent_moveBranchUnderAnother() {
+        // 22 -> 31
+        // 2 virhettä, 22->31, 33 -> 31
+        
+        replayAll();
+        List<StoryTreeIntegrityMessage> messages =
+            testable.checkChangeParentStory(story_22, story_31);
+        verifyAll();
+
+        assertNumberOfMessages(messages, 2);
+        assertMessagesContain(messages, "story.constraint.targetParentInWrongBranch", story_22, story_31);
+        assertMessagesContain(messages, "story.constraint.targetParentInWrongBranch", story_22, story_33);
+    }
+    
+    
+    
+    
+    
+    
+    /*
+     * HELPER METHODS
+     */
 
     
     /**
      * Helper method for checking messages' content.
      */
     private void assertMessagesContain(List<StoryTreeIntegrityMessage> messages,
-            String message, Story source) {     
+            String message, Story source, Story target) {     
         
-        // TODO: Check source
         for (StoryTreeIntegrityMessage msg : messages) {
-            if (msg.getMessage().equals(message)) {
+            if (msg.getMessage().equals(message) && msg.getSource() == source &&
+                    msg.getTarget() == target) {
                 return;
             }
         }
-        fail("Message not found");
+        fail("Message not found: " + message);
     }
     
     private void assertNumberOfMessages(List<StoryTreeIntegrityMessage> messages, int num) {
@@ -126,17 +188,30 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     /*
      * DATA CONSTRUCTION 
      */
+    /*
+     * Dataset as ASCII:
+     * Story 11 (Prod)
+     *  |- Story 21 (Prod)
+     *  | |- Story 31 (Proj1)
+     *  | | |- Story 41 (Iter1)
+     *  | |- Story 32 (Proj1)
+     *  |- Story 22 (Proj2)
+     *  | |- Story 33 (Proj2)
+     *  |- Story 23 (Prod)
+     */
     
     Product     product;
     Project     project1;
     Project     project2;
     Iteration   iteration;
-    Story       story_root;
-    Story       story_inProduct;
-    Story       story_inProject1;
-    Story       story_inIteration;
-    Story       story_inProject2;
-    Story       story_leaf_inProject2;
+    Story       story_11;
+    Story       story_21;
+    Story       story_31;
+    Story       story_32;
+    Story       story_41;
+    Story       story_22;
+    Story       story_33;
+    Story       story_23;
 
     
     @Before
@@ -148,36 +223,41 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     }
 
     private void constructStories() {
-        story_root = new Story();
-        story_inProduct = new Story();
-        story_inProject1 = new Story();
-        story_inIteration = new Story();
-        story_inProject2 = new Story();
-        story_leaf_inProject2 = new Story();
+        story_11 = new Story();
+        story_21 = new Story();
+        story_31 = new Story();
+        story_32 = new Story();
+        story_41 = new Story();
+        story_22 = new Story();
+        story_33 = new Story();
+        story_23 = new Story();
     }
 
     private void setStoryRelations() {
-        story_root.setChildren(new ArrayList<Story>(Arrays.asList(story_inProduct, story_inProject2)));
-        story_inProduct.setParent(story_root);
-        story_inProject2.setParent(story_root);
+        story_11.setChildren(new ArrayList<Story>(Arrays.asList(story_21, story_22)));
+        story_21.setParent(story_11);
+        story_22.setParent(story_11);
         
-        story_inProduct.setChildren(new ArrayList<Story>(Arrays.asList(story_inProject1)));
-        story_inProject1.setParent(story_inProduct);
+        story_21.setChildren(new ArrayList<Story>(Arrays.asList(story_31, story_32)));
+        story_31.setParent(story_21);
+        story_32.setParent(story_21);
         
-        story_inProject1.setChildren(new ArrayList<Story>(Arrays.asList(story_inIteration)));
-        story_inIteration.setParent(story_inProject1);
+        story_31.setChildren(new ArrayList<Story>(Arrays.asList(story_41)));
+        story_41.setParent(story_31);
         
-        story_inProject2.setChildren(new ArrayList<Story>(Arrays.asList(story_leaf_inProject2)));
-        story_leaf_inProject2.setParent(story_inProject2);
+        story_22.setChildren(new ArrayList<Story>(Arrays.asList(story_33)));
+        story_33.setParent(story_22);
+           
     }
 
     private void setStoryBacklogs() {
-        story_root.setBacklog(product);
-        story_inProduct.setBacklog(product);
-        story_inProject1.setBacklog(project1);
-        story_inIteration.setBacklog(iteration);
-        story_inProject2.setBacklog(project2);
-        story_leaf_inProject2.setBacklog(project2);
+        story_11.setBacklog(product);
+        story_21.setBacklog(product);
+        story_31.setBacklog(project1);
+        story_41.setBacklog(iteration);
+        story_22.setBacklog(project2);
+        story_33.setBacklog(project2);
+        story_23.setBacklog(product);
     }
 
     private void constructBacklogs() {

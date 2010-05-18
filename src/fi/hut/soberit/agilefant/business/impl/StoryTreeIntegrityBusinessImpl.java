@@ -37,7 +37,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
              * Can't move to different branch, if the story has children.
              */
             Set<Backlog> allowed = getAllowedBacklogsForChildren(newBacklog);
-            checkChildBacklogRule(story, newBacklog, messages, allowed);
+            checkChildBacklogRule(story, messages, allowed, "story.constraint.childInWrongBranch");
         }
         
         // If story has a parent
@@ -71,16 +71,16 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         return allowed;
     }
 
-    private void checkChildBacklogRule(Story parent, Backlog newBacklog,
-            List<StoryTreeIntegrityMessage> messages, Set<Backlog> allowedBacklogs) {
+    private void checkChildBacklogRule(Story parent, List<StoryTreeIntegrityMessage> messages,
+            Set<Backlog> allowedBacklogs, String message) {
         
         for (Story child : parent.getChildren()) {
             
             if (!allowedBacklogs.contains(child.getBacklog())) {
-                messages.add(new StoryTreeIntegrityMessage(child, null, "story.constraint.childInWrongBranch"));
+                messages.add(new StoryTreeIntegrityMessage(parent, child, message));
             }
             
-            checkChildBacklogRule(child, newBacklog, messages, allowedBacklogs);
+            checkChildBacklogRule(child, messages, allowedBacklogs, message);
         }
         
     }
@@ -134,10 +134,57 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
     }
     
     
+    
+    
+    /*
+     * CHANGING PARENT STORY
+     */
+    
+    
+    
+    
     /** {@inheritDoc} */
     public List<StoryTreeIntegrityMessage> checkChangeParentStory(
             Story story, Story newParent) {
-        return null;
+        List<StoryTreeIntegrityMessage> messages = new ArrayList<StoryTreeIntegrityMessage>();
+        
+        /*
+         * Target parent story can't reside in an iteration
+         */
+        checkTargetParentInIterationRule(story, newParent, messages);
+        
+        /*
+         * Check that all the children are allowed to move to target branch.
+         */
+        if (newParent.getBacklog() instanceof Project) {
+            Set<Backlog> allowedBacklogs = getAllowedBacklogsForChildren(newParent.getBacklog());
+            
+            checkTargetBacklogInWrongBranch(story, newParent, messages, allowedBacklogs);
+            
+            checkChildBacklogRule(story, messages, allowedBacklogs, "story.constraint.targetParentInWrongBranch");
+        }
+        
+        
+        return messages;
+    }
+
+    private void checkTargetBacklogInWrongBranch(Story story, Story newParent,
+            List<StoryTreeIntegrityMessage> messages,
+            Set<Backlog> allowedBacklogs) {
+        if (story.getBacklog() instanceof Product) {
+            messages.add(new StoryTreeIntegrityMessage(story, newParent, "story.constraint.targetParentDeeperInHierarchy"));
+        }
+        else if (!(allowedBacklogs.contains(story.getBacklog()))) {
+            messages.add(new StoryTreeIntegrityMessage(story, newParent, "story.constraint.targetParentInWrongBranch"));
+        }
+    }
+
+    private void checkTargetParentInIterationRule(Story story, Story newParent,
+            List<StoryTreeIntegrityMessage> messages) {
+        if (newParent.getBacklog() instanceof Iteration) {
+            messages.add(new StoryTreeIntegrityMessage(story, newParent,
+                    "story.constraint.targetParentInIteration"));
+        }
     }
 
 }

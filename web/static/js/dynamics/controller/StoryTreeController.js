@@ -291,8 +291,12 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
     if (parentStory === 0) {
       $.post("ajax/treeCreateRootStory.action", {backlogId: me.id, "story.name": nameField.val()}, function(fragment) {
         node.remove();
-        var lastNode = me.element.find('> ul > li').last();
-        var newNode = me.tree.create(0,lastNode,"after");
+        var newNode, lastNode = me.element.find('> ul > li').last();
+        if(lastNode.length) {
+          newNode = me.tree.create(0,lastNode,"after");
+        } else {
+          newNode = me.tree.create(0,-1);
+        }
         newNode.replaceWith(fragment);
       },"html");
     }

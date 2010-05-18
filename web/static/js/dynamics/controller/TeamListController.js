@@ -98,6 +98,7 @@ TeamListController.prototype.initConfig = function() {
     title: "Name",
     get: TeamModel.prototype.getName,
     defaultSortColumn: true,
+    cssClass: 'strong-text',
     sortCallback: DynamicsComparators.valueComparatorFactory(TeamModel.prototype.getName),
     editable: true,
     edit: {
@@ -111,7 +112,14 @@ TeamListController.prototype.initConfig = function() {
     autoScale : true,
     title: "Members",
     decorator: DynamicsDecorators.teamUserCountDecorator,
+    get: TeamModel.prototype.getUsers
+  };
+  
+  var memberNames = {
+    autoScale: false,
+    fullWidth: true,
     get: TeamModel.prototype.getUsers,
+    decorator: DynamicsDecorators.teamUserListDecorator,
     editable: true,
     edit: {
       editor: "Autocomplete",
@@ -121,14 +129,14 @@ TeamListController.prototype.initConfig = function() {
     }
   };
   
-  var actions = {
-    minWidth : 30,
-    autoScale : true,
-    title: "Actions",
-    subViewFactory: TeamRowController.prototype.teamActionFactory
-  };
+//  var actions = {
+//    minWidth : 30,
+//    autoScale : true,
+//    title: "Actions",
+//    subViewFactory: TeamRowController.prototype.teamActionFactory
+//  };
     
   this.teamListConfig.addColumnConfiguration(0, name);
   this.teamListConfig.addColumnConfiguration(1, memberNo);
-//  this.teamListConfig.addColumnConfiguration(2, actions);
+  this.teamListConfig.addColumnConfiguration(3, memberNames);
 };

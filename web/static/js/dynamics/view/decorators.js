@@ -150,15 +150,15 @@ var DynamicsDecorators = {
     return userList.length + " members";
   },
   teamUserListDecorator: function(userList) {
-    retval = "<ul>";
     if (!userList || !userList.length) {
-      return "<ul><li>(no users)</li></ul>";
+      return "(no users)";
     }
+    var fullNames = [];
     for (var i = 0; i < userList.length; i++) {
-      retval += "<li>" + userList[i].getFullName() + "</li>";
+      fullNames.push(userList[i].getFullName());
     }
-    retval += "</ul>";
-    return retval;
+    fullNames.sort();
+    return fullNames.join(', ');
   },
   teamUserInitialsListDecorator: function(userList) {
     if(!userList || !userList.length) {

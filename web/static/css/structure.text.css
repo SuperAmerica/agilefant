@@ -56,3 +56,7 @@ a:link, a:visited {
 a:hover,a:active {
   color: #e50;
 }
+
+.strong-text {
+  font-weight: bold;
+}

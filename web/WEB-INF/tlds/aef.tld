@@ -309,11 +309,7 @@
     <name>storyTreeNode</name>
     <path>/WEB-INF/tags/storyTreeNode.tag</path>
   </tag-file>
-	<tag-file>
-		<name>quickReference</name>
-		<path>/WEB-INF/tags/quickReference.tag</path>
-	</tag-file>
-	 <tag-file>
+  <tag-file>
     <name>backlogBreadCrumb</name>
     <path>/WEB-INF/tags/backlogBreadCrumb.tag</path>
   </tag-file>

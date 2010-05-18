@@ -108,7 +108,6 @@ StoryListController.prototype.hideTasks = function() {
 
 StoryListController.prototype.confirmTasksToDone = function(model) {
   var changedData = model.getChangedData();
-  console.log(changedData);
   if (changedData.state && changedData.state === "DONE") {
     var msg = new DynamicsConfirmationDialog(
         "Set all tasks' states to done?",

@@ -206,22 +206,24 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         }
         currentStory.setChildren(children);
         
-        if(hasNodeChanged(movedStory, messages)) {
+        StoryTreeIntegrityMessage message = hasNodeChanged(movedStory, messages);
+        if(message != null) {
             containsChanges = true;
             currentStory.setChanged(true);
+            currentStory.setMessage(message);
         }
         currentStory.setContainsChanges(containsChanges);
         return currentStory;
     }
 
-    private boolean hasNodeChanged(Story movedStory,
+    private StoryTreeIntegrityMessage hasNodeChanged(Story movedStory,
             List<StoryTreeIntegrityMessage> messages) {
         for(StoryTreeIntegrityMessage message : messages) {
             if(message.getSource() == movedStory || message.getTarget() == movedStory) {
-                return true;
+                return message;
             }
         }
-        return false;
+        return null;
     }
     
     public MoveStoryNode generateChangedStoryTree(Story movedStory,
@@ -238,8 +240,10 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             MoveStoryNode cnode = new MoveStoryNode();
             cnode.setStory(currentParent);
             
-            if(hasNodeChanged(currentParent, messages)) {
+            StoryTreeIntegrityMessage message = hasNodeChanged(currentParent, messages);
+            if(message != null) {
                 cnode.setChanged(true);
+                cnode.setMessage(message);
                 lastChanged = cnode;
             }
             cnode.setContainsChanges(true);

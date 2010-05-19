@@ -84,10 +84,10 @@ public class StoryTreeIntegrityBusinessBuildChangeTreeTest extends MockedTestCas
         MoveStoryNode storyNode = this.testable.generateChangedStoryTree(level3, messages);
         verifyAll();
         
-        assertEquals(level2, storyNode.getStory());
-        assertTrue(storyNode.isContainsChanges());
-        assertEquals(1, storyNode.getChildren().size());
-        assertEquals(level3, storyNode.getChildren().get(0).getStory());
+        assertEquals("invalid root", level2, storyNode.getStory());
+        assertTrue("root not changed", storyNode.isContainsChanges());
+        assertEquals("root does not have one child", 1, storyNode.getChildren().size());
+        assertEquals("invalid child", level3, storyNode.getChildren().get(0).getStory());
         assertEquals(0, storyNode.getChildren().get(0).getChildren().size());
         
     }

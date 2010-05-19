@@ -180,6 +180,20 @@ public class StoryActionTest extends MockedTestCase {
         assertEquals(Action.SUCCESS, storyAction.moveStory());
         verifyAll();
     }
+    
+    @Test
+    @DirtiesContext
+    public void testSaveMoveSignleStory() {
+        storyAction.setStoryId(story.getId());
+        storyAction.setBacklogId(iter.getId());
+        
+        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        expect(backlogBusiness.retrieve(iter.getId())).andReturn(iter);
+        storyBusiness.moveSingleStoryToBacklog(story, iter);
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.safeMoveSingleStory());
+        verifyAll();
+    }
 
     /*
      * TEST DELETION

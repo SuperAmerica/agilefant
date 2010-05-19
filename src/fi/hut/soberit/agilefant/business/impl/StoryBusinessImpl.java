@@ -353,7 +353,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Story parent = story.getParent();
         List<Story> childStories = new ArrayList<Story>(story.getChildren());
         for(Story childStory : childStories) {
-            this.rankStoryUnder(childStory, parent, parent.getBacklog());
+            childStory.setParent(parent);
+            storyDAO.store(childStory);
         }
         //reset parent story
         if(this.storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog)) {

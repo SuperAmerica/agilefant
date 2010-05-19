@@ -30,7 +30,7 @@ StoryInfoBubble.prototype.init = function() {
 
 StoryInfoBubble.prototype.checkForMoveStory = function(model) {
   if(model.currentData.backlog) {
-    this._openMoveStoryDialog();
+    this._openMoveStoryDialog(model.currentData.backlog);
     if(model.canMoveStory(model.currentData.backlog)) {
       this._closeMoveDialog();
       model.commit();

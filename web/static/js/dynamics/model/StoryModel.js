@@ -201,44 +201,45 @@ StoryModel.prototype.canMoveStory = function(backlogId) {
   });
   return sendAjax;
 };
-StoryModel.prototype.moveStory = function(backlogId) {
+StoryModel.prototype.moveStory = function(backlogId, safeMove) {
   var me = this;
   var oldBacklog = this.relations.backlog;
   var oldProject = this.relations.project;
-  
-  if (this.canMoveStory(backlogId)) {
-    jQuery.ajax({
-      url: "ajax/moveStory.action",
-      data: {storyId: me.getId(), backlogId: backlogId},
-      dataType: 'json',
-      type: 'post',
-      async: true,
-      cache: false,
-      success: function(data,status) {
-        me.callListeners(new DynamicsEvents.NamedEvent(me, "storyMoved"));
-        me.relations.backlog = null;
-        me.relations.project = null;
-        me._setData(data);
-        
-        //remove unneccesary old backlog relations
-        if (oldProject && oldProject !== me.relations.project) {
-          oldProject.removeStory(me);
-          //LEAF STORIES: moved to another project
-          oldProject.reloadStoryRanks();
-        }
-        if (oldBacklog && oldBacklog !== me.relations.backlog) {        
-          oldBacklog.removeStory(me);
-        }
-       
-        me.callListeners(new DynamicsEvents.EditEvent(me));
-        MessageDisplay.Ok("Story moved");
-      },
-      error: function(xhr) {
-        MessageDisplay.Error("An error occurred moving the story", xhr);
-      }
-    });
+  var url = "ajax/moveStory.action";
+  if(safeMove) {
+    url = "ajax/safeMoveSingleStory.action";
   }
-};
+  jQuery.ajax({
+    url: url,
+    data: {storyId: me.getId(), backlogId: backlogId},
+    dataType: 'json',
+    type: 'post',
+    async: true,
+    cache: false,
+    success: function(data,status) {
+      me.callListeners(new DynamicsEvents.NamedEvent(me, "storyMoved"));
+      me.relations.backlog = null;
+      me.relations.project = null;
+      me._setData(data);
+      
+      //remove unneccesary old backlog relations
+      if (oldProject && oldProject !== me.relations.project) {
+        oldProject.removeStory(me);
+        //LEAF STORIES: moved to another project
+        oldProject.reloadStoryRanks();
+      }
+      if (oldBacklog && oldBacklog !== me.relations.backlog) {        
+        oldBacklog.removeStory(me);
+      }
+     
+      me.callListeners(new DynamicsEvents.EditEvent(me));
+      MessageDisplay.Ok("Story moved");
+    },
+    error: function(xhr) {
+      MessageDisplay.Error("An error occurred moving the story", xhr);
+    }
+  });
+ };
 
 StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {
   this._rank("under", rankUnderId, moveUnder);

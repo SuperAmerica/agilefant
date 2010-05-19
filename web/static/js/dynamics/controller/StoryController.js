@@ -40,11 +40,25 @@ StoryController.prototype._closeMoveDialog = function() {
     this.currentMoveStoryDialog = null;
   }
 };
+
+StoryController.prototype._confirmMoveStory = function(backlogId) {
+  if(this.currentMoveStoryDialog.find("input[name='selectedAction']").is(":checked")) {
+    this.model.moveStory(backlogId, true)
+  } else {
+    alert("nono");
+    return;
+  }
+  if(this.currentMoveStoryDialog) {
+    this.currentMoveStoryDialog.dialog("destroy");
+    this.currentMoveStoryDialog = null;
+  }
+};
+
 StoryController.prototype._showMoveStoryOptions = function(data) {
   this.currentMoveStoryDialog.dialog("option","title","Error in moving story!");
   this.currentMoveStoryDialog.html(data);
 };
-StoryController.prototype._openMoveStoryDialog = function() {
+StoryController.prototype._openMoveStoryDialog = function(backlogId) {
   var me = this;
   var element = $('<div/>').appendTo(document.body);
   this.currentMoveStoryDialog = element;
@@ -56,7 +70,7 @@ StoryController.prototype._openMoveStoryDialog = function() {
     buttons: {Cancel: function() {
       me._closeMoveDialog();
     },Confirm: function() {
-      
+      me._confirmMoveStory(backlogId);
     }},
     close: function() {
       dialog.dialog('destroy');
@@ -67,8 +81,10 @@ StoryController.prototype._openMoveStoryDialog = function() {
   element.html('<img src="static/img/working.gif" />');
 }
 StoryController.prototype._moveStory = function(id) {
-  this._openMoveStoryDialog();
-  this.model.moveStory(id);
+  this._openMoveStoryDialog(id);
+  if(this.model.checkMoveStory(id)) {
+    this.model.moveStory(id);
+  }
 };
 
 /**

@@ -140,6 +140,13 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         return Action.SUCCESS;
     }
     
+    public String safeMoveSingleStory() {
+        story = storyBusiness.retrieve(storyId);
+        backlog = backlogBusiness.retrieve(backlogId);
+        storyBusiness.moveSingleStoryToBacklog(story, backlog);
+        return Action.SUCCESS;
+    }
+    
     public String rankStoryUnder() {
         story = storyBusiness.retrieve(storyId);
         Story upper = storyBusiness.retrieveIfExists(targetStoryId);

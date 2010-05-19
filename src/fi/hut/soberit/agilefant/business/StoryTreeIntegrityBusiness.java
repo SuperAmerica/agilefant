@@ -4,6 +4,7 @@ import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.MoveStoryNode;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 
 /**
@@ -23,4 +24,5 @@ public interface StoryTreeIntegrityBusiness {
     
     public List<StoryTreeIntegrityMessage> checkChangeParentStory(Story story, Story newParent); 
     
+    public MoveStoryNode generateChangedStoryTree(Story movedStory, List<StoryTreeIntegrityMessage> messages);
 }

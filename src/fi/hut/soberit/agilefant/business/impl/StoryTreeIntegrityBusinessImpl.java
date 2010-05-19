@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.MoveStoryNode;
 import fi.hut.soberit.agilefant.util.StoryHierarchyIntegrityViolationType;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 
@@ -186,6 +187,58 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             messages.add(new StoryTreeIntegrityMessage(story, newParent,
                     StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_ITERATION));
         }
+    }
+
+    private MoveStoryNode recurseChangedStoryTreeChildren(Story movedStory, List<StoryTreeIntegrityMessage> messages) {
+        List<MoveStoryNode> children = new ArrayList<MoveStoryNode>();
+        boolean containsChanges = false;
+        
+        MoveStoryNode currentStory = new MoveStoryNode();
+        currentStory.setStory(movedStory);
+        
+        for(Story story : movedStory.getChildren()) {
+            MoveStoryNode child = recurseChangedStoryTreeChildren(story, messages);
+            if(child.isContainsChanges()) {
+                containsChanges = true;
+            }
+            children.add(child);
+        }
+        currentStory.setChildren(children);
+        
+        if(hasNodeChanged(movedStory, messages)) {
+            containsChanges = true;
+            currentStory.setChanged(true);
+        }
+        currentStory.setContainsChanges(containsChanges);
+        return currentStory;
+    }
+
+    private boolean hasNodeChanged(Story movedStory,
+            List<StoryTreeIntegrityMessage> messages) {
+        for(StoryTreeIntegrityMessage message : messages) {
+            if(message.getSource() == movedStory || message.getTarget() == movedStory) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public MoveStoryNode generateChangedStoryTree(Story movedStory,
+            List<StoryTreeIntegrityMessage> messages) {
+        MoveStoryNode node;
+        // 1. lookup children
+        node = recurseChangedStoryTreeChildren(movedStory, messages);
+        // 2. lookup parents
+        /*
+        MovedStoryNode topmostParent;
+        for (Story currentParent = movedStory.getParent(); currentParent != null;
+            currentParent = currentParent.getParent()) {
+            if(hasNodeChanged(currentParent, messages)) {
+                
+            }
+        }
+        */
+        return node;
     }
 
 }

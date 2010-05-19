@@ -835,8 +835,32 @@
 	<action name="getProductStoryTree" class="storyHierarchyAction" method="retrieveProductRootStories">
     <result type="dispatcher">/WEB-INF/jsp/fragments/storyTree.jsp</result>
   </action>
-
 	<!-- /Story hierarchy -->
+	
+	<!-- Story tree integrity -->
+	<action name="checkChangeBacklog" class="storyTreeIntegrityAction" method="checkChangeBacklog">
+	 <result name="success" type="json">
+	   <param name="target">messages</param>
+	   <param name="patterns">
+	     +source.id, +source.name, +source.class,
+	     +target.id, +target.name, +target.class,
+	     +message,
+	     -*
+	   </param>
+	 </result>
+	</action>
+	<action name="checkChangeParentStory" class="storyTreeIntegrityAction" method="checkChangeParentStory">
+   <result name="success" type="json">
+     <param name="target">messages</param>
+     <param name="patterns">
+       +source.id, +source.name, +source.class,
+       +target.id, +target.name, +target.class,
+       +message,
+       -*
+     </param>
+   </result>
+  </action>
+	<!-- /Story tree integrity -->
 	
 	<!-- timesheets -->
 	<action name="logBacklogEffort" class="hourEntryAction" method="logBacklogEffort">
@@ -881,6 +905,8 @@
 	 </result>
 	</action>
 	<!-- /timesheets -->
+	
+
   </package>
   
 </struts>

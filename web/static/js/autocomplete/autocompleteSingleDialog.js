@@ -23,7 +23,7 @@
 				},
 				width: 500,
 				minHeight: 150,
-				position: 'center',
+				position: 'top',
 				title: this.options.title,
 				modal: true,
 				close: function() {

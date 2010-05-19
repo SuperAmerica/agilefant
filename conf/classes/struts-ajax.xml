@@ -839,26 +839,11 @@
 	
 	<!-- Story tree integrity -->
 	<action name="checkChangeBacklog" class="storyTreeIntegrityAction" method="checkChangeBacklog">
-	 <result name="success" type="json">
-	   <param name="target">messages</param>
-	   <param name="patterns">
-	     +source.id, +source.name, +source.class,
-	     +target.id, +target.name, +target.class,
-	     +message,
-	     -*
-	   </param>
-	 </result>
+	 <result name="success" type="dispatcher">/WEB-INF/jsp/forms/checkStoryMove.jsp</result>
+	 <result name="fatalConstraint" type="dispatcher">/WEB-INF/jsp/forms/checkStoryMove.jsp</result>
 	</action>
 	<action name="checkChangeParentStory" class="storyTreeIntegrityAction" method="checkChangeParentStory">
-   <result name="success" type="json">
-     <param name="target">messages</param>
-     <param name="patterns">
-       +source.id, +source.name, +source.class,
-       +target.id, +target.name, +target.class,
-       +message,
-       -*
-     </param>
-   </result>
+   <result name="success" type="dispatcher">/WEB-INF/jsp/forms/checkStoryParentChange.jsp</result>
   </action>
 	<!-- /Story tree integrity -->
 	

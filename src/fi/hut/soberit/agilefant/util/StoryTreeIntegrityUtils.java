@@ -12,7 +12,8 @@ public class StoryTreeIntegrityUtils {
     
     private static Set<StoryHierarchyIntegrityViolationType> fatalViolations = Collections
             .unmodifiableSet(new HashSet<StoryHierarchyIntegrityViolationType>(
-                    Arrays.asList(StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_ITERATION)));
+                    Arrays.asList(StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_ITERATION,
+                            StoryHierarchyIntegrityViolationType.MOVE_TO_ITERATION_HAS_CHILDREN)));
     
     private static Map<StoryHierarchyIntegrityViolationType, String> initMap() {
         Map<StoryHierarchyIntegrityViolationType, String> i18n = new HashMap<StoryHierarchyIntegrityViolationType, String>();

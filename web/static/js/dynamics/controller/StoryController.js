@@ -26,6 +26,24 @@ StoryController.prototype.handleModelEvents = function(event) {
   if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "task" && this.taskListView) {
     this.taskListView.resort();
   }
+  if (event instanceof DynamicsEvents.StoryTreeIntegrityViolation) {
+    this._openChooseDialog(event.getData());
+  }
+};
+
+StoryController.prototype._openChooseDialog = function(data) {
+  var element = $('<div/>').appendTo(document.body);
+  
+  var dialog = element.dialog({
+    modal: true,
+    title: 'Error moving story!',
+    width: 600,
+    close: function() {
+      dialog.dialog('destroy');
+      element.remove();
+    }
+  });
+  element.html(data);
 };
 
 /**

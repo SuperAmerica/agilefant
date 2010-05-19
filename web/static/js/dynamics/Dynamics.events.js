@@ -221,3 +221,16 @@ DynamicsEvents.NamedEvent.prototype = new DynamicsEvents.CommonEvent();
 DynamicsEvents.NamedEvent.prototype.getEventName = function() {
   return this.eventName;
 };
+
+
+DynamicsEvents.StoryTreeIntegrityViolation = function DynamicsEvents_StoryTreeIntegrityViolation(origin, data) {
+  this.initialize();
+  this.type = "StoryTreeIntegrityViolation";
+  this.object = origin;
+  this.data = data;
+};
+DynamicsEvents.StoryTreeIntegrityViolation.prototype = new DynamicsEvents.CommonEvent();
+
+DynamicsEvents.StoryTreeIntegrityViolation.prototype.getData = function() {
+  return this.data;
+};

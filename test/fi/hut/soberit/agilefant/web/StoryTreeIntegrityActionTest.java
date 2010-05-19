@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.util.StoryHierarchyIntegrityViolationType;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 
 import static org.junit.Assert.*;
@@ -67,6 +68,32 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
         verifyAll();
         
         assertSame(messages, testable.getMessages());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCheckChangeBacklog_fatalError() {
+        Story story = new Story();
+        Backlog newBacklog = new Project();
+        
+        testable.setStoryId(222);
+        testable.setBacklogId(66);
+        
+        StoryTreeIntegrityMessage fatal = new StoryTreeIntegrityMessage(null, null, StoryHierarchyIntegrityViolationType.MOVE_TO_ITERATION_HAS_CHILDREN);
+        List<StoryTreeIntegrityMessage> messages = new ArrayList<StoryTreeIntegrityMessage>(
+                Arrays.asList(fatal, new StoryTreeIntegrityMessage(null, null, null)));
+        
+        expect(storyBusiness.retrieve(222)).andReturn(story);
+        expect(backlogBusiness.retrieve(66)).andReturn(newBacklog);
+        expect(storyTreeIntegrityBusiness.checkChangeBacklog(story, newBacklog))
+            .andReturn(messages);
+        
+        replayAll();
+        assertEquals("fatalConstraint", testable.checkChangeBacklog());
+        verifyAll();
+        
+        assertTrue(testable.getMessages().contains(fatal));
+        assertEquals(1, testable.getMessages().size());
     }
     
     @Test

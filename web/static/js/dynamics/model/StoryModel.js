@@ -186,35 +186,55 @@ StoryModel.prototype.moveStory = function(backlogId) {
   var oldBacklog = this.relations.backlog;
   var oldProject = this.relations.project;
   
+  var sendAjax = false;
   jQuery.ajax({
-    url: "ajax/moveStory.action",
-    data: {storyId: me.getId(), backlogId: backlogId},
-    dataType: 'json',
-    type: 'post',
-    async: true,
+    url: "ajax/checkChangeBacklog.action",
+    data: { storyId: this.getId(), backlogId: backlogId },
+    async: false,
     cache: false,
-    success: function(data,status) {
-      me.relations.backlog = null;
-      me.relations.project = null;
-      me._setData(data);
-      
-      //remove unneccesary old backlog relations
-      if (oldProject && oldProject !== me.relations.project) {
-        oldProject.removeStory(me);
-        //LEAF STORIES: moved to another project
-        oldProject.reloadStoryRanks();
+    type: 'POST',
+    dataType: 'html',
+    success: function(data, status) {
+      if ((jQuery.trim(data)).length === 0) {
+        sendAjax = true;
       }
-      if (oldBacklog && oldBacklog !== me.relations.backlog) {        
-        oldBacklog.removeStory(me);
+      else {
+        me.callListeners(new DynamicsEvents.StoryTreeIntegrityViolation(me, data));
       }
-     
-      me.callListeners(new DynamicsEvents.EditEvent(me));
-      MessageDisplay.Ok("Story moved");
-    },
-    error: function(xhr) {
-      MessageDisplay.Error("An error occurred moving the story", xhr);
     }
   });
+  
+  if (sendAjax) {
+    jQuery.ajax({
+      url: "ajax/moveStory.action",
+      data: {storyId: me.getId(), backlogId: backlogId},
+      dataType: 'json',
+      type: 'post',
+      async: true,
+      cache: false,
+      success: function(data,status) {
+        me.relations.backlog = null;
+        me.relations.project = null;
+        me._setData(data);
+        
+        //remove unneccesary old backlog relations
+        if (oldProject && oldProject !== me.relations.project) {
+          oldProject.removeStory(me);
+          //LEAF STORIES: moved to another project
+          oldProject.reloadStoryRanks();
+        }
+        if (oldBacklog && oldBacklog !== me.relations.backlog) {        
+          oldBacklog.removeStory(me);
+        }
+       
+        me.callListeners(new DynamicsEvents.EditEvent(me));
+        MessageDisplay.Ok("Story moved");
+      },
+      error: function(xhr) {
+        MessageDisplay.Error("An error occurred moving the story", xhr);
+      }
+    });
+  }
 };
 
 StoryModel.prototype.rankUnder = function(rankUnderId, moveUnder) {

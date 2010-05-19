@@ -15,6 +15,10 @@ public class StoryTreeIntegrityMessage {
         this.message = message;
     }
 
+    public String getMessageName() {
+        return StoryTreeIntegrityUtils.StoryHierarchyViolationToI18n(message);
+    }
+    
     public Story getSource() {
         return source;
     }

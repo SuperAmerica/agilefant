@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
+import fi.hut.soberit.agilefant.util.StoryTreeIntegrityUtils;
 
 @Component("storyTreeIntegrityAction")
 @Scope("prototype")
@@ -22,6 +24,8 @@ public class StoryTreeIntegrityAction extends ActionSupport {
 
     private static final long serialVersionUID = 5026286059393178372L;
 
+    public static final String FATAL_CONSTRAINT = "fatalConstraint"; 
+    
     @Autowired
     private StoryTreeIntegrityBusiness storyTreeIntegrityBusiness;
     @Autowired
@@ -36,13 +40,32 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     private Integer targetStoryId;
     private Integer backlogId;
     
+    
     public String checkChangeBacklog() {
         Story story = storyBusiness.retrieve(storyId);
         Backlog backlog = backlogBusiness.retrieve(backlogId);
         
         messages = storyTreeIntegrityBusiness.checkChangeBacklog(story, backlog);
         
+        if (!checkFatalMessages()) {
+            return FATAL_CONSTRAINT; 
+        }
+        
         return Action.SUCCESS;
+    }
+
+    private boolean checkFatalMessages() {
+        List<StoryTreeIntegrityMessage> fatals = new ArrayList<StoryTreeIntegrityMessage>();
+        for (StoryTreeIntegrityMessage stim : messages) {
+            if (StoryTreeIntegrityUtils.isFatalViolation(stim.getMessage())) {
+                fatals.add(stim);
+            }
+        }
+        if (fatals.size() > 0) {
+            messages = fatals;
+            return false;
+        }
+        return true;
     }
 
     public String checkChangeParentStory() {

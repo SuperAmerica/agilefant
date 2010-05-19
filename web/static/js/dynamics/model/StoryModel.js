@@ -181,12 +181,8 @@ StoryModel.prototype.reloadMetrics = function() {
   );
 };
 
-StoryModel.prototype.moveStory = function(backlogId) {
-  var me = this;
-  var oldBacklog = this.relations.backlog;
-  var oldProject = this.relations.project;
-  
-  var sendAjax = false;
+StoryModel.prototype.canMoveStory = function(backlogId) {
+  var sendAjax = false, me = this;
   jQuery.ajax({
     url: "ajax/checkChangeBacklog.action",
     data: { storyId: this.getId(), backlogId: backlogId },
@@ -203,8 +199,14 @@ StoryModel.prototype.moveStory = function(backlogId) {
       }
     }
   });
+  return sendAjax;
+};
+StoryModel.prototype.moveStory = function(backlogId) {
+  var me = this;
+  var oldBacklog = this.relations.backlog;
+  var oldProject = this.relations.project;
   
-  if (sendAjax) {
+  if (this.canMoveStory(backlogId)) {
     jQuery.ajax({
       url: "ajax/moveStory.action",
       data: {storyId: me.getId(), backlogId: backlogId},
@@ -213,6 +215,7 @@ StoryModel.prototype.moveStory = function(backlogId) {
       async: true,
       cache: false,
       success: function(data,status) {
+        me.callListeners(new DynamicsEvents.NamedEvent(me, "storyMoved"));
         me.relations.backlog = null;
         me.relations.project = null;
         me._setData(data);

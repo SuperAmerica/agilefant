@@ -22,7 +22,11 @@ public interface StoryTreeIntegrityBusiness {
     
     public List<StoryTreeIntegrityMessage> checkChangeBacklog(Story story, Backlog newBacklog);
     
+    public boolean canStoryBeMovedToBacklog(Story story, Backlog newBacklog);
+    
     public List<StoryTreeIntegrityMessage> checkChangeParentStory(Story story, Story newParent); 
     
     public MoveStoryNode generateChangedStoryTree(Story movedStory, List<StoryTreeIntegrityMessage> messages);
+    
+    public boolean hasParentStoryConflict(Story story, Backlog newBacklog);
 }

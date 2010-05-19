@@ -70,6 +70,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     private TaskBusiness taskBusiness;
     @Mock
     private StoryHierarchyBusiness storyHierarchyBusiness;
+    @Mock
+    private StoryTreeIntegrityBusiness storyTreeIntegrityBusiness;
 
     private Story story;
     private Iteration firstIteration;
@@ -105,6 +107,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         firstIteration.setParent(firstProject);
         story.setBacklog(firstIteration);
 
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, secondProject)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstProject);
         storyRankBusiness.rankToBottom(story, secondProject);
@@ -126,6 +129,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromIterationToProject_iterationUnderProject() {
         firstIteration.setParent(firstProject);
         story.setBacklog(firstIteration);
+
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
 
         storyDAO.store(story);
 
@@ -149,7 +154,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         firstIteration.setParent(firstProject);
         story.setBacklog(secondProject);
         
-        
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstIteration)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, secondProject);
         storyRankBusiness.rankToBottom(story, firstIteration);
@@ -171,7 +176,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromProjectToIteration_iterationInProject() {
         firstIteration.setParent(firstProject);
         story.setBacklog(firstProject);
-        
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstIteration)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.rankToBottom(story, firstIteration);
         
@@ -193,6 +198,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         secondIteration.setParent(secondProject);
         story.setBacklog(firstIteration);
         
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, secondIteration)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstIteration);
         storyRankBusiness.rankToBottom(story, secondIteration);
@@ -217,6 +223,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         secondIteration.setParent(firstProject);
         story.setBacklog(firstIteration);
         
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, secondIteration)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstIteration);
         storyRankBusiness.rankToBottom(story, secondIteration);
@@ -239,6 +246,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromProjectToProject() {
         story.setBacklog(secondProject);
 
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, secondProject);
         storyRankBusiness.rankToBottom(story, firstProject);
@@ -261,6 +269,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
         expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
 
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
         storyDAO.store(story);
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
@@ -277,6 +286,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         firstIteration.setParent(firstProject);
         story.setBacklog(firstIteration);
         
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProduct)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstIteration);
         storyRankBusiness.removeRank(story, firstProject);
@@ -296,6 +306,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromProjectToProduct() {
         story.setBacklog(firstProject);
         
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProduct)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstProject);
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
@@ -305,6 +316,17 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyBusiness.moveStoryToBacklog(story, firstProduct);
         verifyAll();
         assertEquals(firstProduct, story.getBacklog());
+    }
+    
+    @Test(expected = OperationNotPermittedException.class)
+    @DirtiesContext
+    public void moveFromProjectToProduct_integrityViolation() {
+        story.setBacklog(firstProject);
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProduct)).andReturn(false);
+        replayAll();
+
+        storyBusiness.moveStoryToBacklog(story, firstProduct);
+        verifyAll();
     }
 
     @Test(expected = OperationNotPermittedException.class)
@@ -340,6 +362,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         firstIteration.setParent(firstProject);
         story.setBacklog(firstProduct);
         
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstIteration)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.rankToBottom(story, firstIteration);
         storyRankBusiness.rankToBottom(story, firstProject);
@@ -360,6 +383,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromProductToProject() {
         story.setBacklog(firstProduct);
         
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.rankToBottom(story, firstProject);
         
@@ -378,6 +402,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         Product prod = new Product();
         prod.setId(313);
         story.setBacklog(firstProduct);
+        expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, prod)).andReturn(true);
         storyDAO.store(story);
         backlogHistoryEntryBusiness.updateHistory(prod.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
@@ -386,82 +411,4 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         assertEquals(prod, story.getBacklog());
         verifyAll();
     }
-/*
-    @Test
-    @DirtiesContext
-    public void moveWithChildrenToSameProduct() {
-        Product newBacklog = new Product();
-        newBacklog.setId(1904);
-
-        Backlog oldBacklog = new Iteration();
-        oldBacklog.setId(8482);
-        Project project = new Project();
-        project.setParent(new Product());
-        oldBacklog.setParent(newBacklog);
-
-        Story movable = new Story();
-        movable.setBacklog(oldBacklog);
-
-        movable.setChildren(new HashSet<Story>(Arrays.asList(new Story(),
-                new Story())));
-
-        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(
-                newBacklog);
-        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(
-                newBacklog);
-
-        storyDAO.store(isA(Story.class));
-        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        //storyRankBusiness.rankToBottom(movable, newBacklog);
-
-        backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
-        backlogHistoryEntryBusiness.updateHistory(newBacklog.getId());
-
-        iterationHistoryBusiness.updateIterationHistory(oldBacklog.getId());
-
-        replayAll();
-        storyBusiness.moveStoryToBacklog(movable, newBacklog);
-        verifyAll();
-    }
-
-    @Test
-    @DirtiesContext
-    public void moveParentStoryUnderDifferentProduct() {
-        Product newBacklog = new Product();
-        newBacklog.setId(1904);
-
-        Backlog oldBacklog = new Iteration();
-        oldBacklog.setId(8482);
-        Project project = new Project();
-        project.setParent(new Product());
-
-        Story parentStory = new Story();
-        parentStory.setBacklog(oldBacklog);
-
-        Story movable = new Story();
-        movable.setBacklog(oldBacklog);
-
-        movable.setParent(parentStory);
-
-        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(
-                new Product());
-        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(
-                newBacklog);
-
-        storyDAO.store(isA(Story.class));
-        expect(backlogBusiness.retrieve(1904)).andReturn(newBacklog);
-        //storyRankBusiness.rankToBottom(movable, newBacklog);
-
-        backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
-        backlogHistoryEntryBusiness.updateHistory(newBacklog.getId());
-
-        iterationHistoryBusiness.updateIterationHistory(oldBacklog.getId());
-
-        replayAll();
-        storyBusiness.moveStoryToBacklog(movable, newBacklog);
-        verifyAll();
-
-        assertNull(movable.getParent());
-    }
-    */
 }

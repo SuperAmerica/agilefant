@@ -81,7 +81,7 @@ DynamicsValidationManager.prototype._storeRequested = function(event, editor) {
   if(this.isValid()) {
     if ( !this.configuration.options.preventCommit ) {
       if (this.configuration.options.beforeCommitFunction && typeof this.configuration.options.beforeCommitFunction === 'function') {
-        this.configuration.options.beforeCommitFunction(this.model);
+        this.configuration.options.beforeCommitFunction.call(this.controller,this.model);
       }
       else {
         this.model.commit();

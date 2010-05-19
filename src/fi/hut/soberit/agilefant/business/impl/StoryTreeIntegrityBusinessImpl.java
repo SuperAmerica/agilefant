@@ -253,4 +253,22 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         return lastChanged;
     }
 
+    public boolean canStoryBeMovedToBacklog(Story story, Backlog newBacklog) {
+        List<StoryTreeIntegrityMessage> messages = this.checkChangeBacklog(story, newBacklog);
+        return messages.isEmpty();
+    }
+    
+    public boolean hasParentStoryConflict(Story story, Backlog newBacklog) {
+        /*
+         * A conflict exists if the story being moved has a parent story in project backlog
+         * and that project backlog is not the backlog where the story is being moved to. 
+         */
+        for(Story parent = story.getParent(); parent != null; parent = parent.getParent()) {
+            if(parent.getBacklog() instanceof Project && parent.getBacklog() != newBacklog) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

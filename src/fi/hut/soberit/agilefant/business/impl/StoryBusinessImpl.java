@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
+import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
@@ -73,6 +74,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private TaskBusiness taskBusiness;
     @Autowired
     private StoryHierarchyBusiness storyHierarchyBusiness;
+    @Autowired
+    private StoryTreeIntegrityBusiness storyTreeIntegrityBusiness;
 
     public StoryBusinessImpl() {
         super(Story.class);
@@ -325,26 +328,42 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     @Transactional
     public void moveStoryToBacklog(Story story, Backlog backlog) {
-        Backlog oldBacklog = story.getBacklog();
-
         /* Check for moving to other product */
         if (!story.getChildren().isEmpty()) {
-            if (backlogBusiness.getParentProduct(oldBacklog) != backlogBusiness
+            if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
                     .getParentProduct(backlog)) {
                 throw new OperationNotPermittedException(
                         "Can't move a story with children to another product");
             }
         }
-
-        // cut the parent relation if moving to another product
-        if (story.getParent() != null) {
-            if (backlogBusiness
-                    .getParentProduct(story.getParent().getBacklog()) != backlogBusiness
-                    .getParentProduct(backlog)) {
-                story.setParent(null);
-            }
+        if(!storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, backlog)) {
+            throw new OperationNotPermittedException("Story tree integrity violation");
         }
+        
+        moveStory(story, backlog);
+    }
+    
+    public void moveSingleStoryToBacklog(Story story, Backlog backlog) {
+        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
+                .getParentProduct(backlog)) {
+            throw new OperationNotPermittedException(
+                    "Can't move a story with children to another product");
+        }
+        //move children to the parent story
+        Story parent = story.getParent();
+        List<Story> childStories = new ArrayList<Story>(story.getChildren());
+        for(Story childStory : childStories) {
+            this.rankStoryUnder(childStory, parent, parent.getBacklog());
+        }
+        //reset parent story
+        if(this.storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog)) {
+            story.setParent(null);
+        }
+        moveStory(story, backlog);
+    }
 
+    private void moveStory(Story story, Backlog backlog) {
+        Backlog oldBacklog = story.getBacklog();
         oldBacklog.getStories().remove(story);
         story.setBacklog(backlog);
         backlog.getStories().add(story);

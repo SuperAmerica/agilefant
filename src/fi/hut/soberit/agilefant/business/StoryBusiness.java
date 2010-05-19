@@ -118,4 +118,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     public Story createStorySibling(int referenceStoryId, Story data,
             Set<Integer> responsibleIds);
+    
+    public void moveSingleStoryToBacklog(Story story, Backlog backlog);
 }

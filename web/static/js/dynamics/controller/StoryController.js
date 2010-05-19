@@ -27,23 +27,48 @@ StoryController.prototype.handleModelEvents = function(event) {
     this.taskListView.resort();
   }
   if (event instanceof DynamicsEvents.StoryTreeIntegrityViolation) {
-    this._openChooseDialog(event.getData());
+    this._showMoveStoryOptions(event.getData());
+  }
+  if(event instanceof DynamicsEvents.NamedEvent && event.getEventName() === "storyMoved") {
+    this._closeMoveDialog();
   }
 };
 
-StoryController.prototype._openChooseDialog = function(data) {
+StoryController.prototype._closeMoveDialog = function() {
+  if(this.currentMoveStoryDialog) {
+    this.currentMoveStoryDialog("dialog","destroy");
+    this.currentMoveStoryDialog = null;
+  }
+};
+StoryController.prototype._showMoveStoryOptions = function(data) {
+  this.currentMoveStoryDialog.dialog("option","title","Error in moving story!");
+  this.currentMoveStoryDialog.html(data);
+};
+StoryController.prototype._openMoveStoryDialog = function() {
+  var me = this;
   var element = $('<div/>').appendTo(document.body);
-  
+  this.currentMoveStoryDialog = element;
   var dialog = element.dialog({
     modal: true,
-    title: 'Error moving story!',
+    title: 'Moving story - please wait',
     width: 600,
+    closeOnEscape: false,
+    buttons: {Cancel: function() {
+      me._closeMoveDialog();
+    },Confirm: function() {
+      
+    }},
     close: function() {
       dialog.dialog('destroy');
       element.remove();
+      me.currentMoveStoryDialog = null;
     }
   });
-  element.html(data);
+  element.html('<img src="static/img/working.gif" />');
+}
+StoryController.prototype._moveStory = function(id) {
+  this._openMoveStoryDialog();
+  this.model.moveStory(id);
 };
 
 /**
@@ -108,7 +133,7 @@ StoryController.prototype.moveStory = function() {
   $(window).autocompleteSingleDialog({
     dataType: "backlogs",
     cancel: function() { return; },
-    callback: function(id) { me.model.moveStory(id); },
+    callback: function(id) { me._moveStory(id); },
     title: "Select backlog to move to"
   });
 };

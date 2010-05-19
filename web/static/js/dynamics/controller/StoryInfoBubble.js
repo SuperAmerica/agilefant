@@ -12,7 +12,8 @@ var StoryInfoBubble = function StoryInfoBubble(id, treeController, storyElement,
   this.storyElement = storyElement;
   this.init();
 };
-StoryInfoBubble.prototype = new CommonController();
+
+extendObject(StoryInfoBubble, StoryController);
 
 /**
  * Initialize the info bubble.
@@ -25,6 +26,18 @@ StoryInfoBubble.prototype.init = function() {
   this.createBubble();
   this.addLinks();
   this.populateContent();
+};
+
+StoryInfoBubble.prototype.checkForMoveStory = function(model) {
+  if(model.currentData.backlog) {
+    this._openMoveStoryDialog();
+    if(model.canMoveStory(model.currentData.backlog)) {
+      this._closeMoveDialog();
+      model.commit();
+    }
+  } else {
+    model.commit();
+  }
 };
 
 StoryInfoBubble.prototype.createBubble = function() {
@@ -51,6 +64,7 @@ StoryInfoBubble.prototype.populateContent = function() {
   
   this.treeController._getStoryForId(this.id, function(object) {
     me.model = object;
+    me.attachModelListener();
     me.storyInfoElement.html('');
     me.storyInfoView = new DynamicVerticalTable(me, me.model, me.storyInfoConfig, me.storyInfoElement);
     me.storyInfoView.render();
@@ -115,6 +129,7 @@ StoryInfoBubble.prototype._createConfig = function() {
     leftWidth: '25%',
     rightWidth: '74%',
     closeRowCallback: null,
+    beforeCommitFunction: StoryInfoBubble.prototype.checkForMoveStory,
     validators: [ ]
   });
   config.addColumnConfiguration(0, {

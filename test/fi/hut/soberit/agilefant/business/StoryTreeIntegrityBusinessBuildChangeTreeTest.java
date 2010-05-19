@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +66,31 @@ public class StoryTreeIntegrityBusinessBuildChangeTreeTest extends MockedTestCas
         assertTrue("node 11 changed", node11.isChanged());
         assertTrue("node 12 changed", node12.isChanged());
     }
-    
+    @Test
+    @DirtiesContext
+    public void testGenerateChangedStoryTree_parentChanged() {
+        Story level1 = new Story();
+        Story level2 = new Story();
+        Story level3 = new Story();
+        
+        level3.setParent(level2);
+        level2.setParent(level1);
+        
+        List<StoryTreeIntegrityMessage> messages = new ArrayList<StoryTreeIntegrityMessage>();
+        messages.add(new StoryTreeIntegrityMessage(level2, null, null));
+        
+        
+        replayAll();
+        MoveStoryNode storyNode = this.testable.generateChangedStoryTree(level3, messages);
+        verifyAll();
+        
+        assertEquals(level2, storyNode.getStory());
+        assertTrue(storyNode.isContainsChanges());
+        assertEquals(1, storyNode.getChildren().size());
+        assertEquals(level3, storyNode.getChildren().get(0).getStory());
+        assertEquals(0, storyNode.getChildren().get(0).getChildren().size());
+        
+    }
     private MoveStoryNode findStoryNode(Story story, List<MoveStoryNode> nodes) {
         for(MoveStoryNode node: nodes) {
             if(node.getStory() == story) {

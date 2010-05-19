@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -229,16 +230,23 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         // 1. lookup children
         node = recurseChangedStoryTreeChildren(movedStory, messages);
         // 2. lookup parents
-        /*
-        MovedStoryNode topmostParent;
+    
+        MoveStoryNode lastChanged = node, previous = node;
         for (Story currentParent = movedStory.getParent(); currentParent != null;
             currentParent = currentParent.getParent()) {
+            
+            MoveStoryNode cnode = new MoveStoryNode();
+            cnode.setStory(currentParent);
+            
             if(hasNodeChanged(currentParent, messages)) {
-                
+                cnode.setChanged(true);
+                lastChanged = cnode;
             }
+            cnode.setContainsChanges(true);
+            cnode.setChildren(Arrays.asList(previous));
+            previous = cnode;
         }
-        */
-        return node;
+        return lastChanged;
     }
 
 }

@@ -36,7 +36,7 @@ StoryController.prototype.handleModelEvents = function(event) {
 
 StoryController.prototype._closeMoveDialog = function() {
   if(this.currentMoveStoryDialog) {
-    this.currentMoveStoryDialog("dialog","destroy");
+    this.currentMoveStoryDialog.dialog("destroy");
     this.currentMoveStoryDialog = null;
   }
 };

@@ -1028,9 +1028,6 @@ TableEditors.DialogEditor.prototype.init = function(element, model, options) {
 TableEditors.DialogEditor.prototype._openDialog = function() {
   var me = this;
   
-  var offset = me.getElement().offset();
-  console.log(offset);
-   
   // These override the extendedDialogOptions
   var options = {
       autoOpen:   this.options.autoShow,
@@ -1042,8 +1039,7 @@ TableEditors.DialogEditor.prototype._openDialog = function() {
       close:      function() { me._cancel(); },
       width:      500,
       minHeight:  300,
-      title:      this.options.dialogTitle,
-      position:   [offset.top, offset.left]
+      title:      this.options.dialogTitle
   };
   this.dialog = $('<div/>').dialog(options);
 };

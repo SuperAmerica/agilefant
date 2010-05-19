@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.MoveStoryNode;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityUtils;
 
@@ -33,8 +34,12 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     @Autowired
     private BacklogBusiness backlogBusiness;
     
+    private MoveStoryNode data;
     
     private List<StoryTreeIntegrityMessage> messages;
+    
+    private Backlog backlog;
+    private Story story;
     
     private Integer storyId;
     private Integer targetStoryId;
@@ -42,10 +47,13 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     
     
     public String checkChangeBacklog() {
-        Story story = storyBusiness.retrieve(storyId);
-        Backlog backlog = backlogBusiness.retrieve(backlogId);
+        story = storyBusiness.retrieve(storyId);
+        backlog = backlogBusiness.retrieve(backlogId);
         
         messages = storyTreeIntegrityBusiness.checkChangeBacklog(story, backlog);
+
+        data = storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages);
+        
         
         if (!checkFatalMessages()) {
             return FATAL_CONSTRAINT; 
@@ -96,6 +104,22 @@ public class StoryTreeIntegrityAction extends ActionSupport {
 
     public void setBacklogId(Integer backlogId) {
         this.backlogId = backlogId;
+    }
+
+    public MoveStoryNode getData() {
+        return data;
+    }
+
+    public Backlog getBacklog() {
+        return backlog;
+    }
+
+    public void setBacklog(Backlog backlog) {
+        this.backlog = backlog;
+    }
+
+    public Story getStory() {
+        return story;
     }
     
 }

@@ -23,7 +23,7 @@ public class StoryTreeIntegrityUtils {
         i18n.put(StoryHierarchyIntegrityViolationType.PARENT_IN_WRONG_BRANCH, "story.constraint.parentInWrongBranch");
         i18n.put(StoryHierarchyIntegrityViolationType.TARGET_PARENT_DEEPER_IN_HIERARCHY, "story.constraint.targetParentDeeperInHierarchy");
         i18n.put(StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_ITERATION, "story.constraint.targetParentInIteration");
-        i18n.put(StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_WRONG_BRANCH, "story.constraint.parentInWrongBranch");
+        i18n.put(StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_WRONG_BRANCH, "story.constraint.targetParentInWrongBranch");
         
         return Collections.unmodifiableMap(i18n);
     }

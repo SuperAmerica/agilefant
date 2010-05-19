@@ -22,6 +22,7 @@ import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.MoveStoryNode;
 import fi.hut.soberit.agilefant.util.StoryHierarchyIntegrityViolationType;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 
@@ -50,6 +51,7 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
     public void testCheckChangeBacklog() {
         Story story = new Story();
         Backlog newBacklog = new Project();
+        MoveStoryNode data = new MoveStoryNode();
         
         testable.setStoryId(222);
         testable.setBacklogId(66);
@@ -63,10 +65,14 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
         expect(storyTreeIntegrityBusiness.checkChangeBacklog(story, newBacklog))
             .andReturn(messages);
         
+        expect(storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages))
+            .andReturn(data);
+        
         replayAll();
         assertEquals(Action.SUCCESS, testable.checkChangeBacklog());
         verifyAll();
         
+        assertSame(data, testable.getData());
         assertSame(messages, testable.getMessages());
     }
     
@@ -75,6 +81,7 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
     public void testCheckChangeBacklog_fatalError() {
         Story story = new Story();
         Backlog newBacklog = new Project();
+        MoveStoryNode data = new MoveStoryNode();
         
         testable.setStoryId(222);
         testable.setBacklogId(66);
@@ -88,6 +95,9 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
         expect(storyTreeIntegrityBusiness.checkChangeBacklog(story, newBacklog))
             .andReturn(messages);
         
+        expect(storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages))
+            .andReturn(data);
+        
         replayAll();
         assertEquals("fatalConstraint", testable.checkChangeBacklog());
         verifyAll();
@@ -95,6 +105,7 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
         assertTrue(testable.getMessages().contains(fatal));
         assertEquals(1, testable.getMessages().size());
     }
+
     
     @Test
     @DirtiesContext

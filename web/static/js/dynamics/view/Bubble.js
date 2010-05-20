@@ -42,7 +42,7 @@ Bubble.prototype.destroy = function() {
   this.parentElement.remove();
   
   //Remove the esc listener
-  $(document).unbind('keydown', this.keypressListener);
+  $(document).unbind('keydown.agilefantBubble', this.keypressListener);
   
   if (this.options.closeCallback) {
     this.options.closeCallback();
@@ -103,11 +103,11 @@ Bubble.prototype._bindEvents = function() {
   
   // Add esc press listener
   this.keypressListener = function(event) {
-    if (event.keyCode === 27) {      
+    if (event.keyCode === 27) {
       me.destroy();
     }
   };
   
-  $(document).keydown(this.keypressListener);
+  $(document).bind("keydown.agilefantBubble", this.keypressListener);
 };
 

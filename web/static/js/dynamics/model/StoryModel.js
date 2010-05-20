@@ -328,6 +328,9 @@ StoryModel.prototype.addTask = function(task) {
 
 // Getters and setters in property alphabetical order
 StoryModel.prototype.getBacklog = function() {
+  if (this.currentData.backlog) {
+    return ModelFactory.getObject(ModelFactory.types.backlog, this.currentData.backlog);
+  }
   //hack! in case of leaf stories story may have multiple backlogs
   if(this.relations.project && !this.relations.backlog) {
     return this.relations.project;
@@ -339,15 +342,8 @@ StoryModel.prototype.setBacklog = function(backlog) {
 };
 
 StoryModel.prototype.setBacklogByModel = function(backlog) {
-  this.setBacklog(backlog);
   this.currentData.backlog = backlog.getId();
 };
-
-StoryModel.prototype.setBacklogById = function(backlogId) {
-  this.setBacklog(ModelFactory.getOrRetrieveObject(ModelFactory.types.backlog, backlogId));
-  this.currentData.backlogId = backlogId;
-};
-
 
 StoryModel.prototype.getDescription = function() {
   return this.currentData.description;

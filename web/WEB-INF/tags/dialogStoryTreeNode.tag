@@ -53,13 +53,15 @@
     </c:if>
   
     <c:if test="${!singleNode && (!empty moveStoryNode.children || !moveStoryNode.containsChanges)}">
-      <aef:dialogStoryTreeChildren moveStoryNode="${moveStoryNode}" skipNode="${skipNode}" omitUlElement="false"/>
+      <ul>
+        <aef:dialogStoryTreeChildren moveStoryNode="${moveStoryNode}" skipNode="${skipNode}"/>
+      </ul>
     </c:if>
   </li>
   </c:if>
   
   <c:if test="${skipNode == node && !empty moveStoryNode.children}">
-    <aef:dialogStoryTreeChildren moveStoryNode="${moveStoryNode}" skipNode="${skipNode}" omitUlElement="true"/>
+    <aef:dialogStoryTreeChildren moveStoryNode="${moveStoryNode}" skipNode="${skipNode}" />
   </c:if>
 
  

@@ -37,6 +37,7 @@ ModelFactory.instance = null;
  * @member ModelFactory
  */
 ModelFactory.classNameToType = {
+  "fi.hut.soberit.agilefant.model.Backlog":   "backlog",
   "fi.hut.soberit.agilefant.model.Iteration": "backlog",
   "fi.hut.soberit.agilefant.model.Product":   "backlog",
   "fi.hut.soberit.agilefant.model.Project":   "backlog",
@@ -101,6 +102,7 @@ ModelFactory.classNameToJsClass = {
 };
 
 ModelFactory.typeToClassName = {
+    backlog:    "fi.hut.soberit.agilefant.model.Backlog",
     iteration:  "fi.hut.soberit.agilefant.model.Backlog",
     
     iteration:  "fi.hut.soberit.agilefant.model.Iteration",

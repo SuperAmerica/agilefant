@@ -17,7 +17,7 @@
 </c:choose>
   <c:if test="${forceOpen}"><c:set var="forcedClass" value="open" /></c:if>
 
-  <li storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="${forcedClass}">
+  <li id="storytree_${node.id}" storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="${forcedClass}">
     <a href="#">
     <span class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></span>
     

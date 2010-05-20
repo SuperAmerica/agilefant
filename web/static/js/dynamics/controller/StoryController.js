@@ -76,14 +76,11 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
         me._confirmMoveStory(backlogId);
       },
       Cancel: function() {
+        me.model.rollback();
         me._closeMoveDialog();
       }
     },
-    close: function() {
-      dialog.dialog('destroy');
-      element.remove();
-      me.currentMoveStoryDialog = null;
-    }
+    close: function() { me._closeMoveDialog(); }
   });
   element.html('<div style="text-align:center;"><img src="static/img/pleasewait.gif" /></div>');
 }

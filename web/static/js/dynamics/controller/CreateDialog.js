@@ -361,7 +361,7 @@ CreateDialog.Story.prototype.initFormConfig = function() {
       dialogTitle: "Select parent backlog",
       dataType: "backlogs",
       required: true,
-      set: StoryModel.prototype.setBacklog
+      set: StoryModel.prototype.setBacklogByModel
     }
   });
   

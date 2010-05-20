@@ -120,7 +120,20 @@ var messageUrls = {
   </li>
   <li id="secondMessage" class="closable" style="display: none;">
   <div class="action-message">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque imperdiet, metus tristique fermentum blandit, augue lacus faucibus nisl, a dignissim libero lorem sed dui. Mauris et dolor arcu, eu malesuada erat. Nullam neque velit, eleifend at tempor quis, luctus sit amet leo. Mauris lacinia sollicitudin urna nec dignissim. Aliquam in urna nunc. Quisque egestas erat non nisl condimentum eget mollis diam luctus. Nam mollis interdum purus, condimentum imperdiet leo pretium eu. Suspendisse et ipsum quis ante placerat fermentum at eget sem. Nulla dignissim elementum est id imperdiet. Ut aliquam sagittis dapibus. Sed pulvinar nisi et diam faucibus hendrerit. Sed vitae orci id justo suscipit vehicula. Cras vestibulum tristique dolor, sit amet bibendum enim varius quis. Sed nec semper eros. Cras gravida vulputate orci, at auctor dui euismod et.
+    
+    <h4>Story tree after moving</h4>
+    
+    <div class="hierarchyContainer">
+        <div class="storyTreeContainer">
+          <div class="tree">
+            <ul>
+              <aef:dialogStoryTreeNode moveStoryNode="${data}"/>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
+  
   </div> 
   </li>
 </ul>

@@ -1640,7 +1640,8 @@
 			if(event.target.tagName == "DIV" && event.target.id == "jstree-marker") return false;
 
 			var et = $(event.target);
-			if(et.is("ins") || et.is("span") || et.is("div")) et = et.parent();
+			if(et.is("ins")) et = et.parent();
+			else if(et.is("span")) et = et.parent.parent();
 			
 			var cnt = et.is(".tree") ? et : et.parents(".tree:eq(0)");
 

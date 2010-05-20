@@ -411,4 +411,58 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         assertEquals(prod, story.getBacklog());
         verifyAll();
     }
+    
+    @Test
+    @DirtiesContext
+    public void moveSingleFromProjectToProject() {
+        Story parent = new Story();
+        Story child = new Story();
+        story.setBacklog(secondProject);
+        story.setParent(parent);
+        story.getChildren().add(child);
+        child.setParent(story);
+        
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        
+        storyDAO.store(child);
+        storyDAO.store(story);
+        expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, firstProject)).andReturn(true);
+        backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        replayAll();
+
+        storyBusiness.moveSingleStoryToBacklog(story, firstProject);
+        verifyAll();
+        assertEquals(firstProject, story.getBacklog());
+        assertNull(story.getParent());
+        assertEquals(parent, child.getParent());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void moveSingleFromProjectToProjectNoViolation() {
+        Story parent = new Story();
+        Story child = new Story();
+        story.setBacklog(secondProject);
+        story.setParent(parent);
+        story.getChildren().add(child);
+        child.setParent(story);
+        
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        
+        storyDAO.store(child);
+        storyDAO.store(story);
+        expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, firstProject)).andReturn(false);
+        backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        replayAll();
+
+        storyBusiness.moveSingleStoryToBacklog(story, firstProject);
+        verifyAll();
+        assertEquals(firstProject, story.getBacklog());
+        assertEquals(parent, story.getParent());
+        assertEquals(parent, child.getParent());
+    }
 }

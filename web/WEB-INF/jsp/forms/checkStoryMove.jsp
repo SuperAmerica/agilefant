@@ -80,7 +80,7 @@ var messageUrls = {
 
 <ul style="list-style-type: none;">
   <li>
-    <input type="radio" name="selectedAction" onchange="openElement('#firstMessage');return false;"/> 
+    <input type="radio" value="moveTargetStoryOnly" name="selectedAction" onchange="openElement('#firstMessage');return false;"/> 
     Move the story and leave the children behind
   </li>
   <li id="firstMessage" class="closable" style="display: none;">
@@ -113,9 +113,10 @@ var messageUrls = {
     </div>
     
   </li>
-  
+
+  <c:if test="${!aef:isIteration(backlog)}"> 
   <li>
-    <input type="radio" name="selectedAction" onchange="openElement('#secondMessage');return false;"/>
+    <input type="radio" value="moveTargetAndItsChildren" name="selectedAction" onchange="openElement('#secondMessage');return false;"/>
     Move the story and all of its children
   </li>
   <li id="secondMessage" class="closable" style="display: none;">
@@ -132,10 +133,10 @@ var messageUrls = {
           </div>
         </div>
       </div>
-    
-  
   </div> 
   </li>
+  </c:if>
+  
 </ul>
 
 </div>

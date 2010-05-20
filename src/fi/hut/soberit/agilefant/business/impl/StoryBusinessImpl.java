@@ -385,13 +385,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             childStory.setParent(parent);
             storyDAO.store(childStory);
         }
+        
         //reset parent story
         if(this.storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog)) {
-            Story oldParent = story.getParent();
             story.setParent(null);
-            if(oldParent != null) {
-                storyHierarchyBusiness.updateChildrenTreeRanks(oldParent);
-            }
+        }
+        if(parent != null) {
+            storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         }
         moveStory(story, backlog);
     }

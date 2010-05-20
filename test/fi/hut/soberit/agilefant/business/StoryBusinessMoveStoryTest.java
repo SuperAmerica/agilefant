@@ -457,6 +457,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyDAO.store(child);
         storyDAO.store(story);
         expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, firstProject)).andReturn(false);
+        storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         replayAll();

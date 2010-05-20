@@ -1030,8 +1030,8 @@ TableEditors.DialogEditor.prototype._openDialog = function() {
   
   // These override the extendedDialogOptions
   var options = {
-      autoOpen:   this.options.autoShow,
-      modal:      this.options.modal,
+//      autoOpen:   (this.options.autoShow || true),
+//      modal:      (this.options.modal || ,
       buttons:    {
         'Ok':     function() { me._ok(); },
         'Cancel': function() { me._cancel(); }

@@ -49,7 +49,6 @@
 <script type="text/javascript" src="static/js/dynamics/model/comparators.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/AssignmentModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/HourEntryModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/model/StorySplitContainer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/TaskSplitContainer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/UserListContainer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/TeamListContainer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
@@ -77,7 +76,6 @@
 <script type="text/javascript" src="static/js/dynamics/controller/DailyWorkStoryListController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/DailyWorkTasksWithoutStoryController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/WorkQueueController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-<script type="text/javascript" src="static/js/dynamics/controller/StorySplitDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/TaskSplitDialog.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/UserController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/StoryInfoBubble.js?<ww:text name="struts.agilefantReleaseId" />"></script>

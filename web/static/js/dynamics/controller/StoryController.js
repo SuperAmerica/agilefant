@@ -37,6 +37,7 @@ StoryController.prototype.handleModelEvents = function(event) {
 StoryController.prototype._closeMoveDialog = function() {
   if(this.currentMoveStoryDialog) {
     this.currentMoveStoryDialog.dialog("destroy");
+    this.currentMoveStoryDialog.remove();
     this.currentMoveStoryDialog = null;
   }
 };
@@ -66,23 +67,27 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
     modal: true,
     title: 'Moving story - please wait',
     width: 600,
+    minHeight:  300,
     closeOnEscape: false,
-    buttons: {Cancel: function() {
-      me._closeMoveDialog();
-    },Confirm: function() {
-      me._confirmMoveStory(backlogId);
-    }},
+    buttons: {
+      Confirm: function() {
+        me._confirmMoveStory(backlogId);
+      },
+      Cancel: function() {
+        me._closeMoveDialog();
+      }
+    },
     close: function() {
       dialog.dialog('destroy');
       element.remove();
       me.currentMoveStoryDialog = null;
     }
   });
-  element.html('<img src="static/img/working.gif" />');
+  element.html('<div style="text-align:center;"><img src="static/img/pleasewait.gif" /></div>');
 }
 StoryController.prototype._moveStory = function(id) {
   this._openMoveStoryDialog(id);
-  if(this.model.checkMoveStory(id)) {
+  if(this.model.canMoveStory(id)) {
     this.model.moveStory(id);
   }
 };
@@ -171,13 +176,6 @@ StoryController.prototype.moveStoryToBacklog = function(targetModel) {
   this.model.moveStory(targetModel.getId());
 };
 
-
-/**
- * Open a split dialog. 
- */
-StoryController.prototype.splitStory = function() {
-  var dialog = new StorySplitDialog(this.model);
-};
 
 StoryController.prototype.labelsViewFactory = function(view, model) {
   var options = {};  

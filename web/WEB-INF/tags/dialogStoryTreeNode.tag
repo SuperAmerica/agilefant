@@ -2,12 +2,22 @@
 <%@ tag
   description="Constructs story tree starting from the given story node"%>
 
-<%@ attribute type="fi.hut.soberit.agilefant.transfer.MoveStoryNode"
-  name="moveStoryNode"%>
+<%@ attribute type="fi.hut.soberit.agilefant.transfer.MoveStoryNode" name="moveStoryNode"%>
+<%@ attribute type="fi.hut.soberit.agilefant.model.Story" name="singleStory" %>
   
 <%@ attribute type="fi.hut.soberit.agilefant.model.Story" name="skipNode" %>
 
-<c:set var="node" value="${moveStoryNode.story}" />
+<%@ attribute type="java.lang.Boolean" name="singleNode" %>
+
+<c:choose>
+<c:when test="${singleStory != null && singleNode}">
+  <c:set var="node" value="${singleStory}" />
+</c:when>
+<c:otherwise>
+  <c:set var="node" value="${moveStoryNode.story}" />
+</c:otherwise>
+</c:choose>
+
 
 
   <c:choose>
@@ -18,8 +28,9 @@
       <c:set var="nodeType" value="story" />
     </c:otherwise>
   </c:choose>
-  <c:if test="${moveStoryNode.changed}"><c:set var="markColored" value="color: red !important;" /></c:if>
+  <c:if test="${moveStoryNode.changed}"><c:set var="markColored" value="color: #a00; !important;" /></c:if>
 
+  <c:if test="${skipNode != node || !empty moveStoryNode.children}">
   <li storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="open">
     <c:if test="${skipNode == null || skipNode.id != moveStoryNode.story.id}">
         <span>
@@ -42,7 +53,7 @@
     </c:if>
   
 
-    <c:if test="${!empty moveStoryNode.children || !moveStoryNode.containsChanges}">
+    <c:if test="${!singleNode && (!empty moveStoryNode.children || !moveStoryNode.containsChanges)}">
     <ul>
       <c:forEach items="${moveStoryNode.children}" var="childStory">
        <aef:dialogStoryTreeNode moveStoryNode="${childStory}" skipNode="${skipNode}" />
@@ -50,5 +61,6 @@
     </ul>
     </c:if>
   </li>
+  </c:if>
 
  

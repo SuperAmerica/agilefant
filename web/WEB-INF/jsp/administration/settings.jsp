@@ -44,17 +44,17 @@ $(document).ready(function() {
     <tr>
       <td><label for="dailyWorkEnabled">Enable Daily Work</label></td>
       <td><ww:checkbox id="dailyWorkCheckbox" name="dailyWorkEnabled" fieldValue="true" value="%{dailyWorkEnabled}"></ww:checkbox></td>
-      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="HelpUtils.openHelpPopup(this,'Daily Work','static/html/help/dailyWorkPopup.html'); return false;">What is Daily Work?</a></td>
+      <td><a href="#" class="quickHelpLink" onclick="HelpUtils.openHelpPopup(this,'Daily Work','static/html/help/dailyWorkPopup.html'); return false;">What is Daily Work?</a></td>
     </tr>
     <tr>
       <td><label for="devPortfolioEnabled">Enable Portfolio</label></td>
       <td><ww:checkbox name="devPortfolioEnabled" fieldValue="true" value="%{devPortfolioEnabled}"></ww:checkbox></td>
-      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="HelpUtils.openHelpPopup(this,'Portfolio','static/html/help/devPortfolioPopup.html'); return false;">What is Portfolio?</a></td>
+      <td><a href="#" class="quickHelpLink" onclick="HelpUtils.openHelpPopup(this,'Portfolio','static/html/help/devPortfolioPopup.html'); return false;">What is Portfolio?</a></td>
     </tr>
     <tr>
       <td><label for="hourReportingEnabled">Enable Timesheets</label></td>
       <td><ww:checkbox  name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox></td>
-      <td><a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="HelpUtils.openHelpPopup(this,'Timesheets','static/html/help/timesheetsPopup.html'); return false;">What are Timesheets?</a></td>
+      <td><a href="#" class="quickHelpLink" onclick="HelpUtils.openHelpPopup(this,'Timesheets','static/html/help/timesheetsPopup.html'); return false;">What are Timesheets?</a></td>
     </tr>
     
     </table>

@@ -46,6 +46,16 @@ h4 {
   font-weight: bold;  
 }
 
+/*
+ * SPECIAL TEXT STYLES
+ */
+.strong-text {
+  font-weight: bold;
+}
+.superScript {
+  font-size: 8pt !important;
+  vertical-align: top !important;  
+}
 
 /* LINKS */
 a:link, a:visited {
@@ -57,6 +67,13 @@ a:hover,a:active {
   color: #e50;
 }
 
-.strong-text {
-  font-weight: bold;
+
+
+/**
+ * QUICK HELP
+ */
+.quickHelpLink {
+  font-size: 80%;
+  color: #1e5eee !important;
+  text-decoration: underline;
 }

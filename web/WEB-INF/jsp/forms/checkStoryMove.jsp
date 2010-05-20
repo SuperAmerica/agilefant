@@ -7,6 +7,22 @@
 
 <h2>Can't move story to ${backlog.name}</h2>
 
+<script type="text/javascript">
+<!--
+var openElement = function openElement(selector) {
+  var elem = $(selector);
+  $('.closable').not(elem).not(':hidden').hide('blind');
+  if (elem.is(':hidden')) {
+    elem.show('blind');
+  }
+};
+var messageUrls = {
+    "MOVE_TO_ITERATION_HAS_CHILDREN": "static/html/help/dailyWorkPopup.html",
+    "CHILD_IN_WRONG_BRANCH":          "static/html/help/dailyWorkPopup.html"
+};
+//-->
+</script>
+
 <table>
   <tr>
     <td><strong>Reason:</strong></td>
@@ -16,10 +32,15 @@
         <li>
         <c:choose>
           <c:when test="${msg.target != null}">
-            <aef:text name="${msg.messageName}" />: <span style="color: #999;"><c:out value="${msg.target.name}"/></span> in <span style="color: #999">${msg.target.backlog.name}</span>  
+            <aef:text name="${msg.messageName}" />
+            <a href="#" class="quickHelpLink superScript" title="What's this?" onclick="HelpUtils.openHelpPopup(this,'${msg.message}',messageUrls['${msg.message}']); return false;">[?]</a>:
+            <span style="color: #999;"><c:out value="${msg.target.name}"/></span>
+            in
+            <span style="color: #999">${msg.target.backlog.name}</span>  
           </c:when>
           <c:otherwise>
-            <aef:text name="${msg.messageName}" />          
+            <aef:text name="${msg.messageName}" />
+            <a href="#" class="quickHelpLink superScript" title="What's this?" onclick="HelpUtils.openHelpPopup(this,'${msg.message}',messageUrls['${msg.message}']); return false;">[?]</a>         
           </c:otherwise>
         </c:choose>
         
@@ -44,35 +65,48 @@
 
 <h3>Possible actions</h3>
 
-<script type="text/javascript">
-<!--
-var openElement = function openElement(selector) {
-  var elem = $(selector);
-  $('.closable').not(elem).not(':hidden').hide('blind');
-  if (elem.is(':hidden')) {
-    elem.show('blind');
-  }
-};
-//-->
-</script>
+
+
+<style>
+.action-message {
+  border: 1px dashed #A6C9E2;
+  margin: 0.5em 0;
+  padding: 0.3em;
+}
+</style>
 
 <ul style="list-style-type: none;">
   <li>
     <input type="radio" name="selectedAction" onchange="openElement('#firstMessage');return false;"/> 
-    Remove story from current tree and move to different branch
+    Move the story and leave the children behind
   </li>
   <li id="firstMessage" class="closable" style="display: none;">
   
-    <h4>The original tree after moving:</h4>
+    <div class="action-message">
   
-    <div class="hierarchyContainer">
-      <div class="storyTreeContainer">
-        <div class="tree">
-          <ul>
-            <aef:dialogStoryTreeNode moveStoryNode="${data}" skipNode="${story}"/>
-          </ul>
+      <h4>The story to be moved</h4>
+      <div class="hierarchyContainer">
+        <div class="storyTreeContainer">
+          <div class="tree">
+            <ul>
+              <aef:dialogStoryTreeNode singleStory="${story}" singleNode="true"/>
+            </ul>
+          </div>
         </div>
       </div>
+    
+      <h4>The original tree after moving:</h4>
+    
+      <div class="hierarchyContainer">
+        <div class="storyTreeContainer">
+          <div class="tree">
+            <ul>
+              <aef:dialogStoryTreeNode moveStoryNode="${data}" skipNode="${story}"/>
+            </ul>
+          </div>
+        </div>
+      </div>
+
     </div>
     
   </li>
@@ -81,7 +115,9 @@ var openElement = function openElement(selector) {
     <input type="radio" name="selectedAction" onchange="openElement('#secondMessage');return false;"/> Second message
   </li>
   <li id="secondMessage" class="closable" style="display: none;">
-  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque imperdiet, metus tristique fermentum blandit, augue lacus faucibus nisl, a dignissim libero lorem sed dui. Mauris et dolor arcu, eu malesuada erat. Nullam neque velit, eleifend at tempor quis, luctus sit amet leo. Mauris lacinia sollicitudin urna nec dignissim. Aliquam in urna nunc. Quisque egestas erat non nisl condimentum eget mollis diam luctus. Nam mollis interdum purus, condimentum imperdiet leo pretium eu. Suspendisse et ipsum quis ante placerat fermentum at eget sem. Nulla dignissim elementum est id imperdiet. Ut aliquam sagittis dapibus. Sed pulvinar nisi et diam faucibus hendrerit. Sed vitae orci id justo suscipit vehicula. Cras vestibulum tristique dolor, sit amet bibendum enim varius quis. Sed nec semper eros. Cras gravida vulputate orci, at auctor dui euismod et. 
+  <div class="action-message">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque imperdiet, metus tristique fermentum blandit, augue lacus faucibus nisl, a dignissim libero lorem sed dui. Mauris et dolor arcu, eu malesuada erat. Nullam neque velit, eleifend at tempor quis, luctus sit amet leo. Mauris lacinia sollicitudin urna nec dignissim. Aliquam in urna nunc. Quisque egestas erat non nisl condimentum eget mollis diam luctus. Nam mollis interdum purus, condimentum imperdiet leo pretium eu. Suspendisse et ipsum quis ante placerat fermentum at eget sem. Nulla dignissim elementum est id imperdiet. Ut aliquam sagittis dapibus. Sed pulvinar nisi et diam faucibus hendrerit. Sed vitae orci id justo suscipit vehicula. Cras vestibulum tristique dolor, sit amet bibendum enim varius quis. Sed nec semper eros. Cras gravida vulputate orci, at auctor dui euismod et.
+  </div> 
   </li>
 </ul>
 

@@ -43,8 +43,14 @@ StoryController.prototype._closeMoveDialog = function() {
 };
 
 StoryController.prototype._confirmMoveStory = function(backlogId) {
-  if(this.currentMoveStoryDialog.find("input[name='selectedAction']").is(":checked")) {
-    this.model.moveStory(backlogId, true)
+  var radioButton = this.currentMoveStoryDialog.find("input[type=radio]:checked:eq(0)");
+  if(radioButton.length) {
+    if (radioButton.val() === "moveTargetStoryOnly") {
+      this.model.moveStory(backlogId);
+    }
+    else if (radioButton.val() === "moveTargetAndItsChildren") {
+      this.model.moveStoryAndChildren(backlogId);
+    }
   } else {
     this.currentMoveStoryDialog.find("#please-select-an-option").show('blind');
     return;
@@ -76,11 +82,13 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
         me._confirmMoveStory(backlogId);
       },
       Cancel: function() {
-        me.model.rollback();
-        me._closeMoveDialog();
+        dialog.dialog('close');
       }
     },
-    close: function() { me._closeMoveDialog(); }
+    close: function() {
+      me.model.rollback();
+      me._closeMoveDialog();
+    }
   });
   element.html('<div style="text-align:center;"><img src="static/img/pleasewait.gif" /></div>');
 }

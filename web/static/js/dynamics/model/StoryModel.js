@@ -201,14 +201,23 @@ StoryModel.prototype.canMoveStory = function(backlogId) {
   });
   return sendAjax;
 };
-StoryModel.prototype.moveStory = function(backlogId, safeMove) {
+StoryModel.prototype.moveStory = function(backlogId) {
+  this._moveStory(backlogId, "ajax/moveStory.action");
+};
+
+StoryModel.prototype.moveStoryOnly = function(backlogId) {
+  this._moveStory(backlogId, "ajax/safeMoveSingleStory.action");
+};
+
+StoryModel.prototype.moveStoryAndChildren = function(backlogId) {
+  this._moveStory(backlogId, "ajax/moveStoryAndChildren.action");
+};
+
+StoryModel.prototype._moveStory = function(backlogId, url) {
   var me = this;
   var oldBacklog = this.relations.backlog;
   var oldProject = this.relations.project;
-  var url = "ajax/moveStory.action";
-  if(safeMove) {
-    url = "ajax/safeMoveSingleStory.action";
-  }
+
   jQuery.ajax({
     url: url,
     data: {storyId: me.getId(), backlogId: backlogId},

@@ -46,7 +46,7 @@ StoryController.prototype._confirmMoveStory = function(backlogId) {
   var radioButton = this.currentMoveStoryDialog.find("input[type=radio]:checked:eq(0)");
   if(radioButton.length) {
     if (radioButton.val() === "moveTargetStoryOnly") {
-      this.model.moveStory(backlogId);
+      this.model.moveStoryOnly(backlogId);
     }
     else if (radioButton.val() === "moveTargetAndItsChildren") {
       this.model.moveStoryAndChildren(backlogId);

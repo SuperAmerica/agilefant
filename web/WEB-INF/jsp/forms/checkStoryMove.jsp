@@ -79,62 +79,11 @@ var messageUrls = {
 </style>
 
 <ul style="list-style-type: none;">
-  <li>
-    <input type="radio" value="moveTargetStoryOnly" name="selectedAction" onchange="openElement('#firstMessage');return false;"/> 
-    Move the story and leave the children behind
-  </li>
-  <li id="firstMessage" class="closable" style="display: none;">
   
-    <div class="action-message">
-  
-      <h4>The story to be moved</h4>
-      <div class="hierarchyContainer">
-        <div class="storyTreeContainer">
-          <div class="tree">
-            <ul>
-              <aef:dialogStoryTreeNode singleStory="${story}" singleNode="true"/>
-            </ul>
-          </div>
-        </div>
-      </div>
-    
-      <h4>The original tree after moving:</h4>
-    
-      <div class="hierarchyContainer">
-        <div class="storyTreeContainer">
-          <div class="tree">
-            <ul>
-              <aef:dialogStoryTreeNode moveStoryNode="${data}" skipNode="${story}"/>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    
-  </li>
+  <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryOnly.jsp" %>
 
   <c:if test="${!aef:isIteration(backlog)}"> 
-  <li>
-    <input type="radio" value="moveTargetAndItsChildren" name="selectedAction" onchange="openElement('#secondMessage');return false;"/>
-    Move the story and all of its children
-  </li>
-  <li id="secondMessage" class="closable" style="display: none;">
-  <div class="action-message">
-    
-    <h4>Story tree after moving</h4>
-    
-    <div class="hierarchyContainer">
-        <div class="storyTreeContainer">
-          <div class="tree">
-            <ul>
-              <aef:dialogStoryTreeNode moveStoryNode="${data}"/>
-            </ul>
-          </div>
-        </div>
-      </div>
-  </div> 
-  </li>
+    <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryAndChildren.jsp" %>
   </c:if>
   
 </ul>

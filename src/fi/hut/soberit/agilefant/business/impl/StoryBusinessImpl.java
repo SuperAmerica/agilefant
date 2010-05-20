@@ -343,6 +343,25 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         moveStory(story, backlog);
     }
     
+    public void moveStoryAndChildren(Story story, Backlog backlog) {
+        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
+                .getParentProduct(backlog)) {
+            throw new OperationNotPermittedException(
+                    "Can't move a story with children to another product");
+        }
+        if(this.storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog)) {
+            story.setParent(null);
+        }
+        recursiveMoveStory(story, backlog);
+    }
+    
+    private void recursiveMoveStory(Story story, Backlog backlog) {
+        for(Story child : story.getChildren()) {
+            recursiveMoveStory(child, backlog);
+        }
+        moveStory(story, backlog);
+    }
+    
     public void moveSingleStoryToBacklog(Story story, Backlog backlog) {
         if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
                 .getParentProduct(backlog)) {

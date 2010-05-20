@@ -10,6 +10,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -464,5 +465,57 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         assertEquals(firstProject, story.getBacklog());
         assertEquals(parent, story.getParent());
         assertEquals(parent, child.getParent());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testMoveStoryAndChildren() {
+        Story parent = new Story();
+        Story child1 = new Story();
+        Story child2 = new Story();
+        
+        parent.getChildren().add(story);
+        
+        story.setParent(parent);
+        story.getChildren().add(child1);
+        
+        child1.setParent(story);
+        child1.getChildren().add(child2);
+        
+        child2.setParent(child1);
+        
+        parent.setBacklog(firstProject);
+        story.setBacklog(firstProject);
+        child1.setBacklog(firstProject);
+        child2.setBacklog(firstIteration);
+        
+        firstIteration.setParent(firstProduct);
+        
+        expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, secondProject)).andReturn(true);
+        
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
+                
+        storyDAO.store(child2);
+        
+        storyRankBusiness.removeRank(child2, firstIteration);
+        storyRankBusiness.removeRank(child2, firstIteration.getParent());
+    
+        storyRankBusiness.rankToBottom(child2, secondProject);
+        
+        storyDAO.store(child1);
+        storyDAO.store(story);
+        
+        backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
+        backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
+        iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        EasyMock.expectLastCall().times(2);
+        backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
+        EasyMock.expectLastCall().times(2);
+        
+        replayAll();
+        storyBusiness.moveStoryAndChildren(story, secondProject);
+        verifyAll();
     }
 }

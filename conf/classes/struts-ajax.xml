@@ -531,6 +531,12 @@
       </result>
     </action>
     
+    <action name="moveStoryAndChildren" method="moveStoryAndChildren" class="storyAction">
+      <result name="success" type="json">
+        <param name="target">story</param>
+      </result>
+    </action>
+    
     <action name="rankStoryOver" method="rankStoryOver" class="storyAction">
       <result name="success" type="json">
         <param name="target">story</param>

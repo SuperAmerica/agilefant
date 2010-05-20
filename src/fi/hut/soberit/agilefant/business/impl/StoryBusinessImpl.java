@@ -359,6 +359,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             Story oldParent = story.getParent();
             story.setParent(null);
             if(oldParent != null) {
+                oldParent.getChildren().remove(story);
                 storyHierarchyBusiness.updateChildrenTreeRanks(oldParent);
             }
         }
@@ -383,12 +384,17 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         List<Story> childStories = new ArrayList<Story>(story.getChildren());
         for(Story childStory : childStories) {
             childStory.setParent(parent);
+            parent.getChildren().add(childStory);
+            parent.getChildren().remove(childStory);
             storyDAO.store(childStory);
         }
         
         //reset parent story
         if(this.storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog)) {
             story.setParent(null);
+            if(parent != null) {
+                parent.getChildren().remove(story);
+            }
         }
         if(parent != null) {
             storyHierarchyBusiness.updateChildrenTreeRanks(parent);

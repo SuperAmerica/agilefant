@@ -349,8 +349,18 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             throw new OperationNotPermittedException(
                     "Can't move a story with children to another product");
         }
-        if(this.storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog)) {
+        if (!story.getChildren().isEmpty() && backlog instanceof Iteration) {
+            throw new OperationNotPermittedException(
+                    "Story containing child stories can not be moved to an iteration.");
+        }
+
+        if (this.storyTreeIntegrityBusiness.hasParentStoryConflict(story,
+                backlog)) {
+            Story oldParent = story.getParent();
             story.setParent(null);
+            if(oldParent != null) {
+                storyHierarchyBusiness.updateChildrenTreeRanks(oldParent);
+            }
         }
         recursiveMoveStory(story, backlog);
     }
@@ -377,7 +387,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         //reset parent story
         if(this.storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog)) {
+            Story oldParent = story.getParent();
             story.setParent(null);
+            if(oldParent != null) {
+                storyHierarchyBusiness.updateChildrenTreeRanks(oldParent);
+            }
         }
         moveStory(story, backlog);
     }

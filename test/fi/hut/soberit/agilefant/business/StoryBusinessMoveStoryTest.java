@@ -429,6 +429,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyDAO.store(child);
         storyDAO.store(story);
         expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, firstProject)).andReturn(true);
+        storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         replayAll();
@@ -492,6 +493,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         firstIteration.setParent(firstProduct);
         
         expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, secondProject)).andReturn(true);
+        storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         
         expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
         expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
@@ -516,6 +518,36 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         
         replayAll();
         storyBusiness.moveStoryAndChildren(story, secondProject);
+        verifyAll();
+    }
+    
+    @Test(expected=OperationNotPermittedException.class)
+    @DirtiesContext
+    public void testMoveStoryAndChildren_toIteration() {
+        Story parent = new Story();
+        Story child1 = new Story();
+        Story child2 = new Story();
+        
+        parent.getChildren().add(story);
+        
+        story.setParent(parent);
+        story.getChildren().add(child1);
+        
+        child1.setParent(story);
+        child1.getChildren().add(child2);
+        
+        child2.setParent(child1);
+        
+        parent.setBacklog(firstProject);
+        story.setBacklog(firstProject);
+        child1.setBacklog(firstProject);
+        child2.setBacklog(firstIteration);
+        
+        firstIteration.setParent(firstProduct);
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(secondIteration)).andReturn(firstProduct);
+        replayAll();
+        storyBusiness.moveStoryAndChildren(story, secondIteration);
         verifyAll();
     }
 }

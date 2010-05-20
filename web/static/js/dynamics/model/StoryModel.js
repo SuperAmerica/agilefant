@@ -195,7 +195,7 @@ StoryModel.prototype.canMoveStory = function(backlogId) {
         sendAjax = true;
       }
       else {
-        me.callListeners(new DynamicsEvents.StoryTreeIntegrityViolation(me, data));
+        me.callListeners(new DynamicsEvents.StoryTreeIntegrityViolation(me, data, backlogId));
       }
     }
   });

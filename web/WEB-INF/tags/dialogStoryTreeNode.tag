@@ -30,7 +30,7 @@
   </c:choose>
   <c:if test="${moveStoryNode.changed}"><c:set var="markColored" value="color: #a00; !important;" /></c:if>
 
-  <c:if test="${skipNode != node || !empty moveStoryNode.children}">
+  <c:if test="${skipNode != node}">
   <li storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="open">
     <c:if test="${skipNode == null || skipNode.id != moveStoryNode.story.id}">
         <span>
@@ -52,15 +52,14 @@
     </span>
     </c:if>
   
-
     <c:if test="${!singleNode && (!empty moveStoryNode.children || !moveStoryNode.containsChanges)}">
-    <ul>
-      <c:forEach items="${moveStoryNode.children}" var="childStory">
-       <aef:dialogStoryTreeNode moveStoryNode="${childStory}" skipNode="${skipNode}" />
-      </c:forEach>
-    </ul>
+      <aef:dialogStoryTreeChildren moveStoryNode="${moveStoryNode}" skipNode="${skipNode}" omitUlElement="false"/>
     </c:if>
   </li>
+  </c:if>
+  
+  <c:if test="${skipNode == node && !empty moveStoryNode.children}">
+    <aef:dialogStoryTreeChildren moveStoryNode="${moveStoryNode}" skipNode="${skipNode}" omitUlElement="true"/>
   </c:if>
 
  

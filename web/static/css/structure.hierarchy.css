@@ -86,7 +86,6 @@ div.hierarchyContainer {
   position: absolute;
   max-width: 700px;
   padding: 0.5em;
-  z-index: 1500;
   background: white;
   border: 1px solid #999;
   -moz-border-radius: 5px;

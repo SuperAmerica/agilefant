@@ -11,6 +11,7 @@
 <!--
 var openElement = function openElement(selector) {
   var elem = $(selector);
+  $('#please-select-an-option').hide();
   $('.closable').not(elem).not(':hidden').hide('blind');
   if (elem.is(':hidden')) {
     elem.show('blind');
@@ -123,25 +124,9 @@ var messageUrls = {
 
 </div>
 
-<%--
-<div style="width:550px;">
-<table border="1" style="width: 500px;">
-  <tr>
-    <th>Source</th>
-    <th>Target</th>
-    <th>Message</th>
-  </tr>
-
-  <c:forEach items="${messages}" var="msg">
-    <tr>
-    <td><c:out value="${msg.source.name}" /></td>
-    <td><c:if test="${msg.target != null}"><c:out value="${msg.target.name}" /></c:if></td>
-    <td>
-      <aef:text name="${msg.messageName}" />      
-    </td>
-    </tr>
-  </c:forEach>
-</table>
+<div id="please-select-an-option" class="warning-note" style="display:none;">
+  Please select an option from the list!
 </div>
- --%>
+
+
 </c:if>

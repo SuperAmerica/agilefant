@@ -10,6 +10,7 @@ var Bubble = function Bubble(referenceElement, options) {
     offsetY:   35,
     minWidth:  400,
     minHeight: 80,
+    zIndex:    800,
     maxWidth:  null
   };
   jQuery.extend(this.options, options);
@@ -77,7 +78,8 @@ Bubble.prototype._position = function() {
     'left': pos.left + this.options.offsetX + 'px',
     'min-width': this.options.minWidth,
     'min-height': this.options.minHeight,
-    'max-width': this.options.maxWidth
+    'max-width': this.options.maxWidth,
+    'z-index': this.options.zIndex
   });
   // Add to document
   this.parentElement.appendTo(document.body);

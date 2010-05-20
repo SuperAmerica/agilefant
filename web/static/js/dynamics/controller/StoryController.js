@@ -27,7 +27,7 @@ StoryController.prototype.handleModelEvents = function(event) {
     this.taskListView.resort();
   }
   if (event instanceof DynamicsEvents.StoryTreeIntegrityViolation) {
-    this._showMoveStoryOptions(event.getData());
+    this._showMoveStoryOptions(event.getData(), event.getBacklogId());
   }
   if(event instanceof DynamicsEvents.NamedEvent && event.getEventName() === "storyMoved") {
     this._closeMoveDialog();
@@ -46,7 +46,7 @@ StoryController.prototype._confirmMoveStory = function(backlogId) {
   if(this.currentMoveStoryDialog.find("input[name='selectedAction']").is(":checked")) {
     this.model.moveStory(backlogId, true)
   } else {
-    alert("nono");
+    this.currentMoveStoryDialog.find("#please-select-an-option").show('blind');
     return;
   }
   if(this.currentMoveStoryDialog) {
@@ -55,9 +55,11 @@ StoryController.prototype._confirmMoveStory = function(backlogId) {
   }
 };
 
-StoryController.prototype._showMoveStoryOptions = function(data) {
-  this.currentMoveStoryDialog.dialog("option","title","Error in moving story!");
-  this.currentMoveStoryDialog.html(data);
+StoryController.prototype._showMoveStoryOptions = function(data, backlogId) {
+  if (this.currentMoveStoryDialog) {
+    this.currentMoveStoryDialog.dialog("option","title","Error in moving story!");
+    this.currentMoveStoryDialog.html(data);
+  }
 };
 StoryController.prototype._openMoveStoryDialog = function(backlogId) {
   var me = this;

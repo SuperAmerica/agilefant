@@ -223,14 +223,19 @@ DynamicsEvents.NamedEvent.prototype.getEventName = function() {
 };
 
 
-DynamicsEvents.StoryTreeIntegrityViolation = function DynamicsEvents_StoryTreeIntegrityViolation(origin, data) {
+DynamicsEvents.StoryTreeIntegrityViolation = function DynamicsEvents_StoryTreeIntegrityViolation(origin, data, backlogId) {
   this.initialize();
   this.type = "StoryTreeIntegrityViolation";
   this.object = origin;
   this.data = data;
+  this.backlogId = backlogId;
 };
 DynamicsEvents.StoryTreeIntegrityViolation.prototype = new DynamicsEvents.CommonEvent();
 
 DynamicsEvents.StoryTreeIntegrityViolation.prototype.getData = function() {
   return this.data;
+};
+
+DynamicsEvents.StoryTreeIntegrityViolation.prototype.getBacklogId = function() {
+  return this.backlogId;
 };

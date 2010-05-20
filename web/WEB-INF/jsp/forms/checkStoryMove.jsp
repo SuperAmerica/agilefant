@@ -5,7 +5,7 @@
 
 <img alt="" src="static/img/attention.png" style="float:right;"/>
 
-<h2>Can't move story to ${backlog.name}</h2>
+<h2>Can't move story to <span style="color: #666;"><c:out value="${backlog.name}" /></span></h2>
 
 <script type="text/javascript">
 <!--
@@ -18,8 +18,10 @@ var openElement = function openElement(selector) {
   }
 };
 var messageUrls = {
-    "MOVE_TO_ITERATION_HAS_CHILDREN": "static/html/help/dailyWorkPopup.html",
-    "CHILD_IN_WRONG_BRANCH":          "static/html/help/dailyWorkPopup.html"
+    "MOVE_TO_ITERATION_HAS_CHILDREN": "static/html/storyconstraints/moveToIterationHasChildren.html",
+    "CHILD_IN_WRONG_BRANCH":          "static/html/storyconstraints/childInWrongBranch.html",
+    "PARENT_DEEPER_IN_HIERARCHY":     "static/html/storyconstraints/parentDeeperInHierarchy.html",
+    "PARENT_IN_WRONG_BRANCH":          "static/html/storyconstraints/childInWrongBranch.html"
 };
 //-->
 </script>
@@ -34,14 +36,14 @@ var messageUrls = {
         <c:choose>
           <c:when test="${msg.target != null}">
             <aef:text name="${msg.messageName}" />
-            <a href="#" class="quickHelpLink superScript" title="What's this?" onclick="HelpUtils.openHelpPopup(this,'${msg.message}',messageUrls['${msg.message}']); return false;">[?]</a>:
+            <a href="#" class="quickHelpLink superScript" title="What's this?" onclick="HelpUtils.openHelpPopup(this,'<aef:text name="${msg.messageName}" />',messageUrls['${msg.message}']); return false;">[?]</a>:
             <span style="color: #999;"><c:out value="${msg.target.name}"/></span>
             in
             <span style="color: #999">${msg.target.backlog.name}</span>  
           </c:when>
           <c:otherwise>
             <aef:text name="${msg.messageName}" />
-            <a href="#" class="quickHelpLink superScript" title="What's this?" onclick="HelpUtils.openHelpPopup(this,'${msg.message}',messageUrls['${msg.message}']); return false;">[?]</a>         
+            <a href="#" class="quickHelpLink superScript" title="What's this?" onclick="HelpUtils.openHelpPopup(this,'<aef:text name="${msg.messageName}" />',messageUrls['${msg.message}']); return false;">[?]</a>         
           </c:otherwise>
         </c:choose>
         
@@ -113,7 +115,8 @@ var messageUrls = {
   </li>
   
   <li>
-    <input type="radio" name="selectedAction" onchange="openElement('#secondMessage');return false;"/> Second message
+    <input type="radio" name="selectedAction" onchange="openElement('#secondMessage');return false;"/>
+    Move the story and all of its children
   </li>
   <li id="secondMessage" class="closable" style="display: none;">
   <div class="action-message">

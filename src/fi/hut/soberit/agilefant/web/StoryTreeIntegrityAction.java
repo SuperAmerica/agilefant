@@ -38,6 +38,8 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     
     private List<StoryTreeIntegrityMessage> messages;
     
+    private boolean parentStoryConflict = false;
+    
     private Backlog backlog;
     private Story story;
     
@@ -54,6 +56,8 @@ public class StoryTreeIntegrityAction extends ActionSupport {
 
         data = storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages);
         
+        parentStoryConflict = storyTreeIntegrityBusiness
+                .hasParentStoryConflict(story, backlog);
         
         if (!checkFatalMessages()) {
             return FATAL_CONSTRAINT; 
@@ -121,5 +125,9 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     public Story getStory() {
         return story;
     }
-    
+
+    public boolean isParentStoryConflict() {
+        return parentStoryConflict;
+    }
+
 }

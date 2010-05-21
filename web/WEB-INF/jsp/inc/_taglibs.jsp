@@ -5,4 +5,5 @@ taglib uri="http://displaytag.sf.net" prefix="display" %><%@
 taglib uri="/struts-tags" prefix="ww" %><%@
 taglib uri="/WEB-INF/tlds/aef.tld" prefix="aef" %><%@
 taglib uri="/WEB-INF/tlds/aef_structure.tld" prefix="struct" %><%@
+taglib uri="/WEB-INF/tlds/aef_integrity.tld" prefix="ai" %><%@
 taglib uri="http://www.joda.org/joda/time/tags" prefix="joda" %>

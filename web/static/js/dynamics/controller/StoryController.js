@@ -44,12 +44,18 @@ StoryController.prototype._closeMoveDialog = function() {
 
 StoryController.prototype._confirmMoveStory = function(backlogId) {
   var radioButton = this.currentMoveStoryDialog.find("input[type=radio]:checked:eq(0)");
+  var parentCheckBox = this.currentMoveStoryDialog.find("input[type=checkbox]:checked:eq(0)");
+  var moveParents = false;
+  if (parentCheckBox.length) {
+    moveParents = true;
+  }
+  
   if(radioButton.length) {
     if (radioButton.val() === "moveTargetStoryOnly") {
-      this.model.moveStoryOnly(backlogId);
+      this.model.moveStoryOnly(backlogId, moveParents);
     }
     else if (radioButton.val() === "moveTargetAndItsChildren") {
-      this.model.moveStoryAndChildren(backlogId);
+      this.model.moveStoryAndChildren(backlogId, moveParents);
     }
   } else {
     this.currentMoveStoryDialog.find("#please-select-an-option").show('blind');

@@ -64,9 +64,12 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
         expect(backlogBusiness.retrieve(66)).andReturn(newBacklog);
         expect(storyTreeIntegrityBusiness.checkChangeBacklog(story, newBacklog))
             .andReturn(messages);
-        
+                
         expect(storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages))
             .andReturn(data);
+        
+        expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, newBacklog))
+            .andReturn(true);
         
         replayAll();
         assertEquals(Action.SUCCESS, testable.checkChangeBacklog());
@@ -74,6 +77,7 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
         
         assertSame(data, testable.getData());
         assertSame(messages, testable.getMessages());
+        assertTrue(testable.isParentStoryConflict());
     }
     
     @Test
@@ -98,12 +102,16 @@ public class StoryTreeIntegrityActionTest extends MockedTestCase {
         expect(storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages))
             .andReturn(data);
         
+        expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, newBacklog))
+            .andReturn(false);
+        
         replayAll();
         assertEquals("fatalConstraint", testable.checkChangeBacklog());
         verifyAll();
         
         assertTrue(testable.getMessages().contains(fatal));
         assertEquals(1, testable.getMessages().size());
+        assertFalse(testable.isParentStoryConflict());
     }
 
     

@@ -432,6 +432,10 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        
+        storyRankBusiness.removeRank(story, secondProject);
+        storyRankBusiness.rankToBottom(story, firstProject);
+        
         replayAll();
 
         storyBusiness.moveSingleStoryToBacklog(story, firstProject);
@@ -439,6 +443,37 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         assertEquals(firstProject, story.getBacklog());
         assertNull(story.getParent());
         assertEquals(parent, child.getParent());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void moveRootFromProjectToProject() {
+        Story child = new Story();
+        story.setBacklog(secondProject);
+        story.setParent(null);
+        story.getChildren().add(child);
+        child.setParent(story);
+        
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        
+        storyDAO.store(child);
+        storyDAO.store(story);
+        expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, firstProject)).andReturn(true);
+
+        backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        
+        storyRankBusiness.removeRank(story, secondProject);
+        storyRankBusiness.rankToBottom(story, firstProject);
+        
+        replayAll();
+
+        storyBusiness.moveSingleStoryToBacklog(story, firstProject);
+        verifyAll();
+        assertEquals(firstProject, story.getBacklog());
+        assertNull(story.getParent());
+        assertEquals(null, child.getParent());
     }
     
     @Test
@@ -460,6 +495,9 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        
+        storyRankBusiness.removeRank(story, secondProject);
+        storyRankBusiness.rankToBottom(story, firstProject);
         replayAll();
 
         storyBusiness.moveSingleStoryToBacklog(story, firstProject);

@@ -1,4 +1,4 @@
-<%@include file="../inc/_taglibs.jsp" %>
+<%@include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
 
 <c:if test="${fn:length(messages) > 0}">
 <div class="messageContainer">
@@ -9,20 +9,34 @@
 
 <script type="text/javascript">
 <!--
-var openElement = function openElement(selector) {
-  var elem = $(selector);
-  $('#please-select-an-option').hide();
-  $('.closable').not(elem).not(':hidden').hide('blind');
-  if (elem.is(':hidden')) {
-    elem.show('blind');
-  }
-};
 var messageUrls = {
     "MOVE_TO_ITERATION_HAS_CHILDREN": "static/html/storyconstraints/moveToIterationHasChildren.html",
     "CHILD_IN_WRONG_BRANCH":          "static/html/storyconstraints/childInWrongBranch.html",
     "PARENT_DEEPER_IN_HIERARCHY":     "static/html/storyconstraints/parentDeeperInHierarchy.html",
-    "PARENT_IN_WRONG_BRANCH":          "static/html/storyconstraints/childInWrongBranch.html"
+    "PARENT_IN_WRONG_BRANCH":         "static/html/storyconstraints/childInWrongBranch.html"
 };
+var suggestionUrls = {
+    "moveStoryOnly":           "ajax/suggestion_moveStoryOnly.action",
+    "moveStoryAndChildren":    "ajax/suggestionmoveStoryAndChildren.action"
+};
+
+var openElement = function openElement(selector, type) {
+  var elem = $(selector);
+  $('#please-select-an-option').hide();
+  // Hide all other previously shown options
+  $('.closable').not(elem).not(':hidden').hide('blind');
+
+  // Load the option contents
+  if (elem.is(':hidden')) {
+    elem.show('blind');
+  }
+};
+
+var toggleElement = function toggleElement(selector, type) {
+  $(selector).toggle('blind');
+};
+
+
 //-->
 </script>
 
@@ -60,7 +74,7 @@ var messageUrls = {
   <div class="storyTreeContainer">
     <div class="tree">
       <ul>
-        <aef:dialogStoryTreeNode moveStoryNode="${data}" />
+        <ai:storyTreeNode moveStoryNode="${data}" />
       </ul>
     </div>
   </div>
@@ -76,16 +90,57 @@ var messageUrls = {
   margin: 0.5em 0;
   padding: 0.3em;
 }
+.action-message h4 {
+  margin-top: 0.5em;
+  margin-bottom: 0.3em;
+}
+.closable {
+  display: none;
+}
 </style>
 
 <ul style="list-style-type: none;">
   
-  <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryOnly.jsp" %>
-
-  <c:if test="${!aef:isIteration(backlog)}"> 
-    <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryAndChildren.jsp" %>
-  </c:if>
+  <li>
+    <input type="radio" value="moveTargetStoryOnly" name="selectedAction" onchange="openElement('#suggestion_storyOnlyMessage','moveStoryOnly');return false;"/> 
+    Move the story and leave the children behind
+  </li>
+    
+  <li id="suggestion_storyOnlyMessage" class="closable">
+    <div class="action-message">
+      <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryOnly.jsp" %>
+      <%--<div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div> --%>
+    </div>
+  </li>
   
+  
+  <c:if test="${!aef:isIteration(backlog)}">
+    <li>
+      <input type="radio" value="moveTargetAndItsChildren" name="selectedAction" onchange="openElement('#suggestion_storyAndChildrenMessage','moveStoryAndChildren');return false;"/>
+      Move the story and all of its children
+    </li>
+    <li id="suggestion_storyAndChildrenMessage" class="closable">
+      <div class="action-message">
+        <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryAndChildren.jsp" %>
+      </div>
+    </li>
+  </c:if>
+  <%--
+  !! LEFT OUT CURRENTLY !!
+  
+  
+  <c:if test="${parentStoryConflict == true}">
+    <li>
+      <input type="checkbox" value="" name="moveParentsToProduct" onchange="toggleElement('#suggestion_moveParentsToProduct','moveParentsToProduct');return false;"/>
+      Move story's parents to product
+    </li>
+    <li id="suggestion_moveParentsToProduct" style="display: none;">
+      <div class="action-message">
+        <div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div>
+      </div>
+    </li>
+  </c:if>
+   --%>
 </ul>
 
 </div>

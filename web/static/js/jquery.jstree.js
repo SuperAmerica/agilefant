@@ -1641,7 +1641,7 @@
 
 			var et = $(event.target);
 			if(et.is("ins")) et = et.parent();
-			else if(et.is("span")) et = et.parent.parent();
+			else if(et.is("span")) et = et.parent().parent();
 			
 			var cnt = et.is(".tree") ? et : et.parents(".tree:eq(0)");
 

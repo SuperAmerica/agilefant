@@ -384,8 +384,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         List<Story> childStories = new ArrayList<Story>(story.getChildren());
         for(Story childStory : childStories) {
             childStory.setParent(parent);
-            parent.getChildren().add(childStory);
-            parent.getChildren().remove(childStory);
+            if (parent != null) {
+                parent.getChildren().add(childStory);
+                
+            }
+            story.getChildren().remove(childStory);
             storyDAO.store(childStory);
         }
         

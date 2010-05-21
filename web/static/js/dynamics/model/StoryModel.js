@@ -202,25 +202,25 @@ StoryModel.prototype.canMoveStory = function(backlogId) {
   return sendAjax;
 };
 StoryModel.prototype.moveStory = function(backlogId) {
-  this._moveStory(backlogId, "ajax/moveStory.action");
+  this._moveStory(backlogId, "ajax/moveStory.action", false);
 };
 
-StoryModel.prototype.moveStoryOnly = function(backlogId) {
-  this._moveStory(backlogId, "ajax/safeMoveSingleStory.action");
+StoryModel.prototype.moveStoryOnly = function(backlogId, moveParents) {
+  this._moveStory(backlogId, "ajax/safeMoveSingleStory.action", moveParents);
 };
 
-StoryModel.prototype.moveStoryAndChildren = function(backlogId) {
-  this._moveStory(backlogId, "ajax/moveStoryAndChildren.action");
+StoryModel.prototype.moveStoryAndChildren = function(backlogId, moveParents) {
+  this._moveStory(backlogId, "ajax/moveStoryAndChildren.action", moveParents);
 };
 
-StoryModel.prototype._moveStory = function(backlogId, url) {
+StoryModel.prototype._moveStory = function(backlogId, url, moveParents) {
   var me = this;
   var oldBacklog = this.relations.backlog;
   var oldProject = this.relations.project;
 
   jQuery.ajax({
     url: url,
-    data: {storyId: me.getId(), backlogId: backlogId},
+    data: {storyId: me.getId(), backlogId: backlogId, moveParents: moveParents},
     dataType: 'json',
     type: 'post',
     async: true,

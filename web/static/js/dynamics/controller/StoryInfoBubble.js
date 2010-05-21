@@ -34,13 +34,21 @@ StoryInfoBubble.prototype.checkForMoveStory = function(model) {
     var me = this;
     //ensure that dialog is open
     setTimeout(function() {
-    if(model.canMoveStory(model.currentData.backlog)) {
-      me._closeMoveDialog();
-      model.commit();
-    }
+      if(model.canMoveStory(model.currentData.backlog)) {
+        me._closeMoveDialog();
+        model.commit();
+      }
     }, 200);
   } else {
     model.commit();
+  }
+};
+
+StoryInfoBubble.prototype.handleModelEvents = function(event) {
+  StoryController.prototype.handleModelEvents.call(this, event);
+  if(event instanceof DynamicsEvents.NamedEvent && event.getEventName() === "storyMoved") {
+    this.treeController.refresh();
+    this.bubble.destroy();
   }
 };
 

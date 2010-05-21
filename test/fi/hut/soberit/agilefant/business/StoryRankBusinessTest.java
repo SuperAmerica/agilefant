@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.junit.Test;
 import fi.hut.soberit.agilefant.business.impl.StoryRankBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryRankDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryRank;
@@ -307,4 +309,28 @@ public class StoryRankBusinessTest {
         assertSame(0, rankable.getRank());
     }
 
+    @Test
+    public void testFixContext() {
+        Story story = new Story();
+        story.setId(1);
+        Story story2 = new Story();
+        story2.setId(2);
+        Iteration iter = new Iteration();
+        iter.getStories().add(story);
+        
+        StoryRank rank1 = new StoryRank();
+        rank1.setStory(story);
+        rank1.setBacklog(iter);
+        StoryRank rank2 = new StoryRank();
+        rank2.setStory(story2);
+        rank2.setBacklog(iter);
+        expect(storyRankDAO.retrieveRanksByBacklog(iter)).andReturn(Arrays.asList(rank1, rank2));
+        expect(storyRankDAO.retrieveByBacklogAndStory(iter, story2)).andReturn(rank2);
+        expect(storyRankDAO.retrieveRanksByBacklog(iter)).andReturn(Arrays.asList(rank1, rank2));
+        storyRankDAO.remove(rank2);
+        replayAll();
+        storyRankBusiness.fixContext(iter);
+        verifyAll();
+       
+    }
 }

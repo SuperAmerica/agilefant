@@ -176,6 +176,36 @@ public class IterationBusinessTest {
         
         verifyAll();
     }
+    
+    @Test
+    public void testGetIterationContents_hasInvalidRank() {
+        List<Story> stories = new ArrayList<Story>();
+        stories.addAll(iteration.getStories());
+        IterationTO iterationTO = new IterationTO(iteration);
+        
+        List<Story> rankedStories = new ArrayList<Story>(stories);
+        Story invalidRank = new Story();
+        invalidRank.setId(999);
+        rankedStories.add(invalidRank);
+        
+        expect(iterationDAO.retrieveDeep(iteration.getId())).andReturn(iteration);
+        expect(transferObjectBusiness.constructIterationTO(iteration)).andReturn(iterationTO);
+        expect(storyRankBusiness.retrieveByRankingContext(iteration)).andReturn(rankedStories);
+        storyRankBusiness.fixContext(iteration);
+        expect(storyRankBusiness.retrieveByRankingContext(iteration)).andReturn(stories);
+        Map<Integer, StoryMetrics> emptyMetricsMap = Collections.emptyMap();
+        expect(iterationDAO.calculateIterationDirectStoryMetrics(iteration)).andReturn(emptyMetricsMap);
+        expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
+            .andReturn(new ArrayList<Task>(Arrays.asList(new Task(), new Task())));
+        Map<Integer, Long> emptyTaskMap = Collections.emptyMap();
+        expect(iterationDAO.calculateIterationTaskEffortSpent(iteration)).andReturn(emptyTaskMap);
+        
+        replayAll();
+        
+        iterationBusiness.getIterationContents(iteration.getId());
+        
+        verifyAll();
+    }
 
     @Test(expected = ObjectNotFoundException.class)
     public void testGetIterationContents_nullBacklog() {

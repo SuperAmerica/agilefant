@@ -38,6 +38,7 @@ import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
@@ -134,20 +135,17 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     @Override
     public void delete(Story story) {
-        delete(story, null, null, null);
+        delete(story, null, null, null, null);
     }
     
-    public void delete(int id,TaskHandlingChoice taskHandlingChoice,
-            HourEntryHandlingChoice storyHourEntryHandlingChoice,
-            HourEntryHandlingChoice taskHourEntryHandlingChoice) {
-        delete(this.retrieve(id), taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
-    }
     
     public void deleteAndUpdateHistory(int id,TaskHandlingChoice taskHandlingChoice,
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
-            HourEntryHandlingChoice taskHourEntryHandlingChoice) {
+            HourEntryHandlingChoice taskHourEntryHandlingChoice,
+            ChildHandlingChoice childHandlingChoice) {
         Story story = retrieve(id);
-        delete(story, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+        delete(story, taskHandlingChoice, storyHourEntryHandlingChoice,
+                taskHourEntryHandlingChoice, childHandlingChoice);
         backlogHistoryEntryBusiness.updateHistory(story.getBacklog().getId());
         if (story.getBacklog() instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(story.getBacklog().getId());
@@ -596,14 +594,24 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     public void delete(Story story, TaskHandlingChoice taskHandlingChoice,
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
-            HourEntryHandlingChoice taskHourEntryHandlingChoice) {
+            HourEntryHandlingChoice taskHourEntryHandlingChoice,
+            ChildHandlingChoice childHandlingChoice) {
       
-        for (Story child : story.getChildren()) {
-            if(child != null ) {
-                child.setParent(null);
+        if (childHandlingChoice != null) {
+            switch (childHandlingChoice) {
+            case MOVE:
+                for (Story child : story.getChildren()) {
+                    if (child != null) {
+                        child.setParent(null);
+                    }
+                }
+                story.getChildren().clear();
+                break;
+            case DELETE:
+                deleteStoryChildren(story);
+                break;
             }
         }
-        story.getChildren().clear();
 
         if (taskHandlingChoice != null) {
             switch (taskHandlingChoice) {
@@ -666,6 +674,28 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         storyRankBusiness.removeStoryRanks(story);
         super.delete(story);
         
+    }
+    
+    private void deleteStoryChildren(Story story) {
+        Set<Story> allChildren = getTreeChildren(story);
+        
+        for (Story child : allChildren) {
+            child.getChildren().clear();
+            child.setParent(null);
+            deleteAndUpdateHistory(child.getId(), TaskHandlingChoice.DELETE,
+                    HourEntryHandlingChoice.DELETE,
+                    HourEntryHandlingChoice.DELETE,
+                    null);
+        }
+        story.getChildren().clear();
+    }
+    
+    private Set<Story> getTreeChildren(Story story) {
+        Set<Story> children = new HashSet<Story>(story.getChildren());
+        for (Story child : story.getChildren()) {
+            children.addAll(getTreeChildren(child));
+        }
+        return children;
     }
     
     public void forceDelete(Story story) {

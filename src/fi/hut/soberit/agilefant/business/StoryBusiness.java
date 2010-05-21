@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
@@ -101,15 +102,13 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     void delete(Story story, TaskHandlingChoice taskHandlingChoice,
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
-            HourEntryHandlingChoice taskHourEntryHandlingChoice);
-
-    void delete(int id, TaskHandlingChoice taskHandlingChoice,
-            HourEntryHandlingChoice storyHourEntryHandlingChoice,
-            HourEntryHandlingChoice taskHourEntryHandlingChoice);
+            HourEntryHandlingChoice taskHourEntryHandlingChoice,
+            ChildHandlingChoice childHandlingChoice);
 
     void deleteAndUpdateHistory(int id, TaskHandlingChoice taskHandlingChoice,
             HourEntryHandlingChoice storyHourEntryHandlingChoice,
-            HourEntryHandlingChoice taskHourEntryHandlingChoice);
+            HourEntryHandlingChoice taskHourEntryHandlingChoice,
+            ChildHandlingChoice childHandlingChoice);
 
     void forceDelete(Story story);
     

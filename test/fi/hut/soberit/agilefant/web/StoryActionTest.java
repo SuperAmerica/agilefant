@@ -31,6 +31,7 @@ import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
 
@@ -217,7 +218,7 @@ public class StoryActionTest extends MockedTestCase {
     @DirtiesContext
     public void testDelete() {
        storyAction.setStoryId(story.getId());
-       storyBusiness.deleteAndUpdateHistory(story.getId(), null, null, null);
+       storyBusiness.deleteAndUpdateHistory(story.getId(), null, null, null, null);
        replayAll();
        
        assertEquals(Action.SUCCESS, storyAction.delete());
@@ -232,7 +233,8 @@ public class StoryActionTest extends MockedTestCase {
        storyAction.setTaskHandlingChoice(TaskHandlingChoice.MOVE);
        storyAction.setStoryHourEntryHandlingChoice(HourEntryHandlingChoice.MOVE);
        storyAction.setTaskHourEntryHandlingChoice(HourEntryHandlingChoice.DELETE);
-       storyBusiness.deleteAndUpdateHistory(story.getId(), TaskHandlingChoice.MOVE, HourEntryHandlingChoice.MOVE, HourEntryHandlingChoice.DELETE);
+       storyAction.setChildHandlingChoice(ChildHandlingChoice.DELETE);
+       storyBusiness.deleteAndUpdateHistory(story.getId(), TaskHandlingChoice.MOVE, HourEntryHandlingChoice.MOVE, HourEntryHandlingChoice.DELETE, ChildHandlingChoice.DELETE);
        replayAll();
        
        assertEquals(Action.SUCCESS, storyAction.delete());

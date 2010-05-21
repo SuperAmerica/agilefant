@@ -192,7 +192,7 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
                 throw new RuntimeException(e);
             }
         }
-
+        story.getStoryRanks().clear();
     }
 
     /**

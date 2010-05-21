@@ -24,6 +24,7 @@ import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
@@ -79,6 +80,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private HourEntryHandlingChoice taskHourEntryHandlingChoice;
     private HourEntryHandlingChoice storyHourEntryHandlingChoice;
     private TaskHandlingChoice taskHandlingChoice;
+    private ChildHandlingChoice childHandlingChoice;
 
 
     @Override
@@ -100,7 +102,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
 
     public String delete() {
-        storyBusiness.deleteAndUpdateHistory(storyId, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice);
+        storyBusiness.deleteAndUpdateHistory(storyId, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice, childHandlingChoice);
         return Action.SUCCESS;
     }
 
@@ -333,5 +335,9 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
     public void setTasksToDone(boolean tasksToDone) {
         this.tasksToDone = tasksToDone;
+    }
+
+    public void setChildHandlingChoice(ChildHandlingChoice childHandlingChoice) {
+        this.childHandlingChoice = childHandlingChoice;
     }
 }

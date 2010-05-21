@@ -2,12 +2,48 @@
   <div><img src="static/img/question.png" alt="Are you sure?" style="float: left;" />
   <div style="margin-left: 90px">
 <c:choose>
-	<c:when test="${empty story.hourEntries && empty story.tasks}">
+	<c:when test="${empty story.hourEntries && empty story.tasks && empty story.children}">
 		Delete story?
 	</c:when>
 	<c:otherwise>
 		<form>
-			<div class="deleteForm">
+		  <div class="deleteForm">
+        <c:if test="${!empty story.children}">
+          <p>This story has children.</p>
+          <ul>
+            <li>
+              <input type="radio" name="childHandlingChoice" value="MOVE" onchange="$('#deleteChildren').hide();" checked="checked" />
+              <c:choose>
+              <c:when test="${story.parent != null}">
+                Move the children to the story's parent: <span style="color: #666;">${story.parent.name}</span>
+              </c:when>
+              <c:otherwise>
+                Move the children to be root stories
+              </c:otherwise>
+              </c:choose>
+            </li>
+            <li>
+              <input type="radio" name="childHandlingChoice" value="DELETE" onchange="$('#deleteChildren').show('blind');"/>
+              Delete all the children
+            </li>
+            <li id="deleteChildren" style="display: none; border: 1px dashed #A6C9E2; padding: 0.5em;">
+              <h4>These stories will be deleted!</h4>
+              
+              <p style="font-weight: normal;"><strong>Note!</strong> The children may contain tasks and hour entries which will be deleted!</p>
+              
+              <div class="hierarchyContainer">
+                <div class="storyTreeContainer">
+                  <div class="tree">
+                    <ul>
+                      <ai:storyTreeNode_forStory node="${story}" />
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </c:if>
+      
 				<c:if test="${!empty story.tasks}">
 					<p>This story contains tasks.</p>
 					<ul>
@@ -37,7 +73,7 @@
 							</c:when>
 							<c:otherwise>
 								<li style="color: #ff0000">
-									<input type="hidden" name="taskHandlingChoice" value="MOVE" />
+									<input type="hidden" name="taskHandlingChoice" value="DELETE" checked="checked"/>
 									The tasks will be permanently deleted.
 								</li>
 								<li class="taskHourEntryHandling">

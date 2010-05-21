@@ -17,7 +17,7 @@ var messageUrls = {
 };
 var suggestionUrls = {
     "moveStoryOnly":           "ajax/suggestion_moveStoryOnly.action",
-    "moveStoryAndChildren":    "ajax/suggestionmoveStoryAndChildren.action"
+    "moveStoryAndChildren":    "ajax/suggestion_moveStoryAndChildren.action"
 };
 
 var openElement = function openElement(selector, type) {
@@ -69,7 +69,7 @@ var toggleElement = function toggleElement(selector, type) {
   </tr>
 </table>
 
-<h3>Story hierarchy</h3>
+<h3>Current story hierarchy</h3>
 <div class="hierarchyContainer">
   <div class="storyTreeContainer">
     <div class="tree">
@@ -101,6 +101,24 @@ var toggleElement = function toggleElement(selector, type) {
 
 <ul style="list-style-type: none;">
   
+    <%--
+  !! LEFT OUT CURRENTLY !!
+  
+  
+  <c:if test="${parentStoryConflict == true}">
+    <li>
+      <input type="checkbox" value="" name="moveParentsToProduct" onchange="toggleElement('#suggestion_moveParentsToProduct','moveParentsToProduct');return false;"/>
+      Move story's parents to product
+    </li>
+    <li id="suggestion_moveParentsToProduct" style="display: none;">
+      <div class="action-message">
+        <div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div>
+      </div>
+    </li>
+  </c:if>
+   --%>
+  
+  
   <li>
     <input type="radio" value="moveTargetStoryOnly" name="selectedAction" onchange="openElement('#suggestion_storyOnlyMessage','moveStoryOnly');return false;"/> 
     Move the story and leave the children behind
@@ -125,22 +143,7 @@ var toggleElement = function toggleElement(selector, type) {
       </div>
     </li>
   </c:if>
-  <%--
-  !! LEFT OUT CURRENTLY !!
-  
-  
-  <c:if test="${parentStoryConflict == true}">
-    <li>
-      <input type="checkbox" value="" name="moveParentsToProduct" onchange="toggleElement('#suggestion_moveParentsToProduct','moveParentsToProduct');return false;"/>
-      Move story's parents to product
-    </li>
-    <li id="suggestion_moveParentsToProduct" style="display: none;">
-      <div class="action-message">
-        <div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div>
-      </div>
-    </li>
-  </c:if>
-   --%>
+
 </ul>
 
 </div>

@@ -97,6 +97,7 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
     }
   });
   element.html('<div style="text-align:center;"><img src="static/img/pleasewait.gif" /></div>');
+  console.log("OPEN IT!");
 }
 StoryController.prototype._moveStory = function(id) {
   this._openMoveStoryDialog(id);

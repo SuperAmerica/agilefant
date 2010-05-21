@@ -31,10 +31,14 @@ StoryInfoBubble.prototype.init = function() {
 StoryInfoBubble.prototype.checkForMoveStory = function(model) {
   if(model.currentData.backlog) {
     this._openMoveStoryDialog(model.currentData.backlog);
+    var me = this;
+    //ensure that dialog is open
+    setTimeout(function() {
     if(model.canMoveStory(model.currentData.backlog)) {
-      this._closeMoveDialog();
+      me._closeMoveDialog();
       model.commit();
     }
+    }, 200);
   } else {
     model.commit();
   }

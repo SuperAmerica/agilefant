@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fi.hut.soberit.agilefant.business.impl.StoryHierarchyBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
+import fi.hut.soberit.agilefant.exception.StoryTreeIntegrityViolationException;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
@@ -44,6 +46,9 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
     @Mock(strict = true)
     private StoryFilterBusiness storyFilterBusiness;
+    
+    @Mock(strict = true)
+    private StoryTreeIntegrityBusiness storyTreeIntegrityBusiness;
 
     private List<Story> children;
 
@@ -163,7 +168,8 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         story.setParent(oldParent);
         oldParent.getChildren().add(story);
         oldParent.getChildren().add(story4);
-
+        
+        storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story, reference);
         expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
         expect(storyBusiness.updateStoryRanks(reference)).andReturn(null);
 
@@ -185,6 +191,30 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         assertEquals(3, reference.getChildren().get(3).getTreeRank());
     }
 
+    @Test(expected=StoryTreeIntegrityViolationException.class)
+    @DirtiesContext
+    public void testMoveUnder_treeConstraint() {
+        story1.setParent(reference);
+        story2.setParent(reference);
+        story3.setParent(reference);
+        children.add(story1);
+        children.add(story2);
+        children.add(story3);
+        reference.setChildren(children);
+
+        story.setParent(oldParent);
+        oldParent.getChildren().add(story);
+        oldParent.getChildren().add(story4);
+        
+        storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story, reference);
+        EasyMock.expectLastCall().andThrow(new StoryTreeIntegrityViolationException(null));
+        replayAll();
+
+        storyHierarchyBusiness.moveUnder(story, reference);
+
+        verifyAll();
+    }
+    
     @Test
     @DirtiesContext
     public void testMoveUnder_emptiesOld() {
@@ -199,6 +229,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         story.setParent(oldParent);
         oldParent.getChildren().add(story);
 
+        storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story, reference);
         expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
         expect(storyBusiness.updateStoryRanks(reference)).andReturn(null);
 
@@ -228,6 +259,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         oldParent.getChildren().add(story);
         oldParent.getChildren().add(story4);
 
+        storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story, reference);
         expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
         expect(storyBusiness.updateStoryRanks(reference)).andReturn(null);
 
@@ -286,6 +318,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
         oldParent.getChildren().add(story4);
 
+        storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story, parent);
         expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
         expect(storyBusiness.updateStoryRanks(parent)).andReturn(null);
 
@@ -437,6 +470,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
 
         oldParent.getChildren().add(story4);
 
+        storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story, parent);
         expect(storyBusiness.updateStoryRanks(oldParent)).andReturn(null);
         expect(storyBusiness.updateStoryRanks(parent)).andReturn(null);
 

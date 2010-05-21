@@ -235,11 +235,20 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
   var myId = $(node).attr("storyid");
   var refId = $(ref_node).attr("storyid");
   var data = {storyId: myId, referenceStoryId: refId};
+  var me = this;
   $.ajax({
     url: StoryTreeController.moveNodeUrls[type],
     data: data,
     type: "post",
-    async: true
+    async: true,
+    error: function(xhr, status, error) {
+      if(xhr) {
+          var json =  jQuery.httpData(xhr, "json", null);
+          var message = json.errorMessage;
+          MessageDisplay.Warning(message);
+      }
+      jQuery.tree.rollback(rb);
+    }
   });
 };
 StoryTreeController.prototype.checkStoryMove = function(node, ref_node, type, tree_obj, rb) {

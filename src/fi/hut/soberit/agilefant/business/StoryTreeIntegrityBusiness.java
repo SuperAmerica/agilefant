@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 
+import fi.hut.soberit.agilefant.exception.StoryTreeIntegrityViolationException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.MoveStoryNode;
@@ -29,4 +30,5 @@ public interface StoryTreeIntegrityBusiness {
     public MoveStoryNode generateChangedStoryTree(Story movedStory, List<StoryTreeIntegrityMessage> messages);
     
     public boolean hasParentStoryConflict(Story story, Backlog newBacklog);
+    public void checkChangeParentStoryAndThrow(Story story, Story newParent) throws StoryTreeIntegrityViolationException;
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
+import fi.hut.soberit.agilefant.exception.StoryTreeIntegrityViolationException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
@@ -144,7 +145,12 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
      */
     
     
-    
+    public void checkChangeParentStoryAndThrow(Story story, Story newParent) throws StoryTreeIntegrityViolationException {
+        List<StoryTreeIntegrityMessage> messages = this.checkChangeParentStory(story, newParent);
+        if(!messages.isEmpty()) {
+            throw new StoryTreeIntegrityViolationException(messages);
+        }
+    }
     
     /** {@inheritDoc} */
     public List<StoryTreeIntegrityMessage> checkChangeParentStory(

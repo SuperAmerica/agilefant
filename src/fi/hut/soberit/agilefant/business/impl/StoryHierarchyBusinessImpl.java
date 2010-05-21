@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
+import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -37,6 +38,10 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
 
     @Autowired
     private StoryFilterBusiness storyFilterBusiness;
+    
+    @Autowired
+    private StoryTreeIntegrityBusiness storyTreeIntegrityBusiness;
+   
 
     @Transactional(readOnly = true)
     public List<Story> retrieveProjectLeafStories(Project project) {
@@ -46,7 +51,8 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     @Transactional
     public void moveUnder(Story story, Story reference) {
         Story oldParent = story.getParent();
-
+        this.storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story,
+                reference);
         if (oldParent != null) {
             oldParent.getChildren().remove(story);
         }
@@ -117,6 +123,9 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
             Story oldParent, Story parent) {
         LinkedList<Story> tmpList = new LinkedList<Story>();
         if (parent != oldParent) {
+            if(parent != null) {
+                this.storyTreeIntegrityBusiness.checkChangeParentStoryAndThrow(story, parent);
+            }
             story.setParent(parent);
             if (oldParent != null) {
                 oldParent.getChildren().remove(story);

@@ -23,7 +23,6 @@ import javax.persistence.Table;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -169,7 +168,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @JSON(include=false)
     @OneToMany(mappedBy="parent", targetEntity=fi.hut.soberit.agilefant.model.Story.class)
     @Fetch(FetchMode.SELECT)
-    @IndexColumn(name="treeRank")
+    @OrderBy("treeRank")
     @NotAudited
     public List<Story> getChildren() {
         return children;

@@ -59,7 +59,7 @@ li.genericMessage .messageArea {
     max-height: 400px;
     max-width: 650px;
     overflow: auto;
-    width: 95%;  
+    width: 90%;  
 }
 
 li.genericMessage .closeButton {

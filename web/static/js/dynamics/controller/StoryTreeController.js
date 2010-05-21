@@ -245,7 +245,7 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
       if(xhr) {
           var json =  jQuery.httpData(xhr, "json", null);
           var message = json.errorMessage;
-          MessageDisplay.Warning(message);
+          MessageDisplay.Warning(message, { closeButton: true, displayTime: null });
       }
       jQuery.tree.rollback(rb);
     }

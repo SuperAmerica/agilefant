@@ -19,6 +19,7 @@ public class StoryTreeIntegrityViolationException extends RuntimeException {
         StringBuilder ret = new StringBuilder();
         for (StoryTreeIntegrityMessage message : this.messages) {
             ret.append(message.getMessageName());
+            ret.append(' ');
             ret.append((char)Character.LINE_SEPARATOR);
         }
         return ret.toString();

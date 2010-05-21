@@ -136,7 +136,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
     
 
-    @Transactional(readOnly = true)
+    @Transactional
     public IterationTO getIterationContents(int iterationId) {
         Iteration iteration = this.iterationDAO.retrieveDeep(iterationId);
         if (iteration == null) {

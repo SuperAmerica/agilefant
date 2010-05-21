@@ -1,8 +1,10 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -252,8 +254,14 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
 
     public void fixContext(Backlog backlog) {
         List<Story> ranked = this.retrieveByRankingContext(backlog);
+        Set<Integer> storyIds = new HashSet<Integer>();
+        
+        for(Story story : backlog.getStories()) {
+            storyIds.add(story.getId());
+        }
+        
         for(Story story : ranked) {
-            if(!backlog.getChildren().contains(story)) {
+            if(!storyIds.contains(story.getId())) {
                 this.removeRank(story, backlog);
             }
         }

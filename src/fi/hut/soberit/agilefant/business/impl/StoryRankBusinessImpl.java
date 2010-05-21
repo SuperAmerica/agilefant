@@ -249,4 +249,13 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
     public void setStoryRankDAO(StoryRankDAO storyRankDAO) {
         this.storyRankDAO = storyRankDAO;
     }
+
+    public void fixContext(Backlog backlog) {
+        List<Story> ranked = this.retrieveByRankingContext(backlog);
+        for(Story story : ranked) {
+            if(!backlog.getChildren().contains(story)) {
+                this.removeRank(story, backlog);
+            }
+        }
+    }
 }

@@ -155,6 +155,16 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         for (Story story : iteration.getStories()) {
             tmp.put(story.getId(), story);
         }
+        //validate tree ranks as the ranks have had a tendency to get corrupted
+        //fix ranks if invalid ones are found
+        for(Story story : stories) {
+            if(tmp.get(story.getId()) == null) {
+                this.storyRankBusiness.fixContext(iteration);
+                stories = this.storyRankBusiness.retrieveByRankingContext(iteration);
+                break;
+            }
+        }
+        
         for (Story story : stories) {
             StoryTO storyTO = new StoryTO(tmp.get(story.getId()));
             if (metricsData.containsKey(story.getId())) {

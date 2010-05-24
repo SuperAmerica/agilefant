@@ -137,3 +137,17 @@ div.hierarchyContainer {
 .infobubble a.close-button:hover {
   color: black;
 }
+
+.storytree-filterimg {
+  background-image: url('../img/filter_large.png');
+  background-position: 0% 0%;
+  width: 50px;
+  height: 16px;
+  float: left;
+  margin-left: 0.5em;
+  display: block; 
+  cursor: pointer;
+}
+.storytree-filterimg-active {
+  background-position: 0% 100%;
+}

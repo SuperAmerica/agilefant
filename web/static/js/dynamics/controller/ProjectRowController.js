@@ -18,16 +18,9 @@ ProjectRowController.prototype = new BacklogController();
 /**
  * @member ProjectRowController
  */
-ProjectRowController.columnIndices = {
-    link: 0,
-    name: 1,
-    status: 2,
-    startDate: 3,
-    endDate: 4,
-    actions: 5,
-    description: 6,
-    buttons: 7
-};
+ProjectRowController.columnNames =
+  ["link", "name", "assignees", "status", "startDate", "endDate", "actions", "description", "buttons"];
+ProjectRowController.columnIndices = CommonController.createColumnIndices(ProjectRowController.columnNames);
 
 
 /**

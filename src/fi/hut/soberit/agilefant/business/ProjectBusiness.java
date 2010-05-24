@@ -21,7 +21,7 @@ public interface ProjectBusiness extends GenericBusiness<Project> {
      */
     public Collection<User> getAssignedUsers(Project project);
     
-    public Project store(int projectId, Integer productId, Project project, Set<Integer> assigneeIds) throws ObjectNotFoundException,
+    public ProjectTO store(int projectId, Integer productId, Project project, Set<Integer> assigneeIds) throws ObjectNotFoundException,
             IllegalArgumentException;
 
     public ProjectMetrics getProjectMetrics(Project project);

@@ -247,14 +247,12 @@ ProductController.prototype.initializeProjectListConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getId)
   });
   config.addColumnConfiguration(ProjectRowController.columnIndices.name, {
-    minWidth : 280,
+    minWidth : 150,
     autoScale : true,
-    cssClass : 'productstory-row',
     title : "Name",
     headerTooltip : 'Project name',
     get : ProjectModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getName),
-    defaultSortColumn: true,
     editable : true,
     edit : {
       editor : "Text",
@@ -262,15 +260,28 @@ ProductController.prototype.initializeProjectListConfig = function() {
       required: true
     }
   });
+  config.addColumnConfiguration(ProjectRowController.columnIndices.assignees, {
+    minWidth : 130,
+    autoScale : true,
+    title : "Assignees",
+    headerTooltip : 'Project assignees',
+    get : BacklogModel.prototype.getAssignees,
+    decorator: DynamicsDecorators.emptyValueWrapper(DynamicsDecorators.userInitialsListDecorator, "(No assignees selected)"),
+    editable : true,
+    openOnRowEdit: false,
+    edit : {
+      editor : "Autocomplete",
+      dataType: "usersAndTeams",
+      set : BacklogModel.prototype.setAssignees
+    }
+  });
   config.addColumnConfiguration(ProjectRowController.columnIndices.status, {
     minWidth : 25,
     autoScale : true,
-    cssClass : 'productstory-row',
     title : "Status",
     headerTooltip : 'Project status',
     get : ProjectModel.prototype.getStatus,
     decorator: DynamicsDecorators.projectStatusDecorator,
-    defaultSortColumn: false,
     editable : true,
     edit : {
       editor : "Selection",
@@ -281,7 +292,6 @@ ProductController.prototype.initializeProjectListConfig = function() {
   config.addColumnConfiguration(ProjectRowController.columnIndices.startDate, {
     minWidth : 80,
     autoScale : true,
-    cssClass : 'productstory-row',
     title : "Start date",
     headerTooltip : 'Start date',
     get : ProjectModel.prototype.getStartDate,
@@ -300,13 +310,11 @@ ProductController.prototype.initializeProjectListConfig = function() {
   config.addColumnConfiguration(ProjectRowController.columnIndices.endDate, {
     minWidth : 80,
     autoScale : true,
-    cssClass : 'productstory-row',
     title : "End date",
     headerTooltip : 'End date',
     get : ProjectModel.prototype.getEndDate,
     sortCallback: DynamicsComparators.valueComparatorFactory(ProjectModel.prototype.getEndDate),
     decorator: DynamicsDecorators.dateTimeDecorator,
-    defaultSortColumn: true,
     editable : true,
     edit : {
       editor : "Date",
@@ -319,7 +327,6 @@ ProductController.prototype.initializeProjectListConfig = function() {
   config.addColumnConfiguration(ProjectRowController.columnIndices.actions, {
     minWidth : 26,
     autoScale : true,
-    cssClass : 'productstory-row',
     title : "Edit",
     subViewFactory : ProjectRowController.prototype.projectActionFactory
   });

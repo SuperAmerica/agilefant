@@ -104,7 +104,7 @@ public class ProjectActionTest {
 
     @Test
     public void testStore() {
-        Project dummy = new Project();
+        ProjectTO dummy = new ProjectTO(new Project());
         projectAction.setProductId(313);
         projectAction.setProjectId(1);
         projectAction.setProject(project);

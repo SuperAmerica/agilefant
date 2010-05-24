@@ -152,21 +152,26 @@ public class ProjectBusinessTest {
 
     @Test
     public void testStoreProject_oldProject() {
+        ProjectTO actual = new ProjectTO(project);
+        
         expect(projectDAO.get(project.getId())).andReturn(project);
         projectDAO.store(project);
+        expect(transferObjectBusiness.constructProjectTO(project)).andReturn(actual);
         replayAll();
-        assertEquals(project, projectBusiness.store(project.getId(), null, project, null));
+        assertSame(actual, projectBusiness.store(project.getId(), null, project, null));
         verifyAll();
     }
 
     @Test
     public void testStoreProject_newProject() {
+        ProjectTO actual = new ProjectTO(project);
         project.setId(0);
         expect(productBusiness.retrieve(313)).andReturn(product);
         expect(projectDAO.create(EasyMock.isA(Project.class))).andReturn(123);
         expect(projectDAO.get(123)).andReturn(project);
+        expect(transferObjectBusiness.constructProjectTO(project)).andReturn(actual);
         replayAll();
-        assertEquals(project, projectBusiness.store(0, 313, project, null));
+        assertSame(actual, projectBusiness.store(0, 313, project, null));
         verifyAll();
     }
 
@@ -194,11 +199,14 @@ public class ProjectBusinessTest {
 
     @Test
     public void testStoreProject_withProduct() {
+        ProjectTO actual = new ProjectTO(project);
+
         expect(projectDAO.get(project.getId())).andReturn(project);
         expect(productBusiness.retrieve(313)).andReturn(product);
         projectDAO.store(project);
+        expect(transferObjectBusiness.constructProjectTO(project)).andReturn(actual);
         replayAll();
-        assertEquals(project, projectBusiness.store(project.getId(), 313, project, null));
+        assertSame(actual, projectBusiness.store(project.getId(), 313, project, null));
         verifyAll();
         assertEquals(product, project.getParent());
     }

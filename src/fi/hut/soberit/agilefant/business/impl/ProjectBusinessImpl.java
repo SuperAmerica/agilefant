@@ -128,7 +128,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     }
     
     /** {@inheritDoc} */
-    public Project store(int projectId,
+    public ProjectTO store(int projectId,
             Integer productId, Project project, Set<Integer> assigneeIds) throws ObjectNotFoundException,
             IllegalArgumentException {
 
@@ -152,7 +152,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         persistable.setBaselineLoad(project.getBaselineLoad());
         Project stored = persistProject(persistable);
         
-        return stored;
+        return transferObjectBusiness.constructProjectTO(stored);
     }
     
     private void setAssignees(Project project, Set<Integer> assigneeIds) {
@@ -234,8 +234,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         Project original = this.retrieve(projectId);
         List<IterationTO> iterations = new ArrayList<IterationTO>();
         for (Backlog backlog : original.getChildren()) {
-            IterationTO iter = new IterationTO((Iteration)backlog);
-            iter.setScheduleStatus(transferObjectBusiness.getBacklogScheduleStatus(backlog));
+            IterationTO iter = transferObjectBusiness.constructIterationTO((Iteration)backlog);
             iterations.add(iter);
         }
         return iterations;

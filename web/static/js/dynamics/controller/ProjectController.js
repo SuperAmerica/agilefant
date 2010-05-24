@@ -444,19 +444,33 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
   });
   
   config.addColumnConfiguration(IterationRowController.columnIndices.name, {
-    minWidth : 280,
+    minWidth : 150,
     autoScale : true,
     title : "Name",
     headerTooltip : 'Iteration name',
     get : IterationModel.prototype.getName,
     sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getName),
-    defaultSortColumn: false,
     editable : true,
     dragHandle: true,
     edit : {
       editor : "Text",
       set : IterationModel.prototype.setName,
       required: true
+    }
+  });
+  config.addColumnConfiguration(IterationRowController.columnIndices.assignees, {
+    minWidth : 130,
+    autoScale : true,
+    title : "Assignees",
+    headerTooltip : 'Iteration assignees',
+    get : BacklogModel.prototype.getAssignees,
+    decorator: DynamicsDecorators.emptyValueWrapper(DynamicsDecorators.userInitialsListDecorator, "(No assignees selected)"),
+    editable : true,
+    openOnRowEdit: false,
+    edit : {
+      editor : "Autocomplete",
+      dataType: "usersAndTeams",
+      set : BacklogModel.prototype.setAssignees
     }
   });
   config.addColumnConfiguration(IterationRowController.columnIndices.startDate, {
@@ -486,7 +500,6 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     get : IterationModel.prototype.getEndDate,
     sortCallback: DynamicsComparators.valueComparatorFactory(IterationModel.prototype.getEndDate),
     decorator: DynamicsDecorators.dateTimeDecorator,
-    defaultSortColumn: false,
     editable : true,
     dragHandle: true,
     edit : {

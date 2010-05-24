@@ -177,7 +177,7 @@
    <action name="retrieveProductProjects" method="retrieveProjects" class="productAction">
       <result name="success" type="json">
         <param name="target">childBacklogs</param>
-        <param name="patterns">-stories, -children</param>
+        <param name="patterns">-stories, -children, +assignees.id, +assignees.class, +assignees.initials, -assignees.*</param>
       </result>
     </action>
     
@@ -240,7 +240,7 @@
       <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">
         <param name="target">project</param>
-        <param name="patterns">+assignments.user</param>
+        <param name="patterns">+assignees.id, +assignees.class, +assignees.initials, -assignees.*</param>
       </result>
     </action>
 
@@ -253,6 +253,7 @@
    <action name="storeNewProject" method="store" class="projectAction">    
       <result name="success" type="json">
         <param name="target">project</param>
+        <param name="patterns">+assignees.id, +assignees.class, +assignees.initials, -assignees.*</param>
       </result>
     </action>
     
@@ -273,7 +274,7 @@
     <action name="projectIterations" class="projectAction" method="iterationList">
       <result name="success" type="json">
         <param name="target">iterations</param>
-        <param name="patterns">-tasks, -stories, -assginees</param>
+        <param name="patterns">-tasks, -stories, +assignees.id, +assignees.class, +assignees.initials, -assignees.*</param>
       </result>
     </action>    
     
@@ -303,6 +304,7 @@
     <action name="storeNewIteration" method="store" class="iterationAction">
       <result name="success" type="json">
         <param name="target">iteration</param>
+        <param name="patterns">+assignees.id, +assignees.class, +assignees.initials, -assignees.*</param>
       </result>
     </action>
     
@@ -310,6 +312,7 @@
       <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">
         <param name="target">iteration</param>
+        <param name="patterns">+assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
       </result>
     </action>
     

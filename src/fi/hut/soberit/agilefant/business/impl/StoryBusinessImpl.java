@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -151,6 +152,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             iterationHistoryEntryBusiness.updateIterationHistory(story.getBacklog().getId());
         }
     }
+
 
     /** {@inheritDoc} */
     @Transactional
@@ -671,30 +673,46 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             updateStoryRanks(parentStory);
             storyHierarchyBusiness.updateChildrenTreeRanks(parentStory);
         }
-        storyRankBusiness.removeStoryRanks(story);
+//        storyRankBusiness.removeStoryRanks(story);
         super.delete(story);
         
     }
     
     private void deleteStoryChildren(Story story) {
-        Set<Story> allChildren = getTreeChildren(story);
+        List<Story> allChildren = getTreeChildren(story);
+        Set<Backlog> allBacklogs = getTreeBacklogs(story);
         
         for (Story child : allChildren) {
-            child.getChildren().clear();
-            child.setParent(null);
-            deleteAndUpdateHistory(child.getId(), TaskHandlingChoice.DELETE,
-                    HourEntryHandlingChoice.DELETE,
-                    HourEntryHandlingChoice.DELETE,
-                    ChildHandlingChoice.DELETE);
+            forceDelete(child);
         }
         story.getChildren().clear();
+        
+        for (Backlog blog : allBacklogs) {
+            backlogHistoryEntryBusiness.updateHistory(blog.getId());
+            if (blog instanceof Iteration) {
+                iterationHistoryEntryBusiness.updateIterationHistory(blog.getId());
+            }
+        }
     }
     
-    private Set<Story> getTreeChildren(Story story) {
-        Set<Story> children = new HashSet<Story>(story.getChildren());
+    
+    private Set<Backlog> getTreeBacklogs(Story parent) {
+        Set<Backlog> backlogs = new HashSet<Backlog>();
+        
+        for (Story child : parent.getChildren()) {
+            backlogs.addAll(getTreeBacklogs(child));
+        }
+        
+        backlogs.add(parent.getBacklog());
+        return backlogs;
+    }
+    
+    private List<Story> getTreeChildren(Story story) {
+        List<Story> children = new ArrayList<Story>(story.getChildren());
         for (Story child : story.getChildren()) {
             children.addAll(getTreeChildren(child));
         }
+        Collections.reverse(children);
         return children;
     }
     

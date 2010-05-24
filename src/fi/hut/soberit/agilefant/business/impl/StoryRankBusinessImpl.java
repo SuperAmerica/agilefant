@@ -179,18 +179,8 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      */
     public void removeStoryRanks(Story story) {
         for (StoryRank rank : story.getStoryRanks()) {
-            try {
-                skipRank(rank);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-            try {
-                this.storyRankDAO.remove(rank);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
+            skipRank(rank);
+            this.storyRankDAO.remove(rank);
         }
         story.getStoryRanks().clear();
     }

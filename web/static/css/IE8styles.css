@@ -5,3 +5,29 @@
 .taskState {
   border: 1px solid #666;
 }
+
+/**
+ * LOAD COLORS
+ */
+.load-maximum {
+  background-color: rgb(150, 8, 8);
+  filter: alpha(opacity=70);
+  color: white;
+}
+.load-critical {
+  background-color: rgb(224, 17, 2);
+  filter: alpha(opacity=70);
+  color: white;
+}
+.load-optimal-high {
+  background-color: rgb(245, 221, 57);
+  filter: alpha(opacity=70);
+}
+.load-optimal-low {
+  background-color: rgb(9, 144, 14);
+  filter: alpha(opacity=70);
+}
+.load-low {
+  background-color: rgb(130, 180, 244);
+  filter: alpha(opacity=70);
+}

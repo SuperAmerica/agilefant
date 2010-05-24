@@ -685,7 +685,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             deleteAndUpdateHistory(child.getId(), TaskHandlingChoice.DELETE,
                     HourEntryHandlingChoice.DELETE,
                     HourEntryHandlingChoice.DELETE,
-                    null);
+                    ChildHandlingChoice.DELETE);
         }
         story.getChildren().clear();
     }

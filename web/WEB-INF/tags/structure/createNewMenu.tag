@@ -24,7 +24,7 @@ $(document).ready(function() {
 
   /* Set the close timer */
   createNewMenu.mouseleave(function() {
-    closeTimer = setTimeout(closeMenu, 2000);
+    closeTimer = setTimeout(closeMenu, 500);
   });
   
   $('#createNewMenuLink').click(function() {

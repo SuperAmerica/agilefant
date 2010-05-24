@@ -701,6 +701,10 @@ TableEditors.Date.prototype._registerEditField = function(element) {
   element.data("editor", this).addClass("dynamics-editor-element");
 };
 
+TableEditors.Date.prototype.getEditorValue = function() {
+  return (Date.fromString(this.textField.val())).getTime();
+};
+
 /*
  * PASSWORD INPUT
  */

@@ -21,6 +21,8 @@ LocaleProvider {
 
     private TextProvider textProvider = new TextProviderSupport(
             this.getClass(), this);
+    
+    private static String numberFormat = "^\\d+$";
 
     protected DateFormat getDateFormat() {
         String pattern = textProvider.getText("struts.shortDateTime.format");
@@ -34,12 +36,19 @@ LocaleProvider {
     public Object convertFromString(Map context, String[] values, Class toClass) {
         String value = values[0];
 
-        DateFormat df = this.getDateFormat();
-        
-        try {
-            return new DateTime(df.parse(value));
-        } catch (ParseException e) {
-            throw new TypeConversionException(e.getMessage());
+        if (value.matches(numberFormat)) {
+            long longValue = Long.valueOf(value);
+            DateTime returned = new DateTime(longValue);
+            return returned;
+        }
+        else {
+            DateFormat df = this.getDateFormat();
+            
+            try {
+                return new DateTime(df.parse(value));
+            } catch (ParseException e) {
+                throw new TypeConversionException(e.getMessage());
+            }
         }
     }
 

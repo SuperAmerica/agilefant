@@ -15,10 +15,10 @@ BacklogModel.Validators = {
     return Date.fromString(original);
   },
   dateValidator: function(model) {
-    var start = BacklogModel.Validators._parseDate(model.getStartDate());
-    var end   = BacklogModel.Validators._parseDate(model.getEndDate());
+    var start = model.getStartDate();
+    var end   = model.getEndDate();
     
-    if (start.after(end)) {
+    if (start > end) {
       throw "Start date must be before end date";
     }
   },

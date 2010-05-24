@@ -8,6 +8,16 @@ var StoryInfoWidget = function StoryInfoWidget(model, controller, parentView) {
 
 StoryInfoWidget.prototype = new ViewPart();
 
+StoryInfoWidget.prototype.storyContextFactory = function(cellView, storyModel) {
+  return new CellBubble({
+    title: 'Context',
+    url: 'ajax/getStoryHierarchy.action?storyId=' + storyModel.getId(),
+    text: storyModel.getParentStoryName()
+  }, cellView);
+};
+
+
+
 StoryInfoWidget.prototype.renderAlways = function() {
   return true;
 };
@@ -32,7 +42,7 @@ StoryInfoWidget.prototype.initialize = function() {
   });
   config.addColumnConfiguration(1, {
     title: "Parent story",
-    get : StoryModel.prototype.getParentStoryName
+    subViewFactory: StoryInfoWidget.prototype.storyContextFactory
   });
   config.addColumnConfiguration(2, {
     title: 'Description',

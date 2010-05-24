@@ -34,8 +34,8 @@ TaskSplitDialog.prototype.initDialog = function() {
     title: 'Split task',
     close: function() { me._cancel(); },
     buttons: {
-      "Cancel":  function() { me._cancel(); },
-      "Save": function() { me._save(); }
+      "Save": function() { me._save(); },
+      "Cancel":  function() { me._cancel(); }
     }
   });
   

@@ -105,6 +105,9 @@ DynamicTableCell.prototype._registerEventHandlers = function() {
 DynamicTableCell.prototype.getElement = function() {
 	return this.element;
 };
+DynamicTableCell.prototype.getEditor = function() {
+  return this.editor;
+};
 
 DynamicTableCell.prototype.hide = function() {
   this.cellContents.hide();

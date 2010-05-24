@@ -18,8 +18,8 @@ DynamicsConfirmationDialog.prototype._show = function() {
     position: 'center',
     resizable: false,
     buttons: {
-      No: function() { me._cancel(); },
-      Yes: function() { me._ok(); }
+      Yes: function() { me._ok(); },
+      No: function() { me._cancel(); }
     },
     open: function() {
       var dialogMessage  = $(this);

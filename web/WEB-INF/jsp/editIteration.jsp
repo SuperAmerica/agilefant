@@ -58,33 +58,39 @@ $(document).ready(function() {
       tabs: $("#backlogInfo")
   });
 
-  $('#iterationActions').click(function() {
-    var menu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body);
+  var actionMenu = null;
+  var closeMenu = function() {
+    actionMenu.fadeOut('fast');
+    actionMenu.menuTimer('destroy');
+    actionMenu.remove();
+  };
+  var openMenu = function() {
+    actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
 
-    var pos = $(this).offset();
-    menu.css({
-      "top": pos.top + 20,
-      "left": pos.left
-    });
-        
-    var closeMenu = function() {
-      menu.remove();
-    };
-    
     $('<li/>').text('Spent effort').click(function() {
       closeMenu();
       controller.openLogEffort();
-    }).appendTo(menu);
+    }).appendTo(actionMenu);
 
     $('<li/>').text('Delete').click(function() {
       closeMenu();
       controller.removeIteration();
-    }).appendTo(menu);
+    }).appendTo(actionMenu);
     
-    menu.mouseleave(function() {
-      closeMenu();
+    actionMenu.position({
+      my: "top",
+      at: "bottom",
+      of: "#iterationActions"
     });
-  });
+    actionMenu.show();
+    actionMenu.menuTimer({
+      closeCallback: function() {
+        closeMenu();
+      }
+    });
+  };
+
+ $('#iterationActions').click(function() { openMenu(); });
 });
 </script>
 

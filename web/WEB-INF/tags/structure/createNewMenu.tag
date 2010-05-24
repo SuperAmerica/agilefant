@@ -11,31 +11,15 @@
 $(document).ready(function() {
   var createNewMenu = $('#createNewMenu');
 
-  /* Close the menu if the mouse is not moved over it in five seconds */
-  var closeMenu = function() {
-    createNewMenu.fadeOut('fast');
-  };
-  var closeTimer = null;
-  
-  /* Remove the close timer */
-  createNewMenu.mouseenter(function() {
-    clearTimeout(closeTimer);
-  });
-
-  /* Set the close timer */
-  createNewMenu.mouseleave(function() {
-    closeTimer = setTimeout(closeMenu, 500);
-  });
-  
   $('#createNewMenuLink').click(function() {
     createNewMenu.show();
-    closeTimer = setTimeout(closeMenu, 4000);
+    createNewMenu.menuTimer();
   });
   
   $('#createNewMenu a').click(function() {
     createNewMenu.hide();
+    createNewMenu.menuTimer('destroy');
     CreateDialog.createById($(this).attr('id'));
-    clearTimeout(closeTimer);
   });
 });
 </script>

@@ -59,6 +59,8 @@ HourEntryListController.prototype.paintHourEntryTable = function() {
   this.showLogEffortRow();
   this.hourEntryTableView.render(); 
   this.logEffortController.openRowEdit();
+  
+  this.logEffortRow.getCellByName("effortSpent").getEditor().focus();
 };
 HourEntryListController.prototype.showLogEffortRow = function() {
 
@@ -86,6 +88,7 @@ HourEntryListController.prototype.logEffort = function() {
     me.showLogEffortRow();
     me.hourEntryTableView.render();
     me.logEffortController.openRowEdit();
+    me.logEffortRow.getCellByName("effortSpent").getEditor().focus();
   }
 
 };
@@ -185,6 +188,7 @@ HourEntryListController.prototype.initConfig = function() {
     get : HourEntryModel.prototype.getMinutesSpent,
     decorator: DynamicsDecorators.exactEstimateDecorator,
     editable: true,
+    columnName: "effortSpent",
     edit : {
       editor : "ExactEstimate",
       decorator: DynamicsDecorators.exactEstimateEditDecorator,

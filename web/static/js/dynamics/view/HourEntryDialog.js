@@ -24,11 +24,11 @@ AddHourEntryWidget.prototype = {
       this.setValue(this.options.selected);
       var dialog = this.element.dialog({
         buttons: {
-          "Cancel": function() {
-            me._cancel();
-          },
           "Select": function() {
             me.select();
+          },
+          "Cancel": function() {
+            me._cancel();
           }
         },
         width: 500,

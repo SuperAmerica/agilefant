@@ -37,9 +37,9 @@ DynamicTableRowActions.prototype.initialize = function() {
  */
 DynamicTableRowActions.prototype.open = function() {
   var me = this;
-  $(window).click(this.toggleMenuListener);
   this.menuOpen = true;
   this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
+  
   var off = this.parentView.getElement().offset();
   var menuCss = {
     "position" : "absolute",
@@ -67,13 +67,18 @@ DynamicTableRowActions.prototype.open = function() {
       it.click(function() { return false; });
     }
   });
+  this.menu.menuTimer({
+    closeCallback: function() {
+      me.close();
+    }
+  });
 };
 
 /**
  * Close the menu
  */
 DynamicTableRowActions.prototype.close = function() {
-  $(window).unbind('click', this.toggleMenuListener);
+  this.menu.menuTimer('destroy');
   this.menu.remove();
   this.menuOpen = false;
 };

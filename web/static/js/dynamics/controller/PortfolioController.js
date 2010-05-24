@@ -257,7 +257,7 @@ PortfolioController.prototype.initConfig = function() {
   config.addColumnConfiguration(PortfolioRowController.columnIndices.actions,{
 	    minWidth : 6,
 	    autoScale : true,
-	    title : "Unrank",
+	    title : "Actions",
 	    headerTooltip : 'Move to unranked projects',
 	    subViewFactory: PortfolioRowController.prototype.moveToUnrankedButtonFactory
 	  });
@@ -283,7 +283,7 @@ PortfolioController.prototype.initConfig = function() {
   config.addColumnConfiguration(PortfolioRowController.columnIndices.actions, {
 	    minWidth : 6,
 	    autoScale : true,
-	    title : "Rank",
+	    title : "Actions",
 	    headerTooltip : 'Move to ranked projects',
 	    subViewFactory: PortfolioRowController.prototype.moveToRankedButtonFactory
 	  }); 

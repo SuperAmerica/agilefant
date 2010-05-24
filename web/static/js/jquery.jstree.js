@@ -1640,8 +1640,7 @@
 			if(event.target.tagName == "DIV" && event.target.id == "jstree-marker") return false;
 
 			var et = $(event.target);
-			if(et.is("ins")) et = et.parent();
-			else if(et.is("span")) et = et.parent().parent();
+			if(et.is("ins") || et.is("span")) et = et.parents('li:eq(0)');
 			
 			var cnt = et.is(".tree") ? et : et.parents(".tree:eq(0)");
 
@@ -1710,6 +1709,9 @@
 							break;
 					}
 					tmp.move_type	= mov;
+					if (event.target.tagName == "SPAN") {
+					  tmp.ref_node = $(event.target).parent();
+					}
 					tmp.ref_node	= $(event.target);
 					if(tmp.drag_help !== false) tmp.drag_help.find(".forbidden").removeClass("forbidden");
 					tree_component.drag_drop.marker.css({ "left" : goTo.x , "top" : goTo.y }).show();

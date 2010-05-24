@@ -27,7 +27,7 @@ $(document).ready(function() {
 
 	<div class="structure-main-block">	
 		<div class="dynamictable ui-widget ui-widget-content ui-corner-all">
-			<div class="dynamictable-caption dynamictable-caption-block ui-widget-header ui-corner-all">Portfolio timeline</div>
+			<div class="dynamictable-caption dynamictable-caption-block ui-widget-header ui-corner-all">Timeline</div>
 			<div id="timeline">
 			</div>
 		</div>

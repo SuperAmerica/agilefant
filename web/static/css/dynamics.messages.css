@@ -54,11 +54,18 @@ li.errorMessage dd {
   font-weight: normal !important;
 }
 
+li.genericMessage .titleArea {
+  white-space: nowrap; 
+}
+
 li.genericMessage .messageArea {
     float: left;
     max-height: 400px;
     max-width: 650px;
     overflow: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    display: none;
     /*width: 90%;*/
 }
 
@@ -68,9 +75,11 @@ li.genericMessage .closeButton {
     font-family: cursive;
     font-size: 11pt;
     padding: 0 5px;
+    /*
     position: absolute;
     top: 20px;
     right: 5px;
+    */
 }
 
 li.genericMessage .closeButton:hover {

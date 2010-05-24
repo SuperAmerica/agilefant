@@ -245,8 +245,9 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
       if(xhr) {
           var json =  jQuery.httpData(xhr, "json", null);
           if (json.constructor == Array) {
-            var message = '<h4>Can&apos;t move story. Reason:</h4><ul style="margin: 0; width: 400px; font-weight: normal; white-space: nowrap;"><li>' + json.join('</li><li>') + '</li></ul>';
-            MessageDisplay.Warning(message, { closeButton: true, displayTime: null });
+            var title = 'Can&apos;t move story. Reason:'
+            var message = '<ul style="margin: 0; width: 400px; font-weight: normal; white-space: nowrap;"><li>' + json.join('</li><li>') + '</li></ul>';
+            MessageDisplay.Warning(title, message, { closeButton: true, displayTime: null });
           }
           else {
             MessageDisplay.Error("Error moving story", xhr);

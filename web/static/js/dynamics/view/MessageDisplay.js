@@ -9,6 +9,7 @@ MessageDisplay.cssClasses = {
   errorMessage:   "errorMessage",
   warningMessage: "warningMessage",
   
+  titleArea:      "titleArea",
   messageArea:    "messageArea",
   closeButton:    "closeButton"
 };
@@ -38,7 +39,8 @@ MessageDisplay.GenericMessageClass.prototype.init = function() {
   // Create the element
   this.element = $('<li/>').appendTo(MessageDisplay.messageList);
   this.element.addClass(MessageDisplay.cssClasses.genericMessage);
-  this.messageArea = this.element;
+  
+  
   
   this.render();
   
@@ -52,19 +54,28 @@ MessageDisplay.GenericMessageClass.prototype.init = function() {
  */
 MessageDisplay.GenericMessageClass.prototype.render = function() {
   var me = this;
+  var titleRightMargin = '0';
   if (this.options.closeButton) {
-    this.messageArea = $('<div/>').addClass(MessageDisplay.cssClasses.messageArea).appendTo(this.element);
     var close = $('<div/>').addClass(MessageDisplay.cssClasses.closeButton).text('X').appendTo(this.element);
-    
+
     close.click(function() {
       me.fadeOut();
     });
+    
+    titleRightMargin = '30px';
   }
-  this.addContent();
+  
+  this.titleArea = $('<span/>').addClass(MessageDisplay.cssClasses.titleArea).css('margin-right',titleRightMargin).appendTo(this.element);
+  this.messageArea = $('<div/>').addClass(MessageDisplay.cssClasses.messageArea).appendTo(this.element).hide();
+  
+  this.addContent();  
 };
 
 MessageDisplay.GenericMessageClass.prototype.addContent = function() {
-  this.messageArea.html(this.message);
+  this.titleArea.html(this.title);
+  if (this.message) {
+    this.messageArea.html(this.message).show();
+  }
 };
 
 /**
@@ -123,7 +134,7 @@ MessageDisplay.ErrorMessageClass = function(message, xhr, opts) {
 MessageDisplay.ErrorMessageClass.prototype = new MessageDisplay.GenericMessageClass();
 
 MessageDisplay.ErrorMessageClass.prototype.addContent = function() {
-  var message = "<span>" + this.message + "</span>";
+  this.titleArea.html(this.message);
   
   if (this.jsonData) {
     var list = "<dl>";
@@ -133,9 +144,8 @@ MessageDisplay.ErrorMessageClass.prototype.addContent = function() {
     
     list += "</dl>";
     
-    message += list;
+    this.messageArea.html(list).show();
   }
-  this.messageArea.html(message);
 };
 
 /*
@@ -158,7 +168,7 @@ MessageDisplay.OkMessageClass = function(message, opts) {
       fadeOutTime: 200
   };
   jQuery.extend(this.options, opts);
-  this.message = message;
+  this.title = message;
   this.init();
   this.element.addClass(MessageDisplay.cssClasses.okMessage);
 };
@@ -173,13 +183,13 @@ MessageDisplay.OkMessageClass.prototype = new MessageDisplay.GenericMessageClass
  * Create a new warning message.
  * <strong>Use this method to generate messages</strong>
  */
-MessageDisplay.Warning = function(message, opts) {
-  return new MessageDisplay.WarningMessageClass(message, opts);
+MessageDisplay.Warning = function(title, message, opts) {
+  return new MessageDisplay.WarningMessageClass(title, message, opts);
 };
 /**
  * @constructor
  */
-MessageDisplay.WarningMessageClass = function(message, opts) {
+MessageDisplay.WarningMessageClass = function(title, message, opts) {
   this.options = {
       displayTime: 3500,
 //      closeButton: true,
@@ -187,6 +197,7 @@ MessageDisplay.WarningMessageClass = function(message, opts) {
   };
   jQuery.extend(this.options, opts);
   this.message = message;
+  this.title = title;
   this.init();
   this.element.addClass(MessageDisplay.cssClasses.warningMessage);
 };

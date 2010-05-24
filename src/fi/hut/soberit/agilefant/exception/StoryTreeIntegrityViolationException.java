@@ -24,4 +24,8 @@ public class StoryTreeIntegrityViolationException extends RuntimeException {
         }
         return ret.toString();
     }
+
+    public List<StoryTreeIntegrityMessage> getMessages() {
+        return messages;
+    }
 }

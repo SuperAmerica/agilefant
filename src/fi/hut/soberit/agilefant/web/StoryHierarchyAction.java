@@ -12,8 +12,11 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
+import fi.hut.soberit.agilefant.exception.StoryTreeIntegrityViolationException;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.StoryFilters;
+import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
+import fi.hut.soberit.agilefant.util.StoryTreeIntegrityUtils;
 
 @Component("storyHierarchyAction")
 @Scope("prototype")
@@ -25,7 +28,7 @@ public class StoryHierarchyAction extends ActionSupport {
     
     @Autowired
     private StoryHierarchyBusiness storyHierarchyBusiness;
-    
+        
     private List<Story> stories;
     private StoryFilters storyFilters = new StoryFilters();
     private Integer storyId;
@@ -36,6 +39,8 @@ public class StoryHierarchyAction extends ActionSupport {
     private Integer referenceStoryId;
 
     private List<Story> hierarchy = new ArrayList<Story>();
+    
+    private List<String> integrityErrors = new ArrayList<String>(); 
 
     public String recurseHierarchyAsList() {
         story = storyBusiness.retrieve(storyId);
@@ -46,22 +51,54 @@ public class StoryHierarchyAction extends ActionSupport {
     public String moveStoryUnder() {
         Story target = this.storyBusiness.retrieve(storyId);
         Story reference = this.storyBusiness.retrieve(referenceStoryId);
-        this.storyHierarchyBusiness.moveUnder(target, reference);
+        try {
+            this.storyHierarchyBusiness.moveUnder(target, reference);
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
         return Action.SUCCESS;
     }
 
     public String moveStoryAfter() {
         Story target = this.storyBusiness.retrieve(storyId);
         Story reference = this.storyBusiness.retrieve(referenceStoryId);
-        this.storyHierarchyBusiness.moveAfter(target, reference);
+        try {
+            this.storyHierarchyBusiness.moveAfter(target, reference);
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
         return Action.SUCCESS;
     }
     
     public String moveStoryBefore() {
         Story target = this.storyBusiness.retrieve(storyId);
         Story reference = this.storyBusiness.retrieve(referenceStoryId);
-        this.storyHierarchyBusiness.moveBefore(target, reference);
+        try {
+            this.storyHierarchyBusiness.moveBefore(target, reference);
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
         return Action.SUCCESS;
+    }
+    
+    private void parseIntegrityErrors(StoryTreeIntegrityViolationException stive) {
+        List<StoryTreeIntegrityMessage> messages = stive.getMessages();
+        // Check for fatal messages
+        StoryTreeIntegrityUtils.getFatalMessages(messages);
+        
+        // Build the string
+        for (StoryTreeIntegrityMessage stim : messages) {
+            String message = this.getText(stim.getMessageName());
+            
+            if (stim.getTarget() != null) {
+                message += ": " + stim.getTarget().getName() + " in "
+                        + stim.getTarget().getBacklog().getName();
+            }
+            integrityErrors.add(message);
+        }
     }
         
     public String retrieveProductRootStories() {
@@ -124,6 +161,10 @@ public class StoryHierarchyAction extends ActionSupport {
 
     public Story getTopmostStory() {
         return topmostStory;
+    }
+
+    public List<String> getIntegrityErrors() {
+        return integrityErrors;
     }
 
 }

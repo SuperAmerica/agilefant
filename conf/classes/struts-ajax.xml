@@ -503,6 +503,10 @@
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>
+      <result name="error" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">integrityErrors</param>
+      </result>
     </action>
     
         
@@ -510,12 +514,20 @@
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>
+      <result name="error" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">integrityErrors</param>
+      </result>
     </action>
     
         
     <action name="moveStoryAfter" method="moveStoryAfter" class="storyHierarchyAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
+      </result>
+      <result name="error" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">integrityErrors</param>
       </result>
     </action>
     

@@ -1,8 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +22,10 @@ import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
+
+import static org.junit.Assert.*;
+
+import static org.easymock.EasyMock.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -71,6 +72,28 @@ public class StoryHierarchyActionTest extends MockedTestCase {
         assertEquals(Action.SUCCESS, storyHierarchyAction.moveStoryUnder());
         verifyAll();
     }
+    
+//    @Test
+//    @DirtiesContext
+//    public void testMoveUnder_integrityErrorThrown() {
+//        Story story = new Story();
+//        Story story2 = new Story();
+//        expect(storyBusiness.retrieve(1)).andReturn(story);
+//        expect(storyBusiness.retrieve(2)).andReturn(story2);
+//        
+//        storyHierarchyBusiness.moveUnder(story, story2);
+//        expectLastCall().andThrow(new StoryTreeIntegrityViolationException(
+//                Arrays.asList(new StoryTreeIntegrityMessage(story, story2, StoryHierarchyIntegrityViolationType.PARENT_DEEPER_IN_HIERARCHY))));
+//        
+//        storyHierarchyAction.setStoryId(1);
+//        storyHierarchyAction.setReferenceStoryId(2);
+//        
+//        replayAll();
+//        assertEquals(Action.ERROR, storyHierarchyAction.moveStoryUnder());
+//        verifyAll();
+//        
+//        assertEquals(1, storyHierarchyAction.getIntegrityErrors().size());
+//    }
     
     @Test
     @DirtiesContext

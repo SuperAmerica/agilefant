@@ -244,8 +244,13 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
     error: function(xhr, status, error) {
       if(xhr) {
           var json =  jQuery.httpData(xhr, "json", null);
-          var message = json.errorMessage;
-          MessageDisplay.Warning(message, { closeButton: true, displayTime: null });
+          if (json.constructor == Array) {
+            var message = '<h4>Can&apos;t move story. Reason:</h4><ul style="margin: 0; width: 400px; font-weight: normal; white-space: nowrap;"><li>' + json.join('</li><li>') + '</li></ul>';
+            MessageDisplay.Warning(message, { closeButton: true, displayTime: null });
+          }
+          else {
+            MessageDisplay.Error("Error moving story", xhr);
+          }
       }
       jQuery.tree.rollback(rb);
     }

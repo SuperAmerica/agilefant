@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,25 +58,11 @@ public class StoryTreeIntegrityAction extends ActionSupport {
         parentStoryConflict = storyTreeIntegrityBusiness
                 .hasParentStoryConflict(story, backlog);
         
-        if (!checkFatalMessages()) {
+        if (StoryTreeIntegrityUtils.getFatalMessages(messages)) {
             return FATAL_CONSTRAINT; 
         }
         
         return Action.SUCCESS;
-    }
-
-    private boolean checkFatalMessages() {
-        List<StoryTreeIntegrityMessage> fatals = new ArrayList<StoryTreeIntegrityMessage>();
-        for (StoryTreeIntegrityMessage stim : messages) {
-            if (StoryTreeIntegrityUtils.isFatalViolation(stim.getMessage())) {
-                fatals.add(stim);
-            }
-        }
-        if (fatals.size() > 0) {
-            messages = fatals;
-            return false;
-        }
-        return true;
     }
 
     public String checkChangeParentStory() {

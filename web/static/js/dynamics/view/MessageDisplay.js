@@ -64,7 +64,7 @@ MessageDisplay.GenericMessageClass.prototype.render = function() {
 };
 
 MessageDisplay.GenericMessageClass.prototype.addContent = function() {
-  this.messageArea.text(this.message);
+  this.messageArea.html(this.message);
 };
 
 /**

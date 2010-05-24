@@ -12,7 +12,7 @@ ul.dynamicsMessageContainer {
   width: 0;
 }
 
-ul.dynamicsMessageContainer li {
+ul.dynamicsMessageContainer > li {
   float: right;
   list-style-type: none;
   margin-top: 15px;
@@ -59,7 +59,7 @@ li.genericMessage .messageArea {
     max-height: 400px;
     max-width: 650px;
     overflow: auto;
-    width: 90%;  
+    /*width: 90%;*/
 }
 
 li.genericMessage .closeButton {
@@ -68,6 +68,9 @@ li.genericMessage .closeButton {
     font-family: cursive;
     font-size: 11pt;
     padding: 0 5px;
+    position: absolute;
+    top: 20px;
+    right: 5px;
 }
 
 li.genericMessage .closeButton:hover {

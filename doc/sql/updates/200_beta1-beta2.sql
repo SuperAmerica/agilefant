@@ -10,3 +10,8 @@ ALTER TABLE task_user ADD INDEX FKAC91A4527F4B120 (responsibles_id), ADD CONSTRA
 
 -- Update hour entries
 UPDATE hourentries SET story_id=null WHERE story_id is not null AND DTYPE = 'TaskHourEntry'; 
+
+alter table backlogs_AUD add column parent_id integer;
+alter table stories_AUD add column backlog_id integer;
+alter table tasks_AUD add column iteration_id integer;
+alter table tasks_AUD add column story_id integer;

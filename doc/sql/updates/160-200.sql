@@ -939,3 +939,13 @@ DROP TABLE businesstheme;
 
 /** after alpha 5 **/
 
+
+/** beta 1 **/
+
+/** beta 2 **/
+alter table backlogs_AUD add column parent_id integer;
+alter table stories_AUD add column backlog_id integer;
+alter table tasks_AUD add column iteration_id integer;
+alter table tasks_AUD add column story_id integer;
+
+UPDATE hourentries SET story_id=null WHERE story_id is not null AND DTYPE = 'TaskHourEntry'; 

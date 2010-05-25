@@ -122,7 +122,6 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @JSON(include = false)
     @ManyToOne
-    @NotAudited
     public Backlog getParent() {
         return parent;
     }

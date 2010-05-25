@@ -88,7 +88,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @ManyToOne
     @JSON(include = false)
-    @NotAudited
     public Iteration getIteration() {
         return iteration;
     }
@@ -99,7 +98,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @ManyToOne
     @JSON(include = false)
-    @NotAudited
     public Story getStory() {
         return story;
     }

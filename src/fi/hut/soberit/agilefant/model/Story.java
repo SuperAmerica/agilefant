@@ -81,7 +81,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     @ManyToOne(optional = false)
-    @NotAudited
     public Backlog getBacklog() {
         return backlog;
     }

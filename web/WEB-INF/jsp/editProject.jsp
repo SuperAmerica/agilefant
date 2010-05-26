@@ -38,30 +38,30 @@ $(document).ready(function() {
     textFilterElement: $('#searchByText')
   });
 
-  var actionMenu = null;
+  var actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
+  $('<li/>').text('Spent effort').click(function() {
+    closeMenu();
+    controller.openLogEffort();
+  }).appendTo(actionMenu);
+
+  $('<li/>').text('Delete').click(function() {
+    closeMenu();
+    controller.removeProject();
+  }).appendTo(actionMenu);
+
+  
   var closeMenu = function() {
     actionMenu.fadeOut('fast');
     actionMenu.menuTimer('destroy');
-    actionMenu.remove();
   };
-  var openMenu = function() {
-    actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
-
-    $('<li/>').text('Spent effort').click(function() {
-      closeMenu();
-      controller.openLogEffort();
-    }).appendTo(actionMenu);
-
-    $('<li/>').text('Delete').click(function() {
-      closeMenu();
-      controller.removeProject();
-    }).appendTo(actionMenu);
-    
-    actionMenu.position({
-      my: "top",
-      at: "bottom",
-      of: "#projectActions"
+  var openMenu = function(element) {
+    var pos = $("#projectActions").offset();
+    actionMenu.css({
+      position: 'absolute',
+      top: pos.top + 20,
+      left: pos.left
     });
+
     actionMenu.show();
     actionMenu.menuTimer({
       closeCallback: function() {

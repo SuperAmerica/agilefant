@@ -44,39 +44,39 @@ $(document).ready(function() {
   /*
    * PRODUCT ACTIONS MENU
    */
-   var actionMenu = null;
-   var closeMenu = function() {
-     actionMenu.fadeOut('fast');
-     actionMenu.menuTimer('destroy');
-     actionMenu.remove();
-   };
-   var openMenu = function() {
-     actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
+  var actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
+  $('<li/>').text('Spent effort').click(function() {
+    closeMenu();
+    controller.openLogEffort();
+  }).appendTo(actionMenu);
 
-     $('<li/>').text('Spent effort').click(function() {
-       closeMenu();
-       controller.openLogEffort();
-     }).appendTo(actionMenu);
+  $('<li/>').text('Delete').click(function() {
+    closeMenu();
+    controller.removeProduct();
+  }).appendTo(actionMenu);
 
-     $('<li/>').text('Delete').click(function() {
-       closeMenu();
-       controller.removeProduct();
-     }).appendTo(actionMenu);
-     
-     actionMenu.position({
-       my: "top",
-       at: "bottom",
-       of: "#productActions"
-     });
-     actionMenu.show();
-     actionMenu.menuTimer({
-       closeCallback: function() {
-         closeMenu();
-       }
-     });
-   };
+  
+  var closeMenu = function() {
+    actionMenu.fadeOut('fast');
+    actionMenu.menuTimer('destroy');
+  };
+  var openMenu = function(element) {
+    var pos = $("#productActions").offset();
+    actionMenu.css({
+      position: 'absolute',
+      top: pos.top + 20,
+      left: pos.left
+    });
 
-  $('#productActions').click(function() { openMenu(); });
+    actionMenu.show();
+    actionMenu.menuTimer({
+      closeCallback: function() {
+        closeMenu();
+      }
+    });
+  };
+
+ $('#productActions').click(function() { openMenu(); });
 });
 
 </script>

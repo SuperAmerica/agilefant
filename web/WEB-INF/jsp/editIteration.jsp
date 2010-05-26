@@ -40,8 +40,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-
-  
+ 
   $("#backlogInfo").tabs();
   var controller = new IterationController({
       id: ${iteration.id}, 
@@ -58,30 +57,31 @@ $(document).ready(function() {
       tabs: $("#backlogInfo")
   });
 
-  var actionMenu = null;
+  /* Actions menu */
+  var actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
+  $('<li/>').text('Spent effort').click(function() {
+    closeMenu();
+    controller.openLogEffort();
+  }).appendTo(actionMenu);
+
+  $('<li/>').text('Delete').click(function() {
+    closeMenu();
+    controller.removeIteration();
+  }).appendTo(actionMenu);
+
+  
   var closeMenu = function() {
     actionMenu.fadeOut('fast');
     actionMenu.menuTimer('destroy');
-    actionMenu.remove();
   };
-  var openMenu = function() {
-    actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
-
-    $('<li/>').text('Spent effort').click(function() {
-      closeMenu();
-      controller.openLogEffort();
-    }).appendTo(actionMenu);
-
-    $('<li/>').text('Delete').click(function() {
-      closeMenu();
-      controller.removeIteration();
-    }).appendTo(actionMenu);
-    
-    actionMenu.position({
-      my: "top",
-      at: "bottom",
-      of: "#iterationActions"
+  var openMenu = function(element) {
+    var pos = $("#iterationActions").offset();
+    actionMenu.css({
+      position: 'absolute',
+      top: pos.top + 20,
+      left: pos.left
     });
+
     actionMenu.show();
     actionMenu.menuTimer({
       closeCallback: function() {

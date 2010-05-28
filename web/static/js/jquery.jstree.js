@@ -1640,7 +1640,7 @@
 			if(event.target.tagName == "DIV" && event.target.id == "jstree-marker") return false;
 
 			var et = $(event.target);
-			if(et.is("ins") || et.is("span")) et = et.parents('li:eq(0)');
+			if(et.is("ins")) et = et.parents('li:eq(0)');
 			
 			var cnt = et.is(".tree") ? et : et.parents(".tree:eq(0)");
 
@@ -1663,7 +1663,7 @@
 			var mov = false;
 			var st = cnt.scrollTop();
 
-			if(event.target.tagName == "A" || event.target.tagName == "INS" || event.target.tagName == "SPAN") {
+			if(event.target.tagName == "A" || event.target.tagName == "INS") {
 				// just in case if hover is over the draggable
 				if(et.is("#jstree-dragged")) return false;
 				if(tree2.get_node(event.target).hasClass("closed")) {

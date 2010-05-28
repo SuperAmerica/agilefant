@@ -431,9 +431,13 @@ public class StoryBusinessTest {
     @Test
     public void testDelete_deleteChoices_withChildren() {
         Story child = new Story();
+        Story storyParent = new Story();
+        storyParent.setBacklog(new Product());
         child.setParent(storyInIteration);
+        storyInIteration.setParent(storyParent);
         storyInIteration.getChildren().add(child);
 
+        storyHierarchyBusiness.updateChildrenTreeRanks(storyParent);
         hourEntryBusiness.deleteAll(storyInIteration.getHourEntries());
 //        storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
@@ -443,7 +447,7 @@ public class StoryBusinessTest {
                 HourEntryHandlingChoice.DELETE,
                 HourEntryHandlingChoice.DELETE,
                 ChildHandlingChoice.MOVE);
-        assertNull(child.getParent());
+        assertEquals(storyParent, child.getParent());
         assertTrue(storyInIteration.getChildren().isEmpty());
         verifyAll();
     }

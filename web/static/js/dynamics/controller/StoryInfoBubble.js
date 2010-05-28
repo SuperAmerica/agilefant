@@ -114,7 +114,7 @@ StoryInfoBubble.prototype.addLinks = function() {
     me.treeController._getStoryForId(me.id, function(storyModel) {
       storyModel.addListener(function(evt) {
         if(evt instanceof DynamicsEvents.DeleteEvent) {
-         me.storyElement.remove(); 
+          me.treeController.removeNode(me.storyElement);
         }
       });
       var controller = new StoryController(storyModel, null, null);

@@ -175,7 +175,6 @@ StoryTreeController.prototype.initTree = function() {
   
   // Url params
   var me = this;
-  this.firstReload = true;
   
   this.tree = $(this.element).tree({
     data: {
@@ -193,8 +192,8 @@ StoryTreeController.prototype.initTree = function() {
         selected_delete: false
     },
     callback: {
-        ondata: function(data) { me.reloading = true; return data; },
-        onload: function() { me._treeLoaded(); },
+        ondata: function(data) { me.preventNextBubble = true; return data; },
+        onload: function() { me.preventNextBubble = false; me._treeLoaded(); },
         onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
         beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); },
         beforedata : function(node, tree) { return me._storyFilters(node, tree); },
@@ -341,18 +340,32 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
   nameField.focus();
 };
 
+StoryTreeController.prototype.removeNode = function(node) {
+  var refresh = false;
+  console.log(node);
+  var children = node.children('li');
+  var length = children.length;
+  if (node.find('li').length > 0) {
+    console.log('will refresh');
+    refresh = true;
+  }
+  this.tree.remove(node);
+  if (refresh) {
+    this.tree.refresh();
+  }
+};
+
 /**
  * Initializes the tree.
  * 
  * Will send an ajax request.
  */
 StoryTreeController.prototype.openNodeDetails = function(node) {
-  if (this.reloading && !this.firstReload) {
-    this.reloading = false;
+  if (this.preventNextBubble) {
+    this.preventNextBubble = false;
     return;
   }
   var bubble = new StoryInfoBubble($(node).attr('storyid'), this, $(node), {});
-  this.firstReload = false;
 };
 
 

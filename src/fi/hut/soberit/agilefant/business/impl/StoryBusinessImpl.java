@@ -603,7 +603,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             switch (childHandlingChoice) {
             case MOVE:
                 for (Story child : story.getChildren()) {
-                    if (child != null) {
+                    if (child != null && story.getParent() != null) {
+                        child.setParent(story.getParent());
+                    }
+                    else if (child != null) {
                         child.setParent(null);
                     }
                 }

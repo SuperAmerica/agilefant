@@ -15,3 +15,5 @@ alter table backlogs_AUD add column parent_id integer;
 alter table stories_AUD add column backlog_id integer;
 alter table tasks_AUD add column iteration_id integer;
 alter table tasks_AUD add column story_id integer;
+
+INSERT INTO settings (`name`, `value`, `description`) VALUES ('AgilefantDatabaseVersion', '200b2', 'Agilefant database version');

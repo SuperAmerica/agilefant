@@ -939,6 +939,7 @@ DROP TABLE businesstheme;
 
 /** after alpha 5 **/
 
+INSERT INTO settings (name, `value`) VALUES ('DailyWork','true'), ('DevPortfolio', 'true');
 
 /** after beta 1 **/
 
@@ -948,5 +949,7 @@ alter table tasks_AUD add column iteration_id integer;
 alter table tasks_AUD add column story_id integer;
 
 UPDATE hourentries SET story_id=null WHERE story_id is not null AND DTYPE = 'TaskHourEntry';
+
+INSERT INTO settings (`name`, `value`, `description`) VALUES ('AgilefantDatabaseVersion', '200b2', 'Agilefant database version');
 
 /** after beta 2 */

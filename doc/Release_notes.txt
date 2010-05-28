@@ -1,6 +1,6 @@
-Agilefant 2.0 Beta 1
+Agilefant 2.0 Beta 2
 Release notes
-2010-04-09
+2010-05-28
 --
 
 
@@ -8,27 +8,31 @@ This is an beta version of Agilefant 2.0.
 
 Current status of the release:
 
-- Migration support to future Alpha releases is not guaranteed
+- Beta 2 should be close to the final release of Agilefant 2.0
+ * please report any found bugs at http://www.agilefant.org/mantis
 
 - Browser support:
  * Firefox 3.0+ works
  * Google Chrome and Safari should work fine
- * IE8 works somehow
+ * IE8 is not guaranteed to work, but works to some standard
  * Opera has not been tested
  
-- Many features are yet unfinished
- * Daily Work view is only partially implemented
- * Team support is limited
- * Lots of small and medium sized usability and stability issues
- 
-- Java stack traces occasionally pop up. These are solely for debugging purposes.
-
 
 
 
 +--------------------+
 |     CHANGESET      |
 +--------------------+
+
+Changes from Beta 1
+2010-05-28
++ Daily work functionality rewritten
++ Lots of improvements to story tree
+ - The hierarchy consistency is mainted. For example a child story can not reside
+   in a different project than its parent
++ All functionality that will be included in Agilefant 2.0 should be present 
++ Added help page and some quick help links
++ Daily Work, Timesheets, and Portfolio view can now be enabled/disabled in the settings
 
 Changes from Alpha 5
 2010-04-09

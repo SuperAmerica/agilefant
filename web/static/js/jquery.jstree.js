@@ -1853,7 +1853,7 @@
 						});
 					}
 					else {
-						callback.call(null, opts.static || tree.container.children("ul:eq(0)").html());
+						callback.call(null, opts['static'] || tree.container.children("ul:eq(0)").html());
 					}
 				}
 			};
@@ -2043,8 +2043,8 @@
 					return str;
 				},
 				load	: function(data, tree, opts, callback) {
-					if(opts.static) {
-						callback.call(null, opts.static);
+					if(opts['static']) {
+						callback.call(null, opts['static']);
 					} 
 					else {
 						$.ajax({

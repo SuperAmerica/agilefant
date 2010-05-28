@@ -39,11 +39,11 @@
 	              <div style="float: left; width: 76%; height: 180px; margin-top: 10px; position: relative;" id="loadPlot"></div>
 	            </div>
 	            <div class="load-legends">
-	              <div class="legend-box load-maximum">Maximum</div>
-	              <div class="legend-box load-critical">Critical</div>
-	              <div class="legend-box load-optimal-high">Optimal high</div>
-	              <div class="legend-box load-optimal-low">Optimal low</div>
-	              <div class="legend-box load-low">Low</div>
+	              <div class="legend-box load-maximum"><ww:text name="load.threshold.maximum" /></div>
+	              <div class="legend-box load-critical"><ww:text name="load.threshold.critical" /></div>
+	              <div class="legend-box load-optimal-high"><ww:text name="load.threshold.optimalHigh" /></div>
+	              <div class="legend-box load-optimal-low"><ww:text name="load.threshold.optimalLow" /></div>
+	              <div class="legend-box load-low"><ww:text name="load.threshold.low" /></div>
 	            </div>
 			</div>
 		</div>

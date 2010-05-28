@@ -64,32 +64,32 @@ $(document).ready(function() {
     
     <h3>Load thresholds</h3>
     
-    <p>Load tresholds are used in displaying the workload in the Daily Work view. To restore default threshold, just leave the field empty.</p>
+    <p>Load thresholds are used in displaying the workload in the Daily Work view. To restore default threshold, just leave the field empty.</p>
     
     <table class="settings-table">
 
     <tr>
-      <td>Maximum</td>
+      <td><ww:text name="load.threshold.maximum" /></td>
       <td><ww:textfield name="rangeHigh" id="maximumField" size="4" /> %</td>
       <td style="background: rgba(150, 8, 8, 0.7);">&nbsp;</td>
     </tr>
     <tr>
-      <td>Critical</td>
+      <td><ww:text name="load.threshold.critical" /></td>
       <td><ww:textfield name="criticalLow" id="criticalLowField" size="4" /> %</td>
       <td style="background: rgba(224, 17, 2, 0.7);">&nbsp;</td>
     </tr>
     <tr>
-      <td>Optimal High</td>
+      <td><ww:text name="load.threshold.optimalHigh" /></td>
       <td><ww:textfield name="optimalHigh" id="optimalHighField" size="4" /> %</td>
       <td style="background: rgba(245, 221, 57, 0.7);">&nbsp;</td>
     </tr>
     <tr>
-      <td>Optimal Low</td>
+      <td><ww:text name="load.threshold.optimalLow" /></td>
       <td><ww:textfield name="optimalLow" id="optimalLowField" size="4" /> %</td>
       <td style="background: rgba(9, 144, 14, 0.7)">&nbsp;</td>
     </tr>
     <tr>
-      <td>Minimum</td>
+      <td><ww:text name="load.threshold.low" /></td>
       <td><ww:textfield name="rangeLow" id="minimumField" size="4" /> %</td>
       <td style="background: rgba(130, 180, 244, 0.7);">&nbsp;</td>
     </tr>

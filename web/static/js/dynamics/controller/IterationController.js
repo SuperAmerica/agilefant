@@ -177,6 +177,9 @@ IterationController.prototype.handleModelEvents = function(event) {
     if(event.getObject() instanceof StoryModel) {
       this.reloadMetricsBox();
     }
+    if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof IterationModel && event.getRelation() === "story") {
+      this.reloadMetricsBox();
+    }
   }
 
 };

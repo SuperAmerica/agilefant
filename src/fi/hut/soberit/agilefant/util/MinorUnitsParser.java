@@ -104,7 +104,7 @@ public class MinorUnitsParser {
     }
     
     public double toMajorUnits(long minorUnits) {
-        return minorUnits / minorsPerMajor;
+        return (double)minorUnits / (double)minorsPerMajor;
     }
 
 }

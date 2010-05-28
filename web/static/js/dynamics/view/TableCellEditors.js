@@ -702,7 +702,7 @@ TableEditors.Date.prototype._registerEditField = function(element) {
 };
 
 TableEditors.Date.prototype.getEditorValue = function() {
-  return (Date.fromString(this.textField.val())).getTime();
+  return Date.fromString(this.textField.val()).getTime();
 };
 
 /*

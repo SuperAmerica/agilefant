@@ -50,7 +50,7 @@ var DynamicsDecorators = {
         return emptyText;
       }
       return retval;
-    }
+    };
   }, 
   exactEstimateDecorator: function(value) {
     if (typeof (value) === 'string') {

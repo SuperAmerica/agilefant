@@ -191,7 +191,7 @@ StoryModel.prototype.canMoveStory = function(backlogId) {
     type: 'POST',
     dataType: 'html',
     success: function(data, status) {
-      if ((jQuery.trim(data)).length === 0) {
+      if (jQuery.trim(data).length === 0) {
         sendAjax = true;
       }
       else {

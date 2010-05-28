@@ -77,7 +77,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         LinkedList<Story> tmpList = retrieveChildListAndMoveStory(story,
                 oldParent, parent);
 
-        if (tmpList.getLast() != reference) {
+        if (tmpList.size() != 0 && tmpList.getLast() != reference) {
             tmpList.add(tmpList.indexOf(reference) + 1, story);
         } else {
             tmpList.addLast(story);

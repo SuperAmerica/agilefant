@@ -196,7 +196,7 @@ StoryTreeController.prototype.initTree = function() {
         onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
         beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); },
         beforedata : function(node, tree) { return me._storyFilters(node, tree); },
-        onselect: function(node) { return me.openNodeDetails(node);}
+        onselect: function(node) { me.tree.deselect_branch(node); return me.openNodeDetails(node); }
     },
     types: {
       story: {

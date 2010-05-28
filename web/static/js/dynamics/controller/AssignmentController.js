@@ -11,3 +11,7 @@ AssignmentController.prototype.remove = function(view, model) {
 AssignmentController.prototype.handleModelEvents = function(event) {
 
 };
+
+AssignmentController.prototype.canEdit = function() {
+  return this.model.getId() > 0;
+};

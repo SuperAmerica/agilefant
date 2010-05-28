@@ -279,6 +279,7 @@ IterationController.prototype.initAssigneeConfiguration = function() {
     title : "Iteration availability",
     get : AssignmentModel.prototype.getAvailability,
     decorator: DynamicsDecorators.appendDecoratorFactory("%"),
+    editableCallback: AssignmentController.prototype.canEdit,
     editable: true,
     edit: {
       editor: "Number",

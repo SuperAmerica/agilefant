@@ -158,6 +158,15 @@ IterationController.prototype.removeIteration = function() {
 };
 
 
+IterationController.prototype.pageControllerDispatch = function(event) {
+  if(event instanceof DynamicsEvents.AddEvent) {
+    //new task is added to user's tasks without story
+    if (event.getObject() instanceof TaskModel || event.getObject() instanceof StoryModel) {
+      this.reloadMetrics();
+    }
+  }
+};
+
 
 IterationController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.MetricsEvent 

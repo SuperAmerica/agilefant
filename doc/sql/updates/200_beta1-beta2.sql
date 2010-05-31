@@ -20,7 +20,7 @@ INSERT INTO settings (`name`, `value`, `description`) VALUES ('AgilefantDatabase
 
 
 -- Fix tree ranks
-﻿
+
 DROP PROCEDURE IF EXISTS UpdateTreeRanksForChildren;
 DROP PROCEDURE IF EXISTS UpdateStoryRanksByParents;
 

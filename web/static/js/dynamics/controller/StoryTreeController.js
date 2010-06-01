@@ -164,65 +164,82 @@ StoryTreeController.prototype.hasFilters = function() {
 };
 
 StoryTreeController.prototype.initTree = function() {
+  // Change the jsTree theme folder
+  $.jstree._themes = "static/css/jstree/";
+  
+  
   var urlInfo = {
     "project": {
-      url: "ajax/getProjectStoryTree.action"
+      url: "ajax/getProjectStoryTree.action",
+      data: {
+        "projectId": this.id
+      }
     },
     "product": {
-      url: "ajax/getProductStoryTree.action"
+      url: "ajax/getProductStoryTree.action",
+      data: {
+      "productId": this.id
+      }
     }
   };
   
   // Url params
   var me = this;
   
-  this.tree = $(this.element).tree({
-    data: {
-      async: false,
-      type: "html",
-      opts: {
+  this.tree = $(this.element).jstree({
+    plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "sort", "ui" ],
+    core: {
+      animation: 0,
+      html_titles: true
+    },
+    html_data: {
+      ajax: {
+        url: urlInfo[this.type].url,
         method: "post",
-        url: urlInfo[this.type].url
+        data: urlInfo[this.type].data
       }
     },
-    ui: {
-        dots: true,
-        theme_path: "static/css/jstree/agilefant/style.css",
-        theme_name: "classic",
-        selected_delete: false
-    },
-    callback: {
-        ondata: function(data) { me.preventNextBubble = true; return data; },
-        onload: function() { me.preventNextBubble = false; me._treeLoaded(); },
-        onmove: function(node, ref_node, type, tree_obj, rb) { me.moveStory(node, ref_node, type, tree_obj, rb); },
-        beforemove: function(node, ref_node, type, tree_obj) { return me.checkStoryMove(node, ref_node, type, tree_obj); },
-        beforedata : function(node, tree) { return me._storyFilters(node, tree); },
-        onselect: function(node) { return me.openNodeDetails(node); }
+    themes: {
+      theme: "storytree",
+      dots: true,
+      icons: false,
+      theme_path: "static/css/jstree/agilefant/style.css"
     },
     types: {
-      story: {
-        draggable: true,
-        clickable: false,
-        creatable: true,
-        deletable: true,
-        renameable: false,
-        clickable: true
-      },
-      iteration_story: {
-        draggable: true,
-        clickable: false,
-        creatable: false,
-        deletable: true,
-        renameable: false,
-        clickable: true
+      validChildren: [ "story", "iteration_story" ],
+      types: {
+        "story": {
+          "max_children": -1,
+          "valid_children": "all"
+        },
+        "iteration_story": {
+          "max_children": -1,
+          "valid_children": "none"
+        }
       }
     },
-    rules: {
-      use_max_children : false,
-      use_max_depth : false
+    crrm: {},
+    dnd: {
+      "copy_modifier": ""
+    },
+    cookies: {
+      "save_selected": false
+    },
+    ui: {
+      "select_limit": 1,
+      "initially_select": []
     }
   });
-  this.tree = jQuery.tree.reference(this.element);
+  this.tree = jQuery.jstree._reference(this.element);
+  
+  this.element.bind('move_node.jstree', function(event, data) {
+    // See http://www.jstree.com/documentation/core
+    me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
+  });
+  this.element.bind('select_node.jstree', function(event, data) {
+    me.openNodeDetails(data.rslt.obj);
+    me.tree.deselect_node(data.rslt.obj);
+  });
 };
 StoryTreeController.prototype._treeLoaded = function() {
   if(this.treeExpanded) {
@@ -254,7 +271,7 @@ StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_ob
             MessageDisplay.Error("Error moving story", xhr);
           }
       }
-      jQuery.tree.rollback(rb);
+      jQuery.jstree.rollback(rb);
     }
   });
 };
@@ -291,62 +308,63 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
     MessageDisplay.Warning("Iteration stories can not have children");
     return false;
   }
-  var node = this.tree.create({}, refNode, position);
-  if(!node) {
-    return;
-  }
-  var nodeNameEl = node.find("a").hide();
-  // Hide the "New folder" line
-  node.find("span").hide();
-  var container = $('<div />').css('white-space','nowrap').appendTo(node);
-  var nameField = $('<input type="text" size="75" />').appendTo(container);
-
-  var saveStory = function(event) {
-    event.stopPropagation();
-    event.preventDefault();
-    if (parentStory === 0) {
-      $.post("ajax/treeCreateRootStory.action", {backlogId: me.id, "story.name": nameField.val()}, function(fragment) {
-        node.remove();
-        var newNode, lastNode = me.element.find('> ul > li').last();
-        if(lastNode.length) {
-          newNode = me.tree.create(0,lastNode,"after");
-        } else {
-          newNode = me.tree.create(0,-1);
-        }
-        newNode.replaceWith(fragment);
-      },"html");
-    }
-    else {
-      $.post(StoryTreeController.createNodeUrls[position], {storyId: parentStory, "story.name": nameField.val()}, function(fragment) {
-        container.remove();
-        node.replaceWith(fragment);
-      },"html");
-    }
-  };
-  var cancelFunc = function() {
-    container.remove();
-    me.tree.remove(node);
-  };
   
-  $('<input type="button" value="save" />').appendTo(container).click(saveStory);
-  nameField.keyup(function(event) {
-    if(event.keyCode === 13) {
-      saveStory(event);
-    } else if(event.keyCode === 27) {
-      cancelFunc();
-    }    
-  });
-  $('<input type="button" value="cancel" />').click(cancelFunc).appendTo(container);
-  nameField.focus();
+  
+  var node = this.tree.create(refNode, position, {}, function(node) {
+    var nodeNameEl = node.find("a").hide();
+    // Hide the "New folder" line
+    node.find("span").hide();
+    
+    var container = $('<div />').css('white-space','nowrap').appendTo(node);
+    var nameField = $('<input type="text" size="75" />').appendTo(container);
+    
+    var saveStory = function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      if (parentStory === 0) {
+        $.post("ajax/treeCreateRootStory.action", {backlogId: me.id, "story.name": nameField.val()}, function(fragment) {
+          node.remove();
+          var newNode, lastNode = me.element.find('> ul > li').last();
+          if(lastNode.length) {
+            newNode = me.tree.create(lastNode,"after",{ data: fragment },null,true);
+          } else {
+            // TODO: Fix empty tree
+//            newNode = me.tree.create(0,-1);
+          }
+//          newNode.replaceWith(fragment);
+        },"html");
+      }
+      else {
+        $.post(StoryTreeController.createNodeUrls[position], {storyId: parentStory, "story.name": nameField.val()}, function(fragment) {
+          container.remove();
+          node.replaceWith(fragment);
+        },"html");
+      }
+    };
+    var cancelFunc = function() {
+      container.remove();
+      me.tree.remove(node);
+    };
+    
+    $('<input type="button" value="save" />').appendTo(container).click(saveStory);
+    nameField.keyup(function(event) {
+      if(event.keyCode === 13) {
+        saveStory(event);
+      } else if(event.keyCode === 27) {
+        cancelFunc();
+      }    
+    });
+    $('<input type="button" value="cancel" />').click(cancelFunc).appendTo(container);
+    nameField.focus();
+  }, true);
+  
 };
 
 StoryTreeController.prototype.removeNode = function(node) {
   var refresh = false;
-  console.log(node);
   var children = node.children('li');
   var length = children.length;
   if (node.find('li').length > 0) {
-    console.log('will refresh');
     refresh = true;
   }
   this.tree.remove(node);
@@ -361,10 +379,6 @@ StoryTreeController.prototype.removeNode = function(node) {
  * Will send an ajax request.
  */
 StoryTreeController.prototype.openNodeDetails = function(node) {
-  if (this.preventNextBubble) {
-    this.preventNextBubble = false;
-    return;
-  }
   var bubble = new StoryInfoBubble($(node).attr('storyid'), this, $(node), {});
 };
 

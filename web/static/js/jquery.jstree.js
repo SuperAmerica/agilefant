@@ -1,2068 +1,3091 @@
 /*
- * jsTree 0.9.9a
+ * jsTree 1.0-rc1
  * http://jstree.com/
  *
- * Copyright (c) 2009 Ivan Bozhanov (vakata.com)
+ * Copyright (c) 2010 Ivan Bozhanov (vakata.com)
  *
- * Dual licensed under the MIT and GPL licenses:
+ * Dual licensed under the MIT and GPL licenses (same as jQuery):
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Date: 2009-10-06
- *
+ * Date: 2010-05-25
  */
 
-(function($) {
-	// jQuery plugin
-	$.tree = {
-		datastores	: { },
-		plugins		: { },
-		defaults	: {
-			data	: {
-				async	: false,		// Are async requests used to load open_branch contents
-				type	: "html",		// One of included datastores
-				opts	: { method: "GET", url: false } // Options passed to datastore
+/*global window : false, clearInterval: false, clearTimeout: false, document: false, setInterval: false, setTimeout: false, jQuery: false, navigator: false, XSLTProcessor: false, DOMParser: false, XMLSerializer: false*/
+
+"use strict";
+// Common functions not related to jsTree 
+// decided to move them to a `vakata` "namespace"
+(function ($) {
+	$.vakata = {};
+	// CSS related functions
+	$.vakata.css = {
+		get_css : function(rule_name, delete_flag, sheet) {
+			rule_name = rule_name.toLowerCase();
+			var css_rules = sheet.cssRules || sheet.rules,
+				j = 0;
+			do {
+				if(css_rules.length && j > css_rules.length + 5) { return false; }
+				if(css_rules[j].selectorText && css_rules[j].selectorText.toLowerCase() == rule_name) {
+					if(delete_flag === true) {
+						if(sheet.removeRule) { sheet.removeRule(j); }
+						if(sheet.deleteRule) { sheet.deleteRule(j); }
+						return true;
+					}
+					else { return css_rules[j]; }
+				}
+			}
+			while (css_rules[++j]);
+			return false;
+		},
+		add_css : function(rule_name, sheet) {
+			if($.jstree.css.get_css(rule_name, false, sheet)) { return false; }
+			if(sheet.insertRule) { sheet.insertRule(rule_name + ' { }', 0); } else { sheet.addRule(rule_name, null, 0); }
+			return $.vakata.css.get_css(rule_name);
+		},
+		remove_css : function(rule_name, sheet) { 
+			return $.vakata.css.get_css(rule_name, true, sheet); 
+		},
+		add_sheet : function(opts) {
+			var tmp;
+			if(opts.str) {
+				tmp = document.createElement("style");
+				tmp.setAttribute('type',"text/css");
+				if(tmp.styleSheet) {
+					document.getElementsByTagName("head")[0].appendChild(tmp);
+					tmp.styleSheet.cssText = opts.str;
+				}
+				else {
+					tmp.appendChild(document.createTextNode(opts.str));
+					document.getElementsByTagName("head")[0].appendChild(tmp);
+				}
+				return tmp.sheet || tmp.styleSheet;
+			}
+			if(opts.url) {
+				if(document.createStyleSheet) {
+					try { tmp = document.createStyleSheet(opts.url); } catch (e) { }
+				}
+				else {
+					tmp			= document.createElement('link');
+					tmp.rel		= 'stylesheet';
+					tmp.type	= 'text/css';
+					tmp.media	= "all";
+					tmp.href	= opts.url;
+					document.getElementsByTagName("head")[0].appendChild(tmp);
+					return tmp.styleSheet;
+				}
+			}
+		}
+	};
+})(jQuery);
+
+/* 
+ * jsTree core 1.0
+ */
+(function ($) {
+	// private variables 
+	var instances = [],			// instance array (used by $.jstree.reference/create/focused)
+		focused_instance = -1,	// the index in the instance array of the currently focused instance
+		plugins = {},			// list of included plugins
+		prepared_move = {};		// for the move plugin
+
+	// jQuery plugin wrapper (thanks to jquery UI widget function)
+	$.fn.jstree = function (settings) {
+		var isMethodCall = (typeof settings == 'string'), // is this a method call like $().jstree("open_node")
+			args = Array.prototype.slice.call(arguments, 1), 
+			returnValue = this;
+
+		// extend settings and allow for multiple hashes and metadata
+		if(!isMethodCall && $.meta) { args.push($.metadata.get(this).jstree); }
+		settings = !isMethodCall && args.length ? $.extend.apply(null, [true, settings].concat(args)) : settings;
+		// block calls to "private" methods
+		if(isMethodCall && settings.substring(0, 1) == '_') { return returnValue; }
+
+		// if a method call execute the method on all selected instances
+		if(isMethodCall) {
+			this.each(function() {
+				var instance = instances[$.data(this, "jstree-instance-id")],
+					methodValue = (instance && $.isFunction(instance[settings])) ? instance[settings].apply(instance, args) : instance;
+					if(typeof methodValue !== "undefined" && methodValue !== true && methodValue !== false) { returnValue = methodValue; return false; }
+			});
+		}
+		else {
+			this.each(function() {
+				var instance_id = $.data(this, "jstree-instance-id"),
+					s = false;
+				// if an instance already exists, destroy it first
+				if(instance_id && instances[instance_id]) { instances[instance_id].destroy(); }
+				// push a new empty object to the instances array
+				instance_id = parseInt(instances.push({}),10) - 1;
+				// store the jstree instance id to the container element
+				$.data(this, "jstree-instance-id", instance_id);
+				// clean up all plugins
+				settings.plugins = $.isArray(settings.plugins) ? settings.plugins : $.jstree.defaults.plugins;
+				if($.inArray("core", settings.plugins) === -1) { settings.plugins.unshift("core"); }
+				
+				// only unique plugins (NOT WORKING)
+				// settings.plugins = settings.plugins.sort().join(",,").replace(/(,|^)([^,]+)(,,\2)+(,|$)/g,"$1$2$4").replace(/,,+/g,",").replace(/,$/,"").split(",");
+
+				// extend defaults with passed data
+				s = $.extend(true, {}, $.jstree.defaults, settings);
+				s.plugins = settings.plugins;
+				// push the new object to the instances array (at the same time set the default classes to the container) and init
+				instances[instance_id] = new $.jstree._instance(instance_id, $(this).addClass("jstree jstree-" + instance_id), s); 
+				// init all activated plugins for this instance
+				$.each(instances[instance_id].get_settings().plugins, function (i, val) { instances[instance_id].data[val] = {}; });
+				$.each(instances[instance_id].get_settings().plugins, function (i, val) { if(plugins[val]) { plugins[val].__init.apply(instances[instance_id]); } });
+				// initialize the instance
+				instances[instance_id].init();
+			});
+		}
+		// return the jquery selection (or if it was a method call that returned a value - the returned value)
+		return returnValue;
+	};
+	// object to store exposed functions and objects
+	$.jstree = {
+		defaults : {
+			plugins : []
+		},
+		_focused : function () { return instances[focused_instance] || null; },
+		_reference : function (needle) { 
+			// get by instance id
+			if(instances[needle]) { return instances[needle]; }
+			// get by DOM (if still no luck - return null
+			var o = $(needle); 
+			if(!o.length && typeof needle === "string") { o = $("#" + needle); }
+			if(!o.length) { return null; }
+			return instances[o.closest(".jstree").data("jstree-instance-id")] || null; 
+		},
+		_instance : function (index, container, settings) { 
+			// for plugins to store data in
+			this.data = { core : {} };
+			this.get_settings	= function () { return $.extend(true, {}, settings); };
+			this.get_index		= function () { return index; };
+			this.get_container	= function () { return container; };
+			this._set_settings	= function (s) { 
+				settings = $.extend(true, {}, settings, s);
+			};
+		},
+		_fn : { },
+		plugin : function (pname, pdata) {
+			pdata = $.extend({}, {
+				__init		: $.noop, 
+				__destroy	: $.noop,
+				_fn			: {},
+				defaults	: false
+			}, pdata);
+			plugins[pname] = pdata;
+
+			$.jstree.defaults[pname] = pdata.defaults;
+			$.each(pdata._fn, function (i, val) {
+				val.plugin		= pname;
+				val.old			= $.jstree._fn[i];
+				$.jstree._fn[i] = function () {
+					var rslt,
+						func = val,
+						args = Array.prototype.slice.call(arguments),
+						stgs = this.get_settings(),
+						evnt = new $.Event("before.jstree"),
+						rlbk = false;
+
+					// Check if function belongs to the included plugins of this instance
+					do {
+						if(func && func.plugin && $.inArray(func.plugin, stgs.plugins) !== -1) { break; }
+						func = func.old;
+					} while(func);
+					if(!func) { return; }
+
+					// a chance to stop execution (or change arguments): 
+					// * just bind to jstree.before
+					// * check the additional data object (func property)
+					// * call event.stopImmediatePropagation()
+					// * return false (or an array of arguments)
+					rslt = this.get_container().triggerHandler(evnt, { "func" : i, "inst" : this, "args" : args });
+					if(rslt === false) { return; }
+					if(typeof rslt !== "undefined") { args = rslt; }
+
+					// context and function to trigger events, then finally call the function
+					rslt = func.apply(
+						$.extend({}, this, { 
+							__callback : function (data) { 
+								this.get_container().triggerHandler( i + '.jstree', { "inst" : this, "args" : args, "rslt" : data, "rlbk" : rlbk });
+							},
+							__rollback : function () { 
+								rlbk = this.get_rollback();
+								return rlbk;
+							},
+							__call_old : function (replace_arguments) {
+								return func.old.apply(this, (replace_arguments ? Array.prototype.slice.call(arguments, 1) : args ) );
+							}
+						}), args);
+
+					// return the result
+					return rslt;
+				};
+				$.jstree._fn[i].old = val.old;
+				$.jstree._fn[i].plugin = pname;
+			});
+		},
+		rollback : function (rb) {
+			if(rb) {
+				if(!$.isArray(rb)) { rb = [ rb ]; }
+				$.each(rb, function (i, val) {
+					instances[val.i].set_rollback(val.h, val.d);
+				});
+			}
+		}
+	};
+	// set the prototype for all instances
+	$.jstree._fn = $.jstree._instance.prototype = {};
+
+	// css functions - used internally
+
+	// load the css when DOM is ready
+	$(function() {
+		// code is copied form jQuery ($.browser is deprecated + there is a bug in IE)
+		var u = navigator.userAgent.toLowerCase(),
+			v = (u.match( /.+?(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
+			css_string = '' + 
+				'.jstree ul, .jstree li { display:block; margin:0 0 0 0; padding:0 0 0 0; list-style-type:none; } ' + 
+				'.jstree li { display:block; min-height:18px; line-height:18px; white-space:nowrap; margin-left:18px; } ' + 
+				'.jstree > ul > li { margin-left:0px; } ' + 
+				'.jstree ins { display:inline-block; text-decoration:none; width:18px; height:18px; margin:0 0 0 0; padding:0; } ' + 
+				'.jstree a { display:inline-block; line-height:16px; height:16px; color:black; white-space:nowrap; text-decoration:none; padding:1px 2px; margin:0; } ' + 
+				'.jstree a:focus { outline: none; } ' + 
+				'.jstree a > ins { height:16px; width:16px; } ' + 
+				'.jstree a > .jstree-icon { margin-right:3px; } ' + 
+				'li.jstree-open > ul { display:block; } ' + 
+				'li.jstree-closed > ul { display:none; } ';
+		// Correct IE 6 (does not support the > CSS selector
+		if(/msie/.test(u) && parseInt(v, 10) == 6) { 
+			css_string += '' + 
+				'.jstree li { height:18px; margin-left:0; } ' + 
+				'.jstree li li { margin-left:18px; } ' + 
+				'li.jstree-open ul { display:block; } ' + 
+				'li.jstree-closed ul { display:none !important; } ' + 
+				'.jstree li a { display:inline; } ' + 
+				'.jstree li a ins { height:16px; width:16px; margin-right:3px; } ';
+		}
+		$.vakata.css.add_sheet({ str : css_string });
+	});
+
+	// core functions (open, close, create, update, delete)
+	$.jstree.plugin("core", {
+		__init : function () {
+			this.data.core.to_open = $.map($.makeArray(this.get_settings().core.initially_open), function (n) { return "#" + n.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/'); });
+		},
+		defaults : { 
+			html_titles	: false,
+			animation	: 500,
+			initially_open : []
+		},
+		_fn : { 
+			init	: function () { 
+				this.set_focus(); 
+				this.get_container().html("<ul><li class='jstree-last jstree-leaf'><ins>&#160;</ins><a class='jstree-loading' href='#'><ins class='jstree-icon'>&#160;</ins>Loading ...</a></li></ul>");
+				this.data.core.li_height = this.get_container().find("ul li.jstree-closed, ul li.jstree-leaf").eq(0).height() || 18;
+
+				this.get_container()
+					.delegate("li > ins", "click.jstree", $.proxy(function (event) {
+							var trgt = $(event.target);
+							if(trgt.is("ins") && event.pageY - trgt.offset().top < this.data.core.li_height) { this.toggle_node(trgt); }
+						}, this))
+					.bind("mousedown.jstree", $.proxy(function () { 
+							this.set_focus(); // This used to be setTimeout(set_focus,0) - why?
+						}, this))
+					.bind("dblclick.jstree", function (event) { 
+						var sel;
+						if(document.selection && document.selection.empty) { document.selection.empty(); }
+						else {
+							if(window.getSelection) {
+								sel = window.getSelection();
+								try { 
+									sel.removeAllRanges();
+									sel.collapse();
+								} catch (err) { }
+							}
+						}
+					});
+				this.__callback();
+				this.load_node(-1, function () { this.loaded(); this.reopen(); });
 			},
-			selected	: false,		// FALSE or STRING or ARRAY
-			opened		: [],			// ARRAY OF INITIALLY OPENED NODES
-			languages	: [],			// ARRAY of string values (which will be used as CSS classes - so they must be valid)
-			ui		: {
-				dots		: true,		// BOOL - dots or no dots
-				animation	: 0,		// INT - duration of open/close animations in miliseconds
-				scroll_spd	: 4,
-				theme_path	: false,	// Path to the theme CSS file - if set to false and theme_name is not false - will lookup jstree-path-here/themes/theme-name-here/style.css
-				theme_name	: "default",// if set to false no theme will be loaded
-				selected_parent_close	: "select_parent", // false, "deselect", "select_parent"
-				selected_delete			: "select_previous" // false, "select_previous"
-			},
-			types	: {
-				"default" : {
-					clickable	: true, // can be function
-					renameable	: true, // can be function
-					deletable	: true, // can be function
-					creatable	: true, // can be function
-					draggable	: true, // can be function
-					max_children	: -1, // -1 - not set, 0 - no children, 1 - one child, etc // can be function
-					max_depth		: -1, // -1 - not set, 0 - no children, 1 - one level of children, etc // can be function
-					valid_children	: "all", // all, none, array of values // can be function
-					icon : {
-						image : false,
-						position : false
+			destroy	: function () { 
+				var i,
+					n = this.get_index(),
+					s = this.get_settings(),
+					_this = this;
+
+				$.each(s.plugins, function (i, val) {
+					plugins[val].__destroy.apply(_this);
+				});
+				this.__callback();
+				// set focus to another instance if this one is focused
+				if(this.is_focused()) { 
+					for(i in instances) { 
+						if(instances.hasOwnProperty(i) && i != n) { 
+							instances[i].set_focus(); 
+							break; 
+						} 
 					}
 				}
+				// if no other instance found
+				if(n === focused_instance) { focused_instance = -1; }
+				// remove all traces of jstree in the DOM (only the ones set using jstree*) and cleans all events
+				this.get_container()
+					.unbind(".jstree")
+					.undelegate(".jstree")
+					.removeData("jstree-instance-id")
+					.find("[class^='jstree']")
+						.andSelf()
+						.attr("class", function () { return this.className.replace(/jstree[^ ]*|$/ig,''); });
+				// remove the actual data
+				instances[n] = null;
+				delete instances[n];
 			},
-			rules	: {
-				multiple	: false,	// FALSE | CTRL | ON - multiple selection off/ with or without holding Ctrl
-				multitree	: "none",	// all, none, array of tree IDs to accept from
-				type_attr	: "rel",	// STRING attribute name (where is the type stored as string)
-				createat	: "bottom",	// STRING (top or bottom) new nodes get inserted at top or bottom
-				drag_copy	: "ctrl",	// FALSE | CTRL | ON - drag to copy off/ with or without holding Ctrl
-				drag_button	: "left",	// left, right or both
-				use_max_children	: true,
-				use_max_depth		: true,
-
-				max_children: -1,
-				max_depth	: -1,
-				valid_children : "all"
-			},
-			lang : {
-				new_node	: "New folder",
-				loading		: "Loading ..."
-			},
-			callback	: {
-				beforechange: function(NODE,TREE_OBJ) { return true },
-				beforeopen	: function(NODE,TREE_OBJ) { return true },
-				beforeclose	: function(NODE,TREE_OBJ) { return true },
-				beforemove	: function(NODE,REF_NODE,TYPE,TREE_OBJ) { return true }, 
-				beforecreate: function(NODE,REF_NODE,TYPE,TREE_OBJ) { return true }, 
-				beforerename: function(NODE,LANG,TREE_OBJ) { return true }, 
-				beforedelete: function(NODE,TREE_OBJ) { return true }, 
-				beforedata	: function(NODE,TREE_OBJ) { return { id : $(NODE).attr("id") || 0 } }, // PARAMETERS PASSED TO SERVER
-				ondata		: function(DATA,TREE_OBJ) { return DATA; },		// modify data before parsing it
-				onparse		: function(STR,TREE_OBJ) { return STR; },		// modify string before visualizing it
-				onhover		: function(NODE,TREE_OBJ) { },					// node hovered
-				onselect	: function(NODE,TREE_OBJ) { },					// node selected
-				ondeselect	: function(NODE,TREE_OBJ) { },					// node deselected
-				onchange	: function(NODE,TREE_OBJ) { },					// focus changed
-				onrename	: function(NODE,TREE_OBJ,RB) { },				// node renamed
-				onmove		: function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { },	// move completed
-				oncopy		: function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { },	// copy completed
-				oncreate	: function(NODE,REF_NODE,TYPE,TREE_OBJ,RB) { },	// node created
-				ondelete	: function(NODE,TREE_OBJ,RB) { },				// node deleted
-				onopen		: function(NODE,TREE_OBJ) { },					// node opened
-				onopen_all	: function(TREE_OBJ) { },						// all nodes opened
-				onclose_all	: function(TREE_OBJ) { },						// all nodes closed
-				onclose		: function(NODE,TREE_OBJ) { },					// node closed
-				error		: function(TEXT,TREE_OBJ) { },					// error occured
-				ondblclk	: function(NODE,TREE_OBJ) { TREE_OBJ.toggle_branch.call(TREE_OBJ, NODE); TREE_OBJ.select_branch.call(TREE_OBJ, NODE); },
-				onrgtclk	: function(NODE,TREE_OBJ,EV) { },				// right click - to prevent use: EV.preventDefault(); EV.stopPropagation(); return false
-				onload		: function(TREE_OBJ) { },
-				oninit		: function(TREE_OBJ) { },
-				onfocus		: function(TREE_OBJ) { },
-				ondestroy	: function(TREE_OBJ) { },
-				onsearch	: function(NODES, TREE_OBJ) { NODES.addClass("search"); },
-				ondrop		: function(NODE,REF_NODE,TYPE,TREE_OBJ) { },
-				check		: function(RULE,NODE,VALUE,TREE_OBJ) { return VALUE; },
-				check_move	: function(NODE,REF_NODE,TYPE,TREE_OBJ) { return true; }
-			},
-			plugins : { }
-		},
-
-		create		: function () { return new tree_component(); },
-		focused		: function () { return tree_component.inst[tree_component.focused]; },
-		reference	: function (obj) { 
-			var o = $(obj); 
-			if(!o.size()) o = $("#" + obj);
-			if(!o.size()) return null; 
-			o = (o.is(".tree")) ? o.attr("id") : o.parents(".tree:eq(0)").attr("id"); 
-			return tree_component.inst[o] || null; 
-		},
-		rollback	: function (data) {
-			for(var i in data) {
-				if(!data.hasOwnProperty(i)) continue;
-				var tmp = tree_component.inst[i];
-				var lock = !tmp.locked;
-
-				// if not locked - lock the tree
-				if(lock) tmp.lock(true);
-				// Cancel ongoing rename
-				tmp.inp = false;
-				tmp.container.html(data[i].html).find(".dragged").removeClass("dragged").end().find(".hover").removeClass("hover");
-
-				if(data[i].selected) {
-					tmp.selected = $("#" + data[i].selected);
-					tmp.selected_arr = [];
-					tmp.container
-						.find("a.clicked").each( function () {
-							tmp.selected_arr.push(tmp.get_node(this));
-						});
-				}
-				// if this function set the lock - unlock
-				if(lock) tmp.lock(false);
-
-				delete lock;
-				delete tmp;
-			}
-		},
-		drop_mode	: function (opts) {
-			opts = $.extend(opts, { show : false, type : "default", str : "Foreign node" });
-			tree_component.drag_drop.foreign	= true;
-			tree_component.drag_drop.isdown		= true;
-			tree_component.drag_drop.moving		= true;
-			tree_component.drag_drop.appended	= false;
-			tree_component.drag_drop.f_type		= opts.type;
-			tree_component.drag_drop.f_data		= opts;
-
-
-			if(!opts.show) {
-				tree_component.drag_drop.drag_help	= false;
-				tree_component.drag_drop.drag_node	= false;
-			}
-			else {
-				tree_component.drag_drop.drag_help	= $("<div id='jstree-dragged' class='tree tree-default'><ul><li class='last dragged foreign'><a href='#'><ins>&nbsp;</ins>" + opts.str + "</a></li></ul></div>");
-				tree_component.drag_drop.drag_node	= tree_component.drag_drop.drag_help.find("li:eq(0)");
-			}
-			if($.tree.drag_start !== false) $.tree.drag_start.call(null, false);
-		},
-		drag_start	: false,
-		drag		: false,
-		drag_end	: false
-	};
-	$.fn.tree = function (opts) {
-		return this.each(function() {
-			var conf = $.extend({},opts);
-			if(tree_component.inst && tree_component.inst[$(this).attr('id')]) tree_component.inst[$(this).attr('id')].destroy();
-			if(conf !== false) new tree_component().init(this, conf);
-		});
-	};
-
-	// core
-	function tree_component () {
-		return {
-			cntr : ++tree_component.cntr,
-			settings : $.extend({},$.tree.defaults),
-
-			init : function(elem, conf) {
+			save_opened : function () {
 				var _this = this;
-				this.container = $(elem);
-				if(this.container.size == 0) return false;
-				tree_component.inst[this.cntr] = this;
-				if(!this.container.attr("id")) this.container.attr("id","jstree_" + this.cntr); 
-				tree_component.inst[this.container.attr("id")] = tree_component.inst[this.cntr];
-				tree_component.focused = this.cntr;
-				this.settings = $.extend(true, {}, this.settings, conf);
-
-				// DEAL WITH LANGUAGE VERSIONS
-				if(this.settings.languages && this.settings.languages.length) {
-					this.current_lang = this.settings.languages[0];
-					var st = false;
-					var id = "#" + this.container.attr("id");
-					for(var ln = 0; ln < this.settings.languages.length; ln++) {
-						st = tree_component.add_css(id + " ." + this.settings.languages[ln]);
-						if(st !== false) st.style.display = (this.settings.languages[ln] == this.current_lang) ? "" : "none";
-					}
-				}
-				else this.current_lang = false;
-				// THEMES
-				this.container.addClass("tree");
-				if(this.settings.ui.theme_name !== false) {
-					if(this.settings.ui.theme_path === false) {
-						$("script").each(function () { 
-							if(this.src.toString().match(/jquery\.tree.*?js$/)) { _this.settings.ui.theme_path = this.src.toString().replace(/jquery\.tree.*?js$/, "") + "themes/" + _this.settings.ui.theme_name + "/style.css"; return false; }
+				this.data.core.to_open = [];
+				this.get_container().find(".jstree-open").each(function () { 
+					_this.data.core.to_open.push("#" + this.id.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/')); 
+				});
+				this.__callback(_this.data.core.to_open);
+			},
+			reopen : function (is_callback) {
+				var _this = this,
+					done = true,
+					current = [],
+					remaining = [];
+				if(!is_callback) { this.data.core.reopen = false; this.data.core.refreshing = true; }
+				if(this.data.core.to_open.length) {
+					$.each(this.data.core.to_open, function (i, val) {
+						if(val == "#") { return true; }
+						if($(val).length && $(val).is(".jstree-closed")) { current.push(val); }
+						else { remaining.push(val); }
+					});
+					if(current.length) {
+						this.data.core.to_open = remaining;
+						$.each(current, function (i, val) { 
+							_this.open_node(val, function () { _this.reopen(true); }, true); 
 						});
-					}
-					if(this.settings.ui.theme_path != "" && $.inArray(this.settings.ui.theme_path, tree_component.themes) == -1) {
-						tree_component.add_sheet({ url : this.settings.ui.theme_path });
-						tree_component.themes.push(this.settings.ui.theme_path);
-					}
-					this.container.addClass("tree-" + this.settings.ui.theme_name);
-				}
-				// TYPE ICONS
-				var type_icons = "";
-				for(var t in this.settings.types) {
-					if(!this.settings.types.hasOwnProperty(t)) continue;
-					if(!this.settings.types[t].icon) continue;
-					if( this.settings.types[t].icon.image || this.settings.types[t].icon.position) {
-						if(t == "default")  type_icons += "#" + this.container.attr("id") + " li > a ins { ";
-						else type_icons += "#" + this.container.attr("id") + " li[rel=" + t + "] > a ins { ";
-						if(this.settings.types[t].icon.image) type_icons += " background-image:url(" + this.settings.types[t].icon.image + "); ";
-						if(this.settings.types[t].icon.position) type_icons += " background-position:" + this.settings.types[t].icon.position + "; ";
-						type_icons += "} ";
+						done = false;
 					}
 				}
-				if(type_icons != "") tree_component.add_sheet({ str : type_icons });
-
-				if(this.settings.rules.multiple) this.selected_arr = [];
-				this.offset = false;
-				this.hovered = false;
-				this.locked = false;
-
-				if(tree_component.drag_drop.marker === false) tree_component.drag_drop.marker = $("<div>").attr({ id : "jstree-marker" }).hide().appendTo("body");
-				this.callback("oninit", [this]);
-				this.refresh();
-				this.attach_events();
-				this.focus();
+				if(done) { 
+					// TODO: find a more elegant approach to syncronizing returning requests
+					if(this.data.core.reopen) { clearTimeout(this.data.core.reopen); }
+					this.data.core.reopen = setTimeout(function () { _this.__callback({}, _this); }, 50);
+					this.data.core.refreshing = false;
+				}
 			},
 			refresh : function (obj) {
-				if(this.locked) return this.error("LOCKED");
 				var _this = this;
-				if(obj && !this.settings.data.async) obj = false;
-				this.is_partial_refresh = obj ? true : false;
+				this.save_opened();
+				if(!obj) { obj = -1; }
+				this.load_node(obj, function () { _this.__callback({}); _this.reopen(); });
+			},
+			// Dummy function to fire after the first load (so that there is a jstree.loaded event)
+			loaded	: function () { 
+				this.__callback(); 
+			},
+			// deal with focus
+			set_focus	: function () { 
+				var f = $.jstree._focused();
+				if(f && f !== this) {
+					f.get_container().removeClass("jstree-focused"); 
+				}
+				if(f !== this) {
+					this.get_container().addClass("jstree-focused"); 
+					focused_instance = this.get_index(); 
+				}
+				this.__callback();
+			},
+			is_focused	: function () { 
+				return focused_instance == this.get_index(); 
+			},
 
-				// SAVE OPENED
-				this.opened = Array();
-				if(this.settings.opened != false) {
-					$.each(this.settings.opened, function (i, item) {
-						if(this.replace(/^#/,"").length > 0) { _this.opened.push("#" + this.replace(/^#/,"")); }
-					});
-					this.settings.opened = false;
+			// traverse
+			_get_node		: function (obj) { 
+				var $obj = $(obj, this.get_container()); 
+				if($obj.is(".jstree") || obj == -1) { return -1; } 
+				$obj = $obj.closest("li", this.get_container()); 
+				return $obj.length ? $obj : false; 
+			},
+			_get_next		: function (obj, strict) {
+				obj = this._get_node(obj);
+				if(obj === -1) { return this.get_container().find("> ul > li:first-child"); }
+				if(!obj.length) { return false; }
+				if(strict) { return (obj.nextAll("li").size() > 0) ? obj.nextAll("li:eq(0)") : false; }
+
+				if(obj.hasClass("jstree-open")) { return obj.find("li:eq(0)"); }
+				else if(obj.nextAll("li").size() > 0) { return obj.nextAll("li:eq(0)"); }
+				else { return obj.parentsUntil(this.get_container(),"li").next("li").eq(0); }
+			},
+			_get_prev		: function (obj, strict) {
+				obj = this._get_node(obj);
+				if(obj === -1) { return this.get_container().find("> ul > li:last-child"); }
+				if(!obj.length) { return false; }
+				if(strict) { return (obj.prevAll("li").length > 0) ? obj.prevAll("li:eq(0)") : false; }
+
+				if(obj.prev("li").length) {
+					obj = obj.prev("li").eq(0);
+					while(obj.hasClass("jstree-open")) { obj = obj.children("ul:eq(0)").children("li:last"); }
+					return obj;
+				}
+				else { var o = obj.parentsUntil(this.get_container(),"li:eq(0)"); return o.length ? o : false; }
+			},
+			_get_parent		: function (obj) {
+				obj = this._get_node(obj);
+				if(obj == -1 || !obj.length) { return false; }
+				var o = obj.parentsUntil(this.get_container(), "li:eq(0)");
+				return o.length ? o : -1;
+			},
+			_get_children	: function (obj) {
+				obj = this._get_node(obj);
+				if(obj === -1) { return this.get_container().children("ul:eq(0)").children("li"); }
+				if(!obj.length) { return false; }
+				return obj.children("ul:eq(0)").children("li");
+			},
+			get_path		: function (obj, id_mode) {
+				var p = [],
+					_this = this;
+				obj = this._get_node(obj);
+				if(obj === -1 || !obj || !obj.length) { return false; }
+				obj.parentsUntil(this.get_container(), "li").each(function () {
+					p.push( id_mode ? this.id : _this.get_text(this) );
+				});
+				p.reverse();
+				p.push( id_mode ? obj.attr("id") : this.get_text(obj) );
+				return p;
+			},
+
+			// open/close
+			open_node	: function (obj, callback, skip_animation) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				var s = skip_animation ? 0 : this.get_settings().core.animation,
+					t = this;
+				if(!this._is_loaded(obj)) {
+					obj.children("a").addClass("jstree-loading");
+					this.load_node(obj, function () { t.open_node(obj, callback, skip_animation); }, callback);
 				}
 				else {
-					this.container.find("li.open").each(function (i) { if(this.id) { _this.opened.push("#" + this.id); } });
-				}
-
-				// SAVE SELECTED
-				if(this.selected) {
-					this.settings.selected = Array();
-					if(obj) {
-						$(obj).find("li:has(a.clicked)").each(function () {
-							if(this.id) _this.settings.selected.push("#" + this.id);
-						});
-					}
-					else {
-						if(this.selected_arr) {
-							$.each(this.selected_arr, function () {
-								if(this.attr("id")) _this.settings.selected.push("#" + this.attr("id"));
-							});
-						}
-						else {
-							if(this.selected.attr("id")) this.settings.selected.push("#" + this.selected.attr("id"));
-						}
-					}
-				}
-				else if(this.settings.selected !== false) {
-					var tmp = Array();
-					if((typeof this.settings.selected).toLowerCase() == "object") {
-						$.each(this.settings.selected, function () {
-							if(this.replace(/^#/,"").length > 0) tmp.push("#" + this.replace(/^#/,""));
-						});
-					}
-					else {
-						if(this.settings.selected.replace(/^#/,"").length > 0) tmp.push("#" + this.settings.selected.replace(/^#/,""));
-					}
-					this.settings.selected = tmp;
-				}
-
-				if(obj && this.settings.data.async) {
-					this.opened = Array();
-					obj = this.get_node(obj);
-					obj.find("li.open").each(function (i) { _this.opened.push("#" + this.id); });
-					if(obj.hasClass("open")) obj.removeClass("open").addClass("closed");
-					if(obj.hasClass("leaf")) obj.removeClass("leaf");
-					obj.children("ul:eq(0)").html("");
-					return this.open_branch(obj, true, function () { _this.reselect.apply(_this); });
-				}
-
-				var _this = this;
-				var _datastore = new $.tree.datastores[this.settings.data.type]();
-				if(this.container.children("ul").size() == 0) {
-					this.container.html("<ul class='ltr' style='direction:ltr;'><li class='last'><a class='loading' href='#'><ins>&nbsp;</ins>" + (this.settings.lang.loading || "Loading ...") + "</a></li></ul>");
-				}
-				_datastore.load(this.callback("beforedata",[false,this]),this,this.settings.data.opts,function(data) {
-					data = _this.callback("ondata",[data, _this]);
-					_datastore.parse(data,_this,_this.settings.data.opts,function(str) {
-						str = _this.callback("onparse", [str, _this]);
-						_this.container.empty().append($("<ul class='ltr'>").html(str));
-						_this.container.find("li:last-child").addClass("last").end().find("li:has(ul)").not(".open").addClass("closed");
-						_this.container.find("li").not(".open").not(".closed").addClass("leaf");
-						_this.reselect();
-					});
-				});
-			},
-			reselect : function (is_callback) {
-				var _this = this;
-
-				if(!is_callback)	this.cl_count = 0;
-				else				this.cl_count --;
-				// REOPEN BRANCHES
-				if(this.opened && this.opened.length) {
-					var opn = false;
-					for(var j = 0; this.opened && j < this.opened.length; j++) {
-						if(this.settings.data.async) {
-							var tmp = this.get_node(this.opened[j]);
-							if(tmp.size() && tmp.hasClass("closed") > 0) {
-								opn = true;
-								var tmp = this.opened[j].toString().replace('/','\\/');
-								delete this.opened[j];
-								this.open_branch(tmp, true, function () { _this.reselect.apply(_this, [true]); } );
-								this.cl_count ++;
-							}
-						}
-						else this.open_branch(this.opened[j], true);
-					}
-					if(this.settings.data.async && opn) return;
-					if(this.cl_count > 0) return;
-					delete this.opened;
-				} 
-				if(this.cl_count > 0) return;
-
-				// DOTS and RIGHT TO LEFT
-				this.container.css("direction","ltr").children("ul:eq(0)").addClass("ltr");
-				if(this.settings.ui.dots == false)	this.container.children("ul:eq(0)").addClass("no_dots");
-
-				// REPOSITION SCROLL
-				if(this.scrtop) {
-					this.container.scrollTop(_this.scrtop);
-					delete this.scrtop;
-				}
-				// RESELECT PREVIOUSLY SELECTED
-				if(this.settings.selected !== false) {
-					$.each(this.settings.selected, function (i) {
-						if(_this.is_partial_refresh)	_this.select_branch($(_this.settings.selected[i].toString().replace('/','\\/'), _this.container), (_this.settings.rules.multiple !== false) );
-						else							_this.select_branch($(_this.settings.selected[i].toString().replace('/','\\/'), _this.container), (_this.settings.rules.multiple !== false && i > 0) );
-					});
-					this.settings.selected = false;
-				}
-				this.callback("onload", [_this]);
-			},
-
-			get : function (obj, format, opts) {
-				if(!format) format = this.settings.data.type;
-				if(!opts) opts = this.settings.data.opts;
-				return new $.tree.datastores[format]().get(obj, this, opts);
-			},
-
-			attach_events : function () {
-				var _this = this;
-
-				this.container
-					.bind("mousedown.jstree", function (event) {
-						if(tree_component.drag_drop.isdown) {
-							tree_component.drag_drop.move_type = false;
-							event.preventDefault();
-							event.stopPropagation();
-							event.stopImmediatePropagation();
-							return false;
-						}
-					})
-					.bind("mouseup.jstree", function (event) {
-						setTimeout( function() { _this.focus.apply(_this); }, 5);
-					})
-					.bind("click.jstree", function (event) { 
-						//event.stopPropagation(); 
-						return true;
-					});
-				$("li", this.container.get(0))
-					.live("click", function(event) { // WHEN CLICK IS ON THE ARROW
-						if(event.target.tagName != "LI") return true;
-						_this.off_height();
-						if(event.pageY - $(event.target).offset().top > _this.li_height) return true;
-						_this.toggle_branch.apply(_this, [event.target]);
-						event.stopPropagation();
-						return false;
-					});
-				$("a", this.container.get(0))
-					.live("click", function (event) { // WHEN CLICK IS ON THE TEXT OR ICON
-						if(event.which && event.which == 3) return true;
-						if(_this.locked) {
-							event.preventDefault(); 
-							event.target.blur();
-							return _this.error("LOCKED");
-						}
-						_this.select_branch.apply(_this, [event.target, event.ctrlKey || _this.settings.rules.multiple == "on"]);
-						if(_this.inp) { _this.inp.blur(); }
-						event.preventDefault(); 
-						event.target.blur();
-						return false;
-					})
-					.live("dblclick", function (event) { // WHEN DOUBLECLICK ON TEXT OR ICON
-						if(_this.locked) {
-							event.preventDefault(); 
-							event.stopPropagation();
-							event.target.blur();
-							return _this.error("LOCKED");
-						}
-						_this.callback("ondblclk", [_this.get_node(event.target).get(0), _this]);
-						event.preventDefault(); 
-						event.stopPropagation();
-						event.target.blur();
-					})
-					.live("contextmenu", function (event) {
-						if(_this.locked) {
-							event.target.blur();
-							return _this.error("LOCKED");
-						}
-						return _this.callback("onrgtclk", [_this.get_node(event.target).get(0), _this, event]);
-					})
-					.live("mouseover", function (event) {
-						if(_this.locked) {
-							event.preventDefault();
-							event.stopPropagation();
-							return _this.error("LOCKED");
-						}
-						if(_this.hovered !== false && (event.target.tagName == "A" || event.target.tagName == "INS")) {
-							_this.hovered.children("a").removeClass("hover");
-							_this.hovered = false;
-						}
-						_this.callback("onhover",[_this.get_node(event.target).get(0), _this]);
-					})
-					.live("mousedown", function (event) {
-						if(_this.settings.rules.drag_button == "left" && event.which && event.which != 1)	return true;
-						if(_this.settings.rules.drag_button == "right" && event.which && event.which != 3)	return true;
-						_this.focus.apply(_this);
-						if(_this.locked) return _this.error("LOCKED");
-						// SELECT LIST ITEM NODE
-						var obj = _this.get_node(event.target);
-						// IF ITEM IS DRAGGABLE
-						if(_this.settings.rules.multiple != false && _this.selected_arr.length > 1 && obj.children("a:eq(0)").hasClass("clicked")) {
-							var counter = 0;
-							for(var i in _this.selected_arr) {
-								if(!_this.selected_arr.hasOwnProperty(i)) continue;
-								if(_this.check("draggable", _this.selected_arr[i])) {
-									_this.selected_arr[i].addClass("dragged");
-									tree_component.drag_drop.origin_tree = _this;
-									counter ++;
-								}
-							}
-							if(counter > 0) {
-								if(_this.check("draggable", obj))	tree_component.drag_drop.drag_node = obj;
-								else								tree_component.drag_drop.drag_node = _this.container.find("li.dragged:eq(0)");
-								tree_component.drag_drop.isdown		= true;
-								tree_component.drag_drop.drag_help	= $("<div id='jstree-dragged' class='tree " + ( _this.settings.ui.theme_name != "" ? " tree-" + _this.settings.ui.theme_name : "" ) + "' />").append("<ul class='" + _this.container.children("ul:eq(0)").get(0).className + "' />");
-								var tmp = tree_component.drag_drop.drag_node.clone();
-								if(_this.settings.languages.length > 0) tmp.find("a").not("." + _this.current_lang).hide();
-								tree_component.drag_drop.drag_help.children("ul:eq(0)").append(tmp);
-								tree_component.drag_drop.drag_help.find("li:eq(0)").removeClass("last").addClass("last").children("a").html("<ins>&nbsp;</ins>Multiple selection").end().children("ul").remove();
-
-								tree_component.drag_drop.dragged = _this.container.find("li.dragged");
-							}
-						}
-						else {
-							if(_this.check("draggable", obj)) {
-								tree_component.drag_drop.drag_node	= obj;
-								tree_component.drag_drop.drag_help	= $("<div id='jstree-dragged' class='tree " + ( _this.settings.ui.theme_name != "" ? " tree-" + _this.settings.ui.theme_name : "" ) + "' />").append("<ul class='" + _this.container.children("ul:eq(0)").get(0).className + "' />");
-								var tmp = obj.clone();
-								if(_this.settings.languages.length > 0) tmp.find("a").not("." + _this.current_lang).hide();
-								tree_component.drag_drop.drag_help.children("ul:eq(0)").append(tmp);
-								tree_component.drag_drop.drag_help.find("li:eq(0)").removeClass("last").addClass("last");
-								tree_component.drag_drop.isdown		= true;
-								tree_component.drag_drop.foreign	= false;
-								tree_component.drag_drop.origin_tree = _this;
-								obj.addClass("dragged");
-
-								tree_component.drag_drop.dragged = _this.container.find("li.dragged");
-							}
-						}
-						tree_component.drag_drop.init_x = event.pageX;
-						tree_component.drag_drop.init_y = event.pageY;
-						obj.blur();
-						event.preventDefault(); 
-						event.stopPropagation();
-						return false;
-					});
-			},
-			focus : function () {
-				if(this.locked) return false;
-				if(tree_component.focused != this.cntr) {
-					tree_component.focused = this.cntr;
-					this.callback("onfocus",[this]);
+					if(s) { obj.children("ul").css("display","none"); }
+					obj.removeClass("jstree-closed").addClass("jstree-open").children("a").removeClass("jstree-loading");
+					if(s) { obj.children("ul").slideDown(s, function () { this.style.display = ""; }); }
+					this.__callback({ "obj" : obj });
+					if(callback) { callback.call(); }
 				}
 			},
-
-			off_height : function () {
-				if(this.offset === false) {
-					this.container.css({ position : "relative" });
-					this.offset = this.container.offset();
-					var tmp = 0;
-					tmp = parseInt($.curCSS(this.container.get(0), "paddingTop", true),10);
-					if(tmp) this.offset.top += tmp;
-					tmp = parseInt($.curCSS(this.container.get(0), "borderTopWidth", true),10);
-					if(tmp) this.offset.top += tmp;
-					this.container.css({ position : "" });
+			close_node	: function (obj, skip_animation) {
+				obj = this._get_node(obj);
+				var s = skip_animation ? 0 : this.get_settings().core.animation;
+				if(!obj.length) { return false; }
+				if(s) { obj.children("ul").attr("style","display:block !important"); }
+				obj.removeClass("jstree-open").addClass("jstree-closed");
+				if(s) { obj.children("ul").slideUp(s, function () { this.style.display = ""; }); }
+				this.__callback({ "obj" : obj });
+			},
+			toggle_node	: function (obj) {
+				obj = this._get_node(obj);
+				if(obj.hasClass("jstree-closed")) { return this.open_node(obj); }
+				if(obj.hasClass("jstree-open")) { return this.close_node(obj); }
+			},
+			open_all	: function (obj, original_obj) {
+				obj = obj ? this._get_node(obj) : this.get_container();
+				if(original_obj) { 
+					obj = obj.find("li.jstree-closed");
 				}
-				if(!this.li_height) {
-					var tmp = this.container.find("ul li.closed, ul li.leaf").eq(0);
-					this.li_height = tmp.height();
-					if(tmp.children("ul:eq(0)").size()) this.li_height -= tmp.children("ul:eq(0)").height();
-					if(!this.li_height) this.li_height = 18;
-				}
-			},
-			scroll_check : function (x,y) { 
-				var _this = this;
-				var cnt = _this.container;
-				var off = _this.container.offset();
-
-				var st = cnt.scrollTop();
-				var sl = cnt.scrollLeft();
-				// DETECT HORIZONTAL SCROLL
-				var h_cor = (cnt.get(0).scrollWidth > cnt.width()) ? 40 : 20;
-
-				if(y - off.top < 20)						cnt.scrollTop(Math.max( (st - _this.settings.ui.scroll_spd) ,0));	// NEAR TOP
-				if(cnt.height() - (y - off.top) < h_cor)	cnt.scrollTop(st + _this.settings.ui.scroll_spd);					// NEAR BOTTOM
-				if(x - off.left < 20)						cnt.scrollLeft(Math.max( (sl - _this.settings.ui.scroll_spd),0));	// NEAR LEFT
-				if(cnt.width() - (x - off.left) < 40)		cnt.scrollLeft(sl + _this.settings.ui.scroll_spd);					// NEAR RIGHT
-
-				if(cnt.scrollLeft() != sl || cnt.scrollTop() != st) {
-					tree_component.drag_drop.move_type	= false;
-					tree_component.drag_drop.ref_node	= false;
-					tree_component.drag_drop.marker.hide();
-				}
-				tree_component.drag_drop.scroll_time = setTimeout( function() { _this.scroll_check(x,y); }, 50);
-			},
-			scroll_into_view : function (obj) {
-				obj = obj ? this.get_node(obj) : this.selected;
-				if(!obj) return false;
-				var off_t = obj.offset().top;
-				var beg_t = this.container.offset().top;
-				var end_t = beg_t + this.container.height();
-				var h_cor = (this.container.get(0).scrollWidth > this.container.width()) ? 40 : 20;
-				if(off_t + 5 < beg_t) this.container.scrollTop(this.container.scrollTop() - (beg_t - off_t + 5) );
-				if(off_t + h_cor > end_t) this.container.scrollTop(this.container.scrollTop() + (off_t + h_cor - end_t) );
-			},
-
-			get_node : function (obj) {
-				return $(obj).closest("li");
-			},
-			get_type : function (obj) {
-				obj = !obj ? this.selected : this.get_node(obj);
-				if(!obj) return;
-				var tmp = obj.attr(this.settings.rules.type_attr);
-				return tmp || "default";
-			},
-			set_type : function (str, obj) {
-				obj = !obj ? this.selected : this.get_node(obj);
-				if(!obj || !str) return;
-				obj.attr(this.settings.rules.type_attr, str);
-			},
-			get_text : function (obj, lang) {
-				obj = this.get_node(obj);
-				if(!obj || obj.size() == 0) return "";
-				if(this.settings.languages && this.settings.languages.length) {
-					lang = lang ? lang : this.current_lang;
-					obj = obj.children("a." + lang);
-				}
-				else obj = obj.children("a:visible");
-				var val = "";
-				obj.contents().each(function () {
-					if(this.nodeType == 3) { val = this.data; return false; }
-				});
-				return val;
-			},
-
-			check : function (rule, obj) {
-				if(this.locked) return false;
-				var v = false;
-				// if root node
-				if(obj === -1) { if(typeof this.settings.rules[rule] != "undefined") v = this.settings.rules[rule]; }
 				else {
-					obj = !obj ? this.selected : this.get_node(obj);
-					if(!obj) return;
-					var t = this.get_type(obj);
-					if(typeof this.settings.types[t] != "undefined" && typeof this.settings.types[t][rule] != "undefined") v = this.settings.types[t][rule];
-					else if(typeof this.settings.types["default"] != "undefined" && typeof this.settings.types["default"][rule] != "undefined") v = this.settings.types["default"][rule];
+					original_obj = obj;
+					if(obj.is(".jstree-closed")) { obj = obj.find("li.jstree-closed").andSelf(); }
+					else { obj = obj.find("li.jstree-closed"); }
 				}
-				if(typeof v == "function") v = v.call(null, obj, this);
-				v = this.callback("check", [rule, obj, v, this]);
-				return v;
+				var _this = this;
+				obj.each(function () { 
+					var __this = this; 
+					if(!_this._is_loaded(this)) { _this.open_node(this, function() { _this.open_all(__this, original_obj); }, true); }
+					else { _this.open_node(this, false, true); }
+				});
+				// so that callback is fired AFTER all nodes are open
+				if(original_obj.find('li.jstree-closed').length === 0) { this.__callback({ "obj" : original_obj }); }
 			},
-			check_move : function (nod, ref_node, how) {
-				if(this.locked) return false;
-				if($(ref_node).closest("li.dragged").size()) return false;
+			close_all	: function (obj) {
+				var _this = this;
+				obj = obj ? this._get_node(obj) : this.get_container();
+				obj.find("li.jstree-open").andSelf().each(function () { _this.close_node(this); });
+				this.__callback({ "obj" : obj });
+			},
+			clean_node	: function (obj) {
+				obj = obj && obj != -1 ? $(obj) : this.get_container();
+				obj = obj.is("li") ? obj.find("li").andSelf() : obj.find("li");
+				obj.removeClass("jstree-last")
+					.filter("li:last-child").addClass("jstree-last").end()
+					.filter(":has(ul)")
+						.not(".jstree-open").removeClass("jstree-leaf").addClass("jstree-closed");
+				obj.not(".jstree-open, .jstree-closed").addClass("jstree-leaf");
+				this.__callback({ "obj" : obj });
+			},
+			// rollback
+			get_rollback : function () { 
+				this.__callback();
+				return { i : this.get_index(), h : this.get_container().children("ul").clone(true), d : this.data }; 
+			},
+			set_rollback : function (html, data) {
+				this.get_container().empty().append(html);
+				this.data = data;
+				this.__callback();
+			},
+			// Dummy functions to be overwritten by any datastore plugin included
+			load_node	: function (obj, s_call, e_call) { this.__callback({ "obj" : obj }); },
+			_is_loaded	: function (obj) { return true; },
 
-				var tree1 = nod.parents(".tree:eq(0)").get(0);
-				var tree2 = ref_node.parents(".tree:eq(0)").get(0);
-				// if different trees
-				if(tree1 && tree1 != tree2) {
-					var m = $.tree.reference(tree2.id).settings.rules.multitree;
-					if(m == "none" || ($.isArray(m) && $.inArray(tree1.id, m) == -1)) return false;
+			// Basic operations: create
+			create_node	: function (obj, position, js, callback, is_loaded) {
+				obj = this._get_node(obj);
+				position = typeof position === "undefined" ? "last" : position;
+				var d = $("<li>"),
+					s = this.get_settings().core.html_titles,
+					tmp;
+
+				if(obj !== -1 && !obj.length) { return false; }
+				if(!is_loaded && !this._is_loaded(obj)) { this.load_node(obj, function () { this.create_node(obj, position, js, callback, true); }); return false; }
+
+				this.__rollback();
+
+				if(typeof js === "string") { js = { "data" : js }; }
+				if(!js) { js = {}; }
+				if(js.attr) { d.attr(js.attr); }
+				if(js.state) { d.addClass("jstree-" + js.state); }
+				if(!js.data) { js.data = "New node"; }
+				if(!$.isArray(js.data)) { tmp = js.data; js.data = []; js.data.push(tmp); }
+				$.each(js.data, function (i, m) {
+					tmp = $("<a>");
+					if($.isFunction(m)) { m = m.call(this, js); }
+					if(typeof m == "string") { tmp.attr('href','#')[ s ? "html" : "text" ](m); }
+					else {
+						if(!m.attr) { m.attr = {}; }
+						if(!m.attr.href) { m.attr.href = '#'; }
+						tmp.attr(m.attr)[ s ? "html" : "text" ](m.title);
+						if(m.language) { tmp.addClass(m.language); }
+					}
+					tmp.prepend("<ins class='jstree-icon'>&#160;</ins>");
+					if(m.icon) { 
+						if(m.icon.indexOf("/") === -1) { tmp.children("ins").addClass(m.icon); }
+						else { tmp.children("ins").css("background","url('" + m.icon + "') center center no-repeat;"); }
+					}
+					d.append(tmp);
+				});
+				d.prepend("<ins class='jstree-icon'>&#160;</ins>");
+				if(obj === -1) {
+					obj = this.get_container();
+					if(position === "before") { position = "first"; }
+					if(position === "after") { position = "last"; }
 				}
+				switch(position) {
+					case "before": obj.before(d); tmp = this._get_parent(obj); break;
+					case "after" : obj.after(d);  tmp = this._get_parent(obj); break;
+					case "inside":
+					case "first" :
+						if(!obj.children("ul").length) { obj.append("<ul>"); }
+						obj.children("ul").prepend(d);
+						tmp = obj;
+						break;
+					case "last":
+						if(!obj.children("ul").length) { obj.append("<ul>"); }
+						obj.children("ul").append(d);
+						tmp = obj;
+						break;
+					default:
+						if(!obj.children("ul").length) { obj.append("<ul>"); }
+						if(!position) { position = 0; }
+						tmp = obj.children("ul").children("li").eq(position);
+						if(tmp.length) { tmp.before(d); }
+						else { obj.children("ul").append(d); }
+						tmp = obj;
+						break;
+				}
+				if(tmp === -1 || tmp.get(0) === this.get_container().get(0)) { tmp = -1; }
+				this.clean_node(tmp);
+				this.__callback({ "obj" : d, "parent" : tmp });
+				if(callback) { callback.call(this, d); }
+				return d;
+			},
+			// Basic operations: rename (deal with text)
+			get_text	: function (obj) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				var s = this.get_settings().core.html_titles;
+				obj = obj.children("a:eq(0)");
+				if(s) {
+					obj = obj.clone();
+					obj.children("INS").remove();
+					return obj.html();
+				}
+				else {
+					obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
+					return obj.nodeValue;
+				}
+			},
+			set_text	: function (obj, val) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				obj = obj.children("a:eq(0)");
+				if(this.get_settings().core.html_titles) {
+					var tmp = obj.children("INS").clone();
+					obj.html(val).prepend(tmp);
+					this.__callback({ "obj" : obj, "name" : val });
+					return true;
+				}
+				else {
+					obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
+					this.__callback({ "obj" : obj, "name" : val });
+					return (obj.nodeValue = val);
+				}
+			},
+			rename_node : function (obj, val) {
+				obj = this._get_node(obj);
+				this.__rollback();
+				if(obj && obj.length && this.set_text.apply(this, Array.prototype.slice.call(arguments))) { this.__callback({ "obj" : obj, "name" : val }); }
+			},
+			// Basic operations: deleting nodes
+			delete_node : function (obj) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				this.__rollback();
+				var p = this._get_parent(obj);
+				this.deselect_node(obj);
+				obj = obj.remove();
+				if(p !== -1 && p.find("> ul > li").length === 0) {
+					p.removeClass("jstree-open, jstree-closed").addClass("jstree-leaf");
+				}
+				this.clean_node(p);
+				this.__callback({ "obj" : obj });
+				return obj;
+			},
+			prepare_move : function (o, r, pos, cb, is_cb) {
+				var p = {};
 
-				var p = (how != "inside") ? this.parent(ref_node) : this.get_node(ref_node);
-				nod = this.get_node(nod);
-				if(p == false) return false;
-				var r = {
-					max_depth : this.settings.rules.use_max_depth ? this.check("max_depth", p) : -1,
-					max_children : this.settings.rules.use_max_children ? this.check("max_children", p) : -1,
-					valid_children : this.check("valid_children", p)
-				};
-				var nod_type = (typeof nod == "string") ? nod : this.get_type(nod);
-				if(typeof r.valid_children != "undefined" && (r.valid_children == "none" || (typeof r.valid_children == "object" && $.inArray(nod_type, $.makeArray(r.valid_children)) == -1))) return false;
-				
-				if(this.settings.rules.use_max_children) {
-					if(typeof r.max_children != "undefined" && r.max_children != -1) {
-						if(r.max_children == 0) return false;
-						var c_count = 1;
-						if(tree_component.drag_drop.moving == true && tree_component.drag_drop.foreign == false) {
-							c_count = tree_component.drag_drop.dragged.size();
-							c_count = c_count - p.find('> ul > li.dragged').size();
-						}
-						if(r.max_children < p.find('> ul > li').size() + c_count) return false;
+				p.ot = $.jstree._reference(p.o) || this;
+				p.o = p.ot._get_node(o);
+				p.r = r === - 1 ? -1 : this._get_node(r);
+				p.p = (typeof p === "undefined") ? "last" : pos; // TODO: move to a setting
+				if(!is_cb && prepared_move.o && prepared_move.o[0] === p.o[0] && prepared_move.r[0] === p.r[0] && prepared_move.p === p.p) {
+					this.__callback(prepared_move);
+					if(cb) { cb.call(this, prepared_move); }
+					return;
+				}
+				p.ot = $.jstree._reference(p.o) || this;
+				p.rt = r === -1 ? p.ot : $.jstree._reference(p.r) || this;
+				if(p.r === -1) {
+					p.cr = -1;
+					switch(p.p) {
+						case "first":
+						case "before":
+						case "inside":
+							p.cp = 0; 
+							break;
+						case "after":
+						case "last":
+							p.cp = p.rt.get_container().find(" > ul > li").length; 
+							break;
+						default:
+							p.cp = p.p;
+							break;
 					}
 				}
-
-				if(this.settings.rules.use_max_depth) {
-					if(typeof r.max_depth != "undefined" && r.max_depth === 0) return this.error("MOVE: MAX-DEPTH REACHED");
-					// check for max_depth up the chain
-					var mx = (r.max_depth > 0) ? r.max_depth : false;
-					var i = 0;
-					var t = p;
-					while(t !== -1) {
-						t = this.parent(t);
-						i ++;
-						var m = this.check("max_depth",t);
-						if(m >= 0) {
-							mx = (mx === false) ? (m - i) : Math.min(mx, m - i);
-						}
-						if(mx !== false && mx <= 0) return this.error("MOVE: MAX-DEPTH REACHED");
+				else {
+					if(!/^(before|after)$/.test(p.p) && !this._is_loaded(p.r)) {
+						return this.load_node(p.r, function () { this.prepare_move(o, r, p, cb, true); });
 					}
-					if(mx !== false && mx <= 0) return this.error("MOVE: MAX-DEPTH REACHED");
-					if(mx !== false) { 
-						var incr = 1;
-						if(typeof nod != "string") {
-							var t = nod;
-							// possible async problem - when nodes are not all loaded down the chain
-							while(t.size() > 0) {
-								if(mx - incr < 0) return this.error("MOVE: MAX-DEPTH REACHED");
-								t = t.children("ul").children("li");
-								incr ++;
-							}
-						}
+					switch(p.p) {
+						case "before":
+							p.cp = p.r.index();
+							p.cr = p.rt._get_parent(p.r);
+							break;
+						case "after":
+							p.cp = p.r.index() + 1;
+							p.cr = p.rt._get_parent(p.r);
+							break;
+						case "inside":
+						case "first":
+							p.cp = 0;
+							p.cr = p.r;
+							break;
+						case "last":
+							p.cp = p.r.find(" > ul > li").length; 
+							p.cr = p.r;
+							break;
+						default: 
+							p.cp = p.p;
+							p.cr = p.r;
+							break;
 					}
 				}
-				if(this.callback("check_move", [nod, ref_node, how, this]) == false) return false;
+				p.np = p.cr == -1 ? p.rt.get_container() : p.cr;
+				p.op = p.ot._get_parent(p.o);
+				p.or = p.np.find(" > ul > li:nth-child(" + (p.cp + 1) + ")");
+
+				prepared_move = p;
+				this.__callback(prepared_move);
+				if(cb) { cb.call(this, prepared_move); }
+			},
+			check_move : function () {
+				var obj = prepared_move;
+				if(obj.or[0] === obj.o[0] || obj.r.parentsUntil(".jstree").andSelf().filter("li").index(obj.o) !== -1) { return false; }
 				return true;
 			},
-
-			hover_branch : function (obj) {
-				if(this.locked) return this.error("LOCKED");
-				var _this = this;
-				var obj = _this.get_node(obj);
-				if(!obj.size()) return this.error("HOVER: NOT A VALID NODE");
-				if(!_this.check("clickable", obj)) return this.error("SELECT: NODE NOT SELECTABLE");
-				if(this.hovered) this.hovered.children("A").removeClass("hover");
-				this.hovered = obj;
-				this.hovered.children("a").addClass("hover");
-				this.scroll_into_view(this.hovered);
-			},
-			select_branch : function (obj, multiple) {
-				if(this.locked) return this.error("LOCKED");
-				if(!obj && this.hovered !== false) obj = this.hovered;
-				var _this = this;
-				obj = _this.get_node(obj);
-				if(!obj.size()) return this.error("SELECT: NOT A VALID NODE");
-				obj.children("a").removeClass("hover");
-				// CHECK AGAINST RULES FOR SELECTABLE NODES
-				if(!_this.check("clickable", obj)) return this.error("SELECT: NODE NOT SELECTABLE");
-				if(_this.callback("beforechange",[obj.get(0),_this]) === false) return this.error("SELECT: STOPPED BY USER");
-				// IF multiple AND obj IS ALREADY SELECTED - DESELECT IT
-				if(this.settings.rules.multiple != false && multiple && obj.children("a.clicked").size() > 0) {
-					return this.deselect_branch(obj);
-				}
-				if(this.settings.rules.multiple != false && multiple) {
-					this.selected_arr.push(obj);
-				}
-				if(this.settings.rules.multiple != false && !multiple) {
-					for(var i in this.selected_arr) {
-						if(!this.selected_arr.hasOwnProperty(i)) continue;
-						this.selected_arr[i].children("A").removeClass("clicked");
-						this.callback("ondeselect", [this.selected_arr[i].get(0), _this]);
-					}
-					this.selected_arr = [];
-					this.selected_arr.push(obj);
-					if(this.selected && this.selected.children("A").hasClass("clicked")) {
-						this.selected.children("A").removeClass("clicked");
-						this.callback("ondeselect", [this.selected.get(0), _this]);
-					}
-				}
-				if(!this.settings.rules.multiple) {
-					if(this.selected) {
-						this.selected.children("A").removeClass("clicked");
-						this.callback("ondeselect", [this.selected.get(0), _this]);
-					}
-				}
-				// SAVE NEWLY SELECTED
-				this.selected = obj;
-				if(this.hovered !== false) {
-					this.hovered.children("A").removeClass("hover");
-					this.hovered = obj;
-				}
-
-				// FOCUS NEW NODE AND OPEN ALL PARENT NODES IF CLOSED
-				this.selected.children("a").addClass("clicked").end().parents("li.closed").each( function () { _this.open_branch(this, true); });
-
-				// SCROLL SELECTED NODE INTO VIEW
-				this.scroll_into_view(this.selected);
-
-				this.callback("onselect", [this.selected.get(0), _this]);
-				this.callback("onchange", [this.selected.get(0), _this]);
-			},
-			deselect_branch : function (obj) {
-				if(this.locked) return this.error("LOCKED");
-				var _this = this;
-				var obj = this.get_node(obj);
-				if(obj.children("a.clicked").size() == 0) return this.error("DESELECT: NODE NOT SELECTED");
-
-				obj.children("a").removeClass("clicked");
-				this.callback("ondeselect", [obj.get(0), _this]);
-				if(this.settings.rules.multiple != false && this.selected_arr.length > 1) {
-					this.selected_arr = [];
-					this.container.find("a.clicked").filter(":first-child").parent().each(function () {
-						_this.selected_arr.push($(this));
+			move_node : function (obj, ref, position, is_copy, is_prepared, skip_check) {
+				if(!is_prepared) { 
+					return this.prepare_move(obj, ref, position, function (p) {
+						this.move_node(p, false, false, is_copy, true, skip_check);
 					});
-					if(obj.get(0) == this.selected.get(0)) {
-						this.selected = this.selected_arr[0];
+				}
+				if(!skip_check && !this.check_move()) { return false; }
+
+				this.__rollback();
+				var o = false;
+				if(is_copy) {
+					o = obj.o.clone();
+					o.find("*[id]").andSelf().each(function () {
+						if(this.id) { this.id = "copy_" + this.id; }
+					});
+				}
+				else { o = obj.o; }
+
+				if(obj.or.length) { obj.or.before(o); }
+				else { 
+					if(!obj.np.children("ul").length) { $("<ul>").appendTo(obj.np); }
+					obj.np.children("ul:eq(0)").append(o); 
+				}
+
+				try { 
+					obj.ot.clean_node(obj.op);
+					obj.rt.clean_node(obj.np);
+					if(!obj.op.find("> ul > li").length) {
+						obj.op.removeClass("jstree-open jstree-closed").addClass("jstree-leaf").children("ul").remove();
 					}
+				} catch (e) { }
+
+				if(is_copy) { 
+					prepared_move.cy = true;
+					prepared_move.oc = o; 
 				}
-				else {
-					if(this.settings.rules.multiple != false) this.selected_arr = [];
-					this.selected = false;
-				}
-				this.callback("onchange", [obj.get(0), _this]);
+				this.__callback(prepared_move);
+				return prepared_move;
 			},
-			toggle_branch : function (obj) {
-				if(this.locked) return this.error("LOCKED");
-				var obj = this.get_node(obj);
-				if(obj.hasClass("closed"))	return this.open_branch(obj);
-				if(obj.hasClass("open"))	return this.close_branch(obj); 
-			},
-			open_branch : function (obj, disable_animation, callback) {
-				var _this = this;
+			_get_move : function () { return prepared_move; }
+		}
+	});
+})(jQuery);
+//*/
 
-				if(this.locked) return this.error("LOCKED");
-				var obj = this.get_node(obj);
-				if(!obj.size()) return this.error("OPEN: NO SUCH NODE");
-				if(obj.hasClass("leaf")) return this.error("OPEN: OPENING LEAF NODE");
-				if(this.settings.data.async && obj.find("li").size() == 0) {
-					
-					if(this.callback("beforeopen",[obj.get(0),this]) === false) return this.error("OPEN: STOPPED BY USER");
+/* 
+ * jsTree ui plugin 1.0
+ * This plugins handles selecting/deselecting/hovering/dehovering nodes
+ */
+(function ($) {
+	$.jstree.plugin("ui", {
+		__init : function () { 
+			this.data.ui.selected = $(); 
+			this.data.ui.last_selected = false; 
+			this.data.ui.hovered = null;
+			this.data.ui.to_select = this.get_settings().ui.initially_select;
 
-					obj.children("ul:eq(0)").remove().end().append("<ul><li class='last'><a class='loading' href='#'><ins>&nbsp;</ins>" + (_this.settings.lang.loading || "Loading ...") + "</a></li></ul>");
-					obj.removeClass("closed").addClass("open");
-
-					var _datastore = new $.tree.datastores[this.settings.data.type]();
-					_datastore.load(this.callback("beforedata",[obj,this]),this,this.settings.data.opts,function(data){
-						data = _this.callback("ondata", [data, _this]);
-						if(!data || data.length == 0) {
-							obj.removeClass("closed").removeClass("open").addClass("leaf").children("ul").remove();
-							if(callback) callback.call();
-							return;
+			this.get_container()
+				.delegate("a", "click.jstree", $.proxy(function (event) {
+						event.preventDefault();
+						this.select_node(event.currentTarget, true, event);
+					}, this))
+				.delegate("a", "mouseenter.jstree", $.proxy(function (event) {
+						this.hover_node(event.target);
+					}, this))
+				.delegate("a", "mouseleave.jstree", $.proxy(function (event) {
+						this.dehover_node(event.target);
+					}, this))
+				.bind("reopen.jstree", $.proxy(function () { 
+						this.reselect();
+					}, this))
+				.bind("get_rollback.jstree", $.proxy(function () { 
+						this.dehover_node();
+						this.save_selected();
+					}, this))
+				.bind("set_rollback.jstree", $.proxy(function () { 
+						this.reselect();
+					}, this))
+				.bind("close_node.jstree", $.proxy(function (event, data) { 
+						var s = this.get_settings().ui,
+							obj = this._get_node(data.args[0]),
+							clk = (obj && obj.length) ? obj.find(".jstree-clicked") : [],
+							_this = this;
+						if(s.selected_parent_close === false || !clk.length) { return; }
+						clk.each(function () { 
+							_this.deselect_node(this);
+							if(s.selected_parent_close === "select_parent") { _this.select_node(obj); }
+						});
+					}, this))
+				.bind("delete_node.jstree", $.proxy(function (event, data) { 
+						var obj = this._get_node(data.rslt.obj),
+							clk = (obj && obj.length) ? obj.find(".jstree-clicked") : [],
+							_this = this;
+						clk.each(function () { _this.deselect_node(this); });
+					}, this))
+				.bind("move_node.jstree", $.proxy(function (event, data) { 
+						if(data.rslt.cy) { 
+							data.rslt.oc.find(".jstree-clicked").removeClass("jstree-clicked");
 						}
-						_datastore.parse(data,_this,_this.settings.data.opts,function(str){
-							str = _this.callback("onparse", [str, _this]);
-							// if(obj.children('ul:eq(0)').children('li').size() > 1) obj.children("ul").find('.loaading').parent().replaceWith(str); else 
-							obj.children("ul:eq(0)").replaceWith($("<ul>").html(str));
-							obj.find("li:last-child").addClass("last").end().find("li:has(ul)").not(".open").addClass("closed");
-							obj.find("li").not(".open").not(".closed").addClass("leaf");
-							_this.open_branch.apply(_this, [obj]);
-							if(callback) callback.call();
+					}, this));
+		},
+		defaults : {
+			select_limit : -1, // 0, 1, 2 ... or -1 for unlimited
+			select_multiple_modifier : "ctrl", // on, or ctrl, shift, alt
+			selected_parent_close : "select_parent", // false, "deselect", "select_parent"
+			initially_select : []
+		},
+		_fn : { 
+			_get_node : function (obj, allow_multiple) {
+				if(typeof obj === "undefined" || obj === null) { return allow_multiple ? this.data.ui.selected : this.data.ui.last_selected; }
+				return this.__call_old();
+			},
+			save_selected : function () {
+				var _this = this;
+				this.data.ui.to_select = [];
+				this.data.ui.selected.each(function () { _this.data.ui.to_select.push("#" + this.id.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/')); });
+				this.__callback(this.data.ui.to_select);
+			},
+			reselect : function () {
+				var _this = this,
+					s = this.data.ui.to_select;
+				s = $.map($.makeArray(s), function (n) { return "#" + n.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/'); });
+				this.deselect_all();
+				$.each(s, function (i, val) { if(val && val !== "#") { _this.select_node(val); } });
+				this.__callback();
+			},
+			refresh : function (obj) {
+				this.save_selected();
+				return this.__call_old();
+			},
+			hover_node : function (obj) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				//if(this.data.ui.hovered && obj.get(0) === this.data.ui.hovered.get(0)) { return; }
+				if(!obj.hasClass("jstree-hovered")) { this.dehover_node(); }
+				this.data.ui.hovered = obj.children("a").addClass("jstree-hovered").parent();
+				this.__callback({ "obj" : obj });
+			},
+			dehover_node : function () {
+				var obj = this.data.ui.hovered, p;
+				if(!obj || !obj.length) { return false; }
+				p = obj.children("a").removeClass("jstree-hovered").parent();
+				if(this.data.ui.hovered[0] === p[0]) { this.data.ui.hovered = null; }
+				this.__callback({ "obj" : obj });
+			},
+			select_node : function (obj, check, e) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				var s = this.get_settings().ui,
+					is_multiple = (s.select_multiple_modifier == "on" || (s.select_multiple_modifier !== false && e && e[s.select_multiple_modifier + "Key"])),
+					is_selected = this.is_selected(obj),
+					proceed = true;
+				if(check) {
+					proceed = false;
+					switch(!0) {
+						case (is_selected && !is_multiple): break;
+						case (!is_selected && !is_multiple): 
+							if(s.select_limit == -1 || s.select_limit > 0) {
+								this.deselect_all();
+								proceed = true;
+							}
+							break;
+						case (is_selected && is_multiple): 
+							this.deselect_node(obj);
+							break;
+						case (!is_selected && is_multiple): 
+							if(s.select_limit == -1 || this.data.ui.selected.length + 1 <= s.select_limit) { 
+								proceed = true;
+							}
+							break;
+					}
+				}
+				if(proceed && !is_selected) {
+					obj.children("a").addClass("jstree-clicked");
+					this.data.ui.selected = this.data.ui.selected.add(obj);
+					this.data.ui.last_selected = obj;
+					this.__callback({ "obj" : obj });
+				}
+			},
+			deselect_node : function (obj) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				if(this.is_selected(obj)) {
+					obj.children("a").removeClass("jstree-clicked");
+					this.data.ui.selected = this.data.ui.selected.not(obj);
+					if(this.data.ui.last_selected.get(0) === obj.get(0)) { this.data.ui.last_selected = this.data.ui.selected.eq(0); }
+					this.__callback({ "obj" : obj });
+				}
+			},
+			toggle_select : function (obj) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return false; }
+				if(this.is_selected(obj)) { this.deselect_node(obj); }
+				else { this.select_node(obj); }
+			},
+			is_selected : function (obj) { return this.data.ui.selected.index(this._get_node(obj)) >= 0; },
+			get_selected : function (context) { 
+				return context ? $(context).find(".jstree-clicked").parent() : this.data.ui.selected; 
+			},
+			deselect_all : function (context) {
+				if(context) { $(context).find(".jstree-clicked").removeClass("jstree-clicked"); } 
+				else { this.get_container().find(".jstree-clicked").removeClass("jstree-clicked"); }
+				this.data.ui.selected = $([]);
+				this.data.ui.last_selected = false;
+				this.__callback();
+			}
+		}
+	});
+	// include the selection plugin by default
+	$.jstree.defaults.plugins.push("ui");
+})(jQuery);
+//*/
+
+/* 
+ * jsTree CRRM plugin 1.0
+ * Handles creating/renaming/removing/moving nodes by user interaction.
+ */
+(function ($) {
+	$.jstree.plugin("crrm", { 
+		__init : function () {
+			this.get_container()
+				.bind("move_node.jstree", $.proxy(function (e, data) {
+					if(this.get_settings().crrm.move.open_onmove) {
+						var t = this;
+						data.rslt.np.parentsUntil(".jstree").andSelf().filter(".jstree-closed").each(function () {
+							t.open_node(this, false, true);
 						});
-					});
-					return true;
+					}
+				}, this));
+		},
+		defaults : {
+			input_width_limit : 200,
+			move : {
+				always_copy			: false, // false, true or "multitree"
+				open_onmove			: true,
+				default_position	: "last",
+				check_move			: function (m) { return true; }
+			}
+		},
+		_fn : {
+			_show_input : function (obj, callback) {
+				obj = this._get_node(obj);
+				var w = this.get_settings().crrm.input_width_limit,
+					w1 = obj.children("ins").width(),
+					w2 = obj.find("> a:visible > ins").width() * obj.find("> a:visible > ins").length,
+					t = this.get_text(obj),
+					h1 = $("<div>", { css : { "position" : "absolute", "top" : "-200px", "left" : "-1000px", "visibility" : "hidden" } }).appendTo("body"),
+					h2 = obj.css("position","relative").append(
+					$("<input>", { 
+						"value" : t,
+						// "size" : t.length,
+						"css" : {
+							"padding" : "0",
+							"border" : "1px solid silver",
+							"position" : "absolute",
+							"left" : (w1 + w2 + 4) + "px",
+							"top" : "0px",
+							"height" : (this.data.core.li_height - 2) + "px",
+							"lineHeight" : (this.data.core.li_height - 2) + "px",
+							"width" : "150px" // will be set a bit further down
+						},
+						"blur" : $.proxy(function () {
+							var i = obj.children("input"),
+								v = i.val();
+							if(v === "") { v = t; }
+							this.rename_node(obj, v);
+							callback.call(this, obj, v, t);
+							i.remove();
+							obj.css("position","");
+						}, this),
+						"keyup" : function (event) {
+							var key = event.keyCode || event.which;
+							if(key == 27) { this.value = t; this.blur(); return; }
+							else if(key == 13) { this.blur(); return; }
+							else {
+								h2.width(Math.min(h1.text("pW" + this.value).width(),w));
+							}
+						}
+					})
+				).children("input"); 
+				this.set_text(obj, "");
+				h1.css({
+						fontFamily		: h2.css('fontFamily')		|| '',
+						fontSize		: h2.css('fontSize')		|| '',
+						fontWeight		: h2.css('fontWeight')		|| '',
+						fontStyle		: h2.css('fontStyle')		|| '',
+						fontStretch		: h2.css('fontStretch')		|| '',
+						fontVariant		: h2.css('fontVariant')		|| '',
+						letterSpacing	: h2.css('letterSpacing')	|| '',
+						wordSpacing		: h2.css('wordSpacing')		|| ''
+				});
+				h2.width(Math.min(h1.text("pW" + h2[0].value).width(),w))[0].select();
+			},
+			rename : function (obj) {
+				obj = this._get_node(obj);
+				this.__rollback();
+				var f = this.__callback;
+				this._show_input(obj, function (obj, new_name, old_name) { 
+					f.call(this, { "obj" : obj, "new_name" : new_name, "old_name" : old_name });
+				});
+			},
+			create : function (obj, position, js, callback, skip_rename) {
+				var t, _this = this;
+				obj = this._get_node(obj);
+				if(!obj) { obj = -1; }
+				this.__rollback();
+				t = this.create_node(obj, position, js, function (t) {
+					var p = this._get_parent(t),
+						pos = $(t).index();
+					if(callback) { callback.call(this, t); }
+					if(p.length && p.hasClass("jstree-closed")) { this.open_node(p, false, true); }
+					if(!skip_rename) { 
+						this._show_input(t, function (obj, new_name, old_name) { 
+							_this.__callback({ "obj" : obj, "name" : new_name, "parent" : p, "position" : pos });
+						});
+					}
+					else { _this.__callback({ "obj" : t, "name" : this.get_text(t), "parent" : p, "position" : pos }); }
+				});
+				return t;
+			},
+			remove : function (obj) {
+				obj = this._get_node(obj, true);
+				this.__rollback();
+				this.delete_node(obj);
+				this.__callback({ "obj" : obj });
+			},
+			check_move : function () {
+				if(!this.__call_old()) { return false; }
+				var s = this.get_settings().crrm.move;
+				if(!s.check_move.call(this, this._get_move())) { return false; }
+				return true;
+			},
+			move_node : function (obj, ref, position, is_copy, is_prepared, skip_check) {
+				var s = this.get_settings().crrm.move;
+				if(!is_prepared) { 
+					if(!position) { position = s.default_position; }
+					return this.__call_old(true, obj, ref, position, is_copy, false, skip_check);
+				}
+				// if the move is already prepared
+				if(s.always_copy === true || (s.always_copy === "multitree" && obj.rt.get_index() === obj.ot.get_index() )) {
+					is_copy = true;
+				}
+				this.__call_old(true, obj, ref, position, is_copy, true, skip_check);
+			},
+
+			cut : function (obj) {
+				obj = this._get_node(obj);
+				this.data.crrm.cp_nodes = false;
+				this.data.crrm.ct_nodes = false;
+				if(!obj || !obj.length) { return false; }
+				this.data.crrm.ct_nodes = obj;
+			},
+			copy : function (obj) {
+				obj = this._get_node(obj);
+				this.data.crrm.cp_nodes = false;
+				this.data.crrm.ct_nodes = false;
+				if(!obj || !obj.length) { return false; }
+				this.data.crrm.cp_nodes = obj;
+			},
+			paste : function (obj) { 
+				obj = this._get_node(obj);
+				if(!obj || !obj.length) { return false; }
+				if(!this.data.crrm.ct_nodes && !this.data.crrm.cp_nodes) { return false; }
+				if(this.data.crrm.ct_nodes) { this.move_node(this.data.crrm.ct_nodes, obj); }
+				if(this.data.crrm.cp_nodes) { this.move_node(this.data.crrm.cp_nodes, obj, false, true); }
+			}
+		}
+	});
+	// include the crr plugin by default
+	$.jstree.defaults.plugins.push("crrm");
+})(jQuery);
+
+/* 
+ * jsTree themes plugin 1.0
+ * Handles loading and setting themes, as well as detecting path to themes, etc.
+ */
+(function ($) {
+	var themes_loaded = [];
+	// this variable stores the path to the themes folder - if left as false - it will be autodetected
+	$.jstree._themes = false;
+	$.jstree.plugin("themes", {
+		__init : function () { 
+			this.get_container()
+				.bind("init.jstree", $.proxy(function () {
+						var s = this.get_settings().themes;
+						this.data.themes.dots = s.dots; 
+						this.data.themes.icons = s.icons; 
+						//alert(s.dots);
+						this.set_theme(s.theme, s.url);
+					}, this))
+				.bind("loaded.jstree", $.proxy(function () {
+						// bound here too, as simple HTML tree's won't honor dots & icons otherwise
+						if(!this.data.themes.dots) { this.hide_dots(); }
+						else { this.show_dots(); }
+						if(!this.data.themes.icons) { this.hide_icons(); }
+						else { this.show_icons(); }
+					}, this));
+		},
+		defaults : { 
+			theme : "default", 
+			url : false,
+			dots : true,
+			icons : true
+		},
+		_fn : {
+			set_theme : function (theme_name, theme_url) {
+				if(!theme_name) { return false; }
+				if(!theme_url) { theme_url = $.jstree._themes + theme_name + '/style.css'; }
+				if($.inArray(theme_url, themes_loaded) == -1) {
+					$.vakata.css.add_sheet({ "url" : theme_url, "rel" : "jstree" });
+					themes_loaded.push(theme_url);
+				}
+				if(this.data.theme != theme_name) {
+					this.get_container().removeClass('jstree-' + this.data.theme);
+					this.data.themes.theme = theme_name;
+				}
+				this.get_container().addClass('jstree-' + theme_name);
+				if(!this.data.themes.dots) { this.hide_dots(); }
+				else { this.show_dots(); }
+				if(!this.data.themes.icons) { this.hide_icons(); }
+				else { this.show_icons(); }
+				this.__callback();
+			},
+			get_theme	: function () { return this.data.themes.theme; },
+
+			show_dots	: function () { this.data.themes.dots = true; this.get_container().children("ul").removeClass("jstree-no-dots"); },
+			hide_dots	: function () { this.data.themes.dots = false; this.get_container().children("ul").addClass("jstree-no-dots"); },
+			toggle_dots	: function () { if(this.data.themes.dots) { this.hide_dots(); } else { this.show_dots(); } },
+
+			show_icons	: function () { this.data.themes.icons = true; this.get_container().children("ul").removeClass("jstree-no-icons"); },
+			hide_icons	: function () { this.data.themes.icons = false; this.get_container().children("ul").addClass("jstree-no-icons"); },
+			toggle_icons: function () { if(this.data.themes.icons) { this.hide_icons(); } else { this.show_icons(); } }
+		}
+	});
+	// autodetect themes path
+	$(function () {
+		if($.jstree._themes === false) {
+			$("script").each(function () { 
+				if(this.src.toString().match(/jquery\.jstree[^\/]*?\.js(\?.*)?$/)) { 
+					$.jstree._themes = this.src.toString().replace(/jquery\.jstree[^\/]*?\.js(\?.*)?$/, "") + 'themes/'; 
+					return false; 
+				}
+			});
+		}
+		if($.jstree._themes === false) { $.jstree._themes = "themes/"; }
+	});
+	// include the themes plugin by default
+	$.jstree.defaults.plugins.push("themes");
+})(jQuery);
+//*/
+
+/* 
+ * jsTree HTML data 1.0
+ * The HTML data store. Datastores are build by replacing the `load_node` and `_is_loaded` functions.
+ */
+(function ($) {
+	$.jstree.plugin("html_data", {
+		__init : function () { 
+			this.data.html_data.original_container_html = this.get_container().html().replace(/<\/([^>]+)>\s+</ig,"</$1><").replace(/>\s+<([a-z]{1})/ig,"><$1");
+		},
+		defaults : { 
+			data : false,
+			ajax : false,
+			correct_state : false
+		},
+		_fn : {
+			load_node : function (obj, s_call, e_call) { var _this = this; this.load_node_html(obj, function () { _this.__callback({ "obj" : obj }); s_call.call(this); }, e_call); },
+			_is_loaded : function (obj) { 
+				obj = this._get_node(obj); 
+				return obj == -1 || !obj || !this.get_settings().html_data.ajax || obj.is(".jstree-open, .jstree-leaf") || obj.children("ul").children("li").size() > 0;
+			},
+			load_node_html : function (obj, s_call, e_call) {
+				var d,
+					s = this.get_settings().html_data,
+					error_func = function () {},
+					success_func = function () {};
+				switch(!0) {
+					case (!s.data && !s.ajax):
+						if(!obj || obj == -1) {
+							this.get_container()
+								.html(this.data.html_data.original_container_html)
+								.find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='jstree-icon'>&#160;</ins>");
+							this.clean_node();
+						}
+						if(s_call) { s_call.call(this); }
+						break;
+					case (!!s.data && !s.ajax) || (!!s.data && !!s.ajax && (!obj || obj === -1)):
+						if(!obj || obj == -1) {
+							d = $(s.data);
+							if(!d.is("ul")) { d = $("<ul>").append(d); }
+							this.get_container()
+								.children("ul").empty().append(d.children())
+								.find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='jstree-icon'>&#160;</ins>");
+							this.clean_node();
+						}
+						if(s_call) { s_call.call(this); }
+						break;
+					case (!s.data && !!s.ajax) || (!!s.data && !!s.ajax && obj && obj !== -1):
+						obj = this._get_node(obj);
+						error_func = function (x, t, e) {
+							var ef = this.get_settings().html_data.ajax.error; 
+							if(ef) { ef.call(this, x, t, e); }
+							if(obj != -1 && obj.length) {
+								obj.children(".jstree-loading").removeClass("jstree-loading");
+								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
+							}
+							if(e_call) { e_call.call(this); }
+						};
+						success_func = function (d, t, x) {
+							if(x.responseText == "") {
+								return error_func.call(this, x, t, "");
+							}
+							var sf = this.get_settings().html_data.ajax.success; 
+							if(sf) { d = sf.call(this,d,t,x) || d; }
+							if(d) {
+								d = $(d);
+								if(!d.is("ul")) { d = $("<ul>").append(d); }
+								if(obj == -1 || !obj) { this.get_container().children("ul").empty().append(d.children()).find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='jstree-icon'>&#160;</ins>"); }
+								else { obj.children(".jstree-loading").removeClass("jstree-loading"); obj.append(d).find("li, a").filter(function () { return this.firstChild.tagName !== "INS"; }).prepend("<ins class='jstree-icon'>&#160;</ins>"); }
+								this.clean_node(obj);
+								if(s_call) { s_call.call(this); }
+							}
+							else {
+								obj.children(".jstree-loading").removeClass("jstree-loading");
+								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
+							}
+						};
+						s.ajax.context = this;
+						s.ajax.error = error_func;
+						s.ajax.success = success_func;
+						if($.isFunction(s.ajax.data)) { s.ajax.data = s.ajax.data.call(this, obj); }
+						$.ajax(s.ajax);
+						break;
+				}
+			}
+		}
+	});
+	// include the HTML data plugin by default
+	$.jstree.defaults.plugins.push("html_data");
+})(jQuery);
+//*/
+
+/*
+ * jsTree hotkeys plugin 1.0
+ * Enables keyboard navigation for all tree instances
+ * Depends on the jstree ui & jquery hotkeys plugins
+ */
+(function ($) {
+	var bound = [];
+	function exec(i, event) {
+		var f = $.jstree._focused();
+		if(f && f.data && f.data.hotkeys && f.data.hotkeys.enabled) { 
+			var tmp = f.get_settings().hotkeys[i];
+			if(tmp) { return f.get_settings().hotkeys[i].call(f, event); }
+		}
+	}
+	$.jstree.plugin("hotkeys", {
+		__init : function () {
+			if(typeof $.hotkeys === "undefined") { throw "jsTree hotkeys: jQuery hotkeys plugin not included."; }
+			if(!this.data.ui) { throw "jsTree hotkeys: jsTree UI plugin not included."; }
+			$.each(this.get_settings().hotkeys, function (i, val) {
+				if($.inArray(i, bound) == -1) {
+					$(document).bind("keydown", i, function (event) { return exec(i, event); });
+					bound.push(i);
+				}
+			});
+			this.enable_hotkeys();
+		},
+		defaults : {
+			"up" : function () { 
+				var o = this.data.ui.hovered || this.data.ui.last_selected || -1;
+				this.hover_node(this._get_prev(o));
+				return false; 
+			},
+			"down" : function () { 
+				var o = this.data.ui.hovered || this.data.ui.last_selected || -1;
+				this.hover_node(this._get_next(o));
+				return false;
+			},
+			"left" : function () { 
+				var o = this.data.ui.hovered || this.data.ui.last_selected;
+				if(o) {
+					if(o.hasClass("jstree-open")) { this.close_node(o); }
+					else { this.hover_node(this._get_prev(o)); }
+				}
+				return false;
+			},
+			"right" : function () { 
+				var o = this.data.ui.hovered || this.data.ui.last_selected;
+				if(o && o.length) {
+					if(o.hasClass("jstree-closed")) { this.open_node(o); }
+					else { this.hover_node(this._get_next(o)); }
+				}
+				return false;
+			},
+			"space" : function () { 
+				if(this.data.ui.hovered) { this.data.ui.hovered.children("a:eq(0)").click(); } 
+				return false; 
+			},
+			"ctrl+space" : function (event) { 
+				event.type = "click";
+				if(this.data.ui.hovered) { this.data.ui.hovered.children("a:eq(0)").trigger(event); } 
+				return false; 
+			},
+			"f2" : function () { this.rename(this.data.ui.hovered || this.data.ui.last_selected); },
+			"del" : function () { this.remove(this.data.ui.hovered || this._get_node(null)); }
+		},
+		_fn : {
+			enable_hotkeys : function () {
+				this.data.hotkeys.enabled = true;
+			},
+			disable_hotkeys : function () {
+				this.data.hotkeys.enabled = false;
+			}
+		}
+	});
+})(jQuery);
+//*/
+
+/* 
+ * jsTree JSON 1.0
+ * The JSON data store. Datastores are build by overriding the `load_node` and `_is_loaded` functions.
+ */
+(function ($) {
+	$.jstree.plugin("json_data", {
+		defaults : { 
+			data : false,
+			ajax : false,
+			correct_state : false,
+			progressive_render : false
+		},
+		_fn : {
+			load_node : function (obj, s_call, e_call) { var _this = this; this.load_node_json(obj, function () { _this.__callback({ "obj" : obj }); s_call.call(this); }, e_call); },
+			_is_loaded : function (obj) { 
+				var s = this.get_settings().json_data;
+				obj = this._get_node(obj); 
+				if(obj && obj !== -1 && s.progressive_render) {
+					obj.append(this.parse_json(obj.data("jstree-children")));
+					$.removeData(obj, "jstree-children");
+					this.clean_node(obj);
+				}
+				return obj == -1 || !obj || !s.ajax || obj.is(".jstree-open, .jstree-leaf") || obj.children("ul").children("li").size() > 0;
+			},
+			load_node_json : function (obj, s_call, e_call) {
+				var s = this.get_settings().json_data,
+					error_func = function () {},
+					success_func = function () {};
+				switch(!0) {
+					case (!s.data && !s.ajax): throw "Neither data nor ajax settings supplied.";
+					case (!!s.data && !s.ajax) || (!!s.data && !!s.ajax && (!obj || obj === -1)):
+						if(!obj || obj == -1) {
+							this.get_container().children("ul").empty().append(this.parse_json(s.data).children());
+							this.clean_node();
+						}
+						if(s_call) { s_call.call(this); }
+						break;
+					case (!s.data && !!s.ajax) || (!!s.data && !!s.ajax && obj && obj !== -1):
+						obj = this._get_node(obj);
+						error_func = function (x, t, e) {
+							var ef = this.get_settings().json_data.ajax.error; 
+							if(ef) { ef.call(this, x, t, e); }
+							if(obj != -1 && obj.length) {
+								obj.children(".jstree-loading").removeClass("jstree-loading");
+								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
+							}
+							if(e_call) { e_call.call(this); }
+						};
+						success_func = function (d, t, x) {
+							if(x.responseText == "" || (!$.isArray(d) && !$.isPlainObject(d))) {
+								return error_func.call(this, x, t, "");
+							}
+							var sf = this.get_settings().json_data.ajax.success; 
+							if(sf) { d = sf.call(this,d,t,x) || d; }
+							d = this.parse_json(d);
+							if(d) {
+								if(obj == -1 || !obj) { this.get_container().children("ul").empty().append(d.children()); }
+								else { obj.append(d).children(".jstree-loading").removeClass("jstree-loading"); }
+								this.clean_node(obj);
+								if(s_call) { s_call.call(this); }
+							}
+							else {
+								obj.children(".jstree-loading").removeClass("jstree-loading");
+								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
+							}
+						};
+						s.ajax.context = this;
+						s.ajax.error = error_func;
+						s.ajax.success = success_func;
+						if($.isFunction(s.ajax.data)) { s.ajax.data = s.ajax.data.call(this, obj); }
+						$.ajax(s.ajax);
+						break;
+				}
+			},
+			parse_json : function (js, is_callback) {
+				var d = $(), tmp, i, j, s = this.get_settings().json_data, ul1, ul2, t = this.get_settings().core.html_titles;
+				if(!js) { return d; }
+				if($.isFunction(js)) { 
+					js = js.call(this);
+				}
+				if($.isArray(js)) {
+					if(!js.length) { return false; }
+					for(i = 0, j = js.length; i < j; i++) {
+						tmp = this.parse_json(js[i], true);
+						if(tmp.length) { d = d.add(tmp); }
+					}
 				}
 				else {
-					if(!this.settings.data.async) {
-						if(this.callback("beforeopen",[obj.get(0),this]) === false) return this.error("OPEN: STOPPED BY USER");
-					}
-					if(parseInt(this.settings.ui.animation) > 0 && !disable_animation ) {
-						obj.children("ul:eq(0)").css("display","none");
-						obj.removeClass("closed").addClass("open");
-						obj.children("ul:eq(0)").slideDown(parseInt(this.settings.ui.animation), function() {
-							$(this).css("display","");
-							if(callback) callback.call();
-						});
-					} else {
-						obj.removeClass("closed").addClass("open");
-						if(callback) callback.call();
-					}
-					this.callback("onopen", [obj.get(0), this]);
-					return true;
-				}
-			},
-			close_branch : function (obj, disable_animation) {
-				if(this.locked) return this.error("LOCKED");
-				var _this = this;
-				var obj = this.get_node(obj);
-				if(!obj.size()) return this.error("CLOSE: NO SUCH NODE");
-				if(_this.callback("beforeclose",[obj.get(0),_this]) === false) return this.error("CLOSE: STOPPED BY USER");
-				if(parseInt(this.settings.ui.animation) > 0 && !disable_animation && obj.children("ul:eq(0)").size() == 1) {
-					obj.children("ul:eq(0)").slideUp(parseInt(this.settings.ui.animation), function() {
-						if(obj.hasClass("open")) obj.removeClass("open").addClass("closed");
-						$(this).css("display","");
+					if(typeof js == "string") { js = { data : js }; }
+					if(!js.data && js.data !== "") { return d; }
+					d = $("<li>");
+					if(js.attr) { d.attr(js.attr); }
+					if(js.metadata) { d.data("jstree", js.metadata); }
+					if(js.state) { d.addClass("jstree-" + js.state); }
+					if(!$.isArray(js.data)) { tmp = js.data; js.data = []; js.data.push(tmp); }
+					$.each(js.data, function (i, m) {
+						tmp = $("<a>");
+						if($.isFunction(m)) { m = m.call(this, js); }
+						if(typeof m == "string") { tmp.attr('href','#')[ t ? "html" : "text" ](m); }
+						else {
+							if(!m.attr) { m.attr = {}; }
+							if(!m.attr.href) { m.attr.href = '#'; }
+							tmp.attr(m.attr)[ t ? "html" : "text" ](m.title);
+							if(m.language) { tmp.addClass(m.language); }
+						}
+						tmp.prepend("<ins class='jstree-icon'>&#160;</ins>");
+						if(m.icon) { 
+							if(m.icon.indexOf("/") === -1) { tmp.children("ins").addClass(m.icon); }
+							else { tmp.children("ins").css("background","url('" + m.icon + "') center center no-repeat;"); }
+						}
+						d.append(tmp);
 					});
-				} 
-				else {
-					if(obj.hasClass("open")) obj.removeClass("open").addClass("closed");
+					d.prepend("<ins class='jstree-icon'>&#160;</ins>");
+					if(js.children) { 
+						if(s.progressive_render && js.state !== "open") {
+							d.addClass("jstree-closed").data("jstree-children", js.children);
+						}
+						else {
+							if($.isFunction(js.children)) {
+								js.children = js.children.call(this, js);
+							}
+							if($.isArray(js.children) && js.children.length) {
+								tmp = this.parse_json(js.children, true);
+								if(tmp.length) {
+									ul2 = $("<ul>");
+									ul2.append(tmp);
+									d.append(ul2);
+								}
+							}
+						}
+					}
 				}
-				if(this.selected && this.settings.ui.selected_parent_close !== false && obj.children("ul:eq(0)").find("a.clicked").size() > 0) {
-					obj.find("li:has(a.clicked)").each(function() {
-						_this.deselect_branch(this);
+				if(!is_callback) {
+					ul1 = $("<ul>");
+					ul1.append(d);
+					d = ul1;
+				}
+				return d;
+			},
+			get_json : function (obj, li_attr, a_attr) {
+				var result = [], 
+					s = this.get_settings(), 
+					_this = this,
+					tmp1, tmp2, li, a, t, lang;
+				obj = this._get_node(obj);
+				if(!obj || obj === -1) { obj = this.get_container().find("> ul > li"); }
+				li_attr = $.isArray(li_attr) ? li_attr : [ "id", "class" ];
+				if(this.data.types) { li_attr.push(s.types.type_attr); }
+				a_attr = $.isArray(a_attr) ? a_attr : [ ];
+
+				obj.each(function () {
+					li = $(this);
+					tmp1 = { data : [] };
+					if(li_attr.length) { tmp1.attr = { }; }
+					$.each(li_attr, function (i, v) { 
+						tmp2 = li.attr(v); 
+						if(tmp2 && tmp2.length && tmp2.replace(/jstree[^ ]*|$/ig,'').length) {
+							tmp1.attr[v] = tmp2.replace(/jstree[^ ]*|$/ig,''); 
+						}
 					});
-					if(this.settings.ui.selected_parent_close == "select_parent" && obj.children("a.clicked").size() == 0) this.select_branch(obj, (this.settings.rules.multiple != false && this.selected_arr.length > 0) );
-				}
-				this.callback("onclose", [obj.get(0), this]);
-			},
-			open_all : function (obj, callback) {
-				if(this.locked) return this.error("LOCKED");
-				var _this = this;
-				obj = obj ? this.get_node(obj) : this.container;
+					if(li.hasClass("jstree-open")) { tmp1.state = "open"; }
+					if(li.hasClass("jstree-closed")) { tmp1.state = "closed"; }
+					a = li.children("a");
+					a.each(function () {
+						t = $(this);
+						if(
+							a_attr.length || 
+							$.inArray("languages", s.plugins) !== -1 || 
+							t.children("ins").get(0).style.backgroundImage.length || 
+							(t.children("ins").get(0).className && t.children("ins").get(0).className.replace(/jstree[^ ]*|$/ig,'').length)
+						) { 
+							lang = false;
+							if($.inArray("languages", s.plugins) !== -1 && $.isArray(s.languages) && s.languages.length) {
+								$.each(s.languages, function (l, lv) {
+									if(t.hasClass(lv)) {
+										lang = lv;
+										return false;
+									}
+								});
+							}
+							tmp2 = { attr : { }, title : _this.get_text(t, lang) }; 
+							$.each(a_attr, function (k, z) {
+								tmp1.attr[z] = li.attr(z).replace(/jstree[^ ]*|$/ig,'');
+							});
+							$.each(s.languages, function (k, z) {
+								if(t.hasClass(z)) { tmp2.language = z; return true; }
+							});
+							if(t.children("ins").get(0).className.replace(/jstree[^ ]*|$/ig,'').replace(/^\s+$/ig,"").length) {
+								tmp2.icon = t.children("ins").get(0).className.replace(/jstree[^ ]*|$/ig,'').replace(/^\s+$/ig,"");
+							}
+							if(t.children("ins").get(0).style.backgroundImage.length) {
+								tmp2.icon = t.children("ins").get(0).style.backgroundImage.replace("url(","").replace(")","");
+							}
+						}
+						else {
+							tmp2 = _this.get_text(t);
+						}
+						if(a.length > 1) { tmp1.data.push(tmp2); }
+						else { tmp1.data = tmp2; }
+					});
+					li = li.find("> ul > li");
+					if(li.length) { tmp1.children = _this.get_json(li, li_attr, a_attr); }
+					result.push(tmp1);
+				});
+				return result;
+			}
+		}
+	});
+})(jQuery);
+//*/
 
-				var s = obj.find("li.closed").size();
-				if(!callback)	this.cl_count = 0;
-				else			this.cl_count --;
-				if(s > 0) {
-					this.cl_count += s;
-					// maybe add .andSelf()
-					obj.find("li.closed").each( function () { var __this = this; _this.open_branch.apply(_this, [this, true, function() { _this.open_all.apply(_this, [__this, true]); } ]); });
-				}
-				else if(this.cl_count == 0) this.callback("onopen_all",[this]);
-			},
-			close_all : function (obj) {
-				if(this.locked) return this.error("LOCKED");
-				var _this = this;
-				obj = obj ? this.get_node(obj) : this.container;
-				// maybe add .andSelf()
-				obj.find("li.open").each( function () { _this.close_branch(this, true); });
-				this.callback("onclose_all",[this]);
-			},
-
+/* 
+ * jsTree languages plugin 1.0
+ * Adds support for multiple language versions in one tree
+ * This basically allows for many titles coexisting in one node, but only one of them being visible at any given time
+ * This is useful for maintaining the same structure in many languages (hence the name of the plugin)
+ */
+(function ($) {
+	$.jstree.plugin("languages", {
+		__init : function () { this._load_css();  },
+		defaults : [],
+		_fn : {
 			set_lang : function (i) { 
-				if(!$.isArray(this.settings.languages) || this.settings.languages.length == 0) return false;
-				if(this.locked) return this.error("LOCKED");
-				if(!$.inArray(i,this.settings.languages) && typeof this.settings.languages[i] != "undefined") i = this.settings.languages[i];
-				if(typeof i == "undefined") return false;
-				if(i == this.current_lang) return true;
-				var st = false;
-				var id = "#" + this.container.attr("id");
-				st = tree_component.get_css(id + " ." + this.current_lang);
-				if(st !== false) st.style.display = "none";
-				st = tree_component.get_css(id + " ." + i);
-				if(st !== false) st.style.display = "";
-				this.current_lang = i;
+				var langs = this.get_settings().languages,
+					st = false,
+					selector = ".jstree-" + this.get_index() + ' a';
+				if(!$.isArray(langs) || langs.length === 0) { return false; }
+				if($.inArray(i,langs) == -1) {
+					if(!!langs[i]) { i = langs[i]; }
+					else { return false; }
+				}
+				if(i == this.data.languages.current_language) { return true; }
+				st = $.vakata.css.get_css(selector + "." + this.data.languages.current_language, false, this.data.languages.language_css);
+				if(st !== false) { st.style.display = "none"; }
+				st = $.vakata.css.get_css(selector + "." + i, false, this.data.languages.language_css);
+				if(st !== false) { st.style.display = ""; }
+				this.data.languages.current_language = i;
+				this.__callback(i);
 				return true;
 			},
 			get_lang : function () {
-				if(!$.isArray(this.settings.languages) || this.settings.languages.length == 0) return false;
-				return this.current_lang;
+				return this.data.languages.current_language;
 			},
-
-			create : function (obj, ref_node, position) { 
-				if(this.locked) return this.error("LOCKED");
-				
-				var root = false;
-				if(ref_node == -1) { root = true; ref_node = this.container; }
-				else ref_node = ref_node ? this.get_node(ref_node) : this.selected;
-
-				if(!root && (!ref_node || !ref_node.size())) return this.error("CREATE: NO NODE SELECTED");
-
-				var pos = position;
-
-				var tmp = ref_node; // for type calculation
-				if(position == "before") {
-					position = ref_node.parent().children().index(ref_node);
-					ref_node = ref_node.parents("li:eq(0)");
+			get_text : function (obj, lang) {
+				obj = this._get_node(obj) || this.data.ui.last_selected;
+				if(!obj.size()) { return false; }
+				var langs = this.get_settings().languages,
+					s = this.get_settings().core.html_titles;
+				if($.isArray(langs) && langs.length) {
+					lang = (lang && $.inArray(lang,langs) != -1) ? lang : this.data.languages.current_language;
+					obj = obj.children("a." + lang);
 				}
-				if(position == "after") {
-					position = ref_node.parent().children().index(ref_node) + 1;
-					ref_node = ref_node.parents("li:eq(0)");
-				}
-				if(!root && ref_node.size() == 0) { root = true; ref_node = this.container; }
-
-				if(!root) {
-					if(!this.check("creatable", ref_node)) return this.error("CREATE: CANNOT CREATE IN NODE");
-					if(ref_node.hasClass("closed")) {
-						if(this.settings.data.async && ref_node.children("ul").size() == 0) {
-							var _this = this;
-							return this.open_branch(ref_node, true, function () { _this.create.apply(_this, [obj, ref_node, position]); } );
-						}
-						else this.open_branch(ref_node, true);
-					}
-				}
-
-				// creating new object to pass to parseJSON
-				var torename = false; 
-				if(!obj)	obj = {};
-				else		obj = $.extend(true, {}, obj);
-				if(!obj.attributes) obj.attributes = {};
-				if(!obj.attributes[this.settings.rules.type_attr]) obj.attributes[this.settings.rules.type_attr] = this.get_type(tmp) || "default";
-				if(this.settings.languages.length) {
-					if(!obj.data) { obj.data = {}; torename = true; }
-					for(var i = 0; i < this.settings.languages.length; i++) {
-						if(!obj.data[this.settings.languages[i]]) obj.data[this.settings.languages[i]] = ((typeof this.settings.lang.new_node).toLowerCase() != "string" && this.settings.lang.new_node[i]) ? this.settings.lang.new_node[i] : this.settings.lang.new_node;
-					}
+				else { obj = obj.children("a:eq(0)"); }
+				if(s) {
+					obj = obj.clone();
+					obj.children("INS").remove();
+					return obj.html();
 				}
 				else {
-					if(!obj.data) { obj.data = this.settings.lang.new_node; torename = true; }
+					obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
+					return obj.nodeValue;
 				}
-
-				obj = this.callback("ondata",[obj, this]);
-				var obj_s = $.tree.datastores.json().parse(obj,this);
-				obj_s = this.callback("onparse", [obj_s, this]);
-				var $li = $(obj_s);
-
-				if($li.children("ul").size()) {
-					if(!$li.is(".open")) $li.addClass("closed");
-				}
-				else $li.addClass("leaf");
-				$li.find("li:last-child").addClass("last").end().find("li:has(ul)").not(".open").addClass("closed");
-				$li.find("li").not(".open").not(".closed").addClass("leaf");
-
-				var r = {
-					max_depth : this.settings.rules.use_max_depth ? this.check("max_depth", (root ? -1 : ref_node) ) : -1,
-					max_children : this.settings.rules.use_max_children ? this.check("max_children", (root ? -1 : ref_node) ) : -1,
-					valid_children : this.check("valid_children", (root ? -1 : ref_node) )
-				};
-				var nod_type = this.get_type($li);
-				if(typeof r.valid_children != "undefined" && (r.valid_children == "none" || ($.isArray(r.valid_children) && $.inArray(nod_type, r.valid_children) == -1))) return this.error("CREATE: NODE NOT A VALID CHILD");
-
-				if(this.settings.rules.use_max_children) {
-					if(typeof r.max_children != "undefined" && r.max_children != -1 && r.max_children >= this.children(ref_node).size()) return this.error("CREATE: MAX_CHILDREN REACHED");
-				}
-
-				if(this.settings.rules.use_max_depth) {
-					if(typeof r.max_depth != "undefined" && r.max_depth === 0) return this.error("CREATE: MAX-DEPTH REACHED");
-					// check for max_depth up the chain
-					var mx = (r.max_depth > 0) ? r.max_depth : false;
-					var i = 0;
-					var t = ref_node;
-
-					while(t !== -1 && !root) {
-						t = this.parent(t);
-						i ++;
-						var m = this.check("max_depth",t);
-						if(m >= 0) {
-							mx = (mx === false) ? (m - i) : Math.min(mx, m - i);
-						}
-						if(mx !== false && mx <= 0) return this.error("CREATE: MAX-DEPTH REACHED");
-					}
-					if(mx !== false && mx <= 0) return this.error("CREATE: MAX-DEPTH REACHED");
-					if(mx !== false) { 
-						var incr = 1;
-						var t = $li;
-						while(t.size() > 0) {
-							if(mx - incr < 0) return this.error("CREATE: MAX-DEPTH REACHED");
-							t = t.children("ul").children("li");
-							incr ++;
-						}
-					}
-				}
-
-				if((typeof position).toLowerCase() == "undefined" || position == "inside") 
-					position = (this.settings.rules.createat == "top") ? 0 : ref_node.children("ul:eq(0)").children("li").size();
-				if(ref_node.children("ul").size() == 0 || (root == true && ref_node.children("ul").children("li").size() == 0) ) {
-					if(!root)	var a = this.moved($li,ref_node.children("a:eq(0)"),"inside", true);
-					else		var a = this.moved($li,this.container.children("ul:eq(0)"),"inside", true);
-				}
-				else if(pos == "before" && ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
-					var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", true);
-				else if(pos == "after" &&  ref_node.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").size())
-					var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").children("a:eq(0)"),"after", true);
-				else if(ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
-					var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", true);
-				else
-					var a = this.moved($li,ref_node.children("ul:eq(0)").children("li:last").children("a:eq(0)"),"after",true);
-
-				if(a === false) return this.error("CREATE: ABORTED");
-
-				if(torename) {
-					this.select_branch($li.children("a:eq(0)"));
-					this.rename();
-				}
-				return $li;
 			},
-			rename : function (obj, new_name) {
-				if(this.locked) return this.error("LOCKED");
-				obj = obj ? this.get_node(obj) : this.selected;
-				var _this = this;
-				if(!obj || !obj.size()) return this.error("RENAME: NO NODE SELECTED");
-				if(!this.check("renameable", obj)) return this.error("RENAME: NODE NOT RENAMABLE");
-				if(!this.callback("beforerename",[obj.get(0), _this.current_lang, _this])) return this.error("RENAME: STOPPED BY USER");
-
-				obj.parents("li.closed").each(function () { _this.open_branch(this) });
-				if(this.current_lang)	obj = obj.find("a." + this.current_lang);
-				else					obj = obj.find("a:first");
-
-				// Rollback
-				var rb = {}; 
-				rb[this.container.attr("id")] = this.get_rollback();
-
-				var icn = obj.children("ins").clone();
-				if((typeof new_name).toLowerCase() == "string") {
-					obj.text(new_name).prepend(icn);
-					_this.callback("onrename", [_this.get_node(obj).get(0), _this, rb]);
+			set_text : function (obj, val, lang) {
+				obj = this._get_node(obj) || this.data.ui.last_selected;
+				if(!obj.size()) { return false; }
+				var langs = this.get_settings().languages,
+					s = this.get_settings().core.html_titles,
+					tmp;
+				if($.isArray(langs) && langs.length) {
+					lang = (lang && $.inArray(lang,langs) != -1) ? lang : this.data.languages.current_language;
+					obj = obj.children("a." + lang);
+				}
+				else { obj = obj.children("a:eq(0)"); }
+				if(s) {
+					tmp = obj.children("INS").clone();
+					obj.html(val).prepend(tmp);
+					this.__callback({ "obj" : obj, "name" : val, "lang" : lang });
+					return true;
 				}
 				else {
-					var last_value = "";
-					obj.contents().each(function () {
-						if(this.nodeType == 3) { last_value = this.data; return false; }
-					});
-					_this.inp = $("<input type='text' autocomplete='off' />");
-					_this.inp
-						.val(last_value.replace(/&amp;/g,"&").replace(/&gt;/g,">").replace(/&lt;/g,"<"))
-						.bind("mousedown",		function (event) { event.stopPropagation(); })
-						.bind("mouseup",		function (event) { event.stopPropagation(); })
-						.bind("click",			function (event) { event.stopPropagation(); })
-						.bind("keyup",			function (event) { 
-								var key = event.keyCode || event.which;
-								if(key == 27) { this.value = last_value; this.blur(); return }
-								if(key == 13) { this.blur(); return; }
-							});
-					_this.inp.blur(function(event) {
-							if(this.value == "") this.value = last_value; 
-							obj.text(this.value).prepend(icn);
-							obj.get(0).style.display = ""; 
-							obj.prevAll("span").remove(); 
-							_this.inp = false;
-							_this.callback("onrename", [_this.get_node(obj).get(0), _this, rb]);
-						});
-
-					var spn = $("<span />").addClass(obj.attr("class")).append(icn).append(_this.inp);
-					obj.get(0).style.display = "none";
-					obj.parent().prepend(spn);
-					_this.inp.get(0).focus();
-					_this.inp.get(0).select();
+					obj = obj.contents().filter(function() { return this.nodeType == 3; })[0];
+					this.__callback({ "obj" : obj, "name" : val, "lang" : lang });
+					return (obj.nodeValue = val);
 				}
 			},
-			remove : function(obj) {
-				if(this.locked) return this.error("LOCKED");
-				var _this = this;
-
-				// Rollback
-				var rb = {}; 
-				rb[this.container.attr("id")] = this.get_rollback();
-
-				if(obj && (!this.selected || this.get_node(obj).get(0) != this.selected.get(0) )) {
-					obj = this.get_node(obj);
-					if(obj.size()) {
-						if(!this.check("deletable", obj)) return this.error("DELETE: NODE NOT DELETABLE");
-						if(!this.callback("beforedelete",[obj.get(0), _this])) return this.error("DELETE: STOPPED BY USER");
-						$parent = obj.parent();
-						if(obj.find("a.clicked").size()) {
-							var reset_selected = false;
-							_this.selected_arr = [];
-							this.container.find("a.clicked").filter(":first-child").parent().each(function () {
-								if(!reset_selected && this == _this.selected.get(0)) reset_selected = true;
-								if($(this).parents().index(obj) != -1) return true;
-								_this.selected_arr.push($(this));
-							});
-							if(reset_selected) this.selected = this.selected_arr[0] || false;
+			_load_css : function () {
+				var langs = this.get_settings().languages,
+					str = "/* languages css */",
+					selector = ".jstree-" + this.get_index() + ' a',
+					ln;
+				if($.isArray(langs) && langs.length) {
+					this.data.languages.current_language = langs[0];
+					for(ln = 0; ln < langs.length; ln++) {
+						str += selector + "." + langs[ln] + " {";
+						if(langs[ln] != this.data.languages.current_language) { str += " display:none; "; }
+						str += " } ";
+					}
+					this.data.languages.language_css = $.vakata.css.add_sheet({ 'str' : str });
+				}
+			},
+			create_node : function (obj, position, js, callback) {
+				var t = this.__call_old(true, obj, position, js, function (t) {
+					var langs = this.get_settings().languages,
+						a = t.children("a"),
+						ln;
+					if($.isArray(langs) && langs.length) {
+						for(ln = 0; ln < langs.length; ln++) {
+							if(!a.is("." + langs[ln])) {
+								t.append(a.eq(0).clone().removeClass(langs.join(" ")).addClass(langs[ln]));
+							}
 						}
-						obj = obj.remove();
-						$parent.children("li:last").addClass("last");
-						if($parent.children("li").size() == 0) {
-							$li = $parent.parents("li:eq(0)");
-							$li.removeClass("open").removeClass("closed").addClass("leaf").children("ul").remove();
+						a.not("." + langs.join(", .")).remove();
+					}
+					if(callback) { callback.call(this, t); }
+				});
+				return t;
+			}
+		}
+	});
+})(jQuery);
+//*/
+
+/*
+ * jsTree cookies plugin 1.0
+ * Stores the currently opened/selected nodes in a cookie and then restores them
+ * Depends on the jquery.cookie plugin
+ */
+(function ($) {
+	$.jstree.plugin("cookies", {
+		__init : function () {
+			if(typeof $.cookie === "undefined") { throw "jsTree cookie: jQuery cookie plugin not included."; }
+
+			var s = this.get_settings().cookies,
+				tmp;
+			if(!!s.save_opened) {
+				tmp = $.cookie(s.save_opened);
+				if(tmp && tmp.length) { this.data.core.to_open = tmp.split(","); }
+			}
+			if(!!s.save_selected) {
+				tmp = $.cookie(s.save_selected);
+				if(tmp && tmp.length) { this.data.ui.to_select = tmp.split(","); }
+			}
+			this.get_container()
+				.one( ( this.data.ui ? "reselect" : "reopen" ) + ".jstree", $.proxy(function () {
+					this.get_container()
+						.bind("open_node.jstree close_node.jstree select_node.jstree deselect_node.jstree", $.proxy(function (e) { 
+								if(this.get_settings().cookies.auto_save) { this.save_cookie((e.handleObj.namespace + e.handleObj.type).replace("jstree","")); }
+							}, this));
+				}, this));
+		},
+		defaults : {
+			save_opened		: "jstree_open",
+			save_selected	: "jstree_select",
+			auto_save		: true,
+			cookie_options	: {}
+		},
+		_fn : {
+			save_cookie : function (c) {
+				if(this.data.core.refreshing) { return; }
+				var s = this.get_settings().cookies;
+				if(!c) { // if called manually and not by event
+					if(s.save_opened) {
+						this.save_opened();
+						$.cookie(s.save_opened, this.data.core.to_open.join(","), s.cookie_options);
+					}
+					if(s.save_selected && this.data.ui) {
+						this.save_selected();
+						$.cookie(s.save_selected, this.data.ui.to_select.join(","), s.cookie_options);
+					}
+					return;
+				}
+				switch(c) {
+					case "open_node":
+					case "close_node":
+						if(!!s.save_opened) { 
+							this.save_opened(); 
+							$.cookie(s.save_opened, this.data.core.to_open.join(","), s.cookie_options); 
 						}
-						this.callback("ondelete", [obj.get(0), this, rb]);
-					}
-				}
-				else if(this.selected) {
-					if(!this.check("deletable", this.selected)) return this.error("DELETE: NODE NOT DELETABLE");
-					if(!this.callback("beforedelete",[this.selected.get(0), _this])) return this.error("DELETE: STOPPED BY USER");
-					$parent = this.selected.parent();
-					var obj = this.selected;
-					if(this.settings.rules.multiple == false || this.selected_arr.length == 1) {
-						var stop = true;
-						var tmp = this.settings.ui.selected_delete == "select_previous" ? this.prev(this.selected) : false;
-					}
-					obj = obj.remove();
-					$parent.children("li:last").addClass("last");
-					if($parent.children("li").size() == 0) {
-						$li = $parent.parents("li:eq(0)");
-						$li.removeClass("open").removeClass("closed").addClass("leaf").children("ul").remove();
-					}
-					if(!stop && this.settings.rules.multiple != false) {
-						var _this = this;
-						this.selected_arr = [];
-						this.container.find("a.clicked").filter(":first-child").parent().each(function () {
-							_this.selected_arr.push($(this));
-						});
-						if(this.selected_arr.length > 0) {
-							this.selected = this.selected_arr[0];
-							this.remove();
+						break;
+					case "select_node":
+					case "deselect_node":
+						if(!!s.save_selected && this.data.ui) { 
+							this.save_selected(); 
+							$.cookie(s.save_selected, this.data.ui.to_select.join(","), s.cookie_options); 
 						}
-					}
-					if(stop && tmp) this.select_branch(tmp); 
-					this.callback("ondelete", [obj.get(0), this, rb]);
+						break;
 				}
-				else return this.error("DELETE: NO NODE SELECTED");
-			},
+			}
+		}
+	});
+	// include cookies by default
+	$.jstree.defaults.plugins.push("cookies");
+})(jQuery);
+//*/
 
-			next : function (obj, strict) {
-				obj = this.get_node(obj);
-				if(!obj.size()) return false;
-				if(strict) return (obj.nextAll("li").size() > 0) ? obj.nextAll("li:eq(0)") : false;
+/*
+ * jsTree sort plugin 1.0
+ * Sorts items alphabetically (or using any other function)
+ */
+(function ($) {
+	$.jstree.plugin("sort", {
+		__init : function () {
+			this.get_container()
+				.bind("load_node.jstree", $.proxy(function (e, data) {
+						var obj = this._get_node(data.rslt.obj);
+						obj = obj === -1 ? this.get_container().children("ul") : obj.children("ul");
+						this.sort(obj);
+					}, this))
+				.bind("rename_node.jstree", $.proxy(function (e, data) {
+						this.sort(data.rslt.obj.parent());
+					}, this))
+				.bind("move_node.jstree", $.proxy(function (e, data) {
+						var m = data.rslt.np == -1 ? this.get_container() : data.rslt.np;
+						this.sort(m.children("ul"));
+					}, this));
+		},
+		defaults : function (a, b) { return this.get_text(a) > this.get_text(b) ? 1 : -1; },
+		_fn : {
+			sort : function (obj) {
+				var s = this.get_settings().sort,
+					t = this;
+				obj.append($.makeArray(obj.children("li")).sort($.proxy(s, t)));
+				obj.find("> li > ul").each(function() { t.sort($(this)); });
+				this.clean_node(obj);
+			}
+		}
+	});
+})(jQuery);
+//*/
 
-				if(obj.hasClass("open")) return obj.find("li:eq(0)");
-				else if(obj.nextAll("li").size() > 0) return obj.nextAll("li:eq(0)");
-				else return obj.parents("li").next("li").eq(0);
-			},
-			prev : function(obj, strict) {
-				obj = this.get_node(obj);
-				if(!obj.size()) return false;
-				if(strict) return (obj.prevAll("li").size() > 0) ? obj.prevAll("li:eq(0)") : false;
+/*
+ * jsTree DND plugin 1.0
+ * Drag and drop plugin for moving/copying nodes
+ */
+(function ($) {
+	var o = false,
+		r = false,
+		m = false;
+	$.vakata.dnd = {
+		is_down : false,
+		is_drag : false,
+		helper : false,
+		init_x : 0,
+		init_y : 0,
+		threshold : 5,
+		user_data : {},
 
-				if(obj.prev("li").size()) {
-					var obj = obj.prev("li").eq(0);
-					while(obj.hasClass("open")) obj = obj.children("ul:eq(0)").children("li:last");
-					return obj;
+		drag_start : function (e, data, html) { 
+			if($.vakata.dnd.is_drag) { $.vakata.drag_stop({}); }
+			try {
+				e.currentTarget.unselectable = "on";
+				e.currentTarget.onselectstart = function() { return false; };
+				if(e.currentTarget.style) { e.currentTarget.style.MozUserSelect = "none"; }
+			} catch(err) { }
+			$.vakata.dnd.init_x = e.pageX;
+			$.vakata.dnd.init_y = e.pageY;
+			$.vakata.dnd.user_data = data;
+			$.vakata.dnd.is_down = true;
+			$.vakata.dnd.helper = $("<div id='vakata-dragged'>").html(html).css("opacity", "0.75");
+			$(document).bind("mousemove", $.vakata.dnd.drag);
+			$(document).bind("mouseup", $.vakata.dnd.drag_stop);
+			return false;
+		},
+		drag : function (e) { 
+			if(!$.vakata.dnd.is_down) { return; }
+			if(!$.vakata.dnd.is_drag) {
+				if(Math.abs(e.pageX - $.vakata.dnd.init_x) > 5 || Math.abs(e.pageY - $.vakata.dnd.init_y) > 5) { 
+					$.vakata.dnd.helper.appendTo("body");
+					$.vakata.dnd.is_drag = true;
+					$(document).triggerHandler("vakata.drag_start", { "event" : e, "data" : $.vakata.dnd.user_data });
 				}
-				else return obj.parents("li:eq(0)").size() ? obj.parents("li:eq(0)") : false;
-			},
-			parent : function(obj) {
-				obj = this.get_node(obj);
-				if(!obj.size()) return false;
-				return obj.parents("li:eq(0)").size() ? obj.parents("li:eq(0)") : -1;
-			},
-			children : function(obj) {
-				if(obj === -1) return this.container.children("ul:eq(0)").children("li");
+				else { return; }
+			}
+			$.vakata.dnd.helper.css({ left : (e.pageX + 5) + "px", top : (e.pageY + 10) + "px" });
+			$(document).triggerHandler("vakata.drag", { "event" : e, "data" : $.vakata.dnd.user_data });
+		},
+		drag_stop : function (e) {
+			$(document).unbind("mousemove", $.vakata.dnd.drag);
+			$(document).unbind("mouseup", $.vakata.dnd.drag_stop);
+			$(document).triggerHandler("vakata.drag_stop", { "event" : e, "data" : $.vakata.dnd.user_data });
+			$.vakata.dnd.helper.remove();
+			$.vakata.dnd.init_x = 0;
+			$.vakata.dnd.init_y = 0;
+			$.vakata.dnd.user_data = {};
+			$.vakata.dnd.is_down = false;
+			$.vakata.dnd.is_drag = false;
+		}
+	};
+	$(function() {
+		var css_string = '#vakata-dragged { display:block; margin:0 0 0 0; padding:4px 4px 4px 24px; position:absolute; left:-2000px; top:-2000px; line-height:16px; } ';
+		$.vakata.css.add_sheet({ str : css_string });
+	});
 
-				obj = this.get_node(obj);
-				if(!obj.size()) return false;
-				return obj.children("ul:eq(0)").children("li");
-			},
-
-			toggle_dots : function () {
-				if(this.settings.ui.dots) {
-					this.settings.ui.dots = false;
-					this.container.children("ul:eq(0)").addClass("no_dots");
-				}
-				else {
-					this.settings.ui.dots = true;
-					this.container.children("ul:eq(0)").removeClass("no_dots");
-				}
-			},
-
-			callback : function (cb, args) {
-				var p = false;
-				var r = null;
-				for(var i in this.settings.plugins) {
-					if(typeof $.tree.plugins[i] != "object") continue;
-					p = $.tree.plugins[i];
-					if(p.callbacks && typeof p.callbacks[cb] == "function") r = p.callbacks[cb].apply(this, args);
-					if(typeof r !== "undefined" && r !== null) {
-						if(cb == "ondata" || cb == "onparse") args[0] = r; // keep the chain if data or parse
-						else return r;
-					}
-				}
-				p = this.settings.callback[cb];
-				if(typeof p == "function") return p.apply(null, args);
-			},
-			get_rollback : function () {
-				var rb = {};
-				rb.html = this.container.html();
-				rb.selected = this.selected ? this.selected.attr("id") : false;
-				return rb;
-			},
-			moved : function (what, where, how, is_new, is_copy, rb) {
-				var what	= $(what);
-				var $parent	= $(what).parents("ul:eq(0)");
-				var $where	= $(where);
-				if($where.is("ins")) $where = $where.parent();
-
-				// Rollback
-				if(!rb) {
-					var rb = {}; 
-					rb[this.container.attr("id")] = this.get_rollback();
-					if(!is_new) {
-						var tmp = what.size() > 1 ? what.eq(0).parents(".tree:eq(0)") : what.parents(".tree:eq(0)");
-						if(tmp.get(0) != this.container.get(0)) {
-							tmp = tree_component.inst[tmp.attr("id")];
-							rb[tmp.container.attr("id")] = tmp.get_rollback();
+	$.jstree.plugin("dnd", {
+		__init : function () {
+			this.data.dnd = {
+				active : false,
+				after : false,
+				inside : false,
+				before : false,
+				off : false,
+				prepared : false,
+				w : 0,
+				to1 : false,
+				to2 : false,
+				cof : false,
+				cw : false,
+				ch : false,
+				i1 : false,
+				i2 : false
+			};
+			this.get_container()
+				.bind("mouseenter.jstree", $.proxy(function () {
+						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree && this.data.themes) {
+							m.attr("class", "jstree-" + this.data.themes.theme); 
+							$.vakata.dnd.helper.attr("class", "jstree-dnd-helper jstree-" + this.data.themes.theme);
 						}
-						delete tmp;
-					}
-				}
-
-				if(how == "inside" && this.settings.data.async) {
-					var _this = this;
-					if(this.get_node($where).hasClass("closed")) {
-						return this.open_branch(this.get_node($where), true, function () { _this.moved.apply(_this, [what, where, how, is_new, is_copy, rb]); });
-					}
-					if(this.get_node($where).find("> ul > li > a.loading").size() == 1) {
-						setTimeout(function () { _this.moved.apply(_this, [what, where, how, is_new, is_copy]); }, 200);
-						return;
-					}
-				}
-
-
-				// IF MULTIPLE
-				if(what.size() > 1) {
-					var _this = this;
-					var tmp = this.moved(what.eq(0), where, how, false, is_copy, rb);
-					what.each(function (i) {
-						if(i == 0) return;
-						if(tmp) { // if tmp is false - the previous move was a no-go
-							tmp = _this.moved(this, tmp.children("a:eq(0)"), "after", false, is_copy, rb);
+					}, this))
+				.bind("mouseleave.jstree", $.proxy(function () {
+						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree) {
+							if(this.data.dnd.i1) { clearInterval(this.data.dnd.i1); }
+							if(this.data.dnd.i2) { clearInterval(this.data.dnd.i2); }
 						}
-					});
-					return what;
-				}
+					}, this))
+				.bind("mousemove.jstree", $.proxy(function (e) {
+						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree) {
+							var cnt = this.get_container()[0];
 
-				if(is_copy) {
-					_what = what.clone();
-					_what.each(function (i) {
-						this.id = this.id + "_copy";
-						$(this).find("li").each(function () {
-							this.id = this.id + "_copy";
-						});
-						$(this).removeClass("dragged").find("a.clicked").removeClass("clicked").end().find("li.dragged").removeClass("dragged");
-					});
-				}
-				else _what = what;
-				if(is_new) {
-					if(!this.callback("beforecreate", [this.get_node(what).get(0), this.get_node(where).get(0),how,this])) return false;
-				}
-				else {
-					if(!this.callback("beforemove", [this.get_node(what).get(0), this.get_node(where).get(0),how,this])) return false;
-				}
-
-				if(!is_new) {
-					var tmp = what.parents(".tree:eq(0)");
-					// if different trees
-					if(tmp.get(0) != this.container.get(0)) {
-						tmp = tree_component.inst[tmp.attr("id")];
-
-						// if there are languages - otherwise - no cleanup needed
-						if(tmp.settings.languages.length) {
-							var res = [];
-							// if new tree has no languages - use current visible
-							if(this.settings.languages.length == 0) res.push("." + tmp.current_lang);
+							// Horizontal scroll
+							if(e.pageX + 20 > this.data.dnd.cof.left + this.data.dnd.cw) {
+								if(this.data.dnd.i1) { clearInterval(this.data.dnd.i1); }
+								this.data.dnd.i1 = setInterval($.proxy(function () { this.scrollLeft += 5; }, cnt), 100);
+							}
+							else if(e.pageX - 20 < this.data.dnd.cof.left) {
+								if(this.data.dnd.i1) { clearInterval(this.data.dnd.i1); }
+								this.data.dnd.i1 = setInterval($.proxy(function () { this.scrollLeft -= 5; }, cnt), 100);
+							}
 							else {
-								for(var i in this.settings.languages) {
-									if(!this.settings.languages.hasOwnProperty(i)) continue;
-									for(var j in tmp.settings.languages) {
-										if(!tmp.settings.languages.hasOwnProperty(j)) continue;
-										if(this.settings.languages[i] == tmp.settings.languages[j]) res.push("." + this.settings.languages[i]);
-									}
+								if(this.data.dnd.i1) { clearInterval(this.data.dnd.i1); }
+							}
+
+							// Vertical scroll
+							if(e.pageY + 20 > this.data.dnd.cof.top + this.data.dnd.ch) {
+								if(this.data.dnd.i2) { clearInterval(this.data.dnd.i2); }
+								this.data.dnd.i2 = setInterval($.proxy(function () { this.scrollTop += 5; }, cnt), 100);
+							}
+							else if(e.pageY - 20 < this.data.dnd.cof.top) {
+								if(this.data.dnd.i2) { clearInterval(this.data.dnd.i2); }
+								this.data.dnd.i2 = setInterval($.proxy(function () { this.scrollTop -= 5; }, cnt), 100);
+							}
+							else {
+								if(this.data.dnd.i2) { clearInterval(this.data.dnd.i2); }
+							}
+
+						}
+					}, this))
+				.delegate("a", "mousedown.jstree", $.proxy(function (e) { 
+						this.start_drag(e.currentTarget, e);
+						return false;
+					}, this))
+				.delegate("a", "mouseenter.jstree", $.proxy(function (e) { 
+						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree) {
+							this.dnd_enter(e.currentTarget);
+						}
+					}, this))
+				.delegate("a", "mousemove.jstree", $.proxy(function (e) { 
+						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree) {
+							if(typeof this.data.dnd.off.top === "undefined") { this.data.dnd.off = $(e.target).offset(); }
+							this.data.dnd.w = (e.pageY - (this.data.dnd.off.top || 0)) % this.data.core.li_height;
+							if(this.data.dnd.w < 0) { this.data.dnd.w += this.data.core.li_height; }
+							this.dnd_show();
+						}
+					}, this))
+				.delegate("a", "mouseleave.jstree", $.proxy(function (e) { 
+						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree) {
+							this.data.dnd.after		= false;
+							this.data.dnd.before	= false;
+							this.data.dnd.inside	= false;
+							$.vakata.dnd.helper.children("ins").attr("class","jstree-invalid");
+							m.hide();
+							if(r && r[0] === e.target.parentNode) {
+								if(this.data.dnd.to1) {
+									clearTimeout(this.data.dnd.to1);
+									this.data.dnd.to1 = false;
+								}
+								if(this.data.dnd.to2) {
+									clearTimeout(this.data.dnd.to2);
+									this.data.dnd.to2 = false;
 								}
 							}
-							if(res.length == 0) return this.error("MOVE: NO COMMON LANGUAGES");
-							_what.find("a").not(res.join(",")).remove();
 						}
-						_what.find("a.clicked").removeClass("clicked");
-					}
-				}
-				what = _what;
+					}, this))
+				.delegate("a", "mouseup.jstree", $.proxy(function (e) { 
+						if($.vakata.dnd.is_drag && $.vakata.dnd.user_data.jstree) {
+							this.dnd_finish(e);
+						}
+					}, this));
 
-				// ADD NODE TO NEW PLACE
-				switch(how) {
+			$(document)
+				.bind("vakata.drag_stop", $.proxy(function () {
+						this.data.dnd.after		= false;
+						this.data.dnd.before	= false;
+						this.data.dnd.inside	= false;
+						this.data.dnd.off		= false;
+						this.data.dnd.prepared	= false;
+						this.data.dnd.w			= false;
+						this.data.dnd.to1		= false;
+						this.data.dnd.to2		= false;
+						this.data.dnd.active	= false;
+						this.data.dnd.foreign	= false;
+						if(m) { m.css({ "left" : "-2000px", "top" : "-2000px" }); }
+					}, this))
+				.bind("vakata.drag_start", $.proxy(function (e, data) {
+						if(data.data.jstree) { 
+							var et = $(data.event.target);
+							if(et.closest(".jstree").hasClass("jstree-" + this.get_index())) {
+								this.dnd_enter(et);
+							}
+						}
+					}, this));
+
+			var s = this.get_settings().dnd;
+			if(s.drag_target) {
+				$(document)
+					.delegate(s.drag_target, "mousedown.jstree", $.proxy(function (e) {
+						o = e.target;
+						$.vakata.dnd.drag_start(e, { jstree : true, obj : e.target }, "<ins class='jstree-icon'></ins>" + $(e.target).text() );
+						if(this.data.themes) { 
+							m.attr("class", "jstree-" + this.data.themes.theme); 
+							$.vakata.dnd.helper.attr("class", "jstree-dnd-helper jstree-" + this.data.themes.theme); 
+						}
+						$.vakata.dnd.helper.children("ins").attr("class","jstree-invalid");
+						var cnt = this.get_container();
+						this.data.dnd.cof = cnt.children("ul").offset();
+						this.data.dnd.cw = parseInt(cnt.width(),10);
+						this.data.dnd.ch = parseInt(cnt.height(),10);
+						this.data.dnd.foreign = true;
+						return false;
+					}, this));
+			}
+			if(s.drop_target) {
+				$(document)
+					.delegate(s.drop_target, "mouseenter.jstree", $.proxy(function (e) {
+							if(this.data.dnd.active && this.get_settings().dnd.drop_check.call(this, { "o" : o, "r" : $(e.target) })) {
+								$.vakata.dnd.helper.children("ins").attr("class","jstree-ok");
+							}
+						}, this))
+					.delegate(s.drop_target, "mouseleave.jstree", $.proxy(function (e) {
+							if(this.data.dnd.active) {
+								$.vakata.dnd.helper.children("ins").attr("class","jstree-invalid");
+							}
+						}, this))
+					.delegate(s.drop_target, "mouseup.jstree", $.proxy(function (e) {
+							if(this.data.dnd.active && $.vakata.dnd.helper.children("ins").hasClass("jstree-ok")) {
+								this.get_settings().dnd.drop_finish.call(this, { "o" : o, "r" : $(e.target) });
+							}
+						}, this));
+			}
+		},
+		defaults : {
+			copy_modifier	: "ctrl",
+			check_timeout	: 200,
+			open_timeout	: 500,
+			drop_target		: ".jstree-drop",
+			drop_check		: function (data) { return true; },
+			drop_finish		: $.noop,
+			drag_target		: ".jstree-draggable",
+			drag_finish		: $.noop,
+			drag_check		: function (data) { return { after : false, before : false, inside : true }; }
+		},
+		_fn : {
+			dnd_prepare : function () {
+				this.data.dnd.off = r.offset();
+				if(this.data.dnd.foreign) {
+					var a = this.get_settings().dnd.drag_check.call(this, { "o" : o, "r" : r });
+					this.data.dnd.after = a.after;
+					this.data.dnd.before = a.before;
+					this.data.dnd.inside = a.inside;
+					this.data.dnd.prepared = true;
+					return this.dnd_show();
+				}
+				this.prepare_move(o, r, "before");
+				this.data.dnd.before = this.check_move();
+				this.prepare_move(o, r, "after");
+				this.data.dnd.after = this.check_move();
+				if(this._is_loaded(r)) {
+					this.prepare_move(o, r, "inside");
+					this.data.dnd.inside = this.check_move();
+				}
+				else {
+					this.data.dnd.inside = false;
+				}
+				this.data.dnd.prepared = true;
+				return this.dnd_show();
+			},
+			dnd_show : function () {
+				if(!this.data.dnd.prepared) { return; }
+				var o = ["before","inside","after"],
+					r = false;
+				if(this.data.dnd.w < this.data.core.li_height/3) { o = ["before","inside","after"]; }
+				else if(this.data.dnd.w <= this.data.core.li_height*2/3) {
+					o = this.data.dnd.w < this.data.core.li_height/2 ? ["inside","before","after"] : ["inside","after","before"];
+				}
+				else { o = ["after","inside","before"]; }
+				$.each(o, $.proxy(function (i, val) { 
+					if(this.data.dnd[val]) {
+						$.vakata.dnd.helper.children("ins").attr("class","jstree-ok");
+						r = val;
+						return false;
+					}
+				}, this));
+				if(r === false) { $.vakata.dnd.helper.children("ins").attr("class","jstree-invalid"); }
+				switch(r) {
 					case "before":
-						$where.parents("ul:eq(0)").children("li.last").removeClass("last");
-						$where.parent().before(what.removeClass("last"));
-						$where.parents("ul:eq(0)").children("li:last").addClass("last");
+						m.css({ "left" : (this.data.dnd.off.left + 10) + "px", "top" : (this.data.dnd.off.top - 6) + "px" }).show();
 						break;
 					case "after":
-						$where.parents("ul:eq(0)").children("li.last").removeClass("last");
-						$where.parent().after(what.removeClass("last"));
-						$where.parents("ul:eq(0)").children("li:last").addClass("last");
+						m.css({ "left" : (this.data.dnd.off.left + 10) + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height - 7) + "px" }).show();
 						break;
 					case "inside":
-						if($where.parent().children("ul:first").size()) {
-							if(this.settings.rules.createat == "top") {
-								$where.parent().children("ul:first").prepend(what.removeClass("last")).children("li:last").addClass("last");
-
-								// restored this section
-								var tmp_node = $where.parent().children("ul:first").children("li:first");
-								if(tmp_node.size()) {
-									how = "before";
-									where = tmp_node;
-								}
-							}
-							else {
-								// restored this section
-								var tmp_node = $where.parent().children("ul:first").children(".last");
-								if(tmp_node.size()) {
-									how = "after";
-									where = tmp_node;
-								}
-
-								$where.parent().children("ul:first").children(".last").removeClass("last").end().append(what.removeClass("last")).children("li:last").addClass("last");
-							}
-						}
-						else {
-							what.addClass("last");
-							$where.parent().removeClass("leaf").append("<ul/>");
-							if(!$where.parent().hasClass("open")) $where.parent().addClass("closed");
-							$where.parent().children("ul:first").prepend(what);
-						}
-						if($where.parent().hasClass("closed")) { this.open_branch($where); }
+						m.css({ "left" : (this.data.dnd.off.left + 14) + "px", "top" : (this.data.dnd.off.top + this.data.core.li_height/2 - 5) + "px" }).show();
 						break;
 					default:
+						m.hide();
 						break;
 				}
-				// CLEANUP OLD PARENT
-				if($parent.find("li").size() == 0) {
-					var $li = $parent.parent();
-					$li.removeClass("open").removeClass("closed").addClass("leaf");
-					if(!$li.is(".tree")) $li.children("ul").remove();
-					$li.parents("ul:eq(0)").children("li.last").removeClass("last").end().children("li:last").addClass("last");
+				return r;
+			},
+			dnd_open : function () {
+				this.data.dnd.to2 = false;
+				this.open_node(r, $.proxy(this.dnd_prepare,this), true);
+			},
+			dnd_finish : function (e) {
+				if(this.data.dnd.foreign) {
+					if(this.data.dnd.after || this.data.dnd.before || this.data.dnd.inside) {
+						this.get_settings().dnd.drag_finish.call(this, { "o" : o, "r" : r });
+					}
 				}
 				else {
-					$parent.children("li.last").removeClass("last");
-					$parent.children("li:last").addClass("last");
+					this.dnd_prepare();
+					this.move_node(o, r, this.dnd_show(), e[this.get_settings().dnd.copy_modifier + "Key"]);
 				}
+				o = false;
+				r = false;
+				m.hide();
+			},
+			dnd_enter : function (obj) {
+				var s = this.get_settings().dnd;
+				this.data.dnd.prepared = false;
+				r = this._get_node(obj);
+				if(s.check_timeout) { 
+					// do the calculations after a minimal timeout (users tend to drag quickly to the desired location)
+					if(this.data.dnd.to1) { clearTimeout(this.data.dnd.to1); }
+					this.data.dnd.to1 = setTimeout($.proxy(this.dnd_prepare, this), s.check_timeout); 
+				}
+				else { 
+					this.dnd_prepare(); 
+				}
+				if(s.open_timeout) { 
+					if(this.data.dnd.to2) { clearTimeout(this.data.dnd.to2); }
+					if(r.hasClass("jstree-closed")) { 
+						// if the node is closed - open it, then recalculate
+						this.data.dnd.to2 = setTimeout($.proxy(this.dnd_open, this), s.open_timeout);
+					}
+				}
+				else {
+					if(r.hasClass("jstree-closed")) { 
+						this.dnd_open();
+					}
+				}
+			},
+			start_drag : function (obj, e) {
+				o = this._get_node(obj);
+				if(this.data.ui && this.is_selected(o)) { o = this._get_node(null, true); }
+				$.vakata.dnd.drag_start(e, { jstree : true, obj : o }, "<ins class='jstree-icon'></ins>" + (o.length > 1 ? "Multiple selection" : this.get_text(o)) );
+				if(this.data.themes) { 
+					m.attr("class", "jstree-" + this.data.themes.theme); 
+					$.vakata.dnd.helper.attr("class", "jstree-dnd-helper jstree-" + this.data.themes.theme); 
+				}
+				var cnt = this.get_container();
+				this.data.dnd.cof = cnt.children("ul").offset();
+				this.data.dnd.cw = parseInt(cnt.width(),10);
+				this.data.dnd.ch = parseInt(cnt.height(),10);
+				this.data.dnd.active = true;
+			}
+		}
+	});
+	$(function() {
+		var css_string = '' + 
+			'#vakata-dragged ins { display:block; text-decoration:none; width:16px; height:16px; margin:0 0 0 0; padding:0; position:absolute; top:4px; left:4px; } ' + 
+			'#vakata-dragged .jstree-ok { background:green; } ' + 
+			'#vakata-dragged .jstree-invalid { background:red; } ' + 
+			'#jstree-marker { padding:0; margin:0; line-height:12px; font-size:1px; overflow:hidden; height:12px; width:8px; position:absolute; left:-45px; top:-30px; z-index:1000; background-repeat:no-repeat; display:none; background-color:silver; } ';
+		$.vakata.css.add_sheet({ str : css_string });
+		m = $("<div>").attr({ id : "jstree-marker" }).hide().appendTo("body");
+		$(document).bind("vakata.drag_start", function (e, data) {
+			if(data.data.jstree) { 
+				m.show(); 
+			}
+		});
+		$(document).bind("vakata.drag_stop", function (e, data) {
+			if(data.data.jstree) { m.hide(); }
+		});
+	});
+})(jQuery);
+//*/
 
-				// NO LONGER CORRECT WITH position PARAM - if(is_new && how != "inside") where = this.get_node(where).parents("li:eq(0)");
-				if(is_copy)		this.callback("oncopy", [this.get_node(what).get(0), this.get_node(where).get(0), how, this, rb]);
-				else if(is_new)	this.callback("oncreate", [this.get_node(what).get(0), ($where.is("ul") ? -1 : this.get_node(where).get(0) ), how, this, rb]);
-				else			this.callback("onmove", [this.get_node(what).get(0), this.get_node(where).get(0), how, this, rb]);
-				return what;
-			},
-			error : function (code) {
-				this.callback("error",[code,this]);
-				return false;
-			},
-			lock : function (state) {
-				this.locked = state;
-				if(this.locked)	this.container.children("ul:eq(0)").addClass("locked");
-				else			this.container.children("ul:eq(0)").removeClass("locked");
-			},
-			cut : function (obj) {
-				if(this.locked) return this.error("LOCKED");
-				obj = obj ? this.get_node(obj) : this.container.find("a.clicked").filter(":first-child").parent();
-				if(!obj || !obj.size()) return this.error("CUT: NO NODE SELECTED");
-				tree_component.cut_copy.copy_nodes = false;
-				tree_component.cut_copy.cut_nodes = obj;
-			},
-			copy : function (obj) {
-				if(this.locked) return this.error("LOCKED");
-				obj = obj ? this.get_node(obj) : this.container.find("a.clicked").filter(":first-child").parent();
-				if(!obj || !obj.size()) return this.error("COPY: NO NODE SELECTED");
-				tree_component.cut_copy.copy_nodes = obj;
-				tree_component.cut_copy.cut_nodes = false;
-			},
-			paste : function (obj, position) {
-				if(this.locked) return this.error("LOCKED");
+/*
+ * jsTree checkbox plugin 1.0
+ * Inserts checkboxes in front of every node
+ * Depends on the ui plugin
+ * DOES NOT WORK NICELY WITH MULTITREE DRAG'N'DROP
+ */
+(function ($) {
+	$.jstree.plugin("checkbox", {
+		__init : function () {
+			if(!this.data.ui) { throw("jsTree checkboxes: jsTree UI plugin not included"); }
+			this.select_node = this.deselect_node = this.deselect_all = $.noop;
+			this.get_selected = this.get_checked;
 
-				var root = false;
-				if(obj == -1) { root = true; obj = this.container; }
-				else obj = obj ? this.get_node(obj) : this.selected;
-
-				if(!root && (!obj || !obj.size())) return this.error("PASTE: NO NODE SELECTED");
-				if(!tree_component.cut_copy.copy_nodes && !tree_component.cut_copy.cut_nodes) return this.error("PASTE: NOTHING TO DO");
+			this.get_container()
+				.bind("open_node.jstree create_node.jstree", $.proxy(function (e, data) { 
+						this._prepare_checkboxes(data.rslt.obj);
+					}, this))
+				.bind("loaded.jstree", $.proxy(function (e) {
+						this._prepare_checkboxes();
+					}, this))
+				.bind("clean_node.jstree", $.proxy(function (e, data) {
+						this._repair_state(data.args[0]);
+					}, this))
+				.delegate("a", "click.jstree", $.proxy(function (e) {
+						this.change_state(e.target);
+						this.save_selected();
+						if(this.data.cookies) { this.save_cookie("select_node"); }
+						e.preventDefault();
+					}, this));
+		},
+		_fn : {
+			_prepare_checkboxes : function (obj) {
+				obj = !obj || obj == -1 ? this.get_container() : this._get_node(obj);
+				var c = obj.is("li") && obj.hasClass("jstree-checked") ? "jstree-checked" : "jstree-unchecked";
+				obj.find("a").not(":has(.checkbox)").prepend("<ins class='checkbox'>&#160;</ins>").parent().addClass(c);
+			},
+			change_state : function (obj, state) {
+				obj = this._get_node(obj);
+				state = (state === false || state === true) ? state : obj.hasClass("jstree-checked");
+				if(state) { obj.find("li").andSelf().removeClass("jstree-checked jstree-undetermined").addClass("jstree-unchecked"); }
+				else { obj.find("li").andSelf().removeClass("jstree-unchecked jstree-undetermined").addClass("jstree-checked"); this.data.ui.last_selected = obj; }
 
 				var _this = this;
-
-				var pos = position;
-
-				if(position == "before") {
-					position = obj.parent().children().index(obj);
-					obj = obj.parents("li:eq(0)");
-				}
-				else if(position == "after") {
-					position = obj.parent().children().index(obj) + 1;
-					obj = obj.parents("li:eq(0)");
-				}
-				else if((typeof position).toLowerCase() == "undefined" || position == "inside") {
-					position = (this.settings.rules.createat == "top") ? 0 : obj.children("ul:eq(0)").children("li").size();
-				}
-				if(!root && obj.size() == 0) { root = true; obj = this.container; }
-
-				if(tree_component.cut_copy.copy_nodes && tree_component.cut_copy.copy_nodes.size()) {
-					var ok = true;
-					if(!root && !this.check_move(tree_component.cut_copy.copy_nodes, obj.children("a:eq(0)"), "inside")) return false;
-
-					if(obj.children("ul").size() == 0 || (root == true && obj.children("ul").children("li").size() == 0) ) {
-						if(!root)	var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("a:eq(0)"),"inside", false, true);
-						else		var a = this.moved(tree_component.cut_copy.copy_nodes,this.container.children("ul:eq(0)"),"inside", false, true);
-					}
-					else if(pos == "before" && obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
-						var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", false, true);
-					else if(pos == "after" && obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").size())
-						var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").children("a:eq(0)"),"after", false, true);
-					else if(obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
-						var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before", false, true);
-					else
-						var a = this.moved(tree_component.cut_copy.copy_nodes,obj.children("ul:eq(0)").children("li:last").children("a:eq(0)"),"after", false, true);
-					tree_component.cut_copy.copy_nodes = false;
-				}
-				if(tree_component.cut_copy.cut_nodes && tree_component.cut_copy.cut_nodes.size()) {
-					var ok = true;
-					obj.parents().andSelf().each(function () {
-						if(tree_component.cut_copy.cut_nodes.index(this) != -1) {
-							ok = false;
+				obj.parentsUntil(this.get_container(), "li").each(function () {
+					var $this = $(this);
+					if(state) {
+						if($this.children("ul").children(".jstree-checked, .jstree-undetermined").length) {
+							$this.parentsUntil(_this.get_container(), "li").andSelf().removeClass("jstree-checked jstree-unchecked").addClass("jstree-undetermined");
 							return false;
 						}
-					});
-					if(!ok) return this.error("Invalid paste");
-					if(!root && !this.check_move(tree_component.cut_copy.cut_nodes, obj.children("a:eq(0)"), "inside")) return false;
-
-					if(obj.children("ul").size() == 0 || (root == true && obj.children("ul").children("li").size() == 0) ) {
-						if(!root)	var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("a:eq(0)"),"inside");
-						else		var a = this.moved(tree_component.cut_copy.cut_nodes,this.container.children("ul:eq(0)"),"inside");
-					}
-					else if(pos == "before" && obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
-						var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before");
-					else if(pos == "after" && obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").size())
-						var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position) + ")").children("a:eq(0)"),"after");
-					else if(obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").size())
-						var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:nth-child(" + (position + 1) + ")").children("a:eq(0)"),"before");
-					else
-						var a = this.moved(tree_component.cut_copy.cut_nodes,obj.children("ul:eq(0)").children("li:last").children("a:eq(0)"),"after");
-					tree_component.cut_copy.cut_nodes = false;
-				}
-			},
-			search : function(str, func) {
-				var _this = this;
-				if(!str || (this.srch && str != this.srch) ) {
-					this.srch = "";
-					this.srch_opn = false;
-					this.container.find("a.search").removeClass("search");
-				}
-				this.srch = str;
-				if(!str) return;
-
-				if(!func) func = "contains";
-				if(this.settings.data.async) {
-					if(!this.srch_opn) {
-						var dd = $.extend( { "search" : str } , this.callback("beforedata", [false, this] ) );
-						$.ajax({
-							type		: this.settings.data.opts.method,
-							url			: this.settings.data.opts.url, 
-							data		: dd, 
-							dataType	: "text",
-							success		: function (data) {
-								_this.srch_opn = $.unique(data.split(","));
-								_this.search.apply(_this,[str, func]);
-							} 
-						});
-					}
-					else if(this.srch_opn.length) {
-						if(this.srch_opn && this.srch_opn.length) {
-							var opn = false;
-							for(var j = 0; j < this.srch_opn.length; j++) {
-								if(this.get_node("#" + this.srch_opn[j]).size() > 0) {
-									opn = true;
-									var tmp = "#" + this.srch_opn[j];
-									delete this.srch_opn[j];
-									this.open_branch(tmp, true, function () { _this.search.apply(_this,[str, func]); } );
-								}
-							}
-							if(!opn) {
-								this.srch_opn = [];
-								 _this.search.apply(_this,[str, func]);
-							}
+						else {
+							$this.removeClass("jstree-checked jstree-undetermined").addClass("jstree-unchecked");
 						}
 					}
 					else {
-						this.srch_opn = false;
-						var selector = "a";
-						// IF LANGUAGE VERSIONS
-						if(this.settings.languages.length) selector += "." + this.current_lang;
-						this.callback("onsearch", [this.container.find(selector + ":" + func + "('" + str + "')"), this]);
-					}
-				}
-				else {
-					var selector = "a";
-					// IF LANGUAGE VERSIONS
-					if(this.settings.languages.length) selector += "." + this.current_lang;
-					var nn = this.container.find(selector + ":" + func + "('" + str + "')");
-					nn.parents("li.closed").each( function () { _this.open_branch(this, true); });
-					this.callback("onsearch", [nn, this]);
-				}
-			},
-			add_sheet : tree_component.add_sheet,
-
-			destroy : function() {
-				this.callback("ondestroy", [this]);
-
-				this.container.unbind(".jstree");
-				$("#" + this.container.attr("id")).die("click.jstree").die("dblclick.jstree").die("mouseover.jstree").die("mouseout.jstree").die("mousedown.jstree");
-				this.container.removeClass("tree ui-widget ui-widget-content tree-default tree-" + this.settings.ui.theme_name).children("ul").removeClass("no_dots ltr locked").find("li").removeClass("leaf").removeClass("open").removeClass("closed").removeClass("last").children("a").removeClass("clicked hover search");
-
-				if(this.cntr == tree_component.focused) {
-					for(var i in tree_component.inst) {
-						if(i != this.cntr && i != this.container.attr("id")) {
-							tree_component.inst[i].focus();
-							break;
+						if($this.children("ul").children(".jstree-unchecked, .jstree-undetermined").length) {
+							$this.parentsUntil(_this.get_container(), "li").andSelf().removeClass("jstree-checked jstree-unchecked").addClass("jstree-undetermined");
+							return false;
+						}
+						else {
+							$this.removeClass("jstree-unchecked jstree-undetermined").addClass("jstree-checked");
 						}
 					}
+				});
+				this.data.ui.selected = this.get_checked();
+				this.__callback(obj);
+			},
+			check_node : function (obj) {
+				this.change_state(obj, false);
+			},
+			uncheck_node : function (obj) {
+				this.change_state(obj, true);
+			},
+			check_all : function () {
+				var _this = this;
+				this.get_container().children("ul").children("li").each(function () {
+					_this.check_node(this, false);
+				});
+			},
+			uncheck_all : function () {
+				var _this = this;
+				this.get_container().children("ul").children("li").each(function () {
+					_this.change_state(this, true);
+				});
+			},
+
+			is_checked : function(obj) {
+				obj = this._get_node(obj);
+				return obj.length ? obj.is(".jstree-checked") : false;
+			},
+			get_checked : function (obj) {
+				obj = !obj || obj === -1 ? this.get_container() : this._get_node(obj);
+				return obj.find("> ul > .jstree-checked, .jstree-undetermined > ul > .jstree-checked");
+			},
+			get_unchecked : function (obj) { 
+				obj = !obj || obj === -1 ? this.get_container() : this._get_node(obj);
+				return obj.find("> ul > .jstree-unchecked, .jstree-undetermined > ul > .jstree-unchecked");
+			},
+
+			show_checkboxes : function () { this.get_container().children("ul").removeClass("jstree-no-checkboxes"); },
+			hide_checkboxes : function () { this.get_container().children("ul").addClass("jstree-no-checkboxes"); },
+
+			_repair_state : function (obj) {
+				obj = this._get_node(obj);
+				if(!obj.length) { return; }
+				var a = obj.find("> ul > .jstree-checked").length,
+					b = obj.find("> ul > .jstree-undetermined").length,
+					c = obj.find("> ul > li").length;
+
+				if(c === 0) { if(obj.hasClass("jstree-undetermined")) { this.check_node(obj); } }
+				else if(a === 0 && b === 0) { this.uncheck_node(obj); }
+				else if(a === c) { this.check_node(obj); }
+				else { 
+					obj.parentsUntil(this.get_container(),"li").andSelf().removeClass("jstree-checked jstree-unchecked").addClass("jstree-undetermined");
 				}
-
-				tree_component.inst[this.cntr] = false;
-				tree_component.inst[this.container.attr("id")] = false;
-				delete tree_component.inst[this.cntr];
-				delete tree_component.inst[this.container.attr("id")];
-				tree_component.cntr --;
+			},
+			reselect : function () {
+				var _this = this,
+					s = this.data.ui.to_select;
+				s = $.map($.makeArray(s), function (n) { return "#" + n.toString().replace(/^#/,"").replace('\\/','/').replace('/','\\/'); });
+				this.deselect_all();
+				$.each(s, function (i, val) { _this.check_node(val); });
+				this.__callback();
 			}
 		}
-	};
+	});
+})(jQuery);
+//*/
 
-	// instance manager
-	tree_component.cntr = 0;
-	tree_component.inst = {};
-
-	// themes
-	tree_component.themes = [];
-
-	// drag'n'drop stuff
-	tree_component.drag_drop = {
-		isdown		: false,	// Is there a drag
-		drag_node	: false,	// The actual node
-		drag_help	: false,	// The helper
-		dragged		: false,
-
-		init_x		: false,
-		init_y		: false,
-		moving		: false,
-
-		origin_tree	: false,
-		marker		: false,
-
-		move_type	: false,	// before, after or inside
-		ref_node	: false,	// reference node
-		appended	: false,	// is helper appended
-
-		foreign		: false,	// Is the dragged node a foreign one
-		droppable	: [],		// Array of classes that can be dropped onto the tree
-
-		open_time	: false,	// Timeout for opening nodes
-		scroll_time	: false		// Timeout for scrolling
-	};
-	tree_component.mouseup = function(event) {
-		var tmp = tree_component.drag_drop;
-		if(tmp.open_time)	clearTimeout(tmp.open_time);
-		if(tmp.scroll_time)	clearTimeout(tmp.scroll_time);
-
-		if(tmp.moving && $.tree.drag_end !== false) $.tree.drag_end.call(null, event, tmp);
-
-		if(tmp.foreign === false && tmp.drag_node && tmp.drag_node.size()) {
-			tmp.drag_help.remove();
-			if(tmp.move_type) {
-				var tree1 = tree_component.inst[tmp.ref_node.parents(".tree:eq(0)").attr("id")];
-				if(tree1) tree1.moved(tmp.dragged, tmp.ref_node, tmp.move_type, false, (tmp.origin_tree.settings.rules.drag_copy == "on" || (tmp.origin_tree.settings.rules.drag_copy == "ctrl" && event.ctrlKey) ) );
-			}
-			tmp.move_type	= false;
-			tmp.ref_node	= false;
+/* 
+ * jsTree XML 1.0
+ * The XML data store. Datastores are build by overriding the `load_node` and `_is_loaded` functions.
+ */
+(function ($) {
+	$.vakata.xslt = function (xml, xsl) {
+		var rs = "", xm, xs, processor, support;
+		if(document.recalc) {
+			xm = document.createElement('xml');
+			xs = document.createElement('xml');
+			xm.innerHTML = xml;
+			xs.innerHTML = xsl;
+			$("body").append(xm).append(xs);
+			rs = xm.transformNode(xs.XMLDocument);
+			$("body").remove(xm).remove(xs);
+			return rs;
 		}
-		if(tmp.foreign !== false) {
-			if(tmp.drag_help) tmp.drag_help.remove();
-			if(tmp.move_type) {
-				var tree1 = tree_component.inst[tmp.ref_node.parents(".tree:eq(0)").attr("id")];
-				if(tree1) tree1.callback("ondrop",[tmp.f_data, tree1.get_node(tmp.ref_node).get(0), tmp.move_type, tree1]);
-			}
-			tmp.foreign		= false;
-			tmp.move_type	= false;
-			tmp.ref_node	= false;
-		}
-		// RESET EVERYTHING
-		if(tree_component.drag_drop.marker) tree_component.drag_drop.marker.hide();
-		if(tmp.dragged && tmp.dragged.size()) tmp.dragged.removeClass("dragged");
-		tmp.dragged		= false;
-		tmp.drag_help	= false;
-		tmp.drag_node	= false;
-		tmp.f_type		= false;
-		tmp.f_data		= false;
-		tmp.init_x		= false;
-		tmp.init_y		= false;
-		tmp.moving		= false;
-		tmp.appended	= false;
-		tmp.origin_tree	= false;
-		if(tmp.isdown) {
-			tmp.isdown = false;
-			event.preventDefault(); 
-			event.stopPropagation();
-			return false;
-		}
-	};
-	tree_component.mousemove = function(event) {
-		var tmp = tree_component.drag_drop;
-		var is_start = false;
-
-		if(tmp.isdown) {
-			if(!tmp.moving && Math.abs(tmp.init_x - event.pageX) < 5 && Math.abs(tmp.init_y - event.pageY) < 5) {
-				event.preventDefault();
-				event.stopPropagation();
-				return false;
+		if(typeof window.DOMParser !== "undefined" && typeof window.XMLHttpRequest !== "undefined" && typeof window.XSLTProcessor !== "undefined") {
+			processor = new XSLTProcessor();
+			support = $.isFunction(processor.transformDocument) ? (typeof window.XMLSerializer !== "undefined") : true;
+			if(!support) { return false; }
+			xml = new DOMParser().parseFromString(xml, "text/xml");
+			xsl = new DOMParser().parseFromString(xsl, "text/xml");
+			if($.isFunction(processor.transformDocument)) {
+				rs = document.implementation.createDocument("", "", null);
+				processor.transformDocument(xml, xsl, rs, null);
+				return new XMLSerializer().serializeToString(rs);
 			}
 			else {
-				if(!tmp.moving) {
-					tree_component.drag_drop.moving = true;
-					is_start = true;
-				}
-			}
-
-			if(tmp.open_time) clearTimeout(tmp.open_time);
-
-			if(tmp.drag_help !== false) {
-				if(!tmp.appended) {
-					if(tmp.foreign !== false) tmp.origin_tree = $.tree.focused();
-					$("body").append(tmp.drag_help);
-					tmp.w = tmp.drag_help.width();
-					tmp.appended = true;
-				}
-				tmp.drag_help.css({ "left" : (event.pageX + 5 ), "top" : (event.pageY + 15) });
-			}
-
-			if(is_start && $.tree.drag_start !== false) $.tree.drag_start.call(null, event, tmp);
-			if($.tree.drag !== false) $.tree.drag.call(null, event, tmp);
-
-			if(event.target.tagName == "DIV" && event.target.id == "jstree-marker") return false;
-
-			var et = $(event.target);
-			if(et.is("ins")) et = et.parents('li:eq(0)');
-			
-			var cnt = et.is(".tree") ? et : et.parents(".tree:eq(0)");
-
-			// if not moving over a tree
-			if(cnt.size() == 0 || !tree_component.inst[cnt.attr("id")]) {
-				if(tmp.scroll_time) clearTimeout(tmp.scroll_time);
-				if(tmp.drag_help !== false) tmp.drag_help.find("li:eq(0) ins").addClass("forbidden");
-				tmp.move_type	= false;
-				tmp.ref_node	= false;
-				tree_component.drag_drop.marker.hide();
-				return false;
-			}
-
-			var tree2 = tree_component.inst[cnt.attr("id")];
-			tree2.off_height();
-
-			if(tmp.scroll_time) clearTimeout(tmp.scroll_time);
-			tmp.scroll_time = setTimeout( function() { tree2.scroll_check(event.pageX,event.pageY); }, 50);
-
-			var mov = false;
-			var st = cnt.scrollTop();
-
-			if(event.target.tagName == "A" || event.target.tagName == "INS") {
-				// just in case if hover is over the draggable
-				if(et.is("#jstree-dragged")) return false;
-				if(tree2.get_node(event.target).hasClass("closed")) {
-					tmp.open_time = setTimeout( function () { tree2.open_branch(et); }, 500);
-				}
-
-				var et_off = et.offset();
-				var goTo = { 
-					x : (et_off.left - 1),
-					y : (event.pageY - et_off.top)
-				};
-
-				var arr = [];
-				if(goTo.y < tree2.li_height/3 + 1 )			arr = ["before","inside","after"];
-				else if(goTo.y > tree2.li_height*2/3 - 1 )	arr = ["after","inside","before"];
-				else {
-					if(goTo.y < tree2.li_height/2)			arr = ["inside","before","after"];
-					else									arr = ["inside","after","before"];
-				}
-				var ok = false;
-				var nn = (tmp.foreign == false) ? tmp.origin_tree.container.find("li.dragged") : tmp.f_type;
-				$.each(arr, function(i, val) {
-					if(tree2.check_move(nn, et, val)) {
-						mov = val;
-						ok = true;
-						return false;
-					}
-				});
-				if(ok) {
-					switch(mov) {
-						case "before":
-							goTo.y = et_off.top - 2;
-							tree_component.drag_drop.marker.attr("class","marker");
-							break;
-						case "after":
-							goTo.y = et_off.top - 2 + tree2.li_height;
-							tree_component.drag_drop.marker.attr("class","marker");
-							break;
-						case "inside":
-							goTo.x -= 2;
-							goTo.y = et_off.top - 2 + tree2.li_height/2;
-							tree_component.drag_drop.marker.attr("class","marker_plus"); 
-							break;
-					}
-					tmp.move_type	= mov;
-					if (event.target.tagName == "SPAN") {
-					  tmp.ref_node = $(event.target).parent();
-					}
-					tmp.ref_node	= $(event.target);
-					if(tmp.drag_help !== false) tmp.drag_help.find(".forbidden").removeClass("forbidden");
-					tree_component.drag_drop.marker.css({ "left" : goTo.x , "top" : goTo.y }).show();
-				}
-			}
-
-			if( (et.is(".tree") || et.is("ul") ) && et.find("li:eq(0)").size() == 0) {
-				var et_off = et.offset();
-				tmp.move_type	= "inside";
-				tmp.ref_node	= cnt.children("ul:eq(0)");
-				if(tmp.drag_help !== false) tmp.drag_help.find(".forbidden").removeClass("forbidden");
-				tree_component.drag_drop.marker.attr("class","marker_plus");
-				tree_component.drag_drop.marker.css({ "left" : (et_off.left + 10) , "top" : et_off.top + 15 }).show();
-			}
-			else if( (event.target.tagName != "A" && event.target.tagName != "INS" && event.target.tagName != "SPAN") || !ok) {
-				if(tmp.drag_help !== false) tmp.drag_help.find("li:eq(0) ins").addClass("forbidden");
-				tmp.move_type	= false;
-				tmp.ref_node	= false;
-				tree_component.drag_drop.marker.hide();
-			}
-			event.preventDefault();
-			event.stopPropagation();
-			return false;
-		}
-		return true;
-	};
-	$(function () { 
-		$(document).bind("mousemove.jstree",	tree_component.mousemove); 
-		$(document).bind("mouseup.jstree",		tree_component.mouseup); 
-	});
-
-	// cut, copy, paste stuff
-	tree_component.cut_copy = { 
-		copy_nodes : false,
-		cut_nodes : false
-	};
-
-	// css stuff
-	tree_component.css = false;
-	tree_component.get_css = function(rule_name, delete_flag) {
-		rule_name = rule_name.toLowerCase();
-		var css_rules = tree_component.css.cssRules || tree_component.css.rules;
-		var j = 0;
-		do {
-			if(css_rules.length && j > css_rules.length + 5) return false;
-			if(css_rules[j].selectorText && css_rules[j].selectorText.toLowerCase() == rule_name) {
-				if(delete_flag == true) {
-					if(tree_component.css.removeRule) document.styleSheets[i].removeRule(j);
-					if(tree_component.css.deleteRule) document.styleSheets[i].deleteRule(j);
-					return true;
-				}
-				else return css_rules[j];
+				processor.importStylesheet(xsl);
+				rs = processor.transformToFragment(xml, document);
+				return $("<div>").append(rs).html();
 			}
 		}
-		while (css_rules[++j]);
 		return false;
 	};
-	tree_component.add_css = function(rule_name) {
-		if(tree_component.get_css(rule_name)) return false;
-		(tree_component.css.insertRule) ? tree_component.css.insertRule(rule_name + ' { }', 0) : tree_component.css.addRule(rule_name, null, 0);
-		return tree_component.get_css(rule_name);
+	var xsl = {
+		'nest' : '<?xml version="1.0" encoding="utf-8" ?>' + 
+			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >' + 
+			'<xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" standalone="no" indent="no" media-type="text/html" />' + 
+			'<xsl:template match="/">' + 
+			'	<xsl:call-template name="nodes">' + 
+			'		<xsl:with-param name="node" select="/root" />' + 
+			'	</xsl:call-template>' + 
+			'</xsl:template>' + 
+			'<xsl:template name="nodes">' + 
+			'	<xsl:param name="node" />' + 
+			'	<ul>' + 
+			'	<xsl:for-each select="$node/item">' + 
+			'		<xsl:variable name="children" select="count(./item) &gt; 0" />' + 
+			'		<li>' + 
+			'			<xsl:attribute name="class">' + 
+			'				<xsl:if test="position() = last()">jstree-last </xsl:if>' + 
+			'				<xsl:choose>' + 
+			'					<xsl:when test="@state = \'open\'">jstree-open </xsl:when>' + 
+			'					<xsl:when test="$children or @hasChildren or @state = \'closed\'">jstree-closed </xsl:when>' + 
+			'					<xsl:otherwise>jstree-leaf </xsl:otherwise>' + 
+			'				</xsl:choose>' + 
+			'				<xsl:value-of select="@class" />' + 
+			'			</xsl:attribute>' + 
+			'			<xsl:for-each select="@*">' + 
+			'				<xsl:if test="name() != \'class\' and name() != \'state\' and name() != \'hasChildren\'">' + 
+			'					<xsl:attribute name="{name()}"><xsl:value-of select="." /></xsl:attribute>' + 
+			'				</xsl:if>' + 
+			'			</xsl:for-each>' + 
+			'	<ins class="jstree-icon"><xsl:text>&#xa0;</xsl:text></ins>' + 
+			'			<xsl:for-each select="content/name">' + 
+			'				<a>' + 
+			'				<xsl:attribute name="href">' + 
+			'					<xsl:choose>' + 
+			'					<xsl:when test="@href"><xsl:value-of select="@href" /></xsl:when>' + 
+			'					<xsl:otherwise>#</xsl:otherwise>' + 
+			'					</xsl:choose>' + 
+			'				</xsl:attribute>' + 
+			'				<xsl:attribute name="class"><xsl:value-of select="@lang" /> <xsl:value-of select="@class" /></xsl:attribute>' + 
+			'				<xsl:attribute name="style"><xsl:value-of select="@style" /></xsl:attribute>' + 
+			'				<xsl:for-each select="@*">' + 
+			'					<xsl:if test="name() != \'style\' and name() != \'class\' and name() != \'href\'">' + 
+			'						<xsl:attribute name="{name()}"><xsl:value-of select="." /></xsl:attribute>' + 
+			'					</xsl:if>' + 
+			'				</xsl:for-each>' + 
+			'					<ins>' + 
+			'						<xsl:attribute name="class">jstree-icon ' + 
+			'							<xsl:if test="string-length(attribute::icon) > 0 and not(contains(@icon,\'/\'))"><xsl:value-of select="@icon" /></xsl:if>' + 
+			'						</xsl:attribute>' + 
+			'						<xsl:if test="string-length(attribute::icon) > 0 and contains(@icon,\'/\')"><xsl:attribute name="style">background:url(<xsl:value-of select="@icon" />) center center no-repeat;</xsl:attribute></xsl:if>' + 
+			'						<xsl:text>&#xa0;</xsl:text>' + 
+			'					</ins>' + 
+			'					<xsl:value-of select="current()" />' + 
+			'				</a>' + 
+			'			</xsl:for-each>' + 
+			'			<xsl:if test="$children or @hasChildren"><xsl:call-template name="nodes"><xsl:with-param name="node" select="current()" /></xsl:call-template></xsl:if>' + 
+			'		</li>' + 
+			'	</xsl:for-each>' + 
+			'	</ul>' + 
+			'</xsl:template>' + 
+			'</xsl:stylesheet>',
+
+		'flat' : '<?xml version="1.0" encoding="utf-8" ?>' + 
+			'<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" >' + 
+			'<xsl:output method="html" encoding="utf-8" omit-xml-declaration="yes" standalone="no" indent="no" media-type="text/xml" />' + 
+			'<xsl:template match="/">' + 
+			'	<ul>' + 
+			'	<xsl:for-each select="//item[not(@parent_id) or @parent_id=0]">' + 
+			'		<xsl:call-template name="nodes">' + 
+			'			<xsl:with-param name="node" select="." />' + 
+			'			<xsl:with-param name="is_last" select="number(position() = last())" />' + 
+			'		</xsl:call-template>' + 
+			'	</xsl:for-each>' + 
+			'	</ul>' + 
+			'</xsl:template>' + 
+			'<xsl:template name="nodes">' + 
+			'	<xsl:param name="node" />' + 
+			'	<xsl:param name="is_last" />' + 
+			'	<xsl:variable name="children" select="count(//item[@parent_id=$node/attribute::id]) &gt; 0" />' + 
+			'	<li>' + 
+			'	<xsl:attribute name="class">' + 
+			'		<xsl:if test="$is_last = true()">jstree-last </xsl:if>' + 
+			'		<xsl:choose>' + 
+			'			<xsl:when test="@state = \'open\'">jstree-open </xsl:when>' + 
+			'			<xsl:when test="$children or @hasChildren or @state = \'closed\'">jstree-closed </xsl:when>' + 
+			'			<xsl:otherwise>jstree-leaf </xsl:otherwise>' + 
+			'		</xsl:choose>' + 
+			'		<xsl:value-of select="@class" />' + 
+			'	</xsl:attribute>' + 
+			'	<xsl:for-each select="@*">' + 
+			'		<xsl:if test="name() != \'parent_id\' and name() != \'hasChildren\' and name() != \'class\' and name() != \'state\'">' + 
+			'		<xsl:attribute name="{name()}"><xsl:value-of select="." /></xsl:attribute>' + 
+			'		</xsl:if>' + 
+			'	</xsl:for-each>' + 
+			'	<ins class="jstree-icon"><xsl:text>&#xa0;</xsl:text></ins>' + 
+			'	<xsl:for-each select="content/name">' + 
+			'		<a>' + 
+			'		<xsl:attribute name="href">' + 
+			'			<xsl:choose>' + 
+			'			<xsl:when test="@href"><xsl:value-of select="@href" /></xsl:when>' + 
+			'			<xsl:otherwise>#</xsl:otherwise>' + 
+			'			</xsl:choose>' + 
+			'		</xsl:attribute>' + 
+			'		<xsl:attribute name="class"><xsl:value-of select="@lang" /> <xsl:value-of select="@class" /></xsl:attribute>' + 
+			'		<xsl:attribute name="style"><xsl:value-of select="@style" /></xsl:attribute>' + 
+			'		<xsl:for-each select="@*">' + 
+			'			<xsl:if test="name() != \'style\' and name() != \'class\' and name() != \'href\'">' + 
+			'				<xsl:attribute name="{name()}"><xsl:value-of select="." /></xsl:attribute>' + 
+			'			</xsl:if>' + 
+			'		</xsl:for-each>' + 
+			'			<ins>' + 
+			'				<xsl:attribute name="class">jstree-icon ' + 
+			'					<xsl:if test="string-length(attribute::icon) > 0 and not(contains(@icon,\'/\'))"><xsl:value-of select="@icon" /></xsl:if>' + 
+			'				</xsl:attribute>' + 
+			'				<xsl:if test="string-length(attribute::icon) > 0 and contains(@icon,\'/\')"><xsl:attribute name="style">background:url(<xsl:value-of select="@icon" />) center center no-repeat;</xsl:attribute></xsl:if>' + 
+			'				<xsl:text>&#xa0;</xsl:text>' + 
+			'			</ins>' + 
+			'			<xsl:value-of select="current()" />' + 
+			'		</a>' + 
+			'	</xsl:for-each>' + 
+			'	<xsl:if test="$children">' + 
+			'		<ul>' + 
+			'		<xsl:for-each select="//item[@parent_id=$node/attribute::id]">' + 
+			'			<xsl:call-template name="nodes">' + 
+			'				<xsl:with-param name="node" select="." />' + 
+			'				<xsl:with-param name="is_last" select="number(position() = last())" />' + 
+			'			</xsl:call-template>' + 
+			'		</xsl:for-each>' + 
+			'		</ul>' + 
+			'	</xsl:if>' + 
+			'	</li>' + 
+			'</xsl:template>' + 
+			'</xsl:stylesheet>'
 	};
-	tree_component.remove_css = function(rule_name) { 
-		return tree_component.get_css(rule_name, true); 
-	};
-	tree_component.add_sheet = function(opts) {
-		if(opts.str) {
-			var tmp = document.createElement("style");
-			tmp.setAttribute('type',"text/css");
-			if(tmp.styleSheet) {
-				document.getElementsByTagName("head")[0].appendChild(tmp);
-				tmp.styleSheet.cssText = opts.str;
+	$.jstree.plugin("xml_data", {
+		defaults : { 
+			data : false,
+			ajax : false,
+			xsl : "flat",
+			clean_node : false
+		},
+		_fn : {
+			load_node : function (obj, s_call, e_call) { var _this = this; this.load_node_xml(obj, function () { _this.__callback({ "obj" : obj }); s_call.call(this); }, e_call); },
+			_is_loaded : function (obj) { 
+				var s = this.get_settings().xml_data;
+				return obj == -1 || !obj || !s.ajax || obj.is(".jstree-open, .jstree-leaf") || obj.children("ul").children("li").size() > 0;
+			},
+			load_node_xml : function (obj, s_call, e_call) {
+				var s = this.get_settings().xml_data,
+					error_func = function () {},
+					success_func = function () {};
+				switch(!0) {
+					case (!s.data && !s.ajax): throw "Neither data nor ajax settings supplied.";
+					case (!!s.data && !s.ajax) || (!!s.data && !!s.ajax && (!obj || obj === -1)):
+						if(!obj || obj == -1) {
+							this.get_container().children("ul").empty().append(this.parse_xml(s.data).children());
+							if(s.clean_node) { this.clean_node(obj); }
+						}
+						if(s_call) { s_call.call(this); }
+						break;
+					case (!s.data && !!s.ajax) || (!!s.data && !!s.ajax && obj && obj !== -1):
+						obj = this._get_node(obj);
+						error_func = function (x, t, e) {
+							var ef = this.get_settings().xml_data.ajax.error; 
+							if(ef) { ef.call(this, x, t, e); }
+							if(obj !== -1 && obj.length) {
+								obj.children(".jstree-loading").removeClass("jstree-loading");
+								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
+							}
+							if(e_call) { e_call.call(this); }
+						};
+						success_func = function (d, t, x) {
+							if(x.responseText == "") {
+								return error_func.call(this, x, t, "");
+							}
+							d = x.responseText;
+							var sf = this.get_settings().xml_data.ajax.success; 
+							if(sf) { d = sf.call(this,d,t,x) || d; }
+							d = this.parse_xml(d);
+							if(d) {
+								if(obj === -1 || !obj) { this.get_container().children("ul").empty().append(this.parse_xml(x.responseText).children()); }
+								else { obj.append(this.parse_xml(x.responseText)).children(".jstree-loading").removeClass("jstree-loading"); }
+								if(s.clean_node) { this.clean_node(obj); }
+								if(s_call) { s_call.call(this); }
+							}
+							else {
+								obj.children(".jstree-loading").removeClass("jstree-loading");
+								if(s.correct_state) { obj.removeClass("jstree-open jstree-closed").addClass("jstree-leaf"); }
+							}
+						};
+						s.ajax.context = this;
+						s.ajax.error = error_func;
+						s.ajax.success = success_func;
+						if($.isFunction(s.ajax.data)) { s.ajax.data = s.ajax.data.call(null, obj); }
+						$.ajax(s.ajax);
+						break;
+				}
+			},
+			parse_xml : function (xml) {
+				var s = this.get_settings().xml_data,
+					result = $.vakata.xslt(xml, xsl[s.xsl]);
+				if(result !== false) { result = $(result); }
+				return result;
+			},
+			get_xml : function (tp, obj, li_attr, a_attr, is_callback) {
+				var result = "", 
+					s = this.get_settings(), 
+					_this = this,
+					tmp1, tmp2, li, a, lang;
+				if(!tp) { tp = "flat"; }
+				if(!is_callback) { is_callback = 0; }
+				obj = this._get_node(obj);
+				if(!obj || obj === -1) { obj = this.get_container().find("> ul > li"); }
+				li_attr = $.isArray(li_attr) ? li_attr : [ "id", "class" ];
+				if(this.data.types) { li_attr.push(s.types.type_attr); }
+				a_attr = $.isArray(a_attr) ? a_attr : [ ];
+
+				if(!is_callback) { result += "<root>"; }
+				obj.each(function () {
+					result += "<item";
+					li = $(this);
+					$.each(li_attr, function (i, v) { result += " " + v + "=\"" + li.attr(v).replace(/jstree[^ ]*|$/ig,'').replace(/^\s+$/ig,"") + "\""; });
+					if(li.hasClass("jstree-open")) { result += " state=\"open\""; }
+					if(li.hasClass("jstree-closed")) { result += " state=\"closed\""; }
+					if(tp === "flat") { result += " parent_id=\"" + is_callback + "\""; }
+					result += ">";
+					result += "<content>";
+					a = li.children("a");
+					a.each(function () {
+						tmp1 = $(this);
+						lang = false;
+						result += "<name";
+						if($.inArray("languages", s.plugins) !== -1) {
+							$.each(s.languages, function (k, z) {
+								if(tmp1.hasClass(z)) { result += " lang=\"" + z + "\""; lang = z; return false; }
+							});
+						}
+						if(a_attr.length) { 
+							$.each(a_attr, function (k, z) {
+								result += " " + z + "=\"" + li.attr(z).replace(/jstree[^ ]*|$/ig,'') + "\"";
+							});
+						}
+						if(tmp1.children("ins").get(0).className.replace(/jstree[^ ]*|$/ig,'').replace(/^\s+$/ig,"").length) {
+							result += ' icon="' + tmp1.children("ins").get(0).className.replace(/jstree[^ ]*|$/ig,'').replace(/^\s+$/ig,"") + '"';
+						}
+						if(tmp1.children("ins").get(0).style.backgroundImage.length) {
+							result += ' icon="' + tmp1.children("ins").get(0).style.backgroundImage.replace("url(","").replace(")","") + '"';
+						}
+						result += ">";
+						result += "<![CDATA[" + _this.get_text(tmp1, lang) + "]]>";
+						result += "</name>";
+					});
+					result += "</content>";
+					tmp2 = li[0].id;
+					li = li.find("> ul > li");
+					if(li.length) { tmp2 = _this.get_xml(tp, li, li_attr, a_attr, tmp2); }
+					if(tp == "nest") { result += tmp2; }
+					result += "</item>";
+					if(tp == "flat") { result += tmp2; }
+				});
+				if(!is_callback) { result += "</root>"; }
+				return result;
 			}
-			else {
-				tmp.appendChild(document.createTextNode(opts.str));
-				document.getElementsByTagName("head")[0].appendChild(tmp);
-			}
-			return tmp.sheet || tmp.styleSheet;
 		}
-		if(opts.url) {
-			if(document.createStyleSheet) {
-				try { document.createStyleSheet(opts.url); } catch (e) { };
+	});
+})(jQuery);
+//*/
+
+/*
+ * jsTree search plugin 1.0
+ * Enables both sync and async search on the tree
+ * DOES NOT WORK WITH JSON PROGRESSIVE RENDER
+ */
+(function ($) {
+	$.expr[':'].jstree_contains = function(a,i,m){
+		return (a.textContent || a.innerText || "").toLowerCase().indexOf(m[3].toLowerCase())>=0;
+	};
+	$.jstree.plugin("search", {
+		__init : function () {
+			this.data.search.str = "";
+			this.data.search.result = $();
+		},
+		defaults : {
+			ajax : false, // OR ajax object
+			case_insensitive : false
+		},
+		_fn : {
+			search : function (str, skip_async) {
+				var s = this.get_settings().search, 
+					t = this,
+					error_func = function () { },
+					success_func = function () { };
+				this.data.search.str = str;
+
+				if(!skip_async && s.ajax !== false && this.get_container().find(".jstree-closed:eq(0)").length > 0) {
+					this.search.supress_callback = true;
+					error_func = function () { };
+					success_func = function (d, t, x) {
+						var sf = this.get_settings().search.ajax.success; 
+						if(sf) { d = sf.call(this,d,t,x) || d; }
+						this.data.search.to_open = d;
+						this._search_open();
+					};
+					s.ajax.context = this;
+					s.ajax.error = error_func;
+					s.ajax.success = success_func;
+					if($.isFunction(s.ajax.data)) { s.ajax.data = s.ajax.data.call(this, str); }
+					if(!s.ajax.data) { s.ajax.data = { "search_string" : str }; }
+					if(!s.ajax.dataType || /^json/.exec(s.ajax.dataType)) { s.ajax.dataType = "json"; }
+					$.ajax(s.ajax);
+					return;
+				}
+				if(this.data.search.result.length) { this.clear_search(); }
+				this.data.search.result = this.get_container().find("a" + (this.data.languages ? "." + this.get_lang() : "" ) + ":" + (s.case_insensitive ? "jstree_contains" : "contains") + "(" + this.data.search.str + ")");
+				this.data.search.result.addClass("jstree-search").parents(".jstree-closed").each(function () {
+					t.open_node(this, false, true);
+				});
+				this.__callback({ nodes : this.data.search.result, str : str });
+			},
+			clear_search : function (str) {
+				this.data.search.result.removeClass("jstree-search");
+				this.__callback(this.data.search.result);
+				this.data.search.result = $();
+			},
+			_search_open : function (is_callback) {
+				var _this = this,
+					done = true,
+					current = [],
+					remaining = [];
+				if(this.data.search.to_open.length) {
+					$.each(this.data.search.to_open, function (i, val) {
+						if(val == "#") { return true; }
+						if($(val).length && $(val).is(".jstree-closed")) { current.push(val); }
+						else { remaining.push(val); }
+					});
+					if(current.length) {
+						this.data.search.to_open = remaining;
+						$.each(current, function (i, val) { 
+							_this.open_node(val, function () { _this._search_open(true); }); 
+						});
+						done = false;
+					}
+				}
+				if(done) { this.search(this.data.search.str, true); }
 			}
-			else {
-				var newSS	= document.createElement('link');
-				newSS.rel	= 'stylesheet';
-				newSS.type	= 'text/css';
-				newSS.media	= "all";
-				newSS.href	= opts.url;
-				// var styles	= "@import url(' " + url + " ');";
-				// newSS.href	='data:text/css,'+escape(styles);
-				document.getElementsByTagName("head")[0].appendChild(newSS);
-				return newSS.styleSheet;
+		}
+	});
+})(jQuery);
+//*/
+
+/*
+ * jsTree contextmenu plugin 1.0
+ */
+(function ($) {
+	$.vakata.context = {
+		cnt		: $("<div id='vakata-contextmenu'>"),
+		vis		: false,
+		tgt		: false,
+		func	: false,
+		data	: false,
+		show	: function (s, t, x, y, d) {
+			var html = $.vakata.context.parse(s), h, w;
+			if(!html) { return; }
+			$.vakata.context.vis = true;
+			$.vakata.context.tgt = t;
+			$.vakata.context.data = d || null;
+			$.vakata.context.cnt
+				.html(html)
+				.css({ "visibility" : "hidden", "display" : "block", "left" : 0, "top" : 0 });
+			h = $.vakata.context.cnt.height();
+			w = $.vakata.context.cnt.width();
+			if(x + w > $(document).width()) { 
+				x = $(document).width() - (w + 5); 
+				$.vakata.context.cnt.find("li > ul").addClass("right"); 
 			}
+			if(y + h > $(document).height()) { 
+				y = y - (h + t[0].offsetHeight); 
+				$.vakata.context.cnt.find("li > ul").addClass("bottom"); 
+			}
+
+			$.vakata.context.cnt
+				.css({ "left" : x, "top" : y })
+				.find("li:has(ul)")
+					.bind("mouseenter", function (e) { 
+						var w = $(document).width(),
+							h = $(document).height(),
+							ul = $(this).children("ul").show(); 
+						if(w !== $(document).width()) { ul.toggleClass("right"); }
+						if(h !== $(document).height()) { ul.toggleClass("bottom"); }
+					})
+					.bind("mouseleave", function (e) { 
+						$(this).children("ul").hide(); 
+					})
+					.end()
+				.css({ "visibility" : "visible" })
+				.show();
+			$(document).triggerHandler("vakata.context_show");
+		},
+		hide	: function () {
+			$.vakata.context.vis = false;
+			$.vakata.context.cnt.attr("class","").hide();
+			$(document).triggerHandler("vakata.context_hide");
+		},
+		parse	: function (s, is_callback) {
+			var str = "",
+				tmp = false;
+			if(!is_callback) { $.vakata.context.func = {}; }
+			str += "<ul>";
+			$.each(s, function (i, val) {
+				if(!val) { return true; }
+				$.vakata.context.func[i] = val.action;
+				if(val.separator_before) {
+					str += "<li class='vakata-separator vakata-separator-before'></li>";
+				}
+				str += "<li><ins ";
+				if(val.icon && val.icon.indexOf("/") === -1) { str += " class='" + val.icon + "' "; }
+				if(val.icon && val.icon.indexOf("/") !== -1) { str += " style='background:url(" + val.icon + ") center center no-repeat;' "; }
+				str += ">&#160;</ins><a href='#' rel='" + i + "'>" + val.label;
+				if(val.submenu) {
+					str += "<span style='float:right;'>&raquo;</span>";
+				}
+				str += "</a>";
+				if(val.submenu) {
+					tmp = $.vakata.context.parse(val.submenu, true);
+					if(tmp) { str += tmp; }
+				}
+				str += "</li>";
+				if(val.separator_after) {
+					str += "<li class='vakata-separator vakata-separator-after'></li>";
+				}
+			});
+			str += "</ul>";
+			return str.length > 10 ? str : false;
+		},
+		exec	: function (i) {
+			if($.isFunction($.vakata.context.func[i])) {
+				$.vakata.context.func[i].call($.vakata.context.data, $.vakata.context.tgt);
+				return true;
+			}
+			else { return false; }
 		}
 	};
 	$(function () {
-		var u = navigator.userAgent.toLowerCase();
-		var v = (u.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1];
-
-		var css = '/* TREE LAYOUT */ .tree ul { margin:0 0 0 5px; padding:0 0 0 0; list-style-type:none; } .tree li { display:block; min-height:22px; line-height:22px; padding:0 0 0 15px; margin:0 0 0 0; /* Background fix */ /*clear:left;*/  } .tree li ul { display:none; } .tree li a, .tree li span { display:inline-block;line-height:16px;height:16px;color:black;white-space:nowrap;text-decoration:none;padding:1px 4px 1px 4px;margin:0; } .tree li a:focus { outline: none; } .tree li a input, .tree li span input { margin:0;padding:0 0;display:inline-block;height:12px !important;border:1px solid white;background:white;font-size:10px;font-family:Verdana; } .tree li a input:not([class="xxx"]), .tree li span input:not([class="xxx"]) { padding:1px 0; } /* FOR DOTS */ .tree .ltr li.last { /*float:left;*/ } .tree > ul li.last { overflow:visible; } /* OPEN OR CLOSE */ .tree li.open ul { display:block; } .tree li.closed > ul { display:none !important; } /* FOR DRAGGING */ #jstree-dragged { position:absolute; top:-10px; left:-10px; margin:0; padding:0; } #jstree-dragged ul ul ul { display:none; }   /* BACKGROUND DOTS */ .tree li li { overflow:hidden; } .tree > .ltr > li { display:table; } /* ICONS */ .tree ul ins { display:inline-block; text-decoration:none; width:16px; height:16px; } .tree .ltr ins { margin:0 4px 0 0px; } ';
-		if($.browser.msie) { 
-			if($.browser.version == 6) css += '.tree li { height:18px; zoom:1; } .tree li li { overflow:visible; } .tree .ltr li.last { margin-top: expression( (this.previousSibling && /open/.test(this.previousSibling.className) ) ? "-2px" : "0"); } .marker { width:45px; background-position:-32px top; } .marker_plus { width:5px; background-position:right top; }';
-			if($.browser.version == 7) css += '.tree li li { overflow:visible; } .tree .ltr li.last { margin-top: expression( (this.previousSibling && /open/.test(this.previousSibling.className) ) ? "-2px" : "0"); }';
-		}
-		if($.browser.opera) css += '.tree > ul > li.last:after { content:"."; display: block; height:1px; clear:both; visibility:hidden; }';
-		if($.browser.mozilla && $.browser.version.indexOf("1.8") == 0) css += '.tree .ltr li a { display:inline; float:left; } .tree li ul { clear:both; }';
-		tree_component.css = tree_component.add_sheet({ str : css });
-	});
-})(jQuery);
-
-// Datastores
-// HTML and JSON are included here by default
-(function ($) {
-	$.extend($.tree.datastores, {
-		"html" : function () {
-			return {
-				get		: function(obj, tree, opts) {
-					return obj && $(obj).size() ? $('<div>').append(tree.get_node(obj).clone()).html() : tree.container.children("ul:eq(0)").html();
-				},
-				parse	: function(data, tree, opts, callback) {
-					if(callback) callback.call(null, data);
-					return data;
-				},
-				load	: function(data, tree, opts, callback) {
-					if(opts.url) {
-						$.ajax({
-							'type'		: opts.method,
-							'url'		: opts.url, 
-							'data'		: data, 
-							'dataType'	: "html",
-							'success'	: function (d, textStatus) {
-								callback.call(null, d);
-							},
-							'error'		: function (xhttp, textStatus, errorThrown) { 
-								callback.call(null, false);
-								tree.error(errorThrown + " " + textStatus); 
-							}
-						});
-					}
-					else {
-						callback.call(null, opts['static'] || tree.container.children("ul:eq(0)").html());
-					}
+		var css_string = '' + 
+			'#vakata-contextmenu { display:none; position:absolute; margin:0; padding:0; min-width:180px; background:#ebebeb; border:1px solid silver; } ' + 
+			'#vakata-contextmenu ul { min-width:180px; } ' + 
+			'#vakata-contextmenu ul, #vakata-contextmenu li { margin:0; padding:0; list-style-type:none; display:block; } ' + 
+			'#vakata-contextmenu li { line-height:20px; min-height:20px; position:relative; padding:0px; } ' + 
+			'#vakata-contextmenu li a { padding:1px 6px; line-height:17px; display:block; text-decoration:none; margin:1px 1px 0 1px; } ' + 
+			'#vakata-contextmenu li ins { float:left; width:16px; height:16px; text-decoration:none; margin-right:2px; } ' + 
+			'#vakata-contextmenu li a:hover, #vakata-contextmenu li.vakata-hover > a { background:gray; color:white; } ' + 
+			'#vakata-contextmenu li ul { display:none; position:absolute; top:-2px; left:100%; background:#ebebeb; border:1px solid gray; } ' + 
+			'#vakata-contextmenu .right { right:100%; left:auto; } ' + 
+			'#vakata-contextmenu .bottom { bottom:-1px; top:auto; } ' + 
+			'#vakata-contextmenu li.vakata-separator { min-height:0; height:1px; line-height:1px; font-size:1px; overflow:hidden; margin:0 2px; background:silver; /* border-top:1px solid #fefefe; */ padding:0; } ';
+		$.vakata.css.add_sheet({ str : css_string });
+		$.vakata.context.cnt
+			.delegate("a","click", function (e) { e.preventDefault(); })
+			.delegate("a","mouseup", function (e) {
+				if($.vakata.context.exec($(this).attr("rel"))) {
+					$.vakata.context.hide();
 				}
-			};
-		},
-		"json" : function () {
-			return {
-				get		: function(obj, tree, opts) { 
-					var _this = this;
-					if(!obj || $(obj).size() == 0) obj = tree.container.children("ul").children("li");
-					else obj = $(obj);
-
-					if(!opts) opts = {};
-					if(!opts.outer_attrib) opts.outer_attrib = [ "id", "rel", "class" ];
-					if(!opts.inner_attrib) opts.inner_attrib = [ ];
-
-					if(obj.size() > 1) {
-						var arr = [];
-						obj.each(function () {
-							arr.push(_this.get(this, tree, opts));
-						});
-						return arr;
-					}
-					if(obj.size() == 0) return [];
-
-					var json = { attributes : {}, data : {} };
-					if(obj.hasClass("open")) json.data.state = "open";
-					if(obj.hasClass("closed")) json.data.state = "closed";
-
-					for(var i in opts.outer_attrib) {
-						if(!opts.outer_attrib.hasOwnProperty(i)) continue;
-						var val = (opts.outer_attrib[i] == "class") ? obj.attr(opts.outer_attrib[i]).replace(/(^| )last( |$)/ig," ").replace(/(^| )(leaf|closed|open)( |$)/ig," ") : obj.attr(opts.outer_attrib[i]);
-						if(typeof val != "undefined" && val.toString().replace(" ","").length > 0) json.attributes[opts.outer_attrib[i]] = val;
-						delete val;
-					}
-					
-					if(tree.settings.languages.length) {
-						for(var i in tree.settings.languages) {
-							if(!tree.settings.languages.hasOwnProperty(i)) continue;
-							var a = obj.children("a." + tree.settings.languages[i]);
-							if(opts.force || opts.inner_attrib.length || a.children("ins").get(0).style.backgroundImage.toString().length || a.children("ins").get(0).className.length) {
-								json.data[tree.settings.languages[i]] = {};
-								json.data[tree.settings.languages[i]].title = tree.get_text(obj,tree.settings.languages[i]);
-								if(a.children("ins").get(0).style.className.length) {
-									json.data[tree.settings.languages[i]].icon = a.children("ins").get(0).style.className;
-								}
-								if(a.children("ins").get(0).style.backgroundImage.length) {
-									json.data[tree.settings.languages[i]].icon = a.children("ins").get(0).style.backgroundImage.replace("url(","").replace(")","");
-								}
-								if(opts.inner_attrib.length) {
-									json.data[tree.settings.languages[i]].attributes = {};
-									for(var j in opts.inner_attrib) {
-										if(!opts.inner_attrib.hasOwnProperty(j)) continue;
-										var val = a.attr(opts.inner_attrib[j]);
-										if(typeof val != "undefined" && val.toString().replace(" ","").length > 0) json.data[tree.settings.languages[i]].attributes[opts.inner_attrib[j]] = val;
-										delete val;
-									}
-								}
-							}
-							else {
-								json.data[tree.settings.languages[i]] = tree.get_text(obj,tree.settings.languages[i]);
-							}
-						}
-					}
-					else {
-						var a = obj.children("a");
-						json.data.title = tree.get_text(obj);
-
-						if(a.children("ins").size() && a.children("ins").get(0).className.length) {
-							json.data.icon = a.children("ins").get(0).className;
-						}
-						if(a.children("ins").size() && a.children("ins").get(0).style.backgroundImage.length) {
-							json.data.icon = a.children("ins").get(0).style.backgroundImage.replace("url(","").replace(")","");
-						}
-
-						if(opts.inner_attrib.length) {
-							json.data.attributes = {};
-							for(var j in opts.inner_attrib) {
-								if(!opts.inner_attrib.hasOwnProperty(j)) continue;
-								var val = a.attr(opts.inner_attrib[j]);
-								if(typeof val != "undefined" && val.toString().replace(" ","").length > 0) json.data.attributes[opts.inner_attrib[j]] = val;
-								delete val;
-							}
-						}
-					}
-
-					if(obj.children("ul").size() > 0) {
-						json.children = [];
-						obj.children("ul").children("li").each(function () {
-							json.children.push(_this.get(this, tree, opts));
-						});
-					}
-					return json;
-				},
-				parse	: function(data, tree, opts, callback) { 
-					if(Object.prototype.toString.apply(data) === "[object Array]") {
-						var str = '';
-						for(var i = 0; i < data.length; i ++) {
-							if(typeof data[i] == "function") continue;
-							str += this.parse(data[i], tree, opts);
-						}
-						if(callback) callback.call(null, str);
-						return str;
-					}
-
-					if(!data || !data.data) {
-						if(callback) callback.call(null, false);
-						return "";
-					}
-
-					var str = '';
-					str += "<li ";
-					var cls = false;
-					if(data.attributes) {
-						for(var i in data.attributes) {
-							if(!data.attributes.hasOwnProperty(i)) continue;
-							if(i == "class") {
-								str += " class='" + data.attributes[i] + " ";
-								if(data.state == "closed" || data.state == "open") str += " " + data.state + " ";
-								str += "' ";
-								cls = true;
-							}
-							else str += " " + i + "='" + data.attributes[i] + "' ";
-						}
-					}
-					if(!cls && (data.state == "closed" || data.state == "open")) str += " class='" + data.state + "' ";
-					str += ">";
-
-					if(tree.settings.languages.length) {
-						for(var i = 0; i < tree.settings.languages.length; i++) {
-							var attr = {};
-							attr["href"] = "";
-							attr["style"] = "";
-							attr["class"] = tree.settings.languages[i];
-							if(data.data[tree.settings.languages[i]] && (typeof data.data[tree.settings.languages[i]].attributes).toLowerCase() != "undefined") {
-								for(var j in data.data[tree.settings.languages[i]].attributes) {
-									if(!data.data[tree.settings.languages[i]].attributes.hasOwnProperty(j)) continue;
-									if(j == "style" || j == "class")	attr[j] += " " + data.data[tree.settings.languages[i]].attributes[j];
-									else								attr[j]  = data.data[tree.settings.languages[i]].attributes[j];
-								}
-							}
-							str += "<a";
-							for(var j in attr) {
-								if(!attr.hasOwnProperty(j)) continue;
-								str += ' ' + j + '="' + attr[j] + '" ';
-							}
-							str += ">";
-							if(data.data[tree.settings.languages[i]] && data.data[tree.settings.languages[i]].icon) {
-								str += "<ins " + (data.data[tree.settings.languages[i]].icon.indexOf("/") == -1 ? " class='" + data.data[tree.settings.languages[i]].icon + "' " : " style='background-image:url(\"" + data.data[tree.settings.languages[i]].icon + "\");' " ) + ">&nbsp;</ins>";
-							}
-							else str += "<ins>&nbsp;</ins>";
-							str += ( (typeof data.data[tree.settings.languages[i]].title).toLowerCase() != "undefined" ? data.data[tree.settings.languages[i]].title : data.data[tree.settings.languages[i]] ) + "</a>";
-						}
-					}
-					else {
-						var attr = {};
-						attr["href"] = "";
-						attr["style"] = "";
-						attr["class"] = "";
-						if((typeof data.data.attributes).toLowerCase() != "undefined") {
-							for(var i in data.data.attributes) {
-								if(!data.data.attributes.hasOwnProperty(i)) continue;
-								if(i == "style" || i == "class")	attr[i] += " " + data.data.attributes[i];
-								else								attr[i]  = data.data.attributes[i];
-							}
-						}
-						str += "<a";
-						for(var i in attr) {
-							if(!attr.hasOwnProperty(i)) continue;
-							str += ' ' + i + '="' + attr[i] + '" ';
-						}
-						str += ">";
-						if(data.data.icon) {
-							str += "<ins " + (data.data.icon.indexOf("/") == -1 ? " class='" + data.data.icon + "' " : " style='background-image:url(\"" + data.data.icon + "\");' " ) + ">&nbsp;</ins>";
-						}
-						else str += "<ins>&nbsp;</ins>";
-						str += ( (typeof data.data.title).toLowerCase() != "undefined" ? data.data.title : data.data ) + "</a>";
-					}
-					if(data.children && data.children.length) {
-						str += '<ul>';
-						for(var i = 0; i < data.children.length; i++) {
-							str += this.parse(data.children[i], tree, opts);
-						}
-						str += '</ul>';
-					}
-					str += "</li>";
-					if(callback) callback.call(null, str);
-					return str;
-				},
-				load	: function(data, tree, opts, callback) {
-					if(opts['static']) {
-						callback.call(null, opts['static']);
+			})
+			.delegate("a","mouseover", function () {
+				$.vakata.context.cnt.find(".vakata-hover").removeClass("vakata-hover");
+			})
+			.appendTo("body");
+		$(document).bind("mousedown", function (e) { if($.vakata.context.vis && !$.contains($.vakata.context.cnt[0], e.target)) { $.vakata.context.hide(); } });
+		if(typeof $.hotkeys !== "undefined") {
+			$(document)
+				.bind("keydown", "up", function (e) { 
+					if($.vakata.context.vis) { 
+						var o = $.vakata.context.cnt.find("ul:visible").last().children(".vakata-hover").removeClass("vakata-hover").prevAll("li:not(.vakata-separator)").first();
+						if(!o.length) { o = $.vakata.context.cnt.find("ul:visible").last().children("li:not(.vakata-separator)").last(); }
+						o.addClass("vakata-hover");
+						e.stopImmediatePropagation(); 
+						e.preventDefault();
 					} 
-					else {
-						$.ajax({
-							'type'		: opts.method,
-							'url'		: opts.url, 
-							'data'		: data, 
-							'dataType'	: "json",
-							'success'	: function (d, textStatus) {
-								callback.call(null, d);
-							},
-							'error'		: function (xhttp, textStatus, errorThrown) { 
-								callback.call(null, false);
-								tree.error(errorThrown + " " + textStatus); 
-							}
-						});
+				})
+				.bind("keydown", "down", function (e) { 
+					if($.vakata.context.vis) { 
+						var o = $.vakata.context.cnt.find("ul:visible").last().children(".vakata-hover").removeClass("vakata-hover").nextAll("li:not(.vakata-separator)").first();
+						if(!o.length) { o = $.vakata.context.cnt.find("ul:visible").last().children("li:not(.vakata-separator)").first(); }
+						o.addClass("vakata-hover");
+						e.stopImmediatePropagation(); 
+						e.preventDefault();
+					} 
+				})
+				.bind("keydown", "right", function (e) { 
+					if($.vakata.context.vis) { 
+						$.vakata.context.cnt.find(".vakata-hover").children("ul").show().children("li:not(.vakata-separator)").removeClass("vakata-hover").first().addClass("vakata-hover");
+						e.stopImmediatePropagation(); 
+						e.preventDefault();
+					} 
+				})
+				.bind("keydown", "left", function (e) { 
+					if($.vakata.context.vis) { 
+						$.vakata.context.cnt.find(".vakata-hover").children("ul").hide().children(".vakata-separator").removeClass("vakata-hover");
+						e.stopImmediatePropagation(); 
+						e.preventDefault();
+					} 
+				})
+				.bind("keydown", "esc", function (e) { 
+					$.vakata.context.hide(); 
+					e.preventDefault();
+				})
+				.bind("keydown", "space", function (e) { 
+					$.vakata.context.cnt.find(".vakata-hover").last().children("a").click();
+					e.preventDefault();
+				});
+		}
+	});
+
+	$.jstree.plugin("contextmenu", {
+		__init : function () {
+			this.get_container()
+				.delegate("a", "contextmenu.jstree", $.proxy(function (e) {
+						e.preventDefault();
+						this.show_contextmenu(e.currentTarget, e.pageX, e.pageY);
+					}, this));
+		},
+		defaults : { 
+			show_at_node : true,
+			items : { // Could be a function that should return an object like this one
+				"create" : {
+					"separator_before"	: false,
+					"separator_after"	: true,
+					"label"				: "Create",
+					"action"			: function (obj) { this.create(obj); }
+				},
+				"rename" : {
+					"separator_before"	: false,
+					"separator_after"	: false,
+					"label"				: "Rename",
+					"action"			: function (obj) { this.rename(obj); }
+				},
+				"remove" : {
+					"separator_before"	: false,
+					"icon"				: false,
+					"separator_after"	: false,
+					"label"				: "Delete",
+					"action"			: function (obj) { this.remove(obj); }
+				},
+				"ccp" : {
+					"separator_before"	: true,
+					"icon"				: false,
+					"separator_after"	: false,
+					"label"				: "Edit",
+					"action"			: function (obj) { this.remove(obj); },
+					"submenu" : { 
+						"cut" : {
+							"separator_before"	: false,
+							"separator_after"	: false,
+							"label"				: "Cut",
+							"action"			: function (obj) { this.cut(obj); }
+						},
+						"copy" : {
+							"separator_before"	: false,
+							"icon"				: false,
+							"separator_after"	: false,
+							"label"				: "Copy",
+							"action"			: function (obj) { this.copy(obj); }
+						},
+						"paste" : {
+							"separator_before"	: false,
+							"icon"				: false,
+							"separator_after"	: false,
+							"label"				: "Paste",
+							"action"			: function (obj) { this.paste(obj); }
+						}
 					}
 				}
+			}
+		},
+		_fn : {
+			show_contextmenu : function (obj, x, y) {
+				obj = this._get_node(obj);
+				var s = this.get_settings().contextmenu,
+					a = obj.children("a:visible:eq(0)"),
+					o = false;
+				if(s.show_at_node || typeof x === "undefined" || typeof y === "undefined") {
+					o = a.offset();
+					x = o.left;
+					y = o.top + this.data.core.li_height;
+				}
+				if($.isFunction(s.items)) { s.items = s.items.call(this, obj); }
+				$.vakata.context.show(s.items, a, x, y, this);
+				if(this.data.themes) { $.vakata.context.cnt.attr("class", "jstree-" + this.data.themes.theme + "-context"); }
 			}
 		}
 	});
 })(jQuery);
+//*/
+
+/* 
+ * jsTree types plugin 1.0
+ * Adds support types of nodes
+ * You can set an attribute on each li node, that represents its type.
+ * According to the type setting the node may get custom icon/validation rules
+ */
+(function ($) {
+	$.jstree.plugin("types", {
+		__init : function () {
+			var s = this.get_settings().types;
+			this.data.types.attach_to = [];
+			this.get_container()
+				.bind("init.jstree", $.proxy(function () { 
+						var types = s.types, 
+							attr  = s.type_attr, 
+							icons_css = "", 
+							_this = this;
+
+						$.each(types, function (i, tp) {
+							$.each(tp, function (k, v) { 
+								if(!/^(max_depth|max_children|icon|valid_children)$/.test(k)) { _this.data.types.attach_to.push(k); }
+							});
+							if(!tp.icon) { return true; }
+							if( tp.icon.image || tp.icon.position) {
+								if(i == "default")	{ icons_css += '.jstree-' + _this.get_index() + ' a > .jstree-icon { '; }
+								else				{ icons_css += '.jstree-' + _this.get_index() + ' li[' + attr + '=' + i + '] > a > .jstree-icon { '; }
+								if(tp.icon.image)	{ icons_css += ' background-image:url(' + tp.icon.image + '); '; }
+								if(tp.icon.position){ icons_css += ' background-position:' + tp.icon.position + '; '; }
+								else				{ icons_css += ' background-position:0 0; '; }
+								icons_css += '} ';
+							}
+						});
+						if(icons_css != "") { $.vakata.css.add_sheet({ 'str' : icons_css }); }
+					}, this))
+				.bind("before.jstree", $.proxy(function (e, data) { 
+						if($.inArray(data.func, this.data.types.attach_to) !== -1) {
+							var s = this.get_settings().types.types,
+								t = this._get_type(data.args[0]);
+							if(s[t] && typeof s[t][data.func] !== "undefined" && !this._check(data.func, data.args[0])) {
+								e.stopImmediatePropagation();
+								return false;
+							}
+						}
+					}, this));
+		},
+		defaults : {
+			// defines maximum number of root nodes (-1 means unlimited, -2 means disable max_children checking)
+			max_children		: -1,
+			// defines the maximum depth of the tree (-1 means unlimited, -2 means disable max_depth checking)
+			max_depth			: -1,
+			// defines valid node types for the root nodes
+			valid_children		: "all",
+
+			// where is the type stores (the rel attribute of the LI element)
+			type_attr : "rel",
+			// a list of types
+			types : {
+				// the default type
+				"default" : {
+					"max_children"	: -1,
+					"max_depth"		: -1,
+					"valid_children": "all"
+
+					// Bound functions - you can bind any other function here (using boolean or function)
+					//"select_node"	: true,
+					//"open_node"	: true,
+					//"close_node"	: true,
+					//"create_node"	: true,
+					//"delete_node"	: true
+				}
+			}
+		},
+		_fn : {
+			_get_type : function (obj) {
+				obj = this._get_node(obj);
+				return (!obj || !obj.length) ? false : obj.attr(this.get_settings().types.type_attr) || "default";
+			},
+			set_type : function (str, obj) {
+				obj = this._get_node(obj);
+				return (!obj.length || !str) ? false : obj.attr(this.get_settings().types.type_attr, str);
+			},
+			_check : function (rule, obj, opts) {
+				var v = false, t = this._get_type(obj), d = 0, _this = this, s = this.get_settings().types;
+				if(obj === -1) { 
+					if(!!s[rule]) { v = s[rule]; }
+					else { return; }
+				}
+				else {
+					if(t === false) { return; }
+					if(!!s.types[t] && !!s.types[t][rule]) { v = s.types[t][rule]; }
+					else if(!!s.types["default"] && !!s.types["default"][rule]) { v = s.types["default"][rule]; }
+				}
+				if($.isFunction(v)) { v = v.call(this, obj); }
+				if(rule === "max_depth" && obj !== -1 && opts !== false && s.max_depth !== -2 && v !== 0) {
+					this._get_node(obj).parentsUntil(this.get_container(),"li").each(function (i) {
+						d = _this._check(rule, this, false);
+						if(d !== -1 && d - (i + 1) <= 0) { v = 0; return false; }
+						if(d >= 0 && (d - (i + 1) < v || v < 0) ) { v = d - (i + 1); }
+					});
+				}
+				return v;
+			},
+			check_move : function () {
+				if(!this.__call_old()) { return false; }
+				var m  = this._get_move(),
+					s  = m.rt.get_settings().types,
+					mc = m.rt._check("max_children", m.cr),
+					md = m.rt._check("max_depth", m.cr),
+					vc = m.rt._check("valid_children", m.cr),
+					ch = 0, d = 1, t;
+
+				if(vc === "none") { return false; } 
+				if($.isArray(vc) && m.ot && m.ot._get_type) {
+					m.o.each(function () {
+						if($.inArray(m.ot._get_type(this), vc) === -1) { d = false; return false; }
+					});
+					if(d === false) { return false; }
+				}
+				if(s.max_children !== -2 && mc !== -1) {
+					ch = m.cr === -1 ? this.get_container().children("> ul > li").not(m.o).length : m.cr.children("> ul > li").not(m.o).length;
+					if(ch + m.o.length > mc) { return false; }
+				}
+				if(s.max_depth !== -2 && md !== -1) {
+					d = 0;
+					if(md === 0) { return false; }
+					if(typeof m.o.d === "undefined") {
+						// TODO: deal with progressive rendering and async when checking max_depth (how to know the depth of the moved node)
+						t = m.o;
+						while(t.length > 0) {
+							t = t.find("> ul > li");
+							d ++;
+						}
+						m.o.d = d;
+					}
+					if(md - m.o.d < 0) { return false; }
+				}
+				return true;
+			},
+			create_node : function (obj, position, js, callback, is_loaded, skip_check) {
+				if(!skip_check && (is_loaded || this._is_loaded(obj))) {
+					var p  = (position && position.match(/^before|after$/i)) ? this._get_parent(obj) : this._get_node(obj),
+						s  = this.get_settings().types,
+						mc = this._check("max_children", p),
+						md = this._check("max_depth", p),
+						vc = this._check("valid_children", p),
+						ch;
+					if(!js) { js = {}; }
+					if(vc === "none") { return false; } 
+					if($.isArray(vc)) {
+						if(!js.attr || !js.attr[s.type_attr]) { 
+							if(!js.attr) { js.attr = {}; }
+							js.attr[s.type_attr] = vc[0]; 
+						}
+						else {
+							if($.inArray(js.attr[s.type_attr], vc) === -1) { return false; }
+						}
+					}
+					if(s.max_children !== -2 && mc !== -1) {
+						ch = p === -1 ? this.get_container().children("> ul > li").length : p.children("> ul > li").length;
+						if(ch + 1 > mc) { return false; }
+					}
+					if(s.max_depth !== -2 && md !== -1 && (md - 1) <= 0) { return false; }
+				}
+				return this.__call_old(true, obj, position, js, callback, is_loaded, skip_check);
+			}
+		}
+	});
+})(jQuery);
+//*/

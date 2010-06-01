@@ -34,6 +34,10 @@
       overflow: visible;      
     }
     
+    .loginWrapperWithError {
+      height: 16em !important;
+    }
+    
     #login {
       font-family: Verdana, Arial, Helvetica, sans-serif;
       margin: 1em auto;
@@ -111,9 +115,13 @@
 
 <body>
 
+<c:if test="${param.error == 1}">
+  <c:set var="errorAddedClass" value="loginWrapperWithError" />
+</c:if>
+
 <div id="outerWrapper">
 
-  <div id="loginWrapper" class="dynamictable ui-widget-content ui-corner-all">
+  <div id="loginWrapper" class="dynamictable ui-widget-content ui-corner-all ${errorAddedClass}">
     <div id="heading" class="ui-widget-header ui-corner-all dynamictable-caption dynamictable-caption-block">
       Agilefant login
     </div>

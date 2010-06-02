@@ -496,7 +496,7 @@
        </result>
     </action>
     
-    <action name="retrieveBranchMetrics" class="storyHierarchyAction" method="execute">
+    <action name="retrieveBranchMetrics" class="storyHierarchyAction" method="retrieveBranchMetrics">
       <result type="dispatcher">/WEB-INF/jsp/fragments/branchMetrics.jsp</result>
     </action>
         

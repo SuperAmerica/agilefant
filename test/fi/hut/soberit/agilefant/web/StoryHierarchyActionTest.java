@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.transfer.StoryTreeBranchMetrics;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 import static org.junit.Assert.*;
@@ -141,6 +142,21 @@ public class StoryHierarchyActionTest extends MockedTestCase {
         verifyAll();
         
         assertEquals(stories, storyHierarchyAction.getStories());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveBranchMetrics() {
+        Story story = new Story();
+        StoryTreeBranchMetrics metrics = new StoryTreeBranchMetrics();
+        expect(storyBusiness.retrieve(55)).andReturn(story);
+        expect(storyHierarchyBusiness.calculateStoryTreeMetrics(story)).andReturn(metrics);
+        
+        replayAll();
+        this.storyHierarchyAction.setStoryId(55);
+        assertEquals(Action.SUCCESS, this.storyHierarchyAction.retrieveBranchMetrics());
+        verifyAll();
+        assertEquals(metrics, storyHierarchyAction.getBranchMetrics());
     }
 
 }

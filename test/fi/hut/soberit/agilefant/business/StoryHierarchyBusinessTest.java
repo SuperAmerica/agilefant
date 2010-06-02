@@ -21,11 +21,13 @@ import fi.hut.soberit.agilefant.exception.StoryTreeIntegrityViolationException;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.transfer.StoryTreeBranchMetrics;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -718,5 +720,50 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         assertEquals("Child story's children not empty", 0, actual.getChildren().get(0).getChildren().size());
     }
     
+    @Test
+    @DirtiesContext
+    public void testCalculateStoryTreeMetrics() {
+       Story root = new Story();
+       root.setStoryPoints(20);
+       
+       Story child1 = new Story();
+       child1.setStoryPoints(7);
+       
+       Story child11 = new Story();
+       child11.setStoryPoints(4);
+       
+       Story child12 = new Story();
+       child12.setStoryPoints(4);
+       child12.setState(StoryState.DONE);
+       
+       Story child2 = new Story();
+       child2.setStoryPoints(14);
+       child2.setState(StoryState.DONE);
+       
+       Story child21 = new Story();
+       child21.setStoryPoints(8);
+       child21.setState(StoryState.DONE);
+       
+       Story child22 = new Story();
+       child22.setStoryPoints(4);
+       child22.setState(StoryState.DONE);
+       
+       Story child3 = new Story();
+       child3.setStoryPoints(10);
+       
+       root.setChildren(Arrays.asList(child1, child2, child3));
+       child1.setChildren(Arrays.asList(child11, child12));
+       child2.setChildren(Arrays.asList(child21, child22));
+       
+       replayAll();
+       StoryTreeBranchMetrics metrics = this.storyHierarchyBusiness.calculateStoryTreeMetrics(root);
+       verifyAll();
+       
+       assertEquals(18, metrics.estimatedDonePoints);
+       assertEquals(32, metrics.estimatedPoints);
+       assertEquals(16, metrics.doneLeafPoints);
+       assertEquals(30, metrics.leafPoints);
+       
+    }
     
 }

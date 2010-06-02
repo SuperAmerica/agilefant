@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.exception.StoryTreeIntegrityViolationException;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.StoryTreeBranchMetrics;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityUtils;
@@ -41,6 +42,8 @@ public class StoryHierarchyAction extends ActionSupport {
     private List<Story> hierarchy = new ArrayList<Story>();
     
     private List<String> integrityErrors = new ArrayList<String>(); 
+    
+    private StoryTreeBranchMetrics branchMetrics;
 
     public String recurseHierarchyAsList() {
         story = storyBusiness.retrieve(storyId);
@@ -99,6 +102,12 @@ public class StoryHierarchyAction extends ActionSupport {
             }
             integrityErrors.add(message);
         }
+    }
+    
+    public String retrieveBranchMetrics() {
+        story = this.storyBusiness.retrieve(this.storyId);
+        this.branchMetrics = this.storyHierarchyBusiness.calculateStoryTreeMetrics(story);
+        return Action.SUCCESS;
     }
         
     public String retrieveProductRootStories() {
@@ -165,6 +174,10 @@ public class StoryHierarchyAction extends ActionSupport {
 
     public List<String> getIntegrityErrors() {
         return integrityErrors;
+    }
+
+    public StoryTreeBranchMetrics getBranchMetrics() {
+        return branchMetrics;
     }
 
 }

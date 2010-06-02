@@ -9,14 +9,14 @@
   </tr>
   <tr>
     <th>Done sum (leaf)</th>
-    <td>20</td>
+    <td>${branchMetrics.doneLeafPoints}</td>
     <th>Total sum (leaf)</th>
-    <td>40</td>
+    <td>${branchMetrics.leafPoints}</td>
   </tr>
   <tr>
     <th>Done sum (estimate)</th>
-    <td>21</td>
+    <td>${branchMetrics.estimatedDonePoints}</td>
     <th>Total sum (estimate)</th>
-    <td>45</td>
+    <td>${branchMetrics.estimatedPoints}</td>
   </tr>
 </table>

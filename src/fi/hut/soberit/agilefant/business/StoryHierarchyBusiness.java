@@ -5,6 +5,7 @@ import java.util.List;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.transfer.StoryTreeBranchMetrics;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 
@@ -67,4 +68,5 @@ public interface StoryHierarchyBusiness {
      */
     public StoryTO recurseHierarchy(Story story);
 
+    public StoryTreeBranchMetrics calculateStoryTreeMetrics(Story story);
 }

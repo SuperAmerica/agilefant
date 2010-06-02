@@ -21,7 +21,9 @@ import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.transfer.StoryTreeBranchMetrics;
 import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @Service("storyHierarchyBusiness")
@@ -257,5 +259,39 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
             returned = transfer;
         }
         return returned;
+    }
+    
+    private long storyPointsAsLong(Story story) {
+        if(story.getStoryPoints() == null) {
+            return 0L;
+        }
+        return story.getStoryPoints();
+    }
+    public StoryTreeBranchMetrics calculateStoryTreeMetrics(Story story) {
+        StoryTreeBranchMetrics metrics = new StoryTreeBranchMetrics();
+        
+        if(story.getChildren().isEmpty()) {
+            metrics.leafPoints = storyPointsAsLong(story);
+            if(story.getState() == StoryState.DONE) {
+                metrics.doneLeafPoints = storyPointsAsLong(story);
+            }
+        }
+        
+        for(Story child : story.getChildren()) {
+            StoryTreeBranchMetrics childMetrics = this.calculateStoryTreeMetrics(child);
+            metrics.estimatedDonePoints += childMetrics.estimatedDonePoints;
+            metrics.estimatedPoints += childMetrics.estimatedPoints;
+            metrics.leafPoints += childMetrics.leafPoints;
+            metrics.doneLeafPoints += childMetrics.doneLeafPoints;
+        }
+        
+        if(storyPointsAsLong(story) > metrics.estimatedPoints) {
+            metrics.estimatedPoints = storyPointsAsLong(story);
+            if(story.getState() == StoryState.DONE) {
+                metrics.estimatedDonePoints = storyPointsAsLong(story);
+            }
+        }
+
+        return metrics;
     }
 }

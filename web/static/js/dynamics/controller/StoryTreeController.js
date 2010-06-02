@@ -187,7 +187,7 @@ StoryTreeController.prototype.initTree = function() {
   var me = this;
   
   this.tree = $(this.element).jstree({
-    plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "sort", "ui" ],
+    plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "ui" ],
     core: {
       animation: 0,
       html_titles: true
@@ -315,7 +315,7 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
     // Hide the "New folder" line
     node.find("span").hide();
     
-    var container = $('<div />').css('white-space','nowrap').appendTo(node);
+    var container = $('<div />').css({'white-space':'nowrap','display':'inline-block'}).appendTo(node);
     var nameField = $('<input type="text" size="75" />').appendTo(container);
     
     var saveStory = function(event) {
@@ -326,7 +326,14 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
           node.remove();
           var newNode, lastNode = me.element.find('> ul > li').last();
           if(lastNode.length) {
-            newNode = me.tree.create(lastNode,"after",{ data: fragment },null,true);
+            var newData = $(fragment);
+            newNode = me.tree.create(lastNode,"after",{ data: newData.find('a:eq(0)').html() },null,true);
+            newNode.attr( {
+                'id' : newData.attr('id'),
+                'rel' : newData.attr('rel'),
+                'storystate' : newData.attr('storystate'),
+                'storyid' : newData.attr('storyid')
+              });
           } else {
             // TODO: Fix empty tree
 //            newNode = me.tree.create(0,-1);
@@ -336,8 +343,15 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
       }
       else {
         $.post(StoryTreeController.createNodeUrls[position], {storyId: parentStory, "story.name": nameField.val()}, function(fragment) {
-          container.remove();
-          node.replaceWith(fragment);
+          node.remove();
+          var newData = $(fragment);
+          var newNode = me.tree.create(refNode,position,{ data: newData.find('a:eq(0)').html() },null,true);
+          newNode.attr( {
+            'id' : newData.attr('id'),
+            'rel' : newData.attr('rel'),
+            'storystate' : newData.attr('storystate'),
+            'storyid' : newData.attr('storyid')
+          });
         },"html");
       }
     };

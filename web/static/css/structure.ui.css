@@ -361,30 +361,6 @@ div.smallBurndown {
 }
 
 /**
- * LABEL ICONS
- */
-.labelIcon {
-  background-image: url('../img/labelIcon.png');
-  background-position: 0 0;
-  background-repeat: no-repeat;
-  padding: 0 !important;
-  color: #246 !important;
-  font-size: 7pt;
-  font-family: verdana, arial, sans-serif;
-  text-align: center;
-  text-transform: uppercase;
-  width: 36px;
-}
-
-.labelIconMultiple {
-  background-position: 0 50%;
-}
-
-.labelIconNoLabel {
-  background-position: 0 100%;
-}
-
-/**
  * LOAD COLORS
  */
 .load-maximum {

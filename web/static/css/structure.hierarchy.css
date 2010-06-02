@@ -66,17 +66,53 @@ div.hierarchyContainer {
   margin: 4px;
 }
 
+.jstree .inlineTaskState {
+  display: inline-block;
+  padding: 0 !important;
+  width: 1.5em;
+  height: 1.5em;
+  line-height: 16px;
+}
+
 .treeStoryPoints {
+  display: inline-block;
   background: #ffc;
   min-width: 2ex;
   border: 1px solid #cca;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   text-align: center;
-  vertical-align: middle !important;
+  /*vertical-align: middle !important;*/
   line-height: 14px !important;
   font-size: 80%;
   height: 14px !important;
+  padding: 0 2px;
+}
+/**
+ * LABEL ICONS
+ */
+.labelIcon {
+  display: inline-block;
+  background-image: url('../img/labelIcon.png');
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  padding: 0 !important;
+  color: #246 !important;
+  font-size: 7pt;
+  font-family: verdana, arial, sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  width: 36px;
+  height: 16px;
+  line-height: 16px;
+}
+
+.labelIconMultiple {
+  background-position: 0 50%;
+}
+
+.labelIconNoLabel {
+  background-position: 0 100%;
 }
 
 /**

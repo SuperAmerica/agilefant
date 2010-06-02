@@ -10,6 +10,7 @@
 }
 
 .jstree-storytree li {
+  line-height: 22px !important;
   background-position: -90px 0;
   background-repeat: repeat-y;
 }
@@ -40,6 +41,10 @@
   background: #beebff;
   border: 1px solid #99defd;
   padding: 0 2px 0 1px;
+}
+
+.jstree-storytree a {
+  line-height: 20px;  
 }
 
 .jstree-storytree a .jstree-icon {

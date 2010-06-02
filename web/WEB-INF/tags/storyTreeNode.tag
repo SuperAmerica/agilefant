@@ -47,7 +47,8 @@
     
 
     
-    <c:out value="${node.name}" /><span style="font-size:80%" title="${node.backlog.name}">(<c:out value="${node.backlog.name}"/>)</span>
+    <span><c:out value="${node.name}" /></span>
+    <span style="font-size:80%; color: #666;" title="${node.backlog.name}">(<c:out value="${node.backlog.name}"/>)</span>
     </a>
     <c:if test="${!empty node.children}">
     <ul>

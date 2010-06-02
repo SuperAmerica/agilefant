@@ -110,6 +110,10 @@ StoryModel.prototype._saveData = function(id, changedData) {
     delete changedData.tasksToDone;
     delete this.currentData.tasksToDone;
   }
+  
+  if(this.currentData.backlog) {
+    delete this.currentData.backlog;
+  }
 
   jQuery.extend(data, this.serializeFields("story", changedData));
   if(ArrayUtils.countObjectFields(data) === 0) {

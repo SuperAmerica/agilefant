@@ -92,7 +92,7 @@ $(document).ready(function() {
 </ul>
 
 <form onsubmit="return false;">
-  <div class="details" id="storyTreeContainer"></div>
+  <div class="details" id="storyTreeContainer" style="position: relative;"></div>
   <div class="details" id="projects"></div>
 </form>
 

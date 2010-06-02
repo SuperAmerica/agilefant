@@ -186,6 +186,19 @@ StoryTreeController.prototype.initTree = function() {
   // Url params
   var me = this;
   
+  var overlay = $('<div><div style="border: 1px solid #ccc; display: inline-block; vertical-align: middle; margin-top: 5%; background-color: white;"><img src="static/img/pleasewait.gif" style="display: inline-block; vertical-align: middle;" /> Please wait...</div></div>').css({
+    "background-color": "#999999",
+    "position": "absolute",
+    "opacity": "0.5",
+    "border": "1px solid #666666",
+    "width": "99%",
+    "height": "99%",
+    "top": "0",
+    "left": "0",
+    "text-align": "center",
+    "vertical-align": "middle"
+  }).appendTo(this.parentElement);
+  
   this.tree = $(this.element).jstree({
     plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "ui", "search" ],
     core: {
@@ -196,9 +209,13 @@ StoryTreeController.prototype.initTree = function() {
       ajax: {
         url: urlInfo[this.type].url,
         type: "POST",
+        beforeSend: function(xhr) {
+          overlay.show();
+          return xhr;
+        },
         data: function() {
           var data = {
-              "storyFilters.states": me.storyFilters.statesToKeep
+            "storyFilters.states": me.storyFilters.statesToKeep
           };
           if (me.storyFilters.name) {
             data["storyFilters.name"] = me.storyFilters.name;
@@ -207,6 +224,7 @@ StoryTreeController.prototype.initTree = function() {
           return data;
         },
         complete: function() {
+          overlay.fadeOut('fast');
           me._searchByText();
         }
       }

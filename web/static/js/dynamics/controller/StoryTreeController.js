@@ -40,6 +40,7 @@ StoryTreeController.prototype.resetFilter = function() {
   this.storyFilters = {
       statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"]
   };
+  this.filterImg.removeClass("storytree-filterimg-active");
 };
 
 StoryTreeController.prototype.refresh = function() {
@@ -78,9 +79,9 @@ StoryTreeController.prototype.initHeader = function() {
   var heading = $('<div class="dynamictable-caption" style="margin-bottom: 1em;"></div>').appendTo(this.headerElement);
   
   var title = $('<div style="float: left; width:50%"><span style="float: left;">Story tree</span></div>').appendTo(heading);
-  var filterImg = $('<div/>').addClass("storytree-filterimg").appendTo(title);
+  this.filterImg = $('<div/>').addClass("storytree-filterimg").appendTo(title);
   
-  filterImg.click(function() {
+  this.filterImg.click(function() {
     var bub = new Bubble($(this), {
       title: "Filter by state",
       offsetX: -15,
@@ -91,10 +92,10 @@ StoryTreeController.prototype.initHeader = function() {
     var widget = new StateFilterWidget(bub.getElement(), {
       callback: function(isActive) {
         if (isActive) {
-          filterImg.addClass("storytree-filterimg-active");
+          me.filterImg.addClass("storytree-filterimg-active");
         }
         else {
-          filterImg.removeClass("storytree-filterimg-active");
+          me.filterImg.removeClass("storytree-filterimg-active");
         }
         me.storyFilters.statesToKeep = widget.getFilter();
       },

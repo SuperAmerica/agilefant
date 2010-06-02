@@ -81,12 +81,10 @@ StoryInfoBubble.prototype.populateContent = function() {
     me.storyInfoView = new DynamicVerticalTable(me, me.model, me.storyInfoConfig, me.storyInfoElement);
     me.storyInfoView.render();
   });
-  /*
-  $('<a>more...</a>').click(function() {
-    me._expand();
-    $(this).hide();
-  }).appendTo(this.element);
-  */
+  
+  this.branchMetricsElement = $('<div style="clear: both;"><hr/></div>').appendTo(this.element);
+  var branchContent = $('<div><img src="static/img/working.gif" alt="Please wait..."/></div>').appendTo(this.branchMetricsElement)
+    .load('ajax/retrieveBranchMetrics.action?storyId=' + this.id);
 };
 
 
@@ -123,15 +121,6 @@ StoryInfoBubble.prototype.addLinks = function() {
   }).appendTo(links);
 };
 
-/**
- * Not currently used.
- */
-/*
-StoryInfoBubble.prototype._expand = function() {
-  this.element.find('.dynamictable-row').show();
-  this.element.find('.dynamictable-cell').show();
-};
-*/
 
 /**
  * Create the configuration for the dynamic table.

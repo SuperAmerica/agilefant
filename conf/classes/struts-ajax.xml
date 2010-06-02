@@ -496,6 +496,10 @@
        </result>
     </action>
     
+    <action name="retrieveBranchMetrics" class="storyHierarchyAction" method="execute">
+      <result type="dispatcher">/WEB-INF/jsp/fragments/branchMetrics.jsp</result>
+    </action>
+        
     <action name="deleteStory" method="delete" class="storyAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>

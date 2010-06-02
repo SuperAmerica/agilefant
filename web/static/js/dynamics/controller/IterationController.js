@@ -157,6 +157,13 @@ IterationController.prototype.removeIteration = function() {
   });
 };
 
+/** override backlog controller base class to reload metrics box **/
+IterationController.prototype.openLogEffort = function() {
+  var widget = new SpentEffortWidget(this.model, jQuery.proxy(function() {
+    this.reloadMetricsBox();
+  }, this));
+};
+
 
 IterationController.prototype.pageControllerDispatch = function(event) {
   if(event instanceof DynamicsEvents.AddEvent) {

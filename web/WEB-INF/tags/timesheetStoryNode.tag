@@ -8,7 +8,7 @@
 	<c:forEach items="${nodes}" var="sNode">
 		<tr>
 		<th class="story">
-        <a onclick="tsToggle(this);">${sNode.name}</a>
+        <a onclick="tsToggle(this);">${sNode.name} &raquo;</a>
       </th>
 		<th class="story effortCol">
         ${aef:minutesToString(sNode.effortSum)}

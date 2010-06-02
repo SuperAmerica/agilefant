@@ -110,6 +110,10 @@ StoryModel.prototype._saveData = function(id, changedData) {
     delete changedData.tasksToDone;
     delete this.currentData.tasksToDone;
   }
+  
+  if(this.currentData.backlog) {
+    delete this.currentData.backlog;
+  }
 
   jQuery.extend(data, this.serializeFields("story", changedData));
   if(ArrayUtils.countObjectFields(data) === 0) {
@@ -177,6 +181,7 @@ StoryModel.prototype.reloadMetrics = function() {
     function(data,status) {
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
+      me.callListeners(new DynamicsEvents.MetricsEvent(me));
     }
   );
 };

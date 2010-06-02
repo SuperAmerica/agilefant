@@ -7,7 +7,7 @@
 
 <c:forEach items="${nodes}" var="tNode">
 	<tr class="task">
-	<td><a onclick="tsToggle(this);">${tNode.name}</a></td>
+	<td><a onclick="tsToggle(this);">${tNode.name} &raquo;</a></td>
 	<td class="effortCol">${aef:minutesToString(tNode.effortSum)}</td>
 	</tr>
 	<c:if test="${!empty tNode.hourEntries}">

@@ -250,7 +250,8 @@ StoryTreeController.prototype.initTree = function() {
     },
     crrm: {},
     dnd: {
-      "copy_modifier": ""
+      "copy_modifier": "",
+      "open_timeout": 1000
     },
     cookies: {
       "save_selected": false

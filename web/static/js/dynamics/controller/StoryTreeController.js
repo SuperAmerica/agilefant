@@ -144,23 +144,22 @@ StoryTreeController.prototype._storyFilters = function(node, tree_obj) {
 };
 
 StoryTreeController.prototype.filter = function(name, storyStates) {
-  var data = this.storyFilters;
-  if (name) {
-    data.name = name;
-  } else {
-    delete data.name;
-  }
-  if (storyStates.length > 0) {
-    data.statesToKeep = storyStates;
-  } else {
-    delete data.statesToKeep;
-  }
+
+  this.storyFilters.statesToKeep = storyStates;
+  this.storyFilters.name = name;
+
   this.refresh();
 };
 
 StoryTreeController.prototype.hasFilters = function() {
   return this.storyFilters.name
       || (this.storyFilters.states && this.storyFilters.states.length === 6);
+};
+
+StoryTreeController.prototype._searchByText = function() {
+  if (this.storyFilters.name) {
+    this.tree.search(this.storyFilters.name);
+  }
 };
 
 StoryTreeController.prototype.initTree = function() {
@@ -178,7 +177,7 @@ StoryTreeController.prototype.initTree = function() {
     "product": {
       url: "ajax/getProductStoryTree.action",
       data: {
-      "productId": this.id
+        "productId": this.id
       }
     }
   };
@@ -187,7 +186,7 @@ StoryTreeController.prototype.initTree = function() {
   var me = this;
   
   this.tree = $(this.element).jstree({
-    plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "ui" ],
+    plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "ui", "search" ],
     core: {
       animation: 0,
       html_titles: true
@@ -195,8 +194,20 @@ StoryTreeController.prototype.initTree = function() {
     html_data: {
       ajax: {
         url: urlInfo[this.type].url,
-        method: "post",
-        data: urlInfo[this.type].data
+        type: "POST",
+        data: function() {
+          var data = {
+              "storyFilters.states": me.storyFilters.statesToKeep
+          };
+          if (me.storyFilters.name) {
+            data["storyFilters.name"] = me.storyFilters.name;
+          }
+          jQuery.extend(data, urlInfo[me.type].data);
+          return data;
+        },
+        complete: function() {
+          me._searchByText();
+        }
       }
     },
     themes: {
@@ -228,6 +239,9 @@ StoryTreeController.prototype.initTree = function() {
     ui: {
       "select_limit": 1,
       "initially_select": []
+    },
+    search: {
+      "case_insensitive": true
     }
   });
   this.tree = jQuery.jstree._reference(this.element);
@@ -309,14 +323,16 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
     return false;
   }
   
-  
+  var nameField = $('<input type="text" size="75"/>').css( {
+    'margin' : '0px'
+  });
   var node = this.tree.create(refNode, position, {}, function(node) {
     var nodeNameEl = node.find("a").hide();
     // Hide the "New folder" line
     node.find("span").hide();
     
-    var container = $('<div />').css({'white-space':'nowrap','display':'inline-block'}).appendTo(node);
-    var nameField = $('<input type="text" size="75" />').appendTo(container);
+    var container = $('<div />').css({'white-space':'nowrap','display':'inline-block','height':'16px'}).appendTo(node);
+    nameField.appendTo(container);
     
     var saveStory = function(event) {
       event.stopPropagation();
@@ -324,21 +340,15 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
       if (parentStory === 0) {
         $.post("ajax/treeCreateRootStory.action", {backlogId: me.id, "story.name": nameField.val()}, function(fragment) {
           node.remove();
-          var newNode, lastNode = me.element.find('> ul > li').last();
-          if(lastNode.length) {
-            var newData = $(fragment);
-            newNode = me.tree.create(lastNode,"after",{ data: newData.find('a:eq(0)').html() },null,true);
-            newNode.attr( {
-                'id' : newData.attr('id'),
-                'rel' : newData.attr('rel'),
-                'storystate' : newData.attr('storystate'),
-                'storyid' : newData.attr('storyid')
-              });
-          } else {
-            // TODO: Fix empty tree
-//            newNode = me.tree.create(0,-1);
-          }
-//          newNode.replaceWith(fragment);
+          var newNode;
+          var newData = $(fragment);
+          newNode = me.tree.create(me.tree,"last",{ data: newData.find('a:eq(0)').html() },null,true);
+          newNode.attr( {
+            'id' : newData.attr('id'),
+            'rel' : newData.attr('rel'),
+            'storystate' : newData.attr('storystate'),
+            'storyid' : newData.attr('storyid')
+          });
         },"html");
       }
       else {
@@ -369,9 +379,8 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
       }    
     });
     $('<input type="button" value="cancel" />').click(cancelFunc).appendTo(container);
-    nameField.focus();
   }, true);
-  
+  nameField.focus();
 };
 
 StoryTreeController.prototype.removeNode = function(node) {

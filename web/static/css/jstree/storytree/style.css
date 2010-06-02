@@ -129,7 +129,7 @@
 }
 
 .jstree-storytree a.jstree-search {
-  color: aqua;
+  background-color: #ffc;
 }
 
 #vakata-contextmenu.jstree-storytree-context,#vakata-contextmenu.jstree-storytree-context li ul

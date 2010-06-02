@@ -19,6 +19,11 @@
 
   <li id="storytree_${node.id}" storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="${forcedClass}">
     <a href="#">
+    
+    <span style="display: none;">
+    <c:forEach items="${node.labels}" var="label">${label.displayName} </c:forEach>
+    </span>
+    
     <span class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></span>
     
     <span class="treeStoryPoints" title="Story points">

@@ -181,6 +181,7 @@ StoryModel.prototype.reloadMetrics = function() {
     function(data,status) {
       me.setData(data);
       me.callListeners(new DynamicsEvents.EditEvent(me));
+      me.callListeners(new DynamicsEvents.MetricsEvent(me));
     }
   );
 };

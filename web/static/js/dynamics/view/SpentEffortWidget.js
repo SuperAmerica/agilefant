@@ -1,5 +1,6 @@
-var SpentEffortWidget = function SpentEffortWidget(model) {
+var SpentEffortWidget = function SpentEffortWidget(model, onClose) {
   this.model = model;
+  this.onClose = onClose;
   this.initDialog();
 };
 
@@ -49,6 +50,9 @@ SpentEffortWidget.prototype.close = function() {
     this.model.reload();
   } else if(this.model instanceof StoryModel) {
     this.model.reloadMetrics();
+  }
+  if(this.onClose) {
+    this.onClose();
   }
 };
 

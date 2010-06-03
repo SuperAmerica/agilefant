@@ -211,12 +211,10 @@ CreateDialog.Project.prototype.initFormConfig = function() {
     get : ProjectModel.prototype.getParent,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
-    openOnRowEdit: false,
     edit : {
-      editor : "AutocompleteSingle",
-      dialogTitle: "Select parent product",
+      editor : "InlineAutocomplete",
       dataType: "products",
-      required: true,
+      decorator: DynamicsDecorators.propertyDecoratorFactory(BacklogModel.prototype.getName),
       set: ProjectModel.prototype.setParent
     }
   });
@@ -280,12 +278,10 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     get: IterationModel.prototype.getParent,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
-    openOnRowEdit: false,
     edit : {
-      editor : "AutocompleteSingle",
-      dialogTitle: "Select parent backlog",
+      editor : "InlineAutocomplete",
       dataType: "projects",
-      required: true,
+      decorator: DynamicsDecorators.propertyDecoratorFactory(BacklogModel.prototype.getName),
       set: IterationModel.prototype.setParent
     }
   });

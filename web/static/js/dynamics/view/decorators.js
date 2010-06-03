@@ -251,5 +251,13 @@ var DynamicsDecorators = {
   emptyDescriptionDecorator: function(value) {
     var f = DynamicsDecorators.onEmptyDecoratorFactory('<span style="color: #666; font-size: 80%;">(Empty description)</span>');
     return f(value);
+  },
+  propertyDecoratorFactory: function(propertyFunction) {
+    return function(context) {
+      if (context != null) {
+        return propertyFunction.call(context);
+      }
+      return "";
+    };
   }
 };

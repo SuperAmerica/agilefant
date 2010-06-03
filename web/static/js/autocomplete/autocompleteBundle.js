@@ -74,11 +74,6 @@ Autocomplete.prototype._init = function(element, options) {
   this.recentBox = new AutocompleteRecent(this.recentContainer, this.options.dataType, this, {});  
 };
 
-jQuery.fn.autocomplete = function(options) {
-  var autocomplete = new Autocomplete(this);
-  autocomplete.items = options.items;
-  autocomplete.initialize();
-};
 
 /**
  * Initialize the <code>Autocomplete</code> selector.

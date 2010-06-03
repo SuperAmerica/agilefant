@@ -44,6 +44,9 @@ BacklogModel.prototype.getAssignments = function() {
 BacklogModel.prototype.getHourEntries = function() {
   return this.relations.hourEntry;
 };
+BacklogModel.prototype.getName = function() {
+  return this.currentData.name;
+};
 
 BacklogModel.prototype.addAssignments = function(userIds) {
   if(!(userIds instanceof Array)) {

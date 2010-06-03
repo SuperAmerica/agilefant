@@ -756,6 +756,147 @@ TableEditors.Password.prototype._validate = function() {
 };
 
 
+/*
+ * INLINE AUTOCOMPLETE 
+ */
+/**
+ * Inline autocomplete element.
+ * For single selection only.
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.InlineAutocomplete = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+  this.focus();
+};
+TableEditors.InlineAutocomplete.prototype = new TableEditors.CommonEditor();
+
+TableEditors.InlineAutocomplete.defaultOptions = {
+  /** @member TableEditors.InlineAutocomplete */
+  required: true,
+  /** @member TableEditors.InlineAutocomplete */
+  dataType: "",
+  /** @member TableEditors.InlineAutocomplete */
+  size: "95%"
+};
+
+TableEditors.InlineAutocomplete.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.InlineAutocomplete.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
+  
+  this.textField = $('<input type="text" />').width(this.options.size).appendTo(this.element);
+  
+  this._registerEditField(this.textField);
+  
+  this.textField.autocomplete({
+    source: jQuery.proxy(function(request, response) {
+      response(this._getData(request.term));
+    },this)
+  });
+  
+};
+TableEditors.InlineAutocomplete.prototype._registerEditField = function(element) {
+  element.bind('autocompleteselect', jQuery.proxy(function(event, ui) {
+    this.value = ModelFactory.updateObject(ui.item.object);
+    this._requestSaveIfNotInRowEdit();
+  }, this));
+  
+  element.bind('autocompleteclose', jQuery.proxy(function(event, ui) {
+    this.autocompleteOpen = false;
+    this.setEditorValue(this.value);
+  }, this));
+  
+  element.bind('autocompleteopen', jQuery.proxy(function(event, ui) {
+    this.autocompleteOpen = true;
+  },this));
+  
+  TableEditors.CommonEditor.prototype._registerEditField.call(this, element);
+};
+
+TableEditors.InlineAutocomplete.prototype._handleKeyEvent = function(event) {
+  if (event.keyCode === 27) {
+    event.stopPropagation();
+    event.preventDefault();
+    this._requestCancel();
+    return false;
+  } else if (event.keyCode === 13 && !this.autocompleteOpen) {    
+    event.stopPropagation();
+    event.preventDefault();
+    this._requestSave();
+    return false;
+  }
+};
+
+
+
+TableEditors.InlineAutocomplete.prototype._getData = function(searchString) {
+  var data = AutocompleteDataProvider.getInstance().get(this.options.dataType);
+  var filteredList = this._filterSuggestions(data, searchString);
+  return $.map(filteredList, function(item) {
+    return {
+      label: item.name,
+      value: item.name,
+      object: item.originalObject 
+    };
+  });
+};
+
+TableEditors.InlineAutocomplete.prototype._filterSuggestions = function(list, match) {
+  var me = this;
+  var returnedList = jQuery.grep(list, function(element, index) {
+    return (element.enabled &&
+        (me.matchSearchString(element.matchedString, match) ||
+            me.matchSearchString(element.name, match)));
+  });
+  return returnedList;
+};
+
+TableEditors.InlineAutocomplete.prototype.matchSearchString = function(text, match) {
+  if (!match || !text) {
+    return false;
+  }
+  
+  // Split to fragments
+  var replaceRe = new RegExp("[\\]\\[\\\\!#$%&()*+,./:;<=>?@_`{|}~]+");
+  var matchFragments = match.replace(replaceRe, ' ').split(' ');
+  
+  var a = 5;
+  // Loop through fragments
+  var allMatch = true;
+  for (var i = 0; i < matchFragments.length; i++) {
+    var fragment = matchFragments[i];
+    if (text.toLowerCase().indexOf(fragment.toLowerCase()) === -1) {
+      allMatch = false;
+      break;
+    }  
+  }
+  
+  return allMatch;
+};
+
+TableEditors.InlineAutocomplete.prototype.setEditorValue = function(value) {
+  console.log("Set editor value");
+  if (!value) {
+    value = this.options.get.call(this.model);
+  }
+  if (this.options.decorator) {
+    value = this.options.decorator(value);
+  }
+  this.textField.val(value);
+};
+
+TableEditors.InlineAutocomplete.prototype.getEditorValue = function() {
+  return this.value;
+};
+
+TableEditors.InlineAutocomplete.prototype._validate = function() {
+  return TableEditors.CommonEditor.prototype._validate.call(this);
+};
+
+
+
 
 /*
  * DROP DOWN SELECTION

@@ -21,39 +21,39 @@ $(document).ready(function() {
     }
   });
   
-  test("Autocomplete creation", function() {
-    var original = Autocomplete;
-    var originalInit = Autocomplete.prototype.initialize;
-    var parent = $('<div/>');
-    
-    var constructorCalled = false;
-    Autocomplete = function(elem) {
-      constructorCalled = true;
-      same(elem, parent, "The element should be the parent element");
-    };
-    var initializeCalled = false;
-    Autocomplete.prototype.initialize = function() {
-      initializeCalled = true;
-    };
-    
-    var options = {
-        items: [
-          {
-            id: 1,
-            name: 'Paavo'
-          }
-        ]
-    };
-    
-    parent.autocomplete(options);
-    
-    ok(constructorCalled, "The constructor should be called");
-    ok(initializeCalled, "The constructor should be called");
-    
-    Autocomplete = original;
-    Autocomplete.prototype.initialize = originalInit;
-  });
-  
+//  test("Autocomplete creation", function() {
+//    var original = Autocomplete;
+//    var originalInit = Autocomplete.prototype.initialize;
+//    var parent = $('<div/>');
+//    
+//    var constructorCalled = false;
+//    Autocomplete = function(elem) {
+//      constructorCalled = true;
+//      same(elem, parent, "The element should be the parent element");
+//    };
+//    var initializeCalled = false;
+//    Autocomplete.prototype.initialize = function() {
+//      initializeCalled = true;
+//    };
+//    
+//    var options = {
+//        items: [
+//          {
+//            id: 1,
+//            name: 'Paavo'
+//          }
+//        ]
+//    };
+//    
+//    parent.autocomplete(options);
+//    
+//    ok(constructorCalled, "The constructor should be called");
+//    ok(initializeCalled, "The constructor should be called");
+//    
+//    Autocomplete = original;
+//    Autocomplete.prototype.initialize = originalInit;
+//  });
+//  
   
   test("Construction", function() {
     var parent = $('<div/>');

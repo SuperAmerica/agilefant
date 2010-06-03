@@ -379,3 +379,26 @@ div.smallBurndown {
   background-color: rgba(130, 180, 244, 0.7);
 }
 
+/**
+ * AUTOCOMPLETE
+ */
+ul.ui-autocomplete {
+  max-width: 400px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;  
+}
+
+ul.ui-autocomplete li {
+  white-space: nowrap;
+  border-bottom: 1px solid #ccc;
+}
+ul.ui-autocomplete li a {
+  display: block;
+  padding: 0.3em;
+  width: 100%;
+  height: 100%;  
+}
+
+

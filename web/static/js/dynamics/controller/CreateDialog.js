@@ -355,13 +355,11 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     get : StoryModel.prototype.getBacklog,
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
-    openOnRowEdit: false,
     edit : {
-      editor : "AutocompleteSingle",
-      dialogTitle: "Select parent backlog",
+      editor : "InlineAutocomplete",
       dataType: "backlogs",
-      required: true,
-      set: StoryModel.prototype.setBacklogByModel
+      decorator: DynamicsDecorators.propertyDecoratorFactory(BacklogModel.prototype.getName),
+      set: StoryModel.prototype.setBacklog
     }
   });
   

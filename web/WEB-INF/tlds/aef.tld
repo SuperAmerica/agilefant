@@ -437,11 +437,19 @@
 	  <function-signature>boolean listContains(java.util.Collection, java.lang.Object)</function-signature>
 	</function>
 	
+	
+	
 	<function>
 	  <name>listSubstract</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>java.util.Listsubstract substract(java.util.Collection, java.util.Collection)</function-signature>
 	</function> 	 
+	
+	<function>
+    <name>joinNamedObjects</name>
+    <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+    <function-signature>java.lang.String joinNamedObjects(java.util.Collection)</function-signature>
+  </function>
 	
 	<function>
 	  <name>calculateAFTimeSum</name>

@@ -31,7 +31,7 @@
     <span class="labelIcon"><c:forEach items="${story.labels}" var="label"><c:out value="${fn:substring(label.name, 0, 4)}" /></c:forEach></span> 
   </c:when>
   <c:otherwise>
-    <span class="labelIcon labelIconMultiple">&nbsp;</span>
+    <span class="labelIcon labelIconMultiple" title="${aef:joinNamedObjects(story.labels)}">&nbsp;</span>
   </c:otherwise>
   </c:choose>
 </c:when>

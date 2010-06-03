@@ -12,6 +12,7 @@ import java.util.List;
 import org.joda.time.DateTime;
 
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
@@ -153,5 +154,13 @@ public class AEFFunctions {
     
     public static String dateTimeToFormattedString(DateTime dateTime) {
         return dateTime.toString("YYYY-MM-dd HH:mm");
+    }
+    
+    public static String joinNamedObjects(Collection<NamedObject> objects) {
+        String retval = "";
+        for (NamedObject obj : objects) {
+            retval += obj.getName() + ", ";
+        }
+        return retval.substring(0, retval.length() - 2);
     }
 }

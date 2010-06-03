@@ -67,7 +67,7 @@ $(document).ready(function() {
       display: block;
       margin: 0;
       padding: 0;
-      width: 100%;
+      width: 400px;
       height: 100%;
       white-space: nowrap;
     }
@@ -82,6 +82,8 @@ $(document).ready(function() {
       line-height: 1.5em;
       min-height: 1em;
       vertical-align: middle;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
     }
     ul.storyTreeOrderList li span {
       vertical-align: middle;    

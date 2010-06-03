@@ -55,27 +55,26 @@ DynamicsValidationManager.prototype._runFieldValidators = function() {
 };
 
 DynamicsValidationManager.prototype._reqisterEvents = function() {
-  var me = this;
-  this.element.bind("validationInvalid", function(event, dynamicsEventObj) {
-    me._addValidationErrors(dynamicsEventObj.getMessages(), dynamicsEventObj.getObject(), dynamicsEventObj.getObject());
+  this.element.bind("validationInvalid", jQuery.proxy(function(event, dynamicsEventObj) {
+    this._addValidationErrors(dynamicsEventObj.getMessages(), dynamicsEventObj.getObject(), dynamicsEventObj.getObject());
     return false;
-  });
-  this.element.bind("validationValid", function(event, dynamicsEventObj) {
-    me._removeErrorMessage(dynamicsEventObj.getObject());
-    if(me.activeMessages === 0) {
-      me.clear();
+  },this));
+  this.element.bind("validationValid", jQuery.proxy(function(event, dynamicsEventObj) {
+    this._removeErrorMessage(dynamicsEventObj.getObject());
+    if(thi.activeMessages === 0) {
+      this.clear();
     }
-  });
-  this.element.bind("storeRequested", function(event, editor) {
+  },this));
+  this.element.bind("storeRequested", jQuery.proxy(function(event, editor) {
     event.stopPropagation();
-    me._storeRequested(event, editor);
+    this._storeRequested(event, editor);
     return false;
-  });
-  this.element.bind("cancelRequested", function(event, editor) {
+  },this));
+  this.element.bind("cancelRequested", jQuery.proxy(function(event, editor) {
     event.stopPropagation();
-    me._cancelRequested(event, editor);
+    this._cancelRequested(event, editor);
     return false;
-  });
+  },this));
 };
 DynamicsValidationManager.prototype._storeRequested = function(event, editor) {
   if(this.isValid()) {
@@ -132,13 +131,12 @@ DynamicsValidationManager.prototype._addErrorMessage = function(message) {
 };
 
 DynamicsValidationManager.prototype._removeErrorMessage = function(sender) {
-  var me = this;
   var previousErrors = this.messages[sender];
   if(previousErrors) {
-    $.each(previousErrors, function(field,error) {
+    $.each(previousErrors, jQuery.proxy(function(field,error) {
       error.remove();
-      me.activeMessages--;
-    });
+      this.activeMessages--;
+    },this));
   }
   this.messages[sender] = null;
 };

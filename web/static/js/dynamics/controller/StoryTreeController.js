@@ -191,12 +191,14 @@ StoryTreeController.prototype.initTree = function() {
     "position": "absolute",
     "opacity": "0.5",
     "border": "1px solid #666666",
-    "width": "99%",
-    "height": "99%",
+    "width": "100%",
+    "height": "100%",
     "top": "0",
-    "left": "0",
+    "left": "-1px",
     "text-align": "center",
-    "vertical-align": "middle"
+    "vertical-align": "middle",
+    "-moz-border-radius": "5px",
+    "-webkit-border-radius": "5px"
   }).appendTo(this.parentElement);
   
   this.tree = $(this.element).jstree({

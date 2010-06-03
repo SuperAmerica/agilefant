@@ -310,9 +310,19 @@
     <path>/WEB-INF/tags/storyTreeNode.tag</path>
   </tag-file>
   <tag-file>
+    <name>storyTreeField</name>
+    <path>/WEB-INF/tags/storyTreeField.tag</path>
+  </tag-file>
+  <tag-file>
+    <name>settingStoryTreeField</name>
+    <path>/WEB-INF/tags/settingStoryTreeField.tag</path>
+  </tag-file>
+  <tag-file>
     <name>backlogBreadCrumb</name>
     <path>/WEB-INF/tags/backlogBreadCrumb.tag</path>
   </tag-file>
+  
+  
 	<function>
 	  <name>isProduct</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>

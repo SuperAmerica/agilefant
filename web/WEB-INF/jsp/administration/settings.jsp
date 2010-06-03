@@ -56,9 +56,101 @@ $(document).ready(function() {
       <td><ww:checkbox  name="hourReportingEnabled" fieldValue="true" value="%{hourReportingEnabled}"></ww:checkbox></td>
       <td><a href="#" class="quickHelpLink" onclick="HelpUtils.openHelpPopup(this,'Timesheets','static/html/help/timesheetsPopup.html'); return false;">What are Timesheets?</a></td>
     </tr>
-    
     </table>
     
+    <ww:submit value="Save all"></ww:submit>
+    
+    <h3>Story tree</h3>
+
+    <style>
+    ul.storyTreeOrderList {
+      display: block;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      white-space: nowrap;
+    }
+    ul.storyTreeOrderList li {
+      display: inline-block;
+      background: white;
+      border: 1px solid #ccc;
+      margin: 0.3em 0.5em;
+      padding: 0.2em 0.4em;
+      text-align: center;
+      cursor: move;
+      line-height: 1.5em;
+      min-height: 1em;
+      vertical-align: middle;
+    }
+    ul.storyTreeOrderList li span {
+      vertical-align: middle;    
+    }
+    
+    .backlogDraggable {
+      font-size: 80%;
+      color: #666;
+    }
+    
+    </style>
+    
+    <script type="text/javascript">
+    $(document).ready(function() {
+      var orderInput = $('#storyTreeFieldOrder');
+      $('#storyTreeIncludeThese').sortable({
+        connectWith: '#storyTreeExcludeThese',
+        tolerance: 'pointer',
+        update: function() {
+          
+          var included = [];
+          $.each($('#storyTreeIncludeThese > li'), function(k,v) {
+            included.push($(v).attr('id'));
+          });
+          orderInput.val(included.join(','));
+        },
+        remove: function(event, ui) {
+          console.log(ui);
+          if (ui.item.is('#name')) {
+            MessageDisplay.Warning("Can't remove the name field");
+            $(this).sortable('cancel');
+          }
+        }
+      });
+      $('#storyTreeExcludeThese').sortable({
+        tolerance: 'pointer',
+        connectWith: '#storyTreeIncludeThese'
+      });
+    });
+    </script>
+
+    <table class="settings-table">    
+    <tr>
+      <td title="These items will be shown in the story tree">Order of story info</td>
+      <td colspan="2" style="height: 3em;">
+        <input id="storyTreeFieldOrder" type="hidden" name="storyTreeFieldOrder" value="${settings.storyTreeFieldOrder}"/>
+        <ul class="storyTreeOrderList" id="storyTreeIncludeThese">
+          <c:forEach items="${settings.storyTreeFieldOrder}" var="fieldType">
+            <aef:settingStoryTreeField fieldType="${fieldType}"/>
+          </c:forEach>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td title="These items will not be shown in the story tree">Not in story tree</td>
+      <td colspan="2" style="height: 3em;">
+        <ul class="storyTreeOrderList" id="storyTreeExcludeThese">
+          <c:forEach items="state,storyPoints,labels,name,backlog" var="fieldType">
+            <c:if test="${!fn:contains(settings.storyTreeFieldOrder, fieldType)}">
+              <aef:settingStoryTreeField fieldType="${fieldType}"/>
+            </c:if>
+          </c:forEach>
+        </ul>
+      </td>
+    </tr>
+    </table>
+    
+    
+    <ww:submit value="Save all"></ww:submit>
     
     <div style="margin: 0; padding: 0; display: none;" id="thresholdDiv">
     
@@ -95,10 +187,12 @@ $(document).ready(function() {
     </tr>
     </table>
     
+    <ww:submit value="Save all"></ww:submit>
+    
     </div>
   
   
-    <ww:submit value="Save"></ww:submit>
+    
     
     </ww:form>
   </div>

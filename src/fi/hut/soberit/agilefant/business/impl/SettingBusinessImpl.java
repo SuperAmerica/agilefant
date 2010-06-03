@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +41,7 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     public static final String SETTING_NAME_OPTIMAL_HIGH = "OptimalHigh";
     public static final String SETTING_NAME_CRITICAL_LOW = "CriticalLow";
     public static final String SETTING_NAME_PORTFOLIO_TIME_SPAN = "PortfolioTimeSpan";
+    public static final String SETTING_NAME_STORY_TREE_FIELD_ORDER = "StoryTreeFieldOrder";
 
     public SettingBusinessImpl() {
         super(Setting.class);
@@ -286,4 +289,31 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
         }
     }
 
+    @Transactional(readOnly = true)
+    public String getStoryTreeFieldOrder() {
+        Setting setting = this.retrieveByName(SETTING_NAME_STORY_TREE_FIELD_ORDER);
+        if (setting == null) {
+            return DEFAULT_STORY_TREE_FIELD_ORDER;
+        }
+        return setting.getValue();
+    }
+    
+    public void setStoryTreeFieldOrder(String newOrder) {
+        checkFieldOrderString(newOrder);
+        if (newOrder == null) {
+            this.storeSetting(SETTING_NAME_STORY_TREE_FIELD_ORDER, DEFAULT_STORY_TREE_FIELD_ORDER);
+        } else {
+            this.storeSetting(SETTING_NAME_STORY_TREE_FIELD_ORDER, newOrder);
+        }
+    }
+    
+    private void checkFieldOrderString(String order) {
+        Collection<String> permitted = Collections.unmodifiableCollection(Arrays.asList("state","storyPoints","labels","name","backlog"));
+        String[] names = order.split(",");
+        for (String name : names) {
+            if (name.equals("") || !permitted.contains(name)) {
+                throw new IllegalArgumentException("Incorrect setting string for story tree field order");
+            }
+        }
+    }
 }

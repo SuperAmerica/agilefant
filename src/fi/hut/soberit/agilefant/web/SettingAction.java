@@ -22,6 +22,7 @@ public class SettingAction extends ActionSupport {
     private boolean hourReportingEnabled = false;
     private boolean dailyWorkEnabled = false;
     private boolean devPortfolioEnabled = false;
+    private String storyTreeFieldOrder;
     
     @Autowired
     private SettingBusiness settingBusiness;
@@ -35,6 +36,7 @@ public class SettingAction extends ActionSupport {
         this.hourReportingEnabled = this.settingBusiness.isHourReportingEnabled();
         this.devPortfolioEnabled = this.settingBusiness.isDevPortfolio();
         this.dailyWorkEnabled = this.settingBusiness.isDailyWork();
+        this.storyTreeFieldOrder = this.settingBusiness.getStoryTreeFieldOrder();
         return Action.SUCCESS;
     }
     
@@ -51,6 +53,7 @@ public class SettingAction extends ActionSupport {
         settingBusiness.setHourReporting(hourReportingEnabled);
         settingBusiness.setDevPortfolio(devPortfolioEnabled);
         settingBusiness.setDailyWork(dailyWorkEnabled);
+        settingBusiness.setStoryTreeFieldOrder(storyTreeFieldOrder);
         return Action.SUCCESS;
     }
     
@@ -158,6 +161,14 @@ public class SettingAction extends ActionSupport {
 
     public void setSettingBusiness(SettingBusiness settingBusiness) {
         this.settingBusiness = settingBusiness;
+    }
+
+    public String getStoryTreeFieldOrder() {
+        return storyTreeFieldOrder;
+    }
+
+    public void setStoryTreeFieldOrder(String storyTreeFieldOrder) {
+        this.storyTreeFieldOrder = storyTreeFieldOrder;
     }
     
 }

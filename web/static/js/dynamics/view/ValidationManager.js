@@ -61,7 +61,7 @@ DynamicsValidationManager.prototype._reqisterEvents = function() {
   },this));
   this.element.bind("validationValid", jQuery.proxy(function(event, dynamicsEventObj) {
     this._removeErrorMessage(dynamicsEventObj.getObject());
-    if(thi.activeMessages === 0) {
+    if(this.activeMessages === 0) {
       this.clear();
     }
   },this));

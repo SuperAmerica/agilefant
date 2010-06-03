@@ -120,6 +120,9 @@ var DynamicsDecorators = {
     
     return returned;
   },
+  tasksWithoutStoryContextDecorator: function(value) {
+    return DynamicsDecorators.taskContextDecorator({backlog: value, story: null});
+  },
   backlogSelectDecorator: function(backlog) {
     if (!backlog) {
       return "(no backlog selected)";

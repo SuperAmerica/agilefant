@@ -54,15 +54,14 @@ TasksWithoutStoryController.columnConfig.context = {
     autoScale : true,
     title : "Context",
     headerTooltip : 'Task context',
-    get : TaskModel.prototype.getContext,
-    decorator: DynamicsDecorators.taskContextDecorator,
-    editable : true,
+    get : TaskModel.prototype.getIteration,
+    decorator: DynamicsDecorators.tasksWithoutStoryContextDecorator,
+    editable: true,
     editableCallback: TaskController.prototype.contextEditable,
-    openOnRowEdit: false,
     edit: {
-      editor: "AutocompleteSingle",
+      editor: "InlineAutocomplete",
       dataType: "currentIterations",
-      dialogTitle: "Select parent iteration",
+      decorator: DynamicsDecorators.propertyDecoratorFactory(BacklogModel.prototype.getName),
       set: TaskModel.prototype.setIteration
     }
   };
@@ -188,7 +187,9 @@ TasksWithoutStoryController.prototype.taskControllerFactory = function(view, mod
 
 TasksWithoutStoryController.prototype.createTask = function(forceAssignCurrentUser) {
   var mockModel = ModelFactory.createObject(ModelFactory.types.task);
-  mockModel.setIteration(this.model);
+  if (this.model && this.model instanceof IterationModel) {
+    mockModel.setIteration(this.model);
+  }
   // Check whether to add the current user as a responsible.
   var currentUser = PageController.getInstance().getCurrentUser(); 
   if (currentUser.isAutoassignToTasks() || forceAssignCurrentUser) {

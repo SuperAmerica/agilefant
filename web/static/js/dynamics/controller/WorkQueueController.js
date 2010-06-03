@@ -18,6 +18,15 @@ WorkQueueController.columnConfig.prio = {
   defaultSortColumn: true,
   subViewFactory: TaskController.prototype.toggleFactory
 };
+WorkQueueController.columnConfig.context = {
+  minWidth : 60,
+  autoScale : true,
+  title : "Context",
+  headerTooltip : 'Task context',
+  get : TaskModel.prototype.getContext,
+  decorator: DynamicsDecorators.taskContextDecorator,
+  editable : false
+};
 
 
 WorkQueueController.prototype.handleModelEvents = function(event) {
@@ -68,7 +77,7 @@ WorkQueueController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.name, TasksWithoutStoryController.columnConfig.name);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.state, TasksWithoutStoryController.columnConfig.state);
   
-  config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.context, TasksWithoutStoryController.columnConfig.context);
+  config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.context, WorkQueueController.columnConfig.context);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.detailedContext, WorkQueueController.columnConfigs.detailedContext);
   
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.responsibles, TasksWithoutStoryController.columnConfig.responsibles);

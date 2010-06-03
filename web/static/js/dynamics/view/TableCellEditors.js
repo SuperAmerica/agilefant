@@ -877,7 +877,6 @@ TableEditors.InlineAutocomplete.prototype.matchSearchString = function(text, mat
 };
 
 TableEditors.InlineAutocomplete.prototype.setEditorValue = function(value) {
-  console.log("Set editor value");
   if (!value) {
     value = this.options.get.call(this.model);
   }

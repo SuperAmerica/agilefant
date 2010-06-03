@@ -56,13 +56,6 @@ DailyWorkTasksWithoutStoryController.prototype._addColumnConfigs = function(conf
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.description, TasksWithoutStoryController.columnConfig.description);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.buttons, TasksWithoutStoryController.columnConfig.buttons);
 
-  config.columns[DailyWorkTasksWithoutStoryController.columnIndices.context].options.decorator = function(value) {
-    if(value.story || value.backlog) {
-      return DynamicsDecorators.taskContextDecorator(value);
-    } else {
-      return "(select iteration)";
-    }
-  };
 };
 
 

@@ -289,7 +289,7 @@ StoryListController.columnConfig.effortSpent = {
   minWidth : 30,
   autoScale : true,
   title : "ES",
-  headerTooltip : 'Total task effort spent',
+  headerTooltip : 'Total task spent effort',
   decorator: DynamicsDecorators.exactEstimateDecorator,
   get : StoryModel.prototype.getTotalEffortSpent,
   editable : false,

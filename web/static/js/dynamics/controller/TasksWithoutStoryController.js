@@ -117,7 +117,7 @@ TasksWithoutStoryController.columnConfig.effortSpent = {
   minWidth : 30,
   autoScale : true,
   title : "ES",
-  headerTooltip : 'Effort spent',
+  headerTooltip : 'Spent effort',
   get : TaskModel.prototype.getEffortSpent,
   decorator: DynamicsDecorators.exactEstimateDecorator,
   editable : false,

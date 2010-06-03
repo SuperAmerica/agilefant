@@ -160,7 +160,6 @@
       Password: demo
       </p>
     
-      <p>This is a <strong>Beta</strong> version.<br/>
       Please report found bugs at <a href="http://www.agilefant.org/mantis/">http://www.agilefant.org/mantis/</a></p>
     </div>
   </div>

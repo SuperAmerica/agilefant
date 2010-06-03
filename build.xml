@@ -90,6 +90,12 @@
 			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
 			<hbm2ddl export="false" outputfilename="create-db.ddl" />
 		</hibernatetool>
+		<concat append="true" destfile="${build.dir}/create-db.ddl">
+			<filelist dir="${basedir}/doc/sql/">
+				<file name="db-version.sql"/>
+				<file name="insert-users.sql"/>
+			</filelist>
+		</concat>
 	</target>
 
 	<target name="create-test-db" depends="compile" description="Creates db using hibernate tools">

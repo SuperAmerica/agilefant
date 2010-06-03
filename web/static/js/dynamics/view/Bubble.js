@@ -5,19 +5,27 @@ var Bubble = function Bubble(referenceElement, options) {
   this.options = {
     closeCallback: function() { return false; },
     removeOthers: true,
+    removeSelector: null,
     title:     null,
     offsetX:   100,
     offsetY:   35,
     minWidth:  400,
     minHeight: 80,
     zIndex:    800,
-    maxWidth:  null
+    maxWidth:  null,
+    cssClass:  null
   };
   jQuery.extend(this.options, options);
   this.init();
 };
 Bubble.prototype = new ViewPart();
 
+/**
+ * Removes all bubbles.
+ */
+Bubble.closeAll = function() {
+  $('body > div.infobubble').trigger('destroyBubble');
+};
 /**
  * Returns the content element of the bubble.
  */
@@ -55,6 +63,11 @@ Bubble.prototype._createElements = function() {
   this.element = $('<div/>').appendTo(this.parentElement);
   $('<div>&nbsp;</div>').addClass('infobubble-helperarrow').appendTo(this.parentElement);
   
+  // Additional css classes
+  if (this.options.cssClass) {
+    this.parentElement.addClass(this.options.cssClass);
+  }
+  
   // Header
   var me = this;
   this.header = $('<div style="height: 1.5em;"></div>').appendTo(this.element);
@@ -89,6 +102,14 @@ Bubble.prototype._removeOthersIfNeeded = function() {
   // Fire the delete event for others
   if (this.options.removeOthers) {
     $('body > div.infobubble').trigger('destroyBubble');
+  }
+  else if (this.options.removeSelector) {
+    var removeSelector = this.options.removeSelector;
+    $('body > div.infobubble').each(function() {
+      if ($(this).is(removeSelector)) {
+        $(this).trigger('destroyBubble');
+      }
+    });
   }
 };
 

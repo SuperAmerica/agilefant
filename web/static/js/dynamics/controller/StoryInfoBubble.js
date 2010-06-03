@@ -61,6 +61,7 @@ StoryInfoBubble.prototype.createBubble = function() {
   this.bubble = new Bubble(this.storyElement, {
     closeCallback: function() {
       me.treeController.refreshNode(me.storyElement);
+      Bubble.closeAll();
     },
     title: "Story info"
   });

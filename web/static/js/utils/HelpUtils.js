@@ -7,7 +7,9 @@ HelpUtils.openHelpPopup = function(link, title, url) {
     title: title,
     maxWidth: 450,
     zIndex: 1500,
-    removeOthers: false
+    removeOthers: false,
+    removeSelector: '.helpPopup',
+    cssClass: 'helpPopup'
   });
   var content = $('<div/>').appendTo(bub.getElement());
   content.load(url);

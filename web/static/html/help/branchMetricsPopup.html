@@ -1,0 +1,46 @@
+
+<p>Branch metrics are calculated using two different algorithms:</p>
+
+<style>
+#calculationTable {
+  border-collapse: collapse;
+}
+#calculationTable th {
+  padding-top: 1em;
+  background-color: white;
+  border: none;
+}
+#calculationTable td {
+  border: 1px solid #ccc;
+  padding: 0.3em 0.5em;
+}
+#calculationTable td.dontWrap {
+  white-space: nowrap;
+}
+</style>
+
+<table id="calculationTable">
+  <tr>
+    <th colspan="2">Leaf stories</th>
+  </tr>
+  <tr>
+    <td class="dontWrap">Done count</td>
+    <td>The sum of the all done leaf stories' story points inside the current story. Leaf stories are stories that do not have children.</td>
+  </tr>
+  <tr>
+    <td class="dontWrap">Total count</td>
+    <td>The sum of all leaf stories' story points</td>
+  </tr>
+  <tr>
+    <th colspan="2">Estimated progress</th>
+  </tr>
+  <tr>
+    <td colspan="2">
+      Estimated progress is calculated for each story in the branch and their
+      children recursively. The story's own story point estimate is compared
+      to the sum of its children story points. The greater number will be included
+      in the estimate.
+      </td>
+  </tr>
+</table>
+

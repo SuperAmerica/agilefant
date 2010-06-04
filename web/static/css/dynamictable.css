@@ -840,4 +840,7 @@ a.context, span.context {
   margin-left: 2ex;  
 }
 
+.context-task {
+  margin-left: 3ex;
+}
 

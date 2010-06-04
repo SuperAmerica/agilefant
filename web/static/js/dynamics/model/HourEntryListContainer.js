@@ -39,6 +39,9 @@ HourEntryListContainer.prototype._setData = function(newData) {
 };
 
 HourEntryListContainer.prototype.reload = function() {
+  if(!this.relations.parent) {
+    return;
+  }
   this.fillData();
   this.relationChanged = true;
 };

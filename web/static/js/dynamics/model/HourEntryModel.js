@@ -14,6 +14,11 @@ var HourEntryModel = function HourEntryModel() {
     user: null,
     hourEntryList: null
   };
+  this.classNameToRelation = {
+      "fi.hut.soberit.agilefant.model.Backlog":     "backlog",
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.Task":     "task"
+  };
   
   this.copiedFields = {
     "date": "date",
@@ -47,12 +52,37 @@ HourEntryModel.dateComparator = function(value1, value2) {
 
 HourEntryModel.prototype = new CommonModel();
 
+HourEntryModel.prototype.getContext = function() {
+  var ret = {}, backlog = this.relations.backlog, story = this.relations.story;
+  if(this.relations.task) {
+    ret.task = this.relations.task;
+    backlog = ret.task.getIteration();
+    story = this.relations.task.getStory();
+  }
+  if(story) {
+    ret.story = story;
+    backlog = story.getBacklog();
+  }
+  if(backlog) {
+    ret.backlog = backlog;
+  }
+  return ret;
+};
 HourEntryModel.prototype._setData = function(newData) {
   this.id = newData.id;
   this._copyFields(newData);
   if (newData.user) {
     this.relations.user = ModelFactory.updateObject(newData.user);
   }
+  if(newData.task) {
+    this.relations.task = ModelFactory.updateObject(newData.task);
+  }
+  if(newData.story) {
+    this.relations.story = ModelFactory.updateObject(newData.story);
+  }
+  if(newData.backlog) {
+    this.relations.backlog = ModelFactory.updateObject(newData.backlog);
+  } 
 };
 
 /**
@@ -101,11 +131,12 @@ HourEntryModel.prototype._saveData = function(id, changedData) {
     dataType: "text",
     success: function(data, status) {
       MessageDisplay.Ok("Effort entry saved");
-      var tmp = me;
       if (me.relations.hourEntryList) {
         me.relations.hourEntryList.reload();
       }
-      //me.setData(data);
+      if(data) {
+        me.setData(data);
+      }
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving effort entry", xhr);

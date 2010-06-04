@@ -1,6 +1,13 @@
 var UserSpentEffortWidget = function UserSpentEffortWidget(element, userId) {
-  this.element = element;
+  this.element = $('<div />').appendTo(element);
+  this.container = element;
   this.userId = userId;
+  this.initConfig();
+  this.model = new HourEntryListContainer();
+  this.effortByDayElement = $('<div class="details"></div>').appendTo(element);
+  this.entriesByDay = new DynamicTable(this, this.model, this.hourEntryTableConfig,
+      this.effortByDayElement);
+  this.effortByDayElement.hide();
   this.reload();
 };
 
@@ -20,6 +27,7 @@ UserSpentEffortWidget.prototype._parseDateValues = function(strValue) {
 UserSpentEffortWidget.prototype._registerSpentEffortEvents = function() {
   var me = this;
   //next, prev and current week
+  me.effortByDayElement.hide();
   this.element.find("a:not(.detailLink)").click(function() {
     me.element.load(this.href, function() { 
       me._registerSpentEffortEvents();
@@ -37,10 +45,96 @@ UserSpentEffortWidget.prototype._registerSpentEffortEvents = function() {
   });
   
   //detailed spent effort for day
-  this.element.find('a.detailLink').click(function() {
+  this.element.find('a.detailLink').click(function(event) {
     $('a.detailLink',me.element).removeClass("detailedEffort");
     $(this).addClass("detailedEffort");
-    $('.details',me.element).load(this.href);
+    $.ajax({
+      url: this.href,
+      method: 'post',
+      cache: false,
+      dataType: 'json',
+      success: function(data,status) {
+        me.model.setData(data);
+        me.effortByDayElement.show();
+        me.entriesByDay.render();
+      }
+    });
     return false;
   });
+};
+
+
+UserSpentEffortWidget.prototype.hourEntryControllerFactory = function(view, model) {
+  var hourEntryController = new HourEntryController(model, view, this);
+  return hourEntryController;
+};
+
+UserSpentEffortWidget.prototype.initConfig = function() {
+  this.hourEntryTableConfig = new DynamicTableConfiguration(
+      {
+        rowControllerFactory : UserSpentEffortWidget.prototype.hourEntryControllerFactory,
+        dataSource : HourEntryListContainer.prototype.getHourEntries,
+        cssClass: "ui-widget-content ui-corner-all",
+        captionConfig: {
+          cssClasses: "ui-helper-hidden"
+        }
+  });
+  
+  var date = {
+    minWidth : 40,
+    autoScale : true,
+    title : "Time",
+    get : HourEntryModel.prototype.getDate,
+    decorator: DynamicsDecorators.timeDecorator,
+    sortCallback: HourEntryModel.dateComparator,
+    defaultSortColumn: true,
+    editable: true,
+    edit: {
+      editor: "Date",
+      withTime: true,
+      set : HourEntryModel.prototype.setDate,
+      decorator: DynamicsDecorators.dateTimeDecorator
+    }
+  };
+  var es = {
+    minWidth : 40,
+    autoScale : true,
+    title : "ES",
+    get : HourEntryModel.prototype.getMinutesSpent,
+    decorator: DynamicsDecorators.exactEstimateDecorator,
+    editable: true,
+    columnName: "effortSpent",
+    edit : {
+      editor : "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : HourEntryModel.prototype.setEffortSpent,
+      required: true
+    }
+  };
+  var desc = {
+    minWidth : 200,
+    autoScale : true,
+    title : "Comment",
+    editable: true,
+    get : HourEntryModel.prototype.getDescription,
+    edit : {
+      editor : "Text",
+      set : HourEntryModel.prototype.setDescription
+    }
+  };
+  
+  var context = {
+      minWidth : 200,
+      autoScale : true,
+      title : "Context",
+      editable: false,
+      get : HourEntryModel.prototype.getContext,
+      decorator: DynamicsDecorators.taskContextDecorator
+    };
+  
+  this.hourEntryTableConfig.addColumnConfiguration(0, date);
+  this.hourEntryTableConfig.addColumnConfiguration(1, es);
+  this.hourEntryTableConfig.addColumnConfiguration(2, desc);
+  this.hourEntryTableConfig.addColumnConfiguration(3, context);
+
 };

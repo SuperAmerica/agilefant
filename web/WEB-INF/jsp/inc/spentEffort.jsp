@@ -32,7 +32,7 @@
 				    &mdash;
 				  </c:when>
 				  <c:otherwise>
-				    <a class="detailLink" href="hourEntriesByUserAndWeek.action?userId=${userId}&amp;day=${dayEffort.dayOfYear}&amp;year=${year}">
+				    <a class="detailLink" href="ajax/hourEntriesByUserAndDay.action?userId=${userId}&amp;day=${dayEffort.dayOfYear}&amp;year=${year}">
               ${aef:minutesToString(dayEffort.spentEffort)}</a>
 				  </c:otherwise>
 				</c:choose>
@@ -42,4 +42,3 @@
 		<td><a href="weeklySpentEffort.action?userId=${userId}&week=${currentWeek}&year=${currentYear}">Current week</a></td>
 	</tr>
 </table>
-<div class="details"></div>

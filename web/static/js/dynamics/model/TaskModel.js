@@ -299,7 +299,7 @@ TaskModel.prototype.getIteration = function() {
         return null;
     }
     else if (parent instanceof StoryModel) {
-        return parent.getIteration();
+        return parent.getBacklog();
     }
     else if (parent instanceof IterationModel) {
         return parent;

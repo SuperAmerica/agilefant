@@ -90,6 +90,14 @@ var DynamicsDecorators = {
     date.setTime(value);
     return date.asString();
   },
+  timeDecorator: function(value) {
+    if(!value) {
+      return "";
+    }
+    var date = new Date();
+    date.setTime(value);
+    return date.asString().substring(10,16);
+  },
   hiddenDecorator: function(value) {
     return '';
   },
@@ -116,6 +124,10 @@ var DynamicsDecorators = {
     }
     if (value.story) {
       returned += '<br/><span title="Story: ' + value.story.getName() + '" class="context context-story">' + value.story.getName() + '</a>';
+    }
+    
+    if(value.task) {
+      returned += '<br/><span title="Task: ' + value.task.getName() + '" class="context context-task">' + value.task.getName() + '</a>';
     }
     
     return returned;

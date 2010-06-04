@@ -884,6 +884,19 @@
 	<!-- /Story tree integrity -->
 	
 	<!-- timesheets -->
+  
+    <action name="hourEntriesByUserAndDay" class="spentEffortAction" method="getHourEntriesByUserAndDay">
+      <result type="json">
+        <param name="target">effortEntries</param>
+        <param name="patterns">+*.class,-user,+id,+description,+date,+minutesSpent,
+        +task.id, +task.name, +task.story.id, +task.story.name, +task.story.backlog.id, +task.story.backlog.name,
+        +task.iteration.id, +task.iteration.name,
+        +story.id, +story.name, +story.backlog.id, +story.backlog.name,
+        +backlog.id, +backlog.name,
+        -*</param>
+      </result>
+    </action>
+  
 	<action name="logBacklogEffort" class="hourEntryAction" method="logBacklogEffort">
 	 <result name="success" type="httpheader">
 	   <param name="status">200</param>
@@ -901,8 +914,8 @@
 	</action>
 	<action name="storeEffortEntry" class="hourEntryAction" method="store">
    <interceptor-ref name="prefetchStack" />
-	 <result name="success" type="httpheader">
-	   <param name="status">200</param>
+	 <result name="success" type="json">
+	   <param name="target">hourEntry</param>
 	 </result>
 	</action>
 	<action name="retrieveTaskHourEntries" class="hourEntryAction" method="retrieveTaskHourEntries">

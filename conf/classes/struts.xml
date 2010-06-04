@@ -278,10 +278,6 @@
 		<action name="weeklySpentEffort" method="getDaySumsByWeek" class="spentEffortAction">
 			<result type="dispatcher">/WEB-INF/jsp/inc/spentEffort.jsp</result>
 		</action>
-		
-		<action name="hourEntriesByUserAndWeek" class="spentEffortAction" method="getHourEntriesByUserAndDay">
-			<result type="dispatcher">/WEB-INF/jsp/inc/effortByWeek.jsp</result>
-		</action>
 	
 		<!-- /Session actions -->
         

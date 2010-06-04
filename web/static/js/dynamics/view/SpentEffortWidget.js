@@ -24,7 +24,8 @@ SpentEffortWidget.prototype.initDialog = function() {
     title : "Spent effort",
     close : function() {
       me.close();
-    }
+    },
+    buttons: {Close: function() { me.close(); }}
   });
   
   this.hourEntryListController = new HourEntryListController( {

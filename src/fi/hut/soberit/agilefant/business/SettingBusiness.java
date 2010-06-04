@@ -20,6 +20,9 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
     public static final int DEFAULT_RANGE_HIGH = 120;
     public static final Period DEFAULT_PORTFOLIO_TIME_SPAN = Period.months(6);
     public static final String DEFAULT_STORY_TREE_FIELD_ORDER = "state,storyPoints,labels,name,backlog";
+    public static final BranchMetricsType DEFAULT_BRANCH_METRICS = BranchMetricsType.estimate;
+    
+    public enum BranchMetricsType { off, leaf, estimate, both };
     
     /**
      * Is hour reporting enabled
@@ -133,4 +136,14 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
      * Set the order of story tree fields.
      */
     void setStoryTreeFieldOrder(String newOrder);
+    
+    /**
+     * Get the current selection for branch metrics type.
+     */
+    BranchMetricsType getBranchMetricsType();
+    
+    /**
+     * Set the branch metrics type. 
+     */
+    void setBranchMetricsType(BranchMetricsType type);
 }

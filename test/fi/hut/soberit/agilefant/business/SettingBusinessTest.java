@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import fi.hut.soberit.agilefant.business.SettingBusiness.BranchMetricsType;
 import fi.hut.soberit.agilefant.business.impl.SettingBusinessImpl;
 import fi.hut.soberit.agilefant.db.SettingDAO;
 import fi.hut.soberit.agilefant.model.Setting;
@@ -155,5 +156,65 @@ public class SettingBusinessTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSetStoryTreeFieldOrder_emptyString() {
         testable.setStoryTreeFieldOrder("");
+    }
+    
+    @Test
+    public void testSetBranchMetricsType_doesNotExist() {
+        Setting parameterSetting = new Setting();
+
+        parameterSetting.setName(SettingBusinessImpl.SETTING_NAME_BRANCH_METRICS);
+        parameterSetting.setValue("leaf");
+        
+        expect(settingDAO.getAll()).andReturn(new ArrayList<Setting>());
+        expect(settingDAO.create(eqSetting(parameterSetting))).andReturn(1);
+        
+        replay(settingDAO);
+        testable.loadSettingCache();
+        testable.setBranchMetricsType(BranchMetricsType.leaf);
+        verify(settingDAO);
+    }
+    
+    @Test
+    public void testSetBranchMetricsType_settingExist() {
+        Setting parameterSetting = new Setting();
+        Setting setting = new Setting();
+        
+        setting.setName(SettingBusinessImpl.SETTING_NAME_BRANCH_METRICS);
+        setting.setValue(SettingBusiness.BranchMetricsType.estimate.toString());
+        
+        parameterSetting.setName(SettingBusinessImpl.SETTING_NAME_BRANCH_METRICS);
+        parameterSetting.setValue("off");
+        
+        expect(settingDAO.getAll()).andReturn(Arrays.asList(setting));
+        settingDAO.store(eqSetting(parameterSetting));
+        
+        replay(settingDAO);
+        testable.loadSettingCache();
+        testable.setBranchMetricsType(BranchMetricsType.off);
+        verify(settingDAO);
+    }
+    
+    @Test
+    public void testGetBranchMetricsType() {
+        Setting setting = new Setting();
+        setting.setName(SettingBusinessImpl.SETTING_NAME_BRANCH_METRICS);
+        setting.setValue(SettingBusiness.BranchMetricsType.estimate.toString());
+        
+        expect(settingDAO.getAll()).andReturn(Arrays.asList(setting));
+        
+        replay(settingDAO);
+        testable.loadSettingCache();
+        assertEquals(BranchMetricsType.estimate, testable.getBranchMetricsType());
+        verify(settingDAO);
+    }
+    
+    @Test
+    public void testGetBranchMetricsType_noSuchSettings() {
+        expect(settingDAO.getAll()).andReturn(new ArrayList<Setting>());
+        
+        replay(settingDAO);
+        testable.loadSettingCache();
+        assertEquals(SettingBusiness.DEFAULT_BRANCH_METRICS, testable.getBranchMetricsType());
+        verify(settingDAO);
     }
 }

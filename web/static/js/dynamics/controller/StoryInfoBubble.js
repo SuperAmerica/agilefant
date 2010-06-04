@@ -51,7 +51,7 @@ StoryInfoBubble.prototype.handleModelEvents = function(event) {
     this.bubble.destroy();
   }
   
-  else if (event instanceof DynamicsEvents.MetricsEvent && event.getObject().getId() == this.id) {
+  else if (Configuration.getBranchMetricsType() !== 'off' && event instanceof DynamicsEvents.MetricsEvent && event.getObject().getId() == this.id) {
     this.refreshBranchMetrics();
   }
 }
@@ -87,8 +87,10 @@ StoryInfoBubble.prototype.populateContent = function() {
     me.storyInfoView.render();
   });
   
-  this.branchMetricsElement = $('<div style="clear: both;"><hr/></div>').appendTo(this.element);
-  this.refreshBranchMetrics();
+  if (Configuration.getBranchMetricsType() !== 'off') {
+    this.branchMetricsElement = $('<div style="clear: both;"></div>').appendTo(this.element);
+    this.refreshBranchMetrics();
+  }
 };
 
 StoryInfoBubble.prototype.refreshBranchMetrics = function() {
@@ -96,7 +98,7 @@ StoryInfoBubble.prototype.refreshBranchMetrics = function() {
     this.branchContent = $('<div/>').appendTo(this.branchMetricsElement);
   }
   
-  this.branchContent.html('<img src="static/img/working.gif" alt="Please wait..."/>')
+  this.branchContent.html('<div style="text-align:center;"><img src="static/img/working.gif" alt="Please wait..." style="display: inline-block;"/></div>')
     .load('ajax/retrieveBranchMetrics.action?storyId=' + this.id);
 };
 

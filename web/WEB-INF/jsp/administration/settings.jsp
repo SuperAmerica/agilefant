@@ -149,6 +149,15 @@ $(document).ready(function() {
         </ul>
       </td>
     </tr>
+    <tr>
+      <td title="Affects how the branch metrics are calculated">Branch metrics type</td>
+      <td>
+        <ww:radio list="#{'off':'Off', 'leaf':'Simple', 'estimate':'Advanced', 'both':'Both'}" name="branchMetricsType"/>
+      </td>
+      <td>
+        <a href="#" class="quickHelpLink" onclick="HelpUtils.openHelpPopup(this,'Branch metrics','static/html/help/branchMetricsPopup.html'); return false;">What are branch metrics?</a>
+      </td>
+    </tr>
     </table>
     
     

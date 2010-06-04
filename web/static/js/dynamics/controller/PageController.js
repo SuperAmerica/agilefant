@@ -127,3 +127,7 @@ Configuration.setConfiguration = function(newConfig) {
 Configuration.isTimesheetsEnabled = function() {
   return Configuration.options.timesheets;
 };
+
+Configuration.getBranchMetricsType = function() {
+  return Configuration.options.branchMetricsType;
+};

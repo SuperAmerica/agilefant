@@ -54,7 +54,7 @@
   <c:if test="${settings != null}">
   <script type="text/javascript">
   $.ajaxSetup({ traditional: true }); //force jquery back to < 1.4 series style data serialization
-  Configuration.setConfiguration({ timesheets: ${settings.hourReportingEnabled} });
+  Configuration.setConfiguration({ timesheets: ${settings.hourReportingEnabled}, branchMetricsType: '${settings.branchMetricsType}' });
   </script>
   </c:if>
   

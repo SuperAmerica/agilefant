@@ -1,24 +1,28 @@
 <%@ include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
 
-<h4>Branch metrics</h4>
-
-
 <table>
   <tr>
-    <td>Leaf stories</td>
-    <td><span style="color: green;" title="Done leaf points">${branchMetrics.doneLeafPoints}</span> / <span title="Total leaf points">${branchMetrics.leafPoints}</span></td>
+    <td style="font-weight: bold;" colspan="2">
+      Branch completion
+    </td>
+  </tr>
+  <c:if test="${settings.branchMetricsType == 'both' || settings.branchMetricsType == 'leaf'}">
+  <tr>
+    <td><span style="color: green;" title="Done leaf points">${branchMetrics.doneLeafPoints} done</span> of <span title="Total leaf points">${branchMetrics.leafPoints}</span> leaf story points</td>
     <td style="color: #666;">(${fn:substringBefore(branchMetrics.doneLeafPoints / branchMetrics.leafPoints * 100, '.')}%)</td>
   </tr>
+  </c:if>
+
+  <c:if test="${settings.branchMetricsType == 'both' || settings.branchMetricsType == 'estimate'}">
   <tr>
-    <td>Estimated progress</td>
-    <td><span style="color: green;" title="Estimated done points">${branchMetrics.estimatedDonePoints}</span> / <span title="Total estimated points">${branchMetrics.estimatedPoints}</span></td>
+    <td><span style="color: green;" title="Estimated done points">${branchMetrics.estimatedDonePoints} done</span> of <span title="Total estimated points">${branchMetrics.estimatedPoints}</span> estimated points</td>
     <td style="color: #666;">(${fn:substringBefore(branchMetrics.estimatedDonePoints / branchMetrics.estimatedPoints * 100, '.')}%)</td>
   </tr>
+  </c:if>
+
   <tr>
     <td colspan="2">
-      <a href="#" class="quickHelpLink" onclick="HelpUtils.openHelpPopup(this,'Estimated Progress','static/html/help/branchMetricsPopup.html');return false;">
-        What is this?
-      </a>
+      
     </td>
   </tr>
 </table>

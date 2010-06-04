@@ -42,7 +42,8 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     public static final String SETTING_NAME_CRITICAL_LOW = "CriticalLow";
     public static final String SETTING_NAME_PORTFOLIO_TIME_SPAN = "PortfolioTimeSpan";
     public static final String SETTING_NAME_STORY_TREE_FIELD_ORDER = "StoryTreeFieldOrder";
-
+    public static final String SETTING_NAME_BRANCH_METRICS = "branchMetricsType";
+    
     public SettingBusinessImpl() {
         super(Setting.class);
     }
@@ -315,5 +316,23 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
                 throw new IllegalArgumentException("Incorrect setting string for story tree field order");
             }
         }
+    }
+    
+    
+    public void setBranchMetricsType(BranchMetricsType type) {
+        if(type == null) {
+            this.storeSetting(SETTING_NAME_BRANCH_METRICS, DEFAULT_BRANCH_METRICS.toString());
+        } else {
+            this.storeSetting(SETTING_NAME_BRANCH_METRICS, type.toString());
+        }
+    }
+    
+    @Transactional(readOnly = true)
+    public BranchMetricsType getBranchMetricsType() {
+        Setting setting = this.retrieveByName(SETTING_NAME_BRANCH_METRICS);
+        if (setting == null) {
+            return DEFAULT_BRANCH_METRICS;
+        }
+        return BranchMetricsType.valueOf(setting.getValue());
     }
 }

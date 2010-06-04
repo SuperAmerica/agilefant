@@ -78,7 +78,7 @@
       </td>
       <c:choose>
       <c:when test="${iterationRowMetrics.timesheetsEnabled}">
-      <td style="padding-right: 4px"><b>Effort spent</b></td>
+      <td style="padding-right: 4px"><b>Spent effort</b></td>
       <td>
         <c:choose>
         <c:when test="${iterationRowMetrics.spentEffort.minorUnits != 0}">

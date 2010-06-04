@@ -343,9 +343,10 @@ ProjectController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([0,5,6,10]);
+  row.autoCreateCells([0, 5, 6]);
   row.getCellByName("description").show();
   row.getCellByName("buttons").show();
+  row.getCellByName("backlog").hide();
 //  row.getCell(13).show();
   row.render();
   controller.openRowEdit();
@@ -566,6 +567,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     minWidth : 24,
     autoScale : true,
     title : "#",
+    columnName: "expand",
     headerTooltip : 'Priority',
     defaultSortColumn: true,
     subViewFactory: StoryController.prototype.descriptionToggleFactory,
@@ -637,6 +639,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(5, {
     minWidth : 100,
     autoScale : true,
+    columnName: "backlog",
     title : "Backlog",
     headerTooltip : 'The backlog, where the story resides',
     get : StoryModel.prototype.getBacklog,
@@ -652,6 +655,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   });
   config.addColumnConfiguration(6, {
     minWidth : 35,
+    columnName: "edit",
     autoScale : true,
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
@@ -670,6 +674,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   config.addColumnConfiguration(StoryController.columnIndices.details, {
     fullWidth : true,
     visible : false,
+    columnName: "details",
     subViewFactory : StoryController.prototype.storyDetailsFactory,
     delayedRender: true
   });

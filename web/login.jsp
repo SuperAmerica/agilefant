@@ -152,11 +152,11 @@
         </table>                
       </form>
     </div>
-    
+<!--     
     <div id="disclaimer" class="ui-widget-content ui-corner-all">
-      <p>This is a <strong>Beta</strong> version.<br/> Expect to encounter some errors. 
       Please report found bugs at <a href="http://www.agilefant.org/mantis/">http://www.agilefant.org/mantis/</a></p>
     </div>
+-->    
   </div>
   
   <div id="footerWrapper">

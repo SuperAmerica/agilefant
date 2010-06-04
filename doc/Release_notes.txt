@@ -1,6 +1,6 @@
-Agilefant 2.0 Beta 2
+Agilefant 2.0 RC1
 Release notes
-2010-05-28
+2010-06-03
 --
 
 
@@ -24,6 +24,13 @@ Current status of the release:
 |     CHANGESET      |
 +--------------------+
 
+
+Changes from Beta 2
+2010-06-03
++ Timesheets related bug fixes
++ Reduced debug levels
++ Performance improvements
+
 Changes from Beta 1
 2010-05-28
 + Daily work functionality rewritten
@@ -33,6 +40,7 @@ Changes from Beta 1
 + All functionality that will be included in Agilefant 2.0 should be present 
 + Added help page and some quick help links
 + Daily Work, Timesheets, and Portfolio view can now be enabled/disabled in the settings
+
 
 Changes from Alpha 5
 2010-04-09

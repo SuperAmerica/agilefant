@@ -92,7 +92,7 @@ StoryModel.prototype._setData = function(newData) {
  * Internal function to send the data to server.
  */
 StoryModel.prototype._saveData = function(id, changedData) {
-  var me = this;
+  var me = this, possibleBacklog = this.getBacklog();
   
   var url = "ajax/storeStory.action";
   var data = {};
@@ -125,9 +125,8 @@ StoryModel.prototype._saveData = function(id, changedData) {
   }
   else {
     url = "ajax/createStory.action";
-    data.backlogId = this.getBacklog().getId();
+    data.backlogId = possibleBacklog.getId();
   }
-  
 
   
   jQuery.ajax({
@@ -142,7 +141,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
       var object = ModelFactory.updateObject(newData);
       
       if(!id) {
-        me.getBacklog().addStory(object);
+        possibleBacklog.addStory(object);
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
       if (me.relations.backlog) {

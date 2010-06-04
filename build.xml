@@ -90,6 +90,12 @@
 			<annotationconfiguration propertyfile="${conf.dir}/database-${database.type}.properties" configurationfile="${conf.dir}/hibernate.cfg.xml" />
 			<hbm2ddl export="false" outputfilename="create-db.ddl" />
 		</hibernatetool>
+		<concat append="true" destfile="${build.dir}/create-db.ddl">
+			<filelist dir="${basedir}/doc/sql/">
+				<file name="db-version.sql"/>
+				<file name="insert-users.sql"/>
+			</filelist>
+		</concat>
 	</target>
 
 	<target name="create-test-db" depends="compile" description="Creates db using hibernate tools">
@@ -273,7 +279,7 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
-	<target name="production-war" depends="compress-js">
+	<target name="production-war" depends="replace_version_number, compress-js">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
@@ -342,7 +348,7 @@
 		</javadoc>
 	</target>
 
-	<target name="compress-js" depends="webapp" description="Minifiy a set of files">
+	<target name="compress-js" depends="webapp, concat_javascript" description="Minifiy a set of files">
 		<taskdef name="yuicompress" classname="com.yahoo.platform.yui.compressor.YUICompressTask">
 			<classpath>
 				<path refid="yuicompressor.classpath"/>
@@ -423,21 +429,29 @@
       </fileset>
       -->
 		</concat>
-		<concat destfile="${build.webapp}/static/js/dynamics/dynamicTable.js">
-			<fileset dir="${build.webapp}/static/js/dynamics/view/">
-				<include name="*.js" />
-			</fileset>
+		<concat destfile="${build.webapp}/static/js/Dynamics.js">
+			<filelist dir="${build.webapp}/static/js/" files="utils/ArrayUtils.js, utils/ClassUtils.js, utils/Parsers.js, utils/XworkSerializer.js, 
+				autocomplete/autocompleteSearchBox.js, autocomplete/autocompleteSelectedBox.js, autocomplete/autocompleteRecent.js, 
+				autocomplete/autocompleteBundle.js, autocomplete/autocompleteDataProvider.js, autocomplete/autocompleteDialog.js,
+				autocomplete/autocompleteSingleDialog.js, autocomplete/autocompleteInline.js"></filelist>
+			<filelist dir="${build.webapp}/static/js/dynamics/"
+				files=" Dynamics.events.js, view/ViewPart.js, view/MessageDisplay.js, view/DynamicView.js, view/Table.js, view/Row.js, view/Cell.js, view/RowActions.js, view/TableConfiguration.js, 
+				view/Toggle.js, view/TableCaption.js, view/TableCellEditors.js, view/decorators.js, view/SplitPanel.js, view/Tabs.js, view/Buttons.js, view/Button.js, 
+				view/ValidationManager.js, view/ConfirmationDialog.js, view/ChangePasswordDialog.js, view/LazyLoadedDialog.js, view/UserSpentEffortWidget.js, view/LabelsView.js, 
+				view/AutoSuggest.js, view/SearchByTextWidget.js, view/StoryInfoWidget.js, view/StoryFiltersView.js, view/StateFilterWidget.js, view/SpentEffortWidget.js, view/Bubble.js,
+				view/CellBubble.js, model/CommonModel.js, model/BacklogModel.js, model/IterationModel.js, model/ProjectModel.js, model/ProductModel.js, model/StoryModel.js, 
+				model/TaskModel.js, model/UserModel.js, model/TeamModel.js, model/comparators.js, model/AssignmentModel.js, model/HourEntryModel.js, model/TaskSplitContainer.js, 
+				model/UserListContainer.js, model/TeamListContainer.js, model/HourEntryListContainer.js, model/PortfolioModel.js, model/LabelModel.js, model/DailyWorkModel.js, 
+				model/WorkQueueTaskModel.js, model/ModelFactory.js, controller/CommonController.js, controller/BacklogController.js, controller/TaskController.js, 
+				controller/AssignmentController.js, controller/StoryController.js, controller/IterationController.js, controller/StoryListController.js, controller/ProductController.js, 
+				controller/IterationRowController.js, controller/ProjectController.js, controller/ProjectRowController.js, controller/DailyWorkController.js, 
+				controller/TasksWithoutStoryController.js, controller/DailyWorkStoryListController.js, controller/DailyWorkTasksWithoutStoryController.js, controller/WorkQueueController.js,
+				controller/TaskSplitDialog.js, controller/UserController.js, controller/StoryInfoBubble.js, controller/UserListController.js, controller/UserRowController.js, 
+				controller/TeamListController.js, controller/TeamRowController.js, controller/CreateDialog.js, controller/TaskInfoDialog.js, controller/HourEntryController.js, 
+				controller/HourEntryListController.js, controller/StoryTreeController.js, controller/PortfolioController.js, controller/PortfolioRowController.js, 
+				controller/MyAssignmentsMenuController.js, controller/AdministrationMenuController.js, controller/PersonalLoadController.js"></filelist>
 		</concat>
-		<concat destfile="${build.webapp}/static/js/dynamics/model.js">
-			<fileset dir="${build.webapp}/static/js/dynamics/model/">
-				<include name="*.js" />
-			</fileset>
-		</concat>
-		<concat destfile="${build.webapp}/static/js/dynamics/controller.js">
-			<fileset dir="${build.webapp}/static/js/dynamics/controller/">
-				<include name="*.js" />
-			</fileset>
-		</concat>
+		<copy tofile="${build.webapp}/WEB-INF/jsp/inc/includeDynamics.jsp" file="${build.webapp}/WEB-INF/jsp/inc/includeDynamicsSingle.jsp" overwrite="on"/>
   </target>
   <!-- Generates a rebel.xml configuration file for JRebel.
        The file is generated both to basedir/classes and basedir/eclipse-classes so it should work both with Eclipse and command line deploying.

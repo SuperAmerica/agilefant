@@ -3,7 +3,7 @@ var StoryController = function StoryController(model, view, backlogController) {
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.autohideCells = [ StoryController.columnIndices.description, StoryController.columnIndices.buttons ]; 
+  this.autohideCells = [ "description", "buttons" ]; 
 };
 
 StoryController.columnNames =
@@ -536,6 +536,7 @@ StoryController.prototype.storyPointsEditable = function() {
     }
   });
   config.addColumnConfiguration(TaskController.columnIndices.buttons, {
+    columnName: "buttons",
     fullWidth : true,
     visible : false,
     cssClass : 'task-row',

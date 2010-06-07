@@ -138,6 +138,9 @@ DynamicTableRow.prototype.autoCreateCells = function(disabledSubViews) {
 };
 
 DynamicTableRow.prototype.getCell = function(index) {
+  if (typeof index == 'string') {
+    return this.getCellByName(index);
+  }
   return this.cellIndex[index];
 };
 DynamicTableRow.prototype.getCellByName = function(name) {

@@ -319,6 +319,7 @@ StoryListController.columnConfig.description = {
   }
 };
 StoryListController.columnConfig.buttons = {
+  columnName: "buttons",
   fullWidth : true,
   visible : false,
   subViewFactory : DynamicsButtons.commonButtonFactory

@@ -87,8 +87,11 @@ StoryTreeController.prototype.initHeader = function() {
         title: 'Filter by state',
         offsetX: -15,
         minWidth: 100,
-        minHeight: 20,
-        closeCallback: function() { me.parentController.filter(); }
+        minHeight: 20
+      },
+      filterCallback: function() {
+        me.storyFilters.statesToKeep = widget.getFilter();
+        me.parentController.filter();
       },
       callback: function(isActive) {
         if (isActive) {
@@ -97,7 +100,6 @@ StoryTreeController.prototype.initHeader = function() {
         else {
           me.filterImg.removeClass("storytree-filterimg-active");
         }
-        me.storyFilters.statesToKeep = widget.getFilter();
       },
       activeStates: me.storyFilters.statesToKeep
     });

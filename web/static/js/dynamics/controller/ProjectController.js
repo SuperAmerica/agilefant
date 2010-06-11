@@ -78,13 +78,13 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
      title: "Filter by state",
      offsetX: -15,
      minWidth: 100,
-     minHeight: 20,
-     closeCallback: function() {
-      me.filterLeafStories();
-     }
+     minHeight: 20
+   },
+   filterCallback: function() {
+     me.leafStoriesStateFilters = widget.getFilter();
+     me.filterLeafStories();
    },
    callback: function(isActive) {
-     me.leafStoriesStateFilters = widget.getFilter();
      if(isActive) {
        me.storyListView.activateColumnFilter("State");
      } else {

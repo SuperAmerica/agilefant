@@ -45,6 +45,8 @@ Bubble.prototype.init = function() {
 
 /**
  * Destroy the bubble.
+ * <p>
+ * Pass on the arguments to the close callback function.
  */
 Bubble.prototype.destroy = function() {
   this.parentElement.remove();
@@ -53,7 +55,7 @@ Bubble.prototype.destroy = function() {
   $(document).unbind('keydown.agilefantBubble', this.keypressListener);
   
   if (this.options.closeCallback) {
-    this.options.closeCallback();
+    this.options.closeCallback(arguments);
   }
 };
 

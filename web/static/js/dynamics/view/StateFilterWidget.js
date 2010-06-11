@@ -16,12 +16,18 @@ var StateFilterWidget = function(reference, options) {
   
   this.options = {
     bubbleOptions: {},
+    filterCallback: function() {},
     callback: function(active) {
       MessageDisplay.Ok("Filter active: " + active);
     },
     activeStates: [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE" ]
   };
   jQuery.extend(this.options, options);
+  
+  this.options.bubbleOptions.closeCallback = jQuery.proxy(function(args) {
+    var preventRevert = args[0];
+    this.onBubbleClose(preventRevert);
+  }, this);
 
   this.initActiveStates();
   this.init();
@@ -59,6 +65,22 @@ StateFilterWidget.prototype.clearFilter = function() {
   this.parentElement.find('.inlineTaskState').fadeTo("fast", 1);
   this.activeStates = [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE" ];
   this.options.callback(this.isActive());
+  this.closeAndFilter();
+};
+
+StateFilterWidget.prototype.closeAndFilter = function() {
+  if (this.options.filterCallback) {
+    this.options.filterCallback();
+  }
+  this.bubble.destroy(true);
+};
+
+StateFilterWidget.prototype.onBubbleClose = function(preventRevert) {
+  if (!preventRevert) {
+    this.activeStates = [];
+    jQuery.extend(this.activeStates, this.options.activeStates);
+  }
+  this.options.callback(this.isActive());
 };
 
 StateFilterWidget.prototype.init = function() {
@@ -75,16 +97,14 @@ StateFilterWidget.prototype.init = function() {
       button.fadeTo("fast", 0.5);
     }
   }
-   
-  $('<button>Filter</button>').css('margin-top','1em').click(jQuery.proxy(function() {
-    this.bubble.destroy();
-  },this)).appendTo(this.parentElement);
+
+  $('<button>Filter</button>').click(jQuery.proxy(function() {
+    this.closeAndFilter();
+  },this)).addClass('dynamics-button').css({'margin-top':'1.5em','float':'right','min-width':'6ex','width':'6ex'}).appendTo(this.parentElement);
   
-  
-  // Add clear button
-  $('<a>clear filter</a>').click(jQuery.proxy(function() {
+  $('<button>Clear</button>').click(jQuery.proxy(function() {
     this.clearFilter();
-  }, this)).css({'float': 'right', 'margin-top': '1.5em'}).appendTo(this.parentElement);
+  }, this)).addClass('dynamics-button').css({'margin-top':'1.5em','float':'right','min-width':'6ex','width':'6ex'}).appendTo(this.parentElement);  
 };
 
 StateFilterWidget.prototype.addStateButton = function(state) {
@@ -110,9 +130,9 @@ StateFilterWidget.prototype.removeStateFilter = function(state){
   if (index != -1) {
     this.activeStates.splice(index, 1);
   }
-  this.options.callback(this.isActive());
+//  this.options.callback(this.isActive());
 };
 StateFilterWidget.prototype.addStateFilter = function(state) {
   this.activeStates.push(state.name);
-  this.options.callback(this.isActive());
+//  this.options.callback(this.isActive());
 };

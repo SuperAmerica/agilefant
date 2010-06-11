@@ -75,8 +75,8 @@ StateFilterWidget.prototype.init = function() {
       button.fadeTo("fast", 0.5);
     }
   }
-  
-  $('<button>Filter</button>').click(jQuery.proxy(function() {
+   
+  $('<button>Filter</button>').css('margin-top','1em').click(jQuery.proxy(function() {
     this.bubble.destroy();
   },this)).appendTo(this.parentElement);
   
@@ -84,7 +84,7 @@ StateFilterWidget.prototype.init = function() {
   // Add clear button
   $('<a>clear filter</a>').click(jQuery.proxy(function() {
     this.clearFilter();
-  }, this)).css({'float': 'right', 'margin-top': '0.5em'}).appendTo(this.parentElement);
+  }, this)).css({'float': 'right', 'margin-top': '1.5em'}).appendTo(this.parentElement);
 };
 
 StateFilterWidget.prototype.addStateButton = function(state) {

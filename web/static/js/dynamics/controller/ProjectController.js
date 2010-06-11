@@ -30,20 +30,38 @@ ProjectController.prototype.filter = function() {
   var activeTab = this.tabs.tabs("option","selected");
   if (activeTab === 1) {
     this.storyListView.showInfoMessage("Searching...");
-    this.model.reloadLeafStories({name: this.getTextFilter()}, function() {
+    this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
       me.storyListView.hideInfoMessage("Searching...");
     });
   }
   else if (activeTab === 0) {
     this.storyTreeController.filter(this.getTextFilter(),
-        this.getStateFilters());
+        this.getStoryTreeStateFilters());
   }
   else if (activeTab === 2) {
     this.iterationsView.filter();
   }
 };
 
-ProjectController.prototype.getStateFilters = function() {
+ProjectController.prototype.filterLeafStories = function() {
+  this.storyListView.showInfoMessage("Filtering...");
+  this.model.reloadLeafStories(this.getLeafStoryFilters(), jQuery.proxy(function() {
+    this.storyListView.hideInfoMessage("Filtering...");
+  },this));
+};
+
+ProjectController.prototype.getLeafStoryFilters = function() {
+  var filters = {};
+  if(this.getTextFilter()) {
+    filters.name = this.getTextFilter();
+  }
+  if(this.leafStoriesStateFilters) {
+    filters.states = this.leafStoriesStateFilters;
+  }
+  return filters; 
+};
+
+ProjectController.prototype.getStoryTreeStateFilters = function() {
   return this.storyTreeController.storyFilters.statesToKeep;
 };
 
@@ -54,27 +72,24 @@ ProjectController.prototype.getTextFilter = function() {
 
 ProjectController.prototype.filterLeafStoriesByState = function(element) {
   var me = this;
-  var bub = new Bubble(element, {
-    title: "Filter by state",
-    offsetX: -15,
-    minWidth: 100,
-    minHeight: 20
-  });
-  var filterFunc = function(story) {
-    return (!me.leafStoriesStateFilters || jQuery.inArray(story.getState(), me.leafStoriesStateFilters) !== -1);
-  };
-  
-  var widget = new StateFilterWidget(bub.getElement(), {
+
+  var widget = new StateFilterWidget(element, {
+   bubbleOptions: {
+     title: "Filter by state",
+     offsetX: -15,
+     minWidth: 100,
+     minHeight: 20,
+     closeCallback: function() {
+      me.filterLeafStories();
+     }
+   },
    callback: function(isActive) {
-      me.leafStoriesStateFilters = widget.getFilter();
-      if(isActive) {
-        me.storyListView.activateColumnFilter("State");
-        me.storyListView.setFilter(filterFunc);
-      } else {
-        me.storyListView.disableColumnFilter("State");
-        me.storyListView.setFilter(null);
-      }
-      me.storyListView.filter();
+     me.leafStoriesStateFilters = widget.getFilter();
+     if(isActive) {
+       me.storyListView.activateColumnFilter("State");
+     } else {
+       me.storyListView.disableColumnFilter("State");
+     }
     },
     activeStates: me.leafStoriesStateFilters
   });
@@ -187,7 +202,7 @@ ProjectController.columnConfigs = {
 ProjectController.prototype.handleModelEvents = function(event) {
   var me = this;
   if(event instanceof DynamicsEvents.RankChanged && event.getRankedType() === "story") {
-    this.model.reloadStoryRanks(function() {
+    this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
       me.storyListView.resort();
     });
   }

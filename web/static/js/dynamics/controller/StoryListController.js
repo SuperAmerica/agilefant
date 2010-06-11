@@ -40,9 +40,6 @@ StoryListController.prototype.initConfig = function() {
 
 StoryListController.prototype.filterStoriesByState = function(element) {
   var me = this;
-  var bub = new Bubble(element, {
-    
-  });
   var filterFunc = function(story) {
     return (!me.stateFilters || jQuery.inArray(story.getState(), me.stateFilters) !== -1);
   };

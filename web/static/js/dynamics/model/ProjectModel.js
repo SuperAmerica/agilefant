@@ -127,8 +127,11 @@ ProjectModel.prototype._saveData = function(id, changedData) {
 ProjectModel.prototype.reloadLeafStories = function(filters, callback) {
   var me = this;
   var data = {objectId: this.id};
-  if(filters) {
-    $.extend(data, this.serializeFields("storyFilters", filters));
+  if(filters && filters.name) {
+    data["storyFilters.name"] = filters.name;
+  }
+  if(filters && filters.states) {
+    data["storyFilters.states"] = filters.states;
   }
   jQuery.ajax({
     url: "ajax/projectLeafStories.action",
@@ -146,7 +149,7 @@ ProjectModel.prototype.reloadLeafStories = function(filters, callback) {
   
 };
 
-ProjectModel.prototype.reloadStoryRanks = function(callback) {
+ProjectModel.prototype.reloadStoryRanks = function(callback, filters) {
   var me = this;
   var data = {objectId: this.id};
   jQuery.ajax({

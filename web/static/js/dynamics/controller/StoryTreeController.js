@@ -82,14 +82,14 @@ StoryTreeController.prototype.initHeader = function() {
   this.filterImg = $('<div/>').addClass("storytree-filterimg").appendTo(title);
   
   this.filterImg.click(function() {
-    var bub = new Bubble($(this), {
-      title: "Filter by state",
-      offsetX: -15,
-      minWidth: 100,
-      minHeight: 20,
-      closeCallback: function() { me.parentController.filter(); }
-    });
-    var widget = new StateFilterWidget(bub.getElement(), {
+    var widget = new StateFilterWidget($(this), {
+      bubbleOptions: {
+        title: 'Filter by state',
+        offsetX: -15,
+        minWidth: 100,
+        minHeight: 20,
+        closeCallback: function() { me.parentController.filter(); }
+      },
       callback: function(isActive) {
         if (isActive) {
           me.filterImg.addClass("storytree-filterimg-active");

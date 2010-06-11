@@ -1,9 +1,9 @@
 /**
  * Filter widget for states
  */
-var StateFilterWidget = function(element, options) {
+var StateFilterWidget = function(reference, options) {
   var me = this;
-  this.parentElement = element;
+  this.referenceElement = reference;  
   this.allStoryStates =
    [
      { name: "NOT_STARTED", abbr: "N" },
@@ -15,6 +15,7 @@ var StateFilterWidget = function(element, options) {
    ];
   
   this.options = {
+    bubbleOptions: {},
     callback: function(active) {
       MessageDisplay.Ok("Filter active: " + active);
     },
@@ -61,6 +62,9 @@ StateFilterWidget.prototype.clearFilter = function() {
 };
 
 StateFilterWidget.prototype.init = function() {
+  this.bubble = new Bubble(this.referenceElement, this.options.bubbleOptions);
+  this.parentElement = this.bubble.getElement();
+  
   this.stateButtons = $('<div style="margin: 0.8em 10px 0; height: 1em; line-height: 1em"></div>').appendTo(this.parentElement);
 
   // Add all the buttons
@@ -72,11 +76,15 @@ StateFilterWidget.prototype.init = function() {
     }
   }
   
+  $('<button>Filter</button>').click(jQuery.proxy(function() {
+    this.bubble.destroy();
+  },this)).appendTo(this.parentElement);
+  
+  
   // Add clear button
-  var me = this;
-  $('<a>clear filter</a>').click(function() {
-    me.clearFilter();
-  }).css({'float': 'right', 'margin-top': '0.5em'}).appendTo(this.parentElement);
+  $('<a>clear filter</a>').click(jQuery.proxy(function() {
+    this.clearFilter();
+  }, this)).css({'float': 'right', 'margin-top': '0.5em'}).appendTo(this.parentElement);
 };
 
 StateFilterWidget.prototype.addStateButton = function(state) {

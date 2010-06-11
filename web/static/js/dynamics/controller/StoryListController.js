@@ -41,16 +41,19 @@ StoryListController.prototype.initConfig = function() {
 StoryListController.prototype.filterStoriesByState = function(element) {
   var me = this;
   var bub = new Bubble(element, {
-    title: "Filter by state",
-    offsetX: -15,
-    minWidth: 100,
-    minHeight: 20
+    
   });
   var filterFunc = function(story) {
     return (!me.stateFilters || jQuery.inArray(story.getState(), me.stateFilters) !== -1);
   };
   
-  var widget = new StateFilterWidget(bub.getElement(), {
+  var widget = new StateFilterWidget(element, {
+   bubbleOptions: {
+     title: "Filter by state",
+     offsetX: -15,
+     minWidth: 100,
+     minHeight: 20
+   },
    callback: function(isActive) {
       me.stateFilters = widget.getFilter();
       if(isActive) {

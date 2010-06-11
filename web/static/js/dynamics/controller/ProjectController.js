@@ -214,7 +214,7 @@ ProjectController.prototype._paintLeafStories = function(element) {
         element);
   }
   this.storyListView.showInfoMessage("Loading...");
-  this.model.reloadLeafStories(null, function() {
+  this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
       me.storyListView.hideInfoMessage("Loading...");
   });
 };
@@ -603,7 +603,39 @@ ProjectController.prototype.initializeStoryConfig = function() {
       required: true
     }
   });
+
   config.addColumnConfiguration(2, {
+    minWidth : 50,
+    autoScale : true,
+    title : "Points",
+    headerTooltip : 'Estimate in story points',
+    get : StoryModel.prototype.getStoryPoints,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+    editable : true,
+    editableCallback: StoryController.prototype.storyPointsEditable,
+    decorator: DynamicsDecorators.estimateDecorator,
+    edit : {
+      editor : "Estimate",
+      set : StoryModel.prototype.setStoryPoints
+    }
+  });
+  config.addColumnConfiguration(3, {
+    minWidth : 70,
+    autoScale : true,
+    title : 'State',
+    headerTooltip : 'Story state',
+    get : StoryModel.prototype.getState,
+    decorator: DynamicsDecorators.stateColorDecorator,
+    editable : true,
+    filter: ProjectController.prototype.filterLeafStoriesByState,
+    edit : {
+      editor : "Selection",
+      set : StoryModel.prototype.setState,
+      items : DynamicsDecorators.stateOptions
+    }
+  });
+  
+  config.addColumnConfiguration(4, {
     minWidth : 60,
     autoScale : true,
     title : "Responsibles",
@@ -620,37 +652,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
 
-
-  config.addColumnConfiguration(3, {
-    minWidth : 70,
-    autoScale : true,
-    title : 'State',
-    headerTooltip : 'Story state',
-    get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
-    editable : true,
-    filter: ProjectController.prototype.filterLeafStoriesByState,
-    edit : {
-      editor : "Selection",
-      set : StoryModel.prototype.setState,
-      items : DynamicsDecorators.stateOptions
-    }
-  });
-  config.addColumnConfiguration(4, {
-    minWidth : 50,
-    autoScale : true,
-    title : "Points",
-    headerTooltip : 'Estimate in story points',
-    get : StoryModel.prototype.getStoryPoints,
-    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
-    editable : true,
-    editableCallback: StoryController.prototype.storyPointsEditable,
-    decorator: DynamicsDecorators.estimateDecorator,
-    edit : {
-      editor : "Estimate",
-      set : StoryModel.prototype.setStoryPoints
-    }
-  });
   config.addColumnConfiguration(5, {
     minWidth : 100,
     autoScale : true,

@@ -11,15 +11,31 @@
 <!--
 $(function()
 {
-	$('#${id}').datepicker({
-		dateFormat : 'yy-mm-dd', 
-		numberOfMonths : 3, 
-		buttonImage : 'static/img/calendar.gif',
+	$('#${id}').datepicker( {
+    dateFormat : 'yy-mm-dd',
+    numberOfMonths : 3,
+    showButtonPanel : true,
+    beforeShow : function(input, inst) {
+    console.log(input);
+    console.log(inst);
+        pattern = /(\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
+        var index = inst.input.val().search(pattern);
+        if (index === -1) {
+          inst.input.data("hoursandmins", '12:00');
+        }
+        else {
+          inst.input.data("hoursandmins", inst.input.val().substr(index, 5));
+        }
+    },
+    onSelect : function(newValue, inst) {
+        var val = newValue + " " + inst.input.data("hoursandmins");
+        inst.input.val(val);
+    },
+    buttonImage : 'static/img/calendar.gif',
     buttonImageOnly : true,
     showOn : 'button',
-    showButtonPanel : true,
     constrainInput : false
-    });
+});
 });
 //-->
 </script>

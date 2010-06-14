@@ -191,3 +191,21 @@ div.hierarchyContainer {
 .storytree-filterimg-active {
   background-position: 0% 100%;
 }
+
+/**
+ * CONTEXT INFO BUBBLES
+ */
+.bubbleHierarchyContainer {
+  padding-left: 1em;
+}
+ 
+.bubbleHierarchyContainer a:hover, .bubbleHierarchyContainer a:link, .bubbleHierarchyContainer a:visited, .bubbleHierarchyContainer a:active {
+  font-size: 100%;
+  color: black;
+  text-decoration: none;
+  cursor: default;  
+}
+.bubbleHierarchyContainer ul {
+  margin-left: 0em;
+  padding-left: 1em; 
+}

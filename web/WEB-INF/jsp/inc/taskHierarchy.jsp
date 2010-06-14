@@ -3,7 +3,7 @@
 
 <c:if test="${parentStory != null}">
 <h2>Story hierarchy</h2>
-<div class="storyTreeContainer">
+<div class="storyTreeContainer bubbleHierarchyContainer">
   <div class="tree">
     <ul>
       <aef:storyTreeNode node="${parentStory}" forceOpen="true"/>

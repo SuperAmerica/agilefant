@@ -78,7 +78,7 @@ WorkQueueController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.state, TasksWithoutStoryController.columnConfig.state);
   
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.context, WorkQueueController.columnConfig.context);
-  config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.detailedContext, WorkQueueController.columnConfigs.detailedContext);
+  config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.detailedContext, WorkQueueController.columnConfig.detailedContext);
   
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.responsibles, TasksWithoutStoryController.columnConfig.responsibles);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.el, TasksWithoutStoryController.columnConfig.effortLeft);
@@ -91,11 +91,10 @@ WorkQueueController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.buttons, TasksWithoutStoryController.columnConfig.buttons);
 };
 
-WorkQueueController.columnConfigs = {};
-WorkQueueController.columnConfigs.detailedContext = {
-    minWidth : 15,
-    autoScale : true,
-    title : "",
-    headerTooltip : '',
-    subViewFactory: WorkQueueController.prototype.taskContextFactory
-  };
+WorkQueueController.columnConfig.detailedContext = {
+  minWidth : 15,
+  autoScale : true,
+  title : "",
+  headerTooltip : '',
+  subViewFactory: WorkQueueController.prototype.taskContextFactory
+};

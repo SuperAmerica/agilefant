@@ -140,6 +140,8 @@ $(document).ready( function() {
     if (current) {
         change_selected_interval(current);
         $("#interval").find("[value='"+current+"']").attr("selected","selected");
+    } else {
+      $(".dateSelectRow").show();
     } 
 });
 function tsToggle(caller) {

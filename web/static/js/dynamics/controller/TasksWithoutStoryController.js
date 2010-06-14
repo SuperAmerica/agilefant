@@ -139,7 +139,7 @@ TasksWithoutStoryController.columnConfig.description = {
   get : TaskModel.prototype.getDescription,
   columnName: "description",
   visible : false,
-  decorator: DynamicsDecorators.emptyDescriptionDecorator,
+  decorator: DynamicsDecorators.emptyTaskDescriptionDecorator,
   editable : true,
   edit : {
     editor : "Wysiwyg",

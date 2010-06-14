@@ -195,7 +195,7 @@ StoryInfoBubble.prototype._createConfig = function() {
   config.addColumnConfiguration(4, {
     title : "Responsibles",
     get : StoryModel.prototype.getResponsibles,
-    decorator: DynamicsDecorators.userInitialsListDecorator,
+    decorator: DynamicsDecorators.responsiblesDecorator,
     editable : true,
     edit : {
       editor : "Autocomplete",

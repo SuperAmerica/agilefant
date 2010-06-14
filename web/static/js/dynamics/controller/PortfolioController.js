@@ -202,7 +202,7 @@ PortfolioController.prototype.initConfig = function() {
 	    title : "Assignees",
 	    headerTooltip : 'Project assignees',
 	    get : BacklogModel.prototype.getAssignees,
-	    decorator: DynamicsDecorators.assigneesDecorator,
+	    decorator: DynamicsDecorators.responsiblesDecorator,
 	    editable: true,
 	    edit: {
         editor : "Autocomplete",

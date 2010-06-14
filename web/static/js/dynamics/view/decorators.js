@@ -152,9 +152,6 @@ var DynamicsDecorators = {
   userNameDecorator: function(user) {
     return user.getFullName();
   },
-  assigneesDecorator: function(userList) {
-    return DynamicsDecorators.userInitialsListDecorator(userList, "No assignees selected");
-  },
   responsiblesDecorator: function(userList) {
     return DynamicsDecorators.userInitialsListDecorator(userList, '<span class="smallGreyText">(none)</span>');
   },
@@ -267,6 +264,10 @@ var DynamicsDecorators = {
     };
   },
   emptyDescriptionDecorator: function(value) {
+    var f = DynamicsDecorators.onEmptyDecoratorFactory('<span class="smallGreyText">(empty)</span>');
+    return f(value);
+  },
+  emptyTaskDescriptionDecorator: function(value) {
     var f = DynamicsDecorators.onEmptyDecoratorFactory('<span class="smallGreyText">(Empty description)</span>');
     return f(value);
   },

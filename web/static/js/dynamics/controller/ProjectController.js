@@ -177,7 +177,7 @@ ProjectController.columnConfigs = {
     title : "Assignees",
     headerTooltip : 'Project assignees',
     get : BacklogModel.prototype.getAssignees,
-    decorator: DynamicsDecorators.assigneesDecorator,
+    decorator: DynamicsDecorators.responsiblesDecorator,
     editable: true,
     openOnRowEdit: false,
     edit: {
@@ -480,7 +480,7 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     title : "Assignees",
     headerTooltip : 'Iteration assignees',
     get : BacklogModel.prototype.getAssignees,
-    decorator: DynamicsDecorators.emptyValueWrapper(DynamicsDecorators.userInitialsListDecorator, "(No assignees selected)"),
+    decorator: DynamicsDecorators.responsiblesDecorator,
     editable : true,
     openOnRowEdit: false,
     edit : {

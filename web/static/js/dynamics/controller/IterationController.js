@@ -109,7 +109,7 @@ IterationController.columnConfigs = {
     title : "Assignees",
     headerTooltip : 'Project assignees',
     get : BacklogModel.prototype.getAssignees,
-    decorator: DynamicsDecorators.assigneesDecorator,
+    decorator: DynamicsDecorators.responsiblesDecorator,
     editable: true,
     openOnRowEdit: false,
     edit: {

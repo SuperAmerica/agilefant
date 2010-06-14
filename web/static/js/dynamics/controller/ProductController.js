@@ -266,7 +266,7 @@ ProductController.prototype.initializeProjectListConfig = function() {
     title : "Assignees",
     headerTooltip : 'Project assignees',
     get : BacklogModel.prototype.getAssignees,
-    decorator: DynamicsDecorators.emptyValueWrapper(DynamicsDecorators.userInitialsListDecorator, "(No assignees selected)"),
+    decorator: DynamicsDecorators.responsiblesDecorator,
     editable : true,
     openOnRowEdit: false,
     edit : {

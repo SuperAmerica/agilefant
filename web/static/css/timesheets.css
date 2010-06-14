@@ -57,40 +57,57 @@
   font-weight: normal;
   padding: 0 1em;
   background: rgba(0, 0, 0, 0.15);
-  width: 10ex;
+  width: 100px;
 }
 
 .timesheet-hourEntryContainer {
-  margin: 0.5em;
+  margin: 0.5em 1em;
   padding: 0.5em;
   border: 1px solid #ccc;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  width: 80% !important;
+}
+
+.timesheet-hourEntryContainer > ul > li {
+  line-height: 15pt;  
+}
+
+.timesheet-hourEntryContainer > ul > li:nth-child(even) {
+  background-color: #e0e0e0;  
 }
 
 
 
-
-ul.timesheet-backlogContent {
+ul.timesheet-content {
   list-style-type: none;
   white-space: nowrap;
   margin: 0.5em;
   padding: 0;
 }
 
-ul.timesheet-backlogContent > li > div {
+
+
+ul.timesheet-content > li > div {
   display: inline-block;
-  width: 90%;
+  width: 75%;
+  overflow:hidden;
 }
 
-ul.timesheet-backlogContent > li > div.hoursum {
-  width: 10% !important;
+ul.timesheet-content > li > div.hoursum {
+  width: 100px !important;
+  float: right;
+  padding: 0 1em;
 }
 
 
 
 .timesheet-closable {
   display: none;  
+}
+
+.timesheetOpenListLink {
+  font-weight: bold;
 }
 
 .timesheetOpenListImage {
@@ -114,3 +131,13 @@ ul.timesheet-backlogContent > li > div.hoursum {
 .timesheetOpenListLink:hover {
   color: #666;
 }
+
+.reportTable {
+  max-height: 15em;
+  overflow: auto;
+}
+
+.reportTable td {
+  margin: 0.2em 0.5em;  
+}
+

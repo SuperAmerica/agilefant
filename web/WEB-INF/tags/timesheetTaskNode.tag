@@ -3,21 +3,13 @@
 	description="This tag generates the display data for timesheet querys"%>
 
 <%@ attribute type="java.util.List" name="nodes"%>
-<table class="reportTable" cellpadding="0" cellspacing="0">
 
+<ul class="timesheet-content">
 <c:forEach items="${nodes}" var="tNode">
-	<tr class="task">
-	<td><a onclick="tsToggle(this);">${tNode.name} &raquo;</a></td>
-	<td class="effortCol">${aef:minutesToString(tNode.effortSum)}</td>
-	</tr>
-	<c:if test="${!empty tNode.hourEntries}">
-		<tr>
-		<td colspan="2" class="innerTable" style="display:none;">
-		<aef:timesheetHourEntryList node="${tNode}" />
-		</td>
-		</tr>
-	</c:if>
+  <li>
+    <div>${tNode.name}</div>
+    <div class="hoursum">${aef:minutesToString(tNode.effortSum)}</div>
+  </li>
 </c:forEach>
+</ul>
 
-
-</table>

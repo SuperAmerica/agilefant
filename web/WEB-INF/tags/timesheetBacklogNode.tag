@@ -35,7 +35,7 @@
 
 <c:if test="${!empty node.storyNodes || !empty node.taskNodes || !empty node.hourEntries}">
 
-<ul class="timesheet-backlogContent">
+<ul class="timesheet-content">
   <c:if test="${!empty node.storyNodes}">
     <li>
       <div><a href="#" rel="backlog_${node.backlog.id}_storyContainer" class="timesheetOpenListLink"><div class="timesheetOpenListImage"></div> Stories</a></div>
@@ -62,14 +62,16 @@
   
   <c:if test="${!empty node.hourEntries}">
     <li>
-      <div><a href="#" rel="backlog_${node.backlog.id}_hourEntryContainer" class="timesheetOpenListLink"><div class="timesheetOpenListImage"></div> Direct spent effort</a></div>
+      <div style="color: #666;">Direct spent effort</div>
       <div class="hoursum">${aef:minutesToString(node.ownEffortSpentSum)}</div>
     </li>
+    <%--
     <li id="backlog_${node.backlog.id}_hourEntryContainer" class="timesheet-closable">
       <div class="timesheet-hourEntryContainer">
         <aef:timesheetHourEntryList node="${node}" />
       </div>
     </li>
+     --%>
   </c:if>
   
   <c:if test="${!empty node.backlogNodes}">

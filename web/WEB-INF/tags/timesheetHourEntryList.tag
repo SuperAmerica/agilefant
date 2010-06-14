@@ -4,6 +4,7 @@
 
 <%@ attribute type="fi.hut.soberit.agilefant.util.TimesheetNode"
 	name="node"%>
+  
 <table class="reportTable" cellpadding="0" cellspacing="0">
 <c:forEach items="${node.hourEntries}" var="entry">
 	<tr>

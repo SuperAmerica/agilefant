@@ -158,14 +158,7 @@ $(document).ready(function() {
   $('.timesheetOpenListLink').click(function() {
     var me = $(this);
     var target = $('#' + me.attr('rel'));
-
-    if (target.is(':visible')) {
-      me.text('[+]');
-    }
-    else {
-      me.text('[-]');
-    }
-    
+    me.toggleClass('timesheetOpenList-open');    
     target.toggle();
     return false;
   });

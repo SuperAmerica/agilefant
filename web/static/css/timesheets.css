@@ -68,8 +68,30 @@
   -webkit-border-radius: 5px;
 }
 
+.timesheet-closehandle {
+     
+}
+
 .timesheet-closable {
   display: none;  
+}
+
+.timesheetOpenListImage {
+  display: inline-block;
+  background-image: url('../img/plusminus.png');
+  background-repeat: no-repeat;
+  background-position: 0% 0%;
+  width: 11px;
+  height: 11px;
+}
+.timesheetOpenListLink:hover .timesheetOpenListImage {
+  background-position: 100% 0%;
+}
+.timesheetOpenList-open .timesheetOpenListImage {
+  background-position: 0% 100%;  
+}
+.timesheetOpenList-open:hover .timesheetOpenListImage {
+  background-position: 100% 100%;  
 }
 
 .timesheetOpenListLink:hover {

@@ -26,7 +26,14 @@
  
 <div class="ui-widget-header">
 <ul>
-  <li>${node.name}</li>
+  <c:choose>
+  <c:when test="${aef:isProduct(node.backlog) && !empty node.backlogNodes}">
+    <li><a href="#" rel="backlog_${node.backlog.id}_subBacklogs" class="timesheetOpenListLink">${node.name}</a></li>
+  </c:when>
+  <c:otherwise>
+    <li>${node.name}</li>
+  </c:otherwise>
+  </c:choose>
   <li class="hoursum" title="Recursive sum of all of the backlogs' children">${aef:minutesToString(node.effortSum)}</li>
 </ul>
 </div>
@@ -85,9 +92,11 @@
 </c:if>
 </div>
 
+<div id="backlog_${node.backlog.id}_subBacklogs">
 <c:if test="${!empty node.backlogNodes}">
   <aef:timesheetBacklogNode nodes="${node.backlogNodes}" />
 </c:if>
+</div>
 
 </c:forEach>
 

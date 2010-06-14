@@ -291,6 +291,8 @@ Timesheets
 
 <h2>Results</h2>
 
+<p>Total spent effort: ${aef:minutesToString(effortSum)}</p>
+
 <aef:timesheetBacklogNode nodes="${products}" />
 
 </c:if>

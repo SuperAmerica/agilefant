@@ -19,24 +19,26 @@ LabelsIcon.prototype.renderAlways = function() {
 LabelsIcon.prototype.render = function() {
   var labels = this.model.getLabels();
   this.element.empty();
-  this.icon = $('<span class="labelIcon" />').appendTo(this.element);
+  this.icon = $('<span class="labelIcon" />');
 
   if (!labels.length) {
     this.icon.addClass('labelIconNoLabel');
   } else if (labels.length === 1) {
-    this.icon.text(labels[0].getDisplayName().substr(0,4));
-    this._constructTooltip(labels);
+    var name = labels[0].getDisplayName();
+    this.icon.text(name.substr(0,4));
+    this.icon.attr('title',name)
   } else {
     this.icon.addClass('labelIconMultiple');
     this._constructTooltip(labels);
   }
+  this.icon.appendTo(this.element);
 };
 
 LabelsIcon.prototype._constructTooltip = function(labels) {
   var labelNames = [];
-  $.each(labels, function(k,v) {
-    labelNames.push(v.getDisplayName());
-  });
+  for (var i = 0; i < labels.lenght; i++) {
+    labelNames.push(labels[i].getDisplayName());
+  }
   this.icon.attr('title',labelNames.join(', '));
 };
 

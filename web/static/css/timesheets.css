@@ -1,62 +1,77 @@
 
-.reportTable {
-  width: 100%;
-  text-align: left;
-  padding: 0;
+.timesheetProduct {
+  margin-left: 0;
+  width: 100% !important;
+  border-color: #E09600;
+}
+.timesheetProduct .ui-widget-header {
+  background-image: url('../img/ui/ui-bg_gloss-wave_100_e09600_500x100.png') !important;  
 }
 
-.innerTable .reportTable {
-  width: 97%;
-  margin: 0 0 0 3%;
+.timesheetProject {
+  margin-left: 2%;
+  width: 98% !important;
+  border-color: #a070d2;
 }
 
-.reportTable tr {
+.timesheetProject .ui-widget-header {
+  background-image: url('../img/ui/ui-bg_gloss-wave_100_a070d2_500x100.png') !important;  
+}
+
+.timesheetIteration {
+  margin-left: 4%;
+  width: 96% !important;  
+}
+
+.timesheet-backlog {
+  overflow: hidden;
+  margin-top: 1em;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+}
+
+.timesheet-backlog .ui-widget-header {
+  border: none;
+  font-size: 12pt;
+  line-height: 22pt;
+  padding-left: 1em;
+  -webkit-border-radius: 9px 9px 0 0;
+  -moz-border-radius: 9px 9px 0 0;
+}
+
+.timesheet-backlog .ui-widget-header ul {
   margin: 0;
   padding: 0;
+  list-style-type: none;  
 }
 
-.reportTable th, .reportTable td {
+.timesheet-backlog .ui-widget-header ul li {
+  display: inline-block;
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.timesheet-backlog .ui-widget-header ul li.hoursum {
+  float: right;
   font-weight: normal;
-  background: transparent;
-  margin: 0;
-  border-bottom: 1px solid #ccc;
+  padding: 0 1em;
+  background: rgba(0, 0, 0, 0.15);
+  width: 10ex;
 }
 
-.reportTable th {
-  padding: 0.2em;
+.timesheet-hourEntryContainer {
+  margin: 0.5em;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
 }
 
-.innerTable {
-  width: 100%;
+.timesheet-closable {
+  display: none;  
 }
 
-.reportTable .effortCol {
-  text-align: right;
-  width: 10em;
-}
-.reportTable .userNameCol {}
-.reportTable .entryDescCol {}
-
-
-
-.reportTable th a, .reportTable td a {
-  cursor: pointer;
-}
-
-
-
-.reportTable .iteration {
-  background: #e9eeff;  
-}
-
-.reportTable .project {
-  background: #edf;
-}
-
-.reportTable .product {
-  background: #fec;
-}
-
-.reportTable .story {
-  background: #eee;
+.timesheetOpenListLink:hover {
+  color: #666;
 }

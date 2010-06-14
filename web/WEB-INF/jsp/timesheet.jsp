@@ -149,6 +149,32 @@ function tsToggle(caller) {
 	var nextRow = nextRow.next();
 	nextRow.find("> td.innerTable:not(.noToggle)").toggle();
 }
+
+
+
+
+/* Bind the open/close links*/
+$(document).ready(function() {
+  $('.timesheetOpenListLink').click(function() {
+    var me = $(this);
+    var target = $('#' + me.attr('rel'));
+
+    if (target.is(':visible')) {
+      me.text('[+]');
+    }
+    else {
+      me.text('[-]');
+    }
+    
+    target.toggle();
+    return false;
+  });
+});
+
+
+
+
+
 </script>
 
 <div class="structure-main-block">
@@ -261,51 +287,30 @@ Timesheets
 </table>
 
 </div>
-</div>
+
 
 
 
 
 <c:if test="${!empty products}">
 
-<div class="structure-main-block">
-<div class="dynamictable ui-widget-content ui-corner-all" id="changingPassword">
+<h2>Results</h2>
 
-<div class="ui-widget-header dynamictable-caption dynamictable-caption-block ui-corner-all">
-Results
-</div>
-
-<div style="margin: 1em 1em;">
-
-	<aef:timesheetBacklogNode nodes="${products}" />
-	<table class="reportTable" style="width: 100%;">
-	 <tr>
-	   <td>Query total</td>
-	   <td class="effortCol">${aef:minutesToString(effortSum)}</td>
-	  </tr>
-	 </table>
-
-</div>
-
-</div>
-</div>
-
+<aef:timesheetBacklogNode nodes="${products}" />
 
 </c:if>
+ 
+
+
 <c:if test="${empty products && !empty selectedBacklogs}">
 
-<div class="structure-main-block">
-<div class="dynamictable ui-widget-content ui-corner-all" id="changingPassword">
-
-<div class="ui-widget-header dynamictable-caption dynamictable-caption-block ui-corner-all">
-Results
-</div>
+<h2>Results </h2>
 
 <p>No matching effort entries were found.</p>
 
-</div>
-</div>
-
 </c:if>
 
+</div>
+
 </struct:htmlWrapper>
+

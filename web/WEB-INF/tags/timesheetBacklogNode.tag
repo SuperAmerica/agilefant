@@ -3,6 +3,90 @@
   description="This tag generates the display data for timesheet querys"%>
 
 <%@ attribute type="java.util.List" name="nodes"%>
+
+
+
+
+<c:forEach items="${nodes}" var="node">
+
+<%-- CSS class for the box --%>
+<c:choose>
+<c:when test="${aef:isProduct(node.backlog)}">
+  <c:set var="backlogBoxCssClass" value="timesheetProduct" />
+</c:when>
+<c:when test="${aef:isProject(node.backlog)}">
+  <c:set var="backlogBoxCssClass" value="timesheetProject" />
+</c:when>
+<c:when test="${aef:isIteration(node.backlog)}">
+  <c:set var="backlogBoxCssClass" value="timesheetIteration" />
+</c:when>
+</c:choose>
+
+<div class="ui-widget-content ui-corner-all timesheet-backlog ${backlogBoxCssClass}">
+ 
+<div class="ui-widget-header">
+<ul>
+  <li>${node.name}</li>
+  <li class="hoursum">${aef:minutesToString(node.effortSum)}</li>
+</ul>
+</div>
+
+
+
+<c:if test="${!empty node.storyNodes || !empty node.taskNodes || !empty node.hourEntries}">
+
+<table width="100%" style="margin-bottom: 1em;">
+  <c:if test="${!empty node.storyNodes}">
+    <tr>
+      <th><a href="#" rel="backlog_${node.backlog.id}_storyContainer" class="timesheetOpenListLink">[+]</a> Stories</th>
+      <td>Sum</td>
+    </tr>
+    <tr id="backlog_${node.backlog.id}_storyContainer" class="timesheet-closable">
+      <td colspan="2">
+        <div class="timesheet-hourEntryContainer">
+          <aef:timesheetStoryNode nodes="${node.storyNodes}" />
+        </div>
+      </td>
+    </tr>
+  </c:if>
+  
+  <c:if test="${!empty node.taskNodes}">
+  <tr>
+    <th><a href="#" rel="backlog_${node.backlog.id}_taskContainer" class="timesheetOpenListLink">[+]</a> Tasks</th>
+    <td>Sum</td>
+  </tr>
+  <tr id="backlog_${node.backlog.id}_taskContainer" class="timesheet-closable">
+    <td colspan="2">
+      <div class="timesheet-hourEntryContainer">
+        <aef:timesheetTaskNode nodes="${node.taskNodes}" />
+      </div>
+    </td>
+  </tr>
+  </c:if>
+  
+  <c:if test="${!empty node.hourEntries}">
+  <tr>
+    <th><a href="#" rel="backlog_${node.backlog.id}_hourEntryContainer" class="timesheetOpenListLink">[+]</a> Hour entries</th>
+    <td>Sum</td>
+  </tr>
+  <tr id="backlog_${node.backlog.id}_hourEntryContainer" class="timesheet-closable">
+    <td colspan="2">
+      <div class="timesheet-hourEntryContainer">
+        <aef:timesheetHourEntryList node="${node}" />
+      </div>
+    </td>
+  </tr>
+  </c:if>
+</table>
+</c:if>
+</div>
+
+<c:if test="${!empty node.backlogNodes}">
+  <aef:timesheetBacklogNode nodes="${node.backlogNodes}" />
+</c:if>
+
+</c:forEach>
+<%--
 <table class="reportTable" cellpadding="0" cellspacing="0">
   <c:forEach items="${nodes}" var="node">
     <tr>
@@ -65,3 +149,4 @@
     </c:if>
   </c:forEach>
 </table>
+ --%>

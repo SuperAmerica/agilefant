@@ -18,6 +18,11 @@ public class BacklogTimesheetNode extends TimesheetNode {
     List<BacklogTimesheetNode> childBacklogs = new ArrayList<BacklogTimesheetNode>();
     List<StoryTimesheetNode> childStories = new ArrayList<StoryTimesheetNode>();
     List<TaskTimesheetNode> childTasks = new ArrayList<TaskTimesheetNode>();
+    
+    private long taskEffortSum;
+    private long storyEffortSum;
+    private long backlogEffortSum;
+    
     Backlog backlog;
     
     public BacklogTimesheetNode(Backlog backlog) {
@@ -32,6 +37,27 @@ public class BacklogTimesheetNode extends TimesheetNode {
         children.addAll(this.childTasks);
         return children;
     }
+    
+    @Override
+    public long calculateEffortSum() {
+        taskEffortSum  = 0l;
+        storyEffortSum = 0l;
+        backlogEffortSum = 0l;
+        for(TaskTimesheetNode node : this.childTasks) {
+            taskEffortSum += node.calculateEffortSum();
+        }
+        
+        for(StoryTimesheetNode node : this.childStories) {
+            storyEffortSum += node.calculateEffortSum();
+        }
+        
+        for(BacklogTimesheetNode node : this.childBacklogs) {
+            backlogEffortSum += node.calculateEffortSum();
+        }
+        effortSum = taskEffortSum + storyEffortSum + backlogEffortSum + this.getOwnEffortSpentSum();
+        return effortSum;
+    }
+    
     @Override
     public String getName() {
         return this.backlog.getName();
@@ -68,6 +94,12 @@ public class BacklogTimesheetNode extends TimesheetNode {
     }
     public List<BacklogTimesheetNode> getBacklogNodes() {
         return this.childBacklogs;
+    }
+    public long getTaskEffortSum() {
+        return taskEffortSum;
+    }
+    public long getStoryEffortSum() {
+        return storyEffortSum;
     }
     
 

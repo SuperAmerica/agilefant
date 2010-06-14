@@ -39,7 +39,7 @@
   <c:if test="${!empty node.storyNodes}">
     <tr>
       <th><a href="#" rel="backlog_${node.backlog.id}_storyContainer" class="timesheetOpenListLink">[+]</a> Stories</th>
-      <td>Sum</td>
+      <td>${aef:minutesToString(node.storyEffortSum)}</td>
     </tr>
     <tr id="backlog_${node.backlog.id}_storyContainer" class="timesheet-closable">
       <td colspan="2">
@@ -53,7 +53,7 @@
   <c:if test="${!empty node.taskNodes}">
   <tr>
     <th><a href="#" rel="backlog_${node.backlog.id}_taskContainer" class="timesheetOpenListLink">[+]</a> Tasks</th>
-    <td>Sum</td>
+    <td>${aef:minutesToString(node.taskEffortSum)}</td>
   </tr>
   <tr id="backlog_${node.backlog.id}_taskContainer" class="timesheet-closable">
     <td colspan="2">
@@ -66,8 +66,8 @@
   
   <c:if test="${!empty node.hourEntries}">
   <tr>
-    <th><a href="#" rel="backlog_${node.backlog.id}_hourEntryContainer" class="timesheetOpenListLink">[+]</a> Hour entries</th>
-    <td>Sum</td>
+    <th><a href="#" rel="backlog_${node.backlog.id}_hourEntryContainer" class="timesheetOpenListLink">[+]</a> Direct spent effort</th>
+    <td>${aef:minutesToString(node.ownEffortSpentSum)}</td>
   </tr>
   <tr id="backlog_${node.backlog.id}_hourEntryContainer" class="timesheet-closable">
     <td colspan="2">

@@ -15,8 +15,19 @@ import fi.hut.soberit.agilefant.util.TimesheetNode;
  */
 public class StoryTimesheetNode extends TimesheetNode {
     private Story story;
-
+    private long taskEffortSum;
+    
     List<TaskTimesheetNode> childTasks = new ArrayList<TaskTimesheetNode>();
+    
+    @Override
+    public long calculateEffortSum() {
+        taskEffortSum  = 0l;
+        for(TaskTimesheetNode node : this.childTasks) {
+            taskEffortSum += node.calculateEffortSum();
+        }
+        effortSum = taskEffortSum + this.getOwnEffortSpentSum();
+        return effortSum;
+    }
     
     public StoryTimesheetNode(Story story) {
         super();
@@ -48,5 +59,9 @@ public class StoryTimesheetNode extends TimesheetNode {
 
     public Story getStory() {
         return this.story;
+    }
+
+    public long getTaskEffortSum() {
+        return taskEffortSum;
     }
 }

@@ -15,14 +15,14 @@ import fi.hut.soberit.agilefant.model.HourEntry;
  */
 public abstract class TimesheetNode {
     List<HourEntry> hourEntries = new ArrayList<HourEntry>();
-    private long effortSum = 0;
+    protected long effortSum = 0;
     
     public TimesheetNode() {
         
     }
     
     public long calculateEffortSum() {
-        effortSum = 0;
+        effortSum = 0l;
         for(HourEntry entry : this.hourEntries) {
             effortSum += entry.getMinutesSpent();
         }
@@ -45,5 +45,13 @@ public abstract class TimesheetNode {
     
     public List<HourEntry> getHourEntries() {
         return this.hourEntries;
+    }
+    
+    public long getOwnEffortSpentSum() {
+        long sum = 0;
+        for(HourEntry entry : this.hourEntries) {
+            sum += entry.getMinutesSpent();
+        }
+        return sum;
     }
 }

@@ -7,7 +7,7 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
-  ["priority", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
+  ["priority", "labels", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -196,6 +196,10 @@ StoryController.prototype.labelsViewFactory = function(view, model) {
   return new LabelsView(options, this, model, view); 
 };
 
+StoryController.prototype.labelsIconFactory = function(view, model) {
+  return new LabelsIcon({}, this, model, view);
+};
+
 /**
  * 
  */
@@ -311,7 +315,7 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
     collapse: StoryController.prototype.hideDescriptionColumn,
     expand: StoryController.prototype.showDescriptionColumn,
     expanded: false,
-    targetCells: [StoryController.columnIndices.details ]
+    targetCells: [ "details" ]
   };
   this.toggleView = new DynamicTableToggleView(options, this, view);
   return this.toggleView;

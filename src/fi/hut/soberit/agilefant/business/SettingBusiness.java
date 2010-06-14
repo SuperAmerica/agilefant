@@ -146,4 +146,16 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
      * Set the branch metrics type. 
      */
     void setBranchMetricsType(BranchMetricsType type);
+    
+    
+    /**
+     * Get labels display in story lists. 
+     */
+    boolean isLabelsInStoryList();
+    
+    /**
+     * Toggle labels display in story lists. 
+     * @param mode TODO
+     */
+    void setLabelsInStoryList(boolean mode);
 }

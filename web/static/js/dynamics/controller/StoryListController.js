@@ -86,7 +86,7 @@ StoryListController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.getCurrentView().createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
+  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.labels, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
   controller.openRowEdit();
   row.getCellByName("tasksData").hide();
@@ -174,6 +174,9 @@ StoryListController.prototype._getTableConfig = function() {
 StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
+  if (Configuration.isLabelsInStoryList()) {
+    config.addColumnConfiguration(StoryController.columnIndices.labels, StoryListController.columnConfig.labels);
+  }
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
   config.addColumnConfiguration(StoryController.columnIndices.state, StoryListController.columnConfig.state);
@@ -204,6 +207,13 @@ StoryListController.columnConfig.prio = {
   sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
   defaultSortColumn: true,
   subViewFactory : StoryController.prototype.taskToggleFactory
+};
+StoryListController.columnConfig.labels = {
+  minWidth: 40,
+  autoScale: true,
+  title: "Labels",
+  headerTooltip: "Story's labels",
+  subViewFactory : StoryController.prototype.labelsIconFactory
 };
 StoryListController.columnConfig.name = {
   minWidth : 250,
@@ -257,7 +267,7 @@ StoryListController.columnConfig.responsibles = {
   title : "Responsibles",
   headerTooltip : 'Story responsibles',
   get : StoryModel.prototype.getResponsibles,
-  decorator: DynamicsDecorators.userInitialsListDecorator,
+  decorator: DynamicsDecorators.responsiblesDecorator,
   editable : true,
   openOnRowEdit: false,
   edit : {

@@ -60,6 +60,8 @@ $(document).ready(function() {
     
     <ww:submit value="Save all"></ww:submit>
     
+
+    
     <h3>Story tree</h3>
 
     <style>
@@ -162,6 +164,19 @@ $(document).ready(function() {
     
     
     <ww:submit value="Save all"></ww:submit>
+    
+    <h3>Backlogs</h3>
+    
+    <table class="settings-table">
+    <tr>
+      <td><label for="labelsInStoryList">Display labels in story lists</label></td>
+      <td colspan="2"><ww:checkbox name="labelsInStoryList" fieldValue="true" value="%{labelsInStoryList}"></ww:checkbox></td>
+    </tr>
+    </table>
+    
+    <ww:submit value="Save all"></ww:submit>
+    
+    
     
     <div style="margin: 0; padding: 0; display: none;" id="thresholdDiv">
     

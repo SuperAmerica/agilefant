@@ -128,6 +128,10 @@ Configuration.isTimesheetsEnabled = function() {
   return Configuration.options.timesheets;
 };
 
+Configuration.isLabelsInStoryList = function() {
+  return Configuration.options.labelsInStoryList;
+};
+
 Configuration.getBranchMetricsType = function() {
   return Configuration.options.branchMetricsType;
 };

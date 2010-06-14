@@ -358,7 +358,7 @@ ProjectController.prototype.createStory = function() {
   var controller = new StoryController(mockModel, null, this);
   var row = this.storyListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([0, 5, 6]);
+  row.autoCreateCells([0, 1, 6, 7]);
   row.getCellByName("description").show();
   row.getCellByName("buttons").show();
   row.getCellByName("backlog").hide();
@@ -588,7 +588,12 @@ ProjectController.prototype.initializeStoryConfig = function() {
     subViewFactory: StoryController.prototype.descriptionToggleFactory,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
   });
-  config.addColumnConfiguration(1, {
+  
+  if (Configuration.isLabelsInStoryList()) {
+    config.addColumnConfiguration(1, StoryListController.columnConfig.labels);
+  }
+  
+  config.addColumnConfiguration(2, {
     minWidth : 280,
     autoScale : true,
     title : "Name",
@@ -604,7 +609,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
 
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(3, {
     minWidth : 50,
     autoScale : true,
     title : "Points",
@@ -619,7 +624,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(4, {
     minWidth : 70,
     autoScale : true,
     title : 'State',
@@ -635,13 +640,13 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(5, {
     minWidth : 60,
     autoScale : true,
     title : "Responsibles",
     headerTooltip : 'Story responsibles',
     get : StoryModel.prototype.getResponsibles,
-    decorator: DynamicsDecorators.userInitialsListDecorator,
+    decorator: DynamicsDecorators.responsiblesDecorator,
     editable : true,
     openOnRowEdit: false,
     edit : {
@@ -652,7 +657,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
 
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(6, {
     minWidth : 100,
     autoScale : true,
     columnName: "backlog",
@@ -669,14 +674,14 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set: StoryModel.prototype.moveStory
     }
   });
-  config.addColumnConfiguration(6, {
+  config.addColumnConfiguration(7, {
     minWidth : 35,
     columnName: "edit",
     autoScale : true,
     title : "Edit",
     subViewFactory : StoryController.prototype.storyActionFactory
   });
-  config.addColumnConfiguration(7, {
+  config.addColumnConfiguration(8, {
     columnName: "description",
     fullWidth: true,
     visible: false,
@@ -687,14 +692,14 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(StoryController.columnIndices.details, {
+  config.addColumnConfiguration(9, {
     fullWidth : true,
     visible : false,
     columnName: "details",
     subViewFactory : StoryController.prototype.storyDetailsFactory,
     delayedRender: true
   });
-  config.addColumnConfiguration(StoryController.columnIndices.details + 1, {
+  config.addColumnConfiguration(10, {
     columnName: "buttons",
     fullWidth : true,
     visible : false,

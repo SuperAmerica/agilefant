@@ -43,6 +43,7 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     public static final String SETTING_NAME_PORTFOLIO_TIME_SPAN = "PortfolioTimeSpan";
     public static final String SETTING_NAME_STORY_TREE_FIELD_ORDER = "StoryTreeFieldOrder";
     public static final String SETTING_NAME_BRANCH_METRICS = "branchMetricsType";
+    public static final String SETTING_NAME_LABELS_IN_STORY_LIST = "labelsInStoryList";
     
     public SettingBusinessImpl() {
         super(Setting.class);
@@ -335,4 +336,21 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
         }
         return BranchMetricsType.valueOf(setting.getValue());
     }
+    
+    
+    public void setLabelsInStoryList(boolean mode) {
+        this.storeSetting(SETTING_NAME_LABELS_IN_STORY_LIST, mode);
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean isLabelsInStoryList() {
+        Setting setting = this.retrieveByName(SETTING_NAME_LABELS_IN_STORY_LIST);
+
+        if (setting == null) {
+            return true;
+        }
+
+        return setting.getValue().equals("true");
+    }
+    
 }

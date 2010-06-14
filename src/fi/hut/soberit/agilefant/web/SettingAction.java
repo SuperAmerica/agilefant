@@ -22,6 +22,7 @@ public class SettingAction extends ActionSupport {
     private boolean hourReportingEnabled = false;
     private boolean dailyWorkEnabled = false;
     private boolean devPortfolioEnabled = false;
+    private boolean labelsInStoryList = false;
     private String storyTreeFieldOrder;
     private SettingBusiness.BranchMetricsType branchMetricsType;
     
@@ -39,6 +40,7 @@ public class SettingAction extends ActionSupport {
         this.dailyWorkEnabled = this.settingBusiness.isDailyWork();
         this.storyTreeFieldOrder = this.settingBusiness.getStoryTreeFieldOrder();
         this.branchMetricsType = this.settingBusiness.getBranchMetricsType();
+        this.labelsInStoryList = this.settingBusiness.isLabelsInStoryList();
         return Action.SUCCESS;
     }
     
@@ -57,6 +59,7 @@ public class SettingAction extends ActionSupport {
         settingBusiness.setDailyWork(dailyWorkEnabled);
         settingBusiness.setStoryTreeFieldOrder(storyTreeFieldOrder);
         settingBusiness.setBranchMetricsType(branchMetricsType);
+        settingBusiness.setLabelsInStoryList(labelsInStoryList);
         return Action.SUCCESS;
     }
     
@@ -181,6 +184,14 @@ public class SettingAction extends ActionSupport {
     public void setBranchMetricsType(
             SettingBusiness.BranchMetricsType branchMetricsType) {
         this.branchMetricsType = branchMetricsType;
+    }
+
+    public boolean isLabelsInStoryList() {
+        return labelsInStoryList;
+    }
+
+    public void setLabelsInStoryList(boolean labelsInStoryList) {
+        this.labelsInStoryList = labelsInStoryList;
     }
     
 }

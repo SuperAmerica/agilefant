@@ -5,7 +5,7 @@ var DailyWorkStoryListController = function(model, element, parentController) {
 extendObject(DailyWorkStoryListController, StoryListController);
 
 DailyWorkStoryListController.columnNames =
-  ["priority", "name", "points", "context", "detailedContext", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
+  ["priority", "labels", "name", "points", "context", "detailedContext", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
 DailyWorkStoryListController.columnIndices = CommonController.createColumnIndices(DailyWorkStoryListController.columnNames);
 
 DailyWorkStoryListController.prototype._getTableConfig = function() {
@@ -32,6 +32,11 @@ DailyWorkStoryListController.prototype.storyContextFactory = function(cellView, 
 
 DailyWorkStoryListController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.priority, StoryListController.columnConfig.prio);
+  
+  if (Configuration.isLabelsInStoryList()) {
+    config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.labels, StoryListController.columnConfig.labels);
+  }
+  
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.points, StoryListController.columnConfig.points);
   config.addColumnConfiguration(DailyWorkStoryListController.columnIndices.state, StoryListController.columnConfig.state);

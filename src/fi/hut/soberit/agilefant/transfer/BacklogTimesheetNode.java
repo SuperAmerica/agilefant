@@ -101,6 +101,9 @@ public class BacklogTimesheetNode extends TimesheetNode {
     public long getStoryEffortSum() {
         return storyEffortSum;
     }
+    public long getBacklogEffortSum() {
+        return backlogEffortSum;
+    }
     
 
 }

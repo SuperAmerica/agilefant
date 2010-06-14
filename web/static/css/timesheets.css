@@ -68,9 +68,26 @@
   -webkit-border-radius: 5px;
 }
 
-.timesheet-closehandle {
-     
+
+
+
+ul.timesheet-backlogContent {
+  list-style-type: none;
+  white-space: nowrap;
+  margin: 0.5em;
+  padding: 0;
 }
+
+ul.timesheet-backlogContent > li > div {
+  display: inline-block;
+  width: 90%;
+}
+
+ul.timesheet-backlogContent > li > div.hoursum {
+  width: 10% !important;
+}
+
+
 
 .timesheet-closable {
   display: none;  

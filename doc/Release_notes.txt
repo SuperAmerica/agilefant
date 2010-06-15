@@ -1,21 +1,42 @@
-Agilefant 2.0 RC1
+Agilefant 2.0
 Release notes
-2010-06-03
+2010-06-15
 --
 
 
-This is an beta version of Agilefant 2.0.
+This is the first stable version of Agilefant 2.0. 
 
-Current status of the release:
+Compared to the previous major version, Agilefant 1.6, the new version has the
+following changes.
 
-- Beta 2 should be close to the final release of Agilefant 2.0
- * please report any found bugs at http://www.agilefant.org/mantis
+For more information and questions, visit http://www.agilefant.org/.
+
+- Totally renewed user interface
+ * The interface has been streamlined and works similarly in every view
+ * Performance and ease-of-use is now on a totally different level
+
+- Conceptual model has been fundamentally changed
+ * Instead of a workaround on iteration level, the stories are now consistent
+   throughout the whole system
+ * The former tags have been changed to a more intuitive and easy-to-use labeling
+   system
+ * A work queue for tasks has been added to the Daily Work page
+  
+- Hierarchical backlog management
+ * Product level backlog has been replaced with a story tree
+ * Project backlog is now a collection of all of its iterations' stories
+ * Hierarchy is allowed on project and product levels. Iteration stories can't
+   have children
+
+- Disabling unneeded views
+ * The Timesheets, Daily Work, and Portfolio views can be disabled through the
+   Settings page. 
 
 - Browser support:
- * Firefox 3.0+ works
- * Google Chrome and Safari should work fine
+ * Firefox 3.0+ and Google Chrome are officially supported
+ * Safari should work fine
  * IE8 is not guaranteed to work, but works to some standard
- * Opera has not been tested
+ * Opera probably works to some extent, but has not been tested
  
 
 
@@ -23,7 +44,6 @@ Current status of the release:
 +--------------------+
 |     CHANGESET      |
 +--------------------+
-
 
 Changes from Beta 2
 2010-06-03

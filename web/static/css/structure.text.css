@@ -60,6 +60,9 @@ h4 {
   font-size: 80% !important;
   color: #666 !important;  
 }
+.noBottomMargin {
+  margin-bottom: 0 !important;  
+}
 
 /* LINKS */
 a:link, a:visited {

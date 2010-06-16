@@ -12,6 +12,7 @@ import fi.hut.soberit.agilefant.business.AssignmentBusiness;
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
@@ -29,6 +30,8 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     private BacklogDAO backlogDAO;
     private ProductDAO productDAO;
     private AssignmentBusiness assignmentBusiness;
+    @Autowired
+    private StoryDAO storyDAO;
 
     public BacklogBusinessImpl() {
         super(Backlog.class);
@@ -93,5 +96,10 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
             parent = parent.getParent();
         }
         return (Product)parent;
+    }
+    
+    @Transactional(readOnly = true)
+    public int getStoryPointSumByBacklog(Backlog backlog) {
+        return storyDAO.getStoryPointSumByBacklog(backlog.getId());
     }
 }

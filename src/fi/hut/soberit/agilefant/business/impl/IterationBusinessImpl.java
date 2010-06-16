@@ -262,7 +262,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         metrics.setDailyVelocity(calculateDailyVelocity(iteration));
 
         // 2. Set story points
-        metrics.setStoryPoints(storyBusiness
+        metrics.setStoryPoints(backlogBusiness
                 .getStoryPointSumByBacklog(iteration));
 
         // 3. Set spent effort

@@ -236,7 +236,7 @@ public class IterationBusinessTest {
 
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(latestEntry);
-        expect(storyBusiness.getStoryPointSumByBacklog(iteration)).andReturn(
+        expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(
                 expectedStoryPoints);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(expectedSpentEffort);
@@ -279,7 +279,7 @@ public class IterationBusinessTest {
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(0, 0));
 
-        expect(storyBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(0L);
         expect(
@@ -309,7 +309,7 @@ public class IterationBusinessTest {
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
                         new LocalDate().minusDays(1))).andReturn(null);
 
-        expect(storyBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(0L);
 

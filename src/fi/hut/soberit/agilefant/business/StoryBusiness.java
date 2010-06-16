@@ -6,11 +6,7 @@ import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Backlog;
-import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -50,23 +46,8 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     int create(Story story);
 
     public List<Story> getStoriesByBacklog(Backlog backlog);
-
-    /**
-     * Get the story's tasks as <code>StoryData</code>.
-     * <p>
-     * If <code>story</code> is null, return tasks without story.
-     */
-    public Collection<Task> getStoryContents(Story story, Iteration iteration);
-
-    public Collection<Task> getStoryContents(int storyId, int iterationId);
-
-    StoryMetrics calculateMetrics(int storyId);
-
-    StoryMetrics calculateMetricsWithoutStory(int iterationId);
-
+    
     StoryMetrics calculateMetrics(Story story);
-
-    public Collection<User> getStorysProjectResponsibles(Story story);
 
     /**
      * Moves a story to another backlog.
@@ -75,10 +56,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      *            whether the tasks should be moved with the story.
      */
     public void moveStoryToBacklog(Story story, Backlog backlog);
-
-    public int getStoryPointSumByBacklog(Backlog backlog);
-
-    public List<HistoryRowTO> retrieveStoryHistory(int id);
 
     /**
      * Rank story under the give upperStory.
@@ -95,8 +72,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     public Story updateStoryRanks(Story story);
 
     public void storeBatch(Collection<Story> stories);
-
-    public Collection<Story> retrieveMultiple(Collection<Story> stories);
 
     public StoryTO retrieveStoryWithMetrics(int storyId);
 

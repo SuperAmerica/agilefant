@@ -15,7 +15,6 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
-import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
@@ -26,7 +25,6 @@ import fi.hut.soberit.agilefant.db.HourEntryDAO;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -36,8 +34,6 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -62,10 +58,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
     @Autowired
     private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
-    @Autowired
-    private ProjectBusiness projectBusiness;
-    @Autowired
-    private StoryHistoryDAO storyHistoryDAO;
     @Autowired
     private StoryRankBusiness storyRankBusiness;
     @Autowired
@@ -104,28 +96,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             }
         }
         return storyTasks;
-    }
-
-    @Transactional(readOnly = true)
-    public Collection<Task> getStoryContents(int storyId, int iterationId) {
-        Story story = storyDAO.get(storyId);
-        Iteration iter = iterationDAO.get(iterationId);
-        if (iter == null) {
-            return null;
-        }
-        return getStoryContents(story, iter);
-    }
-
-    @Transactional(readOnly = true)
-    public Collection<User> getStorysProjectResponsibles(Story story) {
-        if (story.getBacklog() instanceof Project) {
-            return projectBusiness.getAssignedUsers((Project) story
-                    .getBacklog());
-        } else if (story.getBacklog() instanceof Iteration) {
-            return projectBusiness.getAssignedUsers((Project) story
-                    .getBacklog().getParent());
-        }
-        return new ArrayList<User>();
     }
 
     /** {@inheritDoc} */
@@ -228,14 +198,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             }
             this.store(story);
         }
-    }
-
-    public Collection<Story> retrieveMultiple(Collection<Story> stories) {
-        Collection<Story> ret = new ArrayList<Story>();
-        for (Story story : stories) {
-            ret.add(this.retrieve(story.getId()));
-        }
-        return ret;
     }
 
     private void populateStoryFields(Story persisted, Story dataItem) {
@@ -573,20 +535,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     @Transactional(readOnly = true)
-    public StoryMetrics calculateMetricsWithoutStory(int iterationId) {
-        StoryMetrics metrics = storyDAO
-                .calculateMetricsWithoutStory(iterationId);
-        metrics.setEffortSpent(hourEntryDAO
-                .calculateSumFromTasksWithoutStory(iterationId));
-        return metrics;
-    }
-
-    @Transactional(readOnly = true)
-    public List<HistoryRowTO> retrieveStoryHistory(int id) {
-        return storyHistoryDAO.retrieveLatestChanges(id, null);
-    }
-
-    @Transactional(readOnly = true)
     public StoryTO retrieveStoryWithMetrics(int storyId) {
         Story story = this.retrieve(storyId);
         StoryTO storyTo = this.transferObjectBusiness.constructStoryTO(story);
@@ -754,14 +702,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public void setIterationHistoryEntryBusiness(
             IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
         this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
-    }
-
-    public int getStoryPointSumByBacklog(Backlog backlog) {
-        return storyDAO.getStoryPointSumByBacklog(backlog.getId());
-    }
-
-    public void setProjectBusiness(ProjectBusiness projectBusiness) {
-        this.projectBusiness = projectBusiness;
     }
 
     public void setHourEntryDAO(HourEntryDAO hourEntryDAO) {

@@ -1,7 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +19,6 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.StoryState;
-import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.transfer.HistoryRowTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
@@ -55,9 +52,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private Set<Integer> userIds = new HashSet<Integer>();
     
     private boolean usersChanged = false;
-    
-    private Collection<Task> storyContents = new ArrayList<Task>();
-    
+        
     private String storyListContext;
     
     private StoryMetrics metrics;
@@ -109,11 +104,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     public String retrieve() {
         story = storyBusiness.retrieveStoryWithMetrics(storyId);
         //story = this.toTransferObject(story);
-        return Action.SUCCESS;
-    }
-    
-    public String retrieveHistory() {
-        storyHistory = this.storyBusiness.retrieveStoryHistory(this.storyId);
         return Action.SUCCESS;
     }
 
@@ -181,21 +171,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         story = storyBusiness.createStorySibling(storyId, story, userIds);
         return Action.SUCCESS;
     }
-    
-    public String storyContents() {
-        storyContents = storyBusiness.getStoryContents(storyId, iterationId);
-        return Action.SUCCESS;
-    }
 
-    public String metrics() {
-        if (storyId > 0) {
-            metrics = storyBusiness.calculateMetrics(storyId);
-        } else {
-            metrics = storyBusiness.calculateMetricsWithoutStory(iterationId);
-        }
-        return Action.SUCCESS;
-    }
-    
     // PREFETCHING
     
     public void initializePrefetchedData(int objectId) {
@@ -288,10 +264,6 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     
     public void setStoryBusiness(StoryBusiness storyBusiness) {
         this.storyBusiness = storyBusiness;
-    }
-
-    public Collection<Task> getStoryContents() {
-        return storyContents;
     }
 
     public StoryMetrics getMetrics() {

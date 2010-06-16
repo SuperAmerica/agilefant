@@ -53,4 +53,6 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      * Recurse the backlog's parent product.
      */
     public Product getParentProduct(Backlog backlog);
+    
+    public int getStoryPointSumByBacklog(Backlog backlog);
 }

@@ -7,16 +7,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
+import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.test.Mock;
+import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+import fi.hut.soberit.agilefant.test.TestedBean;
 
 
 /**
@@ -26,22 +34,21 @@ import fi.hut.soberit.agilefant.model.Project;
  * 
  */
 
-public class BacklogBusinessTest {
-
-    private BacklogBusinessImpl backlogBusiness = new BacklogBusinessImpl();
-    private BacklogDAO backlogDAO;
-    private ProductDAO productDAO;
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = MockContextLoader.class)
+public class BacklogBusinessTest extends MockedTestCase {
     
-    @Before
-    public void setUp() {
-        backlogDAO = createMock(BacklogDAO.class);
-        backlogBusiness.setBacklogDAO(backlogDAO);
-        
-        productDAO = createMock(ProductDAO.class);
-        backlogBusiness.setProductDAO(productDAO);
-    }
+    @TestedBean
+    private BacklogBusinessImpl backlogBusiness;
+    @Mock
+    private BacklogDAO backlogDAO;
+    @Mock
+    private ProductDAO productDAO;
+    @Mock
+    private StoryDAO storyDAO;
     
     @Test
+    @DirtiesContext
     public void testGetNumberOfChildren() {
         Backlog backlog = new Product();
         backlog.setId(5);
@@ -55,6 +62,7 @@ public class BacklogBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testRetrieveMultipleBacklogs() {
         Collection<Integer> idList = Arrays.asList(1,2);
         Collection<Backlog> retrievedBacklogs = new ArrayList<Backlog>();
@@ -72,6 +80,7 @@ public class BacklogBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetChildBacklogs_allProducts() {
         expect(productDAO.getAll()).andReturn(Arrays.asList(new Product()));
         replay(backlogDAO, productDAO);
@@ -80,6 +89,7 @@ public class BacklogBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetChildBacklogs_forProduct() {
         Backlog product = new Product();
         Project project = new Project();
@@ -95,6 +105,7 @@ public class BacklogBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetChildBacklogs_forProject() {
         Backlog project = new Project();
         Iteration iteration = new Iteration();
@@ -109,6 +120,7 @@ public class BacklogBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetParentProduct() {
         Product product = new Product();
         Iteration iterationUnderProject = new Iteration();
@@ -123,5 +135,19 @@ public class BacklogBusinessTest {
         assertSame(product, backlogBusiness.getParentProduct(project));
         assertSame(product, backlogBusiness.getParentProduct(iterationUnderProduct));
         assertSame(product, backlogBusiness.getParentProduct(iterationUnderProject));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGetStoryPointSumByBacklog() {
+        Backlog backlog = new Iteration();
+        backlog.setId(4);
+        expect(storyDAO.getStoryPointSumByBacklog(backlog.getId()))
+            .andReturn(6);
+        replayAll();
+        
+        assertEquals(6, backlogBusiness.getStoryPointSumByBacklog(backlog));
+        
+        verifyAll();
     }
 }

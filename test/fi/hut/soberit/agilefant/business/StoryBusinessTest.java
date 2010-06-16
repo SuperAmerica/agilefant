@@ -46,7 +46,6 @@ public class StoryBusinessTest {
     UserDAO userDAO;
     
     BacklogBusiness backlogBusiness;
-    ProjectBusiness projectBusiness;
     BacklogHistoryEntryBusiness blheBusiness;
     IterationHistoryEntryBusiness iheBusiness;
     StoryRankBusiness storyRankBusiness;
@@ -100,9 +99,6 @@ public class StoryBusinessTest {
         userDAO = createMock(UserDAO.class);
         storyBusiness.setUserDAO(userDAO);
         
-        projectBusiness = createMock(ProjectBusiness.class);
-        storyBusiness.setProjectBusiness(projectBusiness);
-        
         blheBusiness = createMock(BacklogHistoryEntryBusiness.class);
         storyBusiness.setBacklogHistoryEntryBusiness(blheBusiness);
         
@@ -153,11 +149,11 @@ public class StoryBusinessTest {
     }
 
     private void replayAll() {
-        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness, storyHierarchyBusiness);
+        replay(backlogBusiness, storyDAO, iterationDAO, userDAO, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness, storyHierarchyBusiness);
     }
     
     private void verifyAll() {
-        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, projectBusiness, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness, storyHierarchyBusiness);
+        verify(backlogBusiness, storyDAO, iterationDAO, userDAO, iheBusiness, blheBusiness, transferObjectBusiness, hourEntryDAO, taskBusiness, hourEntryBusiness, storyRankBusiness, storyHierarchyBusiness);
     }
 
     
@@ -171,74 +167,7 @@ public class StoryBusinessTest {
         
         verifyAll();
     }
-       
-    @Test
-    public void testGetStoryContents_delegate() {
-        expect(storyDAO.get(story1.getId())).andReturn(story1);
-        expect(iterationDAO.get(iteration.getId()));
-    }
-    
-    @Test
-    public void testGetStoryContents() {
-        Task task1 = new Task();
-        Task task2 = new Task();
-        task2.setStory(story1);
-        story1.setBacklog(iteration);
-        expect(iterationDAO.getAllTasksForIteration(iteration))
-            .andReturn(Arrays.asList(task1, task2));
-        replayAll();
-        assertTrue(storyBusiness.getStoryContents(story1, iteration)
-                .contains(task2));
-        verifyAll();
-    }
-    
-
-    @Test
-    public void testGetStorysProjectResponsibles_iteration() {
-        Collection<User> assignedUsers = Arrays.asList(assignedUser);
-        expect(projectBusiness.getAssignedUsers((Project)storyInIteration.getBacklog().getParent()))
-            .andReturn(assignedUsers);
-        replayAll();
         
-        assertEquals(assignedUsers, storyBusiness.getStorysProjectResponsibles(storyInIteration));
-        
-        verifyAll();
-    }
-    
-    @Test
-    public void testGetStorysProjectResponsibles_project() {
-        Collection<User> assignedUsers = Arrays.asList(assignedUser);
-        expect(projectBusiness.getAssignedUsers((Project)storyInProject.getBacklog()))
-            .andReturn(Arrays.asList(assignedUser));
-        replayAll();
-        
-        assertEquals(assignedUsers, storyBusiness.getStorysProjectResponsibles(storyInProject));
-        
-        verifyAll();
-    }
-    
-    @Test
-    public void testGetStorysProjectResponsibles_product() {
-        replayAll();       
-        assertEquals(0, storyBusiness.getStorysProjectResponsibles(storyInProduct).size());
-        verifyAll();
-    }
-
-    
-    @Test
-    public void testGetStoryPointSumByBacklog() {
-        expect(storyDAO.getStoryPointSumByBacklog(backlog.getId()))
-            .andReturn(6);
-        replayAll();
-        
-        assertEquals(6, storyBusiness.getStoryPointSumByBacklog(backlog));
-        
-        verifyAll();
-    }
-    
-
-    
-    
     private void store_createMockStoryBusiness() {       
         this.storyBusiness = new StoryBusinessImpl() {
             @Override

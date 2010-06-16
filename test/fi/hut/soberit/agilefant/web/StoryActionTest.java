@@ -3,10 +3,6 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +21,6 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryRank;
-import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
@@ -147,26 +142,6 @@ public class StoryActionTest extends MockedTestCase {
         verifyAll();
     }
     
-    @Test
-    @DirtiesContext
-    public void testStoryContents() {
-        storyAction.setIterationId(iter.getId());
-        story.setBacklog(iter);
-        storyAction.setStoryId(story.getId());
-        
-        Set<Task> tasks = new HashSet<Task>(Arrays.asList(new Task(), new Task()));
-        story.setTasks(tasks);
-        
-        expect(storyBusiness.getStoryContents(story.getId(), iter.getId()))
-            .andReturn(tasks);
-        
-        replayAll();
-        
-        assertEquals(Action.SUCCESS, storyAction.storyContents());
-        assertEquals(tasks, storyAction.getStoryContents());
-        
-        verifyAll();
-    }
         
     @Test
     @DirtiesContext

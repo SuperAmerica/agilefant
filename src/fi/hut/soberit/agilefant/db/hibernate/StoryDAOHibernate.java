@@ -11,6 +11,7 @@ import java.util.Set;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -172,6 +173,12 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         query.setParameter("now", new DateTime());
         query.setParameter("backlogType", "Iteration");
         return query.list();
+    }
+    
+    public List<Story> searchByName(String name) {
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+        return asList(crit);
     }
 
 }

@@ -29,5 +29,7 @@ public interface StoryDAO extends GenericDAO<Story> {
     public Collection<Story> getAllIterationStoriesByResponsibleAndInterval(User user, Interval interval);
 
     List<Story> retrieveActiveIterationStoriesWithUserResponsible(int userId);
+    
+    public List<Story> searchByName(String name);
 
 }

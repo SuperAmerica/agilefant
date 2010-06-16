@@ -27,18 +27,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     /**
      * Create and persist a new story.
-     * 
-     * @param dataItem
-     *            the story's data
-     * @param backlogId
-     *            the story's parent backlog's id
-     * @param responsibleIds
-     *            the id's of the responsible users
-     * @return the newly persisted story
-     * @throws IllegalArgumentException
-     *             TODO
-     * @throws ObjectNotFoundException
-     *             TODO
      */
     Story create(Story dataItem, Integer backlogId, Set<Integer> responsibleIds)
             throws IllegalArgumentException, ObjectNotFoundException;
@@ -51,9 +39,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     /**
      * Moves a story to another backlog.
-     * 
-     * @param moveTasks
-     *            whether the tasks should be moved with the story.
      */
     public void moveStoryToBacklog(Story story, Backlog backlog);
 

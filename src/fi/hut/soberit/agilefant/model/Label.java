@@ -50,7 +50,7 @@ public class Label implements NamedObject, Serializable {
         return displayName;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 

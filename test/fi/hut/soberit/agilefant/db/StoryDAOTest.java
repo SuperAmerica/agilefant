@@ -114,5 +114,20 @@ public class StoryDAOTest extends AbstractHibernateTests {
        assertEquals(1, stories.get(0).getId());
    }
 
+   @Test
+   public void testSearchByName() {
+       String search  = "9";
+       executeClassSql();
+       List<Story> stories = storyDAO.searchByName(search);
+       assertEquals(1, stories.size());
+       assertEquals(9, stories.get(0).getId());
+   }
 
+   @Test
+   public void testSearchByName_notFound() {
+       String search  = "not found string";
+       executeClassSql();
+       List<Story> stories = storyDAO.searchByName(search);
+       assertEquals(0, stories.size());
+   }
 }

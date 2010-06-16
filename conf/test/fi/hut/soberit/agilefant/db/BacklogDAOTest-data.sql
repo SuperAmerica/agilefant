@@ -6,7 +6,7 @@ INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (2, 1, 'St
 INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (3, 1, 'Story 3', 5,  0);
 
 /** DATA FOR RECURSIVE CALCULATION OF STORY POINTS **/
-INSERT INTO backlogs (id, backlogtype, name) VALUES (3, 'Project', 'Project 1');
+INSERT INTO backlogs (id, backlogtype, name, rank) VALUES (3, 'Project', 'Project 1', 0);
 INSERT INTO backlogs (id, parent_id, backlogtype, name) VALUES (4, 3, 'Iteration', 'Iteration 4');
 INSERT INTO backlogs (id, parent_id, backlogtype, name) VALUES (5, 3, 'Iteration', 'Iteration 4');
 

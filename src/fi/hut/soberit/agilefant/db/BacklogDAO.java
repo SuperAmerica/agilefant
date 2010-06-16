@@ -29,4 +29,6 @@ public interface BacklogDAO extends GenericDAO<Backlog> {
      * Includes all child backlogs' stories.
      */
     public int calculateStoryPointSumIncludeChildBacklogs(int backlogId);
+    
+    public List<Backlog> searchByName(String name);
 }

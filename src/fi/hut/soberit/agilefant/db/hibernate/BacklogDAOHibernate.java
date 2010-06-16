@@ -7,6 +7,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -81,5 +82,11 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         
         if (result == null) return 0;
         return result.intValue();
+    }
+    
+    public List<Backlog> searchByName(String name) {
+        Criteria crit = getCurrentSession().createCriteria(Backlog.class);
+        crit.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+        return asList(crit);
     }
 }

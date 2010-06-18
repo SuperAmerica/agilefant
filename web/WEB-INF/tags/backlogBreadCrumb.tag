@@ -23,6 +23,6 @@
     </div>
 	</c:when>
 	<c:when test="${aef:isProduct(backlog)}">
-    <h2 class="noBottomMargin">Product: ${backlog.name}</h2>
+    <h2>Product: ${backlog.name}</h2>
 	</c:when>
 </c:choose>

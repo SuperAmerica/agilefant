@@ -52,6 +52,9 @@ h4 {
 .strong-text {
   font-weight: bold;
 }
+.noWrap {
+  white-space: nowrap;  
+}
 .superScript {
   font-size: 8pt !important;
   vertical-align: top !important;  

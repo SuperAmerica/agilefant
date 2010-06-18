@@ -7,7 +7,9 @@
 
 <div id="logoutDiv">
   <a href="#" id="createNewMenuLink" onclick="return false;">Create new</a>
-  |  
+  <%--|
+  <a href="#" id="quickSearchLink" >Search</a> --%>
+  |
   <a href="editUser.action">${currentUser.fullName}</a>
   |
   <a href="help.action">Help</a>

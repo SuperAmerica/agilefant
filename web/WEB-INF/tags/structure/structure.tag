@@ -61,15 +61,72 @@
   <%@include file="../../jsp/inc/includeDynamics.jsp" %>
   
   <script type="text/javascript">
+  var categories =
+    {
+      "fi.hut.soberit.agilefant.model.Story":     "Stories",
+      "fi.hut.soberit.agilefant.model.Iteration": "Iterations",
+      "fi.hut.soberit.agilefant.model.Project":   "Projects",
+      "fi.hut.soberit.agilefant.model.Product":   "Products",
+      };
+
+  
+  $.widget("custom.catcomplete", $.ui.autocomplete, {
+    _renderMenu: function( ul, items ) {
+      var self = this,
+        currentCategory = "";
+      $.each( items, function( index, item ) {
+        var tmpItem = {value: item.name, label: item.name, 'class': item['class'], id: item.id, category: ""};
+        if ( item['class'] != currentCategory ) {
+          tmpItem.category = categories[item['class']];
+          currentCategory = item['class'];
+        }
+        self._renderItem( ul, tmpItem );
+      });
+    },
+    _renderItem: function(ul, data) {
+      var item = $( '<li class="noWrap"></li>' );
+      $('<span class="categoryName">' + data.category + "</span>").appendTo(item);
+      $("<a>" + data.label + "</a>" ).appendTo(item);
+      return item.data( "item.autocomplete", data ).appendTo(ul);
+    }
+  });
+
+  
   PageController.initialize(${currentUserJson});
   $(document).ready(function() {
     window.pageController.init();
+    // Initialize the quick search
+    var searchInput = $('#quickSearchInput');
+    var searchBox = $('#quickSearchBox');
+    var searchLink = $('#quickSearchLink');
+    
+    searchInput.catcomplete({
+      source: "ajax/search.action",
+      minLength: 3,
+      select: function(event, ui) {
+        MessageDisplay.Ok(ui.item['class'] + ": " + ui.item['id']);
+      }
+    });
+
+    searchInput.keyup(function(event) {
+      if (event.keyCode === 27) {
+        searchBox.hide('blind');
+        $(this).val('');
+      }
+    });
+
+    searchLink.click(function() {
+      if (searchBox.is(':hidden')) {
+        searchBox.show('blind',{},'fast',function() {
+          searchInput.focus();
+        });
+      }
+      return false;
+    });
+
   });
   </script>
   
-  
-
-
 </head>
 
 <body>
@@ -94,9 +151,15 @@
 
 <div id="controlWrapper">
   <c:if test="${hideControl != true}">
+  
     <div id="navigationTabsWrapper">
       <struct:mainTabs navi="${navi}" />
     </div>
+    
+    <div style="position: absolute; left: 1em;">
+      <a id="quickSearchLink" href="#" style="font-size: 80%;">Search...</a>
+    </div>
+    
   </c:if>
 </div>
 
@@ -105,6 +168,10 @@
   <c:if test="${hideMenu != true}">
     <div id="menuControlPanel"> 
       <div id="menuToggleControl"> </div>
+    </div>
+    
+    <div id="quickSearchBox" class="ui-widget-header quickSearchBox">
+      <div style="white-space: nowrap;">Search: <input id="quickSearchInput" size="10" type="search" class="ui-autocomplete-input" style="display: inline-block;" /></div>
     </div>
     
     <div id="menuContent">

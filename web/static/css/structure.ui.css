@@ -395,10 +395,40 @@ ul.ui-autocomplete li {
   border-bottom: 1px solid #ccc;
 }
 ul.ui-autocomplete li a {
-  display: block;
+  display: inline-block;
   padding: 0.3em;
   width: 100%;
   height: 100%;  
 }
+ul.ui-autocomplete li span.categoryName {
+  display: inline-block;
+  border-right: 1px solid #ccc;
+  width: 10ex;
+  font-weight: bold;
+}
 
+/**
+ * QUICK SEARCH BOX
+ */
+.quickSearchBox {
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  display: none;
+  padding: 0.3em;
+  margin: 0.2em;
+  /*
+  float: right;
+  position: relative;
+  right: 2em;
+  top: 21px;*/
+}
+.quickSearchBox input {
+  width: 15ex;
+}
+.ui-autocomplete-category {
+  font-weight:bold;
+  padding:.2em .4em;
+  margin:.8em 0 .2em;
+  line-height:1.5;
+}
 

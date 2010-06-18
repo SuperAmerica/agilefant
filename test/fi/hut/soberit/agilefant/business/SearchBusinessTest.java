@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,7 @@ import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -38,10 +40,13 @@ public class SearchBusinessTest extends MockedTestCase {
     @DirtiesContext
     public void testSearchStoriesAndBacklogs() {
         String search = "foo";
-        expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(new Story()));
         expect(backlogDAO.searchByName(search)).andReturn(Arrays.asList((Backlog)(new Iteration())));
+        expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(new Story()));
         replayAll();
-        assertEquals(2, searchBusiness.searchStoriesAndBacklog(search).size());
+        List<NamedObject> result = searchBusiness.searchStoriesAndBacklog(search);
+        assertEquals(2, result.size());
+        assertTrue(result.get(0) instanceof Iteration);
+        assertTrue(result.get(1) instanceof Story);
         verifyAll();
     }
 }

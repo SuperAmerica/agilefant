@@ -8,10 +8,12 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
+import fi.hut.soberit.agilefant.business.SearchBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
@@ -87,6 +89,9 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
     public List<Backlog> searchByName(String name) {
         Criteria crit = getCurrentSession().createCriteria(Backlog.class);
         crit.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+        crit.addOrder(Order.asc("class"));
+        crit.addOrder(Order.asc("name"));
+        crit.setMaxResults(SearchBusiness.MAX_RESULTS_PER_TYPE);
         return asList(crit);
     }
 }

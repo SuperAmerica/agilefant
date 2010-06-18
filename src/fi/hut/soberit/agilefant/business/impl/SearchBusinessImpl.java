@@ -21,8 +21,8 @@ public class SearchBusinessImpl implements SearchBusiness {
     
     public List<NamedObject> searchStoriesAndBacklog(String searchTerm) {
         List<NamedObject> result = new ArrayList<NamedObject>();
-        result.addAll(storyDAO.searchByName(searchTerm));
         result.addAll(backlogDAO.searchByName(searchTerm));
+        result.addAll(storyDAO.searchByName(searchTerm));
         return result;
     }
 }

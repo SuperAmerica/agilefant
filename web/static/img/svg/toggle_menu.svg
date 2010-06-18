@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="20"
+   height="200"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   inkscape:export-filename="C:\Workspace\agilefant\web\static\img\toggle.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90"
+   sodipodi:docname="toggle_menu.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective3162"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#e2aeae"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="-74.832363"
+     inkscape:cy="73.08367"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1018"
+     inkscape:window-height="841"
+     inkscape:window-x="677"
+     inkscape:window-y="249" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(10.890211,-1152.3887)">
+    <image
+       y="837.70728"
+       x="-179.03679"
+       id="image3164"
+       height="100"
+       width="500"
+       sodipodi:absref="C:\Documents and Settings\rjokelai\Desktop\ui-bg_gloss-wave_55_5c9ccc_500x100.png"
+       xlink:href="C:\Documents and Settings\rjokelai\Desktop\ui-bg_gloss-wave_55_5c9ccc_500x100.png"
+       style="fill:#66a2cf;fill-opacity:1" />
+    <rect
+       ry="20.049364"
+       rx="8.0812206"
+       y="927.95148"
+       x="108.55569"
+       height="143.26056"
+       width="20.905828"
+       id="rect3174"
+       style="opacity:1;fill:#66a2cf;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:1.68618202;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+    <path
+       inkscape:export-ydpi="90"
+       inkscape:export-xdpi="90"
+       inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:1.03758895;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 69.109376,952.90751 L 69.109376,1032.1339 C 69.109376,1043.0504 65.935321,1051.8699 60.423821,1051.8699 L 60.146965,952.92411 L 69.109376,952.90751 z"
+       id="path3215"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       sodipodi:type="star"
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:8.96019077;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="path3179"
+       sodipodi:sides="3"
+       sodipodi:cx="-38.035713"
+       sodipodi:cy="28.749985"
+       sodipodi:r1="21.618595"
+       sodipodi:r2="2.9477811"
+       sodipodi:arg1="0.37633153"
+       sodipodi:arg2="1.4235291"
+       inkscape:flatsided="true"
+       inkscape:rounded="1.0884434"
+       inkscape:randomized="0"
+       d="M -17.930007,36.695061 C -32.908376,74.599128 -29.632504,74.113181 -54.969204,42.189499 C -80.305904,10.265818 -81.522998,13.34578 -41.207929,7.3653944 C -0.8928593,1.3850091 -2.9516379,-1.2090063 -17.930007,36.695061 z"
+       transform="matrix(-5.6119376e-2,-0.108146,4.4668583e-2,-0.1358692,80.8123,1002.2396)"
+       inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
+    <path
+       style="fill:#ddeaf4;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:1.00505006;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 117.08244,1095.1717 L 117.08244,1174.4112 C 117.08244,1185.6086 113.89686,1194.6549 108.36535,1194.6549 L 108.08749,1095.1887 L 117.08244,1095.1717 z"
+       id="path3181"
+       sodipodi:nodetypes="ccccc" />
+    <g
+       id="g3249"
+       transform="translate(-8.394,200.00001)">
+      <g
+         id="g3229">
+        <path
+           sodipodi:nodetypes="ccccc"
+           id="path3183"
+           d="M 6.9849947,1052.9075 L 6.9849947,1132.1339 C 6.9849947,1143.0504 3.8109392,1151.8699 -1.7005602,1151.8699 L -1.9774163,1052.9241 L 6.9849947,1052.9075 z"
+           style="fill:#ddeaf4;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:1.03758895;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           transform="matrix(-5.6119376e-2,-0.108146,4.4668583e-2,-0.1358692,-0.5047596,1101.5192)"
+           d="M -17.930007,36.695061 C -32.908376,74.599128 -29.632504,74.113181 -54.969204,42.189499 C -80.305904,10.265818 -81.522998,13.34578 -41.207929,7.3653944 C -0.8928593,1.3850091 -2.9516379,-1.2090063 -17.930007,36.695061 z"
+           inkscape:randomized="0"
+           inkscape:rounded="1.0884434"
+           inkscape:flatsided="true"
+           sodipodi:arg2="1.4235291"
+           sodipodi:arg1="0.37633153"
+           sodipodi:r2="2.9477811"
+           sodipodi:r1="21.618595"
+           sodipodi:cy="28.749985"
+           sodipodi:cx="-38.035713"
+           sodipodi:sides="3"
+           id="path3185"
+           style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:8.96019077;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           sodipodi:type="star"
+           inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+      <g
+         id="g3225">
+        <path
+           sodipodi:nodetypes="ccccc"
+           id="path3217"
+           d="M 6.9849947,952.90751 L 6.9849947,1032.1339 C 6.9849947,1043.0504 3.8109392,1051.8699 -1.7005602,1051.8699 L -1.9774163,952.92411 L 6.9849947,952.90751 z"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:1.03758895;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+           transform="matrix(-5.6119376e-2,-0.108146,4.4668583e-2,-0.1358692,-0.5049799,1001.2294)"
+           d="M -17.930007,36.695061 C -32.908376,74.599128 -29.632504,74.113181 -54.969204,42.189499 C -80.305904,10.265818 -81.522998,13.34578 -41.207929,7.3653944 C -0.8928593,1.3850091 -2.9516379,-1.2090063 -17.930007,36.695061 z"
+           inkscape:randomized="0"
+           inkscape:rounded="1.0884434"
+           inkscape:flatsided="true"
+           sodipodi:arg2="1.4235291"
+           sodipodi:arg1="0.37633153"
+           sodipodi:r2="2.9477811"
+           sodipodi:r1="21.618595"
+           sodipodi:cy="28.749985"
+           sodipodi:cx="-38.035713"
+           sodipodi:sides="3"
+           id="path3219"
+           style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:8.96019077;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           sodipodi:type="star" />
+      </g>
+    </g>
+    <g
+       id="g3241"
+       transform="translate(1.606,5.5230141e-6)">
+      <g
+         id="g3237">
+        <path
+           style="fill:#ddeaf4;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:1.03758895;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           d="M 6.9849947,1252.9075 L 6.9849947,1332.1339 C 6.9849947,1343.0504 3.8109392,1351.8699 -1.7005602,1351.8699 L -1.9774163,1252.9241 L 6.9849947,1252.9075 z"
+           id="path3211"
+           sodipodi:nodetypes="ccccc"
+           inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+        <path
+           sodipodi:type="star"
+           style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:8.96019077;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path3213"
+           sodipodi:sides="3"
+           sodipodi:cx="-38.035713"
+           sodipodi:cy="28.749985"
+           sodipodi:r1="21.618595"
+           sodipodi:r2="2.9477811"
+           sodipodi:arg1="0.37633153"
+           sodipodi:arg2="1.4235291"
+           inkscape:flatsided="true"
+           inkscape:rounded="1.0884434"
+           inkscape:randomized="0"
+           d="M -17.930007,36.695061 C -32.908376,74.599128 -29.632504,74.113181 -54.969204,42.189499 C -80.305904,10.265818 -81.522998,13.34578 -41.207929,7.3653944 C -0.8928593,1.3850091 -2.9516379,-1.2090063 -17.930007,36.695061 z"
+           transform="matrix(5.6119376e-2,0.108146,-4.4668583e-2,0.1358692,5.2148687,1301.9417)"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+      <g
+         id="g3233">
+        <path
+           inkscape:export-ydpi="90"
+           inkscape:export-xdpi="90"
+           inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+           style="fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:1.03758895;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           d="M 6.9849947,1152.9075 L 6.9849947,1232.1339 C 6.9849947,1243.0504 3.8109392,1251.8699 -1.7005602,1251.8699 L -1.9774163,1152.9241 L 6.9849947,1152.9075 z"
+           id="path3221"
+           sodipodi:nodetypes="ccccc" />
+        <path
+           sodipodi:type="star"
+           style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#a6c9e2;stroke-width:8.96019077;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           id="path3223"
+           sodipodi:sides="3"
+           sodipodi:cx="-38.035713"
+           sodipodi:cy="28.749985"
+           sodipodi:r1="21.618595"
+           sodipodi:r2="2.9477811"
+           sodipodi:arg1="0.37633153"
+           sodipodi:arg2="1.4235291"
+           inkscape:flatsided="true"
+           inkscape:rounded="1.0884434"
+           inkscape:randomized="0"
+           d="M -17.930007,36.695061 C -32.908376,74.599128 -29.632504,74.113181 -54.969204,42.189499 C -80.305904,10.265818 -81.522998,13.34578 -41.207929,7.3653944 C -0.8928593,1.3850091 -2.9516379,-1.2090063 -17.930007,36.695061 z"
+           transform="matrix(5.6119376e-2,0.108146,-4.4668583e-2,0.1358692,5.2146484,1201.6519)"
+           inkscape:export-filename="C:\Documents and Settings\rjokelai\Desktop\ikonit\path3213.png"
+           inkscape:export-xdpi="90"
+           inkscape:export-ydpi="90" />
+      </g>
+    </g>
+  </g>
+</svg>

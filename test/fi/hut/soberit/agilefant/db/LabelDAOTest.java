@@ -39,7 +39,9 @@ public class LabelDAOTest extends AbstractHibernateTests {
     public void testSearchLabel(){
         executeClassSql();
         List<Label> list = this.labelDAO.lookupLabelsLike("Kis");
+        assertEquals(1, list.size());
         assertEquals("kissa", list.get(0).getName());
+        assertEquals(1, list.get(0).getId());
     }
     
     @Test

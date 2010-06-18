@@ -39,6 +39,7 @@ LabelDAO {
         ProjectionList plist = Projections.projectionList();
         plist.add(Projections.groupProperty("name"));
         plist.add(Projections.property("displayName"));
+        plist.add(Projections.property("id"));
         crit.setProjection(plist);
         List<Object[]> clist = asList(crit);
         ArrayList<Label> labelList = new ArrayList<Label>();
@@ -46,6 +47,7 @@ LabelDAO {
             Label tempLabel = new Label();
             tempLabel.setDisplayName((String)obj[1]);
             tempLabel.setName((String)obj[0]);
+            tempLabel.setId((Integer)obj[2]);
             labelList.add(tempLabel);
         }
         return labelList;

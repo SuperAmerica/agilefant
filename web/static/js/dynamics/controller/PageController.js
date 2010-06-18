@@ -81,6 +81,14 @@ PageController.prototype.toggleMenu = function() {
   $(window).resize();
   return false;
 };
+/**
+ * Opens the menu if it is closed.
+ */
+PageController.prototype.openMenu = function() {
+  if ($('#outerWrapper').hasClass("menu-collapsed")) {
+    this.toggleMenu();
+  }
+};
 
 PageController.prototype._updateMenuCookie = function(isClosed) {
   if (isClosed) {

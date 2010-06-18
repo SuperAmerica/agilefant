@@ -72,12 +72,15 @@
   
   $.widget("custom.catcomplete", $.ui.autocomplete, {
     _renderMenu: function( ul, items ) {
+      ul.addClass('quickSearchAutocompleteMenu');
+      ul.css('z-index','500');
       var self = this,
         currentCategory = "";
       $.each( items, function( index, item ) {
         var tmpItem = {value: item.name, label: item.name, 'class': item['class'], id: item.id, category: "&nbsp;"};
         if ( item['class'] != currentCategory ) {
           tmpItem.category = categories[item['class']];
+          tmpItem.topBorder = true;
           currentCategory = item['class'];
         }
         self._renderItem( ul, tmpItem );
@@ -85,6 +88,9 @@
     },
     _renderItem: function(ul, data) {
       var item = $( '<li class="noWrap"></li>' );
+      if (data.topBorder) {
+        item.addClass('topBorder');
+      }
       $('<span class="categoryName">' + data.category + "</span>").appendTo(item);
       $("<a>" + data.label + "</a>" ).appendTo(item);
       return item.data( "item.autocomplete", data ).appendTo(ul);
@@ -117,9 +123,12 @@
 
     searchLink.click(function() {
       if (searchBox.is(':hidden')) {
+        window.pageController.openMenu();
         searchBox.show('blind',{},'fast',function() {
           searchInput.focus();
         });
+      } else {
+        searchInput.focus();
       }
       return false;
     });
@@ -157,7 +166,7 @@
     </div>
     
     <div style="position: absolute; left: 1em;">
-      <a id="quickSearchLink" href="#" style="font-size: 80%;">Search...</a>
+      <a id="quickSearchLink" href="#"><img src="static/img/search_small.png" alt="Search..." /><span id="quickSearchLinkText" style="font-size: 80%;">Search...</span></a>
     </div>
     
   </c:if>
@@ -170,11 +179,11 @@
       <div id="menuToggleControl"> </div>
     </div>
     
-    <div id="quickSearchBox" class="ui-widget-header quickSearchBox">
-      <div style="white-space: nowrap;">Search: <input id="quickSearchInput" size="10" type="search" class="ui-autocomplete-input" style="display: inline-block;" /></div>
-    </div>
-    
     <div id="menuContent">
+      <div id="quickSearchBox" class="ui-widget-header quickSearchBox">
+        <div style="white-space: nowrap;">Search: <input id="quickSearchInput" size="10" type="search" class="ui-autocomplete-input" style="display: inline-block;" /></div>
+      </div>
+    
       <c:choose>
       <c:when test="${menuContent != null}">
         <jsp:invoke fragment="menuContent" />

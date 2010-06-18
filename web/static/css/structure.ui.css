@@ -50,6 +50,10 @@
   background-position: 100% 100%;
 }
 
+.menu-collapsed #quickSearchLinkText {
+  display: none;  
+}
+
 /**
  * LEFT HAND MENU
  */
@@ -382,6 +386,7 @@ div.smallBurndown {
 /**
  * AUTOCOMPLETE
  */
+
 ul.ui-autocomplete {
   max-width: 400px;
   list-style-type: none;
@@ -389,27 +394,18 @@ ul.ui-autocomplete {
   padding: 0;
   overflow: hidden;  
 }
-
+ 
 ul.ui-autocomplete li {
   white-space: nowrap;
   border-bottom: 1px solid #ccc;
 }
 ul.ui-autocomplete li a {
-  display: inline-block;
-  height: 18px;
-  padding: 2px;
-  width: 74%;
-  height: 100%;
-  vertical-align: middle;  
+  display: block;
+  padding: 0.3em;
+  width: 100%;
+  height: 100%;  
 }
-ul.ui-autocomplete li span.categoryName {
-  display: inline-block;
-  border-right: 1px solid #ccc;
-  width: 24%;
-  height: 22px;
-  font-weight: bold;
-  vertical-align: middle;
-}
+
 
 /**
  * QUICK SEARCH BOX
@@ -420,12 +416,8 @@ ul.ui-autocomplete li span.categoryName {
   display: none;
   padding: 0.3em;
   margin: 0.2em;
-  /*
-  float: right;
-  position: relative;
-  right: 2em;
-  top: 21px;*/
 }
+
 .quickSearchBox input {
   width: 15ex;
 }
@@ -436,3 +428,42 @@ ul.ui-autocomplete li span.categoryName {
   line-height:1.5;
 }
 
+#quickSearchLink img {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 0.2em;  
+}
+
+ul.quickSearchAutocompleteMenu {
+  max-height: 25em;
+  overflow-y: auto;
+}
+
+ul.quickSearchAutocompleteMenu .bottomBorder {
+  border-bottom: 1px solid #ccc;
+}
+
+ul.quickSearchAutocompleteMenu .topBorder {
+  border-top: 1px solid #ccc;
+}
+
+ul.quickSearchAutocompleteMenu li {
+  border: none;  
+}
+
+ul.quickSearchAutocompleteMenu li a {
+  display: inline-block;
+  height: 18px;
+  padding: 2px;
+  width: 74%;
+  height: 100%;
+  vertical-align: middle;  
+}
+ul.quickSearchAutocompleteMenu li span.categoryName {
+  display: inline-block;
+  border-right: 1px solid #ccc;
+  width: 24%;
+  height: 22px;
+  font-weight: bold;
+  vertical-align: middle;
+}

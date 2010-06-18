@@ -281,5 +281,19 @@
 	
 		<!-- /Session actions -->
         
+        <action name="searchResult" class="resolveSearchResultAction" method="execute">
+            <result name="iteration" type="redirectAction">
+                <param name="actionName">editIteration</param>
+                <param name="iterationId">${targetBacklogId}</param>
+            </result>
+            <result name="project" type="redirectAction">
+                <param name="actionName">editProject</param>
+                <param name="projectId">${targetBacklogId}</param>
+            </result>
+            <result name="product" type="redirectAction">
+                <param name="actionName">editProduct</param>
+                <param name="productId">${targetBacklogId}</param>
+            </result>
+        </action>      
 </package>
 </struts>

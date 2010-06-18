@@ -126,6 +126,18 @@ StoryListController.prototype.confirmTasksToDone = function(model) {
   }
 };
 
+StoryListController.prototype.firstRenderComplete = function() {
+  if(window.location.hash) {
+    var row = this.view.getRowById(window.location.hash.substring(1));
+    if(row) {
+      var controller = row.getController();
+      controller.showTasks();
+      var pos = row.getElement().offset();
+      window.scrollTo(pos.left, pos.top);
+    }
+  }
+};
+
 StoryListController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration( {
     rowControllerFactory : StoryListController.prototype.storyControllerFactory,
@@ -142,7 +154,10 @@ StoryListController.prototype._getTableConfig = function() {
       callback: TaskController.prototype.moveTask,
       accepts: StoryController.prototype.acceptsDraggable
     },
-    beforeCommitFunction: StoryListController.prototype.confirmTasksToDone
+    beforeCommitFunction: StoryListController.prototype.confirmTasksToDone,
+    afterFirstRender: $.proxy(function() {
+      this.firstRenderComplete();
+    }, this)
   });
 
   config.addCaptionItem( {

@@ -180,7 +180,8 @@ var DynamicTableConfiguration = function(options) {
 	};
 	
 	this.options = {
-			rowControllerFactory: function() {},
+			rowControllerFactory: $.noop,
+			afterFirstRender: $.noop,
 			dataSource: null,
 			dropOptions: null,
 			tableDroppable: false,
@@ -262,4 +263,7 @@ DynamicTableConfiguration.prototype.isRowDroppable = function() {
 };
 DynamicTableConfiguration.prototype.getDataType = function() {
   return this.options.dataType;
+};
+DynamicTableConfiguration.prototype.getAfterFirstRender = function() {
+  return this.options.afterFirstRender; 
 };

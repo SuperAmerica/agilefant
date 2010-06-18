@@ -198,4 +198,10 @@ DynamicTableRow.prototype.isEditable = function() {
   return this.parentView.config.getEditableCallback().call(this.getController());
 };
 
+DynamicTableRow.prototype.getViewId = function() {
+  if(this.model instanceof CommonModel && this.model.getId() && this.parentView instanceof DynamicTable) {
+    return this.model.getHashCode();
+  }
+  return DynamicView.prototype.getViewId.call(this);
+};
 

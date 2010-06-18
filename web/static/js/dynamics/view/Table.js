@@ -440,6 +440,10 @@ DynamicTable.prototype.render = function() {
   
   this.layout();
   this.filter();
+  if(!this.firstRenderComplete) {
+    this.firstRenderComplete = true;
+    this.config.getAfterFirstRender().call(this);
+  }
 };
 
 DynamicTable.prototype._renderHeaderColumn = function(index) {
@@ -758,6 +762,17 @@ DynamicTable.prototype.onEdit = function(event) {
 };
 DynamicTable.prototype.onDelete = function(event) {
   this.remove();
+};
+
+DynamicTable.prototype.getRowById = function(id) {
+  var row = $(document.getElementById(id));
+  if(row.length) {
+    row = row.data("row");
+    if (jQuery.inArray(row.getModel().getHashCode(), this.rowHashes) !== -1) {
+      return row;
+    }
+  }
+  return null;
 };
 
 var DynamicVerticalTable = function(controller, model, config, parentView) {

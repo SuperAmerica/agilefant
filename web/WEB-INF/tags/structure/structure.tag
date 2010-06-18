@@ -111,6 +111,10 @@
       minLength: 3,
       select: function(event, ui) {
         window.location.href = "searchResult.action?targetClassName=" + ui.item['class'] + "&targetObjectId=" + ui.item.id;
+      },
+      close: function(event, ui) {
+        searchInput.val('');
+        searchBox.hide('blind'); 
       }
     });
 

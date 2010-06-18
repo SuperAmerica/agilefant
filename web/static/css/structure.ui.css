@@ -435,7 +435,7 @@ ul.ui-autocomplete li a {
 }
 
 ul.quickSearchAutocompleteMenu {
-  max-height: 25em;
+  max-height: 35em;
   overflow-y: auto;
 }
 

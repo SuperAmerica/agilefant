@@ -765,12 +765,11 @@ DynamicTable.prototype.onDelete = function(event) {
 };
 
 DynamicTable.prototype.getRowById = function(id) {
-  var row = $(document.getElementById(id));
+  id = id.replace(/\./gi,"\\.");
+  var row = $("#"+ id, this.element);
   if(row.length) {
     row = row.data("row");
-    if (jQuery.inArray(row.getModel().getHashCode(), this.rowHashes) !== -1) {
-      return row;
-    }
+    return row;
   }
   return null;
 };

@@ -43,6 +43,35 @@ StoryTreeController.prototype.resetFilter = function() {
   this.filterImg.removeClass("storytree-filterimg-active");
 };
 
+StoryTreeController.prototype.renderComplete = function() {
+  if(!this.firstRenderComplete) {
+    this.firstRenderComplete = true;
+    var hash = window.location.hash;
+    //does the hash possibly contain a story identifier
+    if(hash.indexOf("Story_") !== -1) {
+      var matches = hash.match(/Story_(\d+)/i);
+      //hash story id
+      if(matches.length === 2) {
+        var id =  "#storytree_" + matches[1];
+        var node = this.tree._get_node(id);
+        if(node) {
+          window.location.hash = "";
+          //need to open parent nodes 
+          if(!node.is(":visible")) {
+            var path = this.tree.get_path(node, true);
+            for(var i = 0; i < path.length; i++) {
+              this.tree.open_node("#" + path[i]);
+            }
+          }
+          this.openNodeDetails(node);
+          var pos = this.element.find(id).offset();
+          window.scrollTo(pos.left, pos.top);
+        }
+      }
+    }
+  }
+};
+
 StoryTreeController.prototype.refresh = function() {
   if(!this.tree) {
     this.initTree();
@@ -230,6 +259,7 @@ StoryTreeController.prototype.initTree = function() {
         complete: function() {
           overlay.fadeOut('fast');
           me._searchByText();
+          me.renderComplete();
         }
       }
     },

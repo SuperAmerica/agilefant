@@ -128,8 +128,10 @@ StoryListController.prototype.confirmTasksToDone = function(model) {
 
 StoryListController.prototype.firstRenderComplete = function() {
   if(window.location.hash) {
-    var row = this.view.getRowById(window.location.hash.substring(1));
+    var hash = window.location.hash;
+    var row = this.view.getRowById(hash.substring(1));
     if(row) {
+      window.location.hash = "";
       var controller = row.getController();
       controller.showTasks();
       var pos = row.getElement().offset();

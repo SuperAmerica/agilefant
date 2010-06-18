@@ -28,7 +28,7 @@
 }
 
 .menu-collapsed #menuWrapper {
-  width: 2em;
+  width: 1em;
 }
 
 .menu-collapsed #menuContent {
@@ -39,7 +39,7 @@
 }
 
 .menu-collapsed #bodyWrapper {
-  margin: 0 0 0 2em !important;
+  margin: 0 0 0 1em !important;
 }
 
 .menu-collapsed #menuToggleControl {

@@ -90,16 +90,16 @@ img {
 }
 
 #menuControlPanel {
-	position: absolute;
-	right: 5px;
-	top: 3px;
-	z-index: 100;
+	position: relative;
+	float: left;
+	left: -1em;
+	top: -1em;
 }
 
 #menuControlPanel div {
-  height: 16px;
-  width: 16px;
-  margin: 2px 0 0 0;
+  height: 100px;
+  width: 10px;
+  margin: -1px 0 0 -1px;
   padding: 0;
   cursor: pointer;
   background-position: 0% 0%;

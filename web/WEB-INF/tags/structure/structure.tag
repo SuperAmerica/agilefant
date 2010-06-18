@@ -172,16 +172,13 @@
     <div style="position: absolute; left: 1em;">
       <a id="quickSearchLink" href="#"><img src="static/img/search_small.png" alt="Search..." /><span id="quickSearchLinkText" style="font-size: 80%;">Search...</span></a>
     </div>
-    
   </c:if>
 </div>
 
 
 <div id="menuWrapper">
   <c:if test="${hideMenu != true}">
-    <div id="menuControlPanel"> 
-      <div id="menuToggleControl"> </div>
-    </div>
+    
     
     <div id="menuContent">
       <div id="quickSearchBox" class="ui-widget-header quickSearchBox">
@@ -202,6 +199,12 @@
 
 
 <div id="bodyWrapper">
+  <c:if test="${hideMenu != true}">
+    <div id="menuControlPanel"> 
+      <div id="menuToggleControl"> </div>
+    </div>
+  </c:if>
+
   <jsp:doBody />
   
   <div id="layoutEmptyDiv"> </div>

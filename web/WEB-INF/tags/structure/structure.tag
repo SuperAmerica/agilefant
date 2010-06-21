@@ -47,9 +47,10 @@
   
   <script type="text/javascript" src="static/js/utils/HelpUtils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/utils/menuTimer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/utils/quickSearch.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
   <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-  <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>  
   
   <c:if test="${settings != null}">
   <script type="text/javascript">
@@ -61,78 +62,49 @@
   <%@include file="../../jsp/inc/includeDynamics.jsp" %>
   
   <script type="text/javascript">
-  var categories =
-    {
-      "fi.hut.soberit.agilefant.model.Story":     "Stories",
-      "fi.hut.soberit.agilefant.model.Iteration": "Iterations",
-      "fi.hut.soberit.agilefant.model.Project":   "Projects",
-      "fi.hut.soberit.agilefant.model.Product":   "Products",
-      };
 
-  
-  $.widget("custom.catcomplete", $.ui.autocomplete, {
-    _renderMenu: function( ul, items ) {
-      ul.addClass('quickSearchAutocompleteMenu');
-      ul.css('z-index','500');
-      var self = this,
-        currentCategory = "";
-      $.each( items, function( index, item ) {
-        var tmpItem = {value: item.name, label: item.name, 'class': item['class'], id: item.id, category: "&nbsp;"};
-        if ( item['class'] != currentCategory ) {
-          tmpItem.category = categories[item['class']];
-          tmpItem.topBorder = true;
-          currentCategory = item['class'];
-        }
-        self._renderItem( ul, tmpItem );
-      });
-    },
-    _renderItem: function(ul, data) {
-      var item = $( '<li class="noWrap"></li>' );
-      if (data.topBorder) {
-        item.addClass('topBorder');
-      }
-      $('<span class="categoryName">' + data.category + "</span>").appendTo(item);
-      $("<a>" + data.label + "</a>" ).appendTo(item);
-      return item.data( "item.autocomplete", data ).appendTo(ul);
-    }
-  });
 
   
   PageController.initialize(${currentUserJson});
   $(document).ready(function() {
     window.pageController.init();
+
     // Initialize the quick search
     var searchInput = $('#quickSearchInput');
     var searchBox = $('#quickSearchBox');
     var searchLink = $('#quickSearchLink');
     
-    searchInput.catcomplete({
+    searchInput.agilefantQuickSearch({
       source: "ajax/search.action",
       minLength: 3,
       select: function(event, ui) {
         window.location.href = "searchResult.action?targetClassName=" + ui.item['class'] + "&targetObjectId=" + ui.item.id + "#" + ui.item['class'] + "_" + ui.item.id;
-      },
-      close: function(event, ui) {
-        searchInput.val('');
-        searchBox.hide('blind'); 
       }
     });
 
-    searchInput.keyup(function(event) {
+    searchInput.keydown(function(event) {
       if (event.keyCode === 27) {
-        searchBox.hide('blind');
+        $(this).blur();
+        return false;
+      }
+    });
+
+    searchInput.blur(function(event) {
+      if (searchBox.data('open')) {
+        searchBox.data('open',false);
+        searchBox.hide('blind',{},'fast');
         $(this).val('');
       }
+      return false;
     });
 
     searchLink.click(function() {
       if (searchBox.is(':hidden')) {
         window.pageController.openMenu();
         searchBox.show('blind',{},'fast',function() {
+          searchBox.data('open',true);
           searchInput.focus();
         });
-      } else {
-        searchInput.focus();
       }
       return false;
     });

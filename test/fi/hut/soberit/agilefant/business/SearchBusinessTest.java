@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,6 +48,98 @@ public class SearchBusinessTest extends MockedTestCase {
         assertEquals(2, result.size());
         assertTrue(result.get(0) instanceof Iteration);
         assertTrue(result.get(1) instanceof Story);
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchStoriesAndBacklogs_reference() {
+        String search = "story:123";
+        expect(backlogDAO.searchByName(search)).andReturn(new ArrayList<Backlog>());
+        expect(storyDAO.searchByName(search)).andReturn(new ArrayList<Story>());
+        expect(storyDAO.get(123)).andReturn(new Story());
+        replayAll();
+        List<NamedObject> result = searchBusiness.searchStoriesAndBacklog(search);
+        assertEquals(1, result.size());
+        assertTrue(result.get(0) instanceof Story);
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_story() {
+        String term = "story:123";
+        Story story = new Story();
+        expect(storyDAO.get(123)).andReturn(story);
+        replayAll();
+        assertEquals(story, searchBusiness.searchByReference(term));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_storyNotFound() {
+        String term = "story:123";
+        expect(storyDAO.get(123)).andReturn(null);
+        replayAll();
+        assertNull(searchBusiness.searchByReference(term));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_backlog() {
+        String term = "backlog:123";
+        Backlog backlog = new Iteration();
+        expect(backlogDAO.get(123)).andReturn(backlog);
+        replayAll();
+        assertEquals(backlog, searchBusiness.searchByReference(term));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_backlogNotFound() {
+        String term = "backlog:123";
+        expect(backlogDAO.get(123)).andReturn(null);
+        replayAll();
+        assertNull(searchBusiness.searchByReference(term));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_invalidTerm1() {
+        String term = "foo:123";
+        replayAll();
+        assertNull(searchBusiness.searchByReference(term));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_invalidTerm2() {
+        String term = "backlog:123:foo:faa";
+        replayAll();
+        assertNull(searchBusiness.searchByReference(term));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_invalidTerm3() {
+        String term = "backlog:aaa";
+        replayAll();
+        assertNull(searchBusiness.searchByReference(term));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchByReference_invalidTermEmpty() {
+        String term = "";
+        replayAll();
+        assertNull(searchBusiness.searchByReference(term));
         verifyAll();
     }
 }

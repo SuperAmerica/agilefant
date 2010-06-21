@@ -13,6 +13,10 @@ var ProjectController = function ProjectController(options) {
   this.parentView = options.storyListElement;
   this.projectDetailsElement = options.projectDetailsElement;
   
+  if($.cookie("agilefant-leafstory-filters")) {
+    this.leafStoriesStateFilters = $.cookie("agilefant-leafstory-filters").split(",");
+  }
+  
   this.textFilterElement = options.textFilterElement;
   this.textFilter = new SearchByTextWidget($(options.textFilterElement), { searchCallback: function() { me.filter(); } });
   
@@ -90,8 +94,10 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
    callback: function(isActive) {
      if(isActive) {
        me.storyListView.activateColumnFilter("State");
+       $.cookie("agilefant-leafstory-filters", me.leafStoriesStateFilters.join(","));
      } else {
        me.storyListView.disableColumnFilter("State");
+       $.cookie("agilefant-leafstory-filters", null);
      }
     },
     activeStates: me.leafStoriesStateFilters
@@ -214,6 +220,9 @@ ProjectController.prototype._paintLeafStories = function(element) {
   if(!this.storyListView) {
     this.storyListView = new DynamicTable(this, this.model, this.storyListConfig,
         element);
+    if(this.leafStoriesStateFilters) {
+      this.storyListView.activateColumnFilter("State");
+    }
   }
   this.storyListView.showInfoMessage("Loading...");
   this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {

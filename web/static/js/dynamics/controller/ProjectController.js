@@ -19,7 +19,10 @@ var ProjectController = function ProjectController(options) {
   this.init();
   this.initializeProjectDetailsConfig();
   this.initializeIterationListConfig();
-  this.initializeStoryConfig();  
+  this.initializeStoryConfig();
+  
+  this.changeTabIfFragmentFound();
+  
   this.paint();
   window.pageController.setMainController(this);
 };
@@ -392,6 +395,13 @@ ProjectController.prototype.getSelectableBacklogs = function() {
   }
   
   return returned;
+};
+
+ProjectController.prototype.changeTabIfFragmentFound = function() {
+  var hash = window.location.hash;
+  if (hash.match(/fi\.hut\.soberit\.agilefant\.model\.Story_(\d+)/)) {
+    this.tabs.tabs('select',0);
+  }
 };
 
 /**

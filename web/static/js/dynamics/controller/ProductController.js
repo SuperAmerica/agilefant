@@ -24,6 +24,9 @@ var ProductController = function ProductController(options) {
   this.initializeProductDetailsConfig();
   this.initializeProjectListConfig();
   this.initAssigneeConfiguration();
+  
+  this.changeTabIfFragmentFound();
+  
   this.paint();
   window.pageController.setMainController(this);
 };
@@ -135,6 +138,13 @@ ProductController.prototype.paint = function() {
       me.paintProjectList();
     }
   });
+};
+
+ProductController.prototype.changeTabIfFragmentFound = function() {
+  var hash = window.location.hash;
+  if (hash.match(/fi\.hut\.soberit\.agilefant\.model\.Story_(\d+)/)) {
+    this.tabs.tabs('select',0);
+  }
 };
 
 /**

@@ -103,15 +103,9 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
  * Indices for column configuration
  * @member ProjectController
  */
-ProjectController.columnIndices = {
-    status: 0,
-    name: 1,
-    startDate: 2,
-    endDate: 3,
-    actions: 4,
-    description: 5,
-    buttons: 6
-};
+ProjectController.columnNames =
+  ["name","reference","startDate","endDate","plannedSize","baselineLoad","assignees","description"];
+ProjectController.columnIndices = CommonController.createColumnIndices(ProjectController.columnNames); 
 
 ProjectController.columnConfigs = {
   name: {
@@ -123,6 +117,11 @@ ProjectController.columnConfigs = {
       required: true,
       set: ProjectModel.prototype.setName
     }
+  },
+  reference: {
+    title: "Reference ID",
+    get: BacklogModel.prototype.getId,
+    decorator: DynamicsDecorators.quickReference
   },
   startDate: {
     title : "Start Date",
@@ -414,13 +413,14 @@ ProjectController.prototype.initializeProjectDetailsConfig = function() {
     closeRowCallback: null,
     validators: [ BacklogModel.Validators.dateValidator ]
   });
-  config.addColumnConfiguration(0, ProjectController.columnConfigs.name);
-  config.addColumnConfiguration(1, ProjectController.columnConfigs.startDate);  
-  config.addColumnConfiguration(2, ProjectController.columnConfigs.endDate);
-  config.addColumnConfiguration(3, ProjectController.columnConfigs.plannedSize);
-  config.addColumnConfiguration(4, ProjectController.columnConfigs.baselineLoad);
-  config.addColumnConfiguration(5, ProjectController.columnConfigs.assignees);
-  config.addColumnConfiguration(6, ProjectController.columnConfigs.description);
+  config.addColumnConfiguration(ProjectController.columnIndices.name, ProjectController.columnConfigs.name);
+  config.addColumnConfiguration(ProjectController.columnIndices.reference, ProjectController.columnConfigs.reference);
+  config.addColumnConfiguration(ProjectController.columnIndices.startDate, ProjectController.columnConfigs.startDate);  
+  config.addColumnConfiguration(ProjectController.columnIndices.endDate, ProjectController.columnConfigs.endDate);
+  config.addColumnConfiguration(ProjectController.columnIndices.plannedSize, ProjectController.columnConfigs.plannedSize);
+  config.addColumnConfiguration(ProjectController.columnIndices.baselineLoad, ProjectController.columnConfigs.baselineLoad);
+  config.addColumnConfiguration(ProjectController.columnIndices.assignees, ProjectController.columnConfigs.assignees);
+  config.addColumnConfiguration(ProjectController.columnIndices.description, ProjectController.columnConfigs.description);
   this.projectDetailConfig = config;
 };
 

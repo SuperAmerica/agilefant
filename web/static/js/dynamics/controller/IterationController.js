@@ -34,14 +34,10 @@ var IterationController = function IterationController(options) {
   });
   window.pageController.setMainController(this);
 };
-IterationController.columnIndices = {
-  name: 0,
-  statDate: 1,
-  endDate: 2,
-  plannedSize: 3,
-  baselineLoad: 4,
-  assignees: 4
-};
+IterationController.columnNames =
+  ["name","reference","startDate","endDate","plannedSize","baselineLoad","assignees","description"];
+IterationController.columnIndices = CommonController.createColumnIndices(IterationController.columnNames); 
+  
 IterationController.columnConfigs = {
   name: {
     title : "Name",
@@ -52,6 +48,11 @@ IterationController.columnConfigs = {
       required: true,
       set: IterationModel.prototype.setName
     }
+  },
+  reference: {
+    title: "Reference ID",
+    get: BacklogModel.prototype.getId,
+    decorator: DynamicsDecorators.quickReference
   },
   startDate: {
     title : "Start Date",
@@ -262,13 +263,14 @@ IterationController.prototype.initIterationInfoConfig = function() {
     closeRowCallback: null,
     validators: [ BacklogModel.Validators.dateValidator ]
   });
-  config.addColumnConfiguration(0, IterationController.columnConfigs.name);
-  config.addColumnConfiguration(1, IterationController.columnConfigs.startDate);  
-  config.addColumnConfiguration(2, IterationController.columnConfigs.endDate);
-  config.addColumnConfiguration(3, IterationController.columnConfigs.plannedSize);
-  config.addColumnConfiguration(4, IterationController.columnConfigs.baselineLoad);
-  config.addColumnConfiguration(5, IterationController.columnConfigs.assignees);
-  config.addColumnConfiguration(6, IterationController.columnConfigs.description);
+  config.addColumnConfiguration(IterationController.columnIndices.name, IterationController.columnConfigs.name);
+  config.addColumnConfiguration(IterationController.columnIndices.reference, IterationController.columnConfigs.reference);
+  config.addColumnConfiguration(IterationController.columnIndices.startDate, IterationController.columnConfigs.startDate);  
+  config.addColumnConfiguration(IterationController.columnIndices.endDate, IterationController.columnConfigs.endDate);
+  config.addColumnConfiguration(IterationController.columnIndices.plannedSize, IterationController.columnConfigs.plannedSize);
+  config.addColumnConfiguration(IterationController.columnIndices.baselineLoad, IterationController.columnConfigs.baselineLoad);
+  config.addColumnConfiguration(IterationController.columnIndices.assignees, IterationController.columnConfigs.assignees);
+  config.addColumnConfiguration(IterationController.columnIndices.description, IterationController.columnConfigs.description);
   this.iterationDetailConfig = config;
 };
 

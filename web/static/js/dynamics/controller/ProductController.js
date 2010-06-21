@@ -185,6 +185,11 @@ ProductController.prototype.initializeProductDetailsConfig = function() {
     }
   });
   config.addColumnConfiguration(1, {
+    title: "Reference ID",
+    get: BacklogModel.prototype.getId,
+    decorator: DynamicsDecorators.quickReference
+  });
+  config.addColumnConfiguration(2, {
     title : "Description",
     get : ProductModel.prototype.getDescription,
     editable : true,

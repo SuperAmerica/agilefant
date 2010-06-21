@@ -294,6 +294,11 @@
                 <param name="actionName">editProduct</param>
                 <param name="productId">${targetBacklogId}</param>
             </result>
-        </action>      
+        </action>    
+        <action name="qr" class="referenceIDAction" method="execute">
+            <result name="iteration" type="redirect">editIteration.action?iterationId=${backlogId}#${hash}</result>
+            <result name="project" type="redirect">editProject.action?projectId=${backlogId}#${hash}</result>
+            <result name="product" type="redirect">editProduct.action?productId=${backlogId}#${hash}</result>
+        </action>    
 </package>
 </struts>

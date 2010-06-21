@@ -32,6 +32,10 @@ public class SearchBusinessImpl implements SearchBusiness {
     }
 
     public NamedObject searchByReference(String searchTerm) {
+        if(searchTerm == null) {
+            return null;
+        }
+        
         String[] matches = searchTerm.split(":");
         int objectId;
         String type;

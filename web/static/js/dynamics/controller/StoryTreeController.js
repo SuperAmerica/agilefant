@@ -55,7 +55,9 @@ StoryTreeController.prototype.renderComplete = function() {
         var id =  "#storytree_" + matches[1];
         var node = this.tree._get_node(id);
         if(node) {
-          window.location.hash = "";
+          if(!$.browser.msie) {
+            window.location.hash = "#";
+          }
           //need to open parent nodes 
           if(!node.is(":visible")) {
             var path = this.tree.get_path(node, true);

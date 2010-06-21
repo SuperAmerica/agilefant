@@ -78,10 +78,11 @@ a:hover,a:active {
 }
 
 .referenceLink {
-  color: #666;  
+  color: #666 !important;
+  font-size: 80%;  
 }
 .referenceLink:hover {
-  color: #666;  
+  color: #666 !important;  
 }
 
 

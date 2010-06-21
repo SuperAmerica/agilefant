@@ -278,5 +278,16 @@ var DynamicsDecorators = {
       }
       return "";
     };
+  },
+  quickReference: function(objectId) {
+    var text = "";
+    if(this instanceof StoryModel) {
+      text = "story:" + objectId;
+    } else if(this instanceof BacklogModel) {
+      text = "backlog:" + objectId;
+    }
+    if(text) {
+      return '<a href="qr.action?term='+text+'" onclick="return false;">'+text+'</a>';
+    }
   }
 };

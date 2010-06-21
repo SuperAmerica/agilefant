@@ -159,6 +159,11 @@ StoryInfoBubble.prototype._createConfig = function() {
     }
   });
   config.addColumnConfiguration(1, {
+    title: "Reference ID",
+    get: StoryModel.prototype.getId,
+    decorator: DynamicsDecorators.quickReference
+  });
+  config.addColumnConfiguration(2, {
     title : "State",
     get : StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
@@ -169,7 +174,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(3, {
     title : "Points",
     get : StoryModel.prototype.getStoryPoints,
     decorator: DynamicsDecorators.estimateDecorator,
@@ -179,7 +184,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(4, {
     title : "Backlog",
     headerTooltip : 'The backlog, where the story resides',
     get : StoryModel.prototype.getBacklog,
@@ -192,7 +197,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       set: StoryModel.prototype.setBacklogByModel
     }
   });
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(5, {
     title : "Responsibles",
     get : StoryModel.prototype.getResponsibles,
     decorator: DynamicsDecorators.responsiblesDecorator,
@@ -204,7 +209,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(6, {
     title : "Labels",
     subViewFactory: StoryInfoBubble.prototype.labelsViewFactory
   });

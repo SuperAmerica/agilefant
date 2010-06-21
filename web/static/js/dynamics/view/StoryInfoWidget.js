@@ -45,6 +45,11 @@ StoryInfoWidget.prototype.initialize = function() {
     subViewFactory: StoryInfoWidget.prototype.storyContextFactory
   });
   config.addColumnConfiguration(2, {
+    title: "Reference ID",
+    get: StoryModel.prototype.getId,
+    decorator: DynamicsDecorators.quickReference
+  });
+  config.addColumnConfiguration(3, {
     title: 'Description',
     get : StoryModel.prototype.getDescription,
     decorator: DynamicsDecorators.emptyDescriptionDecorator,

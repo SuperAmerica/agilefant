@@ -84,6 +84,13 @@ a:hover,a:active {
 .referenceLink:hover {
   color: #666 !important;  
 }
+.refLinkInput {
+  background: white;
+  color: #666;
+  border: 1px solid #ccc;
+  font-size: 80%;
+  width: 80%;  
+}
 
 
 /**

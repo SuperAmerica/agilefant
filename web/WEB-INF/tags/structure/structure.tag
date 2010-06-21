@@ -48,6 +48,7 @@
   <script type="text/javascript" src="static/js/utils/HelpUtils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/utils/menuTimer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/utils/quickSearch.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/utils/refLinkDisplay.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
   <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>  
@@ -61,10 +62,7 @@
   
   <%@include file="../../jsp/inc/includeDynamics.jsp" %>
   
-  <script type="text/javascript">
-
-
-  
+  <script type="text/javascript">  
   PageController.initialize(${currentUserJson});
   $(document).ready(function() {
     window.pageController.init();
@@ -108,6 +106,7 @@
       }
       return false;
     });
+
 
   });
   </script>

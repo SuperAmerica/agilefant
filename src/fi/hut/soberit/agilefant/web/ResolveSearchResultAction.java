@@ -66,5 +66,9 @@ public class ResolveSearchResultAction extends ActionSupport {
     public int getTargetBacklogId() {
         return targetBacklogId;
     }
+    
+    public String getHash() {
+        return targetClassName + "_" + targetObjectId;
+    }
 
 }

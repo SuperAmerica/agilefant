@@ -282,18 +282,9 @@
 		<!-- /Session actions -->
         
         <action name="searchResult" class="resolveSearchResultAction" method="execute">
-            <result name="iteration" type="redirectAction">
-                <param name="actionName">editIteration</param>
-                <param name="iterationId">${targetBacklogId}</param>
-            </result>
-            <result name="project" type="redirectAction">
-                <param name="actionName">editProject</param>
-                <param name="projectId">${targetBacklogId}</param>
-            </result>
-            <result name="product" type="redirectAction">
-                <param name="actionName">editProduct</param>
-                <param name="productId">${targetBacklogId}</param>
-            </result>
+            <result name="iteration" type="redirect">editIteration.action?iterationId=${targetBacklogId}#${hash}</result>
+            <result name="project" type="redirect">editProject.action?projectId=${targetBacklogId}#${hash}</result>
+            <result name="product" type="redirect">editProduct.action?productId=${targetBacklogId}#${hash}</result>
         </action>    
         <action name="qr" class="referenceIDAction" method="execute">
             <result name="iteration" type="redirect">editIteration.action?iterationId=${backlogId}#${hash}</result>

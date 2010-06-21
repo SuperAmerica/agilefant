@@ -77,6 +77,12 @@ a:hover,a:active {
   color: #e50;
 }
 
+.referenceLink {
+  color: #666;  
+}
+.referenceLink:hover {
+  color: #666;  
+}
 
 
 /**

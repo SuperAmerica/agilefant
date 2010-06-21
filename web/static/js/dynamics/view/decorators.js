@@ -287,7 +287,7 @@ var DynamicsDecorators = {
       text = "backlog:" + objectId;
     }
     if(text) {
-      return '<a href="qr.action?q='+text+'" title="Copy this link for reference" onclick="return false;">'+text+'</a>';
+      return '<a href="qr.action?q='+text+'" title="Copy this link for reference" onclick="return false;" class="referenceLink">'+text+'</a>';
     }
   }
 };

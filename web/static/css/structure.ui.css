@@ -448,7 +448,8 @@ ul.quickSearchAutocompleteMenu .topBorder {
 }
 
 ul.quickSearchAutocompleteMenu li {
-  border: none;  
+  border: none;
+  cursor: pointer !important;  
 }
 
 ul.quickSearchAutocompleteMenu li a {

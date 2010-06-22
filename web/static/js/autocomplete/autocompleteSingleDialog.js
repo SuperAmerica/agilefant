@@ -4,7 +4,7 @@
 		_init: function() {
 			var elData = this.element.data(this.widgetName);
 			this.element.removeData(this.widgetName);
-			this.element = $('<div />').appendTo(document.body);
+			this.element = $('<div />');
 			this.element.data(this.widgetName,elData);
 			var me = this;
 			var autocomplete = new Autocomplete(this.element, {
@@ -23,7 +23,6 @@
 				},
 				width: 500,
 				minHeight: 150,
-				position: 'top',
 				title: this.options.title,
 				modal: true,
 				close: function() {
@@ -34,7 +33,9 @@
 			this.element.data("autocomplete", autocomplete);
 		},
 	  _cancel: function() {
-		  this.options.cancel.call(this);
+		  if (this.options.cancel) {
+		    this.options.cancel.call(this);
+		  }
 		  this.destroy();
 		},
 		select: function(item) {

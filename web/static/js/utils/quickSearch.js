@@ -14,7 +14,6 @@ $.widget("custom.agilefantQuickSearch", $.ui.autocomplete, {
     ul.css('z-index','500');
     var self = this,
       currentCategory = "";
-    console.log("Rendering list");
     $.each( items, function( index, item ) {
       var tmpItem = {value: item.name, label: item.name, 'class': item['class'], id: item.id, category: "&nbsp;"};
       if ( item['class'] != currentCategory ) {

@@ -1,5 +1,5 @@
 
-var showLink = function(link) {
+var showQuickRefLink = function(link) {
   var original = link;
   var text = link.href;
   
@@ -8,7 +8,13 @@ var showLink = function(link) {
   
   $(link).replaceWith(input);
   
-  input.select();
+  input.focus().select();
+  
+  input.keydown(function(event) {
+    if (event.keyCode === 27) {
+      $(this).blur();
+    }
+  });
   
   input.blur(function() {
     input.replaceWith(original);

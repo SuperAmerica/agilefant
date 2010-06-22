@@ -113,7 +113,6 @@ $(document).ready(function() {
           orderInput.val(included.join(','));
         },
         remove: function(event, ui) {
-          console.log(ui);
           if (ui.item.is('#name')) {
             MessageDisplay.Warning("Can't remove the name field");
             $(this).sortable('cancel');

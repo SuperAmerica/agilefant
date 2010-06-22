@@ -321,12 +321,12 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
   return this.toggleView;
 };
 
-StoryController.prototype.rankStoryToTop = function(story, context) {
-  story.rankToTop(context);
+StoryController.prototype.rankStoryToTop = function(story, view) {
+  story.rankToTop(this.parentController.model);
 };
 
-StoryController.prototype.rankStoryToBottom = function(story, context) {
-  story.rankToBottom(context);
+StoryController.prototype.rankStoryToBottom = function(story, view) {
+  story.rankToBottom(this.parentController.model);
 };
 
 /**
@@ -341,15 +341,11 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
   if (isProject) {
     actionItems.push({
       text: "Rank to top",
-      callback: jQuery.proxy(function(model, view) {
-        this.rankStoryToTop(model, this.parentController.model);
-      }, this)
+      callback: StoryController.prototype.rankStoryToTop
     });
     actionItems.push({
       text: "Rank to bottom",
-      callback: jQuery.proxy(function(model, view) {
-        this.rankStoryToBottom(model, this.parentController.model);
-      }, this)
+      callback: StoryController.prototype.rankStoryToTop
     });
   }
   if (Configuration.isTimesheetsEnabled()) {

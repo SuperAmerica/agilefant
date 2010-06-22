@@ -9,7 +9,7 @@ var DynamicView = function DynamicView() {
 	
 };
 
-DynamicView.prototype = new ViewPart();
+DynamicView.prototype = new CommonSubView();
 DynamicView.instanceCounter = 0;
 
 /**

@@ -1,12 +1,11 @@
 var LabelsIcon = function LabelsIcon(options, controller, model, parentView) {
   this.model = model;
   this.parentView = parentView;
-  this.initialize();
 };
 
-LabelsIcon.prototype = new ViewPart();
+LabelsIcon.prototype = new CommonSubView();
 
-LabelsIcon.prototype.initialize = function() {
+LabelsIcon.prototype._draw = function() {
   var me = this;
   this.element = $('<div style="text-align: center;" />');
   this.element.appendTo(this.parentView.getElement());

@@ -9,8 +9,8 @@ var DynamicTableCell = function DynamicTableCell(row, config) {
 	this.subView = null;
 	this.editor = null;
 	this.delayedRender = this.config.hasDelayedRender();
+  this.visible = this.config.isVisible();
 	this.initialize();
-	this.cellRenderComplete = false;
 };
 
 DynamicTableCell.prototype = new ViewPart();
@@ -83,6 +83,13 @@ DynamicTableCell.prototype.initialize = function() {
     var model = this.row.getModel();
     this.subView = subViewFactory.call(this.row
         .getController(), this, model); 
+    if(this.subView instanceof CommonFragmentSubView) {
+      var subViewContainer = $('<span />');
+      subViewContainer.get(0).innerHTML = this.subView.getHTML();
+      subViewContainer.appendTo(this.element);
+    } else if(this.subView instanceof CommonSubView && this.visible) {
+      this.subView.draw();
+    }
   }
 	this._registerEventHandlers();
 };
@@ -110,6 +117,7 @@ DynamicTableCell.prototype.getEditor = function() {
 };
 
 DynamicTableCell.prototype.hide = function() {
+  this.visible = false;
   this.cellContents.hide();
   this.element.hide();
   if(this.subView) {
@@ -117,12 +125,26 @@ DynamicTableCell.prototype.hide = function() {
   }
 };
 DynamicTableCell.prototype.show = function() {
+  this.visible = true;
   this.cellContents.show();
   this.element.show();
   if(this.subView) {
+    this._renderSubView();
     this.subView.show();
   }
 };
+
+DynamicTableCell.prototype._renderSubView = function() {
+  if(this.subView instanceof CommonSubView && this.visible) {
+    if(!this.subView.isDrawn()) {
+      this.subView.draw();
+    }
+    if(this.subView.renderAlways()) {
+      this.subView.render();
+    }
+  }
+};
+
 DynamicTableCell.prototype.render = function() {
   if(this.delayedRender && !this.config.isVisible()) {
     this.delayedRender = false;
@@ -132,10 +154,7 @@ DynamicTableCell.prototype.render = function() {
 	var getter = this.config.getViewGetter();
 	var decorator = this.config.getDecorator();
 	var value = "";
-  if (this.subView && (!this.cellRenderComplete || this.subView.renderAlways())) {
-    this.subView.render(); 
-  }
-  this.cellRenderComplete = true;
+	this._renderSubView();
 	if (getter) {
 		value = getter.call(model);
 	} else {

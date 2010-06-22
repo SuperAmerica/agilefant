@@ -435,7 +435,7 @@
 				autocomplete/autocompleteBundle.js, autocomplete/autocompleteDataProvider.js, autocomplete/autocompleteDialog.js,
 				autocomplete/autocompleteSingleDialog.js, autocomplete/autocompleteInline.js"></filelist>
 			<filelist dir="${build.webapp}/static/js/dynamics/"
-				files=" Dynamics.events.js, view/ViewPart.js, view/MessageDisplay.js, view/DynamicView.js, view/Table.js, view/Row.js, view/Cell.js, view/subviews/RowActions.js, view/TableConfiguration.js, 
+				files=" Dynamics.events.js, view/ViewPart.js, view/MessageDisplay.js, view/DynamicView.js, view/CommonSubView.js, view/CommonFragmentSubView.js, view/Table.js, view/Row.js, view/Cell.js, view/subviews/RowActions.js, view/TableConfiguration.js, 
 				view/subviews/Toggle.js, view/TableCaption.js, view/TableCellEditors.js, view/decorators.js, view/subviews/SplitPanel.js, view/subviews/Tabs.js, view/subviews/Buttons.js, view/subviews/Button.js, 
 				view/ValidationManager.js, view/ConfirmationDialog.js, view/ChangePasswordDialog.js, view/LazyLoadedDialog.js, view/UserSpentEffortWidget.js, view/subviews/LabelsView.js, view/subviews/LabelsIcon.js, 
 				view/subviews/AutoSuggest.js, view/SearchByTextWidget.js, view/subviews/StoryInfoWidget.js, view/StoryFiltersView.js, view/StateFilterWidget.js, view/SpentEffortWidget.js, view/Bubble.js,

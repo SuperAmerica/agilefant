@@ -4,32 +4,23 @@ var DynamicTableRowActions = function DynamicTableRowActions(items, controller, 
   this.model = model;
   this.parentView = parentView;
   this.menuOpen = false;
-  this.initialize();
 };
 
-DynamicTableRowActions.prototype = new ViewPart();
+DynamicTableRowActions.prototype = new CommonFragmentSubView();
 
 /**
  * @private
  */
-DynamicTableRowActions.prototype.initialize = function() {
-  var me = this;
-  this.container = $('<div />').width("68px").appendTo(
-      this.parentView.getElement());
-  this.button = $('<div class="actionColumn"><div class="edit">Edit &#8711;</div></div>');
-  this.button.appendTo(this.container);
-
-  this.toggleMenuListener = function(event) {
-    if (me.menuOpen) {
-      me.close();
+DynamicTableRowActions.prototype.getHTML = function() {
+  this.toggleMenuListener = $.proxy(function() {
+    if (this.menuOpen) {
+      this.close();
     } else {
-      me.open();
+      this.open();
     }
-    event.stopPropagation();
     return false;
-  };
-  this.button.click(this.toggleMenuListener);
-  this.element = this.container;
+  }, this);
+  return '<div style="width: 68px;"><div class="actionColumn"><div class="edit" onclick="'+DelegateFactory.create(this.toggleMenuListener)+'">Edit &#8711;</div></div></div>';
 };
 
 /**

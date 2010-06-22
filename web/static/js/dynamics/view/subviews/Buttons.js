@@ -4,12 +4,11 @@ var DynamicsButtons = function DynamicsButtons(controller, options, parent) {
   this.buttons = [];
   this.parent = parent;
   this.controller = controller;
-  this.initialize();
 };
 
-DynamicsButtons.prototype = new ViewPart();
+DynamicsButtons.prototype = new CommonSubView();
 
-DynamicsButtons.prototype.initialize = function() {
+DynamicsButtons.prototype._draw = function() {
   var me = this, button, width;
   jQuery.each(this.options, function(i, opt) {
     width = (opt.text.length + 2) + "ex";

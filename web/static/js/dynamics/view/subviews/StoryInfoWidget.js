@@ -3,10 +3,9 @@ var StoryInfoWidget = function StoryInfoWidget(model, controller, parentView) {
   this.element = parentView.getElement();
   this.model = model;
   this.controller = controller;
-  this.initialize();
 };
 
-StoryInfoWidget.prototype = new ViewPart();
+StoryInfoWidget.prototype = new CommonSubView();
 
 StoryInfoWidget.prototype.storyContextFactory = function(cellView, storyModel) {
   return new CellBubble({
@@ -26,7 +25,7 @@ StoryInfoWidget.prototype.getElement = function() {
   return this.container;
 };
 
-StoryInfoWidget.prototype.initialize = function() {
+StoryInfoWidget.prototype._draw = function() {
   this.container = $('<div />');
   
   this.hr = $('<div class="ruler">&nbsp;</div>').appendTo(this.container);

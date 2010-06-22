@@ -108,7 +108,7 @@ DynamicTable.prototype.initialize = function() {
 };
 
 DynamicTable.prototype.renderAlways = function() {
-  return false;
+  return !this.firstRenderComplete;
 };
 
 DynamicTable.prototype._bindEvents = function() {
@@ -524,7 +524,7 @@ DynamicTable.prototype._softRender = function() {
 DynamicTable.prototype._hardRender = function(section) {
   var i;
   var rowCount = section.length;
-  this._draw(section);
+  this._drawSection(section);
   for (i = 0; i < rowCount; i++) {
     section[i].render();
   }
@@ -535,11 +535,11 @@ DynamicTable.prototype.resort = function() {
   var tableRows = [];
   tableRows.concat(this.upperRows,this.middleRows, this.bottomRows); 
   this.currentTableRows = tableRows;
-  this._draw(this.middleRows);
+  this._drawSection(this.middleRows);
   this.element.find("textarea.tableSortListener").trigger("tableSorted");
 };
 
-DynamicTable.prototype._draw = function(section) {
+DynamicTable.prototype._drawSection = function(section) {
   var i;
   var rowCount = section.length;
   

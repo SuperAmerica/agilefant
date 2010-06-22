@@ -8,9 +8,9 @@ var CellBubble = function CellBubble(options, parent) {
   $.extend(this.options, options);
   this.parent = parent;
 };
-CellBubble.prototype = new ViewPart();
+CellBubble.prototype = new CommonSubView();
 
-CellBubble.prototype.render = function() {
+CellBubble.prototype._draw = function() {
   var me = this;
   this.element = $('<span>' + this.options.text + '</span>').click(function() {
     var bub = new Bubble(me.element, {

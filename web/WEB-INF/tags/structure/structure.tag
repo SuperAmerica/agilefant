@@ -63,6 +63,20 @@
   <%@include file="../../jsp/inc/includeDynamics.jsp" %>
   
   <script type="text/javascript">  
+  var DelegateFactoryClass = function() {
+    this.handlers = {};
+    this.currentId = 1;
+  };
+  DelegateFactoryClass.prototype.create = function(callback) {
+    var id = "handle_" + this.currentId++;
+    this.handlers[id] = callback;
+    return "DelegateFactory.handle('"+id+"'); return false;";
+  };
+  DelegateFactoryClass.prototype.handle = function(id) {
+    this.handlers[id].apply(arguments);
+  };
+  var DelegateFactory = new DelegateFactoryClass();
+  
   PageController.initialize(${currentUserJson});
   $(document).ready(function() {
     window.pageController.init();

@@ -1,12 +1,11 @@
 var LabelsView = function LabelsView(options, controller, model, parentView) {
   this.model = model;
   this.parentView = parentView;
-  this.initialize();
 };
 
-LabelsView.prototype = new ViewPart();
+LabelsView.prototype = new CommonSubView();
 
-LabelsView.prototype.initialize = function() {
+LabelsView.prototype._draw = function() {
   var me = this;
   this.element = $('<div></div>');
   this.labelsElement = $('<div></div>');

@@ -11,13 +11,14 @@ var DynamicTableToggleView = function DynamicTableToggleView(options, controller
   this.controller = controller;
   this.parentView = parentView;
   this.button = null;
-  this.initialize();
+  this.id = 'dynamics-toggle-' + (DynamicTableToggleView.currentId++);
 };
 
-DynamicTableToggleView.prototype = new ViewPart();
+DynamicTableToggleView.prototype = new CommonFragmentSubView();
 
 DynamicTableToggleView.collapsed = 1;
 DynamicTableToggleView.expanded = 2;
+DynamicTableToggleView.currentId = 1;
 
 DynamicTableToggleView.prototype._getCell = function(cell) {
   if(typeof cell === "number") {
@@ -26,8 +27,13 @@ DynamicTableToggleView.prototype._getCell = function(cell) {
     return this.parentView.getRow().getCellByName(cell);
   }
 };
+DynamicTableToggleView.prototype.renderAlways = function() {
+  return !this.rendered;
+};
 
 DynamicTableToggleView.prototype.render = function() {
+  this.redered = true;
+  this.button = $('#' + this.id);
   if(this.parentView instanceof DynamicTableCell) {
     if(this.options.targetCell) {
       this.targetViews = [this._getCell(this.options.targetCell)];
@@ -38,25 +44,26 @@ DynamicTableToggleView.prototype.render = function() {
       }
     }
   }
-  if (this.options.expanded) {
-    this.expand();
-  } else {
-    this.collapse();
-  }
 };
 
-DynamicTableToggleView.prototype.initialize = function() {
-  this.button = $("<div />").appendTo(this.parentView.getElement());
-  var me = this;
-  this.button.click(function(event) {
-    if (me.button.hasClass("dynamictable-expand")) {
-      me.expand();
+DynamicTableToggleView.prototype.getHTML = function() {
+  var cssClass, titleText;
+  if(this.options.expanded) {
+    cssClass = "dynamictable-collapse";
+    titleText = "Collapse";
+  } else {
+    cssClass = "dynamictable-expand";
+    titleText = "Expand";
+  }
+  var handle = $.proxy(function() {
+    if (this.button.hasClass("dynamictable-expand")) {
+      this.expand();
     } else {
-      me.collapse();
+      this.collapse();
     }
     return false;
-  });
-  this.element = this.button;
+  }, this);
+  return '<div id="'+this.id+'" class="' + cssClass + '" title="' + titleText + '" onclick="'+DelegateFactory.create(handle)+'"></div>';
 };
 DynamicTableToggleView.prototype.showCollapsed = function() {
   this.button.attr("title", "Expand").removeClass("dynamictable-collapse")
@@ -76,7 +83,7 @@ DynamicTableToggleView.prototype.collapse = function() {
 };
 DynamicTableToggleView.prototype.showExpanded = function() {
   this.button.attr("title", "Collapse").addClass("dynamictable-collapse")
-      .removeClass("dynamictable-expand");
+    .removeClass("dynamictable-expand");
   this.currentMode = DynamicTableToggleView.expanded;
 };
 DynamicTableToggleView.prototype.expand = function() {

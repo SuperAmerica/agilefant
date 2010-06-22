@@ -4,17 +4,17 @@ var DynamicTableRowButton = function DynamicTableRowButton(options, controller, 
     this.controller = controller;
     this.model = model;
     this.parentView = parentView;
-  
-    this.initialize();
 };
 
-DynamicTableRowButton.prototype = new ViewPart();
+DynamicTableRowButton.prototype = new CommonFragmentSubView();
 
 /**
  * @private
  */
-DynamicTableRowButton.prototype.initialize = function() {
-    var me = this;
+DynamicTableRowButton.prototype.getHTML = function() {
+  return '<div style="width: 68px;"><div class="actionColumn"><div class="edit" style="width: 44px">' + this.label + '</div></div></div>';
+  /*
+  var me = this;
     this.container = $('<div />').width("68px").appendTo(
         this.parentView.getElement());
     
@@ -27,4 +27,5 @@ DynamicTableRowButton.prototype.initialize = function() {
     
     this.button.click(function(event) { me.callback.call(me.controller); });
     this.element = this.container;
+*/
 };

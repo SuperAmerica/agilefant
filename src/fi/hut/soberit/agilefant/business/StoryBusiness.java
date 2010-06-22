@@ -55,6 +55,16 @@ public interface StoryBusiness extends GenericBusiness<Story> {
             Backlog backlog);
 
     public Story updateStoryRanks(Story story);
+    
+    /**
+     * Ranks the story to the top of the given backlog.
+     */
+    public Story rankStoryToTop(Story story, Backlog context);
+    
+    /**
+     * Ranks the story to the bottom of the given backlog.
+     */
+    public Story rankStoryToBottom(Story story, Backlog context);
 
     public void storeBatch(Collection<Story> stories);
 

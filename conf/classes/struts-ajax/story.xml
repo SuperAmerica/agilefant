@@ -142,6 +142,20 @@
         <param name="patterns">-backlog, -parent</param>
       </result>
     </action>
+    
+    <action name="rankStoryToTop" method="rankStoryToTop" class="storyAction">
+      <result name="success" type="json">
+        <param name="target">story</param>
+        <param name="patterns">-backlog, -parent</param>
+      </result>
+    </action>
+    
+    <action name="rankStoryToBottom" method="rankStoryToTop" class="storyAction">
+      <result name="success" type="json">
+        <param name="target">story</param>
+        <param name="patterns">-backlog, -parent</param>
+      </result>
+    </action>
 
     <action name="deleteStoryForm" method="deleteStoryForm" class="storyAction">
       <result type="dispatcher">/WEB-INF/jsp/forms/deleteStoryForm.jsp</result>

@@ -473,6 +473,26 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         storyRankBusiness.rankAbove(story, backlog, lowerStory);
         return story;
     }
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public Story rankStoryToTop(Story story, Backlog context) {
+        if (context == null) {
+            throw new IllegalArgumentException("Backlog should be given");
+        }
+        storyRankBusiness.rankToHead(story, context);
+        return story;
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public Story rankStoryToBottom(Story story, Backlog context) {
+        if (context == null) {
+            throw new IllegalArgumentException("Backlog should be given");
+        }
+        storyRankBusiness.rankToBottom(story, context);
+        return story;
+    }
 
     private Backlog checkRankingArguments(Story story, Story otherStory,
             Backlog backlog) {

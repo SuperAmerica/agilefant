@@ -262,6 +262,14 @@ StoryModel.prototype.rankOver = function(rankOverId, moveUnder) {
   this._rank("over", rankOverId, moveUnder);
 };
 
+StoryModel.prototype.rankToTop = function(backlog) {
+  this._rank("top", 0, backlog);
+};
+
+StoryModel.prototype.rankToBottom = function(backlog) {
+  this._rank("bottom", 0, backlog);
+};
+
 StoryModel.prototype._rank = function(direction, targetStoryId, targetBacklog) {
   var me = this;
   var postData = {
@@ -269,13 +277,15 @@ StoryModel.prototype._rank = function(direction, targetStoryId, targetBacklog) {
     "targetStoryId": targetStoryId
   };
   
-  if (targetBacklog && targetBacklog != this.getParent()) {
+  if ((targetBacklog && targetBacklog != this.getParent()) || direction === "top" || direction === "bottom" ) {
     postData.backlogId = targetBacklog.getId();
   }
   
   var urls = {
     "over": "ajax/rankStoryOver.action",
-    "under": "ajax/rankStoryUnder.action"
+    "under": "ajax/rankStoryUnder.action",
+    "top":  "ajax/rankStoryToTop.action",
+    "bottom":  "ajax/rankStoryToBottom.action"
   };
   
   jQuery.ajax({
@@ -305,6 +315,7 @@ StoryModel.prototype._rank = function(direction, targetStoryId, targetBacklog) {
     }
   });
 };
+
 
 
 StoryModel.prototype._remove = function(successCallback, extraData) {

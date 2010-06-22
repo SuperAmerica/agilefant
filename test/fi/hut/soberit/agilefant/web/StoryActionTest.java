@@ -301,6 +301,38 @@ public class StoryActionTest extends MockedTestCase {
         verifyAll();
     }
     
+    @Test
+    @DirtiesContext
+    public void testRankStoryToTop() {
+        Story returned = new Story();
+        
+        storyAction.setStoryId(123);
+        storyAction.setBacklogId(222);
+        expect(storyBusiness.retrieve(123)).andReturn(story);
+        expect(backlogBusiness.retrieve(222)).andReturn(iter);
+        expect(storyBusiness.rankStoryToTop(story, iter)).andReturn(returned);
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.rankStoryToTop());
+        verifyAll();
+        assertSame(returned, storyAction.getStory());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRankStoryToBottom() {
+        Story returned = new Story();
+        
+        storyAction.setStoryId(123);
+        storyAction.setBacklogId(222);
+        expect(storyBusiness.retrieve(123)).andReturn(story);
+        expect(backlogBusiness.retrieve(222)).andReturn(iter);
+        expect(storyBusiness.rankStoryToBottom(story, iter)).andReturn(returned);
+        replayAll();
+        assertEquals(Action.SUCCESS, storyAction.rankStoryToBottom());
+        verifyAll();
+        assertSame(returned, storyAction.getStory());
+    }
+    
     @DirtiesContext
     public void testCreateStoryUnder() {
         Story data = new Story();

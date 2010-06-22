@@ -321,15 +321,37 @@ StoryController.prototype.descriptionToggleFactory = function(view, model) {
   return this.toggleView;
 };
 
+StoryController.prototype.rankStoryToTop = function(story, context) {
+  story.rankToTop(context);
+};
+
+StoryController.prototype.rankStoryToBottom = function(story, context) {
+  story.rankToBottom(context);
+};
+
 /**
  * 
  */
-StoryController.prototype.storyActionFactory = function(view, model) {
+StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
   actionItems.push({
     text : "Move",
     callback : StoryController.prototype.moveStory
   });
+  if (isProject) {
+    actionItems.push({
+      text: "Rank to top",
+      callback: jQuery.proxy(function(model, view) {
+        this.rankStoryToTop(model, this.parentController.model);
+      }, this)
+    });
+    actionItems.push({
+      text: "Rank to bottom",
+      callback: jQuery.proxy(function(model, view) {
+        this.rankStoryToBottom(model, this.parentController.model);
+      }, this)
+    });
+  }
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
       text: "Spent effort",
@@ -340,6 +362,18 @@ StoryController.prototype.storyActionFactory = function(view, model) {
     text : "Delete",
     callback : StoryController.prototype.removeStory
   });
+  return actionItems;
+};
+
+StoryController.prototype.projectStoryActionFactory = function(view, model) {
+  var actionItems = this._getStoryActionItems(true);
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+      view);
+  return actionView;
+};
+
+StoryController.prototype.storyActionFactory = function(view, model) {
+  var actionItems = this._getStoryActionItems(false);
   var actionView = new DynamicTableRowActions(actionItems, this, this.model,
       view);
   return actionView;

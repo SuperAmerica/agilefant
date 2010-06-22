@@ -556,6 +556,38 @@ public class StoryBusinessTest {
     }
     
     @Test
+    public void testRankStoryToTop() {
+        Story story = new Story();
+        storyRankBusiness.rankToHead(story, backlog);
+        replayAll();
+        Story actual = storyBusiness.rankStoryToTop(story, backlog);
+        verifyAll();
+        assertSame(actual, story);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankStoryToTop_noBacklog() {
+        Story story = new Story();
+        storyBusiness.rankStoryToTop(story, null);
+    }
+    
+    @Test
+    public void testRankStoryToBottom() {
+        Story story = new Story();
+        storyRankBusiness.rankToBottom(story, backlog);
+        replayAll();
+        Story actual = storyBusiness.rankStoryToBottom(story, backlog);
+        verifyAll();
+        assertSame(actual, story);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void testRankStoryToBottom_noBacklog() {
+        Story story = new Story();
+        storyBusiness.rankStoryToBottom(story, null);
+    }
+    
+    @Test
     public void testStoreBatch() {
         Story s1 = new Story();
         s1.setId(1);

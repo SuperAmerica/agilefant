@@ -162,6 +162,20 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         return Action.SUCCESS;
     }
     
+    public String rankStoryToTop() {
+        story = storyBusiness.retrieve(storyId);
+        backlog = backlogBusiness.retrieve(backlogId);
+        story = storyBusiness.rankStoryToTop(story, backlog);
+        return Action.SUCCESS;
+    }
+    
+    public String rankStoryToBottom() {
+        story = storyBusiness.retrieve(storyId);
+        backlog = backlogBusiness.retrieve(backlogId);
+        story = storyBusiness.rankStoryToBottom(story, backlog);
+        return Action.SUCCESS;
+    }
+    
     public String createStoryUnder() {
         story = storyBusiness.createStoryUnder(storyId, story, userIds);
         return Action.SUCCESS;

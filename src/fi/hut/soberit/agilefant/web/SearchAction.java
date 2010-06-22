@@ -10,7 +10,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.SearchBusiness;
-import fi.hut.soberit.agilefant.model.NamedObject;
+import fi.hut.soberit.agilefant.transfer.SearchResultRow;
 
 @Component("searchAction")
 @Scope("prototype")
@@ -19,7 +19,7 @@ public class SearchAction extends ActionSupport {
     @Autowired
     private SearchBusiness searchBusiness;
     
-    private List<NamedObject> results;
+    private List<SearchResultRow> results;
     
     private String term;
     
@@ -29,7 +29,7 @@ public class SearchAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
-    public List<NamedObject> getResults() {
+    public List<SearchResultRow> getResults() {
         return results;
     }
 

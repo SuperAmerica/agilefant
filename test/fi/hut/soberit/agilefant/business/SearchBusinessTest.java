@@ -15,12 +15,12 @@ import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.SearchResultRow;
 
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
@@ -41,13 +41,15 @@ public class SearchBusinessTest extends MockedTestCase {
     @DirtiesContext
     public void testSearchStoriesAndBacklogs() {
         String search = "foo";
+        Story story = new Story();
+        story.setBacklog(new Iteration());
         expect(backlogDAO.searchByName(search)).andReturn(Arrays.asList((Backlog)(new Iteration())));
-        expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(new Story()));
+        expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(story));
         replayAll();
-        List<NamedObject> result = searchBusiness.searchStoriesAndBacklog(search);
+        List<SearchResultRow> result = searchBusiness.searchStoriesAndBacklog(search);
         assertEquals(2, result.size());
-        assertTrue(result.get(0) instanceof Iteration);
-        assertTrue(result.get(1) instanceof Story);
+        assertTrue(result.get(0).getOriginalObject() instanceof Iteration);
+        assertTrue(result.get(1).getOriginalObject() instanceof Story);
         verifyAll();
     }
     
@@ -59,9 +61,9 @@ public class SearchBusinessTest extends MockedTestCase {
         expect(storyDAO.searchByName(search)).andReturn(new ArrayList<Story>());
         expect(storyDAO.get(123)).andReturn(new Story());
         replayAll();
-        List<NamedObject> result = searchBusiness.searchStoriesAndBacklog(search);
+        List<SearchResultRow> result = searchBusiness.searchStoriesAndBacklog(search);
         assertEquals(1, result.size());
-        assertTrue(result.get(0) instanceof Story);
+        assertTrue(result.get(0).getOriginalObject() instanceof Story);
         verifyAll();
     }
     

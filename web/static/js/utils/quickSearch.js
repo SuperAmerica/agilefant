@@ -15,11 +15,11 @@ $.widget("custom.agilefantQuickSearch", $.ui.autocomplete, {
     var self = this,
       currentCategory = "";
     $.each( items, function( index, item ) {
-      var tmpItem = {value: item.name, label: item.name, 'class': item['class'], id: item.id, category: "&nbsp;"};
-      if ( item['class'] != currentCategory ) {
-        tmpItem.category = categories[item['class']];
+      var tmpItem = {value: item.label, label: item.label, 'class': item.originalObject['class'], id: item.originalObject.id, category: "&nbsp;", originalObject: item.originalObject};
+      if ( item.originalObject['class'] != currentCategory ) {
+        tmpItem.category = categories[item.originalObject['class']];
         tmpItem.topBorder = true;
-        currentCategory = item['class'];
+        currentCategory = item.originalObject['class'];
       }
       self._renderItem( ul, tmpItem );
     });

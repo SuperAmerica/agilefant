@@ -10,11 +10,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fi.hut.soberit.agilefant.business.SearchBusiness;
-import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.SearchResultRow;
 
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
@@ -32,7 +32,7 @@ public class SearchActionTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testExecute() {
-        List<NamedObject> result = new ArrayList<NamedObject>();
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
         searchAction.setTerm("foo");
         expect(searchBusiness.searchStoriesAndBacklog("foo")).andReturn(result);
         replayAll();

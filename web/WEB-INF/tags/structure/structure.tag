@@ -90,7 +90,7 @@
       source: "ajax/search.action",
       minLength: 3,
       select: function(event, ui) {
-        window.location.href = "searchResult.action?targetClassName=" + ui.item['class'] + "&targetObjectId=" + ui.item.id + "#" + ui.item['class'] + "_" + ui.item.id;
+        window.location.href = "searchResult.action?targetClassName=" + ui.item.originalObject['class'] + "&targetObjectId=" + ui.item.originalObject.id;
       }
     });
 

@@ -10,7 +10,7 @@
     <action name="search" method="execute" class="searchAction">
       <result name="success" type="json">
         <param name="target">results</param>
-        <param name="patterns">+id,+name,+class,-*</param>
+        <param name="patterns">+originalObject.id,+label,+originalObject.class,-*</param>
       </result>
     </action>
   

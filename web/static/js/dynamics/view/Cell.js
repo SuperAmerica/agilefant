@@ -4,6 +4,7 @@
  * @param config
  */
 var DynamicTableCell = function DynamicTableCell(row, config) {
+  this.id = "dynamictable-cell-"+DynamicTableCell.currentId++;
 	this.config = config;
 	this.row = row;
 	this.subView = null;
@@ -13,10 +14,16 @@ var DynamicTableCell = function DynamicTableCell(row, config) {
 	this.initialize();
 };
 
+DynamicTableCell.currentId = 1;
+
 DynamicTableCell.prototype = new ViewPart();
 
 DynamicTableCell.prototype.getRow = function() {
   return this.row;
+};
+
+DynamicTableCell.prototype.getId = function() {
+  return this.id;
 };
 
 /**
@@ -24,7 +31,7 @@ DynamicTableCell.prototype.getRow = function() {
  */
 DynamicTableCell.prototype.initialize = function() {
 	var me = this;
-  this.element = $('<div />').addClass(DynamicTable.cssClasses.tableCell);
+  this.element = $('<div id="'+this.id+'"/>').addClass(DynamicTable.cssClasses.tableCell);
 	this.cellContents = $('<span />').appendTo(this.element);
 	
 	var elementCss = {
@@ -52,14 +59,10 @@ DynamicTableCell.prototype.initialize = function() {
 	if(this.config.isDragHandle()) {
 	  this.element.addClass(DynamicTable.cssClasses.dragHandle);
 	}
+	
 	if(this.config.isEditable()) {
 	  //this.element.addClass('dynamictable-editable');
 	  this.element.attr("title", "Double click to edit");
-	  this.element.dblclick(function() {
-	    if (me.getRow().isEditable()) {
-	        me.openEditor();
-	    }
-	  });
 	  var editText = "Double-click to edit ";
 	  if(this.config.getTitle()) {
 	    editText += this.config.getTitle();
@@ -73,11 +76,8 @@ DynamicTableCell.prototype.initialize = function() {
 	    isBlocked: function() { return !!me.editor; },
 	    bodyHandler: function() { return $("<span>"+editText+"</span>"); }
 	  });
-	} else if(this.config.getDoubleClickCallback()) {
-	  this.element.dblclick(function() {
-	    me.config.getDoubleClickCallback().call(me.row.getController(), me.row.getModel(), me);
-	  });
 	}
+	
 	var subViewFactory = this.config.getSubViewFactory(); 
   if (subViewFactory) {
     var model = this.row.getModel();
@@ -91,24 +91,17 @@ DynamicTableCell.prototype.initialize = function() {
       this.subView.draw();
     }
   }
-	this._registerEventHandlers();
 };
 
-DynamicTableCell.prototype._registerEventHandlers = function() {
-  var me = this;
-  this.element.bind("editorClosing", function() {
-    me.editorClosing();
-    return false;
-  });
-  this.element.bind("editorOpening", function() {
-    me.editorOpening();
-    return false;
-  });
-  this.element.bind("transactionEditEvent", function(event) {
-    me.onTransactionEdit();
-    return false;
-  });
+DynamicTableCell.prototype.dblClick = function(event) {
+  if(this.config.getDoubleClickCallback()) {
+      this.config.getDoubleClickCallback().call(this.row.getController(), this.row.getModel(), this);
+  }
+  if (this.config.isEditable() && this.getRow().isEditable()) {
+    this.openEditor();
+  }
 };
+
 DynamicTableCell.prototype.getElement = function() {
 	return this.element;
 };

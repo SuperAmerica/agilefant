@@ -7,6 +7,7 @@ var DynamicTableRow = function DynamicTableRow(config) {
   this.config = config;
   this.cells = [];
   this.cellIndex = {};
+  this.htmlIdsToCell = {};
   this.nameToCell = {};
   this.initialize();
   this.dynamicCssClasses = [];
@@ -31,6 +32,18 @@ DynamicTableRow.prototype.initialize = function() {
     me.hasFocus = false;
   });
   
+  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"editorClosing", $.proxy(function(event) {
+    this.htmlIdsToCell[event.currentTarget.id].editorClosing();
+  }, this));
+  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"editorOpening", $.proxy(function(event) {
+    this.htmlIdsToCell[event.currentTarget.id].editorOpening();
+  }, this));
+  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"editorOpening", $.proxy(function(event) {
+    this.htmlIdsToCell[event.currentTarget.id].onTransactionEdit();
+  }, this));
+  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"dblclick", $.proxy(function(event) {
+    this.htmlIdsToCell[event.currentTarget.id].dblClick(event);
+  }, this));
   
   // FIGURE A BETTER WAY
   if (this.config && this.config.hasOwnProperty("visible") && !this.config.visible) {
@@ -109,6 +122,7 @@ DynamicTableRow.prototype.setCssClassResolver = function(resolver) {
  */
 DynamicTableRow.prototype.createCell = function(config) {
   var cell = new DynamicTableCell(this, config);
+  this.htmlIdsToCell[cell.getId()] = cell;
   cell.getElement().appendTo(this.element);
   this.cells.push(cell);
   return cell;

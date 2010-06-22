@@ -435,11 +435,11 @@
 				autocomplete/autocompleteBundle.js, autocomplete/autocompleteDataProvider.js, autocomplete/autocompleteDialog.js,
 				autocomplete/autocompleteSingleDialog.js, autocomplete/autocompleteInline.js"></filelist>
 			<filelist dir="${build.webapp}/static/js/dynamics/"
-				files=" Dynamics.events.js, view/ViewPart.js, view/MessageDisplay.js, view/DynamicView.js, view/Table.js, view/Row.js, view/Cell.js, view/RowActions.js, view/TableConfiguration.js, 
-				view/Toggle.js, view/TableCaption.js, view/TableCellEditors.js, view/decorators.js, view/SplitPanel.js, view/Tabs.js, view/Buttons.js, view/Button.js, 
-				view/ValidationManager.js, view/ConfirmationDialog.js, view/ChangePasswordDialog.js, view/LazyLoadedDialog.js, view/UserSpentEffortWidget.js, view/LabelsView.js, view/LabelsIcon.js, 
-				view/AutoSuggest.js, view/SearchByTextWidget.js, view/StoryInfoWidget.js, view/StoryFiltersView.js, view/StateFilterWidget.js, view/SpentEffortWidget.js, view/Bubble.js,
-				view/CellBubble.js, model/CommonModel.js, model/BacklogModel.js, model/IterationModel.js, model/ProjectModel.js, model/ProductModel.js, model/StoryModel.js, 
+				files=" Dynamics.events.js, view/ViewPart.js, view/MessageDisplay.js, view/DynamicView.js, view/Table.js, view/Row.js, view/Cell.js, view/subviews/RowActions.js, view/TableConfiguration.js, 
+				view/subviews/Toggle.js, view/TableCaption.js, view/TableCellEditors.js, view/decorators.js, view/subviews/SplitPanel.js, view/subviews/Tabs.js, view/subviews/Buttons.js, view/subviews/Button.js, 
+				view/ValidationManager.js, view/ConfirmationDialog.js, view/ChangePasswordDialog.js, view/LazyLoadedDialog.js, view/UserSpentEffortWidget.js, view/subviews/LabelsView.js, view/subviews/LabelsIcon.js, 
+				view/subviews/AutoSuggest.js, view/SearchByTextWidget.js, view/subviews/StoryInfoWidget.js, view/StoryFiltersView.js, view/StateFilterWidget.js, view/SpentEffortWidget.js, view/Bubble.js,
+				view/subviews/CellBubble.js, model/CommonModel.js, model/BacklogModel.js, model/IterationModel.js, model/ProjectModel.js, model/ProductModel.js, model/StoryModel.js, 
 				model/TaskModel.js, model/UserModel.js, model/TeamModel.js, model/comparators.js, model/AssignmentModel.js, model/HourEntryModel.js, model/TaskSplitContainer.js, 
 				model/UserListContainer.js, model/TeamListContainer.js, model/HourEntryListContainer.js, model/PortfolioModel.js, model/LabelModel.js, model/DailyWorkModel.js, 
 				model/WorkQueueTaskModel.js, model/ModelFactory.js, controller/CommonController.js, controller/BacklogController.js, controller/TaskController.js, 

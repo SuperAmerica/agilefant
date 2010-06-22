@@ -38,7 +38,7 @@ DynamicTableRowActions.prototype.initialize = function() {
 DynamicTableRowActions.prototype.open = function() {
   var me = this;
   this.menuOpen = true;
-  this.menu = $('<ul/>').addClass("actionCell");
+  this.menu = $('<ul/>').appendTo(document.body).addClass("actionCell");
   
   var off = this.parentView.getElement().offset();
   var menuCss = {
@@ -72,7 +72,6 @@ DynamicTableRowActions.prototype.open = function() {
       me.close();
     }
   });
-  this.menu.appendTo(document.body)
 };
 
 /**

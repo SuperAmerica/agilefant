@@ -46,6 +46,8 @@ TableEditors.openOnRowEdit = function(name) {
   return true;
 };
 
+TableEditors.currentId = 1;
+
 /**
  * Common constructor for all <code>TableEditors</code>
  * @constructor
@@ -70,6 +72,11 @@ TableEditors.CommonEditor.defaultOptions = {
      */
     set: function() {}
 };
+
+TableEditors.CommonEditor.prototype.generateId = function() {
+  return "editor-" + (++TableEditors.currentId);
+};
+
 TableEditors.CommonEditor.prototype.init = function(element, model, options) {
   this.editRow = false;
   this.fieldName = "";
@@ -254,7 +261,7 @@ TableEditors.TextFieldEditor.prototype.init = function(element, model, options) 
   jQuery.extend(opts, options);
   TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
   
-  this.textField = $('<input type="' + this.options.fieldType + '"/>')
+  this.textField = $('<input id="'+this.generateId()+'" type="' + this.options.fieldType + '"/>')
     .appendTo(this.element).width(this.options.size);
   this._registerEditField(this.textField);
 };
@@ -942,7 +949,7 @@ TableEditors.Selection.prototype.init = function(element, model, options) {
   jQuery.extend(opts, options);
   TableEditors.CommonEditor.prototype.init.call(this, element, model, opts);
   
-  this.selectBox = $('<select/>').appendTo(this.element).width(this.options.size);
+  this.selectBox = $('<select id="'+this.generateId()+'"/>').appendTo(this.element).width(this.options.size);
   
   var me = this;
   var value = this.options.get.call(this.model);

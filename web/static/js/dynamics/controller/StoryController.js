@@ -139,7 +139,7 @@ StoryController.prototype.removeStory = function() {
         }, extraData);
       }
       else {
-       me.model.remove(null, extraData);
+        me.model.remove(null, extraData);
       }
     }
   });

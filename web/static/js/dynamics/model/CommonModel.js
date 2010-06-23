@@ -118,9 +118,10 @@ CommonModel.prototype._updateRelations = function(type, newData) {
   });
   //do not use removeRelation directly to the list as it will fire additional relation updated events
   $.each(removeRelations, function(k, item) {
-    me._removeOneWayRelation(item);
-    item._removeOneWayRelation(me);
+    me.removeRelation(item, true);
   });
+  
+  
   
   // 3. Update the new relations
   for (i = 0; i < newObjects.length; i++) {
@@ -172,7 +173,7 @@ CommonModel.prototype._removeAllRelations = function() {
     }
   }
   $.each(removeThese, function(k,v) {
-    me.removeRelation(v);
+    me.removeRelation(v, true);
   });
 };
 
@@ -239,10 +240,12 @@ CommonModel.prototype._addOneWayRelation = function(object) {
  * 
  * @param {CommonModel} object the object for which to remove the relation
  */
-CommonModel.prototype.removeRelation = function(object) {
+CommonModel.prototype.removeRelation = function(object, suppressEvents) {
   this._removeOneWayRelation(object);
   object._removeOneWayRelation(this);
-  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,this.classNameToRelation[object.getPersistedClass()]));
+  if (!suppressEvents) {
+    this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,this.classNameToRelation[object.getPersistedClass()]));
+  }
 };
 
 CommonModel.prototype._removeOneWayRelation = function(object) {

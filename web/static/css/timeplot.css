@@ -55,14 +55,14 @@
     text-align: center;
     background-color: #FFE57F;
     font-weight: bold;
-    z-index: 1000;
+    z-index: 51;
 }
 
 .timeplot-valueflag-line {
     display: none;
     width: 14px;
     height: 14px;
-    z-index: 1000;
+    z-index: 51;
 }
 
 .timeplot-timeflag {
@@ -72,20 +72,20 @@
     text-align: center;
     background-color: #FFE57F;
     font-weight: bold;
-    z-index: 1000;
+    z-index: 51;
 }
 
 .timeplot-timeflag-triangle {
     display: none;
     width: 11px;
     height: 6px;
-    z-index: 1001;
+    z-index: 52;
 }
 
 .timeplot-valueflag-pole {
     display: none;
     border-left: 1px solid #FFB02D;
-    z-index: 999;
+    z-index: 50;
 }
 
 .timeplot-lens {

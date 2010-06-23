@@ -94,7 +94,7 @@ ProjectController.prototype.filterLeafStoriesByState = function(element) {
    callback: function(isActive) {
      if(isActive) {
        me.storyListView.activateColumnFilter("State");
-       $.cookie("agilefant-leafstory-filters", me.leafStoriesStateFilters.join(","));
+       $.cookie("agilefant-leafstory-filters", me.leafStoriesStateFilters.join(","),{expires: 31});
      } else {
        me.storyListView.disableColumnFilter("State");
        $.cookie("agilefant-leafstory-filters", null);

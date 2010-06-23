@@ -92,7 +92,7 @@ img {
 #menuControlPanel {
 	position: relative;
 	float: left;
-	left: -1em;
+	left: -1.5em;
 	top: -1em;
 }
 
@@ -102,6 +102,7 @@ img {
   margin: -1px 0 0 -1px;
   padding: 0;
   cursor: pointer;
+  position: absolute;
   background-position: 0% 0%;
 }
 
@@ -122,7 +123,7 @@ img {
 #bodyWrapper {
   width: auto;
   margin: 0 0 0 15em;
-  padding: 1em 2em 1em 1em;
+  padding: 1em 2em 1em 1.5em;
   border-left: 1px solid #A6C9E2;
 }
 

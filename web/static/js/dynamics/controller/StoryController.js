@@ -290,7 +290,7 @@ StoryController.prototype.createTask = function() {
   var controller = new TaskController(mockModel, null, this);
   var row = this.taskListView.createRow(controller, mockModel, "top");
   controller.view = row;
-  row.autoCreateCells([TaskController.columnIndices.actions]);
+  row.autoCreateCells([TaskController.columnIndices.prio, TaskController.columnIndices.actions]);
   row.render();
   controller.openRowEdit();
 };

@@ -33,16 +33,24 @@ DynamicTableRow.prototype.initialize = function() {
   });
   
   this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"editorClosing", $.proxy(function(event) {
-    this.htmlIdsToCell[event.currentTarget.id].editorClosing();
+    if(this.htmlIdsToCell[event.currentTarget.id]) {
+      this.htmlIdsToCell[event.currentTarget.id].editorClosing();
+    }
   }, this));
   this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"editorOpening", $.proxy(function(event) {
-    this.htmlIdsToCell[event.currentTarget.id].editorOpening();
+    if(this.htmlIdsToCell[event.currentTarget.id]) {
+      this.htmlIdsToCell[event.currentTarget.id].editorOpening();
+    }
   }, this));
-  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"editorOpening", $.proxy(function(event) {
-    this.htmlIdsToCell[event.currentTarget.id].onTransactionEdit();
+  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"transactionEditEvent", $.proxy(function(event) {
+    if(this.htmlIdsToCell[event.currentTarget.id]) {
+      this.htmlIdsToCell[event.currentTarget.id].onTransactionEdit();
+    }
   }, this));
   this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"dblclick", $.proxy(function(event) {
-    this.htmlIdsToCell[event.currentTarget.id].dblClick(event);
+    if(this.htmlIdsToCell[event.currentTarget.id]) {
+      this.htmlIdsToCell[event.currentTarget.id].dblClick(event);
+    }
   }, this));
   
   // FIGURE A BETTER WAY

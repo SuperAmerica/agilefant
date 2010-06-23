@@ -11,7 +11,6 @@ var DynamicTableToggleView = function DynamicTableToggleView(options, controller
   this.controller = controller;
   this.parentView = parentView;
   this.button = null;
-  this.id = 'dynamics-toggle-' + (DynamicTableToggleView.currentId++);
 };
 
 DynamicTableToggleView.prototype = new CommonFragmentSubView();
@@ -33,7 +32,7 @@ DynamicTableToggleView.prototype.renderAlways = function() {
 
 DynamicTableToggleView.prototype.render = function() {
   this.redered = true;
-  this.button = $('#' + this.id);
+  this.button = $('#' + this.getId());
   if(this.parentView instanceof DynamicTableCell) {
     if(this.options.targetCell) {
       this.targetViews = [this._getCell(this.options.targetCell)];
@@ -63,7 +62,7 @@ DynamicTableToggleView.prototype.getHTML = function() {
     }
     return false;
   }, this);
-  return '<div id="'+this.id+'" class="' + cssClass + '" title="' + titleText + '" onclick="'+DelegateFactory.create(handle)+'"></div>';
+  return '<div id="'+this.getId()+'" class="' + cssClass + '" title="' + titleText + '" onclick="'+DelegateFactory.create(handle)+'"></div>';
 };
 DynamicTableToggleView.prototype.showCollapsed = function() {
   this.button.attr("title", "Expand").removeClass("dynamictable-collapse")

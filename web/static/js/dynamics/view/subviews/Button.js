@@ -12,7 +12,7 @@ DynamicTableRowButton.prototype = new CommonFragmentSubView();
  * @private
  */
 DynamicTableRowButton.prototype.getHTML = function() {
-  return '<div style="width: 68px;"><div class="actionColumn"><div class="edit" style="width: 44px">' + this.label + '</div></div></div>';
+  return '<div id="'+this.getId()+'" style="width: 68px;"><div class="actionColumn"><div class="edit" style="width: 44px">' + this.label + '</div></div></div>';
   /*
   var me = this;
     this.container = $('<div />').width("68px").appendTo(

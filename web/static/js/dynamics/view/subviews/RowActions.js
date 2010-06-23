@@ -20,7 +20,7 @@ DynamicTableRowActions.prototype.getHTML = function() {
     }
     return false;
   }, this);
-  return '<div style="width: 68px;"><div class="actionColumn"><div class="edit" onclick="'+DelegateFactory.create(this.toggleMenuListener)+'">Edit &#8711;</div></div></div>';
+  return '<div id="'+this.getId()+'" style="width: 68px;"><div class="actionColumn"><div class="edit" onclick="'+DelegateFactory.create(this.toggleMenuListener)+'">Edit &#8711;</div></div></div>';
 };
 
 /**

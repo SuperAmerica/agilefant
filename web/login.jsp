@@ -128,9 +128,14 @@
 
 
     <div id="messageContainer">
-      <c:if test="${param.error == 1}">
+      <c:choose>
+      <c:when test="${param.error == 1}">
         <p style="color: #f00; margin-bottom:20px">Invalid username or password, please try again.</p>
-      </c:if>
+      </c:when>
+      <c:when test="${param.error == 2}">
+        <p style="color: #f00; margin-bottom:20px">Session timed out. Please log in.</p>
+      </c:when>
+      </c:choose>
     </div>
 
     <div id="login">

@@ -16,9 +16,6 @@ public interface TaskBusiness extends GenericBusiness<Task> {
      */
     public Task storeTask(Task task, Integer iterationId, Integer storyId); // ,
 
-    // Set<Integer>
-    // userIds);
-
     public Task resetOriginalEstimate(int taskId);
 
     /**

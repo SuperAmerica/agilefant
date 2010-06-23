@@ -6,6 +6,7 @@ var DynamicTableCaption = function DynamicTableCaption(element, config, text, co
   this.controller = controller;
   this._initialize();
 };
+DynamicTableCaption.currentCaptionItemId = 1;
 
 DynamicTableCaption.prototype._initialize = function() {
   this.captionTextContainer = $("<div />").css("float", "left").appendTo(this.element).width("30%");
@@ -26,7 +27,7 @@ DynamicTableCaption.prototype._initialize = function() {
 
 DynamicTableCaption.prototype._addCaptionItem = function(config) {
   var me = this;
-  var item = $('<li />').addClass(DynamicTable.cssClasses.captionAction).appendTo(this.captionItemContainer).css("float","right");
+  var item = $('<li id="dynamictable-caption-item-'+(DynamicTableCaption.currentCaptionItemId++)+'" />').addClass(DynamicTable.cssClasses.captionAction).appendTo(this.captionItemContainer).css("float","right");
   this.captionItems[config.getName()] = item;
   item.text(config.getText());
   if(config.getCssClass()) {

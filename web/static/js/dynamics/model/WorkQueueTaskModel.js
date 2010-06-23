@@ -7,11 +7,11 @@ extendObject(WorkQueueTaskModel, TaskModel);
 WorkQueueTaskModel.prototype.getWorkQueueRank = function() {
   return this.currentData.workQueueRank;
 };
-WorkQueueTaskModel.prototype.rankInWorkQueue = function(previousTaskId) {
+WorkQueueTaskModel.prototype.rankInWorkQueue = function(previousTaskId, userId) {
   var me = this;
   $.ajax({
     url:  'ajax/rankDailyTaskAndMoveUnder.action',
-    data: { taskId: this.id, rankUnderId: previousTaskId },
+    data: { taskId: this.id, rankUnderId: previousTaskId, userId: userId },
     type: "post",
     success: function(data, status) {
       MessageDisplay.Ok("Task ranked in work queue");

@@ -52,6 +52,19 @@ WorkQueueController.prototype.taskContextFactory = function(cellView, taskModel)
 };
 
 
+WorkQueueController.prototype.rankInWorkQueue = function(view, model, previousModel) {
+  if (!(model instanceof WorkQueueTaskModel)) {
+    return;
+  }
+  
+  if (previousModel) {
+    model.rankInWorkQueue(previousModel.getId(), this.options.userId);
+  }
+  else {
+    model.rankInWorkQueue(-1, this.options.userId);
+  }
+};
+
 WorkQueueController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration({
     caption: "My work queue",
@@ -62,7 +75,7 @@ WorkQueueController.prototype._getTableConfig = function() {
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
     dataType: "queuedTasks",
     dataSource: DailyWorkModel.prototype.getWorkQueue,
-    sortCallback: TaskController.prototype.rankInWorkQueue,
+    sortCallback: $.proxy(function(view, model, previousModel) {this.rankInWorkQueue(view, model, previousModel);}, this),
     sortOptions: {
       items: "> .dynamicTableDataRow",
       handle: "." + DynamicTable.cssClasses.dragHandle

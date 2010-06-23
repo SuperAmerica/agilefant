@@ -47,19 +47,6 @@ TaskController.prototype.moveToIteration = function() {
   });
 };
 
-TaskController.prototype.rankInWorkQueue = function(view, model, previousModel) {
-  if (!(model instanceof WorkQueueTaskModel)) {
-    return;
-  }
-  
-  if (previousModel) {
-    model.rankInWorkQueue(previousModel.getId());
-  }
-  else {
-    model.rankInWorkQueue(-1);
-  }
-};
-
 TaskController.prototype.moveTask = function(targetModel) {
   this.model.rankUnder(-1, targetModel);
 };

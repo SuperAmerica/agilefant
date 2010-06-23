@@ -108,7 +108,7 @@
 	<target name="sync-dbs" depends="create-ddl" description="Synchronise agilefant and aeftest databases">
 		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/drop-create-databases.sql" url="${hibernate.connection.url}" userid="agilefant" password="agilefant" />
 		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="build/create-db.ddl" url="${hibernate.connection.url}" userid="agilefant" password="agilefant" />
-		<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/insert-users.sql" url="${hibernate.connection.url}" userid="agilefant" password="agilefant" />
+		<!--<sql classpath="lib/mysql-connector-java-5.1.7-bin.jar" driver="com.mysql.jdbc.Driver" src="doc/sql/insert-users.sql" url="${hibernate.connection.url}" userid="agilefant" password="agilefant" /> -->
 	</target>
 
 	<target name="copy-spring-files" description="Internal target">

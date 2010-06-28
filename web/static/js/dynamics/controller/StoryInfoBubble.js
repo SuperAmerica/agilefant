@@ -213,7 +213,7 @@ StoryInfoBubble.prototype._createConfig = function() {
     title : "Labels",
     subViewFactory: StoryInfoBubble.prototype.labelsViewFactory
   });
-  config.addColumnConfiguration(6, {
+  config.addColumnConfiguration(7, {
     title : "Description",
     get : StoryModel.prototype.getDescription,
     editable : true,

@@ -1,4 +1,11 @@
 <%@include file="./_taglibs.jsp" %>
+
+<style>
+.backlogHierarchy li, .backlogHierarchy li a {
+  font-size: 100% !important;
+}
+</style>
+
 <div class="hierarchyContainer">
 
 <c:if test="${parentStory != null}">
@@ -23,7 +30,7 @@
 </c:otherwise>
 </c:choose>
 
-<ul>
+<ul class="backlogHierarchy">
 <c:choose>
   <c:when test="${aef:isIteration(backlog)}">
     <li style="list-style-image: url('static/img/hierarchy_arrow.png');">

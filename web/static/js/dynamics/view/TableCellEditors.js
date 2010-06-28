@@ -807,12 +807,12 @@ TableEditors.InlineAutocomplete.prototype.init = function(element, model, option
 TableEditors.InlineAutocomplete.prototype._registerEditField = function(element) {
   element.bind('autocompleteselect', jQuery.proxy(function(event, ui) {
     this.value = ModelFactory.updateObject(ui.item.object);
+    this.setEditorValue(this.value);
     this._requestSaveIfNotInRowEdit();
   }, this));
   
   element.bind('autocompleteclose', jQuery.proxy(function(event, ui) {
     this.autocompleteOpen = false;
-    this.setEditorValue(this.value);
   }, this));
   
   element.bind('autocompleteopen', jQuery.proxy(function(event, ui) {

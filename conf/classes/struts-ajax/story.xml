@@ -45,9 +45,13 @@
     
     <action name="storeStory" method="store" class="storyAction">
       <interceptor-ref name="prefetchStack"/>
-      <result type="json">
+      <result name="success" type="json">
         <param name="target">story</param>
         <param name="patterns">+responsibles, -rank</param>
+      </result>
+      <result name="success_withTasks" type="json">
+        <param name="target">story</param>
+        <param name="patterns">+responsibles, -rank, +tasks</param>
       </result>
     </action>
     

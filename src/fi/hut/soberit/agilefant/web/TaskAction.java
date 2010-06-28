@@ -45,6 +45,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     private Integer iterationId;
     private Integer storyId;
     private boolean responsiblesChanged = false;
+    private boolean storyToStarted = false;
     
     private Story parentStory;
     
@@ -64,14 +65,17 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
             task.setResponsibles(newResponsibles);
         }
         
-        task = taskBusiness.storeTask(task, iterationId, storyId);
-        populateJsonData();
+        task = taskBusiness.storeTask(task, iterationId, storyId, storyToStarted);
+        taskToTransferObject();
+        if (storyToStarted) {
+            return Action.SUCCESS + "_withStory";
+        }
         return Action.SUCCESS;
     }
     
     public String retrieve() {
         task = taskBusiness.retrieve(taskId);
-        populateJsonData();
+        taskToTransferObject();
         return Action.SUCCESS;
     }
     
@@ -93,14 +97,14 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
     public String move() {
         task = taskBusiness.retrieve(taskId);
         task = taskBusiness.move(task, iterationId, storyId);
-        populateJsonData();
+        taskToTransferObject();
         return Action.SUCCESS;
     }
     
     public String resetOriginalEstimate() {
         task = taskBusiness.retrieve(taskId);
         task = taskBusiness.resetOriginalEstimate(taskId);
-        populateJsonData();
+        taskToTransferObject();
         return Action.SUCCESS;
     }
     
@@ -118,7 +122,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         return Action.SUCCESS;
     }
     
-    private void populateJsonData() {
+    private void taskToTransferObject() {
         task = transferObjectBusiness.constructTaskTO(task);
     }
         
@@ -184,6 +188,10 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
 
     public Story getParentStory() {
         return parentStory;
+    }
+
+    public void setStoryToStarted(boolean storyToStarted) {
+        this.storyToStarted = storyToStarted;
     }
     
 }

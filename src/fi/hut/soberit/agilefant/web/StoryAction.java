@@ -118,7 +118,9 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
             users = this.userIds;
         }
         story = storyBusiness.store(storyId, story, null, users, tasksToDone);
-//        story = this.toTransferObject(story);
+        if (tasksToDone) {
+            return Action.SUCCESS + "_withTasks";
+        }
         return Action.SUCCESS;
     }
     

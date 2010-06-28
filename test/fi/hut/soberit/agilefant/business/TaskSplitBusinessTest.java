@@ -97,12 +97,12 @@ public class TaskSplitBusinessTest {
     }
 
     private void createChildTasks(Integer storyId, Integer iterationId) {
-        expect(taskBusiness.storeTask(newTasks.get(0), iterationId, storyId))
+        expect(taskBusiness.storeTask(newTasks.get(0), iterationId, storyId, false))
             .andReturn(createdTasks.get(0));
         expect(taskBusiness.rankUnderTask(createdTasks.get(0), originalTask))
             .andReturn(createdTasks.get(0));
         
-        expect(taskBusiness.storeTask(newTasks.get(1), iterationId, storyId))
+        expect(taskBusiness.storeTask(newTasks.get(1), iterationId, storyId, false))
             .andReturn(createdTasks.get(1));
         expect(taskBusiness.rankUnderTask(createdTasks.get(1), originalTask))
             .andReturn(createdTasks.get(1));

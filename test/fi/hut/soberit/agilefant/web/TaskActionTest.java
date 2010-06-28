@@ -113,7 +113,7 @@ public class TaskActionTest extends MockedTestCase {
         testable.setStoryId(null);
         testable.setIterationId(2);
         testable.setResponsiblesChanged(true);
-        expect(taskBusiness.storeTask(task, 2, null))
+        expect(taskBusiness.storeTask(task, 2, null, false))
             .andReturn(task);
         expectPopulateJsonData();
         replayAll();
@@ -129,7 +129,7 @@ public class TaskActionTest extends MockedTestCase {
         testable.setIterationId(2);
         testable.setResponsiblesChanged(true);
         
-        expect(taskBusiness.storeTask(task, 2, null))
+        expect(taskBusiness.storeTask(task, 2, null, false))
             .andThrow(new ObjectNotFoundException("Iteration not found"));
         replayAll();
         
@@ -145,7 +145,7 @@ public class TaskActionTest extends MockedTestCase {
         testable.setIterationId(2);
         testable.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
         
-        expect(taskBusiness.storeTask(task, 2, null))
+        expect(taskBusiness.storeTask(task, 2, null, false))
             .andReturn(task);
         
         expectPopulateJsonData();
@@ -164,7 +164,7 @@ public class TaskActionTest extends MockedTestCase {
         testable.setIterationId(2);
         testable.setNewResponsibles(new HashSet<User>(Arrays.asList(user1, user2)));
         
-        expect(taskBusiness.storeTask(task, 2, null))
+        expect(taskBusiness.storeTask(task, 2, null, false))
             .andReturn(task);
         
         expectPopulateJsonData();
@@ -175,6 +175,22 @@ public class TaskActionTest extends MockedTestCase {
         
         assertEquals(2, task.getResponsibles().size());
     }
+    
+    @Test
+    @DirtiesContext
+    public void testAjaxStoreTask_storyToStarted() {
+        testable.setStoryId(3);
+        testable.setStoryToStarted(true);
+        expect(taskBusiness.storeTask(task, null, 3, true))
+            .andReturn(task);
+        expectPopulateJsonData();
+        replayAll();
+        
+        assertEquals("success_withStory", testable.store());
+        
+        verifyAll();
+    }
+    
     
     /*
      * TEST DELETING

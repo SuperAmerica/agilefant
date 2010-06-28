@@ -144,12 +144,6 @@ StoryModel.prototype._saveData = function(id, changedData) {
         possibleBacklog.addStory(object);
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
-      if (me.relations.backlog) {
-        //me.relations.backlog.reload();
-      }
-      if (data.tasksToDone) {
-        me.reload();
-      }
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving story", xhr);

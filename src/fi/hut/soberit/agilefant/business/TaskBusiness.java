@@ -9,12 +9,13 @@ public interface TaskBusiness extends GenericBusiness<Task> {
 
     /**
      * Populates and stores a task.
-     * 
      * @param storyId
      *            the parent story's id, or zero if none.
+     * @param storyToStarted TODO
+     * 
      * @return the newly stored task
      */
-    public Task storeTask(Task task, Integer iterationId, Integer storyId); // ,
+    public Task storeTask(Task task, Integer iterationId, Integer storyId, boolean storyToStarted); // ,
 
     public Task resetOriginalEstimate(int taskId);
 

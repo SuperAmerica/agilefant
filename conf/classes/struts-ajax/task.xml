@@ -19,12 +19,20 @@
         <param name="target">task</param>
         <param name="patterns">+responsibles</param>
       </result>
+      <result name="success_withStory" type="json">
+        <param name="target">task</param>
+        <param name="patterns">+responsibles, +story, -story.backlog</param>
+      </result>
     </action>
     
     <action name="createTask" method="store" class="taskAction" >
       <result name="success" type="json">
         <param name="target">task</param>
         <param name="patterns">+responsibles</param>
+      </result>
+      <result name="success_withStory" type="json">
+        <param name="target">task</param>
+        <param name="patterns">+responsibles, +story, -story.backlog</param>
       </result>
     </action>
     

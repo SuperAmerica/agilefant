@@ -123,7 +123,7 @@ public class StoryActionTest extends MockedTestCase {
         expect(storyBusiness.store(story.getId(), story, null, null, true))
                 .andReturn(story);
         replayAll();
-        assertEquals(Action.SUCCESS, storyAction.store());
+        assertEquals("success_withTasks", storyAction.store());
         verifyAll();
     }
     

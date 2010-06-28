@@ -109,8 +109,15 @@ TaskModel.prototype._saveData = function(id, changedData) {
     delete changedData.responsibles;
   }
   
+  if (changedData.storyToStarted) {
+    data.storyToStarted = true;
+    delete changedData.storyToStarted;
+    delete this.currentData.storyToStarted;
+  }
+  
   data.task = changedData;
 
+  
   
   if (id) {
     data.taskId = id;
@@ -157,9 +164,9 @@ TaskModel.prototype._saveData = function(id, changedData) {
     cache: false,
     data: data,
     dataType: "json",
-    success: function(data, status) {
+    success: function(newData, status) {
       MessageDisplay.Ok("Task saved successfully");
-      var object = ModelFactory.updateObject(data);
+      var object = ModelFactory.updateObject(newData);
       if(!id) {
         if (me.relations.story instanceof StoryModel) {
           me.relations.story.addTask(object);
@@ -168,6 +175,9 @@ TaskModel.prototype._saveData = function(id, changedData) {
           me.relations.backlog.addTask(object);
         }
         object.callListeners(new DynamicsEvents.AddEvent(object));
+      }
+      if (data.storyToStarted && me.relations.story) {
+        me.relations.story.callListeners(new DynamicsEvents.EditEvent(me.relations.story));
       }
     },
     error: function(xhr, status, error) {

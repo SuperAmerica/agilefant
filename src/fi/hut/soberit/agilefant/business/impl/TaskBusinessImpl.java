@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
@@ -63,10 +64,7 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     }
 
     /** {@inheritDoc} */
-    public Task storeTask(Task task, Integer iterationId, Integer storyId) {// ,
-        // Set<Integer>
-        // userIds)
-        // {
+    public Task storeTask(Task task, Integer iterationId, Integer storyId, boolean storyToStarted) {
         Task storedTask = null;
 
         if (task == null) {
@@ -92,6 +90,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
             if (iterationId != null || storyId != null) {
                 this.rankToBottom(task, storyId, iterationId);
             }
+        }
+        
+        Story parent = task.getStory();
+        if (storyToStarted && parent != null && parent.getState() == StoryState.NOT_STARTED) {
+            parent.setState(StoryState.STARTED);
         }
 
         updateIterationHistoryIfApplicable(task);

@@ -45,7 +45,7 @@ public class TaskSplitBusinessImpl implements TaskSplitBusiness {
             task.setIteration(original.getIteration());
             task.setStory(original.getStory());
             
-            task = taskBusiness.storeTask(task, parentIterationId, parentStoryId);
+            task = taskBusiness.storeTask(task, parentIterationId, parentStoryId, false);
             taskBusiness.rankUnderTask(task, original);
         }
     }

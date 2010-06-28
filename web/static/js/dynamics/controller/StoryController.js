@@ -432,7 +432,8 @@ StoryController.prototype.storyPointsEditable = function() {
       items: "> .dynamicTableDataRow",
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
-    }
+    },
+    beforeCommitFunction: TaskController.prototype.markStoryAsStarted
   });
   config.addCaptionItem( {
     name : "createTask",

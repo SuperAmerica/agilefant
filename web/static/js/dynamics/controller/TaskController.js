@@ -112,6 +112,27 @@ TaskController.prototype.createSplitTask = function() {
     });
 };
 
+TaskController.prototype.markStoryAsStarted = function(model) {
+  var changedData = model.getChangedData();
+  var story = model.getStory();
+  if (story && story.getState() === "NOT_STARTED" && changedData.state !== "NOT_STARTED") {
+    var msg = new DynamicsConfirmationDialog(
+        "Mark the story started as well?",
+        "Do you want to mark the story started as well?",
+        function() {
+          model.currentData.storyToStarted = true;
+          model.commit();
+        },
+        function() {
+          model.commit();
+        }
+      );
+  }
+  else {
+    model.commit();
+  }
+};
+
 TaskController.prototype.actionColumnFactory = function(view, model) {
   var actionItems = [{
     text : "Split",

@@ -19,57 +19,9 @@ IterationRowController.prototype = new BacklogController();
  * @member IterationRowController
  */
 IterationRowController.columnNames =
-  ["expand", "link", "name", "assignees", "startDate", "endDate", "actions", "description", "buttons", "storiesData"];
+  ["expand", "link", "name", "assignees", "startDate", "endDate", "storiesData"];
 IterationRowController.columnIndices = CommonController.createColumnIndices(IterationRowController.columnNames);
 
-
-/**
- * 
- */
-IterationRowController.prototype.iterationActionFactory = function(view, model) {
-  var actionItems = [ {
-    text : "Edit",
-    callback : CommonController.prototype.openRowEdit
-  }/*, {
-    text : "Delete",
-    callback : IterationRowController.prototype.removeIteration
-  } */];
-  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
-      view);
-  return actionView;
-};
-
-
-/**
- * Confirm and remove iteration.
- */
-IterationRowController.prototype.removeIteration = function() {
-  var me = this;
-  var dialog = new LazyLoadedFormDialog();
-  dialog.init({
-    title: "Delete iteration",
-    url: "ajax/deleteIterationForm.action",
-    disableClose: true,
-    data: {
-      IterationId: me.model.getId()
-    },
-    okCallback: function(extraData) {
-      var confirmation = extraData.confirmationString;
-      if (confirmation && confirmation.toLowerCase() == 'yes') {
-        me.model.remove(function() {
-          me.parentController.removeChildController("iteration", me);
-          if (window.pageController) {
-            window.pageController.refreshMenu();
-          }
-        }, extraData);
-        dialog.close();
-      }
-    },
-    closeCallback: function() {
-      dialog.close();
-    }
-  });
-};
 
 IterationRowController.prototype.toggleFactory = function(view, model) {
   var me = this;

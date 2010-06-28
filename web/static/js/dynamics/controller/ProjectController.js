@@ -545,27 +545,6 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
       withTime: true
     }
   });
-  config.addColumnConfiguration(IterationRowController.columnIndices.actions, {
-    minWidth : 33,
-    autoScale : true,
-    title : "Edit",
-    subViewFactory : IterationRowController.prototype.iterationActionFactory
-  });
-  config.addColumnConfiguration(IterationRowController.columnIndices.description, {
-    fullWidth : true,
-    visible : false,
-    get : IterationModel.prototype.getDescription,
-    editable : true,
-    edit : {
-      editor : "Wysiwyg",
-      set : IterationModel.prototype.setDescription
-    }
-  });
-  config.addColumnConfiguration(IterationRowController.columnIndices.buttons, {
-    fullWidth : true,
-    visible : false,
-    subViewFactory : DynamicsButtons.commonButtonFactory
-  });
   config.addColumnConfiguration(IterationRowController.columnIndices.storiesData, {
     fullWidth : true,
     visible : false,

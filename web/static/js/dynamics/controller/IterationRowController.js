@@ -19,7 +19,7 @@ IterationRowController.prototype = new BacklogController();
  * @member IterationRowController
  */
 IterationRowController.columnNames =
-  ["link", "name", "assignees", "startDate", "endDate", "actions", "description", "buttons"];
+  ["expand", "link", "name", "assignees", "startDate", "endDate", "actions", "description", "buttons", "storiesData"];
 IterationRowController.columnIndices = CommonController.createColumnIndices(IterationRowController.columnNames);
 
 
@@ -84,6 +84,7 @@ IterationRowController.prototype.toggleFactory = function(view, model) {
 
 IterationRowController.prototype.showDetails = function() {
   var cell = this.view.getCell(IterationRowController.columnIndices.storiesData);
+console.log(cell);
   if (cell) {
     var data = {
         iterationId: this.model.id

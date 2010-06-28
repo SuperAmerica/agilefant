@@ -61,6 +61,16 @@ $(document).ready(function() {
 </li>
 </c:if>
 
+<!-- Portlets -->
+<li id="navitab-portlets">
+  <a href="portlets.action">
+  <span>
+  <img src="static/img/portfolio.png" alt="Dev Portfolio" />
+  Portlets
+  </span>
+  </a>
+</li>
+
 <%-- Settings --%>
 <li id="navitab-settings">
     <a href="settings.action">

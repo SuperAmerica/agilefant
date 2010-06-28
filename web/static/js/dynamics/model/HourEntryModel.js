@@ -128,7 +128,7 @@ HourEntryModel.prototype._saveData = function(id, changedData) {
     async: true,
     cache: false,
     data: data,
-    dataType: "text",
+    dataType: "json",
     success: function(data, status) {
       MessageDisplay.Ok("Effort entry saved");
       if (me.relations.hourEntryList) {

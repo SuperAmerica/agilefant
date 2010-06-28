@@ -898,7 +898,12 @@ TableEditors.InlineAutocomplete.prototype.getEditorValue = function() {
 };
 
 TableEditors.InlineAutocomplete.prototype._validate = function() {
-  return TableEditors.CommonEditor.prototype._validate.call(this);
+  var valid = true;
+  if (this.options.required && !this.value) {
+    valid = false;
+    this.addErrorMessage(ValidationMessages.textField.required);
+  }
+  return TableEditors.CommonEditor.prototype._validate.call(this) && valid;
 };
 
 

@@ -94,7 +94,7 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         ProjectBurnupData data = backlogHistoryEntryDAO
                 .retrieveBurnupData(project.getId());
 
-        JFreeChart burnup = ChartFactory.createXYStepChart(CHART_NAME,
+        JFreeChart burnup = ChartFactory.createXYStepChart("'" + project.getName() + "' burnup",
                 DATE_AXIS_LABEL, STORYPOINTS_AXIS_LABEL, null,
                 PlotOrientation.VERTICAL, true, true, false);
 

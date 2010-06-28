@@ -178,7 +178,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     }
 
     protected JFreeChart constructChart(Iteration iteration) {
-        JFreeChart burndown = ChartFactory.createTimeSeriesChart(BURNDOWN_SERIES_NAME,
+        JFreeChart burndown = ChartFactory.createTimeSeriesChart("'" + iteration.getName() + "' burndown",
                 DATE_AXIS_LABEL,
                 EFFORT_AXIS_LABEL,
                 getDataset(iteration),

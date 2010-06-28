@@ -105,6 +105,7 @@ WorkQueueController.prototype._addColumnConfigs = function(config) {
 };
 
 WorkQueueController.columnConfig.detailedContext = {
+  columnName: "detailedContext",
   minWidth : 15,
   autoScale : true,
   title : "",

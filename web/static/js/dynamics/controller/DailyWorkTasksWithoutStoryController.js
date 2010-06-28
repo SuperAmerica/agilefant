@@ -1,7 +1,7 @@
 
 var DailyWorkTasksWithoutStoryController = function(model, element, parentController) { 
   TasksWithoutStoryController.call(this, model, element, parentController);
-  this.autohideCells = [ DailyWorkTasksWithoutStoryController.columnIndices.description,  DailyWorkTasksWithoutStoryController.columnIndices.actions];
+  this.autohideCells = [ DailyWorkTasksWithoutStoryController.columnIndices.description, DailyWorkTasksWithoutStoryController.columnIndices.actions, DailyWorkTasksWithoutStoryController.columnIndices.detailedContext ];
 };
 extendObject(DailyWorkTasksWithoutStoryController, TasksWithoutStoryController);
 
@@ -39,12 +39,35 @@ DailyWorkTasksWithoutStoryController.prototype._getTableConfig = function() {
   return config;
 };
 
+DailyWorkTasksWithoutStoryController.prototype.createTask = function(forceAssignCurrentUser) {
+  var mockModel = ModelFactory.createObject(ModelFactory.types.task);
+  if (this.model && this.model instanceof IterationModel) {
+    mockModel.setIteration(this.model);
+  }
+  // Check whether to add the current user as a responsible.
+  var currentUser = PageController.getInstance().getCurrentUser(); 
+  if (currentUser.isAutoassignToTasks() || forceAssignCurrentUser) {
+    mockModel.addResponsible(currentUser.getId());
+  }
+  
+  var controller = new TaskController(mockModel, null, this);
+  var row = this.getCurrentView().createRow(controller, mockModel, "top");
+  controller.view = row;
+  row.autoCreateCells([0, 4]); //hide priority and detailedContext columns
+  row.render();
+  controller.openRowEdit();
+  row.getCellByName("actions").hide();
+  row.getCellByName("buttons").show();
+  row.getCellByName("description").hide();
+};
+
 DailyWorkTasksWithoutStoryController.prototype._addColumnConfigs = function(config) {
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.prio, TasksWithoutStoryController.columnConfig.prio);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.name, TasksWithoutStoryController.columnConfig.name);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.state, TasksWithoutStoryController.columnConfig.state);
   
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.context, TasksWithoutStoryController.columnConfig.context);
+  config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.detailedContext, WorkQueueController.columnConfig.detailedContext);
   
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.responsibles, TasksWithoutStoryController.columnConfig.responsibles);
   config.addColumnConfiguration(DailyWorkTasksWithoutStoryController.columnIndices.el, TasksWithoutStoryController.columnConfig.effortLeft);

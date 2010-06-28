@@ -457,15 +457,17 @@ ul.quickSearchAutocompleteMenu li a {
   display: inline-block;
   height: 18px;
   padding: 2px;
-  width: 74%;
+  width: auto;
   height: 100%;
   vertical-align: middle;  
 }
 ul.quickSearchAutocompleteMenu li span.categoryName {
   display: inline-block;
   border-right: 1px solid #ccc;
-  width: 24%;
+  width: 10ex;
   height: 22px;
   font-weight: bold;
   vertical-align: middle;
+  text-align: right;
+  padding: 0 5px;
 }

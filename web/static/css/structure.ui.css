@@ -332,9 +332,9 @@ div.smallBurndown {
   -moz-border-radius: 10px;
   overflow: hidden;
   background: white;
-  background-image: url('../img/search.png');
+  background-image: url('../img/search_small.png');
   background-repeat: no-repeat;
-  background-position: 0 45%;
+  background-position: 5px 45%;
   width: 20ex;
   font-size: 10pt;
 }

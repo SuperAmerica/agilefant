@@ -464,4 +464,6 @@
     <copy file="${basedir}/tools/rebel.xml.template" tofile="${build.webapp}/WEB-INF/classes/rebel.xml" filtering="true" />
     <copy file="${basedir}/tools/rebel.xml.template" tofile="${basedir}/eclipse-classes/rebel.xml" filtering="true" />
   </target>
+  
+  <target name="development-redeploy" depends="clean, undeploy-local, jrebel, deploy-local-web" />
 </project>

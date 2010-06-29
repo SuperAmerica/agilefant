@@ -26,7 +26,7 @@
   margin: 10px 0 0;
   padding: 0;
   
-  border: 1px solid #ccc;
+  border: 1px solid #A6C9E2;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -132,6 +132,8 @@ $(document).ready(function() {
 
 
 <h2>Widgets of ${contents.name}</h2>
+
+<p>Add widget: <ww:select name="type" list="#{'burndown':'Burndown','text':'Text'}"/></p>
 
 <div style="margin-top: 2em; min-width: 750px; background: #def;">
   <div class="widgetContainer">

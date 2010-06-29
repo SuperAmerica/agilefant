@@ -14,7 +14,7 @@ public class AgilefantWidgetUtils {
     private static Map<String, String> mapActions() {
         Map<String,String> actions = new HashMap<String, String>();
         
-        actions.put("text", "static/html/widgets/burndownWidget.html");
+        actions.put("text", "static/html/widgets/textWidget.html");
         actions.put("burndown", "static/html/widgets/burndownWidget.html");
         
         return Collections.unmodifiableMap(actions);

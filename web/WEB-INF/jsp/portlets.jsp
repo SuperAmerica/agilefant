@@ -15,6 +15,7 @@
   width: 100%;
   min-height: 200px;
   list-style-type: none;
+  position: relative;
 }
 .widget {
   background: whiteSmoke;
@@ -92,6 +93,9 @@
   max-height: 320px;
   overflow: auto;
 }
+.createNewWidget button, .createNewWidget td {
+  font-size: 100% !important;
+}
 </style>
 
 <script type="text/javascript">
@@ -121,6 +125,32 @@ $(document).ready(function() {
     $(this).hide();
   });
 
+  /*
+   * New widget creation
+   */
+  
+  $('.newWidgetLink').click(function() {
+    var clone = $('#templates > #newWidget').clone();
+    clone.removeAttr('id');
+
+    clone.find('.cancelNewWidget').click(function() {
+      clone.remove();
+    });
+
+    clone.find('.saveNewWidget').click(function() {
+      
+    });
+
+    clone.find('.objectName').agilefantQuickSearch();
+    
+    clone.prependTo($('.widgetList:eq(0)'));
+    return false;
+  });
+
+  /*
+   * Load the widget contents
+   */
+  
   <c:forEach items="${contents.widgets}" var="widget">
   $('#widget_${widget.id}').load('${widget.url}');
   </c:forEach>
@@ -129,11 +159,32 @@ $(document).ready(function() {
 
 </script>
 
+<ul id="templates" style="display: none;">
+  <li class="widget createNewWidget" id="newWidget" style="position:relative;">
+    <div class="widgetHeader"><span>Create a new widget</span></div>
+    <div class="widgetContent">
+      <table>
+        <tr>
+          <td>Type</td>
+          <td><ww:select name="type" list="#{'burndown':'Burndown','text':'Text'}"/></td>
+        </tr>
+        <tr>
+          <td>Object</td>
+          <td><ww:textfield name="object" cssClass="objectName"/></td>
+        </tr>
+      </table>
+      <div style="clear: left; float: right;">
+        <button class="dynamics-button saveNewWidget">Save</button>
+        <button class="dynamics-button cancelNewWidget">Cancel</button>
+      </div>
+    </div>
+  </li>
+</ul>
 
 
 <h2>Widgets of ${contents.name}</h2>
 
-<p>Add widget: <ww:select name="type" list="#{'burndown':'Burndown','text':'Text'}"/></p>
+<a href="#" class="newWidgetLink">Add widget</a>
 
 <div style="margin-top: 2em; min-width: 750px; background: #def;">
   <c:forEach items="${widgetGrid}" var="wigetList">
@@ -147,7 +198,7 @@ $(document).ready(function() {
   </c:forEach>
   <div class="widgetContainer">
     <ul class="widgetList">
-    
+      
     </ul>
   </div>
 </div>

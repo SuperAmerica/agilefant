@@ -110,7 +110,19 @@ $(document).ready(function() {
   });
 
   $('.closeWidget').live('click',function() {
-    $(this).parents('.widget').remove();
+    var widget = $(this).parents('.widget');
+    
+    $.ajax({
+      type: 'POST',
+      dataType: 'text',
+      url: 'ajax/widgets/deleteWidget.action',
+      data: { widgetId: widget.attr('widgetId') },
+      success: function(data, status) {
+        MessageDisplay.Ok('Widget removed');
+        widget.remove();
+      }
+    });
+    
   });
 
   $('.minimizeWidget').live('click',function() {
@@ -150,13 +162,13 @@ $(document).ready(function() {
     });
 
     clone.find('.saveNewWidget').click(function() {
-      MessageDisplay.Ok('Type: ' + typeField.val() + '\nId:' + idField.data('selectedId'));
       $.ajax({
         type: 'POST',
         dataType: 'html',
         url: 'ajax/widgets/createWidget.action',
         data: { type: typeField.val(), objectId: idField.data('selectedId'), collectionId: ${contents.id}, position: 0, listNumber: 0 },
         success: function(data, status) {
+          MessageDisplay.Ok('Widget added');
           clone.replaceWith($('<li class="widget"/>').html(data));
         }
       });
@@ -171,7 +183,7 @@ $(document).ready(function() {
    */
   
   <c:forEach items="${contents.widgets}" var="widget">
-  $('#widget_${widget.id}').load('${widget.url}?objectId=${widget.objectId}');
+  $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('${widget.url}?objectId=${widget.objectId}');
   </c:forEach>
 
 });

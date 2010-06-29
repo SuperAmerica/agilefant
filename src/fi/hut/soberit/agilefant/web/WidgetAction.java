@@ -35,8 +35,8 @@ public class WidgetAction extends ActionSupport implements CRUDAction {
     }
 
     public String delete() {
-        // TODO Auto-generated method stub
-        return null;
+        agilefantWidgetBusiness.delete(widgetId);
+        return Action.SUCCESS;
     }
 
     public String retrieve() {

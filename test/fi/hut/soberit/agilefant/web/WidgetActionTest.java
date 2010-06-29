@@ -48,4 +48,15 @@ public class WidgetActionTest extends MockedTestCase {
         assertSame(widget, testable.getWidget());
     }
     
+    @Test
+    @DirtiesContext
+    public void testDelete() {
+        testable.setWidgetId(123);
+        
+        agilefantWidgetBusiness.delete(123);
+        replayAll();
+        assertEquals(Action.SUCCESS, testable.delete());
+        verifyAll();
+    }
+    
 }

@@ -1,5 +1,5 @@
 <div class="widgetHeader">
-  <span>${iteration.name}</span>
+  <span>Iteration: ${iteration.name}</span>
   <ul>
     <li class="closeWidget">X</li>
     <li class="maximizeWidget" style="display: none;">+</li>
@@ -7,5 +7,16 @@
   </ul>
 </div>
 <div class="widgetContent" style="text-align: center;">
-  <img src="http://localhost:8080/agilefant/drawIterationBurndown.action?backlogId=${iteration.id}" width="300" style="display: inline-block;"/>
+  <table>
+    <tr>
+      <td>
+        <%@include file="/WEB-INF/jsp/inc/iterationMetrics.jsp" %>
+      </td>
+      <td>
+        <div class="smallBurndown" style="background-image: url('drawSmallIterationBurndown.action?backlogId=${iteration.id}');">
+          &nbsp;
+        </div>
+      </td>
+    </tr>
+  </table>
 </div>

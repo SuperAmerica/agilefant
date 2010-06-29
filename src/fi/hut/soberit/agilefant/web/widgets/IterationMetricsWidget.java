@@ -14,7 +14,7 @@ import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 public class IterationMetricsWidget extends CommonWidget {
     private static final long serialVersionUID = 4029492283643549647L;
     private Iteration iteration;
-    private IterationMetrics metrics;
+    private IterationMetrics iterationMetrics;
 
     @Autowired
     private IterationBusiness iterationBusiness;
@@ -22,11 +22,16 @@ public class IterationMetricsWidget extends CommonWidget {
     @Override
     public String execute() {
         iteration = iterationBusiness.retrieve(getObjectId());
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return SUCCESS;
     }
 
     public Iteration getIteration() {
         return iteration;
+    }
+
+    public IterationMetrics getIterationMetrics() {
+        return iterationMetrics;
     }
 
 }

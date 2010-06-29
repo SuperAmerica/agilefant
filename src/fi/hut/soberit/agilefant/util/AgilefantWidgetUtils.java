@@ -13,6 +13,7 @@ public class AgilefantWidgetUtils {
         
         actions.put("text", "static/html/widgets/textWidget.html");
         actions.put("burndown", "static/html/widgets/burndownWidget.html");
+        actions.put("iterationMetrics", "ajax/widgets/iterationMetrics.action");
         
         return Collections.unmodifiableMap(actions);
     }

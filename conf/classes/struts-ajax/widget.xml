@@ -5,12 +5,16 @@
 
 <struts>
   
-  <package name="ajax-users" namespace="/ajax/widgets" extends="ajax">
+  <package name="ajax-widgets" namespace="/ajax/widgets" extends="ajax">
 
     <action name="createWidget" class="portletAction" method="create">
       <result name="success" type="json">
         
       </result>
+    </action>
+    
+    <action name="iterationMetrics" class="iterationMetricsWidget" method="execute">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/iterationMetricsWidget.jsp</result>
     </action>
   
   </package>

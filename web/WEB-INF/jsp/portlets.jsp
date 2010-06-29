@@ -152,7 +152,7 @@ $(document).ready(function() {
    */
   
   <c:forEach items="${contents.widgets}" var="widget">
-  $('#widget_${widget.id}').load('${widget.url}');
+  $('#widget_${widget.id}').load('${widget.url}?objectId=${widget.objectId}');
   </c:forEach>
 
 });

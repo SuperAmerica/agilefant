@@ -136,13 +136,15 @@ $(document).ready(function() {
 <p>Add widget: <ww:select name="type" list="#{'burndown':'Burndown','text':'Text'}"/></p>
 
 <div style="margin-top: 2em; min-width: 750px; background: #def;">
-  <div class="widgetContainer">
-    <ul class="widgetList">
-      <c:forEach items="${contents.widgets}" var="widget">
-        <li class="widget" id="widget_${widget.id}"><img src="static/img/pleasewait.gif" /></li>
-      </c:forEach>
-    </ul>
-  </div>
+  <c:forEach items="${widgetGrid}" var="wigetList">
+    <div class="widgetContainer">
+      <ul class="widgetList">
+        <c:forEach items="${wigetList}" var="widget">
+          <li class="widget" id="widget_${widget.id}"><img src="static/img/pleasewait.gif" /></li>
+        </c:forEach>
+      </ul>
+    </div>
+  </c:forEach>
   <div class="widgetContainer">
     <ul class="widgetList">
     

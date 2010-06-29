@@ -51,7 +51,7 @@ public class AgilefantWidgetUtils {
         
         AgilefantWidget burndownWidget2 = new AgilefantWidget();
         burndownWidget2.setListNumber(1);
-        burndownWidget2.setPosition(0);
+        burndownWidget2.setPosition(1);
         burndownWidget2.setType("burndown");
         burndownWidget2.setId(126);
         mock.getWidgets().add(burndownWidget2);

@@ -29,6 +29,7 @@
   border: 1px solid #ccc;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
+  border-radius: 5px;
   
   font-size: 80%;
   
@@ -51,6 +52,7 @@
   border: 1px solid #ccc;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
+  border-radius: 5px;
   
   padding: 2px 5px;
   margin: 2px;
@@ -78,6 +80,7 @@
   border: 1px solid white;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 .portletHeader ul li:hover {
   color: #666;

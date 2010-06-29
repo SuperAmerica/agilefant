@@ -86,6 +86,7 @@ $(document).ready(function() {
       vertical-align: middle;
       -webkit-border-radius: 5px;
       -moz-border-radius: 5px;
+      border-radius: 5px;
     }
     ul.storyTreeOrderList li span {
       vertical-align: middle;    

@@ -92,22 +92,3 @@
 .dynamictable .dynamictable-row a.daily-work-story-context:hover {
 	color: #e50 !important;
 }
-
-.daily-work-details-view {
-	-moz-background-clip: border;
-	-moz-background-inline-policy: continuous;
-	-moz-background-origin: padding;
-	-moz-border-radius-bottomleft: 5px;
-	-moz-border-radius-bottomright: 5px;
-	-moz-border-radius-topleft: 5px;
-	-moz-border-radius-topright: 5px;
-	background: #FFFFFF none repeat scroll 0 0;
-	border: 1px solid #AAAAAA;
-	margin: 0;
-	overflow: hidden;
-	padding: 5px 0;
-	position: absolute;
-	top: 2em;
-	width: 9em;
-	z-index: 300;
-}

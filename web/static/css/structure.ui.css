@@ -127,6 +127,7 @@ ul#createNewMenu {
   overflow: hidden;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 ul#createNewMenu li {
@@ -178,6 +179,10 @@ ul#createNewMenu li.separator,ul#createNewMenu li.separator:hover {
   border-width: 1px 1px 0 1px;
   border-color: #A6C9E2;
   border-style: solid;
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+  /*
   -moz-border-radius-bottomleft: 0;
   -moz-border-radius-bottomright: 0;
   -moz-border-radius-topleft: 5px;
@@ -186,6 +191,7 @@ ul#createNewMenu li.separator,ul#createNewMenu li.separator:hover {
   -webkit-border-bottom-left-radius: 0;
   -webkit-border-top-left-radius: 5px;
   -webkit-border-top-right-radius: 5px;
+  */
   padding: 0;
   margin: 0 0.5em 0 0;
   background: #dfeffc url("../img/ui/ui-bg_glass_85_dfeffc_1x400.png")
@@ -268,6 +274,7 @@ div.smallBurndown {
   border-color: #ccc;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
   background-repeat: no-repeat;
   background-position: -5px -5px;
   height: 75px;
@@ -330,6 +337,7 @@ div.smallBurndown {
   border-color: #ccc;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
+  border-radius: 10px;
   overflow: hidden;
   background: white;
   background-image: url('../img/search_small.png');
@@ -413,6 +421,7 @@ ul.ui-autocomplete li a {
 .quickSearchBox {
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
+  border-radius: 5px;
   display: none;
   padding: 0.3em;
   margin: 2px;

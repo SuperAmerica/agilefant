@@ -15,6 +15,7 @@ p.infoBox {
   border: 3px solid rgba(255, 100, 0, 0.5);
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 div.rightHandImage {
@@ -27,7 +28,8 @@ div.rightHandImage img {
   padding: 1em;
   
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px; 
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 div.rightHandImage p {
@@ -144,7 +146,7 @@ levels of planning. Product backlog is maintained as a story tree.</p>
 <h4>Projects</h4>
 <h4>Iterations</h4>
 
-<div style="width:40%; border: 1px solid #ccc; margin: 1em; -moz-border-radius: 5px; -webkit-border-radius: 5px;">
+<div style="width:40%; border: 1px solid #ccc; margin: 1em; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;">
 <h4>Example</h4>
 
 <ul style="list-style-type: none; list-style-image: url('static/img/hierarchy_arrow.png')">

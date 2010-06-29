@@ -37,6 +37,7 @@
   border: 1px solid #ccc;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .dynamictable-vertical .dynamictable-row {
@@ -138,6 +139,7 @@
   z-index: 100;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
+  border-radius: 5px;
   width: 100px;
   background: white;
 }
@@ -422,6 +424,7 @@ button.dynamics-button:focus, button.dynamics-button:hover {
   border: 1px solid rgba(0,0,0,0.3);
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
+  border-radius: 1em;
   padding: 0 0.3em !important;
   display: inline;
   width: 1em;
@@ -583,6 +586,8 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 	position: relative;
 	top: 2px;
 	-moz-border-radius: 0.5em;
+	-webkit-border-radius: 0.5em;
+	border-radius: 0.5em;
 	border: 1px solid #999;
 	background-color: #f3f3f3;
 	cursor: pointer;
@@ -775,6 +780,7 @@ ul.storyTabs {
 div.corner-border {
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
+	border-radius: 5px;
 	border:1px solid #A6C9E2;
 	/* margin-left: -8px;*/
 }
@@ -799,6 +805,7 @@ ul.dynamics-error-container {
   border-style: solid;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .dynamics-validation-invalid input, .dynamics-validation-invalid select {

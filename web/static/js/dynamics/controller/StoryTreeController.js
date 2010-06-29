@@ -231,7 +231,8 @@ StoryTreeController.prototype.initTree = function() {
     "text-align": "center",
     "vertical-align": "middle",
     "-moz-border-radius": "5px",
-    "-webkit-border-radius": "5px"
+    "-webkit-border-radius": "5px",
+    "border-radius": "5px"
   }).appendTo(this.parentElement);
   
   this.tree = $(this.element).jstree({

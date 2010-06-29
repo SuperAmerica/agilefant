@@ -41,7 +41,8 @@ div.hierarchyContainer {
   width: 35ex;
   border: 1px solid #999;
   -moz-border-radius: 5px;
-  -webkit-border-radius: 5px
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .storytree-actions .headerbar {
@@ -81,6 +82,7 @@ div.hierarchyContainer {
   border: 1px solid #cca;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  border-radius: 3px;
   text-align: center;
   /*vertical-align: middle !important;*/
   line-height: 14px !important;
@@ -126,6 +128,7 @@ div.hierarchyContainer {
   border: 1px solid #999;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 
 .infobubble-helperarrow {

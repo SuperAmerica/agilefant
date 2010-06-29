@@ -30,6 +30,7 @@
       border-width: 3px;
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px;
+      border-radius: 10px;
       z-index: 100;
       overflow: visible;      
     }
@@ -62,6 +63,7 @@
       border-width: 3px;
       -moz-border-radius: 10px;
       -webkit-border-radius: 10px;
+      border-radius: 10px;
       
       font-size: 80%;
       color: #f00;

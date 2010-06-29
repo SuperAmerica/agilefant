@@ -40,7 +40,8 @@ DynamicTableRowActions.prototype.open = function() {
     "top" : off.top + 18,
     "left" : off.left - 32,
     "-webkit-border-radius": "5px",
-    "-moz-border-radius": "5px"
+    "-moz-border-radius": "5px",
+    "border-radius": "5px"
   };
   this.menu.css(menuCss);
   $.each(this.items, function(index, item) {

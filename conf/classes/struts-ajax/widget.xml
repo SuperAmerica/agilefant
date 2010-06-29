@@ -4,13 +4,22 @@
     "http://struts.apache.org/dtds/struts-2.0.dtd">
 
 <struts>
-  
-  <package name="ajax-widgets" namespace="/ajax/widgets" extends="ajax">
 
-    <action name="createWidget" class="portletAction" method="create">
-      <result name="success" type="json">
-        
-      </result>
+  <package name="ajax-widgets" namespace="/ajax/widgets" extends="ajax">
+  
+    <action name="createWidget" class="widgetAction" method="create">
+			<result name="success" type="redirectAction">
+				<param name="actionName">/ajax/widgets/${widget.type}.action</param>
+				<param name="objectId">${widget.objectId}</param>
+			</result>
+		</action>
+
+    <action name="text" class="widgetAction" method="execute">
+      <result name="dispatcher">/static/html/widgets/textWidget.html</result>
+    </action>
+    
+    <action name="burndown" class="widgetAction" method="execute">
+      <result name="dispatcher">/static/html/widgets/burndownWidget.html</result>
     </action>
     
     <action name="iterationMetrics" class="iterationMetricsWidget" method="execute">

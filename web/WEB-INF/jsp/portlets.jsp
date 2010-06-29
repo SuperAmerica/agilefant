@@ -18,7 +18,7 @@
   position: relative;
 }
 .widget {
-  background: whiteSmoke;
+  background: white;
 
   display: block;
   min-width: 350px;
@@ -58,7 +58,7 @@
   padding: 2px 5px;
   margin: 2px;
   
-  background: white;
+  background: whiteSmoke;
   
   vertical-align: middle;
   cursor: move;
@@ -78,7 +78,7 @@
   padding: 0;
   cursor: pointer;
   text-align: center;
-  border: 1px solid white;
+  border: 1px solid transparent;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
@@ -137,11 +137,30 @@ $(document).ready(function() {
       clone.remove();
     });
 
-    clone.find('.saveNewWidget').click(function() {
-      
+    var idField = clone.find('.objectId');
+    var typeField = clone.find('.objectType');
+
+     
+    idField.agilefantQuickSearch({
+      source: "ajax/search.action",
+      minLength: 3,
+      select: function(event, ui) {
+        idField.data('selectedId',ui.item.originalObject.id);
+      }
     });
 
-    clone.find('.objectName').agilefantQuickSearch();
+    clone.find('.saveNewWidget').click(function() {
+      MessageDisplay.Ok('Type: ' + typeField.val() + '\nId:' + idField.data('selectedId'));
+      $.ajax({
+        type: 'POST',
+        dataType: 'html',
+        url: 'ajax/widgets/createWidget.action',
+        data: { type: typeField.val(), objectId: idField.data('selectedId'), collectionId: ${contents.id}, position: 0, listNumber: 0 },
+        success: function(data, status) {
+          clone.replaceWith($('<li class="widget"/>').html(data));
+        }
+      });
+    });
     
     clone.prependTo($('.widgetList:eq(0)'));
     return false;
@@ -166,11 +185,11 @@ $(document).ready(function() {
       <table>
         <tr>
           <td>Type</td>
-          <td><ww:select name="type" list="#{'burndown':'Burndown','text':'Text'}"/></td>
+          <td><ww:select name="type" list="#{'iterationMetrics':'Iteration Metrics','burndown':'Burndown','text':'Text'}" cssClass="objectType"/></td>
         </tr>
         <tr>
           <td>Object</td>
-          <td><ww:textfield name="object" cssClass="objectName"/></td>
+          <td><input name="object" class="objectId"/></td>
         </tr>
       </table>
       <div style="clear: left; float: right;">
@@ -187,11 +206,11 @@ $(document).ready(function() {
 <a href="#" class="newWidgetLink">Add widget</a>
 
 <div style="margin-top: 2em; min-width: 750px; background: #def;">
-  <c:forEach items="${widgetGrid}" var="wigetList">
+  <c:forEach items="${widgetGrid}" var="widgetList">
     <div class="widgetContainer">
       <ul class="widgetList">
-        <c:forEach items="${wigetList}" var="widget">
-          <li class="widget" id="widget_${widget.id}"><img src="static/img/pleasewait.gif" /></li>
+        <c:forEach items="${widgetList}" var="widget">
+          <li class="widget" id="widget_${widget.id}"><div style="text-align:center;"><img src="static/img/pleasewait.gif" style="display:inline-block;vertical-align:middle;"/><span style="font-size:100%;color:#666;vertical-align: middle;">Please wait...</span></div></li>
         </c:forEach>
       </ul>
     </div>

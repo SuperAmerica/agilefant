@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.AgilefantWidgetBusiness;
+import fi.hut.soberit.agilefant.business.WidgetCollectionBusiness;
 import fi.hut.soberit.agilefant.db.AgilefantWidgetDAO;
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
@@ -20,8 +21,11 @@ import fi.hut.soberit.agilefant.model.WidgetCollection;
 public class AgilefantWidgetBusinessImpl extends
         GenericBusinessImpl<AgilefantWidget> implements AgilefantWidgetBusiness {
 
+    @Autowired
+    private WidgetCollectionBusiness widgetCollectionBusiness;
+    
     private AgilefantWidgetDAO agilefantWidgetDAO;
-
+    
     @Autowired
     public void setAgilefantWidgetDAO(AgilefantWidgetDAO agilefantWidgetDAO) {
         this.genericDAO = agilefantWidgetDAO;
@@ -31,6 +35,31 @@ public class AgilefantWidgetBusinessImpl extends
     public AgilefantWidgetBusinessImpl() {
         super(AgilefantWidget.class);
     }
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public AgilefantWidget create(String type, Integer objectId,
+            Integer collectionId, Integer position, Integer listNumber) {
+        AgilefantWidget storable = new AgilefantWidget();
+        
+        if (type == null || objectId == null || collectionId == null || position == null || listNumber == null) {
+            throw new IllegalArgumentException("Arguments must be supplied");
+        }
+        
+        storable.setType(type);
+        storable.setObjectId(objectId);
+        storable.setListNumber(listNumber);
+        storable.setPosition(position);
+        storable.setWidgetCollection(widgetCollectionBusiness.retrieve(collectionId));
+        
+        // TODO: order the list
+        
+        
+        Integer newId = (Integer)agilefantWidgetDAO.create(storable);
+        
+        return agilefantWidgetDAO.get(newId);
+    }
+    
 
     @SuppressWarnings("unchecked")
     public List<List<AgilefantWidget>> generateWidgetGrid(

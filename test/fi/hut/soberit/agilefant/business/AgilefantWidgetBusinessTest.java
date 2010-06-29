@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.List;
 
+import org.easymock.Capture;
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -19,6 +21,8 @@ import fi.hut.soberit.agilefant.test.TestedBean;
 
 import static org.junit.Assert.*;
 
+import static org.easymock.EasyMock.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
 public class AgilefantWidgetBusinessTest extends MockedTestCase {
@@ -29,6 +33,70 @@ public class AgilefantWidgetBusinessTest extends MockedTestCase {
     @Mock
     AgilefantWidgetDAO agilefantWidgetDAO;
     
+    @Mock
+    WidgetCollectionBusiness widgetCollectionBusiness;
+    
+    
+    /*
+     * CREATE
+     */
+    @Test
+    @DirtiesContext
+    public void testCreate() {
+        AgilefantWidget returned = new AgilefantWidget();
+        Capture<AgilefantWidget> captured = new Capture<AgilefantWidget>();
+        
+        expect(widgetCollectionBusiness.retrieve(2)).andReturn(new WidgetCollection());
+        expect(agilefantWidgetDAO.create(EasyMock.capture(captured)))
+            .andReturn(new Integer(15));
+        
+        expect(agilefantWidgetDAO.get(15)).andReturn(returned);
+        
+        replayAll();
+        assertSame(returned, testable.create("text", 1, 2, 3, 4));
+        verifyAll();
+        
+        AgilefantWidget actual = captured.getValue();
+        
+        assertEquals("text", actual.getType());
+        assertEquals(1, actual.getObjectId().intValue());
+        
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCreate_nullIds() {
+        try {
+            testable.create(null, 1, 2, 3, 4);
+            fail();
+        }
+        catch (IllegalArgumentException e) {}
+        try {
+            testable.create("", null, 2, 3, 4);
+            fail();
+        }
+        catch (IllegalArgumentException e) {}
+        try {
+            testable.create("", 2, null, 3, 4);
+            fail();
+        }
+        catch (IllegalArgumentException e) {}
+        try {
+            testable.create("", 2, 3, null, 4);
+            fail();
+        }
+        catch (IllegalArgumentException e) {}
+        try {
+            testable.create("", 1, 2, 3, null);
+            fail();
+        }
+        catch (IllegalArgumentException e) {}
+    }
+    
+    
+    /*
+     * GENERATE GRID
+     */
     @Test
     @DirtiesContext
     public void testGenerateWidgetGrid_oneColumn() {

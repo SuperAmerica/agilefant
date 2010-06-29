@@ -29,6 +29,9 @@ public class AgilefantWidget {
     
     @Column
     private Integer position;
+    
+    @Column
+    private Integer objectId;
 
     
     /**
@@ -78,6 +81,16 @@ public class AgilefantWidget {
 
     public void setPosition(Integer position) {
         this.position = position;
+    }
+
+
+    public Integer getObjectId() {
+        return objectId;
+    }
+
+
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
     }
     
 }

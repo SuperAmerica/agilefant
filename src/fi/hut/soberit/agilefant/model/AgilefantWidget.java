@@ -6,9 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import fi.hut.soberit.agilefant.util.AgilefantWidgetUtils;
 
 @Entity
 @Table(name = "widgets")
@@ -24,7 +21,7 @@ public class AgilefantWidget {
     @ManyToOne
     private WidgetCollection widgetCollection;
     
-    @Column(nullable = false)
+    @Column
     private Integer listNumber;
     
     @Column
@@ -32,16 +29,6 @@ public class AgilefantWidget {
     
     @Column
     private Integer objectId;
-
-    
-    /**
-     * TRANSIENT GETTER
-     */
-    @Transient
-    public String getUrl() {
-        return AgilefantWidgetUtils.getActionForType(this.type);
-    }
-    
     
     public int getId() {
         return id;

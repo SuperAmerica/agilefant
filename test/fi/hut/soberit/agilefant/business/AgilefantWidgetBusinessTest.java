@@ -115,7 +115,7 @@ public class AgilefantWidgetBusinessTest extends MockedTestCase {
         widgets.getWidgets().add(widget);
         
         replayAll();
-        List<List<AgilefantWidget>> grid = this.testable.generateWidgetGrid(widgets);
+        List<List<AgilefantWidget>> grid = this.testable.generateWidgetGrid(widgets, 0);
         verifyAll();
         assertEquals(1, grid.size());
         assertEquals(1, grid.get(0).size());
@@ -127,9 +127,19 @@ public class AgilefantWidgetBusinessTest extends MockedTestCase {
     public void testGenerateWidgetGrid_empty() {
         WidgetCollection widgets = new WidgetCollection();
         replayAll();
-        List<List<AgilefantWidget>> grid = this.testable.generateWidgetGrid(widgets);
+        List<List<AgilefantWidget>> grid = this.testable.generateWidgetGrid(widgets, 0);
         verifyAll();
         assertEquals(0, grid.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGenerateWidgetGrid_emptyMinColumns() {
+        WidgetCollection widgets = new WidgetCollection();
+        replayAll();
+        List<List<AgilefantWidget>> grid = this.testable.generateWidgetGrid(widgets, 2);
+        verifyAll();
+        assertEquals(2, grid.size());
     }
     
     @Test
@@ -152,7 +162,7 @@ public class AgilefantWidgetBusinessTest extends MockedTestCase {
         widgets.getWidgets().add(widget3);
         
         replayAll();
-        List<List<AgilefantWidget>> grid = this.testable.generateWidgetGrid(widgets);
+        List<List<AgilefantWidget>> grid = this.testable.generateWidgetGrid(widgets, 2);
         verifyAll();
         
         assertEquals(4, grid.size());

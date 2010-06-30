@@ -34,7 +34,7 @@ public class PortletAction extends ActionSupport implements ContextAware {
     
     public String retrieve() {
         contents = widgetCollectionBusiness.retrieve(collectionId); 
-        widgetGrid = agilefantWidgetBusiness.generateWidgetGrid(contents);
+        widgetGrid = agilefantWidgetBusiness.generateWidgetGrid(contents, 2);
         return Action.SUCCESS;
     }
     

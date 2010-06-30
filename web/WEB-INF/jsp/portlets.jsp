@@ -222,11 +222,6 @@ $(document).ready(function() {
     </div>
     <c:set var="listCount" value="${listCount + 1}"/>
   </c:forEach>
-  <div class="widgetContainer">
-    <ul class="widgetList" listNumber="${listCount}">
-      
-    </ul>
-  </div>
 </div>
 
 

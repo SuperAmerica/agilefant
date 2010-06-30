@@ -70,14 +70,10 @@ public class AgilefantWidgetBusinessImpl extends
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     public List<List<AgilefantWidget>> generateWidgetGrid(
-            WidgetCollection collection) {
+            WidgetCollection collection, int minNumberOfLists) {
         Collection<AgilefantWidget> widgets = collection.getWidgets();
         List<List<AgilefantWidget>> columns = new ArrayList<List<AgilefantWidget>>();
-        int numberOfLists = 0;
-        
-        if(widgets.size() == 0) {
-            return columns;
-        }
+        int numberOfLists = minNumberOfLists - 1;
 
         for (AgilefantWidget widget : widgets) {
             if (numberOfLists < widget.getListNumber()) {

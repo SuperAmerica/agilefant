@@ -303,7 +303,7 @@ $(document).ready(function() {
 </script>
 
 
-<h2>Widgets of ${contents.name}</h2>
+<h2>Portfolio: ${contents.name}</h2>
 
 <div style="float: right; margin-right: 2.5%;">
   <a href="#" class="controlLink newWidgetLink" style="float: right;"><span>Add widget</span> <span class="plusSign">+</span></a>

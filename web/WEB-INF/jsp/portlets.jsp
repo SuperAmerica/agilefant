@@ -110,6 +110,7 @@ $(document).ready(function() {
     placeholder: 'widget-placeholder',
     handle: '.widgetHeader',
     items: '> :not(.createNewWidget)',
+    delay: 300,
     stop: function(event, ui) {
       var pos = ui.item.parent('ul').children('li').index(ui.item);
       $.ajax({
@@ -137,15 +138,23 @@ $(document).ready(function() {
   });
 
   $('.minimizeWidget').live('click',function() {
-    $(this).siblings('.maximizeWidget').show();
-    $(this).parents('.widget').find('.widgetContent').hide('blind');
-    $(this).hide();
+    var me = $(this);
+    var parent = me.parents('.widget');
+    me.siblings('.maximizeWidget').show();
+    parent.find('.widgetContent').hide('blind');
+    me.hide();
+
+    jQuery.cookie('agilefant_widgetcollection_${contents.id}_' + parent.attr('widgetId'), 'closed', { expires: 60 });
   });
 
   $('.maximizeWidget').live('click',function() {
-    $(this).siblings('.minimizeWidget').show();
-    $(this).parents('.widget').find('.widgetContent').show('blind');
-    $(this).hide();
+    var me = $(this);
+    var parent = me.parents('.widget');
+    me.siblings('.minimizeWidget').show();
+    parent.find('.widgetContent').show('blind');
+    me.hide();
+
+    jQuery.cookie('agilefant_widgetcollection_${contents.id}_' + parent.attr('widgetId'), 'open', { expires: 60 });
   });
 
   /*
@@ -197,9 +206,6 @@ $(document).ready(function() {
   $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('ajax/widgets/${widget.type}.action?objectId=${widget.objectId}');
   </c:forEach>
 
-  $('.foo').click(function() {
-    console.log($('.widgetList:eq(0)').sortable('serialize'));
-  });
 });
 
 </script>
@@ -208,7 +214,6 @@ $(document).ready(function() {
 <h2>Widgets of ${contents.name}</h2>
 
 <a href="#" class="newWidgetLink">Add widget</a>
-<a href="#" class="foo">Test</a>
 
 <div style="margin-top: 2em; min-width: 750px; background: #def;">
   <c:set var="listCount" value="0"/>

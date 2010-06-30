@@ -247,10 +247,14 @@ $(document).ready(function() {
         data: { type: typeField.val(), objectId: idField.data('selectedId'), collectionId: ${contents.id}, position: 0, listNumber: 0 },
         success: function(data, status) {
           MessageDisplay.Ok('Widget added');
-          var newWidget = $('<li class="widget realWidget"/>').html(data);
+          
+          var newWidget = $('<li class="widget realWidget"/>');
+
+          clone.replaceWith(newWidget);
+
+          newWidget.html(data);
           var newWidgetId = newWidget.find('input[type=hidden][name=widgetId]').val();
           newWidget.attr('widgetId',newWidgetId).attr('id','widget_'+newWidgetId);
-          clone.replaceWith(newWidget);
         }
       });
     });
@@ -264,8 +268,8 @@ $(document).ready(function() {
    */
   $('.propertiesWidgetLink').click(function() {
     var clone = $('#templates > #staticWidget').clone();
-    clone.removeAttr('id').addClass('portfolioPropertiesWidget').attr('widgetId','-1');
-    if ($('.portfolioPropertiesWidget').length === 0) {
+    clone.removeAttr('id').attr('widgetId','-1');
+    if ($('#portfolioPropertiesTable').length === 0) {
       clone.prependTo($('.widgetList:eq(0)'));
       clone.load('ajax/widgets/portfolioProperties.action?collectionId=${contents.id}');
     }

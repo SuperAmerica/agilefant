@@ -44,6 +44,10 @@
     <action name="iterationMetrics" class="iterationMetricsWidget" method="execute">
       <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/iterationMetricsWidget.jsp</result>
     </action>
+    
+    <action name="userLoad" class="userLoadWidget" method="execute">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/userLoadWidget.jsp</result>
+    </action>
 
     <!-- /Widgets -->  
   </package>

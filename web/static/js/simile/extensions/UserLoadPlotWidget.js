@@ -1,8 +1,11 @@
 window.Timeline.DateTime = window.SimileAjax.DateTime;
 Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
 Timeplot.urlPrefix = "static/img/timeline/";
-var UserLoadPlotWidget = function UserLoadPlotWidget(userId, plots) {
+var UserLoadPlotWidget = function UserLoadPlotWidget(userId, plots, loadIntervalLength) {
   this.userId = userId;
+  
+  this.loadIntervalLength = loadIntervalLength;
+    
   this.plotConf = {total: null, detailed: null};
   jQuery.extend(this.plotConf, plots);
   this.totalPlot = null;
@@ -117,9 +120,13 @@ UserLoadPlotWidget.prototype._calculateTotalStepValues = function() {
 
 UserLoadPlotWidget.prototype.updateData = function(callback) {
   var me = this;
+  var data = {userId: this.userId};
+  if(this.loadIntervalLength) {
+    data.loadIntervalLength = this.loadIntervalLength;
+  }
   $.ajax({
 	    url: "ajax/defaultUserLoad.action",
-	    data: {userId: this.userId}, 
+	    data: data, 
 	    async: true,
 	    dataType: "json",
 	    type: "post",

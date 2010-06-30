@@ -31,11 +31,16 @@ public class UserLoadAction extends ActionSupport {
     
     private ComputedLoadData userLoadData;
     
+    private Integer loadIntervalLength = null;
+    
     private UserLoadLimits loadLimits;
     
     public String retrieveUserLoad() {
+        if(loadIntervalLength == null) {
+            loadIntervalLength = DEFAULT_LOAD_INTERVAL_LENGTH;
+        }
         User user = userBusiness.retrieve(userId);
-        userLoadData = personalLoadBusiness.retrieveUserLoad(user, DEFAULT_LOAD_INTERVAL_LENGTH);
+        userLoadData = personalLoadBusiness.retrieveUserLoad(user, loadIntervalLength);
         return Action.SUCCESS;
     }
 
@@ -67,5 +72,9 @@ public class UserLoadAction extends ActionSupport {
 
     public UserLoadLimits getLoadLimits() {
         return loadLimits;
+    }
+
+    public void setLoadIntervalLength(Integer loadIntervalLength) {
+        this.loadIntervalLength = loadIntervalLength;
     }
 }

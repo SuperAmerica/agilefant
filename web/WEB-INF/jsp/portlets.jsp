@@ -2,6 +2,17 @@
 
 <struct:htmlWrapper navi="widgets">
 
+<script type="text/javascript" src="static/js/simile-widgets.js"></script>
+<script type="text/javascript" src="static/js/simile/extensions/LoadPlot.js"></script>
+<script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
+<script type="text/javascript" src="static/js/simile/extensions/UserLoadPlotWidget.js"></script>
+
+<script type="text/javascript" src="static/js/excanvas.js"></script>
+<link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/timeline/timeline.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/timeline/ether.css" type="text/css"/>
+<link rel="stylesheet" href="static/css/timeline/event.css" type="text/css"/>
+
 <style>
 .widgetContainer {
   width: 50%;
@@ -203,7 +214,7 @@ $(document).ready(function() {
    */
   
   <c:forEach items="${contents.widgets}" var="widget">
-  $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('ajax/widgets/${widget.type}.action?objectId=${widget.objectId}');
+  $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('ajax/widgets/${widget.type}.action?objectId=${widget.objectId}&widgetId=${widget.id}');
   </c:forEach>
 
 });
@@ -238,7 +249,7 @@ $(document).ready(function() {
       <table>
         <tr>
           <td>Type</td>
-          <td><ww:select name="type" list="#{'iterationMetrics':'Iteration Metrics','burndown':'Burndown','text':'Text'}" cssClass="objectType"/></td>
+          <td><ww:select name="type" list="#{'iterationMetrics':'Iteration Metrics', 'userLoad': 'User Workload','burndown':'Burndown','text':'Text'}" cssClass="objectType"/></td>
         </tr>
         <tr>
           <td>Object</td>

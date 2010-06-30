@@ -198,7 +198,10 @@ $(document).ready(function() {
   /*
    * New widget creation
    */
-  
+  var searchUrls = {
+    "iterationMetrics": "iterations.action",
+    "userLoad": "users.action"
+  };
   $('.newWidgetLink').click(function() {
     var clone = $('#templates > #newWidget').clone();
     clone.removeAttr('id');
@@ -209,10 +212,27 @@ $(document).ready(function() {
 
     var idField = clone.find('.objectId');
     var typeField = clone.find('.objectType');
-
+    
      
-    idField.agilefantQuickSearch({
-      source: "ajax/search.action",
+    idField.autocomplete({
+      source: function(request, response) {
+        $.ajax({
+          url: "ajax/" + searchUrls[typeField.val()],
+          dataType: "json",
+          data: {
+			term: request.term
+		  },
+          success: function(data) {
+            response($.map(data, function(item) {
+              return {
+                label: item.label,
+                value: item.label,
+                originalObject: item.originalObject
+              }
+            }))
+          }
+        })
+      },
       minLength: 3,
       select: function(event, ui) {
         idField.data('selectedId',ui.item.originalObject.id);

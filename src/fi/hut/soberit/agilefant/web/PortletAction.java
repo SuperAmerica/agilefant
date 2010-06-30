@@ -21,11 +21,13 @@ public class PortletAction extends ActionSupport implements ContextAware {
 
     private static final long serialVersionUID = -999270161618784027L;
 
-    private int collectionId = 1;
+    private int collectionId = 0;
     
     private WidgetCollection contents;
     private List<List<AgilefantWidget>> widgetGrid = new ArrayList<List<AgilefantWidget>>();
 
+    private List<WidgetCollection> allCollections = new ArrayList<WidgetCollection>();
+    
     @Autowired
     private AgilefantWidgetBusiness agilefantWidgetBusiness;
     
@@ -33,8 +35,17 @@ public class PortletAction extends ActionSupport implements ContextAware {
     private WidgetCollectionBusiness widgetCollectionBusiness;
     
     public String retrieve() {
+        if (collectionId == 0) {
+            return Action.SUCCESS + "_projectPortfolio";
+        }
+        allCollections = widgetCollectionBusiness.getAllCollections();
         contents = widgetCollectionBusiness.retrieve(collectionId); 
         widgetGrid = agilefantWidgetBusiness.generateWidgetGrid(contents, 2);
+        return Action.SUCCESS;
+    }
+    
+    public String getPropertiesWidget() {
+        contents = widgetCollectionBusiness.retrieve(collectionId);
         return Action.SUCCESS;
     }
     
@@ -43,10 +54,10 @@ public class PortletAction extends ActionSupport implements ContextAware {
      */
     
     public String getContextName() {
-        return "portlets";
+        return "portfolio";
     }
     public int getContextObjectId() {
-        return 0;
+        return collectionId;
     }
     
     public WidgetCollection getContents() {
@@ -75,5 +86,9 @@ public class PortletAction extends ActionSupport implements ContextAware {
 
     public void setCollectionId(int collectionId) {
         this.collectionId = collectionId;
+    }
+
+    public List<WidgetCollection> getAllCollections() {
+        return allCollections;
     }
 }

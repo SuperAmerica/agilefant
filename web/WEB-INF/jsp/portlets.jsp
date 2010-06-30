@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
 
-<struct:htmlWrapper navi="widgets">
+<struct:htmlWrapper navi="portfolio">
 
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/LoadPlot.js"></script>
@@ -61,7 +61,7 @@
   background: whiteSmoke;
 }
 .widgetHeader {
-  border: 1px solid #ccc;
+  border: 1px solid #A6C9E2;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -69,7 +69,7 @@
   padding: 2px 5px;
   margin: 2px;
   
-  background: whiteSmoke;
+  background: #DFEFFC;
   
   vertical-align: middle;
 }
@@ -106,8 +106,32 @@
   max-height: 320px;
   overflow: auto;
 }
-.createNewWidget button, .createNewWidget td {
+.staticWidget button, .createNewWidget td {
   font-size: 100% !important;
+}
+.controlLink {
+  border: 1px solid transparent;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  display: block;
+  
+  padding: 0 5px;
+}
+.controlLink:hover {
+  border-color: #ccc;
+}
+.controlLink span {
+  line-height: 24pt;
+  vertical-align: middle;
+}
+.controlLink span.plusSign {
+  font-size: 24pt;
+  font-weight: bold;
+  color: #ccc;
+}
+.controlLink:hover span.plusSign {
+  color: #aaa;
 }
 </style>
 
@@ -120,7 +144,7 @@ $(document).ready(function() {
     dropOnEmpty: true,
     placeholder: 'widget-placeholder',
     handle: '.widgetHeader',
-    items: '> :not(.createNewWidget)',
+    items: '> :not(.staticWidget)',
     delay: 300,
     stop: function(event, ui) {
       var pos = ui.item.parent('ul').children('li').index(ui.item);
@@ -134,18 +158,21 @@ $(document).ready(function() {
 
   $('.closeWidget').live('click',function() {
     var widget = $(this).parents('.widget');
-    
-    $.ajax({
-      type: 'POST',
-      dataType: 'text',
-      url: 'ajax/widgets/deleteWidget.action',
-      data: { widgetId: widget.attr('widgetId') },
-      success: function(data, status) {
-        MessageDisplay.Ok('Widget removed');
-        widget.remove();
-      }
-    });
-    
+
+    if (widget.attr('widgetId') !== '-1') {
+      $.ajax({
+        type: 'POST',
+        dataType: 'text',
+        url: 'ajax/widgets/deleteWidget.action',
+        data: { widgetId: widget.attr('widgetId') },
+        success: function(data, status) {
+          MessageDisplay.Ok('Widget removed');
+          widget.remove();
+        }
+      });
+    } else {
+      widget.remove();
+    }
   });
 
   $('.minimizeWidget').live('click',function() {
@@ -200,7 +227,10 @@ $(document).ready(function() {
         data: { type: typeField.val(), objectId: idField.data('selectedId'), collectionId: ${contents.id}, position: 0, listNumber: 0 },
         success: function(data, status) {
           MessageDisplay.Ok('Widget added');
-          clone.replaceWith($('<li class="widget realWidget"/>').html(data));
+          var newWidget = $('<li class="widget realWidget"/>').html(data);
+          var newWidgetId = newWidget.find('input[type=hidden][name=widgetId]').val();
+          newWidget.attr('widgetId',newWidgetId).attr('id','widget_'+newWidgetId);
+          clone.replaceWith(newWidget);
         }
       });
     });
@@ -210,6 +240,18 @@ $(document).ready(function() {
   });
 
   /*
+   * Properties widget
+   */
+  $('.propertiesWidgetLink').click(function() {
+    var clone = $('#templates > #staticWidget').clone();
+    clone.removeAttr('id').addClass('portfolioPropertiesWidget').attr('widgetId','-1');
+    if ($('.portfolioPropertiesWidget').length === 0) {
+      clone.prependTo($('.widgetList:eq(0)'));
+      clone.load('ajax/widgets/portfolioProperties.action?collectionId=${contents.id}');
+    }
+  });
+  
+  /*
    * Load the widget contents
    */
   
@@ -217,6 +259,21 @@ $(document).ready(function() {
   $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('ajax/widgets/${widget.type}.action?objectId=${widget.objectId}&widgetId=${widget.id}');
   </c:forEach>
 
+  /*
+   * Change to -dropdown
+   */
+  $('#changeToSelection').change(function() {
+    var value = $(this).val();
+    if (value === "portfolio") {
+      window.location.href = "projectPortfolio.action"
+    }
+    else if (value === "createNew") {
+      window.location.href = "createPortfolio.action"
+    }
+    else {
+      window.location.href = "portlets.action?collectionId=" + value
+    }
+  });
 });
 
 </script>
@@ -224,7 +281,37 @@ $(document).ready(function() {
 
 <h2>Widgets of ${contents.name}</h2>
 
-<a href="#" class="newWidgetLink">Add widget</a>
+<div style="float: right; margin-right: 2.5%;">
+  <a href="#" class="controlLink newWidgetLink" style="float: right;"><span>Add widget</span> <span class="plusSign">+</span></a>
+  <a href="#" class="controlLink propertiesWidgetLink" style="float: right;"><span>Properties</span> <span class="plusSign">?</span></a>
+</div>
+
+<p>
+
+Change to
+<select id="changeToSelection">
+  <option selected="selected" style="color: #666;">Select a portfolio...</option>
+
+  <optgroup label="General">
+    <option value="portfolio">Project portfolio</option>
+  </optgroup>
+  
+  <optgroup label="Personal portfolios">
+    <c:forEach items="${allCollections}" var="collection">
+      <option value="${collection.id}">${collection.name}</option>
+    </c:forEach>
+  </optgroup>
+  
+  <optgroup label="Other">
+    <option value="createNew" style="font-style: italic; color: #666;">Create new...</option>
+  </optgroup>
+</select>
+
+</p>
+
+
+
+
 
 <div style="margin-top: 2em; min-width: 750px; background: #def;">
   <c:set var="listCount" value="0"/>
@@ -243,13 +330,14 @@ $(document).ready(function() {
 
 <!-- Hidden templates -->
 <ul id="templates" style="display: none;">
-  <li class="widget createNewWidget" id="newWidget" style="position:relative;">
+  <!-- Create new widget -->
+  <li class="widget createNewWidget staticWidget" id="newWidget" style="position:relative;">
     <div class="widgetHeader"><span>Create a new widget</span></div>
     <div class="widgetContent">
       <table>
         <tr>
           <td>Type</td>
-          <td><ww:select name="type" list="#{'iterationMetrics':'Iteration Metrics', 'userLoad': 'User Workload','burndown':'Burndown','text':'Text'}" cssClass="objectType"/></td>
+          <td><ww:select name="type" list="#{'iterationMetrics':'Iteration Metrics', 'userLoad': 'User Workload'}" cssClass="objectType"/></td>
         </tr>
         <tr>
           <td>Object</td>
@@ -261,6 +349,10 @@ $(document).ready(function() {
         <button class="dynamics-button cancelNewWidget">Cancel</button>
       </div>
     </div>
+  </li>
+  
+  <li class="widget staticWidget" id="staticWidget">
+    <div style="text-align:center;"><img src="static/img/pleasewait.gif" style="display:inline-block;vertical-align:middle;"/><span style="font-size:100%;color:#666;vertical-align: middle;">Please wait...</span></div>
   </li>
 </ul>
 <!-- /Hidden templates -->

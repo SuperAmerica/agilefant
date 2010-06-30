@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
 
-<struct:widget name="Iteration: ${iteration.name}">
+<struct:widget name="Iteration: ${iteration.name}" widgetId="${widgetId}">
 
 <table>
   <tr>

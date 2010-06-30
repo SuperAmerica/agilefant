@@ -69,6 +69,11 @@
 				<param name="backlogId">${contextObjectId}</param>
 			</result>
 			
+			<result name="success_portfolio" type="redirectAction">
+        <param name="actionName">portlets</param>
+        <param name="collectionId">${contextObjectId}</param>
+      </result>
+			
 			
 			<result name="success_dailyWork" type="redirectAction">
 				<param name="actionName">dailyWork</param>
@@ -199,7 +204,10 @@
 		</action>
 		
 		<action name="portlets" class="portletAction" method="retrieve">
-		  <result type="dispatcher">/WEB-INF/jsp/portlets.jsp</result>
+		  <result name="success_projectPortfolio" type="redirectAction">
+		    <param name="actionName">projectPortfolio</param>
+		  </result>
+		  <result name="success" type="dispatcher">/WEB-INF/jsp/portlets.jsp</result>
 		</action>
 		<!-- /Dev portfolio -->
 

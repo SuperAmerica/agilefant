@@ -49,10 +49,11 @@ $(document).ready(function() {
 </li>
 </c:if>
 
-<!-- Dev Portfolio -->
+
+<!-- Portlets -->
 <c:if test="${settings.devPortfolio}">
 <li id="navitab-portfolio">
-  <a href="projectPortfolio.action">
+  <a href="contextView.action?contextName=portfolio">
   <span>
   <img src="static/img/portfolio.png" alt="Dev Portfolio" />
   Portfolio
@@ -60,16 +61,6 @@ $(document).ready(function() {
   </a>
 </li>
 </c:if>
-
-<!-- Portlets -->
-<li id="navitab-portlets">
-  <a href="portlets.action">
-  <span>
-  <img src="static/img/portfolio.png" alt="Dev Portfolio" />
-  Portlets
-  </span>
-  </a>
-</li>
 
 <%-- Settings --%>
 <li id="navitab-settings">

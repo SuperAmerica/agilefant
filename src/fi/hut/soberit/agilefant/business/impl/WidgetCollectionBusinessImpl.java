@@ -1,6 +1,11 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,15 @@ public class WidgetCollectionBusinessImpl extends
 
     public WidgetCollectionBusinessImpl() {
         super(WidgetCollection.class);
+    }
+    
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
+    public List<WidgetCollection> getAllCollections() {
+        List<WidgetCollection> allCollections = new ArrayList<WidgetCollection>();
+        allCollections.addAll(widgetCollectionDAO.getAll());
+        Collections.sort(allCollections, new PropertyComparator("name", true, true));
+        return allCollections;
     }
     
     /** {@inheritDoc} */

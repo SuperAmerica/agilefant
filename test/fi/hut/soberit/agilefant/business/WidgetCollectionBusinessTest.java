@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.ArrayList;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,12 +33,15 @@ public class WidgetCollectionBusinessTest extends MockedTestCase {
     
     @Test
     @DirtiesContext
-    public void testRetrieve() {
-        expect(widgetCollectionDAO.get(123)).andReturn(new WidgetCollection());
+    public void testGetAllCollections() {
+        expect(widgetCollectionDAO.getAll()).andReturn(new ArrayList<WidgetCollection>());
         replayAll();
-        testable.retrieve(123);
+        testable.getAllCollections();
         verifyAll();
     }
+
+    
+    
     
     WidgetCollection collection;
     AgilefantWidget  widget1;

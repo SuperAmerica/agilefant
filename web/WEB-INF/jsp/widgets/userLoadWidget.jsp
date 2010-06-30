@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
 
-<struct:widget name="Workload of: ${user.fullName}">
+<struct:widget name="Workload of: ${user.fullName}" widgetId="${widgetId}">
 <div style="position: relative; padding: 0em 1em;">
         <div style="float: left; width: 76%; height: 100px; margin-top: 10px; position: relative;" id="userLoadWidget_${widgetId}"></div>
       </div>

@@ -20,10 +20,49 @@ $(document).ready(function() {
     rankedProjectsElement: $("#rankedProjects"),
     unrankedProjectsElement: $("#unrankedProjects")
   });
+
+  /*
+   * Change to -dropdown
+   */
+  $('#changeToSelection').change(function() {
+    var value = $(this).val();
+    if (value === "portfolio") {
+      window.location.href = "projectPortfolio.action"
+    }
+    else if (value === "createNew") {
+      window.location.href = "createPortfolio.action"
+    }
+    else {
+      window.location.href = "portlets.action?collectionId=" + value
+    }
+  });
 });
 </script>
 
 <h2>Project portfolio</h2>
+
+<p>
+Change to
+<select id="changeToSelection">
+  <option selected="selected" style="color: #666;">Select a portfolio...</option>
+
+  <optgroup label="General">
+    <option value="portfolio">Project portfolio</option>
+  </optgroup>
+  
+  <optgroup label="Personal portfolios">
+    <c:forEach items="${allCollections}" var="collection">
+      <option value="${collection.id}">${collection.name}</option>
+    </c:forEach>
+  </optgroup>
+  
+  <optgroup label="Other">
+    <option value="createNew" style="font-style: italic; color: #666;">Create new...</option>
+  </optgroup>
+</select>
+
+</p>
+
 
 	<div class="structure-main-block">	
 		<div class="dynamictable ui-widget ui-widget-content ui-corner-all">

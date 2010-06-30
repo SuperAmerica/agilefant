@@ -1,11 +1,19 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.List;
+
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
 
 public interface WidgetCollectionBusiness extends
         GenericBusiness<WidgetCollection> {
 
+    /**
+     * Retrieve all <code>WidgetCollections</code> as alphabetical list.
+     * @return
+     */
+    public List<WidgetCollection> getAllCollections();
+    
     /**
      * Insert the widget to a given position and shift the others.
      */

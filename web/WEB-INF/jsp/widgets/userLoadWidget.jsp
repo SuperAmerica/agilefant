@@ -1,10 +1,10 @@
 <%@include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
 
 <struct:widget name="Workload of: ${user.fullName}">
-<div style="position: relative;">
-        <div style="float: left; width: 76%; height: 180px; margin-top: 10px; position: relative;" id="userLoadWidget_${widgetId}"></div>
+<div style="position: relative; padding: 0em 1em;">
+        <div style="float: left; width: 76%; height: 100px; margin-top: 10px; position: relative;" id="userLoadWidget_${widgetId}"></div>
       </div>
-      <div class="load-legends" id="userLoadLegends_${widgetId}">
+      <div class="load-legends" style="width: 10%;" id="userLoadLegends_${widgetId}">
         <div class="legend-box load-maximum"><ww:text name="load.threshold.maximum" /></div>
         <div class="legend-box load-critical"><ww:text name="load.threshold.critical" /></div>
         <div class="legend-box load-optimal-high"><ww:text name="load.threshold.optimalHigh" /></div>

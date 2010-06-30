@@ -44,53 +44,61 @@ public class AgilefantWidgetBusinessTest extends MockedTestCase {
     @DirtiesContext
     public void testCreate() {
         AgilefantWidget returned = new AgilefantWidget();
+        WidgetCollection collection = new WidgetCollection();
         Capture<AgilefantWidget> captured = new Capture<AgilefantWidget>();
         
-        expect(widgetCollectionBusiness.retrieve(2)).andReturn(new WidgetCollection());
+        expect(widgetCollectionBusiness.retrieve(2)).andReturn(collection);
+        
+        widgetCollectionBusiness.insertWidgetToHead(EasyMock.isA(WidgetCollection.class), EasyMock.isA(AgilefantWidget.class));
+        
         expect(agilefantWidgetDAO.create(EasyMock.capture(captured)))
             .andReturn(new Integer(15));
         
         expect(agilefantWidgetDAO.get(15)).andReturn(returned);
         
+        
         replayAll();
-        assertSame(returned, testable.create("text", 1, 2, 3, 4));
+        assertSame(returned, testable.create("text", 1, 2));
         verifyAll();
         
         AgilefantWidget actual = captured.getValue();
         
         assertEquals("text", actual.getType());
         assertEquals(1, actual.getObjectId().intValue());
-        
+        assertEquals(collection, actual.getWidgetCollection());
     }
     
     @Test
     @DirtiesContext
     public void testCreate_nullIds() {
         try {
-            testable.create(null, 1, 2, 3, 4);
+            testable.create(null, 1, 2);
             fail();
         }
         catch (IllegalArgumentException e) {}
         try {
-            testable.create("", null, 2, 3, 4);
+            testable.create("", null, 2);
             fail();
         }
         catch (IllegalArgumentException e) {}
         try {
-            testable.create("", 2, null, 3, 4);
+            testable.create("", 2, null);
             fail();
         }
         catch (IllegalArgumentException e) {}
-        try {
-            testable.create("", 2, 3, null, 4);
-            fail();
-        }
-        catch (IllegalArgumentException e) {}
-        try {
-            testable.create("", 1, 2, 3, null);
-            fail();
-        }
-        catch (IllegalArgumentException e) {}
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testMove() {
+        WidgetCollection collection = new WidgetCollection();
+        AgilefantWidget widget = new AgilefantWidget(); 
+        widget.setWidgetCollection(collection);
+        
+        widgetCollectionBusiness.insertWidgetToPosition(collection, widget, 1, 2);
+        replayAll();
+        testable.move(widget, 1, 2);
+        verifyAll();
     }
     
     

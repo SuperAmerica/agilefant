@@ -30,7 +30,7 @@ public class WidgetAction extends ActionSupport implements CRUDAction {
     private AgilefantWidgetBusiness agilefantWidgetBusiness;
     
     public String create() {
-        widget = agilefantWidgetBusiness.create(type, objectId, collectionId, position, listNumber);
+        widget = agilefantWidgetBusiness.create(type, objectId, collectionId);
         return Action.SUCCESS;
     }
 
@@ -47,6 +47,12 @@ public class WidgetAction extends ActionSupport implements CRUDAction {
     public String store() {
         // TODO Auto-generated method stub
         return null;
+    }
+    
+    public String move() {
+        widget = agilefantWidgetBusiness.retrieve(widgetId);
+        agilefantWidgetBusiness.move(widget, position, listNumber);
+        return Action.SUCCESS;
     }
     
     /*

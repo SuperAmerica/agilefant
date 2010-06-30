@@ -61,6 +61,8 @@
   background: whiteSmoke;
   
   vertical-align: middle;
+}
+.realWidget .widgetHeader {
   cursor: move;
 }
 .widgetHeader ul {
@@ -106,7 +108,16 @@ $(document).ready(function() {
     connectWith: '.widgetList',
     dropOnEmpty: true,
     placeholder: 'widget-placeholder',
-    handle: '.widgetHeader'
+    handle: '.widgetHeader',
+    items: '> :not(.createNewWidget)',
+    stop: function(event, ui) {
+      var pos = ui.item.parent('ul').children('li').index(ui.item);
+      $.ajax({
+        type: 'POST',
+        url:  'ajax/widgets/moveWidget.action',
+        data: { widgetId: ui.item.attr('widgetId'), listNumber: ui.item.parent('ul').attr('listNumber'), position: pos }
+      });
+    }
   });
 
   $('.closeWidget').live('click',function() {
@@ -169,7 +180,7 @@ $(document).ready(function() {
         data: { type: typeField.val(), objectId: idField.data('selectedId'), collectionId: ${contents.id}, position: 0, listNumber: 0 },
         success: function(data, status) {
           MessageDisplay.Ok('Widget added');
-          clone.replaceWith($('<li class="widget"/>').html(data));
+          clone.replaceWith($('<li class="widget realWidget"/>').html(data));
         }
       });
     });
@@ -183,13 +194,43 @@ $(document).ready(function() {
    */
   
   <c:forEach items="${contents.widgets}" var="widget">
-  $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('${widget.url}?objectId=${widget.objectId}');
+  $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('ajax/widgets/${widget.type}.action?objectId=${widget.objectId}');
   </c:forEach>
 
+  $('.foo').click(function() {
+    console.log($('.widgetList:eq(0)').sortable('serialize'));
+  });
 });
 
 </script>
 
+
+<h2>Widgets of ${contents.name}</h2>
+
+<a href="#" class="newWidgetLink">Add widget</a>
+<a href="#" class="foo">Test</a>
+
+<div style="margin-top: 2em; min-width: 750px; background: #def;">
+  <c:set var="listCount" value="0"/>
+  <c:forEach items="${widgetGrid}" var="widgetList">
+    <div class="widgetContainer">
+      <ul class="widgetList" listNumber="${listCount}">
+        <c:forEach items="${widgetList}" var="widget">
+          <li class="widget realWidget" id="widget_${widget.id}"><div style="text-align:center;"><img src="static/img/pleasewait.gif" style="display:inline-block;vertical-align:middle;"/><span style="font-size:100%;color:#666;vertical-align: middle;">Please wait...</span></div></li>
+        </c:forEach>
+      </ul>
+    </div>
+    <c:set var="listCount" value="${listCount + 1}"/>
+  </c:forEach>
+  <div class="widgetContainer">
+    <ul class="widgetList" listNumber="${listCount}">
+      
+    </ul>
+  </div>
+</div>
+
+
+<!-- Hidden templates -->
 <ul id="templates" style="display: none;">
   <li class="widget createNewWidget" id="newWidget" style="position:relative;">
     <div class="widgetHeader"><span>Create a new widget</span></div>
@@ -211,29 +252,7 @@ $(document).ready(function() {
     </div>
   </li>
 </ul>
-
-
-<h2>Widgets of ${contents.name}</h2>
-
-<a href="#" class="newWidgetLink">Add widget</a>
-
-<div style="margin-top: 2em; min-width: 750px; background: #def;">
-  <c:forEach items="${widgetGrid}" var="widgetList">
-    <div class="widgetContainer">
-      <ul class="widgetList">
-        <c:forEach items="${widgetList}" var="widget">
-          <li class="widget" id="widget_${widget.id}"><div style="text-align:center;"><img src="static/img/pleasewait.gif" style="display:inline-block;vertical-align:middle;"/><span style="font-size:100%;color:#666;vertical-align: middle;">Please wait...</span></div></li>
-        </c:forEach>
-      </ul>
-    </div>
-  </c:forEach>
-  <div class="widgetContainer">
-    <ul class="widgetList">
-      
-    </ul>
-  </div>
-</div>
-
+<!-- /Hidden templates -->
 
 
 </struct:htmlWrapper>

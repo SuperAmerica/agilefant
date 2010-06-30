@@ -22,7 +22,14 @@
 		  </result>
 		</action>
 
+    <action name="moveWidget" class="widgetAction" method="move">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
+
     <!-- /CRUD -->
+    
     
     <!-- Widgets -->
 

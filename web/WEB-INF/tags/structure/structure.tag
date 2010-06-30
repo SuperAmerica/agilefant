@@ -62,6 +62,9 @@
         window.location.reload(); 
       }
       return data;
+    },
+    error: function(xhr,status,error) {
+      MessageDisplay.Error("An unknown error occurred",xhr);
     }
   }); 
   Configuration.setConfiguration({ timesheets: ${settings.hourReportingEnabled}, branchMetricsType: '${settings.branchMetricsType}', labelsInStoryList: ${settings.labelsInStoryList} });

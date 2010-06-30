@@ -39,7 +39,7 @@ public class WidgetActionTest extends MockedTestCase {
         testable.setListNumber(1);
         
         AgilefantWidget widget = new AgilefantWidget();
-        expect(agilefantWidgetBusiness.create("text", 122, 5, 2, 1)).andReturn(widget);
+        expect(agilefantWidgetBusiness.create("text", 122, 5)).andReturn(widget);
         
         replayAll();
         assertEquals(Action.SUCCESS, testable.create());
@@ -59,4 +59,18 @@ public class WidgetActionTest extends MockedTestCase {
         verifyAll();
     }
     
+    @Test
+    @DirtiesContext
+    public void testMove() {
+        AgilefantWidget widget = new AgilefantWidget();
+        testable.setWidgetId(123);
+        testable.setPosition(0);
+        testable.setListNumber(2);
+        
+        expect(agilefantWidgetBusiness.retrieve(123)).andReturn(widget);
+        agilefantWidgetBusiness.move(widget, 0, 2);
+        replayAll();
+        assertEquals(Action.SUCCESS, testable.move());
+        verifyAll();
+    }
 }

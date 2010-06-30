@@ -17,7 +17,7 @@ import fi.hut.soberit.agilefant.model.AgilefantWidget;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
 
 @Service("agilefantWidgetBusiness")
-@Transactional(readOnly = true)
+@Transactional
 public class AgilefantWidgetBusinessImpl extends
         GenericBusinessImpl<AgilefantWidget> implements AgilefantWidgetBusiness {
 
@@ -38,30 +38,37 @@ public class AgilefantWidgetBusinessImpl extends
     
     /** {@inheritDoc} */
     @Transactional
-    public AgilefantWidget create(String type, Integer objectId,
-            Integer collectionId, Integer position, Integer listNumber) {
+    public AgilefantWidget create(String type, Integer objectId, Integer collectionId) {
         AgilefantWidget storable = new AgilefantWidget();
         
-        if (type == null || objectId == null || collectionId == null || position == null || listNumber == null) {
+        if (type == null || objectId == null || collectionId == null) {
             throw new IllegalArgumentException("Arguments must be supplied");
         }
         
+        WidgetCollection collection = widgetCollectionBusiness.retrieve(collectionId);
+        
         storable.setType(type);
         storable.setObjectId(objectId);
-        storable.setListNumber(listNumber);
-        storable.setPosition(position);
-        storable.setWidgetCollection(widgetCollectionBusiness.retrieve(collectionId));
+        storable.setWidgetCollection(collection);
         
-        // TODO: order the list
-        
+        widgetCollectionBusiness.insertWidgetToHead(collection, storable);
         
         Integer newId = (Integer)agilefantWidgetDAO.create(storable);
         
-        return agilefantWidgetDAO.get(newId);
+        return  agilefantWidgetDAO.get(newId);
     }
     
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public void move(AgilefantWidget widget, int position, int listNumber) {
+        widgetCollectionBusiness.insertWidgetToPosition(widget
+                .getWidgetCollection(), widget, position, listNumber);
+    }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public List<List<AgilefantWidget>> generateWidgetGrid(
             WidgetCollection collection) {
         Collection<AgilefantWidget> widgets = collection.getWidgets();

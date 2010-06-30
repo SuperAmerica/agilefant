@@ -12,10 +12,14 @@ public interface AgilefantWidgetBusiness extends GenericBusiness<AgilefantWidget
      */
     /**
      * Creates and returns a new AgilefantWidget. 
-     * @param objectId TODO
      */
-    public AgilefantWidget create(String type, Integer objectId, Integer collectionId, Integer position, Integer listNumber);
+    public AgilefantWidget create(String type, Integer objectId, Integer collectionId);
     
+    
+    /**
+     * Move the widget to a specified position in its collection.
+     */
+    public void move(AgilefantWidget widget, int position, int listNumber);
     
     /**
      * Arranges the given widgets to lists according to their listNumber property.

@@ -2,13 +2,43 @@
 
 <struct:widget name="Portfolio properties" widgetId="-1">
 
-<table>
+<script type="text/javascript">
+$(document).ready(function() {
+  
+  var myWidget = $('#portfolioPropertiesTable').parents('.widget');
+  $('.cancelProperties').click(function() {
+    $(this).parents('.widget').remove();
+  });
+  
+  $('.saveProperties').click(function() {
+    var postData = {
+      "collection.id":   ${collectionId},
+      "collection.name": $('input[name=collectionName]').val(),
+      "private":         $('input[name=collectionPrivate]').is(':checked'),
+      "userId":          ${currentUser.id}
+    };
+
+    $.ajax({
+      type: 'POST',
+      url:  'ajax/widgets/storeCollection.action',
+      data: postData,
+      success: function(data, status) {
+        MessageDisplay.Ok('Portfolio information updated');
+        myWidget.remove();
+      }
+    });
+  });
+});
+</script>
+
+
+<table id="portfolioPropertiesTable">
   <tr>
     <td>
       Name
     </td>
     <td>
-      <input name="name" value="${contents.name}"/>
+      <input name="collectionName" value="${contents.name}"/>
     </td>
   </tr>
   <tr>
@@ -16,7 +46,10 @@
       Private?
     </td>
     <td>
-      <input type="checkbox" />
+      <c:if test="${contents.user != null}">
+        <c:set var="checkboxSelected" value='checked="checked"' />
+      </c:if>
+      <input type="checkbox" name="collectionPrivate" disabled="disabled" ${checkboxSelected}/>
     </td>
   </tr>
 </table>

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
+import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.AgilefantWidgetBusiness;
 import fi.hut.soberit.agilefant.business.WidgetCollectionBusiness;
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
@@ -17,11 +18,14 @@ import fi.hut.soberit.agilefant.model.WidgetCollection;
 
 @Component("portletAction")
 @Scope("prototype")
-public class PortletAction extends ActionSupport implements ContextAware {
+public class PortletAction extends ActionSupport implements ContextAware, Prefetching {
 
     private static final long serialVersionUID = -999270161618784027L;
 
+    @PrefetchId
     private int collectionId = 0;
+    
+    private WidgetCollection collection;
     
     private WidgetCollection contents;
     private List<List<AgilefantWidget>> widgetGrid = new ArrayList<List<AgilefantWidget>>();
@@ -44,9 +48,18 @@ public class PortletAction extends ActionSupport implements ContextAware {
         return Action.SUCCESS;
     }
     
+    public String store() {
+        widgetCollectionBusiness.store(collection);
+        return Action.SUCCESS;
+    }
+    
     public String getPropertiesWidget() {
         contents = widgetCollectionBusiness.retrieve(collectionId);
         return Action.SUCCESS;
+    }
+    
+    public void initializePrefetchedData(int objectId) {
+        collection = widgetCollectionBusiness.retrieve(objectId);
     }
     
     /*
@@ -91,4 +104,14 @@ public class PortletAction extends ActionSupport implements ContextAware {
     public List<WidgetCollection> getAllCollections() {
         return allCollections;
     }
+
+    public WidgetCollection getCollection() {
+        return collection;
+    }
+
+    public void setCollection(WidgetCollection collection) {
+        this.collection = collection;
+    }
+
+
 }

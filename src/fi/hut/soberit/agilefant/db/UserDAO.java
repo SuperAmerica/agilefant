@@ -33,4 +33,6 @@ public interface UserDAO extends GenericDAO<User> {
      * @param enabled whether the wanted users are enabled or disabled
      */
     List<User> listUsersByEnabledStatus(boolean enabled);
+    
+    List<User> searchByName(String searchTerm);
 }

@@ -10,6 +10,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 
 @ContextConfiguration
@@ -43,15 +45,31 @@ public class BacklogDAOTest extends AbstractHibernateTests {
     public void testSearchByName() {
         String search  = "Iteration";
         executeClassSql();
-        List<Backlog> stories = backlogDAO.searchByName(search);
-        assertEquals(4, stories.size());
+        List<Backlog> backlogs = backlogDAO.searchByName(search);
+        assertEquals(4, backlogs.size());
     }
 
     @Test
     public void testSearchByName_notFound() {
         String search  = "not found string";
         executeClassSql();
-        List<Backlog> stories = backlogDAO.searchByName(search);
-        assertEquals(0, stories.size());
+        List<Backlog> backlogs = backlogDAO.searchByName(search);
+        assertEquals(0, backlogs.size());
+    }
+    
+    @Test
+    public void testSearchByName_iterations() {
+        String search  = "Iteration";
+        executeClassSql();
+        List<Backlog> backlogs = backlogDAO.searchByName(search, Iteration.class);
+        assertEquals(4, backlogs.size());
+    }
+    
+    @Test
+    public void testSearchByName_projects() {
+        String search  = "Iteration";
+        executeClassSql();
+        List<Backlog> backlogs = backlogDAO.searchByName(search, Project.class);
+        assertEquals(0, backlogs.size());
     }
 }

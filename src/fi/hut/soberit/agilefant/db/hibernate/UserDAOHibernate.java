@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +27,7 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
         crit.add(Restrictions.eq("loginName", loginName));
         return firstResult(crit);
     }
-    
+
     /** {@inheritDoc} */
     public User getByLoginNameIgnoreCase(String loginName) {
         Criteria crit = getCurrentSession().createCriteria(User.class);
@@ -38,6 +39,14 @@ public class UserDAOHibernate extends GenericDAOHibernate<User> implements
     public List<User> listUsersByEnabledStatus(boolean enabled) {
         Criteria crit = getCurrentSession().createCriteria(User.class);
         crit.add(Restrictions.eq("enabled", enabled));
+        return asList(crit);
+    }
+
+    public List<User> searchByName(String searchTerm) {
+        Criteria crit = getCurrentSession().createCriteria(User.class);
+        crit.add(Restrictions.or(Restrictions.like("fullName", searchTerm,
+                MatchMode.ANYWHERE), Restrictions.like("initials", searchTerm,
+                MatchMode.ANYWHERE)));
         return asList(crit);
     }
 

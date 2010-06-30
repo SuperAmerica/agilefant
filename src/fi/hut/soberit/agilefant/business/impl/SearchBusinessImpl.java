@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 import fi.hut.soberit.agilefant.business.SearchBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.NamedObject;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.SearchResultRow;
 
 @Service("searchBusiness")
@@ -21,6 +25,8 @@ public class SearchBusinessImpl implements SearchBusiness {
     private StoryDAO storyDAO;
     @Autowired
     private BacklogDAO backlogDAO;
+    @Autowired
+    private UserDAO userDAO;
 
     public List<SearchResultRow> searchStoriesAndBacklog(String searchTerm) {
         List<SearchResultRow> result = new ArrayList<SearchResultRow>();
@@ -30,6 +36,22 @@ public class SearchBusinessImpl implements SearchBusiness {
                     quickRefMatch));
         }
         List<Backlog> backlogs = backlogDAO.searchByName(searchTerm);
+        backlogListSearchResult(result, backlogs);
+        List<Story> stories = storyDAO.searchByName(searchTerm);
+        storyListSearchResult(result, stories);
+        return result;
+    }
+
+    private void storyListSearchResult(List<SearchResultRow> result,
+            List<Story> stories) {
+        for (Story story : stories) {
+            result.add(new SearchResultRow(story.getBacklog().getName() + " > "
+                    + story.getName(), story));
+        }
+    }
+
+    private void backlogListSearchResult(List<SearchResultRow> result,
+            List<Backlog> backlogs) {
         for (Backlog bl : backlogs) {
             SearchResultRow item = new SearchResultRow();
             item.setOriginalObject(bl);
@@ -40,12 +62,6 @@ public class SearchBusinessImpl implements SearchBusiness {
             }
             result.add(item);
         }
-        List<Story> stories = storyDAO.searchByName(searchTerm);
-        for (Story story : stories) {
-            result.add(new SearchResultRow(story.getBacklog().getName() + " > "
-                    + story.getName(), story));
-        }
-        return result;
     }
 
     public NamedObject searchByReference(String searchTerm) {
@@ -72,5 +88,35 @@ public class SearchBusinessImpl implements SearchBusiness {
             return backlogDAO.get(objectId);
         }
         return null;
+    }
+
+    public List<SearchResultRow> searchIterations(String searchTerm) {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        List<Backlog> backlogs = backlogDAO.searchByName(searchTerm, Iteration.class);
+        backlogListSearchResult(result, backlogs);
+        return result;
+    }
+
+    public List<SearchResultRow> searchProjects(String searchTerm) {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        List<Backlog> backlogs = backlogDAO.searchByName(searchTerm, Project.class);
+        backlogListSearchResult(result, backlogs);
+        return result;
+    }
+
+    public List<SearchResultRow> searchStories(String searchTerm) {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        List<Story> stories = storyDAO.searchByName(searchTerm);
+        storyListSearchResult(result, stories);
+        return result;
+    }
+
+    public List<SearchResultRow> searchUsers(String searchTerm) {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        List<User> users = userDAO.searchByName(searchTerm);
+        for(User user : users) {
+            result.add(new SearchResultRow(user.getFullName(), user));
+        }
+        return result;
     }
 }

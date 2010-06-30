@@ -40,4 +40,52 @@ public class SearchActionTest extends MockedTestCase {
         assertEquals(result, searchAction.getResults());
         verifyAll();
     }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchIterations() {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        searchAction.setTerm("foo");
+        expect(searchBusiness.searchIterations("foo")).andReturn(result);
+        replayAll();
+        searchAction.searchIterations();
+        assertEquals(result, searchAction.getResults());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchProjects() {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        searchAction.setTerm("foo");
+        expect(searchBusiness.searchProjects("foo")).andReturn(result);
+        replayAll();
+        searchAction.searchProjects();
+        assertEquals(result, searchAction.getResults());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchStories() {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        searchAction.setTerm("foo");
+        expect(searchBusiness.searchStories("foo")).andReturn(result);
+        replayAll();
+        searchAction.searchStories();
+        assertEquals(result, searchAction.getResults());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchUsers() {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        searchAction.setTerm("foo");
+        expect(searchBusiness.searchUsers("foo")).andReturn(result);
+        replayAll();
+        searchAction.searchUsers();
+        assertEquals(result, searchAction.getResults());
+        verifyAll();
+    }
 }

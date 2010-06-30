@@ -88,4 +88,20 @@ public class UserDAOTest extends AbstractHibernateTests {
         assertTrue(foundIds.contains(3));
     }
     
+    @Test
+    public void testSearchByName() {
+        String search  = "full";
+        executeClassSql();
+        List<User> users = userDAO.searchByName(search);
+        assertEquals(1, users.size());
+    }
+
+    @Test
+    public void testSearchByName_notFound() {
+        String search  = "not found string";
+        executeClassSql();
+        List<User> users = userDAO.searchByName(search);
+        assertEquals(0, users.size());
+    }
+    
 }

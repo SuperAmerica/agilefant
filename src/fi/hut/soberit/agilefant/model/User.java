@@ -41,7 +41,7 @@ import flexjson.JSON;
 @Entity
 @Table(name = "users")
 @Audited
-public class User {
+public class User implements NamedObject {
 
     private int id;
 

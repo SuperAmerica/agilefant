@@ -85,9 +85,12 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         if (result == null) return 0;
         return result.intValue();
     }
-    
     public List<Backlog> searchByName(String name) {
-        Criteria crit = getCurrentSession().createCriteria(Backlog.class);
+        return searchByName(name, Backlog.class);
+    }
+    
+    public List<Backlog> searchByName(String name, Class<?> type) {
+        Criteria crit = getCurrentSession().createCriteria(type);
         crit.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
         crit.addOrder(Order.asc("class"));
         crit.addOrder(Order.asc("name"));

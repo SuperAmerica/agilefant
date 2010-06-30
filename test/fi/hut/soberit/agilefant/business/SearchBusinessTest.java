@@ -13,9 +13,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fi.hut.soberit.agilefant.business.impl.SearchBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
@@ -36,6 +39,8 @@ public class SearchBusinessTest extends MockedTestCase {
     private StoryDAO storyDAO;
     @Mock
     private BacklogDAO backlogDAO;
+    @Mock
+    private UserDAO userDAO;
     
     @Test
     @DirtiesContext
@@ -143,5 +148,44 @@ public class SearchBusinessTest extends MockedTestCase {
         replayAll();
         assertNull(searchBusiness.searchByReference(term));
         verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchIterations() {
+        String term = "";
+        List<Backlog> res = Arrays.asList((Backlog)(new Iteration()));
+        
+        expect(backlogDAO.searchByName(term, Iteration.class)).andReturn(res);
+        replayAll();
+        List<SearchResultRow> actual = searchBusiness.searchIterations(term);
+        verifyAll();
+        assertSame(res.get(0), actual.get(0).getOriginalObject());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchProjects() {
+        String term = "";
+        List<Backlog> res = Arrays.asList((Backlog)(new Project()));
+        
+        expect(backlogDAO.searchByName(term, Project.class)).andReturn(res);
+        replayAll();
+        List<SearchResultRow> actual = searchBusiness.searchProjects(term);
+        verifyAll();
+        assertSame(res.get(0), actual.get(0).getOriginalObject());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testSearchUsers() {
+        String term = "";
+        List<User> res = Arrays.asList(new User());
+        
+        expect(userDAO.searchByName(term)).andReturn(res);
+        replayAll();
+        List<SearchResultRow> actual = searchBusiness.searchUsers(term);
+        verifyAll();
+        assertSame(res.get(0), actual.get(0).getOriginalObject());
     }
 }

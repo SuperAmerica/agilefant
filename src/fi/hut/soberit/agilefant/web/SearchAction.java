@@ -28,6 +28,26 @@ public class SearchAction extends ActionSupport {
         results = this.searchBusiness.searchStoriesAndBacklog(term);
         return Action.SUCCESS;
     }
+    
+    public String searchIterations() {
+        results = this.searchBusiness.searchIterations(term);
+        return Action.SUCCESS;
+    }
+    
+    public String searchProjects() {
+        results = this.searchBusiness.searchProjects(term);
+        return Action.SUCCESS;
+    }
+    
+    public String searchStories() {
+        results = this.searchBusiness.searchStories(term);
+        return Action.SUCCESS;
+    }
+    
+    public String searchUsers() {
+        results = this.searchBusiness.searchUsers(term);
+        return Action.SUCCESS;
+    }
 
     public List<SearchResultRow> getResults() {
         return results;

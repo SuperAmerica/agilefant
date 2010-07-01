@@ -67,8 +67,8 @@ $(document).ready(function() {
 
 <div style="clear: left;">
   <button class="dynamics-button deletePortfolio" style="width: 20ex;">Delete portfolio</button>
-  <button class="dynamics-button saveProperties" style="float: right;">Save</button>
   <button class="dynamics-button cancelProperties" style="float: right;">Cancel</button>
+  <button class="dynamics-button saveProperties" style="float: right;">Save</button>
 </div>
 
 </struct:widget>

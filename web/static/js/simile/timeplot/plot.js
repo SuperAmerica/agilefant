@@ -89,7 +89,7 @@ Timeplot.Plot.prototype = {
                     } else if (p > month) {
                         plot._timeFlag.innerHTML = d.toLocaleDateString();
                     } else {
-                        plot._timeFlag.innerHTML = d.toLocaleString();
+                        plot._timeFlag.innerHTML = d.asDateOnly();
                     }
 
                     var tw = plot._timeFlag.clientWidth;

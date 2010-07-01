@@ -510,10 +510,13 @@ Date.fullYearStart = '20';
 	
 	Date.prototype.before = function(anotherDate) {
 	  return (this.getTime() < anotherDate.getTime());
-	}
+	};
 	
 	Date.prototype.after = function(anotherDate) {
     return (this.getTime() > anotherDate.getTime());
-  }
-	
+  };
+  
+  Date.prototype.asDateOnly = function() {
+    return this.getFullYear() + "-" + _zeroPad(this.getMonth()+1) + "-" + _zeroPad(this.getDate());
+  };
 })();;

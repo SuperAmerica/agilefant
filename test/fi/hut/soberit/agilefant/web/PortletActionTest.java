@@ -1,11 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.easymock.EasyMock;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -16,8 +10,6 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.AgilefantWidgetBusiness;
 import fi.hut.soberit.agilefant.business.WidgetCollectionBusiness;
-import fi.hut.soberit.agilefant.model.AgilefantWidget;
-import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -41,30 +33,30 @@ public class PortletActionTest extends MockedTestCase {
     @Mock
     private WidgetCollectionBusiness widgetCollectionBusiness;
     
-    
-    @Test
-    @DirtiesContext
-    @Ignore
-    public void testRetrieve() {
-        WidgetCollection collection = new WidgetCollection();
-        testable.setCollectionId(123);
-        
-        expect(widgetCollectionBusiness.getAllPublicCollections()).andReturn(
-                new ArrayList<WidgetCollection>(Arrays.asList(
-                        collection, new WidgetCollection())));
-        // TODO: Figure a way to mock SecurityUtil.getLoggedUser
-        expect(widgetCollectionBusiness.getCollectionsForUser(EasyMock.isA(User.class)));
-        
-        expect(widgetCollectionBusiness.retrieve(123)).andReturn(collection);
-        expect(agilefantWidgetBusiness.generateWidgetGrid(collection, 2)).andReturn(new ArrayList<List<AgilefantWidget>>());
-                
-        replayAll();
-        assertEquals(Action.SUCCESS, testable.retrieve());
-        verifyAll();
-        
-        assertEquals(2, testable.getAllCollections().size());
-        assertSame(collection, testable.getContents());
-    }
+//    
+//    @Test
+//    @DirtiesContext
+//    @Ignore
+//    public void testRetrieve() {
+//        WidgetCollection collection = new WidgetCollection();
+//        testable.setCollectionId(123);
+//        
+//        expect(widgetCollectionBusiness.getAllPublicCollections()).andReturn(
+//                new ArrayList<WidgetCollection>(Arrays.asList(
+//                        collection, new WidgetCollection())));
+//        // TODO: Figure a way to mock SecurityUtil.getLoggedUser
+//        expect(widgetCollectionBusiness.getCollectionsForUser(EasyMock.isA(User.class)));
+//        
+//        expect(widgetCollectionBusiness.retrieve(123)).andReturn(collection);
+//        expect(agilefantWidgetBusiness.generateWidgetGrid(collection, 2)).andReturn(new ArrayList<List<AgilefantWidget>>());
+//                
+//        replayAll();
+//        assertEquals(Action.SUCCESS, testable.retrieve());
+//        verifyAll();
+//        
+//        assertEquals(2, testable.getAllCollections().size());
+//        assertSame(collection, testable.getContents());
+//    }
     
     
     @Test

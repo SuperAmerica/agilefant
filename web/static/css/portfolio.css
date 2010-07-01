@@ -145,3 +145,9 @@
 .privatePortfolios option {
   color: #2E6E9E;
 }
+
+.widget-top-info {
+  margin-bottom: 1em;
+  color: #666;
+  font-size: 8pt;
+}

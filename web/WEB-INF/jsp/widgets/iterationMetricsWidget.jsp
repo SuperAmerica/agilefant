@@ -4,7 +4,7 @@
   widgetId="${widgetId}">
 
   <%-- Breadcrumb --%>
-  <div style="margin-bottom: 1em; color: #666;"><a
+  <div class="widget-top-info"><a
     href="editBacklog.action?backlogId=${iteration.parent.parent.id}">
   <c:out value="${iteration.parent.parent.name}" /> </a> &gt; <a
     href="editBacklog.action?backlogId=${iteration.parent.id}"> <c:out

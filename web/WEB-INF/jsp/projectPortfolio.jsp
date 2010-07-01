@@ -11,6 +11,12 @@
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/portfolio-eventsource.js"></script>
 
+<style>
+.privatePortfolios option {
+  color: #2E6E9E;
+}
+</style>
+
 <script type="text/javascript">
 window.Timeline.DateTime = window.SimileAjax.DateTime;
 Timeline.GregorianDateLabeller.monthNames["en"] = [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ];
@@ -42,6 +48,7 @@ $(document).ready(function() {
 <h2>Project portfolio</h2>
 
 <p>
+
 Change to
 <select id="changeToSelection">
   <option selected="selected" style="color: #666;">Select a portfolio...</option>
@@ -50,8 +57,14 @@ Change to
     <option value="portfolio">Project portfolio</option>
   </optgroup>
   
-  <optgroup label="Personal portfolios">
-    <c:forEach items="${allCollections}" var="collection">
+  <optgroup label="Public portfolios">
+    <c:forEach items="${publicCollections}" var="collection">
+      <option value="${collection.id}">${collection.name}</option>
+    </c:forEach>
+  </optgroup>
+  
+  <optgroup label="Private portfolios" class="privatePortfolios">
+    <c:forEach items="${privateCollections}" var="collection">
       <option value="${collection.id}">${collection.name}</option>
     </c:forEach>
   </optgroup>

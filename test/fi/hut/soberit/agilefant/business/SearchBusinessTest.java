@@ -178,6 +178,25 @@ public class SearchBusinessTest extends MockedTestCase {
     
     @Test
     @DirtiesContext
+    public void testSearchStories() {
+        String term = "";
+        Story story = new Story();
+        story.setName("faa");
+        story.setBacklog(new Iteration());
+        story.getBacklog().setName("foo");
+        
+        List<Story> res = Arrays.asList(story);
+        expect(storyDAO.searchByName(term)).andReturn(res);
+        replayAll();
+        List<SearchResultRow> actual = searchBusiness.searchStories(term);
+        verifyAll();
+        assertSame(story, actual.get(0).getOriginalObject());
+        assertTrue(actual.get(0).getLabel().contains("foo"));
+        assertTrue(actual.get(0).getLabel().contains("faa"));
+    }
+    
+    @Test
+    @DirtiesContext
     public void testSearchUsers() {
         String term = "";
         List<User> res = Arrays.asList(new User());

@@ -7,9 +7,10 @@
   <div style="margin-bottom: 1em; color: #666;"><a
     href="editBacklog.action?backlogId=${iteration.parent.parent.id}">
   <c:out value="${iteration.parent.parent.name}" /> </a> &gt; <a
-    href="editBacklog.action?backlogId=${backlog.parent.id}"> <c:out
-    value="${iteration.parent.name}" /> </a> &gt; <c:out
-    value="${iteration.name}" /></div>
+    href="editBacklog.action?backlogId=${iteration.parent.id}"> <c:out
+    value="${iteration.parent.name}" /> </a> &gt; <a
+    href="editBacklog.action?backlogId=${iteration.id}"> <c:out
+    value="${iteration.name}" /></a></div>
 
   <%-- Metrics --%>
   <table style="margin: 2em 0;">

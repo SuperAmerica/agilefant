@@ -412,7 +412,13 @@
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String minutesToString(java.lang.Long)</function-signature>
 	</function> 
-	 	 
+  
+     <function>
+      <name>estimateToHours</name>
+      <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+      <function-signature>String estimateToHours(fi.hut.soberit.agilefant.model.ExactEstimate)</function-signature>
+    </function>
+  	 	 
 	<function>
 	  <name>htmlSubString</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>

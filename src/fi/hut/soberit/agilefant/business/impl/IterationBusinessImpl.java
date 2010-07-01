@@ -231,6 +231,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
 
     private Integer calculatePercent(Integer part, Integer total) {
+        if(total == 0) {
+            return 0;
+        }
         return Math.round(100.0f * part / total);
     }
 
@@ -269,17 +272,15 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         metrics.setSpentEffort(new ExactEstimate(spentEffort));
 
         // 3. Tasks done and Total
-        Pair<Integer, Integer> pair = iterationDAO
+        Pair<Integer, Integer> pairTasks = iterationDAO
                 .getCountOfDoneAndAllTasks(iteration);
-        metrics.setTotalTasks(pair.second);
-        metrics.setCompletedTasks(pair.first);
-        metrics.setPercentDoneTasks(calculatePercent(pair.first, pair.second));
+        metrics.setTotalTasks(pairTasks.second);
+        metrics.setCompletedTasks(pairTasks.first);
+        
 
-        pair = iterationDAO.getCountOfDoneAndAllStories(iteration);
-        metrics.setTotalStories(pair.second);
-        metrics.setCompletedStories(pair.first);
-        metrics
-                .setPercentDoneStories(calculatePercent(pair.first, pair.second));
+        Pair<Integer, Integer>  pairStories = iterationDAO.getCountOfDoneAndAllStories(iteration);
+        metrics.setTotalStories(pairStories.second);
+        metrics.setCompletedStories(pairStories.first);
 
         //4. iteration interval
         LocalDate today = new LocalDate();
@@ -291,6 +292,15 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         
         //5. variance
         metrics.setVariance(calculateVariance(iteration));
+        
+        //6. calculate percentages
+        metrics.setPercentDoneTasks(calculatePercent(pairTasks.first, pairTasks.second));
+        metrics.setPercentDoneStories(calculatePercent(pairStories.first, pairStories.second));
+        metrics.setDoneStoryPointsPercentage(calculatePercent(metrics.getDoneStoryPoints(), metrics.getStoryPoints()));
+        metrics.setDaysLeftPercentage(calculatePercent(metrics.getDaysLeft(), metrics.getTotalDays()));
+        if(metrics.getEffortLeft() != null && metrics.getOriginalEstimate() != null) {
+            metrics.setCompletedEffortPercentage(calculatePercent(metrics.getEffortLeft().intValue(), metrics.getOriginalEstimate().intValue()));
+        }
         return metrics;
     }
 

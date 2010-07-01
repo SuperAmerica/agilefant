@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Product;
@@ -80,6 +81,15 @@ public class AEFFunctions {
             return "";
         }
         return minutesParser.convertToString(minor);
+    }
+    
+    public static String estimateToHours(ExactEstimate estimate) {
+        if(estimate == null) {
+            return "";
+        }
+        double rounded = Math.round(estimate.floatValue() * 10 / 60.0);
+        double result = rounded / 10.0;
+        return "" + result + "h";
     }
     
     public static String nl2br(String s) {

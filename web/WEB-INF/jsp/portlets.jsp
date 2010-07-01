@@ -2,6 +2,8 @@
 
 <struct:htmlWrapper navi="portfolio">
 
+<script type="text/javascript" src="static/js/widgets/agilefantWidget.js"></script>
+
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/LoadPlot.js"></script>
 <script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
@@ -12,131 +14,6 @@
 <link rel="stylesheet" href="static/css/timeline/timeline.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/ether.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/event.css" type="text/css"/>
-
-<style>
-.widgetContainer {
-  width: 50%;
-  margin: 0;
-  padding: 0;
-  float: left;
-}
-.widgetList {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 200px;
-  list-style-type: none;
-  position: relative;
-}
-.widget {
-  background: white;
-
-  display: block;
-  min-width: 350px;
-  max-height: 350px;
-  
-  margin: 10px 0 0;
-  padding: 0;
-  
-  border: 1px solid #A6C9E2;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  
-  font-size: 80%;
-  
-  width: 95%;
-  
-  overflow: hidden;
-}
-.widget-placeholder {
-  min-width: 350px;
-  width: 95%;
-  height: 100px;
-  
-  margin: 10px 0 0;
-  padding: 0;
-  
-  border: 1px dashed #ccc;
-  background: whiteSmoke;
-}
-.widgetHeader {
-  border: 1px solid #A6C9E2;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  border-radius: 5px;
-  
-  padding: 2px 5px;
-  margin: 2px;
-  
-  background: #DFEFFC;
-  
-  vertical-align: middle;
-}
-.realWidget .widgetHeader {
-  cursor: move;
-}
-.widgetHeader ul {
-  float: right;
-  margin: 0;
-  padding: 0;
-}
-.widgetHeader ul li {
-  font-weight: bold;
-  display: inline-block;
-  float: right;
-  width: 13px;
-  height: 13px;
-  margin: 0 2px;
-  padding: 0;
-  cursor: pointer;
-  text-align: center;
-  border: 1px solid transparent;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-}
-.widgetHeader ul li:hover {
-  color: #666;
-  background: whiteSmoke;
-  border-color: #ccc;
-}
-.widgetContent {
-  margin: 2px 5px;
-  max-height: 320px;
-  overflow: auto;
-}
-.staticWidget button, .createNewWidget td {
-  font-size: 100% !important;
-}
-.controlLink {
-  border: 1px solid transparent;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  display: block;
-  
-  padding: 0 5px;
-}
-.controlLink:hover {
-  border-color: #ccc;
-}
-.controlLink span {
-  line-height: 24pt;
-  vertical-align: middle;
-}
-.controlLink span.plusSign {
-  font-size: 24pt;
-  font-weight: bold;
-  color: #ccc;
-}
-.controlLink:hover span.plusSign {
-  color: #aaa;
-}
-.privatePortfolios option {
-  color: #2E6E9E;
-}
-</style>
 
 <script type="text/javascript">
 
@@ -158,45 +35,7 @@ $(document).ready(function() {
       });
     }
   });
-
-  $('.closeWidget').live('click',function() {
-    var widget = $(this).parents('.widget');
-
-    if (widget.attr('widgetId') !== '-1') {
-      $.ajax({
-        type: 'POST',
-        dataType: 'text',
-        url: 'ajax/widgets/deleteWidget.action',
-        data: { widgetId: widget.attr('widgetId') },
-        success: function(data, status) {
-          MessageDisplay.Ok('Widget removed');
-          widget.remove();
-        }
-      });
-    } else {
-      widget.remove();
-    }
-  });
-
-  $('.minimizeWidget').live('click',function() {
-    var me = $(this);
-    var parent = me.parents('.widget');
-    me.siblings('.maximizeWidget').show();
-    parent.find('.widgetContent').hide('blind');
-    me.hide();
-
-    jQuery.cookie('agilefant_widgetcollection_${contents.id}_' + parent.attr('widgetId'), 'closed', { expires: 60 });
-  });
-
-  $('.maximizeWidget').live('click',function() {
-    var me = $(this);
-    var parent = me.parents('.widget');
-    me.siblings('.minimizeWidget').show();
-    parent.find('.widgetContent').show('blind');
-    me.hide();
-
-    jQuery.cookie('agilefant_widgetcollection_${contents.id}_' + parent.attr('widgetId'), 'open', { expires: 60 });
-  });
+  
 
   /*
    * New widget creation
@@ -222,9 +61,7 @@ $(document).ready(function() {
         $.ajax({
           url: "ajax/" + searchUrls[typeField.val()],
           dataType: "json",
-          data: {
-			term: request.term
-		  },
+          data: { term: request.term },
           success: function(data) {
             response($.map(data, function(item) {
               return {
@@ -270,11 +107,15 @@ $(document).ready(function() {
    * Properties widget
    */
   $('.propertiesWidgetLink').click(function() {
-    var clone = $('#templates > #staticWidget').clone();
-    clone.removeAttr('id').attr('widgetId','-1');
     if ($('#portfolioPropertiesTable').length === 0) {
+      var clone = $('#templates > #staticWidget').clone();
       clone.prependTo($('.widgetList:eq(0)'));
-      clone.load('ajax/widgets/portfolioProperties.action?objectId=${contents.id}');
+      clone.aefWidget({
+        url: 'ajax/widgets/portfolioProperties.action?',
+        objectId: ${contents.id},
+        widgetId: -1,
+        realWidget: false
+      });
     }
   });
   
@@ -284,8 +125,14 @@ $(document).ready(function() {
 
   var widgetCounter = 0;
   <c:forEach items="${contents.widgets}" var="widget">
+  
   widgetCounter++;
-  $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('ajax/widgets/${widget.type}.action?objectId=${widget.objectId}&widgetId=${widget.id}');
+  
+  $('#widget_${widget.id}').aefWidget({
+    widgetId: ${widget.id},
+    objectId: ${widget.objectId},
+    url: 'ajax/widgets/${widget.type}.action'
+  });
   </c:forEach>
 
   if (widgetCounter === 0) {
@@ -311,10 +158,11 @@ $(document).ready(function() {
 
 </script>
 
+<div class="structure-main-block">
 
 <h2>Portfolio: ${contents.name}</h2>
 
-<div style="float: right; margin-right: 2.5%;">
+<div style="margin-right: 2.5%; min-width: 750px;">
   <a href="#" class="controlLink newWidgetLink" style="float: right;"><span>Add widget</span> <span class="plusSign">+</span></a>
   <a href="#" class="controlLink propertiesWidgetLink" style="float: right;"><span>Properties</span> <span class="plusSign">?</span></a>
 </div>
@@ -396,5 +244,6 @@ Change to
 </ul>
 <!-- /Hidden templates -->
 
+</div>
 
 </struct:htmlWrapper>

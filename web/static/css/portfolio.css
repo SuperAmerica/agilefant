@@ -1,0 +1,147 @@
+/*
+ * CSS for Agilefant's widget portfolios.
+ */
+
+.widgetContainer {
+  width: 50%;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+
+.widgetList {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 200px;
+  list-style-type: none;
+  position: relative;
+}
+
+.widget {
+  background: white;
+
+  display: block;
+  min-width: 350px;
+  max-height: 350px;
+  
+  margin: 10px 0 0;
+  padding: 0;
+  
+  border: 1px solid #A6C9E2;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  
+  font-size: 9pt;
+  
+  width: 95%;
+  
+  overflow: hidden;
+}
+
+
+.widget-placeholder {
+  min-width: 350px;
+  width: 95%;
+  height: 100px;
+  
+  margin: 10px 0 0;
+  padding: 0;
+  
+  border: 1px dashed #ccc;
+  background: whiteSmoke;
+}
+
+.widgetHeader {
+  border: 1px solid #A6C9E2;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  
+  padding: 2px 5px;
+  margin: 2px;
+  
+  background: #DFEFFC;
+  
+  vertical-align: middle;
+}
+
+.realWidget .widgetHeader {
+  cursor: move;
+}
+
+.widgetHeader ul {
+  display: none;
+  float: right;
+  margin: 0;
+  padding: 0;
+}
+.realWidget .widgetHeader ul {
+  display: block;  
+}
+
+.widgetHeader ul li {
+  font-weight: bold;
+  display: inline-block;
+  float: right;
+  width: 13px;
+  height: 13px;
+  margin: 0 2px;
+  padding: 0;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid transparent;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+}
+
+.widgetHeader ul li:hover {
+  color: #666;
+  background: whiteSmoke;
+  border-color: #ccc;
+}
+
+.widgetContent {
+  margin: 2px 5px;
+  max-height: 320px;
+  overflow: auto;
+}
+
+.staticWidget button, .createNewWidget td {
+  font-size: 100% !important;
+}
+
+.controlLink {
+  border: 1px solid transparent;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  display: block;
+  
+  padding: 0 5px;
+}
+
+.controlLink:hover {
+  border-color: #ccc;
+}
+
+.controlLink span {
+  line-height: 24pt;
+  vertical-align: middle;
+}
+
+.controlLink span.plusSign {
+  font-size: 24pt;
+  font-weight: bold;
+  color: #ccc;
+}
+
+.controlLink:hover span.plusSign {
+  color: #aaa;
+}
+
+.privatePortfolios option {
+  color: #2E6E9E;
+}

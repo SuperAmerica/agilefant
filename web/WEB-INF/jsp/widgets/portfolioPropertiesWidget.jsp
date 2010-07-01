@@ -23,11 +23,12 @@ $(document).ready(function() {
   $('.saveProperties').click(function() {
     var postData = {
       "collection.id":   ${collectionId},
-      "collection.name": $('input[name=collectionName]').val(),
-      "private":         $('input[name=collectionPrivate]').is(':checked'),
-      "userId":          ${currentUser.id}
+      "collection.name": $('input[name=collectionName]').val()
     };
 
+    if ($('input[name=collectionPrivate]').is(':checked')) {
+        postData["collection.user"] = ${currentUser.id};
+    }
     $.ajax({
       type: 'POST',
       url:  'ajax/widgets/storeCollection.action',
@@ -59,7 +60,7 @@ $(document).ready(function() {
       <c:if test="${contents.user != null}">
         <c:set var="checkboxSelected" value='checked="checked"' />
       </c:if>
-      <input type="checkbox" name="collectionPrivate" disabled="disabled" ${checkboxSelected}/>
+      <input type="checkbox" name="collectionPrivate" ${checkboxSelected}/>
     </td>
   </tr>
 </table>

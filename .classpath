@@ -81,7 +81,7 @@
 	<classpathentry kind="lib" path="lib/joda-time-1.6.jar" sourcepath="lib-src/joda-time-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-hibernate-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/spring-test.jar"/>
+	<classpathentry kind="lib" path="lib/spring-test.jar" sourcepath="C:/Workspace/.m2/repository/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01-sources.jar"/>
 	<classpathentry kind="lib" path="lib/build/h2-1.1.114.jar"/>
 	<classpathentry kind="lib" path="lib/jettison-1.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/build/easymock-2.5.jar"/>

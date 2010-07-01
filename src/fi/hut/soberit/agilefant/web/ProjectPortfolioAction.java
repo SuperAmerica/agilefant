@@ -11,6 +11,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.PortfolioBusiness;
 import fi.hut.soberit.agilefant.business.WidgetCollectionBusiness;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.PortfolioTO;
 
 @Component("projectPortfolioAction")
@@ -23,12 +24,14 @@ public class ProjectPortfolioAction implements ContextAware{
     @Autowired
     private WidgetCollectionBusiness widgetCollectionBusiness;
     
-    private List<WidgetCollection> allCollections;
+    private List<WidgetCollection> publicCollections;
+    private List<WidgetCollection> privateCollections;
     
     private PortfolioTO portfolioData = new PortfolioTO();
 
     public String retrieve() {
-        allCollections = widgetCollectionBusiness.getAllCollections();
+        publicCollections = widgetCollectionBusiness.getAllPublicCollections();
+        privateCollections = widgetCollectionBusiness.getCollectionsForUser(SecurityUtil.getLoggedUser());
         return Action.SUCCESS;
     }
 
@@ -53,8 +56,12 @@ public class ProjectPortfolioAction implements ContextAware{
         return 0;
     }
 
-    public List<WidgetCollection> getAllCollections() {
-        return allCollections;
+    public List<WidgetCollection> getPublicCollections() {
+        return publicCollections;
+    }
+
+    public List<WidgetCollection> getPrivateCollections() {
+        return privateCollections;
     }
 
 }

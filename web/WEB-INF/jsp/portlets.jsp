@@ -133,6 +133,9 @@
 .controlLink:hover span.plusSign {
   color: #aaa;
 }
+.privatePortfolios option {
+  color: #2E6E9E;
+}
 </style>
 
 <script type="text/javascript">
@@ -326,8 +329,14 @@ Change to
     <option value="portfolio">Project portfolio</option>
   </optgroup>
   
-  <optgroup label="Personal portfolios">
-    <c:forEach items="${allCollections}" var="collection">
+  <optgroup label="Public portfolios">
+    <c:forEach items="${publicCollections}" var="collection">
+      <option value="${collection.id}">${collection.name}</option>
+    </c:forEach>
+  </optgroup>
+  
+  <optgroup label="Private portfolios" class="privatePortfolios">
+    <c:forEach items="${privateCollections}" var="collection">
       <option value="${collection.id}">${collection.name}</option>
     </c:forEach>
   </optgroup>

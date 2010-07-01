@@ -13,6 +13,7 @@ import fi.hut.soberit.agilefant.business.AgilefantWidgetBusiness;
 import fi.hut.soberit.agilefant.business.WidgetCollectionBusiness;
 import fi.hut.soberit.agilefant.db.WidgetCollectionDAO;
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
 
 @Service("widgetCollectionBusiness")
@@ -36,12 +37,18 @@ public class WidgetCollectionBusinessImpl extends
     }
     
     /** {@inheritDoc} */
-    @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
-    public List<WidgetCollection> getAllCollections() {
+    public List<WidgetCollection> getAllPublicCollections() {
         List<WidgetCollection> allCollections = new ArrayList<WidgetCollection>();
-        allCollections.addAll(widgetCollectionDAO.getAll());
-        Collections.sort(allCollections, new PropertyComparator("name", true, true));
+        allCollections.addAll(widgetCollectionDAO.getCollectionsForUser(null));
+        return allCollections;
+    }
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public List<WidgetCollection> getCollectionsForUser(User user) {
+        List<WidgetCollection> allCollections = new ArrayList<WidgetCollection>();
+        allCollections.addAll(widgetCollectionDAO.getCollectionsForUser(user));
         return allCollections;
     }
     

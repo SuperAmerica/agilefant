@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fi.hut.soberit.agilefant.business.impl.WidgetCollectionBusinessImpl;
 import fi.hut.soberit.agilefant.db.WidgetCollectionDAO;
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -42,10 +43,20 @@ public class WidgetCollectionBusinessTest extends MockedTestCase {
     
     @Test
     @DirtiesContext
-    public void testGetAllCollections() {
-        expect(widgetCollectionDAO.getAll()).andReturn(new ArrayList<WidgetCollection>());
+    public void testGetAllPublicCollections() {
+        expect(widgetCollectionDAO.getCollectionsForUser(null)).andReturn(new ArrayList<WidgetCollection>());
         replayAll();
-        testable.getAllCollections();
+        testable.getAllPublicCollections();
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGetCollectionsForUser() {
+        User user = new User();
+        expect(widgetCollectionDAO.getCollectionsForUser(user)).andReturn(new ArrayList<WidgetCollection>());
+        replayAll();
+        testable.getCollectionsForUser(user);
         verifyAll();
     }
 

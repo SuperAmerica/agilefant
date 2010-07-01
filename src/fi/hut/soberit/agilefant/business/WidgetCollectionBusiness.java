@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
+import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WidgetCollection;
 
 public interface WidgetCollectionBusiness extends
@@ -14,10 +15,15 @@ public interface WidgetCollectionBusiness extends
     public WidgetCollection createPortfolio();
     
     /**
-     * Retrieve all <code>WidgetCollections</code> as alphabetical list.
-     * @return
+     * Retrieve all public <code>WidgetCollection</code>s as alphabetical list.
      */
-    public List<WidgetCollection> getAllCollections();
+    public List<WidgetCollection> getAllPublicCollections();
+    
+    /**
+     * Retrieve all <code>WidgetCollection</code>s of target user as alphabetical
+     * list.
+     */
+    public List<WidgetCollection> getCollectionsForUser(User user);
     
     /**
      * Insert the widget to a given position and shift the others.

@@ -32,7 +32,7 @@
       <td>
         <c:out value="${iterationMetrics.percentDoneTasks}" />%
       </td>
-      <td style="text-align: center;">
+      <td style="text-align: center; white-space: nowrap;">
         <c:out value="${iterationMetrics.completedTasks}" /> / 
         <c:out value="${iterationMetrics.totalTasks}" />
       </td>
@@ -47,7 +47,7 @@
       <td>
         <c:out value="${iterationMetrics.completedEffortPercentage}" />%
       </td>
-      <td style="text-align: center;">
+      <td style="text-align: center; white-space: nowrap;">
         <c:out value="${aef:estimateToHours(iterationMetrics.effortLeft)}" /> / 
         <c:out value="${aef:estimateToHours(iterationMetrics.originalEstimate)}" />
       </td>
@@ -62,7 +62,7 @@
       <td>
         <c:out value="${iterationMetrics.percentDoneStories}" />%
       </td>
-      <td style="text-align: center;">
+      <td style="text-align: center; white-space: nowrap;">
         <c:out value="${iterationMetrics.completedStories}" /> / 
         <c:out value="${iterationMetrics.totalStories}" />
       </td>
@@ -77,8 +77,8 @@
       <td>
         <c:out value="${iterationMetrics.doneStoryPointsPercentage}" />%
       </td>
-      <td style="text-align: center;">
-        <c:out value="${iterationMetrics.doneStoryPoints}" /> points / 
+      <td style="text-align: center; white-space: nowrap;">
+        <c:out value="${iterationMetrics.doneStoryPoints}" /> / 
         <c:out value="${iterationMetrics.storyPoints}" /> points
       </td>
     </tr>
@@ -86,11 +86,13 @@
     </td>
       <td style="padding-left: 1em; vertical-align: middle;">
         <div class="smallBurndown" style="margin: 0; background-image: url('drawSmallIterationBurndown.action?backlogId=${iteration.id}');">&nbsp;</div>
-          <div style="width: 100px; height: 1em;" class="storyStateNOT_STARTED">
+          <div style="width: 100px; height: 1em; margin-top: 0.5em;" class="storyStateNOT_STARTED">
             <div class="storyStateDONE" style="display: inline-block; float: right; width: ${iterationMetrics.daysLeftPercentage}%; height: 1em;">
           </div>
         </div>
-        ${iterationMetrics.daysLeft} / ${iterationMetrics.totalDays} days left
+        <div style="text-align: center;">
+          ${iterationMetrics.daysLeft} / ${iterationMetrics.totalDays} days left
+        </div>
       </td>
     </tr>
   </table>

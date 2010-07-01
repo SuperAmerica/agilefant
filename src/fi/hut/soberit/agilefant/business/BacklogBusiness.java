@@ -45,7 +45,9 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      */
     public Collection<Backlog> getChildBacklogs(Backlog backlog);
 
-    int calculateStoryPointSum(int backlogId);
+    public int calculateStoryPointSum(int backlogId);
+    
+    public int calculateDoneStoryPointSum(int backlogId);
     
     public void addAssignees(int backlogId, Set<Integer> userIds);
 

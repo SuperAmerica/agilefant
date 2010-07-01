@@ -1,105 +1,86 @@
 <%@ include file="./_taglibs.jsp"%>
 
 <div class="project-iteration-row-metrics-left">
-	<table class="project-iteration-metrics">
-		<tr>
-		<td style="padding-left: 10px; padding-right: 10px" colspan="2">
-				<h4>Story states by count</h4>
-        <div>
-          ${iterationRowMetrics.doneStoryCount} / ${iterationRowMetrics.storyCount} (${iterationRowMetrics.doneStoryPercentage} %) done
-        </div>
-        <c:if test="${iterationRowMetrics.storyCount > 0}">
-          <div class="iterationRowMetricsBar project-iteration-metrics-storystates">
-            <c:forEach var="entry" items="${iterationRowMetrics.stateDistribution}">
-              <div class="iterationRowMetricsBar storyState${entry.key}" style="width: ${entry.value * 300 / iterationRowMetrics.storyCount}px"></div>
-            </c:forEach>
-          </div>
-        </c:if>
-		</td>
-    
-    <%--
-		<td style="padding-left: 10px; padding-right: 10px">
-			<h4>Burndown chart</h4>
-		<img id="smallChart" src="drawSmallIterationBurndown.action?backlogId=${iterationId}" />
-		</td>
-     --%>
+<table class="project-iteration-metrics">
+  <tr>
+    <td style="padding-left: 10px; padding-right: 10px" colspan="2">
+    <h4>Done stories</h4>
+    <div>${iterationMetrics.completedStories} /
+    ${iterationMetrics.totalStories}
+    (${iterationMetrics.percentDoneStories} %) done</div>
+    <c:if test="${iterationMetrics.completedStories > 0}">
+      <div class="iterationMetricsBar project-iteration-metrics-storystates storyStateNOT_STARTED" style="height: 1.5em;">
+        <div class="iterationMetricsBar storyStateDONE" style="height: 1.5em; width: ${iterationMetrics.percentDoneStories}%"></div>
+      </div>
+    </c:if></td>
 
-			<td style="padding-left: 10px; padding-right: 10px" colspan="2">
-				<h4>Time left in iteration</h4>
-        <div>
-          ${iterationRowMetrics.daysLeft} / ${iterationRowMetrics.totalDays} (${iterationRowMetrics.daysLeftPercentage} %) days
-        </div>
-        <c:if test="${iterationRowMetrics.totalDays > 0}">
-          <div class="iterationRowMetricsBar project-iteration-metrics-timeleft">
-            <div class="iterationRowMetricsBar storyStateDONE" style="width: ${300 - iterationRowMetrics.daysLeft * 300 / iterationRowMetrics.totalDays}px"></div>
-            <div class="iterationRowMetricsBar storyStateNOT_STARTED" style="width: ${iterationRowMetrics.daysLeft * 300 / iterationRowMetrics.totalDays}px"></div>
-          </div>
-        </c:if>
-		</td>
-    </tr>   
-    
-    
-    <tr>
-      <td style="padding: 0 10px;"><b>Effort left</b></td>
-      <td>
-        <c:choose>
-        <c:when test="${iterationRowMetrics.effortLeft.minorUnits  != 0}">
-          <c:out value="${aef:minutesToString(iterationRowMetrics.effortLeft.minorUnits)}" />
-        </c:when>
-        <c:otherwise>
+    <td style="padding-left: 10px; padding-right: 10px" colspan="2">
+    <h4>Time left in iteration</h4>
+    <div>${iterationMetrics.daysLeft} /
+    ${iterationMetrics.totalDays}
+    (${iterationMetrics.daysLeftPercentage} %) days</div>
+    <c:if test="${iterationMetrics.totalDays > 0}">
+      <div class="iterationMetricsBar project-iteration-metrics-timeleft storyStateNOT_STARTED" style="height: 1.5em;">
+      <div class="iterationMetricsBar storyStateDONE" style="width: ${iterationMetrics.daysLeftPercentage}%; height: 1.5em; float: right;"></div>
+      </div>
+    </c:if></td>
+  </tr>
+
+
+  <tr>
+    <td style="padding: 0 10px;"><b>Effort left</b></td>
+    <td><c:choose>
+      <c:when test="${iterationMetrics.effortLeft.minorUnits  != 0}">
+        <c:out
+          value="${aef:minutesToString(iterationMetrics.effortLeft.minorUnits)}" />
+      </c:when>
+      <c:otherwise>
           &mdash;
         </c:otherwise>
-        </c:choose>
-      </td>
-      <td style="padding-right: 4px"><b>Schedule Variance</b></td>
-      <td>
-        <c:choose>
-        <c:when test="${iterationRowMetrics.variance != null}">
-          <c:out value="${iterationRowMetrics.variance}" />
-        </c:when>
-        <c:otherwise>
+    </c:choose></td>
+    <td style="padding-right: 4px"><b>Schedule Variance</b></td>
+    <td><c:choose>
+      <c:when test="${iterationMetrics.variance != null}">
+        <c:out value="${iterationMetrics.variance}" /> days
+      </c:when>
+      <c:otherwise>
           &mdash;
         </c:otherwise>
-        </c:choose>
-      </td>
-    </tr>
-    
-    <tr>
-      <td style="padding: 0 10px;"><b>Original estimate</b></td>
-      <td>
-        <c:choose>
-        <c:when test="${iterationRowMetrics.originalEstimate.minorUnits  != 0}">
-          <c:out value="${aef:minutesToString(iterationRowMetrics.originalEstimate.minorUnits)}" />
-        </c:when>
-        <c:otherwise>
+    </c:choose></td>
+  </tr>
+
+  <tr>
+    <td style="padding: 0 10px;"><b>Original estimate</b></td>
+    <td><c:choose>
+      <c:when
+        test="${iterationMetrics.originalEstimate.minorUnits  != 0}">
+        <c:out
+          value="${aef:minutesToString(iterationMetrics.originalEstimate.minorUnits)}" />
+      </c:when>
+      <c:otherwise>
           &mdash;
         </c:otherwise>
-        </c:choose>
-      </td>
-      <c:choose>
-      <c:when test="${iterationRowMetrics.timesheetsEnabled}">
-      <td style="padding-right: 4px"><b>Spent effort</b></td>
-      <td>
-        <c:choose>
-        <c:when test="${iterationRowMetrics.spentEffort.minorUnits != 0}">
-          <c:out value="${aef:minutesToString(iterationRowMetrics.spentEffort.minorUnits)}" />
-        </c:when>
-        <c:otherwise>
+    </c:choose></td>
+    <c:choose>
+      <c:when test="${settings.hourReportingEnabled}">
+        <td style="padding-right: 4px"><b>Spent effort</b></td>
+        <td><c:choose>
+          <c:when test="${iterationMetrics.spentEffort.minorUnits != 0}">
+            <c:out
+              value="${aef:minutesToString(iterationMetrics.spentEffort.minorUnits)}" />
+          </c:when>
+          <c:otherwise>
           &mdash;
         </c:otherwise>
-        </c:choose>
-      </td>
+        </c:choose></td>
       </c:when>
       <c:otherwise>
         <td></td>
         <td></td>
       </c:otherwise>
-      </c:choose>
-    </tr>
-    
+    </c:choose>
+  </tr>
 
-			</table>
-		</div>
-		</tr>
-	</table>
-	</div>
+
+</table>
+</div>

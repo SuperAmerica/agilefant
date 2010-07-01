@@ -36,7 +36,6 @@ IterationRowController.prototype.toggleFactory = function(view, model) {
 
 IterationRowController.prototype.showDetails = function() {
   var cell = this.view.getCell(IterationRowController.columnIndices.storiesData);
-console.log(cell);
   if (cell) {
     var data = {
         iterationId: this.model.id

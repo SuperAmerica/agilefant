@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +30,9 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
-import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
-import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -55,7 +52,6 @@ public class IterationBusinessTest {
     BacklogBusiness backlogBusiness;
     AssignmentBusiness assignmentBusiness;
     BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
-    SettingBusiness settingBusiness;
     StoryRankBusiness storyRankBusiness;
     TaskBusiness taskBusiness;
     
@@ -98,9 +94,6 @@ public class IterationBusinessTest {
         backlogHistoryEntryBusiness = createMock(BacklogHistoryEntryBusiness.class);
         iterationBusiness.setBacklogHistoryEntryBusiness(backlogHistoryEntryBusiness);
         
-        settingBusiness = createMock(SettingBusiness.class);
-        iterationBusiness.setSettingBusiness(settingBusiness);
-        
         storyRankBusiness = createStrictMock(StoryRankBusiness.class);
         iterationBusiness.setStoryRankBusiness(storyRankBusiness);
         
@@ -112,6 +105,8 @@ public class IterationBusinessTest {
     public void setUp() {
         iteration = new Iteration();
         iteration.setId(123);
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010, 1, 20, 0, 0, 0, 0));
 
         project = new Project();
         project.setId(313);
@@ -142,7 +137,7 @@ public class IterationBusinessTest {
         verify(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness,
+                assignmentBusiness, backlogHistoryEntryBusiness,
                 storyRankBusiness, taskBusiness);
     }
 
@@ -150,7 +145,7 @@ public class IterationBusinessTest {
         replay(iterationDAO, transferObjectBusiness,
                 storyBusiness, hourEntryBusiness, backlogBusiness,
                 iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness, settingBusiness,
+                assignmentBusiness, backlogHistoryEntryBusiness,
                 storyRankBusiness, taskBusiness);
     }
 
@@ -235,9 +230,10 @@ public class IterationBusinessTest {
         Integer expectedPercentDoneStories = 50;
 
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
-                .andReturn(latestEntry);
+                .andReturn(latestEntry).times(2);
         expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(
                 expectedStoryPoints);
+        expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(10);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(expectedSpentEffort);
         expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
@@ -246,7 +242,7 @@ public class IterationBusinessTest {
                 Pair.create(1, 2));
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
-                        new LocalDate().minusDays(1))).andReturn(null);
+                        new LocalDate().minusDays(1))).andReturn(null).times(2);
 
         replayAll();
 
@@ -266,6 +262,7 @@ public class IterationBusinessTest {
                 .getPercentDoneTasks());
         assertEquals(expectedPercentDoneStories, actualMetrics
                 .getPercentDoneStories());
+        assertEquals(10, actualMetrics.getDoneStoryPoints().intValue());
 
         verifyAll();
     }
@@ -273,18 +270,19 @@ public class IterationBusinessTest {
     @Test
     public void testGetIterationMetricsZeroTotals() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
-                .andReturn(null);
+                .andReturn(null).times(2);
         expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
                 Pair.create(0, 0));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(0, 0));
 
         expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(0);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(0L);
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
-                        new LocalDate().minusDays(1))).andReturn(null);
+                        new LocalDate().minusDays(1))).andReturn(null).times(1);
 
         replayAll();
 
@@ -300,16 +298,17 @@ public class IterationBusinessTest {
     @Test
     public void testGetIterationMetrics_nullLatestHistoryEntry() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
-                .andReturn(null);
+                .andReturn(null).times(2);
         expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(1, 3));
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
-                        new LocalDate().minusDays(1))).andReturn(null);
+                        new LocalDate().minusDays(1))).andReturn(null).times(1);
 
         expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(0);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(0L);
 
@@ -325,6 +324,41 @@ public class IterationBusinessTest {
 
         verifyAll();
     }
+    
+    @Test
+    public void testGetIterationMetrics_withInterval() {
+        Iteration iter = new Iteration();
+        iter.setId(100);
+        iter.setStartDate(new DateTime());
+        iter.setEndDate(iter.getStartDate().plusDays(100));
+        IterationHistoryEntry latestHistoryEntry = new IterationHistoryEntry();
+        latestHistoryEntry.setOriginalEstimateSum(10);
+        latestHistoryEntry.setEffortLeftSum(10);
+
+        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(
+                latestHistoryEntry).times(2);
+
+        expect(backlogBusiness.getStoryPointSumByBacklog(iter)).andReturn(10);
+        expect(backlogBusiness.calculateDoneStoryPointSum(iter.getId())).andReturn(5);
+        expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iter))
+                .andReturn((long) 10);
+        expect(iterationDAO.getCountOfDoneAndAllTasks(iter)).andReturn(
+                Pair.create(2, 4));
+        expect(iterationDAO.getCountOfDoneAndAllStories(iter)).andReturn(
+                Pair.create(1, 2));
+
+        expect(
+                iterationHistoryEntryDAO.retrieveByDate(100, new LocalDate()
+                        .minusDays(1))).andReturn(null).times(2);
+        replayAll();
+        IterationMetrics iterRow = iterationBusiness.getIterationMetrics(iter);
+        assertEquals(100, iterRow.getDaysLeft());
+        assertEquals(10, iterRow.getEffortLeft().intValue());
+        assertEquals(10, iterRow.getOriginalEstimate().intValue());
+        assertEquals(5, iterRow.getDoneStoryPoints().intValue());
+        verifyAll();
+    }
+    
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetIterationMetrics_nullIteration() {
@@ -530,37 +564,7 @@ public class IterationBusinessTest {
         assertEquals(1f, percentage, 1000);
     }
     
-    @Test
-    public void testGetIterationRowMetrics() {
-        Iteration iter = new Iteration();
-        iter.setId(100);
-        iter.setStartDate(new DateTime());
-        iter.setEndDate(iter.getStartDate().plusDays(100));
-        Map<StoryState, Integer> data = new EnumMap<StoryState, Integer>(StoryState.class);
-        IterationHistoryEntry latestHistoryEntry = new IterationHistoryEntry();
-        latestHistoryEntry.setOriginalEstimateSum(10);
-        latestHistoryEntry.setEffortLeftSum(10);
-        data.put(StoryState.NOT_STARTED, 0);
-        data.put(StoryState.STARTED, 1);
-        data.put(StoryState.PENDING, 2);
-        data.put(StoryState.BLOCKED, 3);
-        data.put(StoryState.IMPLEMENTED, 4);
-        data.put(StoryState.DONE, 5);
-        
-        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
-        expect(iterationDAO.get(iter.getId())).andReturn(iter);
-        expect(iterationDAO.countIterationStoriesByState(iter.getId())).andReturn(data);
-        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(latestHistoryEntry);
-        expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iter)).andReturn((long) 10);
-        expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(null);    
-        replayAll();
-        IterationRowMetrics iterRow = iterationBusiness.getIterationRowMetrics(100);
-        assertEquals(100, iterRow.getDaysLeft());
-        assertEquals(10, iterRow.getEffortLeft().intValue());
-        assertEquals(10, iterRow.getOriginalEstimate().intValue());
-        verifyAll();
-    }
-    
+
     @Test
     public void testCalculateVariance() {
         Iteration iter = new Iteration();

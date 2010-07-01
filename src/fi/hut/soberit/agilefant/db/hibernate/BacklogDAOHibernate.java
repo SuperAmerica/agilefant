@@ -17,6 +17,7 @@ import fi.hut.soberit.agilefant.business.SearchBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 
 /**
  * Hibernate implementation of BacklogDAO interface using GenericDAOHibernate.
@@ -59,6 +60,16 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         Criteria crit = getCurrentSession().createCriteria(Story.class);
         crit.setProjection(Projections.sum("storyPoints"));
         crit.createCriteria("backlog").add(Restrictions.idEq(backlogId));
+        Integer result = uniqueResult(crit);
+        if (result == null) return 0;
+        return result.intValue();
+    }
+    
+    public int calculateDoneStoryPointSum(int backlogId) {
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.setProjection(Projections.sum("storyPoints"));
+        crit.createCriteria("backlog").add(Restrictions.idEq(backlogId));
+        crit.add(Restrictions.eq("state", StoryState.DONE));
         Integer result = uniqueResult(crit);
         if (result == null) return 0;
         return result.intValue();

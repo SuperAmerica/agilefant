@@ -82,6 +82,10 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         return backlogDAO.calculateStoryPointSum(backlogId);
     }
 
+    public int calculateDoneStoryPointSum(int backlogId) {
+        return backlogDAO.calculateDoneStoryPointSum(backlogId);
+    }
+    
     public void addAssignees(int backlogId, Set<Integer> userIds) {
         Backlog backlog = this.retrieve(backlogId);
         this.assignmentBusiness.addMultiple(backlog, userIds,

@@ -16,7 +16,6 @@ import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
-import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 
 @Component("iterationAction")
 @Scope("prototype")
@@ -34,9 +33,7 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
     private int parentBacklogId;
 
     private IterationMetrics iterationMetrics;
-    
-    private IterationRowMetrics iterationRowMetrics;
-    
+        
     private Set<AssignmentTO> assignments;
     
     private Set<Integer> assigneeIds = new HashSet<Integer>();
@@ -81,7 +78,8 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
     }
 
     public String iterationRowMetrics() {
-        iterationRowMetrics = iterationBusiness.getIterationRowMetrics(iterationId);
+        iteration = this.iterationBusiness.retrieve(iterationId);
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
     
@@ -155,10 +153,6 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
 
     public IterationMetrics getIterationMetrics() {
         return iterationMetrics;
-    }
-    
-    public IterationRowMetrics getIterationRowMetrics() {
-        return iterationRowMetrics;
     }
 
     public Backlog getParentBacklog() {

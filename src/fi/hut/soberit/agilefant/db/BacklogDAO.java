@@ -23,6 +23,8 @@ public interface BacklogDAO extends GenericDAO<Backlog> {
 
     int calculateStoryPointSum(int backlogId);
     
+    int calculateDoneStoryPointSum(int backlogId);
+    
     /**
      * Calculate the stories story point sum.
      * <p>

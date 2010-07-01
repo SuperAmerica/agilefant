@@ -22,7 +22,6 @@ import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
-import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
@@ -42,7 +41,6 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
-import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
@@ -73,8 +71,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private BacklogBusiness backlogBusiness;
     @Autowired
     private AssignmentBusiness assignmentBusiness;
-    @Autowired
-    private SettingBusiness settingBusiness;
     @Autowired 
     private StoryRankBusiness storyRankBusiness;
     @Autowired
@@ -264,6 +260,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         // 2. Set story points
         metrics.setStoryPoints(backlogBusiness
                 .getStoryPointSumByBacklog(iteration));
+        metrics.setDoneStoryPoints(backlogBusiness
+                .calculateDoneStoryPointSum(iteration.getId()));
 
         // 3. Set spent effort
         long spentEffort = hourEntryBusiness
@@ -283,6 +281,16 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         metrics
                 .setPercentDoneStories(calculatePercent(pair.first, pair.second));
 
+        //4. iteration interval
+        LocalDate today = new LocalDate();
+        
+        metrics.setTotalDays(Days.daysBetween(iteration.getStartDate(), iteration.getEndDate()).getDays());
+        if (today.isBefore(iteration.getEndDate().toLocalDate())) {
+            metrics.setDaysLeft(daysLeftInIteration(iteration).getDays());
+        }
+        
+        //5. variance
+        metrics.setVariance(calculateVariance(iteration));
         return metrics;
     }
 
@@ -395,50 +403,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
     }
     
-    public void setSettingBusiness(SettingBusiness settingBusiness) {
-        this.settingBusiness = settingBusiness;
-    }
-    
     public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
         this.storyRankBusiness = storyRankBusiness;
-    }
-    
-    @Transactional(readOnly = true)
-    public IterationRowMetrics getIterationRowMetrics(int iterationId) {
-        Iteration iteration = retrieve(iterationId);
-        LocalDate today = new LocalDate();
-        IterationRowMetrics iterationRowMetrics = new IterationRowMetrics();
-        
-        // Timesheets enabled?
-        iterationRowMetrics.setTimesheetsEnabled(settingBusiness.isHourReportingEnabled());
-        iterationRowMetrics.setStateData(iterationDAO.countIterationStoriesByState(iterationId));
-        iterationRowMetrics.setTotalDays(Days.daysBetween(iteration.getStartDate(), iteration.getEndDate()).getDays());
-        
-        if (today.isBefore(iteration.getEndDate().toLocalDate())) {
-            iterationRowMetrics.setDaysLeft(daysLeftInIteration(iteration).getDays());
-        }
-        
-        IterationHistoryEntry latestHistoryEntry = iterationHistoryEntryBusiness
-        .retrieveLatest(iteration);
-        
-        if (latestHistoryEntry == null) {
-            iterationRowMetrics.setOriginalEstimate(new ExactEstimate(0));
-            iterationRowMetrics.setEffortLeft(new ExactEstimate(0));
-        } else {
-            iterationRowMetrics.setOriginalEstimate(new ExactEstimate(latestHistoryEntry
-                    .getOriginalEstimateSum()));
-            iterationRowMetrics.setEffortLeft(new ExactEstimate(latestHistoryEntry
-                    .getEffortLeftSum()));
-        }
-
-        // Set spent effort
-        long spentEffort = hourEntryBusiness
-                .calculateSumOfIterationsHourEntries(iteration);
-        iterationRowMetrics.setSpentEffort(new ExactEstimate(spentEffort));
-        // Set variance
-        iterationRowMetrics.setVariance(calculateVariance(iteration));
-  
-        return iterationRowMetrics;
     }
     
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter) {

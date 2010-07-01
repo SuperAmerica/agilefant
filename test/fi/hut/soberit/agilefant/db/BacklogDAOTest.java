@@ -26,6 +26,12 @@ public class BacklogDAOTest extends AbstractHibernateTests {
         executeClassSql();
         assertEquals(20, backlogDAO.calculateStoryPointSum(1));
     }
+    
+    @Test
+    public void testCalculateStoryDonePointSum() {
+        executeClassSql();
+        assertEquals(10, backlogDAO.calculateDoneStoryPointSum(1));
+    }
 
     @Test
     public void testCalculateStoryPointSumIncludeChildBacklogs_iteration() {

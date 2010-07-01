@@ -25,4 +25,6 @@
   </tr>
 </table>
 
+<div style="width: 100px; height: 1em; background-color: #ccc;"><div style="display: inline-block; width: ${iterationMetrics.percentDoneStories}%; background-color: green; height: 1em;"></div></div>
+
 </struct:widget>

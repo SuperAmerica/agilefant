@@ -11,7 +11,6 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
-import fi.hut.soberit.agilefant.transfer.IterationRowMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 
 public interface IterationBusiness extends GenericBusiness<Iteration> {
@@ -27,9 +26,7 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
             Iteration iterationData, Set<Integer> assigneeIds);
     
     public Collection<Iteration> retrieveCurrentAndFutureIterations();
-    
-    public IterationRowMetrics getIterationRowMetrics(int iterationId);
-    
+        
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter);
     
     public Days daysLeftInIteration(Iteration iter);

@@ -7,6 +7,7 @@ import java.util.List;
 import org.easymock.EasyMock;
 import org.junit.Assert;
 
+
 public class MockedTestCase {
 
     public void setUpMocks() {

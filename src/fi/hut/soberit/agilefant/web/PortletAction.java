@@ -18,12 +18,14 @@ import fi.hut.soberit.agilefant.model.WidgetCollection;
 
 @Component("portletAction")
 @Scope("prototype")
-public class PortletAction extends ActionSupport implements ContextAware, Prefetching {
+public class PortletAction extends ActionSupport implements CRUDAction, ContextAware, Prefetching {
 
     private static final long serialVersionUID = -999270161618784027L;
 
     @PrefetchId
     private int collectionId = 0;
+    
+    private int objectId = 0;
     
     private WidgetCollection collection;
     
@@ -53,8 +55,22 @@ public class PortletAction extends ActionSupport implements ContextAware, Prefet
         return Action.SUCCESS;
     }
     
+    public String create() {
+        collection = widgetCollectionBusiness.createPortfolio();
+        collectionId = collection.getId();
+        return Action.SUCCESS;
+    }
+
+    public String delete() {
+        widgetCollectionBusiness.delete(collectionId);
+        return Action.SUCCESS;
+    }
+    
+    
+    
     public String getPropertiesWidget() {
-        contents = widgetCollectionBusiness.retrieve(collectionId);
+        contents = widgetCollectionBusiness.retrieve(objectId);
+        collectionId = objectId;
         return Action.SUCCESS;
     }
     
@@ -112,6 +128,16 @@ public class PortletAction extends ActionSupport implements ContextAware, Prefet
     public void setCollection(WidgetCollection collection) {
         this.collection = collection;
     }
+
+    public int getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(int objectId) {
+        this.objectId = objectId;
+    }
+
+
 
 
 }

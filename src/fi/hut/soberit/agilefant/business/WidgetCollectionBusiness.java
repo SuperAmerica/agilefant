@@ -9,6 +9,11 @@ public interface WidgetCollectionBusiness extends
         GenericBusiness<WidgetCollection> {
 
     /**
+     * Create a new portfolio.
+     */
+    public WidgetCollection createPortfolio();
+    
+    /**
      * Retrieve all <code>WidgetCollections</code> as alphabetical list.
      * @return
      */

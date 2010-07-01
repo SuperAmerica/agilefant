@@ -9,6 +9,16 @@ $(document).ready(function() {
   $('.cancelProperties').click(function() {
     $(this).parents('.widget').remove();
   });
+
+  $('.deletePortfolio').click(function() {
+    var dialog = new DynamicsConfirmationDialog(
+        "Really delete the portfolio?",
+        "This action can't be reversed",
+        function() {
+          window.location.href = "deletePortfolio.action?collectionId=${collectionId}"
+        }
+    );
+  });
   
   $('.saveProperties').click(function() {
     var postData = {
@@ -54,9 +64,10 @@ $(document).ready(function() {
   </tr>
 </table>
 
-<div style="clear: left; float: right;">
-  <button class="dynamics-button saveProperties">Save</button>
-  <button class="dynamics-button cancelProperties">Cancel</button>
+<div style="clear: left;">
+  <button class="dynamics-button deletePortfolio" style="width: 20ex;">Delete portfolio</button>
+  <button class="dynamics-button saveProperties" style="float: right;">Save</button>
+  <button class="dynamics-button cancelProperties" style="float: right;">Cancel</button>
 </div>
 
 </struct:widget>

@@ -209,6 +209,21 @@
 		  </result>
 		  <result name="success" type="dispatcher">/WEB-INF/jsp/portlets.jsp</result>
 		</action>
+		
+		<action name="createPortfolio" class="portletAction" method="create">
+      <result name="success" type="redirectAction">
+        <param name="actionName">portlets.action</param>
+        <param name="collectionId">${collectionId}</param>
+      </result>
+    </action>
+    
+    <action name="deletePortfolio" class="portletAction" method="delete">
+      <result name="success" type="redirectAction">
+        <param name="actionName">portlets.action</param>
+        <param name="collectionId">0</param>
+      </result>
+    </action>
+		
 		<!-- /Dev portfolio -->
 
 		<action name="drawProjectBurnup" method="getProjectBurnup" class="chartAction">

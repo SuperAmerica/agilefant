@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.ArrayList;
 
+import org.easymock.EasyMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,6 +32,14 @@ public class WidgetCollectionBusinessTest extends MockedTestCase {
     @Mock
     WidgetCollectionDAO widgetCollectionDAO;
     
+    @Mock
+    AgilefantWidgetBusiness agilefantWidgetBusiness;
+    
+    WidgetCollection collection;
+    AgilefantWidget  widget1;
+    AgilefantWidget  widget2;
+    AgilefantWidget  widget3;
+    
     @Test
     @DirtiesContext
     public void testGetAllCollections() {
@@ -41,12 +50,22 @@ public class WidgetCollectionBusinessTest extends MockedTestCase {
     }
 
     
+    @Test
+    @DirtiesContext
+    public void testCreatePortfolio() {
+        collection = new WidgetCollection();
+        collection.setId(641);
+        
+        expect(widgetCollectionDAO.create(EasyMock.isA(WidgetCollection.class))).andReturn(641);
+        expect(widgetCollectionDAO.get(641)).andReturn(collection);
+        
+        replayAll();
+        assertSame(collection, testable.createPortfolio());
+        verifyAll();
+        
+        assertEquals("New portfolio", collection.getName());
+    }
     
-    
-    WidgetCollection collection;
-    AgilefantWidget  widget1;
-    AgilefantWidget  widget2;
-    AgilefantWidget  widget3;
     
     private void setUp_data() {
         collection = new WidgetCollection();

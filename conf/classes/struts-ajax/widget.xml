@@ -30,11 +30,13 @@
     </action>
 
 
+
     <action name="storeCollection" class="portletAction" method="store">
       <result name="success" type="httpheader">
         <param name="status">200</param>
       </result>
     </action>
+    
     <!-- /CRUD -->
     
     

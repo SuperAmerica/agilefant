@@ -9,6 +9,7 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.AgilefantWidgetBusiness;
 import fi.hut.soberit.agilefant.business.WidgetCollectionBusiness;
 import fi.hut.soberit.agilefant.db.WidgetCollectionDAO;
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
@@ -22,6 +23,9 @@ public class WidgetCollectionBusinessImpl extends
     private WidgetCollectionDAO widgetCollectionDAO;
     
     @Autowired
+    private AgilefantWidgetBusiness agilefantWidgetBusiness;
+    
+    @Autowired
     public void setWidgetCollectionDAO(WidgetCollectionDAO widgetCollectionDAO) {
         this.genericDAO = widgetCollectionDAO;
         this.widgetCollectionDAO = widgetCollectionDAO;
@@ -31,6 +35,7 @@ public class WidgetCollectionBusinessImpl extends
         super(WidgetCollection.class);
     }
     
+    /** {@inheritDoc} */
     @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
     public List<WidgetCollection> getAllCollections() {
@@ -39,6 +44,21 @@ public class WidgetCollectionBusinessImpl extends
         Collections.sort(allCollections, new PropertyComparator("name", true, true));
         return allCollections;
     }
+    
+    /** {@inheritDoc} */
+    @Transactional
+    public WidgetCollection createPortfolio() {
+        WidgetCollection collection = new WidgetCollection();
+        collection.setName("New portfolio");
+        
+        Integer newId = (Integer)widgetCollectionDAO.create(collection);
+        collection = widgetCollectionDAO.get(newId);
+        
+        collection.setName("New portfolio");
+        
+        return collection;
+    }
+    
     
     /** {@inheritDoc} */
     @Transactional

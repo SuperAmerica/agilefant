@@ -271,17 +271,23 @@ $(document).ready(function() {
     clone.removeAttr('id').attr('widgetId','-1');
     if ($('#portfolioPropertiesTable').length === 0) {
       clone.prependTo($('.widgetList:eq(0)'));
-      clone.load('ajax/widgets/portfolioProperties.action?collectionId=${contents.id}');
+      clone.load('ajax/widgets/portfolioProperties.action?objectId=${contents.id}');
     }
   });
   
   /*
    * Load the widget contents
    */
-  
+
+  var widgetCounter = 0;
   <c:forEach items="${contents.widgets}" var="widget">
+  widgetCounter++;
   $('#widget_${widget.id}').attr('widgetId',${widget.id}).load('ajax/widgets/${widget.type}.action?objectId=${widget.objectId}&widgetId=${widget.id}');
   </c:forEach>
+
+  if (widgetCounter === 0) {
+    $('.newWidgetLink').click();
+  }
 
   /*
    * Change to -dropdown

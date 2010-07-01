@@ -41,6 +41,7 @@ public class ProjectPortfolioActionTest extends MockedTestCase {
     // ProjectPortfolioAction should
     // + have Scope annotation with "prototype" value
     @Test
+    @DirtiesContext
     public void testSpringScope() {
         SpringAssertions.assertScopeAnnotation("prototype",
                 ProjectPortfolioAction.class);

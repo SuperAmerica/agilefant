@@ -3,6 +3,9 @@ package fi.hut.soberit.agilefant.web;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -333,12 +336,14 @@ public class StoryActionTest extends MockedTestCase {
         assertSame(returned, storyAction.getStory());
     }
     
+    @Test
     @DirtiesContext
     public void testCreateStoryUnder() {
         Story data = new Story();
         Story res = new Story();
+        Set<Integer> userIds = Collections.emptySet();
         
-        expect(storyBusiness.createStoryUnder(1, data, null)).andReturn(res);
+        expect(storyBusiness.createStoryUnder(1, data, userIds)).andReturn(res);
         replayAll();
         storyAction.setStory(data);
         storyAction.setStoryId(1);
@@ -347,12 +352,14 @@ public class StoryActionTest extends MockedTestCase {
         assertEquals(res, storyAction.getStory());
     }
     
+    @Test
     @DirtiesContext
     public void testCreateStorySibling() {
         Story data = new Story();
         Story res = new Story();
+        Set<Integer> userIds = Collections.emptySet();
         
-        expect(storyBusiness.createStorySibling(1, data, null)).andReturn(res);
+        expect(storyBusiness.createStorySibling(1, data, userIds)).andReturn(res);
         replayAll();
         storyAction.setStory(data);
         storyAction.setStoryId(1);

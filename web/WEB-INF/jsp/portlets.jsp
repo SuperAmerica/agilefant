@@ -41,7 +41,8 @@ $(document).ready(function() {
    */
   var searchUrls = {
     "iterationMetrics": "iterations.action",
-    "userLoad": "users.action"
+    "userLoad": "users.action",
+    "story": "stories.action"
   };
   $('.newWidgetLink').click(function() {
     var clone = $('#templates > #newWidget').clone();
@@ -234,7 +235,7 @@ Change to
       <table>
         <tr>
           <td>Type</td>
-          <td><ww:select name="type" list="#{'iterationMetrics':'Iteration Metrics', 'userLoad': 'User Workload'}" cssClass="objectType"/></td>
+          <td><ww:select name="type" list="#{'story':'Story','iterationMetrics':'Iteration Metrics', 'userLoad': 'User Workload'}" cssClass="objectType"/></td>
         </tr>
         <tr>
           <td>Object</td>

@@ -63,8 +63,7 @@ public class PortletActionTest extends MockedTestCase {
     @DirtiesContext
     public void testStore() {
         WidgetCollection collection = new WidgetCollection();
-        testable.setCollection(collection);
-        
+        testable.setCollection(collection);        
         widgetCollectionBusiness.store(collection);        
         replayAll();
         assertEquals(Action.SUCCESS, testable.store());

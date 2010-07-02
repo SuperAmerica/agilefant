@@ -16,6 +16,8 @@
 			<interceptor name="refreshUser"	class="refreshUserInterceptor" />
 			<interceptor name="contextView"	class="contextViewInterceptor" />
 			<interceptor name="settings"	class="settingsInterceptor" />
+			<interceptor name="prefetch" class="prefetchInterceptor" />
+			
 			<interceptor-stack name="authenticationStack">
 				<interceptor-ref name="exception"  />
 				<interceptor-ref name="completeStack" />
@@ -30,6 +32,17 @@
 				<interceptor-ref name="exception" />
 				<interceptor-ref name="completeStack" />
 			</interceptor-stack>
+			
+			<interceptor-stack name="prefetchStack">
+        <interceptor-ref name="exception" />
+        <interceptor-ref name="prefetch" />
+        <interceptor-ref name="completeStack" />
+        <interceptor-ref name="refreshUser" />
+        <interceptor-ref name="settings" />
+        <interceptor-ref name="validation">
+          <param name="validateAnnotatedMethodOnly">true</param>
+        </interceptor-ref>
+      </interceptor-stack>
 		</interceptors>
 		
 		<default-interceptor-ref name="authenticationStack" />
@@ -211,6 +224,14 @@
 		</action>
 		
 		<action name="createPortfolio" class="portletAction" method="create">
+      <result name="success" type="redirectAction">
+        <param name="actionName">portlets.action</param>
+        <param name="collectionId">${collectionId}</param>
+      </result>
+    </action>
+    
+    <action name="storePortfolio" class="portletAction" method="store">
+      <interceptor-ref name="prefetchStack"/>
       <result name="success" type="redirectAction">
         <param name="actionName">portlets.action</param>
         <param name="collectionId">${collectionId}</param>

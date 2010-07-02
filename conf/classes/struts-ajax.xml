@@ -51,7 +51,7 @@
         <interceptor-ref name="settings" />
         <interceptor-ref name="validation">
           <param name="validateAnnotatedMethodOnly">true</param>
-      </interceptor-ref>
+        </interceptor-ref>
       </interceptor-stack>
       
       <interceptor-stack name="preparedStack">

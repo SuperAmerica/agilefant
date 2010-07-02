@@ -7,6 +7,7 @@ $.widget("custom.aefWidget", {
     widgetId: -1,
     objectId: -1,
     realWidget: true,
+    ajaxWidget: true,
     url: 'noop.action'
   },
   _create: function() {
@@ -55,13 +56,15 @@ $.widget("custom.aefWidget", {
     },this));
   },
   reload: function() {
-    this.element.load(this.options.url, {
-      objectId : this.options.objectId,
-      widgetId : this.options.widgetId
-    }, jQuery.proxy(function(data, status) {
-      this.content = this.element.find('.widgetContent');
-      this._bindEvents();
-    }, this));
+    if (this.options.ajaxWidget) {
+      this.element.load(this.options.url, {
+        objectId : this.options.objectId,
+        widgetId : this.options.widgetId
+      }, jQuery.proxy(function(data, status) {
+        this.content = this.element.find('.widgetContent');
+        this._bindEvents();
+      }, this));
+    }
   },
   destroy: function() {
     $.Widget.prototype.destroy.apply(this, arguments);

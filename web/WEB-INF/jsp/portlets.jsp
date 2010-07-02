@@ -16,7 +16,6 @@
 <link rel="stylesheet" href="static/css/timeline/event.css" type="text/css"/>
 
 <script type="text/javascript">
-
 $(document).ready(function() {
 
   $('.widgetList').sortable({
@@ -107,15 +106,9 @@ $(document).ready(function() {
    * Properties widget
    */
   $('.propertiesWidgetLink').click(function() {
-    if ($('#portfolioPropertiesTable').length === 0) {
-      var clone = $('#templates > #staticWidget').clone();
-      clone.prependTo($('.widgetList:eq(0)'));
-      clone.aefWidget({
-        url: 'ajax/widgets/portfolioProperties.action?',
-        objectId: ${contents.id},
-        widgetId: -1,
-        realWidget: false
-      });
+    if ($('#portfolioPropertiesWidget').length === 0) {
+      var clone = $('#templates > #propertiesTemplate').clone();
+      clone.attr('id','portfolioPropertiesWidget').prependTo($('.widgetList:eq(0)'));
     }
   });
   
@@ -155,6 +148,23 @@ $(document).ready(function() {
     }
   });
 });
+
+
+var deletePortfolio = function deletePortfolio(link) {
+  var dialog = new DynamicsConfirmationDialog(
+      "Really delete the portfolio?",
+      "This action can't be reversed",
+      function() {
+        window.location.href = "deletePortfolio.action?collectionId=${collectionId}"
+      }
+  );
+  return false;
+};
+
+var cancelProperties = function cancelProperties(link) {
+  $(link).parents('.widget').remove();
+  return false;
+};
 
 </script>
 
@@ -240,6 +250,50 @@ Change to
   
   <li class="widget staticWidget" id="staticWidget">
     <div style="text-align:center;"><img src="static/img/pleasewait.gif" style="display:inline-block;vertical-align:middle;"/><span style="font-size:100%;color:#666;vertical-align: middle;">Please wait...</span></div>
+  </li>
+  
+  <li class="widget staticWidget" id="propertiesTemplate">
+    <div class="widgetHeader">
+      Portfolio properties
+    </div>
+    <div class="widgetContent">
+      <ww:form action="storePortfolio">
+        <input type="hidden" name="collectionId" value="${contents.id}"/>
+        <table id="portfolioPropertiesTable">
+          <tr>
+            <td>
+              Name
+            </td>
+            <td>
+              <input name="collection.name" value="${contents.name}"/>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Mark as
+            </td>
+            <td>
+              <c:choose>
+              <c:when test="${contents.user != null}">
+                <input type="radio" name="collection.user" value="null" /> Public<br/>
+                <input type="radio" name="collection.user" value="${contents.user.id}" checked="checked" /> Private
+              </c:when>
+              <c:otherwise>
+                <input type="radio" name="collection.user" value="null" checked="checked" /> Public<br/>
+                <input type="radio" name="collection.user" value="${currentUser.id}" /> Private
+              </c:otherwise>
+              </c:choose>
+            </td>
+          </tr>
+        </table>
+        
+        <div style="clear: left;">
+          <button class="dynamics-button deletePortfolio" style="width: 20ex;" onclick="deletePortfolio(this); return false;">Delete portfolio</button>
+          <button class="dynamics-button cancelProperties" style="float: right;" onclick="cancelProperties(this); return false;">Cancel</button>
+          <button class="dynamics-button saveProperties" style="float: right;">Save</button>
+        </div>
+      </ww:form>
+    </div>
   </li>
 </ul>
 <!-- /Hidden templates -->

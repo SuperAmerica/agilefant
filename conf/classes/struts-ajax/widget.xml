@@ -29,22 +29,11 @@
       </result>
     </action>
 
-
-
-    <action name="storeCollection" class="portletAction" method="store">
-      <result name="success" type="httpheader">
-        <param name="status">200</param>
-      </result>
-    </action>
     
     <!-- /CRUD -->
     
     
     <!-- Widgets -->
-    
-    <action name="portfolioProperties" class="portletAction" method="getPropertiesWidget">
-      <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/portfolioPropertiesWidget.jsp</result>
-    </action>
     
     <action name="iterationMetrics" class="iterationMetricsWidget" method="execute">
       <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/iterationMetricsWidget.jsp</result>

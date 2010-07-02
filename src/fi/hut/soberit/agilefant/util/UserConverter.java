@@ -14,6 +14,9 @@ public class UserConverter extends StrutsTypeConverter {
     @SuppressWarnings("unchecked")
     @Override
     public Object convertFromString(Map context, String[] values, Class toClass) {
+        if (values[0].equalsIgnoreCase("null")) {
+            return null;
+        }
         int id = Integer.parseInt(values[0]);
         return userBusiness.retrieve(id);
     }

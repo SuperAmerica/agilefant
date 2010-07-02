@@ -43,6 +43,13 @@ public class UserConverterTest {
         verifyAll();
         assertSame(user, returned);
     }
+    
+    @Test
+    public void testConvertFromString_withNull() {
+        replayAll();
+        assertNull(testable.convertFromString(null, new String[] { "null" }, User.class));
+        verifyAll();
+    }
 
     @Test(expected = NumberFormatException.class)
     public void testConvertFromString_invalidId() {

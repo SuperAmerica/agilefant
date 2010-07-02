@@ -42,6 +42,10 @@
     <action name="userLoad" class="userLoadWidget" method="execute">
       <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/userLoadWidget.jsp</result>
     </action>
+    
+    <action name="story" class="storyWidget" method="execute">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/storyWidget.jsp</result>
+    </action>
 
     <!-- /Widgets -->  
   </package>

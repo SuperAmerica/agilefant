@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 import java.util.Set;
 
-import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
@@ -28,11 +27,7 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     public Collection<Iteration> retrieveCurrentAndFutureIterations();
         
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter);
-    
-    public Days daysLeftInIteration(Iteration iter);
-    
-    public float calculateIterationTimeframePercentageLeft(Iteration iter);
-    
+            
     public Integer calculateVariance(Iteration iter);
     
     void delete(int id);

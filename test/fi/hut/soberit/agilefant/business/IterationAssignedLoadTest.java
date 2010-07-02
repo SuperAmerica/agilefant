@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -165,6 +166,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         expect(iterationDAO.getAllTasksForIteration(iteration)).andReturn(
                 allTasks);
         Set<AssignmentTO> actual;
+        expect(backlogBusiness.calculateBacklogTimeframePercentageLeft(iteration)).andReturn(100.0f);
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iteration)).andReturn(Days.days(10));
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
         verifyAll();
@@ -178,6 +181,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         taskInStory21.getResponsibles().add(user2);
         expect(iterationDAO.getAllTasksForIteration(iteration)).andReturn(
                 allTasks);
+        expect(backlogBusiness.calculateBacklogTimeframePercentageLeft(iteration)).andReturn(100.0f);
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iteration)).andReturn(Days.days(10));
         Set<AssignmentTO> actual;
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
@@ -197,6 +202,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         iteration.getAssignments().add(assign1);
         expect(iterationDAO.getAllTasksForIteration(iteration)).andReturn(
                 allTasks);
+        expect(backlogBusiness.calculateBacklogTimeframePercentageLeft(iteration)).andReturn(1.0f);
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iteration)).andReturn(Days.days(10));
         Set<AssignmentTO> actual;
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
@@ -221,6 +228,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         iteration.getAssignments().add(assign1);
         expect(iterationDAO.getAllTasksForIteration(iteration)).andReturn(
                 allTasks);
+        expect(backlogBusiness.calculateBacklogTimeframePercentageLeft(iteration)).andReturn(100.0f);
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iteration)).andReturn(Days.days(5));
         Set<AssignmentTO> actual;
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
@@ -249,6 +258,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
 
         expect(iterationDAO.getAllTasksForIteration(iteration)).andReturn(
                 allTasks);
+        expect(backlogBusiness.calculateBacklogTimeframePercentageLeft(iteration)).andReturn(1.0f);
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iteration)).andReturn(Days.days(5));
         Set<AssignmentTO> actual;
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);
@@ -266,11 +277,11 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         assertEquals(45, u2.getAvailableWorktime().longValue());
         assertEquals(455, u1.getAvailableWorktime().longValue());
         
-        assertEquals(10181l, u1.getTotalLoad().longValue());
-        assertEquals(101071l, u2.getTotalLoad().longValue());
+        assertEquals(10145l, u1.getTotalLoad().longValue());
+        assertEquals(101035l, u2.getTotalLoad().longValue());
         
-        assertEquals(2238, u1.getLoadPercentage());
-        assertEquals(224602, u2.getLoadPercentage());
+        assertEquals(2230, u1.getLoadPercentage());
+        assertEquals(224522, u2.getLoadPercentage());
     }
 
     @Test
@@ -283,6 +294,8 @@ public class IterationAssignedLoadTest extends MockedTestCase {
 
         expect(iterationDAO.getAllTasksForIteration(iteration)).andReturn(
                 allTasks);
+        expect(backlogBusiness.calculateBacklogTimeframePercentageLeft(iteration)).andReturn(100.0f);
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iteration)).andReturn(Days.days(5));
         Set<AssignmentTO> actual;
         replayAll();
         actual = iterationBusiness.calculateAssignedLoadPerAssignee(iteration);

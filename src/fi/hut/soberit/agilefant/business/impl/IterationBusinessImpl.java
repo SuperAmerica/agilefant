@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -287,7 +286,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         
         metrics.setTotalDays(Days.daysBetween(iteration.getStartDate(), iteration.getEndDate()).getDays());
         if (today.isBefore(iteration.getEndDate().toLocalDate())) {
-            metrics.setDaysLeft(daysLeftInIteration(iteration).getDays());
+            metrics.setDaysLeft(backlogBusiness.daysLeftInSchedulableBacklog(iteration).getDays());
         }
         
         //5. variance
@@ -454,9 +453,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
                 unassignedLoad += taskEffort;
             }
         }
-        float timeframeLeft = this
-                .calculateIterationTimeframePercentageLeft(iter);
-        float weeksLeft = (float) this.daysLeftInIteration(iter).getDays() / 7.0f;
+        float timeframeLeft = backlogBusiness
+                .calculateBacklogTimeframePercentageLeft(iter);
+        float weeksLeft = (float) backlogBusiness.daysLeftInSchedulableBacklog(iter).getDays() / 7.0f;
         long iterationBaselineLoad = 0l;
         if (iter.getBaselineLoad() != null) {
             iterationBaselineLoad = (long) (iter.getBaselineLoad().floatValue() * weeksLeft);
@@ -516,30 +515,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
     }
     
-    public Days daysLeftInIteration(Iteration iter) {
-        DateTime currentTime = new DateTime();
-        Interval iterInterval = new Interval(iter.getStartDate()
-                .toDateMidnight(), iter.getEndDate().toDateMidnight());
-        if (iter.getEndDate().isBeforeNow()) {
-            return Days.days(0);
-        }
-        Interval toIterationEnd = new Interval(currentTime.toDateMidnight(),
-                iter.getEndDate().toDateMidnight());
-        Interval intersection = toIterationEnd.overlap(iterInterval);
-        if (iterInterval.toDurationMillis() == 0) {
-            return Days.days(0);
-        } 
-        return Days.daysIn(intersection);
-    }
-
-    public float calculateIterationTimeframePercentageLeft(Iteration iter) {
-        Interval iterInterval = new Interval(iter.getStartDate()
-                .toDateMidnight(), iter.getEndDate().toDateMidnight());
-        Days daysLeft = this.daysLeftInIteration(iter);
-        return (float) daysLeft.toStandardDuration().getMillis()
-                / (float) iterInterval.toDurationMillis();
-    }
-    
     public Integer calculateVariance(Iteration iter) {
         IterationHistoryEntry latestHistoryEntry = iterationHistoryEntryBusiness
         .retrieveLatest(iter);
@@ -550,7 +525,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         long dailyVelocity = calculateDailyVelocity(iter).longValue();
         if(dailyVelocity != 0 && iter.getStartDate().isBeforeNow() && effortLeft != 0) {
             int daysLeft = (int) (effortLeft / dailyVelocity);
-            return daysLeft - daysLeftInIteration(iter).getDays(); 
+            return daysLeft - backlogBusiness.daysLeftInSchedulableBacklog(iter).getDays(); 
         } else {
             return null;
         }      

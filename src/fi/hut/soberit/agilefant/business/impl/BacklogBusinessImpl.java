@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +18,7 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 
 /**
@@ -76,6 +80,29 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         return childBacklogs;
     }
 
+    public Days daysLeftInSchedulableBacklog(Schedulable backlog) {
+        DateTime currentTime = new DateTime();
+        Interval backlogInterval = new Interval(backlog.getStartDate()
+                .toDateMidnight(), backlog.getEndDate().toDateMidnight());
+        if (backlog.getEndDate().isBeforeNow()) {
+            return Days.days(0);
+        }
+        Interval tobacklogEnd = new Interval(currentTime.toDateMidnight(),
+                backlog.getEndDate().toDateMidnight());
+        Interval intersection = tobacklogEnd.overlap(backlogInterval);
+        if (backlogInterval.toDurationMillis() == 0) {
+            return Days.days(0);
+        } 
+        return Days.daysIn(intersection);
+    }
+    
+    public float calculateBacklogTimeframePercentageLeft(Schedulable backlog) {
+        Interval backlogInterval = new Interval(backlog.getStartDate()
+                .toDateMidnight(), backlog.getEndDate().toDateMidnight());
+        Days daysLeft = this.daysLeftInSchedulableBacklog(backlog);
+        return (float) daysLeft.toStandardDuration().getMillis()
+                / (float) backlogInterval.toDurationMillis();
+    }
 
     @Transactional(readOnly = true)
     public int calculateStoryPointSum(int backlogId) {

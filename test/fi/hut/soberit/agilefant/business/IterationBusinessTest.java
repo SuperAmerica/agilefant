@@ -1,7 +1,14 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -338,6 +345,7 @@ public class IterationBusinessTest {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(
                 latestHistoryEntry).times(2);
 
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iter)).andReturn(Days.days(100));
         expect(backlogBusiness.getStoryPointSumByBacklog(iter)).andReturn(10);
         expect(backlogBusiness.calculateDoneStoryPointSum(iter.getId())).andReturn(5);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iter))
@@ -491,79 +499,6 @@ public class IterationBusinessTest {
         this.iterationBusiness.moveTo(iteration, newParent);
         verifyAll();
     }
-    
-    @Test
-    public void testTimeLeftInIteration() {
-        Iteration iter = new Iteration();
-        DateTime startDate = new DateTime().minusDays(2);
-        DateTime endDate = startDate.plusDays(5);
-        iter.setStartDate(startDate.toDateMidnight().toDateTime());
-        iter.setEndDate(endDate);
-        
-        Days daysLeft = iterationBusiness.daysLeftInIteration(iter);
-        
-        assertEquals(3, daysLeft.getDays());
-        
-    }
-    
-    @Test
-    public void testTimeLeftInIteration_past() {
-        Iteration iter = new Iteration();
-        DateTime startDate = new DateTime().minusDays(40);
-        DateTime endDate = startDate.plusDays(5);
-        iter.setStartDate(startDate.toDateMidnight().toDateTime());
-        iter.setEndDate(endDate);
-        
-        Days daysLeft = iterationBusiness.daysLeftInIteration(iter);
-        assertEquals(0, daysLeft.getDays());
-    }
-    
-    @Test
-    public void testTimeLeftInIteration_future() {
-        Iteration iter = new Iteration();
-        DateTime startDate = new DateTime().plusDays(2);
-        DateTime endDate = startDate.plusDays(50);
-        iter.setStartDate(startDate.toDateMidnight().toDateTime());
-        iter.setEndDate(endDate);
-        
-        Days daysLeft = iterationBusiness.daysLeftInIteration(iter);
-        System.out.println(daysLeft);
-        assertEquals(50, daysLeft.getDays());
-    }
-    
-    @Test
-    public void testCalculateIterationTimeframePercentageLeft() {
-        Iteration iter = new Iteration();
-        DateTime startDate = new DateTime().minusDays(2);
-        DateTime endDate = startDate.plusDays(4);
-        iter.setStartDate(startDate.toDateMidnight().toDateTime());
-        iter.setEndDate(endDate);
-        float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
-        assertEquals(0.5f,percentage,0);
-    }
-    
-    @Test
-    public void testCalculateIterationTimeframePercentageLeft_past() {
-        Iteration iter = new Iteration();
-        DateTime startDate = new DateTime().minusDays(40);
-        DateTime endDate = startDate.plusDays(5);
-        iter.setStartDate(startDate.toDateMidnight().toDateTime());
-        iter.setEndDate(endDate);
-        float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
-        assertEquals(0f, percentage, 0);
-    }
-    
-    @Test
-    public void testCalculateIterationTimeframePercentageLeft_future() {
-        Iteration iter = new Iteration();
-        DateTime startDate = new DateTime().plusDays(4);
-        DateTime endDate = startDate.plusDays(50);
-        iter.setStartDate(startDate.toDateMidnight().toDateTime());
-        iter.setEndDate(endDate);
-        float percentage = iterationBusiness.calculateIterationTimeframePercentageLeft(iter);
-        assertEquals(1f, percentage, 1000);
-    }
-    
 
     @Test
     public void testCalculateVariance() {
@@ -579,6 +514,7 @@ public class IterationBusinessTest {
         latestHistoryEntry.setEffortLeftSum(60);
         
         expect(iterationHistoryEntryBusiness.retrieveLatest(iter)).andReturn(latestHistoryEntry);    
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(iter)).andReturn(Days.days(90));
         expect(iterationHistoryEntryDAO.retrieveByDate(iter.getId(), today.minusDays(1))).andReturn(yesterdayHistoryEntry);
         replayAll();
         assertEquals((Integer)(-30), iterationBusiness.calculateVariance(iter));

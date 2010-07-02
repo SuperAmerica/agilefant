@@ -3,8 +3,11 @@ package fi.hut.soberit.agilefant.business;
 import java.util.Collection;
 import java.util.Set;
 
+import org.joda.time.Days;
+
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Schedulable;
 
 /**
  * This description contains generic information on <code>Business</code>
@@ -57,4 +60,7 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
     public Product getParentProduct(Backlog backlog);
     
     public int getStoryPointSumByBacklog(Backlog backlog);
+    
+    public Days daysLeftInSchedulableBacklog(Schedulable backlog);
+    public float calculateBacklogTimeframePercentageLeft(Schedulable backlog);
 }

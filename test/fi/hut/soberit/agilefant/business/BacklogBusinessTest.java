@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -149,5 +151,82 @@ public class BacklogBusinessTest extends MockedTestCase {
         assertEquals(6, backlogBusiness.getStoryPointSumByBacklog(backlog));
         
         verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testTimeLeftInSchedulable() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(2);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        
+        Days daysLeft = backlogBusiness.daysLeftInSchedulableBacklog(iter);
+        
+        assertEquals(3, daysLeft.getDays());
+        
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testTimeLeftInSchedulable_past() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(40);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        
+        Days daysLeft = backlogBusiness.daysLeftInSchedulableBacklog(iter);
+        assertEquals(0, daysLeft.getDays());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testTimeLeftInSchedulable_future() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().plusDays(2);
+        DateTime endDate = startDate.plusDays(50);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        
+        Days daysLeft = backlogBusiness.daysLeftInSchedulableBacklog(iter);
+        assertEquals(50, daysLeft.getDays());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCalculateBacklogTimeframePercentageLeft() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(2);
+        DateTime endDate = startDate.plusDays(4);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        float percentage = backlogBusiness.calculateBacklogTimeframePercentageLeft(iter);
+        assertEquals(0.5f,percentage,0);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCalculateBacklogTimeframePercentageLeft_past() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().minusDays(40);
+        DateTime endDate = startDate.plusDays(5);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        float percentage = backlogBusiness.calculateBacklogTimeframePercentageLeft(iter);
+        assertEquals(0f, percentage, 0);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCalculateBacklogTimeframePercentageLeft_future() {
+        Iteration iter = new Iteration();
+        DateTime startDate = new DateTime().plusDays(4);
+        DateTime endDate = startDate.plusDays(50);
+        iter.setStartDate(startDate.toDateMidnight().toDateTime());
+        iter.setEndDate(endDate);
+        float percentage = backlogBusiness.calculateBacklogTimeframePercentageLeft(iter);
+        assertEquals(1f, percentage, 1000);
     }
 }

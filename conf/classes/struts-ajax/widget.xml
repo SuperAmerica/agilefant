@@ -47,6 +47,10 @@
       <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/storyWidget.jsp</result>
     </action>
 
+    <action name="projectMetrics" class="projectMetricsWidget" method="execute">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/widgets/projectMetricsWidget.jsp</result>
+    </action>
+
     <!-- /Widgets -->  
   </package>
   

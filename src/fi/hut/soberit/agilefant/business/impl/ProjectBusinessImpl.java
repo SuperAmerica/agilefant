@@ -6,12 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.AssignmentBusiness;
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
@@ -52,6 +54,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     private BacklogDAO backlogDAO;
     private ProductBusiness productBusiness;
     private AssignmentBusiness assignmentBusiness;
+    @Autowired
+    private BacklogBusiness backlogBusiness;
     
     private TransferObjectBusiness transferObjectBusiness;
     private RankingBusiness rankingBusiness;
@@ -124,6 +128,13 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         ProjectMetrics metrics = new ProjectMetrics();
         metrics.setStoryPoints(
                 backlogDAO.calculateStoryPointSumIncludeChildBacklogs(project.getId()));
+        
+        LocalDate today = new LocalDate();
+        
+        metrics.setTotalDays(Days.daysBetween(project.getStartDate(), project.getEndDate()).getDays());
+        if (today.isBefore(project.getEndDate().toLocalDate())) {
+            metrics.setDaysLeft(backlogBusiness.daysLeftInSchedulableBacklog(project).getDays());
+        }
         return metrics;
     }
     

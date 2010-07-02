@@ -42,22 +42,28 @@ $.widget("custom.aefWidget", {
     /* Minimize/maximize widget */
     var minimizeButton = this.element.find('.minimizeWidget');
     var maximizeButton = this.element.find('.maximizeWidget');
-    if (this.content.find('.expandable').length === 0) {
-      minimizeButton.hide();
-      maximizeButton.hide();
-    }
-    else {
+    if (this.content.find('.expandable').length) {
+      /* Bind the events */
       minimizeButton.bind('click',jQuery.proxy(function() {
         maximizeButton.show();
         minimizeButton.hide();
-        this.content.find('.expandable').hide();      
+        this.content.find('.expandable').hide();
+        jQuery.cookie('agilefant_widgets_' + this.options.widgetId + '_open','closed',{expires:60});
       },this));
     
       maximizeButton.bind('click',jQuery.proxy(function() {
         maximizeButton.hide();
         minimizeButton.show();
-        this.content.find('.expandable').show(); 
+        this.content.find('.expandable').show();
+        jQuery.cookie('agilefant_widgets_' + this.options.widgetId + '_open','open',{expires:60});
       },this));
+      
+      /* Check for cookie */
+      if (jQuery.cookie('agilefant_widgets_' + this.options.widgetId + '_open') === 'open') {
+        maximizeButton.click();
+      } else {
+        minimizeButton.click();
+      }
     }
   },
   reload: function() {

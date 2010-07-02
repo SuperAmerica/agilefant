@@ -82,6 +82,7 @@
 }
 
 .widgetHeader ul li {
+  list-style-type: none;
   font-weight: bold;
   display: inline-block;
   float: right;
@@ -108,6 +109,11 @@
   max-height: 320px;
   overflow: auto;
 }
+
+.widgetContent .expandable {
+  display: hidden; /* Expandable content hidden by default */  
+}
+
 
 .staticWidget button, .createNewWidget td {
   font-size: 100% !important;

@@ -20,6 +20,7 @@ import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
+import org.jfree.ui.RectangleInsets;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,18 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
     protected static final String PLANNED_NAME = "Work planned";
     protected static final String DONE_NAME = "Work done";
 
+    
+    @Transactional(readOnly = true)
+    public byte[] getBurnup(Project project) {
+        return getChartImageByteArray(constructChart(project));
+    }
+    
+    @Transactional(readOnly = true)
+    public byte[] getSmallBurnup(Project project) {
+        return getChartImageByteArray(constructSmallChart(project), SMALL_WIDTH, SMALL_HEIGHT);
+    }
+    
+    
     /**
      * Generates a byte array (a png image file) from a JFreeChart object
      * 
@@ -85,10 +98,6 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         return getChartImageByteArray(chart, DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
-    @Transactional(readOnly = true)
-    public byte[] getBurnup(Project project) {
-        return getChartImageByteArray(constructChart(project));
-    }
 
     protected JFreeChart constructChart(Project project) {
         ProjectBurnupData data = backlogHistoryEntryDAO
@@ -112,6 +121,38 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         formatChartStyle(burnup);
 
         return burnup;
+    }
+    
+    protected JFreeChart constructSmallChart(Project project) {
+        JFreeChart burndown = this.constructChart(project);
+        return transformToSmallChart(burndown);
+    }
+    
+    /**
+     * Trims and transforms a big burndown chart to a small one.
+     */
+    protected JFreeChart transformToSmallChart(JFreeChart burndownChart) {
+        JFreeChart chart = burndownChart;
+        XYPlot plot = chart.getXYPlot();
+        
+        chart.setBackgroundPaint(CHART_BACKGROUND_COLOR);
+        plot.setBackgroundPaint(PLOT_BACKGROUND_COLOR);
+        
+        plot.setDomainGridlinesVisible(false);
+        plot.setRangeGridlinesVisible(false);
+        plot.getDomainAxis().setVisible(false);
+        plot.getRangeAxis().setVisible(false);
+        
+        plot.getDomainAxis().setLabel(null);
+        plot.getRangeAxis().setLabel(null);
+        
+        RectangleInsets ins = new RectangleInsets(-6, -8, -3, -7);
+        chart.setPadding(ins);
+
+        chart.removeLegend();
+        chart.setTitle("");
+        
+        return chart;
     }
 
     protected Pair<TimeSeriesCollection, TimeSeriesCollection> convertToDatasets(

@@ -253,6 +253,13 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		
+		<action name="drawSmallProjectBurnup" method="getSmallProjectBurnup" class="chartAction">
+      <result name="success" type="stream">
+        <param name="contentType">image/png</param>
+        <param name="inputName">inputStream</param>
+      </result>
+    </action>
 
 		<action name="drawIterationBurndown" method="getIterationBurndown" class="chartAction">
 			<result name="success" type="stream">

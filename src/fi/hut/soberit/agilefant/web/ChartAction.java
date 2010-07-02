@@ -61,6 +61,12 @@ public class ChartAction extends ActionSupport {
         result = projectBurnupBusiness.getBurnup(project);
         return Action.SUCCESS;
     }
+    
+    public String getSmallProjectBurnup() {
+        Project project = projectBusiness.retrieve(backlogId);
+        result = projectBurnupBusiness.getSmallBurnup(project);
+        return Action.SUCCESS;
+    }
 
     public String getSmallIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);

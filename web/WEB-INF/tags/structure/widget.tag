@@ -11,7 +11,7 @@
     <li class="maximizeWidget" style="display: none;">+</li>
     <li class="minimizeWidget">-</li>
   </ul>
-  <span>${name}</span>
+  <div>${name}</div>
 </div>
 
 <div class="widgetContent">

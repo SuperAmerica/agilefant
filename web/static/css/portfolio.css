@@ -67,7 +67,7 @@
   vertical-align: middle;
 }
 
-.realWidget .widgetHeader {
+.realWidget .widgetHeader > div {
   cursor: move;
 }
 

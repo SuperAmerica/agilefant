@@ -23,7 +23,7 @@ $(document).ready(function() {
     connectWith: '.widgetList',
     dropOnEmpty: true,
     placeholder: 'widget-placeholder',
-    handle: '.widgetHeader',
+    handle: '.widgetHeader > div',
     items: '> :not(.staticWidget)',
     delay: 300,
     stop: function(event, ui) {

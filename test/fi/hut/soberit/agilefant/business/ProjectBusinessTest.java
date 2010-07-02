@@ -10,8 +10,13 @@ import java.util.Set;
 
 import org.easymock.EasyMock;
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fi.hut.soberit.agilefant.business.impl.ProjectBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
@@ -26,24 +31,44 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.test.Mock;
+import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
-public class ProjectBusinessTest {
-
-    ProjectBusinessImpl projectBusiness = new ProjectBusinessImpl();
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = MockContextLoader.class)
+public class ProjectBusinessTest  extends MockedTestCase { 
+    @TestedBean
+    ProjectBusinessImpl projectBusiness;
+    @Mock
     ProjectDAO projectDAO;
+    @Mock
     BacklogDAO backlogDAO;
+    @Mock
     ProductBusiness productBusiness;
+    @Mock
     TransferObjectBusiness transferObjectBusiness;
+    @Mock
     SettingBusiness settingBusiness;
+    @Mock
     RankingBusiness rankingBusiness;
+    @Mock
     AssignmentBusiness assignmentBusiness;
+    @Mock
     BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
+    @Mock
     IterationBusiness iterationBusiness;
+    @Mock
     StoryBusiness storyBusiness;
+    @Mock
     HourEntryBusiness hourEntryBusiness;
+    @Mock
     StoryRankBusiness storyRankBusiness;
+    @Mock
+    BacklogBusiness backlogBusiness;
     
     Project project;
     Product product;
@@ -52,47 +77,6 @@ public class ProjectBusinessTest {
     Story story1;
     Story story2;
 
-    @Before
-    public void setUp_dependencies() {
-        projectDAO = createStrictMock(ProjectDAO.class);
-        projectBusiness.setProjectDAO(projectDAO);
-
-        backlogDAO = createStrictMock(BacklogDAO.class);
-        projectBusiness.setBacklogDAO(backlogDAO);
-
-        productBusiness = createStrictMock(ProductBusiness.class);
-        projectBusiness.setProductBusiness(productBusiness);
-        
-        transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
-        projectBusiness.setTransferObjectBusiness(transferObjectBusiness);
-        
-        settingBusiness = createStrictMock(SettingBusiness.class);
-        projectBusiness.setSettingBusiness(settingBusiness);
-        
-        rankingBusiness = createStrictMock(RankingBusiness.class);
-        projectBusiness.setRankingBusiness(rankingBusiness);
-        
-        backlogHistoryEntryBusiness = createMock(BacklogHistoryEntryBusiness.class);
-        projectBusiness.setHistoryEntryBusiness(backlogHistoryEntryBusiness);
-        
-        assignmentBusiness = createMock(AssignmentBusiness.class);
-        projectBusiness.setAssignmentBusiness(assignmentBusiness);
-        
-        settingBusiness = createMock(SettingBusiness.class);
-        projectBusiness.setSettingBusiness(settingBusiness);
-        
-        iterationBusiness = createStrictMock(IterationBusiness.class);
-        projectBusiness.setIterationBusiness(iterationBusiness);
-        
-        storyBusiness = createStrictMock(StoryBusiness.class);
-        projectBusiness.setStoryBusiness(storyBusiness);
-        
-        hourEntryBusiness = createStrictMock(HourEntryBusiness.class);
-        projectBusiness.setHourEntryBusiness(hourEntryBusiness);
-        
-        storyRankBusiness = createStrictMock(StoryRankBusiness.class);
-        projectBusiness.setStoryRankBusiness(storyRankBusiness);
-    }
 
     @Before
     public void setUp_data() {
@@ -121,36 +105,47 @@ public class ProjectBusinessTest {
         story1.setTasks(new HashSet<Task>(Arrays.asList(task)));
     }
 
-    private void replayAll() {
-        replay(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness, storyRankBusiness);
-    }
-
-    private void verifyAll() {
-        verify(projectDAO, backlogDAO, productBusiness, transferObjectBusiness, settingBusiness, rankingBusiness, storyRankBusiness);
-    }
-
     @Test
+    @DirtiesContext
     public void testGetProjectMetrics() {
-        expect(
-                backlogDAO.calculateStoryPointSumIncludeChildBacklogs(project
-                        .getId())).andReturn(100);
+        ProjectMetrics metrics = new ProjectMetrics();
+        project.setStartDate(new DateTime().minusDays(7));
+        project.setEndDate(project.getStartDate().plusDays(10));
+
+        metrics.setTotalDays(10);
+        metrics.setDaysLeft(3);
+        
+        metrics.setNumberOfStories(100);
+        metrics.setNumberOfDoneStories(40);
+        
+        metrics.setStoryPoints(1000);
+        metrics.setCompletedStoryPoints(10);
+        
+        
+        expect(projectDAO.calculateProjectStoryMetrics(project.getId())).andReturn(metrics);
+        expect(backlogBusiness.daysLeftInSchedulableBacklog(project)).andReturn(Days.days(3));
 
         replayAll();
 
         ProjectMetrics actualMetrics = projectBusiness
                 .getProjectMetrics(project);
 
-        assertEquals(100, actualMetrics.getStoryPoints());
+        assertSame(metrics, actualMetrics);
+        assertEquals(40, actualMetrics.getCompletedStoriesPercentage());
+        assertEquals(1, actualMetrics.getStoryPointsCompletedPercentage());
+        assertEquals(30, actualMetrics.getDaysLeftPercentage());
 
         verifyAll();
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @DirtiesContext
     public void testGetProjectMetrics_nullProject() {
         projectBusiness.getProjectMetrics(null);
     }
 
     @Test
+    @DirtiesContext
     public void testStoreProject_oldProject() {
         ProjectTO actual = new ProjectTO(project);
         
@@ -163,6 +158,7 @@ public class ProjectBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testStoreProject_newProject() {
         ProjectTO actual = new ProjectTO(project);
         project.setId(0);
@@ -176,6 +172,7 @@ public class ProjectBusinessTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @DirtiesContext
     public void testStoreProject_invalidDates() {
         project.setStartDate(new DateTime(2008, 1, 1, 1, 0, 0, 0));
         project.setEndDate(new DateTime(2007, 1, 1, 1, 0, 0, 0));
@@ -188,6 +185,7 @@ public class ProjectBusinessTest {
     }
 
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testStoreProject_illegalProjectId() {
         Project falseProject = new Project();
         falseProject.setId(4);
@@ -198,6 +196,7 @@ public class ProjectBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testStoreProject_withProduct() {
         ProjectTO actual = new ProjectTO(project);
 
@@ -212,6 +211,7 @@ public class ProjectBusinessTest {
     }
 
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testStoreProject_invalidProduct() {
         expect(projectDAO.get(123)).andReturn(project);
         expect(productBusiness.retrieve(313)).andThrow(new ObjectNotFoundException());
@@ -221,11 +221,13 @@ public class ProjectBusinessTest {
     }
     
     @Test(expected = IllegalArgumentException.class)
+    @DirtiesContext
     public void testStoreProject_newProjectWithoutParent() {
         projectBusiness.store(0, null, project, null);
     }
 
     @Test
+    @DirtiesContext
     public void testGetAssignedUsers() {
         Collection<User> expected = Arrays.asList(user1, user2);
         expect(projectDAO.getAssignedUsers(project)).andReturn(expected);
@@ -238,6 +240,7 @@ public class ProjectBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetProjectData() {
         Project proj = new Project();
         proj.setId(111);
@@ -256,6 +259,7 @@ public class ProjectBusinessTest {
     
     
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testGetProjectData_noSuchProject() {
         expect(projectDAO.get(-1)).andReturn(null);
         replayAll();
@@ -264,6 +268,7 @@ public class ProjectBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testUnrank() {
         Project project = new Project();
         project.setId(500);
@@ -276,6 +281,7 @@ public class ProjectBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testRankOver_rankToTop() {
         Project project = new Project();
         project.setId(1);
@@ -294,6 +300,7 @@ public class ProjectBusinessTest {
     }
              
     @Test
+    @DirtiesContext
     public void testRankOver() {
         Project project = new Project();
         project.setId(1);
@@ -314,6 +321,7 @@ public class ProjectBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testDeleteProject() {
         Product product = new Product();
         product.setId(123);
@@ -321,6 +329,7 @@ public class ProjectBusinessTest {
         Project project = new Project();
         iter.setParent(project);
         iter.setId(111);
+        project.getChildren().add(iter);
         project.setParent(product);
         project.setId(112);
         Story story = new Story();

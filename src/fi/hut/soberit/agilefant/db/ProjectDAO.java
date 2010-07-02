@@ -8,6 +8,7 @@ import org.joda.time.LocalDate;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 /**
  * Interface for a DAO of a Project.
@@ -55,5 +56,7 @@ public interface ProjectDAO extends GenericDAO<Project> {
 
     List<Project> retrieveActiveWithUserAssigned(int userId);
     public List<BacklogHistoryEntry> getHistoryEntriesForProject(int id);
+    
+    public ProjectMetrics calculateProjectStoryMetrics(int backlogId);
 
 }

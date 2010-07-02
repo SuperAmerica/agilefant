@@ -26,7 +26,6 @@ import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
-import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
@@ -51,14 +50,17 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         ProjectBusiness {
 
     private ProjectDAO projectDAO;
-    private BacklogDAO backlogDAO;
+    @Autowired
     private ProductBusiness productBusiness;
+    @Autowired
     private AssignmentBusiness assignmentBusiness;
     @Autowired
     private BacklogBusiness backlogBusiness;
-    
+    @Autowired
     private TransferObjectBusiness transferObjectBusiness;
+    @Autowired
     private RankingBusiness rankingBusiness;
+    @Autowired
     private SettingBusiness settingBusiness;
     @Autowired
     private StoryBusiness storyBusiness;
@@ -77,40 +79,18 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         super(Project.class);
     }
     
-    @Autowired
-    public void setProjectDAO(ProjectDAO projectDAO) {
-        this.genericDAO = projectDAO;
-        this.projectDAO = projectDAO;
+    public void setSettingBusiness(SettingBusiness settingBusiness) {
+        this.settingBusiness = settingBusiness;
     }
-
-    @Autowired
-    public void setBacklogDAO(BacklogDAO backlogDAO) {
-        this.backlogDAO = backlogDAO;
-    }    
     
-    @Autowired
     public void setRankingBusiness(RankingBusiness rankingBusiness) {
         this.rankingBusiness = rankingBusiness;
     }
     
     @Autowired
-    public void setSettingBusiness(SettingBusiness settingBusiness) {
-        this.settingBusiness = settingBusiness;
-    }
-    
-    @Autowired
-    public void setProductBusiness(ProductBusiness productBusiness) {
-        this.productBusiness = productBusiness;
-    }
-    
-    @Autowired
-    public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
-        this.transferObjectBusiness = transferObjectBusiness;
-    }
-    
-    @Autowired
-    public void setAssignmentDAO(AssignmentBusiness assignmentBusiness) {
-        this.assignmentBusiness = assignmentBusiness;
+    public void setProjectDAO(ProjectDAO projectDAO) {
+        this.genericDAO = projectDAO;
+        this.projectDAO = projectDAO;
     }
     
     @Transactional
@@ -125,16 +105,35 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         if (project == null) {
             throw new IllegalArgumentException("Project must be supplied");
         }
-        ProjectMetrics metrics = new ProjectMetrics();
-        metrics.setStoryPoints(
-                backlogDAO.calculateStoryPointSumIncludeChildBacklogs(project.getId()));
-        
+        ProjectMetrics metrics = projectDAO
+                .calculateProjectStoryMetrics(project.getId());
+
         LocalDate today = new LocalDate();
-        
-        metrics.setTotalDays(Days.daysBetween(project.getStartDate(), project.getEndDate()).getDays());
+
+        metrics.setTotalDays(Days.daysBetween(project.getStartDate(),
+                project.getEndDate()).getDays());
         if (today.isBefore(project.getEndDate().toLocalDate())) {
-            metrics.setDaysLeft(backlogBusiness.daysLeftInSchedulableBacklog(project).getDays());
+            metrics.setDaysLeft(backlogBusiness.daysLeftInSchedulableBacklog(
+                    project).getDays());
         }
+
+        // percentages
+        if (metrics.getTotalDays() != 0) {
+            metrics.setDaysLeftPercentage(Math.round((float) metrics
+                    .getDaysLeft()
+                    * 100f / (float) metrics.getTotalDays()));
+        }
+        if (metrics.getStoryPoints() != 0) {
+            metrics.setStoryPointsCompletedPercentage(Math
+                    .round((float) metrics.getCompletedStoryPoints() * 100f
+                            / (float) metrics.getStoryPoints()));
+        }
+        if (metrics.getNumberOfDoneStories() != 0) {
+            metrics.setCompletedStoriesPercentage(Math.round((float) metrics
+                    .getNumberOfDoneStories()
+                    * 100f / (float) metrics.getNumberOfStories()));
+        }
+
         return metrics;
     }
     

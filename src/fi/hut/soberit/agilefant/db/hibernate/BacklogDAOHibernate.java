@@ -96,6 +96,7 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         if (result == null) return 0;
         return result.intValue();
     }
+    
     public List<Backlog> searchByName(String name) {
         return searchByName(name, Backlog.class);
     }

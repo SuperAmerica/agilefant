@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
+import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 @ContextConfiguration
 @Transactional
@@ -129,5 +130,15 @@ public class ProjectDAOTest extends AbstractHibernateTests {
         executeSql("classpath:fi/hut/soberit/agilefant/db/ProjectDAOTest-assignments-data.sql");
         List<Project> projects = projectDAO.retrieveActiveWithUserAssigned(1);
         assertEquals(2, projects.size());
+    }
+    
+    @Test
+    public void testCalculateStoryMetrics() {
+        executeClassSql();
+        ProjectMetrics actual = projectDAO.calculateProjectStoryMetrics(3);
+        assertEquals(10110, actual.getCompletedStoryPoints());
+        assertEquals(11110, actual.getStoryPoints());
+        assertEquals(3, actual.getNumberOfDoneStories());
+        assertEquals(4, actual.getNumberOfStories());
     }
 }

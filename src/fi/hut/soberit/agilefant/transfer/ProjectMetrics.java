@@ -7,6 +7,7 @@ public class ProjectMetrics {
     private int storyPointsCompletedPercentage = 0;
     private int numberOfStories = 0;
     private int numberOfDoneStories = 0;
+    private int completedStoriesPercentage = 0;
     private int daysLeft = 0;
     private int totalDays = 0;
     private int daysLeftPercentage = 0;
@@ -73,5 +74,13 @@ public class ProjectMetrics {
 
     public void setDaysLeftPercentage(int daysLeftPercentage) {
         this.daysLeftPercentage = daysLeftPercentage;
+    }
+
+    public int getCompletedStoriesPercentage() {
+        return completedStoriesPercentage;
+    }
+
+    public void setCompletedStoriesPercentage(int completedStoriesPercentage) {
+        this.completedStoriesPercentage = completedStoriesPercentage;
     }
 }

@@ -7,6 +7,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -15,7 +17,10 @@ import org.springframework.stereotype.Repository;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 
 /**
  * Hibernate implementation of ProjectDAO interface using
@@ -115,6 +120,33 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         crit.add(Restrictions.eq("backlog.id", projectId));
         crit.addOrder(Order.asc("timestamp"));
         return asList(crit);
+    }
+    
+    private int toInt(Object obj) {
+        if(obj != null) {
+            return (Integer)obj;
+        }
+        return 0;
+    }
+    public ProjectMetrics calculateProjectStoryMetrics(int backlogId) {
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        ProjectionList proj = Projections.projectionList();
+        proj.add(Projections.sum("storyPoints"));
+        proj.add(Projections.count("id"));
+        proj.add(Projections.groupProperty("state"));
+        crit.setProjection(proj);
+        crit.createCriteria("storyRanks", "ranks").createCriteria("backlog", "backlog").add(Restrictions.idEq(backlogId));
+        List<Object[]> res = asList(crit);
+        ProjectMetrics metrics = new ProjectMetrics();
+        for(Object[] row : res) {
+            if((StoryState)row[2] == StoryState.DONE) {
+                metrics.setCompletedStoryPoints(metrics.getCompletedStoryPoints() + toInt(row[0]));
+                metrics.setNumberOfDoneStories(metrics.getNumberOfDoneStories() + toInt(row[1]));
+            } 
+            metrics.setStoryPoints(metrics.getStoryPoints() + toInt(row[0]));
+            metrics.setNumberOfStories(metrics.getNumberOfStories() + toInt(row[1]));
+        }
+        return metrics;
     }
     
 }

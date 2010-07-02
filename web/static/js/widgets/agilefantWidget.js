@@ -42,18 +42,23 @@ $.widget("custom.aefWidget", {
     /* Minimize/maximize widget */
     var minimizeButton = this.element.find('.minimizeWidget');
     var maximizeButton = this.element.find('.maximizeWidget');
-    
-    minimizeButton.bind('click',jQuery.proxy(function() {
-      maximizeButton.show();
+    if (this.content.find('.expandable').length === 0) {
       minimizeButton.hide();
-      this.content.hide('blind');      
-    },this));
-
-    maximizeButton.bind('click',jQuery.proxy(function() {
       maximizeButton.hide();
-      minimizeButton.show();
-      this.content.show('blind');      
-    },this));
+    }
+    else {
+      minimizeButton.bind('click',jQuery.proxy(function() {
+        maximizeButton.show();
+        minimizeButton.hide();
+        this.content.find('.expandable').hide();      
+      },this));
+    
+      maximizeButton.bind('click',jQuery.proxy(function() {
+        maximizeButton.hide();
+        minimizeButton.show();
+        this.content.find('.expandable').show(); 
+      },this));
+    }
   },
   reload: function() {
     if (this.options.ajaxWidget) {

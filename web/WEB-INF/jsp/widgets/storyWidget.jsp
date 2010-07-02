@@ -17,6 +17,7 @@
       <td><span class="inlineTaskState taskState${story.state}" title="<aef:text name="story.state.${story.state}" />"><aef:text name="story.stateAbbr.${story.state}" /></span></td>
       <td>Story points</td>
       <td><span class="treeStoryPoints" title="Story points">${story.storyPoints}</span></td>
+      
       <td>Labels</td>
       <td>
         <c:choose>
@@ -37,5 +38,9 @@
       <td colspan="6"><div class="branchMetricsContainer"></div></td>
     </tr>
   </table>
+  
+  <div class="expandable">
+    Experimental expandable content. Should default to hidden and the state be remembered.
+  </div>
   
 </struct:widget>

@@ -14,6 +14,8 @@ $.widget("custom.aefWidget", {
   _create: function() {
     this.element.attr('widgetId', this.options.widgetId);
     
+    this.element.addClass('widget');
+    
     if (this.options.realWidget) {
       this.element.addClass('realWidget');
     }
@@ -23,16 +25,19 @@ $.widget("custom.aefWidget", {
   },
   _loadCookie: function() {
     if (!window.aefWidgetCookie) {
-      var cookie = $.cookie('agilefant_widgets_expanded').split(',') || [];      
+      var cookie = $.cookie('agilefant_widgets_expanded');      
       window.aefWidgetCookie = [];
-      for (var i = 0; i < cookie.length; i++) {
-        window.aefWidgetCookie.push(parseInt(cookie[i], 10));
+      if (cookie) {
+        cookie = cookie.split(',');
+        for (var i = 0; i < cookie.length; i++) {
+          window.aefWidgetCookie.push(parseInt(cookie[i], 10));
+        }
       }
     }
   },
   _cookie: function() {
     window.aefWidgetCookie = window.aefWidgetCookie.unique();
-    $.cookie('agilefant_widgets_expanded',window.aefWidgetCookie.join(','));
+    $.cookie('agilefant_widgets_expanded',window.aefWidgetCookie.join(','),{expires:60});
   },
   _isExpanded: function() {
     return (jQuery.inArray(this.options.widgetId, window.aefWidgetCookie) !== -1);

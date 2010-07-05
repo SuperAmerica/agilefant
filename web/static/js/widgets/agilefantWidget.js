@@ -1,6 +1,7 @@
 /**
  * Agilefant Widget jQuery plugin.
  */
+window.aefWidgetCookie = null;
 
 $.widget("custom.aefWidget", {
   options: {
@@ -17,7 +18,42 @@ $.widget("custom.aefWidget", {
       this.element.addClass('realWidget');
     }
     
+    this._loadCookie();
     this.reload();
+  },
+  _loadCookie: function() {
+    if (!window.aefWidgetCookie) {
+      var cookie = $.cookie('agilefant_widgets_expanded').split(',') || [];      
+      window.aefWidgetCookie = [];
+      for (var i = 0; i < cookie.length; i++) {
+        window.aefWidgetCookie.push(parseInt(cookie[i], 10));
+      }
+    }
+  },
+  _cookie: function() {
+    window.aefWidgetCookie = window.aefWidgetCookie.unique();
+    $.cookie('agilefant_widgets_expanded',window.aefWidgetCookie.join(','));
+  },
+  _isExpanded: function() {
+    return (jQuery.inArray(this.options.widgetId, window.aefWidgetCookie) !== -1);
+  },
+  _addToCookie: function() {
+    window.aefWidgetCookie.push(this.options.widgetId);
+    this._cookie();
+  },
+  _removeFromCookie: function() {
+    ArrayUtils.remove(window.aefWidgetCookie, this.options.widgetId);
+    this._cookie();
+  },
+  expand: function() {
+    this.element.find('.maximizeWidget').hide();
+    this.element.find('.minimizeWidget').show();
+    this.content.find('.expandable').show();
+  },
+  collapse: function() {
+    this.element.find('.maximizeWidget').show();
+    this.element.find('.minimizeWidget').hide();
+    this.content.find('.expandable').hide();
   },
   _bindEvents: function() {
     var me = this;
@@ -45,24 +81,20 @@ $.widget("custom.aefWidget", {
     if (this.content.find('.expandable').length) {
       /* Bind the events */
       minimizeButton.bind('click',jQuery.proxy(function() {
-        maximizeButton.show();
-        minimizeButton.hide();
-        this.content.find('.expandable').hide();
-        jQuery.cookie('agilefant_widgets_' + this.options.widgetId + '_open','closed',{expires:60});
+        this.collapse();
+        this._removeFromCookie();
       },this));
     
       maximizeButton.bind('click',jQuery.proxy(function() {
-        maximizeButton.hide();
-        minimizeButton.show();
-        this.content.find('.expandable').show();
-        jQuery.cookie('agilefant_widgets_' + this.options.widgetId + '_open','open',{expires:60});
+        this.expand();
+        this._addToCookie();
       },this));
       
       /* Check for cookie */
-      if (jQuery.cookie('agilefant_widgets_' + this.options.widgetId + '_open') === 'open') {
-        maximizeButton.click();
+      if (this._isExpanded()) {
+        this.expand();
       } else {
-        minimizeButton.click();
+        this.collapse();
       }
     }
   },

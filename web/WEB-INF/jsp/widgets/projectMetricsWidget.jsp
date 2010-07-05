@@ -10,7 +10,7 @@
     href="editBacklog.action?backlogId=${project.id}"> <c:out
     value="${project.name}" /> </a></div>
     
-      <table style="margin: 2em 0;">
+      <table>
     <tr>
       <td>
   <table>

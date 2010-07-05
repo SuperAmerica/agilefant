@@ -13,7 +13,7 @@
     value="${iteration.name}" /></a></div>
 
   <%-- Metrics --%>
-  <table style="margin: 2em 0;">
+  <table>
     <tr>
       <td>
   <table>

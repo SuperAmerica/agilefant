@@ -79,7 +79,6 @@ public class User implements NamedObject {
     private boolean autoassignToTasks = true;
     private boolean autoassignToStories = true;
     private UserSettingType markStoryStarted = UserSettingType.ask;
-    private UserSettingType markStoryBranchStarted = UserSettingType.ask;
     
     
     /**
@@ -326,18 +325,6 @@ public class User implements NamedObject {
         this.autoassignToStories = autoassignToStories;
     }
 
-    @JSON
-    @NotAudited
-    @Column(columnDefinition = "integer default 1")
-    public UserSettingType getMarkStoryBranchStarted() {
-        return markStoryBranchStarted;
-    }
-
-    
-    public void setMarkStoryBranchStarted(UserSettingType markStoryBranchStarted) {
-        this.markStoryBranchStarted = markStoryBranchStarted;
-    }
-    
     @JSON
     @NotAudited
     @Column(columnDefinition = "integer default 1")

@@ -30,7 +30,7 @@ public class AgilefantUserDetails implements UserDetails {
 
     private int userId;
 
-    AgilefantUserDetails(User user) {
+    public AgilefantUserDetails(User user) {
         username = user.getLoginName();
         password = user.getPassword();
         userId = user.getId();

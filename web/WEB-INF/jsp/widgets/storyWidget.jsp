@@ -3,8 +3,8 @@
 
   <script type="text/javascript">
   $(document).ready(function() {
-    $('#storyWidgetInfo_${story.id} div.branchMetricsContainer').load('ajax/retrieveBranchMetrics.action?storyId=${story.id}');
-    $('#treeContent_${story.id}').load('ajax/getStoryHierarchy.action?storyId=${story.id}');
+    $('#storyWidgetInfo_${widgetId} div.branchMetricsContainer').load('ajax/retrieveBranchMetrics.action?storyId=${story.id}');
+    $('#treeContent_${widgetId}').load('ajax/getStoryHierarchy.action?storyId=${story.id}');
   });
   </script>
 
@@ -12,7 +12,7 @@
     <a href="qr.action?q=story:${story.id}">View the story in its backlog</a>
   </div>
   
-  <table id="storyWidgetInfo_${story.id}">
+  <table id="storyWidgetInfo_${widgetId}">
     <tr>
       <td>State</td>
       <td><span class="inlineTaskState taskState${story.state}" title="<aef:text name="story.state.${story.state}" />"><aef:text name="story.stateAbbr.${story.state}" /></span></td>
@@ -41,7 +41,7 @@
   </table>
   
   <div class="expandable">
-    <div id="treeContent_${story.id}"> </div>
+    <div id="treeContent_${widgetId}"> </div>
   </div>
   
 </struct:widget>

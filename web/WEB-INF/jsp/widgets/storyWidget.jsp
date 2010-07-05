@@ -4,6 +4,7 @@
   <script type="text/javascript">
   $(document).ready(function() {
     $('#storyWidgetInfo_${story.id} div.branchMetricsContainer').load('ajax/retrieveBranchMetrics.action?storyId=${story.id}');
+    $('#treeContent_${story.id}').load('ajax/getStoryHierarchy.action?storyId=${story.id}');
   });
   </script>
 
@@ -40,7 +41,7 @@
   </table>
   
   <div class="expandable">
-    Experimental expandable content. Should default to hidden and the state be remembered.
+    <div id="treeContent_${story.id}"> </div>
   </div>
   
 </struct:widget>

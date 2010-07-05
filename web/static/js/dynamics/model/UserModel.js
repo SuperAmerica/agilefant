@@ -26,7 +26,9 @@ var UserModel = function UserModel() {
       "email": "email",
       "weekEffort": "weekEffort",
       "enabled":    "enabled",
-      "autoassignToTasks": "autoassignToTasks"
+      "autoassignToTasks": "autoassignToTasks",
+      "markStoryStarted": "markStoryStarted",
+      "autoassignToStories": "autoassignToStories"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Story":         "story",
@@ -259,6 +261,14 @@ UserModel.prototype.getWeekEffort = function() {
 
 UserModel.prototype.setWeekEffort = function(weekEffort) {
   this.currentData.weekEffort = weekEffort;
+};
+
+UserModel.prototype.isAutoassignToStories = function() {
+  return this.currentData.autoassignToStories;
+};
+
+UserModel.prototype.getMarkStoryStarted = function() {
+  return this.currentData.markStoryStarted;
 };
 
 

@@ -298,7 +298,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         metrics.setDoneStoryPointsPercentage(calculatePercent(metrics.getDoneStoryPoints(), metrics.getStoryPoints()));
         metrics.setDaysLeftPercentage(calculatePercent(metrics.getDaysLeft(), metrics.getTotalDays()));
         if(metrics.getEffortLeft() != null && metrics.getOriginalEstimate() != null) {
-            metrics.setCompletedEffortPercentage(calculatePercent(metrics.getEffortLeft().intValue(), metrics.getOriginalEstimate().intValue()));
+            int effortDone = metrics.getOriginalEstimate().intValue() - metrics.getEffortLeft().intValue();
+            metrics.setCompletedEffortPercentage(calculatePercent(effortDone, metrics.getOriginalEstimate().intValue()));
         }
         return metrics;
     }

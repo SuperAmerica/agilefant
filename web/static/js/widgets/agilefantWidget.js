@@ -122,6 +122,7 @@ $.widget("custom.aefWidget", {
   },
   destroy: function() {
     $.Widget.prototype.destroy.apply(this, arguments);
+    this._removeFromCookie();
     this.element.remove();
   }
 });

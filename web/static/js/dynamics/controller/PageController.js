@@ -52,7 +52,7 @@ PageController.prototype.refreshMenu = function() {
     window.menuController.reload();    
   }
   if (window.myAssignmentsMenuController) {
-    window.myAssingmentsMenuController.reload();
+    window.myAssignmentsMenuController.reload();
   }
 };
 

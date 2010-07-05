@@ -2,7 +2,6 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
                        "http://www.springframework.org/dtd/spring-beans.dtd">
 <beans>
-	<bean name="projectTypeAction" class="fi.hut.soberit.agilefant.web.ProjectTypeAction" singleton="false" autowire="byName"/>
 	<bean name="workTypeAction" class="fi.hut.soberit.agilefant.web.WorkTypeAction" singleton="false" autowire="byName"/>
 	<bean name="projectAction" class="fi.hut.soberit.agilefant.web.ProjectAction" singleton="false" autowire="byName"/>
 	<bean name="todoAction" class="fi.hut.soberit.agilefant.web.TodoAction" singleton="false" autowire="byName"/>

@@ -20,7 +20,6 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.ProjectType;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
@@ -60,7 +59,6 @@ public class AjaxExceptionHandler extends ActionSupport {
         put(BacklogHistoryEntry.class, "backlogHistoryEntry.notFound");
         put(BacklogHourEntry.class, "backlogHourEntry.notFound");
         put(Holiday.class, "holiday.notFound");
-        put(ProjectType.class, "projectType.notFound");
     }};
   
     

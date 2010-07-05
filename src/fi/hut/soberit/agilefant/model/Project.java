@@ -45,7 +45,6 @@ import flexjson.JSON;
  * 
  * @see fi.hut.soberit.agilefant.model.Backlog
  * @see fi.hut.soberit.agilefant.model.Story
- * @see fi.hut.soberit.agilefant.model.ProjectType
  * @see fi.hut.soberit.agilefant.model.Iteration
  */
 @Entity

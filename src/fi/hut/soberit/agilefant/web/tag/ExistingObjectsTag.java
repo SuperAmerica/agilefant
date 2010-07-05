@@ -6,7 +6,6 @@ import javax.servlet.jsp.tagext.Tag;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
-import fi.hut.soberit.agilefant.business.ProjectTypeBusiness;
 
 public class ExistingObjectsTag extends SpringTagSupport {
     private static final long serialVersionUID = 1810440984222729111L;
@@ -17,31 +16,23 @@ public class ExistingObjectsTag extends SpringTagSupport {
 
     public static final String HAS_ITERATIONS = "hasIterations";
 
-    public static final String HAS_PROJECTTYPES = "hasProjectTypes";
-
     private ProductBusiness productBusiness;
 
     private ProjectBusiness projectBusiness;
 
     private IterationBusiness iterationBusiness;
 
-    private ProjectTypeBusiness projectTypeBusiness;
-
     @Override
     public int doStartTag() throws JspException {
         productBusiness = requireBean("productBusiness");
         projectBusiness = requireBean("projectBusiness");
         iterationBusiness = requireBean("iterationBusiness");
-        projectTypeBusiness = requireBean("projectTypeBusiness");
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PRODUCTS,
                 productBusiness.countAll() > 0);
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_PROJECTS,
                 projectBusiness.countAll() > 0);
         super.getPageContext().setAttribute(ExistingObjectsTag.HAS_ITERATIONS,
                 iterationBusiness.countAll() > 0);
-        super.getPageContext().setAttribute(
-                ExistingObjectsTag.HAS_PROJECTTYPES,
-                projectTypeBusiness.countAll() > 0);
         return Tag.EVAL_BODY_INCLUDE;
     }
 

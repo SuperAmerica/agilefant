@@ -20,7 +20,6 @@
 		<mapping class="fi.hut.soberit.agilefant.model.IterationHistoryEntry" />
 		<mapping class="fi.hut.soberit.agilefant.model.Product" />
 		<mapping class="fi.hut.soberit.agilefant.model.Project" />
-		<mapping class="fi.hut.soberit.agilefant.model.ProjectType" />
 		<mapping class="fi.hut.soberit.agilefant.model.Setting" />
 		<mapping class="fi.hut.soberit.agilefant.model.Story" />
 		<mapping class="fi.hut.soberit.agilefant.model.StoryHourEntry" />

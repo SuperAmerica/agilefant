@@ -6,6 +6,7 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.HashSet;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
@@ -64,6 +66,11 @@ public class TaskActionTest extends MockedTestCase {
         task.setId(444);
         testable.setTask(task);
         testable.setTaskId(task.getId());
+    }
+    
+    @After
+    public void tearDown() {
+        SecurityUtil.setLoggedUser(null);
     }
     
     private void expectPopulateJsonData() {
@@ -187,6 +194,42 @@ public class TaskActionTest extends MockedTestCase {
         replayAll();
         
         assertEquals("success_withStory", testable.store());
+        
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testAjaxStoreTask_alwaysStoryToStarted() {
+        User user = new User();
+        user.setMarkStoryStarted(User.UserSettingType.always);
+        SecurityUtil.setLoggedUser(user);
+        
+        testable.setStoryId(3);
+        expect(taskBusiness.storeTask(task, null, 3, true))
+            .andReturn(task);
+        expectPopulateJsonData();
+        replayAll();
+        
+        assertEquals("success_withStory", testable.store());
+        
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testAjaxStoreTask_neverStoryToStarted() {
+        User user = new User();
+        user.setMarkStoryStarted(User.UserSettingType.never);
+        SecurityUtil.setLoggedUser(user);
+        
+        testable.setStoryId(3);
+        expect(taskBusiness.storeTask(task, null, 3, false))
+            .andReturn(task);
+        expectPopulateJsonData();
+        replayAll();
+        
+        assertEquals("success", testable.store());
         
         verifyAll();
     }

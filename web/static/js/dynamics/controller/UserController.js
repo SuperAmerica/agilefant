@@ -31,11 +31,6 @@ UserController.prototype._renderTables = function()  {
       this, this.model, this.userInfoConfig,
       this.infoElement);
   this.infoView.render();
-
-  this.settingsView = new DynamicVerticalTable(
-      this, this.model, this.settingsViewConfig,
-      this.userSettingsElement);
-  this.settingsView.render(); 
 };
 
 
@@ -51,7 +46,6 @@ UserController.prototype.changePassword = function() {
  */
 UserController.prototype.initConfigs = function() {
   this._initUserInfoConfig();
-  this._initSettingsConfig();
 };
 
 UserController.columnIndices = {
@@ -156,35 +150,35 @@ UserController.prototype._initUserInfoConfig = function() {
 };
 
 
-
-/**
- * Initialize configuration for settings changing.
- */
-UserController.prototype._initSettingsConfig = function() {
-  var config = new DynamicTableConfiguration( {
-    leftWidth: '20%',
-    rightWidth: '79%',
-    cssClass: "ui-widget-content ui-corner-all",
-    caption: "User specific settings",
-    captionConfig: {
-      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
-    },
-    closeRowCallback: null
-  });
-
-  
-  config.addColumnConfiguration(0, {
-    title: 'Autoassign to tasks',
-    get: UserModel.prototype.isAutoassignToTasksAsString,
-    editable: true,
-    decorator: DynamicsDecorators.enabledDisabledColorDecorator,
-    edit: {
-      editor: "Selection",
-      items: DynamicsDecorators.enabledDisabledOptions,
-      set: UserModel.prototype.setAutoassignToTasks
-    }
-  });
-  
-  this.settingsViewConfig = config;
-};
+//
+///**
+// * Initialize configuration for settings changing.
+// */
+//UserController.prototype._initSettingsConfig = function() {
+//  var config = new DynamicTableConfiguration( {
+//    leftWidth: '20%',
+//    rightWidth: '79%',
+//    cssClass: "ui-widget-content ui-corner-all",
+//    caption: "User specific settings",
+//    captionConfig: {
+//      cssClasses: "dynamictable-caption-block ui-widget-header ui-corner-all"
+//    },
+//    closeRowCallback: null
+//  });
+//
+//  
+//  config.addColumnConfiguration(0, {
+//    title: 'Assign me to tasks I create',
+//    get: UserModel.prototype.isAutoassignToTasksAsString,
+//    editable: true,
+//    decorator: DynamicsDecorators.enabledDisabledColorDecorator,
+//    edit: {
+//      editor: "Selection",
+//      items: DynamicsDecorators.enabledDisabledOptions,
+//      set: UserModel.prototype.setAutoassignToTasks
+//    }
+//  });
+//  
+//  this.settingsViewConfig = config;
+//};
 

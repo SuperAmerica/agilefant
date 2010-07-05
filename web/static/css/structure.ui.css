@@ -480,3 +480,33 @@ ul.quickSearchAutocompleteMenu li span.categoryName {
   text-align: right;
   padding: 0 5px;
 }
+
+/**
+ * BUTTONS
+ */
+input.dynamics-button {
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  border-radius: 5px;
+  border: 1px solid #999;
+  
+  background-color:#fff;
+  background-image: url('../img/button_fade.png');
+  background-position: 0 3px;
+  background-repeat: repeat-x;
+  
+  min-height: 1.8em;
+  min-width: 6em;
+  margin-right: 0.5em;
+  padding: 3px 5px;
+  
+  white-space:nowrap !important;
+  font-size: 80%;
+  text-align: center;
+  
+  cursor: pointer;
+}
+input.dynamics-button:focus, input.dynamics-button:hover {
+  background: #eed;
+}
+

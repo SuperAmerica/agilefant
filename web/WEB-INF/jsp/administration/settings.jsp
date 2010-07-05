@@ -58,7 +58,7 @@ $(document).ready(function() {
     </tr>
     </table>
     
-    <ww:submit value="Save all"></ww:submit>
+    <ww:submit value="Save all" cssClass="dynamics-button"></ww:submit>
     
 
     
@@ -163,7 +163,7 @@ $(document).ready(function() {
     </table>
     
     
-    <ww:submit value="Save all"></ww:submit>
+    <ww:submit value="Save all" cssClass="dynamics-button"></ww:submit>
     
     <h3>Backlogs</h3>
     
@@ -174,7 +174,7 @@ $(document).ready(function() {
     </tr>
     </table>
     
-    <ww:submit value="Save all"></ww:submit>
+    <ww:submit value="Save all" cssClass="dynamics-button"></ww:submit>
     
     
     
@@ -213,7 +213,7 @@ $(document).ready(function() {
     </tr>
     </table>
     
-    <ww:submit value="Save all"></ww:submit>
+    <ww:submit value="Save all" cssClass="dynamics-button"></ww:submit>
     
     </div>
   

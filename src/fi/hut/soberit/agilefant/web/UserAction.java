@@ -52,6 +52,8 @@ public class UserAction extends ActionSupport implements CRUDAction, Prefetching
         if (userId == 0) {
             userId = getLoggedInUserId();
         }
+        user = userBusiness.retrieve(userId);
+        
         return Action.SUCCESS;
     }
     

@@ -30,7 +30,7 @@ $(document).ready(function() {
       $.ajax({
         type: 'POST',
         url:  'ajax/widgets/moveWidget.action',
-        data: { widgetId: ui.item.attr('widgetId'), listNumber: ui.item.parent('ul').attr('listNumber'), position: pos }
+        data: { widgetId: ui.item.aefWidget('option','widgetId'), listNumber: ui.item.parent('ul').attr('listNumber'), position: pos }
       });
     }
   });
@@ -81,21 +81,32 @@ $(document).ready(function() {
     });
 
     clone.find('.saveNewWidget').click(function() {
+      var newObjectId = idField.data('selectedId');
+      var newObjectType = typeField.val();
       $.ajax({
         type: 'POST',
         dataType: 'html',
         url: 'ajax/widgets/createWidget.action',
-        data: { type: typeField.val(), objectId: idField.data('selectedId'), collectionId: ${contents.id}, position: 0, listNumber: 0 },
+        data: { type: newObjectType, objectId: newObjectId, collectionId: ${contents.id}, position: 0, listNumber: 0 },
         success: function(data, status) {
           MessageDisplay.Ok('Widget added');
           
-          var newWidget = $('<li class="widget realWidget"/>');
-
+          var newWidget = $('<li />');
           clone.replaceWith(newWidget);
 
           newWidget.html(data);
+          
           var newWidgetId = newWidget.find('input[type=hidden][name=widgetId]').val();
-          newWidget.attr('widgetId',newWidgetId).attr('id','widget_'+newWidgetId);
+
+          newWidget.aefWidget({
+            widgetId: newWidgetId,
+            objectId: newObjectId,
+            realWidget: true,
+            ajaxWidget: true,
+            initialReload: false,
+            url: 'ajax/widgets/' + newObjectType + '.action' 
+          });
+          //newWidget.attr('widgetId',newWidgetId).attr('id','widget_'+newWidgetId);
         }
       });
     });

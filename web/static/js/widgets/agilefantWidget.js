@@ -9,6 +9,7 @@ $.widget("custom.aefWidget", {
     objectId: -1,
     realWidget: true,
     ajaxWidget: true,
+    initialReload: true,
     url: 'noop.action'
   },
   _create: function() {
@@ -21,7 +22,12 @@ $.widget("custom.aefWidget", {
     }
     
     this._loadCookie();
-    this.reload();
+    
+    if (this.options.initialReload) {
+      this.reload();
+    } else {
+      this._bindEvents();
+    }
   },
   _loadCookie: function() {
     if (!window.aefWidgetCookie) {
@@ -62,6 +68,7 @@ $.widget("custom.aefWidget", {
   },
   _bindEvents: function() {
     var me = this;
+    this.content = this.element.find('.widgetContent');
     
     /* Close widget */
     this.element.find('.closeWidget').click(function() {
@@ -109,7 +116,6 @@ $.widget("custom.aefWidget", {
         objectId : this.options.objectId,
         widgetId : this.options.widgetId
       }, jQuery.proxy(function(data, status) {
-        this.content = this.element.find('.widgetContent');
         this._bindEvents();
       }, this));
     }

@@ -66,11 +66,16 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
     /** {@inheritDoc} */
     public Task storeTask(Task task, Integer iterationId, Integer storyId, boolean storyToStarted) {
         Task storedTask = null;
+        TaskState currentTaskState = null;
 
         if (task == null) {
             throw new IllegalArgumentException("Task should be given");
         }
 
+        if(task.getId() != 0) {
+            currentTaskState = this.retrieveDetached(task.getId()).getState();
+        }
+        
         // allow storing existing task without relations
         if (task.getId() == 0 || iterationId != null || storyId != null) {
             assignParentForTask(task, iterationId, storyId);
@@ -93,8 +98,10 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         }
         
         Story parent = task.getStory();
-        if (storyToStarted && parent != null && parent.getState() == StoryState.NOT_STARTED) {
-            parent.setState(StoryState.STARTED);
+        if(currentTaskState == TaskState.NOT_STARTED && task.getState() != TaskState.NOT_STARTED) {
+            if (storyToStarted && parent != null && parent.getState() == StoryState.NOT_STARTED) {
+                parent.setState(StoryState.STARTED);
+            }
         }
 
         updateIterationHistoryIfApplicable(task);

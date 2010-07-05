@@ -356,7 +356,7 @@ public class TaskActionTest extends MockedTestCase {
     @DirtiesContext
     public void testInitializePrefetchedData_happyCase() {
         Task expected = new Task();
-        expect(taskBusiness.retrieve(123)).andReturn(expected);
+        expect(taskBusiness.retrieveDetached(123)).andReturn(expected);
         replayAll();
         
         testable.initializePrefetchedData(123);
@@ -368,7 +368,7 @@ public class TaskActionTest extends MockedTestCase {
     @Test(expected = ObjectNotFoundException.class)
     @DirtiesContext
     public void testInitializePrefetchedData_objectNotFound() {
-        expect(taskBusiness.retrieve(-1)).andThrow(new ObjectNotFoundException());
+        expect(taskBusiness.retrieveDetached(-1)).andThrow(new ObjectNotFoundException());
         replayAll();
         
         testable.initializePrefetchedData(-1);

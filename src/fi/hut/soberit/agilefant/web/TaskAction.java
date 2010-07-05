@@ -17,6 +17,8 @@ import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.User.UserSettingType;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
 @Component("taskAction")
@@ -65,12 +67,27 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
             task.setResponsibles(newResponsibles);
         }
         
-        task = taskBusiness.storeTask(task, iterationId, storyId, storyToStarted);
+        boolean startStory = false;
+        
+        if (storyToStarted || markStoryStarted()) {
+            startStory = true;
+        }
+        
+        task = taskBusiness.storeTask(task, iterationId, storyId, startStory);
         taskToTransferObject();
-        if (storyToStarted) {
+        if (startStory) {
             return Action.SUCCESS + "_withStory";
         }
         return Action.SUCCESS;
+    }
+    
+    private boolean markStoryStarted() {
+        User currentUser = SecurityUtil.getLoggedUser();
+        if (currentUser != null 
+                && currentUser.getMarkStoryStarted() == UserSettingType.always) {
+            return true;
+        }
+        return false;
     }
     
     public String retrieve() {
@@ -128,7 +145,7 @@ public class TaskAction extends ActionSupport implements Prefetching, CRUDAction
         
     // Prefetching
     public void initializePrefetchedData(int objectId) {
-        task = taskBusiness.retrieve(objectId);
+        task = taskBusiness.retrieveDetached(objectId);
     }
     
       

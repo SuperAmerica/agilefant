@@ -115,7 +115,8 @@ TaskController.prototype.createSplitTask = function() {
 TaskController.prototype.markStoryAsStarted = function(model) {
   var changedData = model.getChangedData();
   var story = model.getStory();
-  if (story && story.getState() === "NOT_STARTED" && changedData.state !== "NOT_STARTED") {
+  var currentUser = PageController.getInstance().getCurrentUser();
+  if (currentUser.getMarkStoryStarted() === "ask" && story && story.getState() === "NOT_STARTED" && changedData.state !== "NOT_STARTED") {
     var msg = new DynamicsConfirmationDialog(
         "Mark the story started as well?",
         "Do you want to mark the story started as well?",

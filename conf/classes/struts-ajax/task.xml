@@ -21,7 +21,7 @@
       </result>
       <result name="success_withStory" type="json">
         <param name="target">task</param>
-        <param name="patterns">+responsibles, +story, -story.backlog</param>
+        <param name="patterns">+responsibles, +story, -story.backlog, -story.parent</param>
       </result>
     </action>
     

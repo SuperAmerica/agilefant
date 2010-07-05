@@ -176,7 +176,7 @@ TaskModel.prototype._saveData = function(id, changedData) {
         }
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
-      if (data.storyToStarted && me.relations.story) {
+      if ((data.storyToStarted || PageController.getInstance().getCurrentUser().getMarkStoryStarted() === "always")&& me.relations.story) {
         me.relations.story.callListeners(new DynamicsEvents.EditEvent(me.relations.story));
       }
     },

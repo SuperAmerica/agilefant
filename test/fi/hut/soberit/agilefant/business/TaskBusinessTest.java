@@ -178,6 +178,7 @@ public class TaskBusinessTest {
         task.setId(54326);
         task.setIteration(iteration);
 
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task);
         taskDAO.store(task);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
@@ -196,7 +197,7 @@ public class TaskBusinessTest {
         task.setIteration(new Iteration());
         
         
-        
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task);
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
         taskDAO.store(task);
         
@@ -220,6 +221,7 @@ public class TaskBusinessTest {
     public void testStoreTask_existingTaskStateSetToDone() {
         task.setId(54326);
         task.setState(TaskState.DONE);
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task);
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(iteration);
         taskDAO.store(task);
         expectRankToBottom(task, null, iteration);
@@ -239,6 +241,7 @@ public class TaskBusinessTest {
         task.setEffortLeft(null);
         task.setOriginalEstimate(new ExactEstimate(120));
         
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task);
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
         expectRankToBottom(task, story, null);
@@ -260,6 +263,7 @@ public class TaskBusinessTest {
         task.setEffortLeft(new ExactEstimate(90));
         task.setOriginalEstimate(null);
         
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task);
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
         expectRankToBottom(task, story, null);
@@ -280,6 +284,7 @@ public class TaskBusinessTest {
         task.setId(123515);
         task.setIteration(iteration);
         
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task);
         taskDAO.store(task);
         iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         
@@ -317,6 +322,11 @@ public class TaskBusinessTest {
         task.setId(12);
         story.setState(StoryState.NOT_STARTED);
         
+        Task task2 = new Task();
+        task2.setState(TaskState.NOT_STARTED);
+        
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task2);
+        
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
         expectRankToBottom(task, story, null);
@@ -335,6 +345,11 @@ public class TaskBusinessTest {
         task.setId(12);
         story.setState(StoryState.DONE);
         
+        Task task2 = new Task();
+        task2.setState(TaskState.NOT_STARTED);
+        
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task2);
+        
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         taskDAO.store(task);
         expectRankToBottom(task, story, null);
@@ -346,6 +361,28 @@ public class TaskBusinessTest {
         verifyAll();
         
         assertEquals(StoryState.DONE, story.getState());
+    }
+    
+    @Test
+    public void testStoreTask_StartedTaskStoryToDone() {
+        task.setId(12);
+        task.setState(TaskState.STARTED);
+        story.setState(StoryState.NOT_STARTED);
+        Task task2 = new Task();
+        task2.setState(TaskState.STARTED);
+        
+        expect(taskDAO.getAndDetach(task.getId())).andReturn(task2);
+        expect(storyBusiness.retrieve(story.getId())).andReturn(story);
+        taskDAO.store(task);
+        expectRankToBottom(task, story, null);
+        
+        replayAll();
+        
+        taskBusiness.storeTask(task, null, story.getId(), true);
+        
+        verifyAll();
+        
+        assertEquals(StoryState.NOT_STARTED, story.getState());
     }
     
     /*

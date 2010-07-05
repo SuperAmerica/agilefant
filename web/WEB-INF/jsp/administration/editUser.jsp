@@ -47,7 +47,7 @@ $(document).ready(function() {
       </tr>
       <tr>
         <td>Assign me to stories I create</td>
-        <td><ww:radio list="#{'true':'Always','false':'Never'}" name="user.autoassignToStories"/></td>
+        <td><ww:radio list="#{'true':'When not in story tree','false':'Never'}" name="user.autoassignToStories"/></td>
       </tr>
       <tr>
         <td>Mark story started when its task is started</td>

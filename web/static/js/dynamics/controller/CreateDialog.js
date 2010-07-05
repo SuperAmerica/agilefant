@@ -313,7 +313,11 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
 CreateDialog.Story = function() {
   // Create the mock model
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.story);
-  
+  // Assign user
+  var user = PageController.getInstance().getCurrentUser();
+  if (user.isAutoassignToStories()) {
+    this.model.setResponsibles([user.getId()]);
+  }
   
   this.initFormConfig();
   this.init(CreateDialog.configurations.story);

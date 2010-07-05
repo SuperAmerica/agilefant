@@ -83,6 +83,14 @@ StoryListController.prototype.storyControllerFactory = function(view, model) {
 StoryListController.prototype.createStory = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
   mockModel.setBacklog(this.model);
+  
+  // Assign user if option is set
+  var user = PageController.getInstance().getCurrentUser();
+  if (user.isAutoassignToStories()) {
+    mockModel.setResponsibles([user.getId()]);
+  }
+  
+  
   var controller = new StoryController(mockModel, null, this);
   var row = this.getCurrentView().createRow(controller, mockModel, "top");
   controller.view = row;

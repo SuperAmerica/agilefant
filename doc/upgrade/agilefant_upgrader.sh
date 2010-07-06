@@ -44,12 +44,41 @@ if [ "$?" -ne "0" ]; then
  exit;
 fi
 
-if [ -d "./docs/sql/update.sql" ]; then
-  echo "Updating database schema..." 
- else
-  echo "Unable to find database updates. Exiting..."
-  exit;
-fi
-mysql -u$mysql_user -p$mysql_password -h$mysql_server -D$mysql_database -e "source docs/sql/update.sql"
 
-echo "Database updated"
+checkVersion() {
+  unset agilefant_db_version
+  agilefant_db_version=`mysql -u$mysql_user -p$mysql_password -h$mysql_server -D$mysql_database -e"SELECT value FROM settings WHERE name='AgilefantDatabaseVersion'" | awk 'NR==2'`
+  echo "Current database version: $agilefant_db_version"
+}
+findUpdateFile() {
+  unset updateFile
+  updateFile=`find ./ -name "$1-*.sql"`
+  echo "Found update file: $updateFile"
+}
+runUpdate() {
+  echo "Running $1"
+  mysql -u$mysql_user -p$mysql_password -h$mysql_server -D$mysql_database < $1
+  if [ $? -ne 0 ]; then
+    echo "Error updating database ($1). Exiting..."
+    exit 1
+  fi
+}
+continueLoop=1
+
+while [ "$continueLoop" -eq "1" ]
+do
+  checkVersion
+  findUpdateFile $agilefant_db_version
+  if [ -z "$updateFile" ]; then
+    echo "No more updates."
+    continueLoop=0
+    continue
+  else
+    echo "Found: $updateFile"
+  fi
+
+  runUpdate $updateFile
+done
+
+echo "Database updated successfully."
+

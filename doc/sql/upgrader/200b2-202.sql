@@ -11,3 +11,5 @@ alter table widgets add index FK4FE3EEAF8BACA792 (widgetCollection_id), add cons
 alter table users add column autoassignToStories bit default 0;
 alter table users add column markStoryBranchStarted integer default 1;
 alter table users add column markStoryStarted integer default 1;
+
+UPDATE hourentries SET minutesSpent = 0 WHERE minutesSpent IS NULL;

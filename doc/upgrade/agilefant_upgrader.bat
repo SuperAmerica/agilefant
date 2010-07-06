@@ -3,10 +3,7 @@ cls
 echo Agilefant database upgrade script
 echo
 
-set aef_mysql_host=
-set aef_mysql_database=
-set aef_mysql_user=
-set aef_mysql_password=
+call :clearvariables
 
 echo Enter MySQL server host (default: localhost)
 set /P aef_mysql_host=?
@@ -69,42 +66,80 @@ if NOT %Errorlevel%==0 (
   echo Database backup generated
 )
 
-REM Check that upgrade file exists
-if exist docs\sql\updates\update.sql (
-  echo Updating database schema
-) else (
-  echo Unable to find database updates. Exiting...
-  goto error
-)
 
 REM Update the database
 
-mysql -u%aef_mysql_user% -p%aef_mysql_password% -D%aef_mysql_database% -h%aef_mysql_host% -e "source docs\sql\updates\update.sql"
+REM start
+REM 1. Check db version
+REM 2. check for update
+REM  -> update found -> update -> start
+REM  -> not found -> :eof
+REM end 
 
-if not %Errorlevel%==0 (
-  echo Error occured when updating database. Exiting...
+:updateStart
+
+call :getversion
+
+if %aef_db_version%.==. (
+  echo Unable to detect database version number. Exiting...
   goto error
 )
+
+set aef_update_filename=
+for %%a in (%aef_db_version%-*.sql) do (
+  set aef_update_filename=%%~na.sql
+)
+REM reset the error level
+verify >nul
+
+if not %aef_update_filename%.==. (
+  echo Found update script: %aef_update_filename%. Updating...
+
+  mysql -u%aef_mysql_user% -p%aef_mysql_password% -D%aef_mysql_database% -h%aef_mysql_host% -e "source %aef_update_filename%" 
+  
+  goto updateStart
+) else (
+  echo No more updates.
+) 
+
 goto exit
+
+
+:getversion
+  mysql -u%aef_mysql_user% -p%aef_mysql_password% -D%aef_mysql_database% -h%aef_mysql_host% -e"SELECT value FROM settings WHERE name='AgilefantDatabaseVersion'"  > temp.txt
+  call :parseversion<temp.txt
+  del temp.txt
+  echo Current database version: %aef_db_version%
+goto :eof
+
+:parseversion
+  set /p settinglabel=>nul
+  set /p aef_db_version=>nul
+goto :eof
 
 
 
 :exit
 echo Database updated successfully
 set aef_retval=0
-goto clearvariables
+call :clearvariables
+goto End
 
 :error
 set aef_retval=1
-goto clearvariables
+call :clearvariables
+goto End
 
 
 :clearvariables
-set aef_mysql_host=
-set aef_mysql_server=
-set aef_mysql_user=
-set aef_mysql_pass=
-goto End
+  set aef_mysql_host=
+  set aef_mysql_server=
+  set aef_mysql_user=
+  set aef_mysql_pass=
+  set settinglabel=
+  set aef_db_version=
+  set aef_update_filename=
+goto :eof
 
 :End
 EXIT /B %aef_retval%

@@ -1,7 +1,6 @@
 /*
  * CSS for Agilefant's widget portfolios.
  */
-
 .widgetContainer {
   width: 50%;
   margin: 0;
@@ -20,35 +19,60 @@
 
 .widget {
   background: white;
-
   display: block;
   min-width: 350px;
   max-height: 350px;
-  
   margin: 10px 0 0;
   padding: 0;
-  
   border: 1px solid #A6C9E2;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  
   font-size: 9pt;
-  
   width: 95%;
-  
   overflow: hidden;
+  position: relative;
 }
 
+.widget-overlay {
+  display: none;
+  
+  background-color: #999;
+  position: absolute;
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  vertical-align: middle;
+  
+  border-radius:         3px;
+  -moz-border-radius:    3px;
+  -webkit-border-radius: 3px;
+}
+
+.widget-overlay>div {
+  border: 1px solid #ccc;
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 5%;
+  padding: 3px 5px 3px 0;
+  background-color: white;
+  color: #666;
+}
+
+.widget-overlay > div > img {
+  display: inline-block;
+  vertical-align: middle;
+}
 
 .widget-placeholder {
   min-width: 350px;
   width: 95%;
   height: 100px;
-  
   margin: 10px 0 0;
   padding: 0;
-  
   border: 1px dashed #ccc;
   background: whiteSmoke;
 }
@@ -58,16 +82,13 @@
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
-  
   padding: 2px 5px;
   margin: 2px;
-  
   background: #DFEFFC;
-  
   vertical-align: middle;
 }
 
-.realWidget .widgetHeader > div {
+.realWidget .widgetHeader>div {
   cursor: move;
 }
 
@@ -77,8 +98,9 @@
   margin: 0;
   padding: 0;
 }
+
 .realWidget .widgetHeader ul {
-  display: block;  
+  display: block;
 }
 
 .widgetHeader ul li {
@@ -111,11 +133,10 @@
 }
 
 .widgetContent .expandable {
-  display: hidden; /* Expandable content hidden by default */  
+  display: hidden; /* Expandable content hidden by default */
 }
 
-
-.staticWidget button, .createNewWidget td {
+.staticWidget button,.createNewWidget td {
   font-size: 100% !important;
 }
 
@@ -125,7 +146,6 @@
   -webkit-border-radius: 5px;
   border-radius: 5px;
   display: block;
-  
   padding: 0 5px;
 }
 

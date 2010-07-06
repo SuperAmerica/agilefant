@@ -80,7 +80,9 @@ $(document).ready(function() {
       }
     });
 
+    var overlay = clone.find('.widget-overlay');
     clone.find('.saveNewWidget').click(function() {
+      overlay.show();
       var newObjectId = idField.data('selectedId');
       var newObjectType = typeField.val();
       $.ajax({
@@ -106,7 +108,10 @@ $(document).ready(function() {
             initialReload: false,
             url: 'ajax/widgets/' + newObjectType + '.action' 
           });
-          //newWidget.attr('widgetId',newWidgetId).attr('id','widget_'+newWidgetId);
+        },
+        error: function(xhr,status,error) {
+          overlay.hide();
+          MessageDisplay.Error("An error occurred when creating the widget",xhr);
         }
       });
     });
@@ -229,7 +234,7 @@ Change to
     <div class="widgetContainer">
       <ul class="widgetList" listNumber="${listCount}">
         <c:forEach items="${widgetList}" var="widget">
-          <li class="widget realWidget" id="widget_${widget.id}"><div style="text-align:center;"><img src="static/img/pleasewait.gif" style="display:inline-block;vertical-align:middle;"/><span style="font-size:100%;color:#666;vertical-align: middle;">Please wait...</span></div></li>
+          <li id="widget_${widget.id}"><div style="text-align:center;"><img src="static/img/pleasewait.gif" style="display:inline-block;vertical-align:middle;"/><span style="font-size:100%;color:#666;vertical-align: middle;">Please wait...</span></div></li>
         </c:forEach>
       </ul>
     </div>
@@ -242,6 +247,7 @@ Change to
 <ul id="templates" style="display: none;">
   <!-- Create new widget -->
   <li class="widget createNewWidget staticWidget" id="newWidget" style="position:relative;">
+    
     <div class="widgetHeader"><span>Create a new widget</span></div>
     <div class="widgetContent">
       <table>
@@ -257,6 +263,12 @@ Change to
       <div style="clear: left; float: right;">
         <button class="dynamics-button saveNewWidget">Save</button>
         <button class="dynamics-button cancelNewWidget">Cancel</button>
+      </div>
+    </div>
+    
+    <div class="widget-overlay">
+      <div>
+        <img src="static/img/pleasewait.gif" alt="" /> Please wait...
       </div>
     </div>
   </li>

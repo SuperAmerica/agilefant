@@ -130,7 +130,7 @@ $(document).ready(function() {
     <table class="settings-table">    
     <tr>
       <td title="These items will be shown in the story tree">Order of story info</td>
-      <td colspan="2" style="height: 3em;">
+      <td colspan="2" style="height: 3em; min-width: 500px;">
         <input id="storyTreeFieldOrder" type="hidden" name="storyTreeFieldOrder" value="${settings.storyTreeFieldOrder}"/>
         <ul class="storyTreeOrderList" id="storyTreeIncludeThese">
           <c:forEach items="${settings.storyTreeFieldOrder}" var="fieldType">
@@ -143,7 +143,7 @@ $(document).ready(function() {
       <td title="These items will not be shown in the story tree">Not in story tree</td>
       <td colspan="2" style="height: 3em;">
         <ul class="storyTreeOrderList" id="storyTreeExcludeThese">
-          <c:forEach items="state,storyPoints,labels,name,backlog" var="fieldType">
+          <c:forEach items="state,storyPoints,labels,name,backlog,breadcrumb" var="fieldType">
             <c:if test="${!fn:contains(settings.storyTreeFieldOrder, fieldType)}">
               <aef:settingStoryTreeField fieldType="${fieldType}"/>
             </c:if>

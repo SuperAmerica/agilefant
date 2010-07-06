@@ -18,4 +18,7 @@
 <c:when test="${fieldType == 'backlog'}">
   <li id="backlog" title="Story's backlog"><span class="backlogDraggable">(Backlog)</span></li>    
 </c:when>
+<c:when test="${fieldType == 'breadcrumb'}">
+  <li id="breadcrumb" title="Story's backlog"><span class="backlogDraggable">(Project &gt; Iteration)</span></li>    
+</c:when>
 </c:choose>

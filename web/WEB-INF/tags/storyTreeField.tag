@@ -41,4 +41,19 @@
 <c:when test="${type == 'backlog'}">
   <span style="font-size:80%; color: #666;" title="${story.backlog.name}">(<c:out value="${story.backlog.name}"/>)</span>
 </c:when>
+<c:when test="${type == 'breadcrumb'}">
+  <c:choose>
+  <c:when test="${aef:isIteration(story.backlog)}">
+    <span style="font-size:80%; color: #666;" title="Story's backlog">
+      (<c:out value="${story.backlog.parent.name}"/> &gt; <c:out value="${story.backlog.name}"/>)
+    </span>
+  </c:when>
+  <c:otherwise>
+    <span style="font-size:80%; color: #666;" title="Story's backlog">
+      (<c:out value="${story.backlog.name}"/>)
+    </span>
+  </c:otherwise>
+  </c:choose>
+  
+</c:when>
 </c:choose>

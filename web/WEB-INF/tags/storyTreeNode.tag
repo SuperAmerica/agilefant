@@ -26,8 +26,6 @@
   <c:forEach items="${node.labels}" var="label">${label.displayName} </c:forEach>
   </span>
      
-  <c:set var="fieldOrder" value="state, storyPoints, labels, name, backlog" />
-  
   <c:forEach items="${settings.storyTreeFieldOrder}" var="fieldType">
     <aef:storyTreeField story="${node}" type="${fn:trim(fieldType)}"/>  
   </c:forEach>

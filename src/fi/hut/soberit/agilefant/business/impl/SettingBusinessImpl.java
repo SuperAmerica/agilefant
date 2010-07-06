@@ -310,7 +310,7 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     }
     
     private void checkFieldOrderString(String order) {
-        Collection<String> permitted = Collections.unmodifiableCollection(Arrays.asList("state","storyPoints","labels","name","backlog"));
+        Collection<String> permitted = Collections.unmodifiableCollection(Arrays.asList("state","storyPoints","labels","name","backlog","breadcrumb"));
         String[] names = order.split(",");
         for (String name : names) {
             if (name.equals("") || !permitted.contains(name)) {

@@ -25,7 +25,6 @@ import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 
 @Service("taskBusiness")
@@ -211,33 +210,6 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         }
         return iterationId;
     }
-
-    public User getLoggedInUser() {
-        User loggedUser = null;
-        // May fail if request is multithreaded
-        loggedUser = SecurityUtil.getLoggedUser();
-        return loggedUser;
-    }
-
-    /**
-     * Populates user ids into tasks responsibles.
-     * <p>
-     * Will skip not found users.
-     */
-    // private void populateUserData(Task task, Set<Integer> userIds) {
-    // if (userIds == null) return;
-    // Set<User> userSet = new HashSet<User>();
-    //        
-    // for (Integer userId : userIds) {
-    // User user = userBusiness.retrieveIfExists(userId);
-    // if (user != null) {
-    // userSet.add(user);
-    // }
-    // }
-    //        
-    // task.getResponsibles().clear();
-    // task.getResponsibles().addAll(userSet);
-    // }
 
     public Task resetOriginalEstimate(int taskId) {
         Task task = retrieve(taskId);

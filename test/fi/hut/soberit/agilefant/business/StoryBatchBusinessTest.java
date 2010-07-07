@@ -48,6 +48,9 @@ public class StoryBatchBusinessTest extends MockedTestCase{
         expect(storyBusiness.retrieve(1)).andReturn(story1);
         expect(storyBusiness.retrieve(2)).andReturn(story2);
         
+        storyBusiness.store(story1);
+        storyBusiness.store(story2);
+        
         labelBusiness.createStoryLabels(labels, 1);
         labelBusiness.createStoryLabels(labels, 2);
         
@@ -71,6 +74,9 @@ public class StoryBatchBusinessTest extends MockedTestCase{
         expect(storyBusiness.retrieve(1)).andReturn(story1);
         expect(storyBusiness.retrieve(2)).andReturn(story2);
 
+        storyBusiness.store(story1);
+        storyBusiness.store(story2);
+        
         replayAll();
         storyBatchBusiness.modifyMultiple(new HashSet<Integer>(Arrays.asList(1,2)), state, null);
         verifyAll();

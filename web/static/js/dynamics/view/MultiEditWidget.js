@@ -35,7 +35,7 @@ MultiEditWidget.prototype.init = function() {
     jQuery.ajax({
       type: 'post',
       async:  'true',
-      url: 'ajax/editMultiple.action',
+      url: 'ajax/editMultipleStories.action',
       dataType: 'text',
       data: { storyIds: this.getSelected(), state: stateSelect.val() },
       success: jQuery.proxy(function(data,status) {

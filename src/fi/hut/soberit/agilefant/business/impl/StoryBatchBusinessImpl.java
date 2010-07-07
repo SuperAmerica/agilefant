@@ -49,6 +49,7 @@ public class StoryBatchBusinessImpl implements StoryBatchBusiness {
         if (state != null) {
             for (Story story : stories) {
                 story.setState(state);
+                storyBusiness.store(story);
             }
         }
     }

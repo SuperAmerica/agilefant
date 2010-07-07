@@ -85,6 +85,8 @@ CreateDialogClass.prototype._ok = function() {
   }
 };
 
+
+
 CreateDialogClass.prototype._cancel = function() {
   this.close();
 };
@@ -122,7 +124,6 @@ CreateDialogClass.prototype.initializeForm = function() {
   this.view.render();
   this.view.openFullEdit();
 };
-
 
 /**
  * Product creation dialog.
@@ -313,6 +314,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
 CreateDialog.Story = function() {
   // Create the mock model
   this.model = ModelFactory.createObject(ModelFactory.typeToClassName.story);
+  
   // Assign user
   var user = PageController.getInstance().getCurrentUser();
   if (user.isAutoassignToStories()) {
@@ -336,13 +338,13 @@ CreateDialog.Story.prototype.initFormConfig = function() {
     leftWidth: '24%',
     rightWidth: '75%',
     closeRowCallback: CreateDialogClass.prototype.close,
-    validators: [ StoryModel.Validators.backlogValidator ]
+    validators: [ ]
   });
   
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.name,{
     title: "Name",
     editable: true,
-    get: CreateDialog.returnEmptyString,
+    get: StoryModel.prototype.getName,
     edit: {
       editor: "Text",
       required: true,
@@ -411,6 +413,39 @@ CreateDialog.Story.prototype.initFormConfig = function() {
   
   this.formConfig = config;
 };
+
+
+/**
+ * Create dialog for stories that are created in tree. 
+ */
+CreateDialog.StoryFromTree = function(model, ajax) {
+  // Create the mock model
+  this.model = model;
+  this.ajax = ajax;
+   
+  // Assign user
+  var user = PageController.getInstance().getCurrentUser();
+  if (user.isAutoassignToStories()) {
+    this.model.setResponsibles([user.getId()]);
+  }
+  
+  this.initFormConfig();
+  
+  this.formConfig.columns[CreateDialog.Story.columnIndices.backlog].options.editable = false;
+  
+  this.init(CreateDialog.configurations.story);
+};
+extendObject(CreateDialog.StoryFromTree, CreateDialog.Story);
+
+CreateDialog.StoryFromTree.prototype._ok = function() {
+  if (this.view.getValidationManager().isValid()) {
+    this.ajax(this.model);
+    this.close();
+  }
+};
+
+
+
 
 /**
  * User creation dialog.

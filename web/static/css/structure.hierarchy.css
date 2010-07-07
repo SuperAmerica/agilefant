@@ -212,3 +212,19 @@ div.hierarchyContainer {
   margin-left: 0em;
   padding-left: 1em; 
 }
+
+/**
+ * CREATE DIALOG LINK
+ */
+div.storyTreeContainer .openCreateDialogLink,
+div.storyTreeContainer .openCreateDialogLink:active,
+div.storyTreeContainer .openCreateDialogLink:visited {
+  font-size: 80% !important;
+  color: #1E5EEE !important;
+  text-decoration: underline !important;
+  cursor: pointer !important;
+}
+div.storyTreeContainer .openCreateDialogLink:hover {
+  color: #e50 !important;
+}
+

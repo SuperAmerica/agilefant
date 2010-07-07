@@ -373,6 +373,36 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
   );
 };
 
+StoryTreeController.prototype.saveStory = function(refnode, position, node, data, parentStory) {
+  var url;
+  if (!parentStory) {
+    url = "ajax/treeCreateRootStory.action";
+    data.backlogId = this.id;
+  } else {
+    url = StoryTreeController.createNodeUrls[position];
+    data.storyId = parentStory.getId();
+  }
+  
+  $.post(url, data, jQuery.proxy(function(fragment) {
+    this._replaceNodeWithFragment(fragment, refnode, position, node);
+  }, this), "html");
+};
+
+StoryTreeController.prototype._replaceNodeWithFragment = function(fragment, refNode, position, node) {
+  node.remove();
+  var newData = $(fragment);
+  var newNode = this.tree.create(refNode,position,{ data: newData.find('a:eq(0)').html() },null,true);
+  newNode.attr( {
+    'id' : newData.attr('id'),
+    'rel' : newData.attr('rel'),
+    'storystate' : newData.attr('storystate'),
+    'storyid' : newData.attr('storyid')
+  });
+};
+
+/**
+ * 
+ */
 StoryTreeController.prototype.createNode = function(refNode, position, parentStory) {
   var me = this;
   if($(refNode).attr("rel") === "iteration_story" && position === "inside") {
@@ -391,50 +421,46 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
     var container = $('<div />').css({'white-space':'nowrap','display':'inline-block','height':'16px'}).appendTo(node);
     nameField.appendTo(container);
     
-    var saveStory = function(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      if (parentStory === 0) {
-        $.post("ajax/treeCreateRootStory.action", {backlogId: me.id, "story.name": nameField.val()}, function(fragment) {
-          node.remove();
-          var newNode;
-          var newData = $(fragment);
-          newNode = me.tree.create(me.tree,"last",{ data: newData.find('a:eq(0)').html() },null,true);
-          newNode.attr( {
-            'id' : newData.attr('id'),
-            'rel' : newData.attr('rel'),
-            'storystate' : newData.attr('storystate'),
-            'storyid' : newData.attr('storyid')
-          });
-        },"html");
-      }
-      else {
-        $.post(StoryTreeController.createNodeUrls[position], {storyId: parentStory, "story.name": nameField.val()}, function(fragment) {
-          node.remove();
-          var newData = $(fragment);
-          var newNode = me.tree.create(refNode,position,{ data: newData.find('a:eq(0)').html() },null,true);
-          newNode.attr( {
-            'id' : newData.attr('id'),
-            'rel' : newData.attr('rel'),
-            'storystate' : newData.attr('storystate'),
-            'storyid' : newData.attr('storyid')
-          });
-        },"html");
-      }
-    };
     var cancelFunc = function() {
       container.remove();
       me.tree.remove(node);
     };
     
-    $('<input type="button" value="save" />').appendTo(container).click(saveStory);
-    nameField.keyup(function(event) {
+    $('<a>more...</a>').appendTo(container).addClass('openCreateDialogLink').click(function() {
+      var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.story);
+      mockModel.setName(nameField.val());
+      if (parentStory instanceof StoryModel) {
+        mockModel.setBacklogByModel(parentStory.getBacklog());
+      }
+      else {
+        mockModel.setBacklogByModel(me.parentController.model);
+      }
+      
+      var ajax = function(model) {
+        var userIds = model.currentData.userIds;
+        delete model.currentData.userIds;
+        var ajaxData = model.serializeFields("story", model.currentData);
+        ajaxData["userIds"] = userIds;
+        me.saveStory(refNode, position, node, ajaxData, parentStory);
+      };
+      
+      new CreateDialog.StoryFromTree(mockModel, ajax);
+    });
+    
+    $('<input type="button" value="save" />').appendTo(container).click(jQuery.proxy(function(event) {
+      event.stopPropagation();
+      event.preventDefault();
+      me.saveStory(refNode, position, node, { "story.name": nameField.val() }, parentStory);
+    }, this));
+    nameField.keyup(jQuery.proxy(function(event) {
       if(event.keyCode === 13) {
-        saveStory(event);
+        event.stopPropagation();
+        event.preventDefault();
+        me.saveStory(refNode, position, node, { "story.name": nameField.val() }, parentStory);
       } else if(event.keyCode === 27) {
         cancelFunc();
       }    
-    });
+    }, this));
     $('<input type="button" value="cancel" />').click(cancelFunc).appendTo(container);
   }, true);
   nameField.focus();

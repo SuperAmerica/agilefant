@@ -803,6 +803,7 @@ TableEditors.InlineAutocomplete.prototype.init = function(element, model, option
     },this)
   });
   
+  this.setEditorValue();
 };
 TableEditors.InlineAutocomplete.prototype._registerEditField = function(element) {
   element.bind('autocompleteselect', jQuery.proxy(function(event, ui) {
@@ -887,6 +888,7 @@ TableEditors.InlineAutocomplete.prototype.setEditorValue = function(value) {
   if (!value) {
     value = this.options.get.call(this.model);
   }
+  this.value = value;
   if (this.options.decorator) {
     value = this.options.decorator(value);
   }

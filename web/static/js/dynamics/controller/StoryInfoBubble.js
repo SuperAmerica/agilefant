@@ -24,7 +24,7 @@ StoryInfoBubble.prototype.init = function() {
     return;
   }
   this.createBubble();
-  this.addLinks();
+//  this.addLinks();
   this.populateContent();
 };
 
@@ -85,6 +85,7 @@ StoryInfoBubble.prototype.populateContent = function() {
     me.storyInfoElement.html('');
     me.storyInfoView = new DynamicVerticalTable(me, me.model, me.storyInfoConfig, me.storyInfoElement);
     me.storyInfoView.render();
+    me.addLinks();
   });
   
   if (Configuration.getBranchMetricsType() !== 'off') {
@@ -114,12 +115,12 @@ StoryInfoBubble.prototype.addLinks = function() {
   
   $('<a>add child</a>').click(function() {
     me.bubble.destroy();
-    me.treeController.createNode(me.storyElement,"inside", me.id);
+    me.treeController.createNode(me.storyElement,"inside", me.model);
   }).appendTo(links);
   
   $('<a>add sibling</a>').click(function() {
     me.bubble.destroy();
-    me.treeController.createNode(me.storyElement,"after", me.id);
+    me.treeController.createNode(me.storyElement,"after", me.model);
   }).appendTo(links);
   
   $('<a>delete</a>').click(function() {

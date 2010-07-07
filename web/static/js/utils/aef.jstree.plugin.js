@@ -52,11 +52,11 @@
       },
       get_checked : function (obj) {
         obj = !obj || obj === -1 ? this.get_container() : this._get_node(obj);
-        return obj.find("> ul > .jstree-checked");
+        return obj.find("ul > .jstree-checked");
       },
       get_unchecked : function (obj) { 
         obj = !obj || obj === -1 ? this.get_container() : this._get_node(obj);
-        return obj.find("> ul > .jstree-unchecked");
+        return obj.find("ul > .jstree-unchecked");
       },
 
       show_checkboxes : function () { this.get_container().children("ul").removeClass("jstree-no-checkboxes"); },

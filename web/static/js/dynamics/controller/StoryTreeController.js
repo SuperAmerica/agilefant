@@ -303,10 +303,12 @@ StoryTreeController.prototype.initTree = function() {
       "case_insensitive": true
     },
     aefCheckbox: {
-      "select_callback": function(count) { MessageDisplay.Ok('count: ' + count); }
+      "select_callback": jQuery.proxy(function(count) { this.toggleEditBox(count); }, this)
     }
   });
   this.tree = jQuery.jstree._reference(this.element);
+  
+  this.editBox = new MultiEditWidget(this);
   
   this.element.bind('move_node.jstree', function(event, data) {
     // See http://www.jstree.com/documentation/core
@@ -318,6 +320,22 @@ StoryTreeController.prototype.initTree = function() {
   this.element.bind('select_node.jstree', function(event, data) {
     me.tree.deselect_node(data.rslt.obj);
   });
+};
+StoryTreeController.prototype.getSelectedIds = function() {
+  var checked = this.tree.get_checked();
+  var ids = [];
+  checked.each(function() {
+    ids.push(parseInt($(this).attr('storyId'), 10));
+  });
+  return ids;
+};
+StoryTreeController.prototype.toggleEditBox = function(count) {
+  if (count > 0 && !this.editBox.isVisible()) {
+    this.editBox.open();
+  }
+  else if (!count){
+    this.editBox.close();
+  }
 };
 StoryTreeController.prototype._treeLoaded = function() {
   if(this.treeExpanded) {

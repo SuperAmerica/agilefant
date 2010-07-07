@@ -440,7 +440,7 @@
 				view/subviews/Toggle.js, view/TableCaption.js, view/TableCellEditors.js, view/decorators.js, view/subviews/SplitPanel.js, view/subviews/Tabs.js, view/subviews/Buttons.js, view/subviews/Button.js, 
 				view/ValidationManager.js, view/ConfirmationDialog.js, view/ChangePasswordDialog.js, view/LazyLoadedDialog.js, view/UserSpentEffortWidget.js, view/subviews/LabelsView.js, view/subviews/LabelsIcon.js, 
 				view/subviews/AutoSuggest.js, view/SearchByTextWidget.js, view/subviews/StoryInfoWidget.js, view/StoryFiltersView.js, view/StateFilterWidget.js, view/SpentEffortWidget.js, view/Bubble.js,
-				view/subviews/CellBubble.js, model/CommonModel.js, model/BacklogModel.js, model/IterationModel.js, model/ProjectModel.js, model/ProductModel.js, model/StoryModel.js, 
+				view/subviews/CellBubble.js, view/MultiEditWidget.js, model/CommonModel.js, model/BacklogModel.js, model/IterationModel.js, model/ProjectModel.js, model/ProductModel.js, model/StoryModel.js, 
 				model/TaskModel.js, model/UserModel.js, model/TeamModel.js, model/comparators.js, model/AssignmentModel.js, model/HourEntryModel.js, model/TaskSplitContainer.js, 
 				model/UserListContainer.js, model/TeamListContainer.js, model/HourEntryListContainer.js, model/PortfolioModel.js, model/LabelModel.js, model/DailyWorkModel.js, 
 				model/WorkQueueTaskModel.js, model/ModelFactory.js, controller/CommonController.js, controller/BacklogController.js, controller/TaskController.js, 

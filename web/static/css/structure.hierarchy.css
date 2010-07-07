@@ -228,3 +228,40 @@ div.storyTreeContainer .openCreateDialogLink:hover {
   color: #e50 !important;
 }
 
+/**
+ * MULTIPLE EDITING
+ */
+.multiEditContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #ccc;
+  width: 100%;
+  max-height: 0;
+  border: 1px solid #ccc;
+  margin: 0;
+}
+
+.multiEditContainer > ul {
+  margin: 0;
+  padding: 0;
+  
+  list-style-type: none;
+  
+  white-space: nowrap;
+  text-align: center;  
+}
+
+.multiEditContainer > ul > li {
+  display: inline-block;
+  vertical-align: center;
+  margin: 1ex 1ex;
+}
+
+/**
+ * OTHERS
+ */
+.storyTreeContainer ul > li > a {
+  cursor: pointer;  
+}
+

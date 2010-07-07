@@ -20,7 +20,7 @@
 <c:if test="${forceOpen}"><c:set var="forcedClass" value="open" /></c:if>
 
 <li id="storytree_${node.id}" storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="${forcedClass}">
-  <a href="#">
+  <a>
   
   <span style="display: none;">
   <c:forEach items="${node.labels}" var="label">${label.displayName} </c:forEach>

@@ -374,6 +374,7 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
 };
 
 StoryTreeController.prototype.saveStory = function(refnode, position, node, data, parentStory) {
+  node.html('<img src="static/img/working.gif" style="margin-left: 5em;"/>');
   var url;
   if (!parentStory) {
     url = "ajax/treeCreateRootStory.action";

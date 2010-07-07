@@ -43,6 +43,7 @@ MultiEditWidget.prototype.init = function() {
       }, this)
     });
     
+    this.close();
   }, this)).appendTo(buttonLi);
   
   this.content.appendTo(this.element);

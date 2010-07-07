@@ -1,11 +1,18 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -585,32 +592,6 @@ public class StoryBusinessTest {
     public void testRankStoryToBottom_noBacklog() {
         Story story = new Story();
         storyBusiness.rankStoryToBottom(story, null);
-    }
-    
-    @Test
-    public void testStoreBatch() {
-        Story s1 = new Story();
-        s1.setId(1);
-        Story s2 = new Story();
-        s2.setId(2);
-        Collection<Story> batch = Arrays.asList(s1,s2);
-        storyDAO.store(s1);
-        storyDAO.store(s2);
-        replayAll();
-        storyBusiness.storeBatch(batch);
-        verifyAll();
-    }
-    
-    @Test(expected=IllegalArgumentException.class)
-    public void testStoreBatch_nonPersited() {
-        Story s1 = new Story();
-        Story s2 = new Story();
-        Collection<Story> batch = Arrays.asList(s1,s2);
-        storyDAO.store(s1);
-        storyDAO.store(s2);
-        replayAll();
-        storyBusiness.storeBatch(batch);
-        verifyAll();
     }
     
     @Test

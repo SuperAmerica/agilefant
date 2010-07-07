@@ -164,6 +164,12 @@
     <action name="deleteStoryForm" method="deleteStoryForm" class="storyAction">
       <result type="dispatcher">/WEB-INF/jsp/forms/deleteStoryForm.jsp</result>
     </action>
+    
+    <action name="editMultiple" method="updateMultipleStories" class="multipleStoryAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
   
   </package>
   

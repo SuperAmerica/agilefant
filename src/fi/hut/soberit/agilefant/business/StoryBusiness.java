@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -65,8 +64,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
      * Ranks the story to the bottom of the given backlog.
      */
     public Story rankStoryToBottom(Story story, Backlog context);
-
-    public void storeBatch(Collection<Story> stories);
 
     public StoryTO retrieveStoryWithMetrics(int storyId);
 

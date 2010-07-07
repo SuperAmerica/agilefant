@@ -190,16 +190,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
 
-    @Transactional
-    public void storeBatch(Collection<Story> stories) {
-        for (Story story : stories) {
-            if (story.getId() == 0) {
-                throw new IllegalArgumentException("non persited story");
-            }
-            this.store(story);
-        }
-    }
-
     private void populateStoryFields(Story persisted, Story dataItem) {
         persisted.setDescription(dataItem.getDescription());
         persisted.setName(dataItem.getName());

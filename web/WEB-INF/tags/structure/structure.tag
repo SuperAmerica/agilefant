@@ -49,6 +49,7 @@
   <script type="text/javascript" src="static/js/utils/menuTimer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/utils/quickSearch.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/utils/refLinkDisplay.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+  <script type="text/javascript" src="static/js/utils/aef.jstree.plugin.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   
   <script type="text/javascript" src="static/js/dynamics/controller/PageController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/dynamics/controller/MenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>  

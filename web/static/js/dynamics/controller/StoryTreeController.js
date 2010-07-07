@@ -101,6 +101,8 @@ StoryTreeController.prototype.refreshNode = function(element) {
         // Replace
         node.attr("rel", rel);
         node.find("a:eq(0)").replaceWith(contents);
+        
+        node.trigger('node_refresh.jstree');
       }
   );
 };
@@ -236,7 +238,7 @@ StoryTreeController.prototype.initTree = function() {
   }).appendTo(this.parentElement);
   
   this.tree = $(this.element).jstree({
-    plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "ui", "search" ],
+    plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "ui", "search", "aefCheckbox" ],
     core: {
       animation: 0,
       html_titles: true
@@ -299,6 +301,9 @@ StoryTreeController.prototype.initTree = function() {
     },
     search: {
       "case_insensitive": true
+    },
+    aefCheckbox: {
+      "select_callback": function(count) { MessageDisplay.Ok('count: ' + count); }
     }
   });
   this.tree = jQuery.jstree._reference(this.element);
@@ -307,8 +312,10 @@ StoryTreeController.prototype.initTree = function() {
     // See http://www.jstree.com/documentation/core
     me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
   });
+  this.element.delegate('span', 'click.jstree', function(event) {
+    me.openNodeDetails($(event.target).parents('li:eq(0)'));
+  });
   this.element.bind('select_node.jstree', function(event, data) {
-    me.openNodeDetails(data.rslt.obj);
     me.tree.deselect_node(data.rslt.obj);
   });
 };

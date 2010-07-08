@@ -76,6 +76,7 @@ ProductController.prototype.paintProductDetails = function() {
  * Backlog widgets page
  */
 ProductController.prototype.paintBacklogWidgets = function() {
+  var me = this;
   this.backlogsElement.load('ajax/productBacklogView.action?productId=' + this.id, jQuery.proxy(function() {
     this.backlogsElement.find('.widgetList > li').each(function() {
       var staticWidget = $(this).hasClass('staticWidget');
@@ -108,6 +109,17 @@ ProductController.prototype.paintBacklogWidgets = function() {
     this.backlogsElement.find('.droppableWidget').droppable({
       hoverClass: 'ui-droppable-widget-hover',
       drop: function(event, ui) {
+        var storyId = ui.draggable.attr("storyid");
+        var backlogId = $(this).attr("backlogid");
+        var prevBacklog = ui.draggable.parents(".storyList:eq(0)");
+        var prevStory = ui.draggable.next();
+        me.moveStory(storyId, backlogId, $.proxy(function() {
+          if(prevStory) {
+            ui.draggable.insertBefore(prevStory);
+          } else {
+            ui.draggable.appendTo(prevBacklog);
+          }
+        },this));
         ui.draggable.appendTo($(this).find('.storyList'));
         return true;
       },
@@ -116,6 +128,39 @@ ProductController.prototype.paintBacklogWidgets = function() {
       }
     });
   }, this));
+};
+
+ProductController.prototype.moveStory = function(storyId, backlogId, revert) {
+  var doMove = function() {
+    jQuery.ajax({
+      url: "ajax/moveStory.action",
+      data: {storyId: storyId, backlogId: backlogId},
+      dataType: 'json',
+      type: 'post',
+      async: true,
+      cache: false,
+      success: function(data,status) {
+        MessageDisplay.Ok("Story moved.");
+      }
+    });
+  };
+  jQuery.ajax({
+    url: "ajax/checkChangeBacklog.action",
+    data: { storyId: storyId, backlogId: backlogId },
+    async: true,
+    cache: false,
+    type: 'POST',
+    dataType: 'html',
+    success: function(data, status) {
+      if (jQuery.trim(data).length === 0) {
+        doMove();
+      }
+      else {
+        MessageDisplay.Error("Unable to move story: " + data);
+        revert();
+      }
+    }
+  });
 };
 
 ProductController.prototype.paintProjectList = function() {

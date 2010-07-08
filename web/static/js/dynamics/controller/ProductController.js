@@ -71,6 +71,10 @@ ProductController.prototype.paintProductDetails = function() {
   this.productDetailsView.render();
 };
 
+
+/**
+ * Backlog widgets page
+ */
 ProductController.prototype.paintBacklogWidgets = function() {
   this.backlogsElement.load('ajax/productBacklogView.action?productId=' + this.id, jQuery.proxy(function() {
     this.backlogsElement.find('.widgetList > li').each(function() {
@@ -80,6 +84,36 @@ ProductController.prototype.paintBacklogWidgets = function() {
         initialReload: false,
         realWidget: !staticWidget
       });
+    });
+    
+    this.backlogsElement.find('.storyList > li').draggable({
+      connectWith: '.storyList',
+      placeholder: 'placeholder',
+      appendTo: 'body',
+      helper: function(event, ui) {
+        var elem = $('<div/>').css({
+          'width': '200px',
+          'white-space': 'normal',
+          'background': 'white',
+          'padding': '0.5em',
+          'border': '1px dashed #ccc'
+        }).html($(event.target).html());
+        return elem.get(0);
+      },
+      containment: 'document',
+      dropOnEmpty: true,
+      revert: 'invalid'
+    });
+
+    this.backlogsElement.find('.droppableWidget').droppable({
+      hoverClass: 'ui-droppable-widget-hover',
+      drop: function(event, ui) {
+        ui.draggable.appendTo($(this).find('.storyList'));
+        return true;
+      },
+      over: function(event, ui) {
+        var foo = 5;
+      }
     });
   }, this));
 };

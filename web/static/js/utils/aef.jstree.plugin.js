@@ -19,6 +19,9 @@
         .bind("node_refresh.jstree", $.proxy(function(e) {
           this._prepare_checkboxes(e.target);
         }, this))
+        .bind("clean_node.jstree", $.proxy(function(e, data) {
+          this._prepare_checkboxes(data.args[0]);
+        }, this))
         .delegate("ins.checkbox", "click.jstree", $.proxy(function (e) {
             this.change_state(e.target);
             e.preventDefault();
@@ -48,7 +51,7 @@
       
       uncheck_all : function () {
         var _this = this;
-        this.get_container().children("ul").children("li").each(function () {
+        this.get_container().find("li.jstree-checked").each(function () {
           _this.change_state(this, true);
         });
       },

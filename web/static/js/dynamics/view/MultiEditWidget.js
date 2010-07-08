@@ -21,12 +21,12 @@ MultiEditWidget.prototype.init = function() {
 
   $('<li>State:</li>').appendTo(this.content);
   var stateElement = $('<li><select name="state" /></li>').appendTo(this.content);
-  var stateSelect = stateElement.find('select');
+  this.stateSelect = stateElement.find('select');
   var states = {'NOT_STARTED':'Not started','STARTED':'Started','PENDING':'Pending','BLOCKED':'Blocked','IMPLEMENTED':'Ready','DONE':'Done'};
   
-  $.each(states, function(k,v) {
-    stateSelect.append('<option value='+k+'>'+v+'</option>');
-  });
+  $.each(states, jQuery.proxy(function(k,v) {
+    this.stateSelect.append('<option value='+k+'>'+v+'</option>');
+  }, this));
   
   $('<li>Labels:</li>').appendTo(this.content);
   this.labelElement = $('<li></li>').appendTo(this.content);
@@ -62,7 +62,7 @@ MultiEditWidget.prototype.init = function() {
       async:  'true',
       url: 'ajax/editMultipleStories.action',
       dataType: 'text',
-      data: { storyIds: this.getSelected(), state: stateSelect.val(), labelNames: this.getLabels() },
+      data: { storyIds: this.getSelected(), state: this.stateSelect.val(), labelNames: this.getLabels() },
       success: jQuery.proxy(function(data,status) {
         this.storyTreeController.refresh();
       }, this)
@@ -94,6 +94,7 @@ MultiEditWidget.prototype.open = function() {
 };
 MultiEditWidget.prototype.close = function() {
   this.element.animate( { 'max-height' : '0' }, 500, 'easeInOutCubic', jQuery.proxy(function() {
+    this.stateSelect.val('NOT_STARTED');
     this.labelsView.empty();
     this.element.hide();
   }, this));

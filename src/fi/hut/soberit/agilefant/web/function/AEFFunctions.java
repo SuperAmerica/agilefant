@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.MinorUnitsParser;
 
@@ -172,5 +173,15 @@ public class AEFFunctions {
             retval += obj.getName() + ", ";
         }
         return retval.substring(0, retval.length() - 2);
+    }
+    
+    public static String scheduleStatus(Schedulable obj) {
+        if (obj.getEndDate().isBeforeNow()) {
+            return "PAST";
+        }
+        else if (obj.getStartDate().isAfterNow()) {
+            return "FUTURE";
+        }
+        return "CURRENT";
     }
 }

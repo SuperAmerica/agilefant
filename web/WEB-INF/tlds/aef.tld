@@ -467,4 +467,10 @@
 		<function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 		<function-signature>String stripHTML(java.lang.String)</function-signature>
 	</function>
+	
+	<function>
+    <name>scheduleStatus</name>
+    <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+    <function-signature>String scheduleStatus(fi.hut.soberit.agilefant.model.Schedulable)</function-signature>
+	</function>
 </taglib>

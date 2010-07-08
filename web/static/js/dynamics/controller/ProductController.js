@@ -13,6 +13,7 @@ var ProductController = function ProductController(options) {
   this.iterationListElement = options.iterationListElement;
   this.assigmentListElement = options.assigmentListElement;
   this.hourEntryListElement = options.hourEntryListElement;
+  this.backlogsElement = options.backlogsElement;
   this.storyTreeElement = options.storyTreeElement;
   this.tabs = options.tabs;
   
@@ -70,10 +71,17 @@ ProductController.prototype.paintProductDetails = function() {
   this.productDetailsView.render();
 };
 
-ProductController.prototype.paintIterationList = function() {
-//  this.productDetailsView = new DynamicVerticalTable(this, this.model, this.productDetailConfig,
-//      this.productDetailsElement);
-//  this.productDetailsView.render();
+ProductController.prototype.paintBacklogWidgets = function() {
+  this.backlogsElement.load('ajax/productBacklogView.action?productId=' + this.id, jQuery.proxy(function() {
+    this.backlogsElement.find('.widgetList > li').each(function() {
+      var staticWidget = $(this).hasClass('staticWidget');
+      $(this).aefWidget({
+        ajaxWidget: false,
+        initialReload: false,
+        realWidget: !staticWidget
+      });
+    });
+  }));
 };
 
 ProductController.prototype.paintProjectList = function() {
@@ -123,6 +131,9 @@ ProductController.prototype.paint = function() {
         if(tab === 1) {
           me.paintProjectList();
         }
+        if (tab === 2) {
+          me.paintBacklogWidgets();
+        }
       });
   if(tab === 0) {
     this.paintStoryTree();
@@ -136,6 +147,8 @@ ProductController.prototype.paint = function() {
       me.paintStoryTree();
     } else if(ui.index === 1) {
       me.paintProjectList();
+    } else if(ui.index === 2) {
+      me.paintBacklogWidgets();
     }
   });
 };

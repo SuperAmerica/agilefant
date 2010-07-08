@@ -65,6 +65,10 @@
       </result>
     </action>
     
+    <action name="productBacklogView" method="retrieve" class="productAction">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/productBacklogView.jsp</result>
+    </action>
+    
     <action name="retrieveAllProducts" method="retrieveAll" class="productAction">
       <result name="success" type="json">
         <param name="target">products</param>

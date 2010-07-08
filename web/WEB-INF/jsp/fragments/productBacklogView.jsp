@@ -71,7 +71,7 @@ $(document).ready(function() {
       <input type="checkbox" name="future" checked="checked" /> Future
     </struct:widget>
   </li>
-  <li class="widget staticWidget droppableWidget">
+  <li class="widget staticWidget droppableWidget" backlogid="${product.id}">
     <struct:widget name="Product stories" widgetId="-1">
       <ul class="storyList">
         <c:forEach items="${product.stories}" var="story">
@@ -85,7 +85,7 @@ $(document).ready(function() {
 <div class="widgetContainer">
 <ul class="widgetList">
   <c:forEach items="${product.projects}" var="project">
-    <li class="widget droppableWidget">
+    <li class="widget droppableWidget" backlogid="${project.id}">
       <struct:widget name="${project.name}" widgetId="-1">
         <input type="hidden" name="${aef:scheduleStatus(project)}" value="true" />
         <ul class="storyList " style="min-height: 20px;">
@@ -103,7 +103,7 @@ $(document).ready(function() {
 <ul class="widgetList">
   <c:forEach items="${product.projects}" var="project">
     <c:forEach items="${project.children}" var="iteration">
-      <li class="widget droppableWidget">
+      <li class="widget droppableWidget" backlogid="${iteration.id}">
         <struct:widget name="${project.name} > ${iteration.name}" widgetId="-1">
           <input type="hidden" name="${aef:scheduleStatus(iteration)}" value="true" />
           <ul class="storyList" style="min-height: 20px;">

@@ -81,7 +81,7 @@ ProductController.prototype.paintBacklogWidgets = function() {
         realWidget: !staticWidget
       });
     });
-  }));
+  }, this));
 };
 
 ProductController.prototype.paintProjectList = function() {

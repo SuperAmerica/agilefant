@@ -76,9 +76,9 @@ $(document).ready(function() {
       widgetId="-1">
       <input type="hidden" name="${aef:scheduleStatus(project)}"
         value="true" />
-      <ul class="storyList expandable" style="min-height: 20px;">
+      <ul class="storyList " style="min-height: 20px;">
         <c:forEach items="${project.stories}" var="story">
-          <li class="expandable"><aef:storyTreeField
+          <li class=""><aef:storyTreeField
             story="${story}" type="state" /> ${story.name}</li>
         </c:forEach>
       </ul>
@@ -95,9 +95,9 @@ $(document).ready(function() {
         name="${project.name} > ${iteration.name}" widgetId="-1">
         <input type="hidden" name="${aef:scheduleStatus(iteration)}"
           value="true" />
-        <ul class="storyList expandable" style="min-height: 20px;">
+        <ul class="storyList" style="min-height: 20px;">
           <c:forEach items="${iteration.stories}" var="story">
-            <li class="expandable"><aef:storyTreeField
+            <li class=""><aef:storyTreeField
               story="${story}" type="state" /> ${story.name}</li>
           </c:forEach>
         </ul>

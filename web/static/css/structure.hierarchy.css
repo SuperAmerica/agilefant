@@ -235,11 +235,17 @@ div.storyTreeContainer .openCreateDialogLink:hover {
   position: fixed;
   bottom: 0;
   left: 0;
-  background: #ccc;
-  width: 100%;
+  
+  margin: 0 20%;
+  width: 60%;
   max-height: 0;
-  border: 1px solid #ccc;
-  margin: 0;
+  
+  background: #DFEFFC url('../img/ui/ui-bg_gloss-wave_55_5c9ccc_500x100.png') repeat-x 50% 50%;
+
+  border: 1px solid #4297D7;
+  border-radius: 10px 10px 0 0;
+  -moz-border-radius: 10px 10px 0 0;
+  -webkit-border-radius: 10px 10px 0 0;
 }
 
 .multiEditContainer > ul {
@@ -256,6 +262,19 @@ div.storyTreeContainer .openCreateDialogLink:hover {
   display: inline-block;
   vertical-align: center;
   margin: 1ex 1ex;
+}
+
+.multiEditContainer > ul > li > div {
+  display: inline-block;
+  vertical-align: middle;  
+}
+
+/* For Labels */ 
+.multiEditContainer img.label-ok, .multiEditContainer img.label-cancel {
+  display: none;  
+}
+.multiEditContainer .as-list {
+  bottom: 60px;  
 }
 
 /**

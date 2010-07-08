@@ -96,7 +96,12 @@ AutoSuggest.prototype.initialize = function() {
     this.addKeydownHandler();
   }
 
-  this.element.appendTo(this.parentView.getElement());
+  if (this.parentView.getElement) {
+    this.element.appendTo(this.parentView.getElement());
+  }
+  else {
+    this.element.appendTo(this.parentView);
+  }
 };
 
 AutoSuggest.prototype.success = function() {

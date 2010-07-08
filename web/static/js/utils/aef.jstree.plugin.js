@@ -45,6 +45,13 @@
       uncheck_node : function (obj) {
         this.change_state(obj, true);
       },
+      
+      uncheck_all : function () {
+        var _this = this;
+        this.get_container().children("ul").children("li").each(function () {
+          _this.change_state(this, true);
+        });
+      },
 
       is_checked : function(obj) {
         obj = this._get_node(obj);

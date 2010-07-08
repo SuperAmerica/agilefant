@@ -329,6 +329,9 @@ StoryTreeController.prototype.getSelectedIds = function() {
   });
   return ids;
 };
+StoryTreeController.prototype.clearSelectedIds = function() {
+  this.tree.uncheck_all();
+};
 StoryTreeController.prototype.toggleEditBox = function(count) {
   if (count > 0 && !this.editBox.isVisible()) {
     this.editBox.open();

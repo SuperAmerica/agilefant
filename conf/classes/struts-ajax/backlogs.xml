@@ -65,7 +65,7 @@
       </result>
     </action>
     
-    <action name="productBacklogView" method="retrieve" class="productAction">
+    <action name="productBacklogView" method="retrieveLeafStories" class="productAction">
       <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/productBacklogView.jsp</result>
     </action>
     

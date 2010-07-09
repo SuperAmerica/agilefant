@@ -5,6 +5,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,6 +17,7 @@ import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.transfer.ProductTO;
 
 public class ProductActionTest {
 
@@ -83,6 +85,18 @@ public class ProductActionTest {
         productAction.store();
         assertEquals(product, productAction.getProduct());
         verifyAll();
+    }
+    
+    @Test
+    public void testRetrieveLeafStories() {
+        ProductTO prodTO = new ProductTO(product);
+        productAction.setProductId(1);
+        expect(productBusiness.retrieve(1)).andReturn(product);
+        expect(productBusiness.retrieveLeafStoriesOnly(product)).andReturn(prodTO);
+        replayAll();
+        productAction.retrieveLeafStories();
+        verifyAll();
+        assertSame(prodTO, productAction.getProduct());
     }
 
 }

@@ -4,6 +4,7 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,9 @@ import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.ProductTO;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -184,6 +188,51 @@ public class ProductBusinessTest {
         replayAll();
         productBusiness.delete(prod.getId());
         verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveLeafStoriesOnly() {
+        Product product = new Product();
+        product.setId(1);
+        Project project = new Project();
+        project.setId(2);
+        product.getChildren().add(project);
+        Iteration iteration = new Iteration();
+        iteration.setId(3);
+        project.getChildren().add(iteration);
+        
+        Story productStory = new Story();
+        productStory.setBacklog(product);
+        Story projectStory = new Story();
+        projectStory.setBacklog(project);
+        Story iterationStory = new Story();
+        iterationStory.setBacklog(iteration);
+        
+        //add all three stories to all three backlogs
+        //as only one story should be left in each backlog 
+        product.setStories(new HashSet<Story>(Arrays.asList(productStory, projectStory, iterationStory)));
+        project.setStories(new HashSet<Story>(Arrays.asList(productStory, projectStory, iterationStory)));
+        iteration.setStories(new HashSet<Story>(Arrays.asList(productStory, projectStory, iterationStory)));
+        
+        expect(productDAO.retrieveLeafStories(product)).andReturn(Arrays.asList(productStory, projectStory, iterationStory));
+        
+        replayAll();
+        ProductTO actual = this.productBusiness.retrieveLeafStoriesOnly(product);
+        verifyAll();
+        assertEquals(1, actual.getChildren().size());
+        assertEquals(1, actual.getStories().size());
+        assertSame(productStory, actual.getStories().iterator().next());
+
+        ProjectTO actualProject = (ProjectTO)actual.getChildren().iterator().next();
+        assertEquals(1, actualProject.getChildren().size());
+        assertEquals(1, actualProject.getStories().size());
+        assertSame(projectStory, actualProject.getStories().iterator().next());
+        
+        IterationTO actualIteration = (IterationTO)actualProject.getChildren().iterator().next();
+        assertEquals(0, actualIteration.getChildren().size());
+        assertEquals(1, actualIteration.getStories().size());
+        assertSame(iterationStory, actualIteration.getStories().iterator().next());
     }
 
 }

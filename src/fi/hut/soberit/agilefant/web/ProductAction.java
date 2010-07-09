@@ -51,6 +51,12 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
         product = productBusiness.retrieve(productId);
         return Action.SUCCESS;
     }
+    
+    public String retrieveLeafStories() {
+        Product product = productBusiness.retrieve(productId);
+        this.product = productBusiness.retrieveLeafStoriesOnly(product);
+        return Action.SUCCESS;
+    }
 
     public String store() {
         this.product = this.productBusiness.store(productId, product);

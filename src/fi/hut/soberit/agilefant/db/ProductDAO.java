@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Story;
 
 /**
  * Interface for a DAO of a Product.
@@ -16,4 +17,5 @@ public interface ProductDAO extends GenericDAO<Product> {
     
     public List<Product> retrieveBacklogTree();
 
+    public List<Story> retrieveLeafStories(Product product);
 }

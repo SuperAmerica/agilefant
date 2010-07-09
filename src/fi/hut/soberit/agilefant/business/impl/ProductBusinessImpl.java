@@ -2,8 +2,10 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.ProductTO;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @Service("productBusiness")
@@ -126,5 +130,49 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
         }
         
         super.delete(product);
+    }
+    
+    @Transactional(readOnly=true)
+    public ProductTO retrieveLeafStoriesOnly(Product product) {
+        Map<Integer, Backlog> backlogs = new HashMap<Integer, Backlog>();
+        
+        ProductTO root = new ProductTO(product);
+        root.setChildren(new HashSet<Backlog>());
+        root.setStories(new HashSet<Story>());
+        backlogs.put(root.getId(), root);
+        
+        createBacklogTo(product, backlogs, root);
+        
+        List<Story> stories = this.productDAO.retrieveLeafStories(product);
+        for(Story story : stories) {
+           backlogs.get(story.getBacklog().getId()).getStories().add(story);
+        }
+        return root;
+    }
+
+    private void createBacklogTo(Backlog parent,
+            Map<Integer, Backlog> backlogs, Backlog parentTO) {
+        List<Backlog> children = new ArrayList<Backlog>(parent.getChildren());
+        for(Backlog child : children) {
+            Backlog to = createTO(child);
+            parentTO.getChildren().add(to);
+            to.setParent(parentTO);
+            to.setChildren(new HashSet<Backlog>());
+            to.setStories(new HashSet<Story>());
+            backlogs.put(to.getId(), to);
+            createBacklogTo(child, backlogs, to);
+        }
+    }
+    
+    private Backlog createTO(Backlog backlog) {
+        Backlog backlogTO = null;
+        if(backlog instanceof Product) {
+            backlogTO = new ProductTO((Product)backlog);
+        } else if(backlog instanceof Project) {
+            backlogTO = new ProjectTO((Project)backlog);
+        } else if(backlog instanceof Iteration){
+            backlogTO = new IterationTO((Iteration)backlog);
+        }
+        return backlogTO;
     }
 }

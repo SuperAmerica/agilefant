@@ -1,5 +1,5 @@
 <%@ include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
-
+<b>NOTICE: only leaf stories are shown in this view!</b>
 <script type="text/javascript">
 $(document).ready(function() {
   $('.displayCheckboxes input[name=past]').change(function() {
@@ -57,9 +57,6 @@ $(document).ready(function() {
   font-weight: bold;
   color: #1d5987;
 }
-.storyHasChildren {
-  background: #ffc;
-}
 </style>
 
 <h2>Product's backlogs</h2>
@@ -77,9 +74,7 @@ $(document).ready(function() {
     <struct:widget name="Product stories" widgetId="-1">
       <ul class="storyList">
         <c:forEach items="${product.stories}" var="story">
-          <c:set var="childClass" value="" />
-          <c:if test="${!empty story.children}"><c:set var="childClass" value="storyHasChildren" /></c:if>
-          <li class="${childClass}" storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
+          <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
         </c:forEach>
       </ul>
     </struct:widget>
@@ -94,9 +89,7 @@ $(document).ready(function() {
         <input type="hidden" name="${aef:scheduleStatus(project)}" value="true" />
         <ul class="storyList " style="min-height: 20px;">
           <c:forEach items="${project.stories}" var="story">
-            <c:set var="childClass" value="" />
-            <c:if test="${!empty story.children}"><c:set var="childClass" value="storyHasChildren" /></c:if>
-            <li class="${childClass}" storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
+            <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
           </c:forEach>
         </ul>
       </struct:widget>
@@ -114,9 +107,7 @@ $(document).ready(function() {
           <input type="hidden" name="${aef:scheduleStatus(iteration)}" value="true" />
           <ul class="storyList" style="min-height: 20px;">
             <c:forEach items="${iteration.stories}" var="story">
-              <c:set var="childClass" value="" />
-              <c:if test="${!empty story.children}"><c:set var="childClass" value="storyHasChildren" /></c:if>
-              <li class="${childClass}" storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
+              <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
             </c:forEach>
           </ul>
         </struct:widget>

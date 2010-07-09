@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.transfer.ProductTO;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 public interface ProductBusiness extends GenericBusiness<Product> {
@@ -17,4 +18,6 @@ public interface ProductBusiness extends GenericBusiness<Product> {
     void delete(Product product);
 
     List<ProjectTO> retrieveProjects(Product product);
+    
+    public ProductTO retrieveLeafStoriesOnly(Product product);
 }

@@ -273,7 +273,7 @@ var DynamicsDecorators = {
   },
   propertyDecoratorFactory: function(propertyFunction) {
     return function(context) {
-      if (context != null) {
+      if (context !== null) {
         return propertyFunction.call(context);
       }
       return "";

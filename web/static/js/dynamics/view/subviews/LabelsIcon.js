@@ -25,7 +25,7 @@ LabelsIcon.prototype.render = function() {
   } else if (labels.length === 1) {
     var name = labels[0].getDisplayName();
     this.icon.text(name.substr(0,4));
-    this.icon.attr('title',name)
+    this.icon.attr('title',name);
   } else {
     this.icon.addClass('labelIconMultiple');
     this._constructTooltip(labels);

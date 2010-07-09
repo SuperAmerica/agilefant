@@ -3,7 +3,7 @@
  * Removes duplicates from the array.
  */
 Array.prototype.unique = function () {
-  var r = new Array();
+  var r = [];
   o:for(var i = 0, n = this.length; i < n; i++)
   {
     for(var x = 0, y = r.length; x < y; x++)
@@ -16,7 +16,7 @@ Array.prototype.unique = function () {
     r[r.length] = this[i];
   }
   return r;
-}
+};
 
 
 /**

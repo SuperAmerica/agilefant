@@ -54,7 +54,7 @@ StoryInfoBubble.prototype.handleModelEvents = function(event) {
   else if (Configuration.getBranchMetricsType() !== 'off' && event instanceof DynamicsEvents.MetricsEvent && event.getObject().getId() == this.id) {
     this.refreshBranchMetrics();
   }
-}
+};
 
 StoryInfoBubble.prototype.createBubble = function() {
   var me = this;

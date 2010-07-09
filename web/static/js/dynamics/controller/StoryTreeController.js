@@ -469,11 +469,11 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
         var userIds = model.currentData.userIds;
         delete model.currentData.userIds;
         var ajaxData = model.serializeFields("story", model.currentData);
-        ajaxData["userIds"] = userIds;
+        ajaxData.userIds = userIds;
         me.saveStory(refNode, position, node, ajaxData, parentStory);
       };
       
-      new CreateDialog.StoryFromTree(mockModel, ajax);
+      var dialog = new CreateDialog.StoryFromTree(mockModel, ajax);
     });
     
     $('<input type="button" value="save" />').appendTo(container).click(jQuery.proxy(function(event) {

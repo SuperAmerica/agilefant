@@ -1,4 +1,4 @@
-var CommonFragmentSubView = function CommonSubView() {
+var CommonFragmentSubView = function CommonFragmentSubView() {
   
 };
 

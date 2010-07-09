@@ -279,7 +279,7 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
-	<target name="production-war" depends="replace_version_number, compress-js">
+	<target name="production-war" depends="replace_version_number, replace-static-expiration-time, compress-js">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
@@ -305,7 +305,15 @@
 		                         replace="struts.agilefantReleaseId = agilefant_revision_${svn.info.rev}"
 		                         byline="true"/>
 
+	</target>
+	
+	<!--  <param\-name>expirationTime<\/param\-name>\s*$\s*<param\-value>(\d+)<\/param\-value>  -->
+	<target name="replace-static-expiration-time" depends="webapp">
+	  <replaceregexp file="${build.dir}/webapp/WEB-INF/web.xml" flags="m"
+	     match="&lt;param\-name&gt;expirationTime&lt;\/param\-name&gt;\s*$\s*&lt;param\-value&gt;\d+&lt;\/param\-value&gt;"
+	     replace="&lt;param\-name&gt;expirationTime&lt;\/param\-name&gt;&lt;param\-value&gt;31104000&lt;\/param\-value&gt;" />
 	</target>	
+	
 	<target name="debug-release-zip" depends="clean, compile, concat_javascript, replace_version_number, war, create-ddl" description="Generates release directory">
 		<mkdir dir="${release.dir}" />
 		<mkdir dir="${release.dir}/sql-updates" />

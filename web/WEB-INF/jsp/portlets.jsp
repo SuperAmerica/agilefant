@@ -2,6 +2,8 @@
 
 <struct:htmlWrapper navi="portfolio">
 
+<jsp:attribute name="includeInHeader">
+
 <script type="text/javascript" src="static/js/widgets/agilefantWidget.js"></script>
 
 <script type="text/javascript" src="static/js/simile-widgets.js"></script>
@@ -185,6 +187,9 @@ var cancelProperties = function cancelProperties(link) {
 };
 
 </script>
+</jsp:attribute>
+<jsp:body>
+
 
 <div class="structure-main-block">
 
@@ -324,5 +329,5 @@ Change to
 <!-- /Hidden templates -->
 
 </div>
-
+</jsp:body>
 </struct:htmlWrapper>

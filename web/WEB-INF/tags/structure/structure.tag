@@ -6,6 +6,7 @@
 
 <%@attribute name="navi" fragment="false" required="true"%>
 
+<%@attribute name="includeInHeader" fragment="true" %>
 <%@attribute name="headerContent" fragment="true" %>
 <%@attribute name="menuContent" fragment="true" %>
 
@@ -74,6 +75,8 @@
   
   <%@include file="../../jsp/inc/includeDynamics.jsp" %>
   
+
+  
   <script type="text/javascript">  
   var DelegateFactoryClass = function() {
     this.handlers = {};
@@ -137,6 +140,10 @@
   });
   </script>
   
+  <%-- HEAD-includes from other jsp files --%>
+  <c:if test="${includeInHeader != null}">
+    <jsp:invoke fragment="includeInHeader" />
+  </c:if>
 </head>
 
 <body>

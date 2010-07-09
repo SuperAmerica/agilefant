@@ -2,6 +2,7 @@
 
 <struct:htmlWrapper navi="portfolio">
 
+<jsp:attribute name="includeInHeader">
 <link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/timeline.css" type="text/css"/>
 <link rel="stylesheet" href="static/css/timeline/ether.css" type="text/css"/>
@@ -38,7 +39,9 @@ $(document).ready(function() {
   });
 });
 </script>
+</jsp:attribute>
 
+<jsp:body>
 <h2>Project portfolio</h2>
 
 <p>
@@ -82,5 +85,5 @@ Change to
 	</div>
 	<div id="unrankedProjects" class="structure-main-block">
 	</div>
-
+</jsp:body>
 </struct:htmlWrapper>

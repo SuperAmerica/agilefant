@@ -2,7 +2,11 @@
 
 <struct:htmlWrapper navi="dailyWork">
 
-<link rel="stylesheet" href="static/css/dailywork.css" type="text/css"/>
+<jsp:attribute name="includeInHeader">
+  <link rel="stylesheet" href="static/css/dailywork.css" type="text/css"/>
+</jsp:attribute>
+
+<jsp:body>
 
 <!-- User selector -->
 <ww:form method="get">
@@ -41,5 +45,6 @@ You don't currently have any stories or tasks assigned to you.<br/>
 <!-- Tasks without story -->
 <form onsubmit="return false;"><div id="task-list" class="structure-main-block"></div></form>
 
+</jsp:body>
 
 </struct:htmlWrapper>

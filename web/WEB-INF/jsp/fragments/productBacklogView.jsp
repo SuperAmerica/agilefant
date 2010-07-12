@@ -3,13 +3,37 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+  var toggleIteration = function(widget, projectDisplayed, past, current, future) {
+    if (projectDisplayed) {
+      var schedule = widget.find('input[type=hidden].scheduleStatus').attr('name');
+      if (past && schedule === 'PAST') {
+         widget.show();
+      } else if (current && schedule === 'ONGOING') {
+        widget.show();
+      } else if (future && schedule === 'FUTURE') {
+        widget.show();
+      } else {
+        widget.hide();
+      }
+    } else {
+      widget.hide();
+    }
+  };
+
   var toggleProjectIterations = function(id) {
     var projectWidget = $('.projectWidget[backlogId='+id+']');
     if (projectWidget.is(':visible') && projectWidget.find('input[name=showIterations]').is(':checked')) {
-      $('.iterationWidget').has('input[name=parentProject_'+id+']').show();
+      var showPast = $('.iterationDisplayCheckboxes input[name=past]').is(':checked');
+      var showCurrent = $('.iterationDisplayCheckboxes input[name=current]').is(':checked');
+      var showFuture = $('.iterationDisplayCheckboxes input[name=future]').is(':checked'); 
+      $('.iterationWidget').has('input[name=parentProject_'+id+']').each(function() {
+        toggleIteration($(this), true, showPast, showCurrent, showFuture);
+      });
     }
     else {
-      $('.iterationWidget').has('input[name=parentProject_'+id+']').hide();
+      $('.iterationWidget').has('input[name=parentProject_'+id+']').each(function() {
+        toggleIteration($(this), false);
+      });
     }
   };
   
@@ -46,6 +70,19 @@ $(document).ready(function() {
     });
   });
 
+  /* Hide/show filters for iterations by schedule status */
+  $('.iterationDisplayCheckboxes input').change(function() {
+    var showPast = $('.iterationDisplayCheckboxes input[name=past]').is(':checked');
+    var showCurrent = $('.iterationDisplayCheckboxes input[name=current]').is(':checked');
+    var showFuture = $('.iterationDisplayCheckboxes input[name=future]').is(':checked');
+
+    $('.iterationWidget').each(function() {
+      var parentProjectId = $(this).find('input.parentProjectId').val();
+      var parentProjectDisplayed = $('.projectWidget[backlogid='+parentProjectId+']').is(':visible');
+      toggleIteration($(this), parentProjectDisplayed, showPast, showCurrent, showFuture);
+    });
+  });
+
   /* Initially hide all past backlogs */
   $('.projectWidget').has('input[type=hidden][name=PAST]').each(function() {
     toggleProject($(this).attr('backlogid'), false);
@@ -63,7 +100,7 @@ $(document).ready(function() {
 
 
   /*
-   * PRODUCT WIDGET SPIKE
+   * PRODUCT WIDGET SCROLLING
    */
   var originalOffset = $('#productWidget').offset();
   var startOffset = $(window).scrollTop() - originalOffset.top;
@@ -177,12 +214,20 @@ $(document).ready(function() {
 
 <div class="widgetContainer">
 <ul class="widgetList">
+  <li class="widget staticWidget iterationDisplayCheckboxes">
+    <struct:widget name="Display iterations" widgetId="-1">
+      <input type="checkbox" name="past" checked="checked" /> Past
+      <input type="checkbox" name="current" checked="checked" /> Ongoing
+      <input type="checkbox" name="future" checked="checked" /> Future
+    </struct:widget>
+  </li>
+
   <c:forEach items="${product.childProjects}" var="project">
     <c:forEach items="${project.childIterations}" var="iteration">
       <li class="widget iterationWidget droppableWidget" backlogid="${iteration.id}">
         <struct:widget name="${project.name} > ${iteration.name}" widgetId="-1">
-          <input type="hidden" name="${aef:scheduleStatus(iteration)}" value="true" />
-          <input type="hidden" name="parentProject_${project.id}" value="1" />
+          <input type="hidden" class="scheduleStatus" name="${aef:scheduleStatus(iteration)}" value="true" />
+          <input type="hidden" class="parentProjectId" name="parentProject_${project.id}" value="${project.id}" />
           <ul class="storyList" style="min-height: 20px;">
             <c:forEach items="${iteration.leafStories}" var="story">
               <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>

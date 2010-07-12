@@ -41,6 +41,9 @@ ProductController.prototype.filter = function() {
   else if (activeTab === 1) {
     this.projectListView.filter();
   }
+  else if (activeTab === 2) {
+    this.filterBacklogsView();
+  }
 };
 
 ProductController.prototype.getStateFilters = function() {
@@ -72,10 +75,11 @@ ProductController.prototype.paintProductDetails = function() {
 };
 
 
+
 /**
- * Backlog widgets page
+ * Backlog view tab
  */
-ProductController.prototype.paintBacklogWidgets = function() {
+ProductController.prototype.paintBacklogsView = function() {
   var me = this;
   this.backlogsElement.load('ajax/productBacklogView.action?productId=' + this.id, jQuery.proxy(function() {
     this.backlogsElement.find('.widgetList > li').each(function() {
@@ -129,6 +133,13 @@ ProductController.prototype.paintBacklogWidgets = function() {
     });
   }, this));
 };
+
+ProductController.prototype.filterBacklogsView = function() {
+  var filter = this.getTextFilter();
+  
+  this.backlogsElement.find('.storyList li').show().not(':contains('+filter+')').hide();
+};
+
 
 ProductController.prototype.moveStory = function(storyId, backlogId, revert) {
   var doMove = function() {
@@ -211,7 +222,7 @@ ProductController.prototype.paint = function() {
           me.paintProjectList();
         }
         if (tab === 2) {
-          me.paintBacklogWidgets();
+          me.paintBacklogsView();
         }
       });
   if(tab === 0) {
@@ -227,7 +238,7 @@ ProductController.prototype.paint = function() {
     } else if(ui.index === 1) {
       me.paintProjectList();
     } else if(ui.index === 2) {
-      me.paintBacklogWidgets();
+      me.paintBacklogsView();
     }
   });
 };

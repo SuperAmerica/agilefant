@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,8 +29,12 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.LeafStoryContainer;
 import fi.hut.soberit.agilefant.transfer.ProductTO;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.transfer.Scheduled;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.StoryComparator;
 
 @Service("productBusiness")
 @Transactional
@@ -49,7 +56,7 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
     public ProductBusinessImpl() {
         super(Product.class);
     }
-    
+
     @Autowired
     public void setProductDAO(ProductDAO productDAO) {
         this.genericDAO = productDAO;
@@ -85,12 +92,13 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
             throw new IllegalArgumentException("product.emptyName");
         }
     }
-    
+
     public List<ProjectTO> retrieveProjects(Product product) {
         List<ProjectTO> projects = new ArrayList<ProjectTO>();
-        for(Backlog child : product.getChildren()) {
-            if(child instanceof Project) {
-                projects.add(transferObjectBusiness.constructProjectTO((Project)child));
+        for (Backlog child : product.getChildren()) {
+            if (child instanceof Project) {
+                projects.add(transferObjectBusiness
+                        .constructProjectTO((Project) child));
             }
         }
         return projects;
@@ -100,78 +108,122 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
     public void delete(int id) {
         delete(retrieve(id));
     }
-    
+
     @Override
     public void delete(Product product) {
         if (product == null)
             return;
         Set<Backlog> children = new HashSet<Backlog>(product.getChildren());
-        
-        if(children != null) {
+
+        if (children != null) {
             for (Backlog item : children) {
-                if(item instanceof Project) {
+                if (item instanceof Project) {
                     projectBusiness.delete(item.getId());
-                } else if(item instanceof Iteration) {
+                } else if (item instanceof Iteration) {
                     iterationBusiness.delete(item.getId());
                 }
             }
         }
-        
+
         Set<Story> stories = new HashSet<Story>(product.getStories());
         if (stories != null) {
             for (Story item : stories) {
                 storyBusiness.forceDelete(item);
             }
         }
-        
-        Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>(product.getHourEntries());   
+
+        Set<BacklogHourEntry> hourEntries = new HashSet<BacklogHourEntry>(
+                product.getHourEntries());
         if (hourEntries != null) {
             hourEntryBusiness.deleteAll(hourEntries);
         }
-        
+
         super.delete(product);
     }
-    
-    @Transactional(readOnly=true)
+
+    @SuppressWarnings("unchecked")
+    @Transactional(readOnly = true)
     public ProductTO retrieveLeafStoriesOnly(Product product) {
-        Map<Integer, Backlog> backlogs = new HashMap<Integer, Backlog>();
-        
+        Map<Integer, LeafStoryContainer> backlogs = new HashMap<Integer, LeafStoryContainer>();
+
         ProductTO root = new ProductTO(product);
         root.setChildren(new HashSet<Backlog>());
-        root.setStories(new HashSet<Story>());
         backlogs.put(root.getId(), root);
-        
+
         createBacklogTo(product, backlogs, root);
-        
+
         List<Story> stories = this.productDAO.retrieveLeafStories(product);
-        for(Story story : stories) {
-           backlogs.get(story.getBacklog().getId()).getStories().add(story);
+        for (Story story : stories) {
+            backlogs.get(story.getBacklog().getId()).getLeafStories().add(
+                    new StoryTO(story));
+        }
+
+        
+        // sort backlogs
+        Comparator<Scheduled> backlogComparator = new Comparator<Scheduled>() {
+            private Comparator<Scheduled> inner = new PropertyComparator("startDate", true, false);
+        
+            public int compare(Scheduled o1, Scheduled o2) {
+                if(o1 == null) {
+                    return -1;
+                }
+                if(o2 == null) {
+                    return 1;
+                }
+                if(o1.getScheduleStatus() != o2.getScheduleStatus()) {
+                    if(o1.getScheduleStatus().ordinal() < o2.getScheduleStatus().ordinal()) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                } else {
+                    return this.inner.compare(o1, o2);
+                }
+            }
+        };
+        
+        for (ProjectTO project : root.getChildProjects()) {
+            Collections.sort(project.getChildIterations(), backlogComparator);
+        }
+        Collections.sort(root.getChildProjects(), backlogComparator);
+
+        // sort stories
+        Comparator<Story> comparator = new StoryComparator();
+        for (LeafStoryContainer container : backlogs.values()) {
+            Collections.sort(container.getLeafStories(), comparator);
         }
         return root;
     }
 
     private void createBacklogTo(Backlog parent,
-            Map<Integer, Backlog> backlogs, Backlog parentTO) {
+            Map<Integer, LeafStoryContainer> backlogs, Backlog parentTO) {
         List<Backlog> children = new ArrayList<Backlog>(parent.getChildren());
-        for(Backlog child : children) {
-            Backlog to = createTO(child);
-            parentTO.getChildren().add(to);
-            to.setParent(parentTO);
+        for (Backlog child : children) {
+            Backlog to = createTO(child, parentTO);
             to.setChildren(new HashSet<Backlog>());
-            to.setStories(new HashSet<Story>());
-            backlogs.put(to.getId(), to);
+            backlogs.put(to.getId(), (LeafStoryContainer) to);
             createBacklogTo(child, backlogs, to);
         }
     }
-    
-    private Backlog createTO(Backlog backlog) {
+
+    private Backlog createTO(Backlog backlog, Backlog parentTO) {
         Backlog backlogTO = null;
-        if(backlog instanceof Product) {
-            backlogTO = new ProductTO((Product)backlog);
-        } else if(backlog instanceof Project) {
-            backlogTO = new ProjectTO((Project)backlog);
-        } else if(backlog instanceof Iteration){
-            backlogTO = new IterationTO((Iteration)backlog);
+        if (backlog instanceof Product) {
+            backlogTO = new ProductTO((Product) backlog);
+        } else if (backlog instanceof Project) {
+            backlogTO = new ProjectTO((Project) backlog);
+            backlogTO.setParent(parentTO);
+            ((ProjectTO) backlogTO).setScheduleStatus(transferObjectBusiness
+                    .getBacklogScheduleStatus(backlog));
+            ((ProductTO) parentTO).getChildProjects()
+                    .add((ProjectTO) backlogTO);
+        } else if (backlog instanceof Iteration) {
+            backlogTO = new IterationTO((Iteration) backlog);
+            backlogTO.setParent(parentTO);
+            ((IterationTO) backlogTO).setScheduleStatus(transferObjectBusiness
+                    .getBacklogScheduleStatus(backlog));
+            ((ProjectTO) parentTO).getChildIterations().add(
+                    (IterationTO) backlogTO);
         }
         return backlogTO;
     }

@@ -22,16 +22,19 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.ProductTO;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
-public class ProductBusinessTest {
+public class ProductBusinessTest extends MockedTestCase {
 
     @TestedBean
     private ProductBusinessImpl productBusiness = new ProductBusinessImpl();
@@ -45,16 +48,8 @@ public class ProductBusinessTest {
     private ProjectBusiness projectBusiness;
     @Mock
     private HourEntryBusiness hourEntryBusiness;
-
-    private void replayAll() {
-        replay(productDAO, storyBusiness, iterationBusiness, projectBusiness,
-                hourEntryBusiness);
-    }
-
-    private void verifyAll() {
-        verify(productDAO, storyBusiness, iterationBusiness, projectBusiness,
-                hourEntryBusiness);
-    }
+    @Mock
+    private TransferObjectBusiness transferObjectBusiness;
 
     @Test
     @DirtiesContext
@@ -189,7 +184,7 @@ public class ProductBusinessTest {
         productBusiness.delete(prod.getId());
         verifyAll();
     }
-    
+
     @Test
     @DirtiesContext
     public void testRetrieveLeafStoriesOnly() {
@@ -201,38 +196,59 @@ public class ProductBusinessTest {
         Iteration iteration = new Iteration();
         iteration.setId(3);
         project.getChildren().add(iteration);
-        
+
         Story productStory = new Story();
         productStory.setBacklog(product);
+        productStory.setId(1);
         Story projectStory = new Story();
         projectStory.setBacklog(project);
+        projectStory.setId(2);
         Story iterationStory = new Story();
+        iterationStory.setId(3);
         iterationStory.setBacklog(iteration);
-        
-        //add all three stories to all three backlogs
-        //as only one story should be left in each backlog 
-        product.setStories(new HashSet<Story>(Arrays.asList(productStory, projectStory, iterationStory)));
-        project.setStories(new HashSet<Story>(Arrays.asList(productStory, projectStory, iterationStory)));
-        iteration.setStories(new HashSet<Story>(Arrays.asList(productStory, projectStory, iterationStory)));
-        
-        expect(productDAO.retrieveLeafStories(product)).andReturn(Arrays.asList(productStory, projectStory, iterationStory));
-        
-        replayAll();
-        ProductTO actual = this.productBusiness.retrieveLeafStoriesOnly(product);
-        verifyAll();
-        assertEquals(1, actual.getChildren().size());
-        assertEquals(1, actual.getStories().size());
-        assertSame(productStory, actual.getStories().iterator().next());
+        iterationStory.setName("xxx");
+        Story iterationStory2 = new Story();
+        iterationStory2.setId(4);
+        iterationStory2.setBacklog(iteration);
+        iterationStory2.setState(StoryState.DONE);
+        iterationStory2.setName("bbb");
 
-        ProjectTO actualProject = (ProjectTO)actual.getChildren().iterator().next();
-        assertEquals(1, actualProject.getChildren().size());
-        assertEquals(1, actualProject.getStories().size());
-        assertSame(projectStory, actualProject.getStories().iterator().next());
+        // add all three stories to all three backlogs
+        // as only one story should be left in each backlog
+        product.setStories(new HashSet<Story>(Arrays.asList(productStory,
+                projectStory, iterationStory)));
+        project.setStories(new HashSet<Story>(Arrays.asList(productStory,
+                projectStory, iterationStory)));
+        iteration.setStories(new HashSet<Story>(Arrays.asList(productStory,
+                projectStory, iterationStory, iterationStory2)));
+
+        expect(productDAO.retrieveLeafStories(product)).andReturn(
+                Arrays.asList(productStory, projectStory, iterationStory,
+                        iterationStory2));
         
-        IterationTO actualIteration = (IterationTO)actualProject.getChildren().iterator().next();
+        expect(transferObjectBusiness.getBacklogScheduleStatus(project)).andReturn(ScheduleStatus.FUTURE);
+        expect(transferObjectBusiness.getBacklogScheduleStatus(iteration)).andReturn(ScheduleStatus.PAST);
+
+        replayAll();
+        ProductTO actual = this.productBusiness
+                .retrieveLeafStoriesOnly(product);
+        verifyAll();
+        assertEquals(1, actual.getChildProjects().size());
+        assertEquals(1, actual.getLeafStories().size());
+        assertEquals(1, actual.getLeafStories().get(0).getId());
+
+        ProjectTO actualProject = actual.getChildProjects().get(0);
+        
+        assertEquals(1, actualProject.getChildIterations().size());
+        assertEquals(1, actualProject.getLeafStories().size());
+        assertEquals(2, actualProject.getLeafStories().get(0).getId());
+
+        IterationTO actualIteration = actualProject.getChildIterations().get(0);
+        
         assertEquals(0, actualIteration.getChildren().size());
-        assertEquals(1, actualIteration.getStories().size());
-        assertSame(iterationStory, actualIteration.getStories().iterator().next());
+        assertEquals(2, actualIteration.getLeafStories().size());
+        assertEquals(3, actualIteration.getLeafStories().get(0).getId());
+        assertEquals(4, actualIteration.getLeafStories().get(1).getId());
     }
 
 }

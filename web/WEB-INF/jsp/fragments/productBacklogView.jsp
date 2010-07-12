@@ -60,6 +60,20 @@ $(document).ready(function() {
   $('.displayCheckboxes input[name=iterations]').change(function() {
     $('.projectWidget input[name=showIterations]').attr('checked', $(this).is(':checked')).trigger('change');
   });
+
+
+  /*
+   * PRODUCT WIDGET SPIKE
+   */
+  var originalOffset = $('#productWidget').offset();
+  var startOffset = $(window).scrollTop() - originalOffset.top;
+  $(window).scroll(function(event) {
+    var offset = $(window).scrollTop() - originalOffset.top;
+    if (offset < 10) offset = 10;
+    else if (offset > startOffset) offset += 30;
+
+    $("#productWidget").stop().animate({"marginTop": offset + "px"},"slow");
+  });
 });
 </script>
 
@@ -79,10 +93,12 @@ $(document).ready(function() {
 .widgetHeader, .widgetHeader > div {
   cursor: auto !important;
 }
-.productWidget, .productWidget .widgetContent {
-  max-height: none !important;
+.productWidget {
+  max-height: 600px !important;
 }
-
+.productWidget .widgetContent {
+  max-height: 500px !important;
+}
 .storyList {
   list-style-type: none;
   margin: 0;
@@ -117,7 +133,7 @@ $(document).ready(function() {
 
 <div class="widgetContainer">
 <ul class="widgetList">
-  <li class="widget productWidget staticWidget droppableWidget" backlogid="${product.id}">
+  <li class="widget productWidget staticWidget droppableWidget" id="productWidget" backlogid="${product.id}">
     <struct:widget name="${product.name}" widgetId="-1">
       <ul class="storyList">
         <c:forEach items="${product.leafStories}" var="story">

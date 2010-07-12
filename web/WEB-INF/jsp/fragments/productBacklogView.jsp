@@ -194,7 +194,7 @@ $(document).ready(function() {
     </struct:widget>
   </li>
   <c:forEach items="${product.childProjects}" var="project">
-    <li class="widget projectWidget droppableWidget" backlogid="${project.id}">
+    <li class="widget projectWidget droppableWidget staticWidget" backlogid="${project.id}">
       <struct:widget name="${project.name}" widgetId="-1">
         <input type="hidden" name="${aef:scheduleStatus(project)}" value="true" />
         <c:if test="${!empty project.childIterations}">
@@ -224,7 +224,7 @@ $(document).ready(function() {
 
   <c:forEach items="${product.childProjects}" var="project">
     <c:forEach items="${project.childIterations}" var="iteration">
-      <li class="widget iterationWidget droppableWidget" backlogid="${iteration.id}">
+      <li class="widget iterationWidget droppableWidget staticWidget" backlogid="${iteration.id}">
         <struct:widget name="${project.name} > ${iteration.name}" widgetId="-1">
           <input type="hidden" class="scheduleStatus" name="${aef:scheduleStatus(iteration)}" value="true" />
           <input type="hidden" class="parentProjectId" name="parentProject_${project.id}" value="${project.id}" />

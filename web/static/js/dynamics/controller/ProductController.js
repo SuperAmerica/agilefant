@@ -233,6 +233,7 @@ ProductController.prototype.paint = function() {
     me.textFilter.clear();
     if(me.storyTreeController) {
       me.storyTreeController.resetFilter();
+      me.storyTreeController.clearSelectedIds();
     }
     if(ui.index === 0) {
       me.paintStoryTree();

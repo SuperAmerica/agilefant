@@ -2,34 +2,64 @@
 
 
 <script type="text/javascript">
+
 $(document).ready(function() {
+  var toggleProjectIterations = function(id) {
+    var projectWidget = $('.projectWidget[backlogId='+id+']');
+    if (projectWidget.is(':visible') && projectWidget.find('input[name=showIterations]').is(':checked')) {
+      $('.iterationWidget').has('input[name=parentProject_'+id+']').show();
+    }
+    else {
+      $('.iterationWidget').has('input[name=parentProject_'+id+']').hide();
+    }
+  };
+  
+  var toggleProject = function(id, displayed) {
+    var projectWidget = $('.projectWidget[backlogId='+id+']'); 
+    if (displayed) {
+      projectWidget.show();
+      toggleProjectIterations(id);
+    } else {
+      projectWidget.hide();
+      toggleProjectIterations(id);
+    }
+  };
+  
   /* Hide/show filters on past/current/future projects and their iterations */
   $('.displayCheckboxes input[name=past]').change(function() {
-    $('.projectWidget').has('input[type=hidden][name=PAST]').toggle().each(function() {
-      $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+    var checked = $(this).is(':checked');
+    $('.projectWidget').has('input[type=hidden][name=PAST]').each(function() {
+      toggleProject($(this).attr('backlogid'), checked);
     });
   });
 
   $('.displayCheckboxes input[name=current]').change(function() {
-    $('.projectWidget').has('input[type=hidden][name=CURRENT]').toggle().each(function() {
-      $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+    var checked = $(this).is(':checked');
+    $('.projectWidget').has('input[type=hidden][name=CURRENT]').each(function() {
+      toggleProject($(this).attr('backlogid'), checked);
     });
   });
 
   $('.displayCheckboxes input[name=future]').change(function() {
-    $('.projectWidget').has('input[type=hidden][name=FUTURE]').toggle().each(function() {
-      $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+    var checked = $(this).is(':checked');
+    $('.projectWidget').has('input[type=hidden][name=FUTURE]').each(function() {
+      toggleProject($(this).attr('backlogid'), checked);
     });
   });
 
   /* Initially hide all past backlogs */
-  $('.projectWidget').has('input[type=hidden][name=PAST]').hide().each(function() {
-    $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+  $('.projectWidget').has('input[type=hidden][name=PAST]').each(function() {
+    toggleProject($(this).attr('backlogid'), false);
   });
 
-  /* Checkbox for showing iterations */
+  /* Checkbox for each project to show iterations */
   $('.projectWidget input[name=showIterations]').change(function() {
-    $('.iterationWidget').has('input[name='+$(this).val()+']').toggle();
+    toggleProjectIterations($(this).val());
+  });
+
+  /* One checkbox to rule them all */
+  $('.displayCheckboxes input[name=iterations]').change(function() {
+    $('.projectWidget input[name=showIterations]').attr('checked', $(this).is(':checked')).trigger('change');
   });
 });
 </script>
@@ -104,6 +134,8 @@ $(document).ready(function() {
       <input type="checkbox" name="past" /> Past
       <input type="checkbox" name="current" checked="checked" /> Ongoing
       <input type="checkbox" name="future" checked="checked" /> Future
+      <br/>
+      <input type="checkbox" name="iterations" checked="checked" /> Hide/show projects' iterations
     </struct:widget>
   </li>
   <c:forEach items="${product.projects}" var="project">
@@ -111,7 +143,7 @@ $(document).ready(function() {
       <struct:widget name="${project.name}" widgetId="-1">
         <input type="hidden" name="${aef:scheduleStatus(project)}" value="true" />
         <c:if test="${!empty project.children}">
-          <input type="checkbox" name="showIterations" value="parentProject_${project.id}" checked="checked"/> Show iterations
+          <input type="checkbox" name="showIterations" value="${project.id}" checked="checked"/> Show iterations
           <hr/>
         </c:if>
         <ul class="storyList " style="min-height: 20px;">

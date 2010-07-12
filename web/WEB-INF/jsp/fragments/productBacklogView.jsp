@@ -3,6 +3,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+  /* Hide/show filters on past/current/future projects and their iterations */
   $('.displayCheckboxes input[name=past]').change(function() {
     $('.projectWidget').has('input[type=hidden][name=PAST]').toggle().each(function() {
       $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
@@ -85,7 +86,7 @@ $(document).ready(function() {
 <ul class="widgetList">
 
   <li class="widget productWidget staticWidget droppableWidget" backlogid="${product.id}">
-    <struct:widget name="Product stories" widgetId="-1">
+    <struct:widget name="${product.name}" widgetId="-1">
       <ul class="storyList">
         <c:forEach items="${product.stories}" var="story">
           <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>

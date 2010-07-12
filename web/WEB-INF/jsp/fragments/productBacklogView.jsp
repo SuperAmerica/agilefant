@@ -80,6 +80,10 @@ $(document).ready(function() {
 .widgetHeader, .widgetHeader > div {
   cursor: auto !important;
 }
+.productWidget, .productWidget .widgetContent {
+  max-height: none !important;
+}
+
 .storyList {
   list-style-type: none;
   margin: 0;

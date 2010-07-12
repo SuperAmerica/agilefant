@@ -94,7 +94,7 @@ $(document).ready(function() {
   <li class=""><a href="#projects"><span><img
         alt="Projects" src="static/img/backlog.png" /> Projects</span></a></li>
   <li class=""><a href="#backlogs"><span><img
-        alt="Backlogs" src="static/img/backlog.png" /> Backlogs</span></a></li>
+        alt="Backlogs" src="static/img/leaf_stories.png" /> Leaf stories</span></a></li>
   <li id="searchByText" style="float: right;"> </li>
 </ul>
 

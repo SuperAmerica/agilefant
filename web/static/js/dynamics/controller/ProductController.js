@@ -39,11 +39,12 @@ ProductController.prototype.filter = function() {
     this.storyTreeController.filter(this.getTextFilter(), this.getStateFilters());
   }
   else if (activeTab === 1) {
-    this.projectListView.filter();
+    this.filterLeafStories();
   }
   else if (activeTab === 2) {
-    this.filterBacklogsView();
+    this.projectListView.filter();
   }
+  
 };
 
 ProductController.prototype.getStateFilters = function() {
@@ -79,7 +80,7 @@ ProductController.prototype.paintProductDetails = function() {
 /**
  * Backlog view tab
  */
-ProductController.prototype.paintBacklogsView = function() {
+ProductController.prototype.paintLeafStories = function() {
   var me = this;
   this.backlogsElement.load('ajax/productBacklogView.action?productId=' + this.id, jQuery.proxy(function() {
     this.backlogsElement.find('.widgetList > li').each(function() {
@@ -134,7 +135,7 @@ ProductController.prototype.paintBacklogsView = function() {
   }, this));
 };
 
-ProductController.prototype.filterBacklogsView = function() {
+ProductController.prototype.filterLeafStories = function() {
   var filter = this.getTextFilter();
   
   this.backlogsElement.find('.storyList li').show().not(':contains('+filter+')').hide();
@@ -219,10 +220,10 @@ ProductController.prototype.paint = function() {
         me.model = model;
         me.paintProductDetails();
         if(tab === 1) {
-          me.paintProjectList();
+          me.paintLeafStories();
         }
         if (tab === 2) {
-          me.paintBacklogsView();
+          me.paintProjectList();
         }
       });
   if(tab === 0) {
@@ -236,9 +237,9 @@ ProductController.prototype.paint = function() {
     if(ui.index === 0) {
       me.paintStoryTree();
     } else if(ui.index === 1) {
-      me.paintProjectList();
+      me.paintLeafStories();
     } else if(ui.index === 2) {
-      me.paintBacklogsView();
+      me.paintProjectList();
     }
   });
 };

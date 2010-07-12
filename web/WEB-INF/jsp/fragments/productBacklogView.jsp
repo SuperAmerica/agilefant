@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
-<b>NOTICE: only leaf stories are shown in this view!</b>
+
+
 <script type="text/javascript">
 $(document).ready(function() {
   $('.displayCheckboxes input[name=past]').change(function() {
@@ -59,7 +60,9 @@ $(document).ready(function() {
 }
 </style>
 
-<h2>Product's backlogs</h2>
+<h2>Product's leaf stories</h2>
+
+<%--<strong>NOTICE: only leaf stories are shown in this view!</strong> --%>
 
 <div class="widgetContainer">
 <ul class="widgetList">

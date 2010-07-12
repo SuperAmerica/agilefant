@@ -35,7 +35,7 @@ $(document).ready(function() {
     storyTreeElement: $('#storyTreeContainer'),
     hourEntryListElement: $("#backlogSpentEffort"),
     searchByTextElement: $('#searchByText'),
-    backlogsElement: $('#backlogs'),
+    backlogsElement: $('#leafStories'),
     tabs: $('#productContents')
   });
   if(Configuration.isTimesheetsEnabled()) {
@@ -91,21 +91,21 @@ $(document).ready(function() {
 <ul class="backlogTabs">
   <li class=""><a href="#storyTreeContainer"><span><img
         alt="Story tree" src="static/img/story_tree.png" /> Story tree</span></a></li>
+  <li class=""><a href="#leafStories"><span><img
+        alt="Backlogs" src="static/img/leaf_stories.png" /> Leaf stories</span></a></li>
   <li class=""><a href="#projects"><span><img
         alt="Projects" src="static/img/backlog.png" /> Projects</span></a></li>
-  <li class=""><a href="#backlogs"><span><img
-        alt="Backlogs" src="static/img/leaf_stories.png" /> Leaf stories</span></a></li>
   <li id="searchByText" style="float: right;"> </li>
 </ul>
 
 <form onsubmit="return false;">
   <div class="details" id="storyTreeContainer" style="position: relative;"></div>
-  <div class="details" id="projects"></div>
-  <div class="details" id="backlogs">
+  <div class="details" id="leafStories">
     <div style="text-align:center; vertical-align: middle;">
       <img src="static/img/pleasewait.gif" style="display: inline-block; vertical-align: middle;"/> Loading...
     </div>
   </div>
+  <div class="details" id="projects"></div>
 </form>
 
 </div>

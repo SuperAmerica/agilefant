@@ -208,9 +208,7 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
 
     private Backlog createTO(Backlog backlog, Backlog parentTO) {
         Backlog backlogTO = null;
-        if (backlog instanceof Product) {
-            backlogTO = new ProductTO((Product) backlog);
-        } else if (backlog instanceof Project) {
+        if (backlog instanceof Project) {
             backlogTO = new ProjectTO((Project) backlog);
             backlogTO.setParent(parentTO);
             ((ProjectTO) backlogTO).setScheduleStatus(transferObjectBusiness

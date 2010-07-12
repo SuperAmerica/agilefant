@@ -1,7 +1,9 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.easymock.EasyMock;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -249,6 +252,67 @@ public class ProductBusinessTest extends MockedTestCase {
         assertEquals(2, actualIteration.getLeafStories().size());
         assertEquals(3, actualIteration.getLeafStories().get(0).getId());
         assertEquals(4, actualIteration.getLeafStories().get(1).getId());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveLeafStoriesOnly_backlogOrder() {
+        Product product = new Product();
+        product.setId(1);
+        
+        Project project1 = new Project();
+        project1.setId(2);
+        product.getChildren().add(project1);
+        
+        Project project2 = new Project();
+        project2.setId(3);
+        product.getChildren().add(project2);
+        
+        Project project3 = new Project();
+        project3.setId(4);
+        product.getChildren().add(project3);
+
+        DateTime time = new DateTime(2010,1,1,0,0,0,0);
+        
+        Iteration iteration = new Iteration();
+        iteration.setId(5);
+        project1.getChildren().add(iteration);
+        iteration.setStartDate(time.minusDays(50));
+        
+        Iteration iteration2 = new Iteration();
+        iteration2.setId(6);
+        project1.getChildren().add(iteration2);
+        iteration2.setStartDate(time);
+
+        expect(productDAO.retrieveLeafStories(product)).andReturn(
+                new ArrayList<Story>());
+        
+        expect(transferObjectBusiness.getBacklogScheduleStatus(project1)).andReturn(ScheduleStatus.ONGOING);
+        expect(transferObjectBusiness.getBacklogScheduleStatus(project2)).andReturn(ScheduleStatus.PAST);
+        expect(transferObjectBusiness.getBacklogScheduleStatus(project3)).andReturn(ScheduleStatus.FUTURE);
+        
+        expect(transferObjectBusiness.getBacklogScheduleStatus(iteration)).andReturn(ScheduleStatus.PAST);
+        expect(transferObjectBusiness.getBacklogScheduleStatus(iteration2)).andReturn(ScheduleStatus.PAST);
+
+        replayAll();
+        ProductTO actual = this.productBusiness
+                .retrieveLeafStoriesOnly(product);
+        verifyAll();
+        assertEquals(3, actual.getChildProjects().size());
+        
+        assertEquals(4, actual.getChildProjects().get(0).getId());
+        assertEquals(2, actual.getChildProjects().get(1).getId());
+        assertEquals(3, actual.getChildProjects().get(2).getId());
+        
+        ProjectTO actualProject = actual.getChildProjects().get(1);
+        
+        assertEquals(2, actualProject.getChildIterations().size());
+
+        assertEquals(6, actualProject.getChildIterations().get(0).getId());
+        assertEquals(5, actualProject.getChildIterations().get(1).getId());
+       
+        
+
     }
 
 }

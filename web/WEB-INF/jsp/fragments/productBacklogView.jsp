@@ -4,18 +4,32 @@
 <script type="text/javascript">
 $(document).ready(function() {
   $('.displayCheckboxes input[name=past]').change(function() {
-    $('.widget').has('input[type=hidden][name=PAST]').toggle();
+    $('.projectWidget').has('input[type=hidden][name=PAST]').toggle().each(function() {
+      $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+    });
   });
 
   $('.displayCheckboxes input[name=current]').change(function() {
-    $('.widget').has('input[type=hidden][name=CURRENT]').toggle();
+    $('.projectWidget').has('input[type=hidden][name=CURRENT]').toggle().each(function() {
+      $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+    });
   });
 
   $('.displayCheckboxes input[name=future]').change(function() {
-    $('.widget').has('input[type=hidden][name=FUTURE]').toggle();
+    $('.projectWidget').has('input[type=hidden][name=FUTURE]').toggle().each(function() {
+      $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+    });
   });
 
-  $('.widget').has('input[type=hidden][name=PAST]').hide();
+  /* Initially hide all past backlogs */
+  $('.projectWidget').has('input[type=hidden][name=PAST]').hide().each(function() {
+    $('.iterationWidget').has('input[name=parentProject_'+$(this).attr('backlogid')+']').toggle();
+  });
+
+  /* Checkbox for showing iterations */
+  $('.projectWidget input[name=showIterations]').change(function() {
+    $('.iterationWidget').has('input[name='+$(this).val()+']').toggle();
+  });
 });
 </script>
 
@@ -31,6 +45,9 @@ $(document).ready(function() {
 }
 .widget {
   min-width: 200px !important;
+}
+.widgetHeader, .widgetHeader > div {
+  cursor: auto !important;
 }
 .storyList {
   list-style-type: none;
@@ -66,14 +83,8 @@ $(document).ready(function() {
 
 <div class="widgetContainer">
 <ul class="widgetList">
-  <li class="widget staticWidget displayCheckboxes">
-    <struct:widget name="Display backlogs" widgetId="-1">
-      <input type="checkbox" name="past" /> Past
-      <input type="checkbox" name="current" checked="checked" /> Ongoing
-      <input type="checkbox" name="future" checked="checked" /> Future
-    </struct:widget>
-  </li>
-  <li class="widget staticWidget droppableWidget" backlogid="${product.id}">
+
+  <li class="widget productWidget staticWidget droppableWidget" backlogid="${product.id}">
     <struct:widget name="Product stories" widgetId="-1">
       <ul class="storyList">
         <c:forEach items="${product.stories}" var="story">
@@ -84,12 +95,24 @@ $(document).ready(function() {
   </li>
 </ul>
 </div>
+
 <div class="widgetContainer">
 <ul class="widgetList">
+  <li class="widget staticWidget displayCheckboxes">
+    <struct:widget name="Display projects" widgetId="-1">
+      <input type="checkbox" name="past" /> Past
+      <input type="checkbox" name="current" checked="checked" /> Ongoing
+      <input type="checkbox" name="future" checked="checked" /> Future
+    </struct:widget>
+  </li>
   <c:forEach items="${product.projects}" var="project">
-    <li class="widget droppableWidget" backlogid="${project.id}">
+    <li class="widget projectWidget droppableWidget" backlogid="${project.id}">
       <struct:widget name="${project.name}" widgetId="-1">
         <input type="hidden" name="${aef:scheduleStatus(project)}" value="true" />
+        <c:if test="${!empty project.children}">
+          <input type="checkbox" name="showIterations" value="parentProject_${project.id}" checked="checked"/> Show iterations
+          <hr/>
+        </c:if>
         <ul class="storyList " style="min-height: 20px;">
           <c:forEach items="${project.stories}" var="story">
             <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
@@ -105,9 +128,10 @@ $(document).ready(function() {
 <ul class="widgetList">
   <c:forEach items="${product.projects}" var="project">
     <c:forEach items="${project.children}" var="iteration">
-      <li class="widget droppableWidget" backlogid="${iteration.id}">
+      <li class="widget iterationWidget droppableWidget" backlogid="${iteration.id}">
         <struct:widget name="${project.name} > ${iteration.name}" widgetId="-1">
           <input type="hidden" name="${aef:scheduleStatus(iteration)}" value="true" />
+          <input type="hidden" name="parentProject_${project.id}" value="1" />
           <ul class="storyList" style="min-height: 20px;">
             <c:forEach items="${iteration.stories}" var="story">
               <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>

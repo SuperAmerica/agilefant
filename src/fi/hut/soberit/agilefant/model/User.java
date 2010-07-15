@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,8 +22,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -281,8 +280,7 @@ public class User implements NamedObject {
         return weekEffort;
     }
 
-    @Cascade(CascadeType.DELETE_ORPHAN)
-    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
     @NotAudited
     public Collection<Holiday> getHolidays() {
         return holidays;
@@ -292,8 +290,7 @@ public class User implements NamedObject {
         this.holidays = holidays;
     }
 
-    @Cascade(CascadeType.DELETE_ORPHAN)
-    @OneToMany(mappedBy="user", fetch=FetchType.LAZY)
+    @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
     @NotAudited
     public Collection<HolidayAnomaly> getHolidayAnomalies() {
         return holidayAnomalies;

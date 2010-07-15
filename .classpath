@@ -92,7 +92,6 @@
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/build/junit-4.4.jar"/>
 	<classpathentry kind="lib" path="lib/gzipflt.jar"/>
-	<classpathentry kind="lib" path="lib/hibernate-validator-4.1.0.Final.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-validator.jar"/>
 	<classpathentry kind="output" path="eclipse-classes"/>
 </classpath>

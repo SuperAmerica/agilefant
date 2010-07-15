@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -13,8 +14,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -26,13 +25,13 @@ import flexjson.JSON;
  * A Hibernate entity bean which represents a project.
  * <p>
  * Conceptually, a project is a type of a backlog. A project-backlog represents
- * work (iterations, stories) to be done towards some project
- * outcome (documents, code, plans, etc.).
+ * work (iterations, stories) to be done towards some project outcome
+ * (documents, code, plans, etc.).
  * <p>
  * A project is further divided up to smaller containers for work, the
  * iterations. Project also is a part of a bigger container, the product. Since
- * a project is a backlog, it can contain stories, which, in turn, are
- * smaller containers for work.
+ * a project is a backlog, it can contain stories, which, in turn, are smaller
+ * containers for work.
  * <p>
  * Example projects would be "Acme KillerApp v1.3" or "User Documentation".
  * <p>
@@ -59,16 +58,14 @@ public class Project extends Backlog implements Schedulable, Rankable {
     private int rank = 0;
 
     private Status status = Status.GREEN;
-    
+
     private Set<Assignment> assignments = new HashSet<Assignment>();
-    
+
     private Set<BacklogHistoryEntry> backlogHistoryEntries = new HashSet<BacklogHistoryEntry>();
-    
+
     private ExactEstimate baselineLoad = new ExactEstimate(0);
-    
+
     private ExactEstimate backlogSize = new ExactEstimate(0);
-
-
 
     public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
@@ -115,8 +112,7 @@ public class Project extends Backlog implements Schedulable, Rankable {
         this.status = status;
     }
 
-    @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,            
-                mappedBy = "backlog")
+    @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class, mappedBy = "backlog")
     @JSON(include = false)
     @NotAudited
     public Set<Assignment> getAssignments() {
@@ -148,17 +144,16 @@ public class Project extends Backlog implements Schedulable, Rankable {
         this.baselineLoad = baselineLoad;
     }
 
-    @OneToMany(mappedBy="backlog")
-    @Cascade(value = CascadeType.DELETE_ORPHAN)
+    @OneToMany(mappedBy = "backlog", cascade = CascadeType.REMOVE)
     @NotAudited
-    @JSON(include=false)
+    @JSON(include = false)
     public Set<BacklogHistoryEntry> getBacklogHistoryEntries() {
         return backlogHistoryEntries;
-        }
-    
+    }
+
     public void setBacklogHistoryEntries(
             Set<BacklogHistoryEntry> backlogHistoryEntries) {
         this.backlogHistoryEntries = backlogHistoryEntries;
-        }
+    }
 
 }

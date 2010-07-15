@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,13 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
         emptyProject.setId(5);
     }
     
+    @After
+    public void tearDown() {
+        product = null;
+        emptyProduct = null;
+        project = null;
+        emptyProject = null;
+    }
     @Test
     public void testRetrieveProjectRootStories() {
        executeClassSql();

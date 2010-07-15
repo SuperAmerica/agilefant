@@ -89,10 +89,10 @@ public class IterationHistoryEntryDAOHibernate extends
         long first = 0;
         long second = 0;
         if (results[0] != null) {
-            first = ((ExactEstimate)results[0]).getMinorUnits();
+            first = (Long)results[0];
         }
         if (results[1] != null) {
-            second = ((ExactEstimate)results[1]).getMinorUnits();
+            second = (Long)results[1];
         }
         return Pair.create(new ExactEstimate(first), new ExactEstimate(second));
     }

@@ -144,7 +144,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @OneToMany(mappedBy = "story",
             targetEntity = fi.hut.soberit.agilefant.model.StoryHourEntry.class )
     @NotAudited
-    @OrderBy("date desc")
     public Set<StoryHourEntry> getHourEntries() {
         return hourEntries;
     }

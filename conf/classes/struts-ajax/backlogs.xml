@@ -251,6 +251,10 @@
       </result>
     </action>
     
+    <action name="iterationHistory" class="iterationHistoryAction">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/iterationStoryHistory.jsp</result>
+    </action>
+    
     <!-- /Iteration actions -->  
   
   </package>

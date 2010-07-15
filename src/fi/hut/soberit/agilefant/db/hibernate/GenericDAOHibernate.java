@@ -119,14 +119,14 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     public int count() {
         DetachedCriteria criteria = createCriteria().setProjection(
                 Projections.rowCount());
-        return ((Integer) hibernateTemplate.findByCriteria(criteria).get(0))
+        return ((Long) hibernateTemplate.findByCriteria(criteria).get(0))
                 .intValue();
     }
 
     public boolean exists(int id) {
         DetachedCriteria crit = createCriteria().add(Restrictions.idEq(id))
                 .setProjection(Projections.rowCount());
-        return ((Integer) hibernateTemplate.findByCriteria(crit).get(0))
+        return ((Long) hibernateTemplate.findByCriteria(crit).get(0))
                 .intValue() > 0;
     }
 

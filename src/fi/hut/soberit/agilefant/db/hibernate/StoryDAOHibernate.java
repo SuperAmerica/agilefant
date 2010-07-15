@@ -43,7 +43,7 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         DetachedCriteria crit = createCriteria().add(
                 Restrictions.eq("creator", user)).setProjection(
                 Projections.rowCount());
-        return ((Integer) hibernateTemplate.findByCriteria(crit).get(0))
+        return ((Long) hibernateTemplate.findByCriteria(crit).get(0))
                 .intValue();
     }
 
@@ -77,7 +77,7 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         long allTasksEffortLeftSum = 0;
         if (resultsByState != null) {
             for (Object[] results : resultsByState) {
-                int count = ((Integer)results[0]).intValue();
+                int count = ((Long)results[0]).intValue();
                 ExactEstimate originalEstimateSum = (ExactEstimate) results[1];
                 ExactEstimate effortLeftSum = (ExactEstimate) results[2];
                 TaskState state = (TaskState) results[3];
@@ -136,7 +136,7 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         
         Map<Integer, Integer> result = new HashMap<Integer, Integer>();
         for(Object[] row : rawData) {
-            result.put((Integer)row[0], (Integer)row[1]);
+            result.put((Integer)row[0], ((Long)row[1]).intValue());
         }
         return result;
     }

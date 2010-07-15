@@ -7,7 +7,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.hibernate.envers.Audited;
+
 @Entity
+@Audited
 @Table(name = "storyrank", uniqueConstraints = { @UniqueConstraint(columnNames = {
         "backlog_id", "story_id" }) })
 public class StoryRank {

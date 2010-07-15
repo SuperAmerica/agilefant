@@ -11,8 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -103,9 +101,8 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     }
     
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
-            mappedBy = "backlog")
+            mappedBy = "backlog", cascade = javax.persistence.CascadeType.REMOVE)
     @JSON(include = false)
-    @Cascade(CascadeType.DELETE_ORPHAN)
     public Set<Assignment> getAssignments() {
         return assignments;
     }

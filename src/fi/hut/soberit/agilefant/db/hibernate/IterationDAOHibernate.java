@@ -101,7 +101,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
 
         for (Object[] row : queryResults) {
             StoryState state = (StoryState) row[0];
-            Integer count = (Integer) row[1];
+            Integer count = ((Long) row[1]).intValue();
             results.put(state, count);
         }
 
@@ -122,7 +122,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         int done = 0;
 
         for (Object[] row : results) {
-            Integer count = (Integer) row[1];
+            Long count = (Long) row[1];
             total += count;
             if (row[0].equals(doneValue))
                 done += count;

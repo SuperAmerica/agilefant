@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ public class AssignmentDAOTest extends AbstractHibernateTests {
     public void setUp() {
         user = new User();
         user.setId(2);
+    }
+    
+    @After
+    public void tearDown() {
+        this.user = null;
+        this.interval = null;
     }
     
     @Test

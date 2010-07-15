@@ -36,7 +36,7 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         criteria.add(Restrictions.idEq(backlog.getId()));
         criteria.createCriteria("children");
         criteria.setProjection(Projections.rowCount());
-        return ((Integer) criteria.list().get(0)).intValue();
+        return ((Long) criteria.list().get(0)).intValue();
     }
 
     @SuppressWarnings("unchecked")
@@ -60,7 +60,7 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         Criteria crit = getCurrentSession().createCriteria(Story.class);
         crit.setProjection(Projections.sum("storyPoints"));
         crit.createCriteria("backlog").add(Restrictions.idEq(backlogId));
-        Integer result = uniqueResult(crit);
+        Long result = uniqueResult(crit);
         if (result == null) return 0;
         return result.intValue();
     }
@@ -70,7 +70,7 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         crit.setProjection(Projections.sum("storyPoints"));
         crit.createCriteria("backlog").add(Restrictions.idEq(backlogId));
         crit.add(Restrictions.eq("state", StoryState.DONE));
-        Integer result = uniqueResult(crit);
+        Long result = uniqueResult(crit);
         if (result == null) return 0;
         return result.intValue();
     }
@@ -91,7 +91,7 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         
         crit.add(Restrictions.isNotNull("storyPoints"));
         
-        Integer result = uniqueResult(crit);
+        Long result = uniqueResult(crit);
         
         if (result == null) return 0;
         return result.intValue();

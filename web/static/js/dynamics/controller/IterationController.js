@@ -17,6 +17,7 @@ var IterationController = function IterationController(options) {
   this.smallBurndownElement = options.smallBurndownElement;
   this.burndownElement = options.burndownElement;
   this.tabs = options.tabs;
+  this.historyElement = options.historyElement;
   this.init();
   
   this.initAssigneeConfiguration();
@@ -26,10 +27,10 @@ var IterationController = function IterationController(options) {
   
   var me = this;
   this.tabs.bind('tabsselect', function(event, ui) {
-    if (Configuration.isTimesheetsEnabled() && ui.index === 2) {
-      me.selectSpentEffortTab();
-    } else if(ui.index === 1) {
+    if(ui.index === 1) {
       me.selectAssigneesTab();
+    } else if(ui.index === 2) {
+      me.historyElement.load("ajax/iterationHistory.action",{iterationId: me.id});
     }
   });
   window.pageController.setMainController(this);

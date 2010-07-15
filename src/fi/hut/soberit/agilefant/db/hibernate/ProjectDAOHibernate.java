@@ -124,7 +124,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
     
     private int toInt(Object obj) {
         if(obj != null) {
-            return (Integer)obj;
+            return ((Long)obj).intValue();
         }
         return 0;
     }

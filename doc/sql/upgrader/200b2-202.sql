@@ -13,3 +13,7 @@ alter table users add column markStoryBranchStarted integer default 1;
 alter table users add column markStoryStarted integer default 1;
 
 UPDATE hourentries SET minutesSpent = 0 WHERE minutesSpent IS NULL;
+
+
+create table storyrank_AUD (id integer not null, REV integer not null, REVTYPE tinyint, rank integer, backlog_id integer, story_id integer, primary key (id, REV)) ENGINE=InnoDB;
+alter table storyrank_AUD add index FK1CD8B7F220258526 (REV), add constraint FK1CD8B7F220258526 foreign key (REV) references agilefant_revisions (id);

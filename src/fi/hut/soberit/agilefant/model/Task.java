@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -21,7 +22,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -158,9 +158,9 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     @OneToMany(
             targetEntity = fi.hut.soberit.agilefant.model.WhatsNextEntry.class,
             fetch = FetchType.LAZY,
-            mappedBy = "task"
+            mappedBy = "task",
+            cascade = CascadeType.REMOVE
     )
-    @Cascade(value = { org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
     @JSON(include = false)
     public Set<WhatsNextEntry> getWhatsNextEntries() {
         return whatsNextEntries;
@@ -171,7 +171,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     }
 
     @OneToMany(mappedBy="task")
-    @OrderBy("date desc")
     @NotAudited
     public Set<TaskHourEntry> getHourEntries() {
         return hourEntries;

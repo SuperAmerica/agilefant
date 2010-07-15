@@ -12,6 +12,7 @@
     alt="Edit" src="static/img/info.png" /> Info</span></a></li>
   <li class=""><a href="#backlogAssignees_cont"><span><img
     alt="Edit" src="static/img/team.png" /> Workload</span></a></li>
+  <li class=""><a href="#iterationHistory"><span>History</span></a></li>
   <li id="iterationActions" class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
@@ -36,7 +37,13 @@
     <br/>
     Personal adjustment adjusts the iteration baseline load for each user.
   </div>
+  <div class="details" id="iterationHistory">
+    <div style="text-align:center; vertical-align: middle;">
+      <img src="static/img/pleasewait.gif" style="display: inline-block; vertical-align: middle;"/> Loading...
+    </div>
 </div>
+</div>
+
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -54,7 +61,8 @@ $(document).ready(function() {
       metricsElement: $("#iterationMetrics"),
       smallBurndownElement: $("#smallChart"),
       burndownElement: $("#bigChart"),
-      tabs: $("#backlogInfo")
+      tabs: $("#backlogInfo"),
+      historyElement: $("#iterationHistory")
   });
 
   /* Actions menu */

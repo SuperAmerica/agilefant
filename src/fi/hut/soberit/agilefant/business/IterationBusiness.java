@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.joda.time.LocalDate;
@@ -11,6 +12,7 @@ import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 
 public interface IterationBusiness extends GenericBusiness<Iteration> {
 
@@ -35,4 +37,6 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     void delete(Iteration iteration);
     
     void deleteAndUpdateHistory(int id);
+    
+    public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(Iteration iteration);
 }

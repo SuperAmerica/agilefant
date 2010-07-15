@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -12,6 +13,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,8 @@ import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
+import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
+import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -41,6 +45,7 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -74,7 +79,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private StoryRankBusiness storyRankBusiness;
     @Autowired
     private TaskBusiness taskBusiness;
-
+    @Autowired
+    private BacklogHistoryDAO backlogHistoryDAO;
+    @Autowired
+    private StoryHistoryDAO storyHistoryDAO;
+    
     public IterationBusinessImpl() {
         super(Iteration.class);
     }
@@ -377,46 +386,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         return iterationDAO.retrieveCurrentAndFutureIterationsAt(dayStart);
     }
     
-    public void setTransferObjectBusiness(
-            TransferObjectBusiness transferObjectBusiness) {
-        this.transferObjectBusiness = transferObjectBusiness;
-    }
-
-    public void setStoryBusiness(StoryBusiness storyBusiness) {
-        this.storyBusiness = storyBusiness;
-    }
-
-    public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
-        this.hourEntryBusiness = hourEntryBusiness;
-    }
-
-    public void setIterationHistoryEntryBusiness(
-            IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
-        this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
-    }
-
-    public void setIterationHistoryEntryDAO(
-            IterationHistoryEntryDAO iterationHistoryEntryDAO) {
-        this.iterationHistoryEntryDAO = iterationHistoryEntryDAO;
-    }
-
-    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
-        this.backlogBusiness = backlogBusiness;
-    }
-
-    public void setAssignmentBusiness(AssignmentBusiness assignmentBusiness) {
-        this.assignmentBusiness = assignmentBusiness;
-    }
-
-    public void setBacklogHistoryEntryBusiness(
-            BacklogHistoryEntryBusiness backlogHistoryEntryBusiness) {
-        this.backlogHistoryEntryBusiness = backlogHistoryEntryBusiness;
-    }
-    
-    public void setStoryRankBusiness(StoryRankBusiness storyRankBusiness) {
-        this.storyRankBusiness = storyRankBusiness;
-    }
-    
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter) {
         List<Task> iterationTasks = this.iterationDAO
                 .getAllTasksForIteration(iter);
@@ -531,10 +500,19 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             return null;
         }      
     }
-
-    public void setTaskBusiness(TaskBusiness taskBusiness) {
-        this.taskBusiness = taskBusiness;
-        
+    
+    @SuppressWarnings("unchecked")
+    public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(Iteration iteration) {
+        List<AgilefantHistoryEntry> added = this.backlogHistoryDAO.retrieveAddedStories(iteration);
+        List<AgilefantHistoryEntry> deleted = this.backlogHistoryDAO.retrieveDeletedStories(iteration);
+        for(AgilefantHistoryEntry entry : deleted) {
+            Story story = this.storyHistoryDAO.retrieveClosestRevision(entry.getObjectId(), entry.getRevision().getId());
+            entry.setObject(story);
+        }
+        List<AgilefantHistoryEntry> ret = new ArrayList<AgilefantHistoryEntry>();
+        ret.addAll(added);
+        ret.addAll(deleted);
+        Collections.sort(ret, new PropertyComparator("revision.timestamp", true, false));
+        return ret;
     }
-
 }

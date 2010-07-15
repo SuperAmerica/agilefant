@@ -1,7 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.createStrictMock;
+
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
@@ -20,16 +19,24 @@ import java.util.Set;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
+import org.hibernate.envers.RevisionType;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import fi.hut.soberit.agilefant.business.impl.IterationBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
+import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
+import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
+import fi.hut.soberit.agilefant.model.AgilefantRevisionEntity;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
@@ -39,6 +46,11 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.test.Mock;
+import fi.hut.soberit.agilefant.test.MockContextLoader;
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
@@ -47,20 +59,38 @@ import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
 import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 
-public class IterationBusinessTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = MockContextLoader.class)
+public class IterationBusinessTest  extends MockedTestCase {
 
-    IterationBusinessImpl iterationBusiness = new IterationBusinessImpl();
+    @TestedBean
+    IterationBusinessImpl iterationBusiness;
+    @Mock
     TransferObjectBusiness transferObjectBusiness;
+    @Mock
     StoryBusiness storyBusiness;
+    @Mock
     HourEntryBusiness hourEntryBusiness;
+    @Mock
     IterationDAO iterationDAO;
+    @Mock
     IterationHistoryEntryDAO iterationHistoryEntryDAO;
+    @Mock
     IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    @Mock
     BacklogBusiness backlogBusiness;
+    @Mock
     AssignmentBusiness assignmentBusiness;
+    @Mock
     BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
+    @Mock
     StoryRankBusiness storyRankBusiness;
+    @Mock
     TaskBusiness taskBusiness;
+    @Mock
+    StoryHistoryDAO storyHistoryDAO;
+    @Mock
+    BacklogHistoryDAO backlogHistoryDAO;
     
     Iteration iteration;
     Project project;
@@ -70,43 +100,6 @@ public class IterationBusinessTest {
     IterationTO expectedIterationData;
     Task task;
     TaskTO taskTO;
-
-    @Before
-    public void setUp_Dependencies() {
-        iterationDAO = createMock(IterationDAO.class);
-        iterationBusiness.setIterationDAO(iterationDAO);
-
-        storyBusiness = createMock(StoryBusiness.class);
-        iterationBusiness.setStoryBusiness(storyBusiness);
-
-        hourEntryBusiness = createMock(HourEntryBusiness.class);
-        iterationBusiness.setHourEntryBusiness(hourEntryBusiness);
-
-        transferObjectBusiness = createMock(TransferObjectBusiness.class);
-        iterationBusiness.setTransferObjectBusiness(transferObjectBusiness);
-
-        iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
-        iterationBusiness
-                .setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
-
-        iterationHistoryEntryDAO = createMock(IterationHistoryEntryDAO.class);
-        iterationBusiness.setIterationHistoryEntryDAO(iterationHistoryEntryDAO);
-
-        backlogBusiness = createMock(BacklogBusiness.class);
-        iterationBusiness.setBacklogBusiness(backlogBusiness);
-
-        assignmentBusiness = createMock(AssignmentBusiness.class);
-        iterationBusiness.setAssignmentBusiness(assignmentBusiness);
-        
-        backlogHistoryEntryBusiness = createMock(BacklogHistoryEntryBusiness.class);
-        iterationBusiness.setBacklogHistoryEntryBusiness(backlogHistoryEntryBusiness);
-        
-        storyRankBusiness = createStrictMock(StoryRankBusiness.class);
-        iterationBusiness.setStoryRankBusiness(storyRankBusiness);
-        
-        taskBusiness = createStrictMock(TaskBusiness.class);
-        iterationBusiness.setTaskBusiness(taskBusiness);
-    }
 
     @Before
     public void setUp() {
@@ -140,23 +133,8 @@ public class IterationBusinessTest {
                 tasksTOsWithoutStoryList);
     }
 
-    private void verifyAll() {
-        verify(iterationDAO, transferObjectBusiness,
-                storyBusiness, hourEntryBusiness, backlogBusiness,
-                iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness,
-                storyRankBusiness, taskBusiness);
-    }
-
-    private void replayAll() {
-        replay(iterationDAO, transferObjectBusiness,
-                storyBusiness, hourEntryBusiness, backlogBusiness,
-                iterationHistoryEntryBusiness, iterationHistoryEntryDAO,
-                assignmentBusiness, backlogHistoryEntryBusiness,
-                storyRankBusiness, taskBusiness);
-    }
-
     @Test
+    @DirtiesContext
     public void testGetIterationContents() {
         List<Story> stories = new ArrayList<Story>();
         stories.addAll(iteration.getStories());
@@ -180,6 +158,7 @@ public class IterationBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetIterationContents_hasInvalidRank() {
         List<Story> stories = new ArrayList<Story>();
         stories.addAll(iteration.getStories());
@@ -210,6 +189,7 @@ public class IterationBusinessTest {
     }
 
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testGetIterationContents_nullBacklog() {
         expect(iterationDAO.retrieveDeep(0)).andReturn(null);
         replay(iterationDAO);
@@ -218,6 +198,7 @@ public class IterationBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testGetIterationMetrics() {
         IterationHistoryEntry latestEntry = new IterationHistoryEntry();
         latestEntry.setEffortLeftSum(112);
@@ -279,6 +260,7 @@ public class IterationBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testGetIterationMetricsZeroTotals() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(null).times(2);
@@ -307,6 +289,7 @@ public class IterationBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testGetIterationMetrics_nullLatestHistoryEntry() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(null).times(2);
@@ -337,6 +320,7 @@ public class IterationBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetIterationMetrics_withInterval() {
         Iteration iter = new Iteration();
         iter.setId(100);
@@ -378,6 +362,7 @@ public class IterationBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testStoreIteration() {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(3);
@@ -411,6 +396,7 @@ public class IterationBusinessTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @DirtiesContext
     public void testStoreIteration_iterationParent() {
         expect(backlogBusiness.retrieve(11)).andReturn(iteration);
         replayAll();
@@ -419,6 +405,7 @@ public class IterationBusinessTest {
     }
 
     @Test(expected = ObjectNotFoundException.class)
+    @DirtiesContext
     public void testStoreIteration_nullParent() {
         expect(backlogBusiness.retrieve(11)).andThrow(new ObjectNotFoundException());
         replayAll();
@@ -427,6 +414,7 @@ public class IterationBusinessTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @DirtiesContext
     public void testStoreIteration_invalidInterval() {
         DateTime start = new DateTime();
         DateTime end = start.minusDays(3);
@@ -440,6 +428,7 @@ public class IterationBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testCreateIteration() {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(3);
@@ -474,6 +463,7 @@ public class IterationBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testCreateIteration_noAssigments() {
         DateTime start = new DateTime();
         DateTime end = start.plusDays(3);
@@ -492,6 +482,7 @@ public class IterationBusinessTest {
         verifyAll();
     }
     @Test
+    @DirtiesContext
     public void testMoveTo() {
         Project newParent = new Project();
         newParent.setId(911);
@@ -505,6 +496,7 @@ public class IterationBusinessTest {
     }
 
     @Test
+    @DirtiesContext
     public void testCalculateVariance() {
         Iteration iter = new Iteration();
         LocalDate today = new LocalDate();
@@ -526,6 +518,7 @@ public class IterationBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testCalculateVariance_notStarted() {
         Iteration iter = new Iteration();
         LocalDate today = new LocalDate();
@@ -546,6 +539,7 @@ public class IterationBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testCalculateVariance_noEffortLeft() {
         Iteration iter = new Iteration();
         LocalDate today = new LocalDate();
@@ -566,6 +560,7 @@ public class IterationBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testDeleteIteration() {
         Iteration iter = new Iteration();
         Project project = new Project();
@@ -610,6 +605,7 @@ public class IterationBusinessTest {
     }
     
     @Test
+    @DirtiesContext
     public void testdeleteAndUpdateHistory() {
         Iteration iteration = new Iteration();
         iteration.setId(111);
@@ -626,5 +622,31 @@ public class IterationBusinessTest {
         replayAll();
         iterationBusiness.deleteAndUpdateHistory(111);
         verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveChangesInIterationStories() {
+        AgilefantRevisionEntity revDeleted = new AgilefantRevisionEntity();
+        revDeleted.setId(1200);
+        revDeleted.setTimestamp(200);
+        AgilefantHistoryEntry deleted = new AgilefantHistoryEntry(200, RevisionType.DEL, revDeleted);
+        
+        AgilefantRevisionEntity revAdded = new AgilefantRevisionEntity();
+        revAdded.setTimestamp(10000);
+        AgilefantHistoryEntry added = new AgilefantHistoryEntry(new Story(), revAdded, RevisionType.ADD);
+        
+        expect(backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(added));
+        expect(backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(Arrays.asList(deleted));
+        expect(storyHistoryDAO.retrieveClosestRevision(200, 1200)).andReturn(null);
+        
+        replayAll();
+        List<AgilefantHistoryEntry> actual = this.iterationBusiness.retrieveChangesInIterationStories(iteration);
+        verifyAll();
+        assertEquals(added, actual.get(0));
+        assertEquals(deleted, actual.get(1));
+        
+        
+        
     }
 }

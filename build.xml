@@ -125,6 +125,10 @@
 		<mkdir dir="${test.conf.dir}/WEB-INF" />
 		<mkdir dir="${test.reports.junit}" />
 		<junit fork="true" forkmode="once" dir="${basedir}" printsummary="true">
+			<jvmarg value="-Xmx128m"/> 
+			<jvmarg value="-Xms128m"/>
+			<jvmarg value="-XX:PermSize=512m"/> 
+			<jvmarg value="-XX:MaxPermSize=512m"/>
 			<classpath refid="compile.test.classpath" />
 			<formatter type="xml" />
 			<batchtest todir="${test.reports.junit}">

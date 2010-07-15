@@ -77,7 +77,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         
         Map<Integer, Integer> result = new HashMap<Integer, Integer>();
         for(Object[] row : rawData) {
-            result.put((Integer)row[0], (Integer)row[1]);
+            result.put((Integer)row[0], ((Long)row[1]).intValue());
         }
         return result;
     }
@@ -150,7 +150,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         List<Object[]> data = asList(iteration);
         List<UnassignedLoadTO> result = new ArrayList<UnassignedLoadTO>();
         for(Object[] rowData : data) {
-            UnassignedLoadTO row = new UnassignedLoadTO((ExactEstimate)rowData[0],(Integer)rowData[1], (Integer)rowData[2]);
+            UnassignedLoadTO row = new UnassignedLoadTO(new ExactEstimate((Long)rowData[0]),(Integer)rowData[1], ((Integer)rowData[2]).intValue());
             result.add(row);
         }
         
@@ -178,7 +178,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         List<Object[]> data = asList(iteration);
         List<UnassignedLoadTO> result = new ArrayList<UnassignedLoadTO>();
         for(Object[] rowData : data) {
-            UnassignedLoadTO row = new UnassignedLoadTO((ExactEstimate)rowData[0],(Integer)rowData[1], (Integer)rowData[2]);
+            UnassignedLoadTO row = new UnassignedLoadTO(new ExactEstimate((Long)rowData[0]),(Integer)rowData[1], (Integer)rowData[2]);
             result.add(row);
         }
         

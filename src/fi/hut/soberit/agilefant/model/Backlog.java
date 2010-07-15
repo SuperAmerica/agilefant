@@ -15,7 +15,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.BatchSize;
@@ -163,7 +162,6 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     }
 
     @OneToMany(mappedBy="backlog")
-    @OrderBy("date desc")
     @NotAudited
     public Set<BacklogHourEntry> getHourEntries() {
         return hourEntries;

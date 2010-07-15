@@ -9,6 +9,8 @@
 			we need the package mapping to make package-info.java work, but it
 			won't map all the package classes
 		-->
+        <property name="org.hibernate.envers.store_data_at_delete">true</property>
+        
 		<mapping package="fi.hut.soberit.agilefant.model" />
 
 		<mapping class="fi.hut.soberit.agilefant.model.Assignment" />
@@ -80,6 +82,5 @@
 		<event type="post-collection-recreate">
 			<listener class="org.hibernate.envers.event.AuditEventListener" />
 		</event>
-
 	</session-factory>
 </hibernate-configuration>

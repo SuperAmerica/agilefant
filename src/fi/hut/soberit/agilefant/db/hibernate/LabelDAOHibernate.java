@@ -28,7 +28,7 @@ LabelDAO {
         crit.add(Restrictions.eq("name", labelName.toLowerCase()));
         crit.setProjection(Projections.projectionList().add(Projections.count("id")));
         Object ret = crit.uniqueResult();
-        int count = (Integer)ret;
+        long count = (Long)ret;
         return count > 0;
     }
     

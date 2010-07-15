@@ -55,7 +55,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         return ret;
     }
 
-    private static long sum(Integer val1, Integer val2) {
+    private static long sum(Long val1, Long val2) {
         long sum = 0;
         if (val1 != null) {
             sum += val1;
@@ -78,8 +78,8 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 Projections.sum("storyPoints")));
         iterationCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));
-        return sum((Integer) projectCrit.uniqueResult(),
-                (Integer) iterationCrit.uniqueResult());
+        return sum((Long) projectCrit.uniqueResult(),
+                (Long) iterationCrit.uniqueResult());
     }
 
     /**
@@ -96,8 +96,8 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 Projections.sum("storyPoints")));
         projectCrit.add(Restrictions.eq("state", StoryState.DONE));
         iterationCrit.add(Restrictions.eq("state", StoryState.DONE));
-        return sum((Integer) projectCrit.uniqueResult(),
-                (Integer) iterationCrit.uniqueResult());
+        return sum((Long) projectCrit.uniqueResult(),
+                (Long) iterationCrit.uniqueResult());
     }
 
     private void attachRootFilters(Criteria projectCrit,
@@ -157,8 +157,8 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 Projections.sum("storyPoints")));
         iterationCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));
-        return sum((Integer) projectCrit.uniqueResult(),
-                (Integer) iterationCrit.uniqueResult());
+        return sum((Long) projectCrit.uniqueResult(),
+                (Long) iterationCrit.uniqueResult());
     }
 
     /** {@inheritDoc} */

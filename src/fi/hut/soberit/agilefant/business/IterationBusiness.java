@@ -9,6 +9,7 @@ import org.joda.time.LocalDate;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
@@ -25,18 +26,27 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
 
     public IterationTO store(int iterationId, int parentBacklogId,
             Iteration iterationData, Set<Integer> assigneeIds);
-    
+
     public Collection<Iteration> retrieveCurrentAndFutureIterations();
-        
+
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter);
-            
+
     public Integer calculateVariance(Iteration iter);
-    
+
     void delete(int id);
-    
+
     void delete(Iteration iteration);
-    
+
     void deleteAndUpdateHistory(int id);
-    
-    public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(Iteration iteration);
+
+    public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(
+            Iteration iteration);
+
+    /**
+     * Retrieve stories that have been added to the iteration after the
+     * iteration has started, but have not been removed from the iteration
+     * before the iteration ended. Notice: will return stories which have been
+     * removed from the iteration after iteration has ended.
+     */
+    public List<Story> retrieveUnexpectedStories(Iteration iteration);
 }

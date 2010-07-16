@@ -515,4 +515,45 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Collections.sort(ret, new PropertyComparator("revision.timestamp", true, false));
         return ret;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public List<Story> retrieveUnexpectedStories(Iteration iteration) {
+        List<AgilefantHistoryEntry> added = this.backlogHistoryDAO
+                .retrieveAddedStories(iteration);
+        List<AgilefantHistoryEntry> deleted = this.backlogHistoryDAO
+                .retrieveDeletedStories(iteration);
+
+        List<Integer> removedDuringIteration = new ArrayList<Integer>();
+        for (AgilefantHistoryEntry entry : deleted) {
+            if (entry.getRevisionDate().isAfter(iteration.getStartDate())
+                    && entry.getRevisionDate().isBefore(iteration.getEndDate())) {
+                removedDuringIteration.add(entry.getObjectId());
+            }
+        }
+
+        List<Story> unexpectedStories = new ArrayList<Story>();
+        for (AgilefantHistoryEntry entry : added) {
+            if (entry.getRevisionDate().isAfter(iteration.getStartDate())
+                    && entry.getRevisionDate().isBefore(iteration.getEndDate())
+                    && !removedDuringIteration.contains(entry.getObjectId())) {
+                unexpectedStories.add((Story) entry.getObject());
+            }
+        }
+        
+        // update stories to their current revisions if possible (the story has
+        // not been deleted)
+        List<Story> unexpected = new ArrayList<Story>();
+        for (Story story : unexpectedStories) {
+            Story current = this.storyBusiness.retrieveIfExists(story.getId());
+            if (current != null) {
+                unexpected.add(current);
+            } else {
+                unexpected.add(story);
+            }
+        }
+
+        return unexpected;
+    }
 }

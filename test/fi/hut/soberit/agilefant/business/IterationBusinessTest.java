@@ -7,6 +7,7 @@ import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -648,5 +649,133 @@ public class IterationBusinessTest  extends MockedTestCase {
         
         
         
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_empty() {
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        replayAll();
+        List<Story> actual = this.iterationBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_oneAdded() {
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        Story current = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        expect(this.storyBusiness.retrieveIfExists(1)).andReturn(current);
+        
+        replayAll();
+        List<Story> actual = this.iterationBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertSame(current, actual.get(0));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_addedAndDeleted() {
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        AgilefantRevisionEntity deletedRevision = new AgilefantRevisionEntity();
+        deletedRevision.setTimestamp(new DateTime(2010,1,20,0,0,0,0).getMillis());
+        AgilefantHistoryEntry deletedEntry = new AgilefantHistoryEntry(1, RevisionType.DEL, deletedRevision);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(Arrays.asList(deletedEntry));
+        
+        replayAll();
+        List<Story> actual = this.iterationBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_addedBeforeStart() {
+        iteration.setStartDate(new DateTime(2010,2,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,4,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        
+        replayAll();
+        List<Story> actual = this.iterationBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_movedAfterEnd() {
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        AgilefantRevisionEntity deletedRevision = new AgilefantRevisionEntity();
+        deletedRevision.setTimestamp(new DateTime(2010,2,20,0,0,0,0).getMillis());
+        AgilefantHistoryEntry deletedEntry = new AgilefantHistoryEntry(1, RevisionType.DEL, deletedRevision);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(Arrays.asList(deletedEntry));
+        expect(this.storyBusiness.retrieveIfExists(1)).andReturn(added);
+        
+        replayAll();
+        List<Story> actual = this.iterationBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(1, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_deletedAfterEnd() {
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        expect(this.storyBusiness.retrieveIfExists(1)).andReturn(null);
+        
+        replayAll();
+        List<Story> actual = this.iterationBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertSame(added, actual.get(0));
     }
 }

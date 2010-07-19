@@ -6,7 +6,9 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
+import org.hibernate.envers.RevisionType;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.junit.Test;
@@ -19,14 +21,18 @@ import fi.hut.soberit.agilefant.business.impl.BacklogBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
+import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
+import fi.hut.soberit.agilefant.model.AgilefantRevisionEntity;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
+import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 
 
 /**
@@ -48,6 +54,10 @@ public class BacklogBusinessTest extends MockedTestCase {
     private ProductDAO productDAO;
     @Mock
     private StoryDAO storyDAO;
+    @Mock
+    private StoryBusiness storyBusiness;
+    @Mock
+    private BacklogHistoryDAO backlogHistoryDAO;
     
     @Test
     @DirtiesContext
@@ -228,5 +238,140 @@ public class BacklogBusinessTest extends MockedTestCase {
         iter.setEndDate(endDate);
         float percentage = backlogBusiness.calculateBacklogTimeframePercentageLeft(iter);
         assertEquals(1f, percentage, 1000);
+    }
+    
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_empty() {
+        Iteration iteration = new Iteration();
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        replayAll();
+        List<Story> actual = this.backlogBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_oneAdded() {
+        Iteration iteration = new Iteration();
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        Story current = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        expect(this.storyBusiness.retrieveIfExists(1)).andReturn(current);
+        
+        replayAll();
+        List<Story> actual = this.backlogBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertSame(current, actual.get(0));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_addedAndDeleted() {
+        Iteration iteration = new Iteration();
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        AgilefantRevisionEntity deletedRevision = new AgilefantRevisionEntity();
+        deletedRevision.setTimestamp(new DateTime(2010,1,20,0,0,0,0).getMillis());
+        AgilefantHistoryEntry deletedEntry = new AgilefantHistoryEntry(1, RevisionType.DEL, deletedRevision);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(Arrays.asList(deletedEntry));
+        
+        replayAll();
+        List<Story> actual = this.backlogBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_addedBeforeStart() {
+        Iteration iteration = new Iteration();
+        iteration.setStartDate(new DateTime(2010,2,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,4,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        
+        replayAll();
+        List<Story> actual = this.backlogBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(0, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_movedAfterEnd() {
+        Iteration iteration = new Iteration();
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        AgilefantRevisionEntity deletedRevision = new AgilefantRevisionEntity();
+        deletedRevision.setTimestamp(new DateTime(2010,2,20,0,0,0,0).getMillis());
+        AgilefantHistoryEntry deletedEntry = new AgilefantHistoryEntry(1, RevisionType.DEL, deletedRevision);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(Arrays.asList(deletedEntry));
+        expect(this.storyBusiness.retrieveIfExists(1)).andReturn(added);
+        
+        replayAll();
+        List<Story> actual = this.backlogBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertEquals(1, actual.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testRetrieveUnexpectedStories_deletedAfterEnd() {
+        Iteration iteration = new Iteration();
+        iteration.setStartDate(new DateTime(2010,1,1,0,0,0,0));
+        iteration.setEndDate(new DateTime(2010,2,1,0,0,0,0));
+        
+        Story added = new Story();
+        added.setId(1);
+        AgilefantRevisionEntity addedRevision = new AgilefantRevisionEntity();
+        addedRevision.setTimestamp(new DateTime(2010,1,15,0,0,0,0).getMillis());
+        AgilefantHistoryEntry addedEntry = new AgilefantHistoryEntry(added, addedRevision, RevisionType.ADD);
+        
+        expect(this.backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(addedEntry));
+        expect(this.backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        expect(this.storyBusiness.retrieveIfExists(1)).andReturn(null);
+        
+        replayAll();
+        List<Story> actual = this.backlogBusiness.retrieveUnexpectedStories(iteration);
+        verifyAll();
+        assertSame(added, actual.get(0));
     }
 }

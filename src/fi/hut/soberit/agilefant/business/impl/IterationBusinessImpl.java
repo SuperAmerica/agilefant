@@ -30,6 +30,7 @@ import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
+import fi.hut.soberit.agilefant.db.history.IterationHistoryDAO;
 import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
@@ -83,6 +84,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private BacklogHistoryDAO backlogHistoryDAO;
     @Autowired
     private StoryHistoryDAO storyHistoryDAO;
+    @Autowired
+    private IterationHistoryDAO iterationHistoryDAO;
     
     public IterationBusinessImpl() {
         super(Iteration.class);
@@ -502,58 +505,39 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
     
     @SuppressWarnings("unchecked")
-    public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(Iteration iteration) {
-        List<AgilefantHistoryEntry> added = this.backlogHistoryDAO.retrieveAddedStories(iteration);
-        List<AgilefantHistoryEntry> deleted = this.backlogHistoryDAO.retrieveDeletedStories(iteration);
-        for(AgilefantHistoryEntry entry : deleted) {
-            Story story = this.storyHistoryDAO.retrieveClosestRevision(entry.getObjectId(), entry.getRevision().getId());
+    public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(
+            Iteration iteration) {
+        List<AgilefantHistoryEntry> added = this.backlogHistoryDAO
+                .retrieveAddedStories(iteration);
+        List<AgilefantHistoryEntry> deleted = this.backlogHistoryDAO
+                .retrieveDeletedStories(iteration);
+        for (AgilefantHistoryEntry entry : deleted) {
+            Story story = this.storyHistoryDAO.retrieveClosestRevision(entry
+                    .getObjectId(), entry.getRevision().getId());
             entry.setObject(story);
         }
         List<AgilefantHistoryEntry> ret = new ArrayList<AgilefantHistoryEntry>();
         ret.addAll(added);
         ret.addAll(deleted);
-        Collections.sort(ret, new PropertyComparator("revision.timestamp", true, false));
+        Collections.sort(ret, new PropertyComparator("revision.timestamp",
+                true, false));
         return ret;
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public List<Story> retrieveUnexpectedStories(Iteration iteration) {
-        List<AgilefantHistoryEntry> added = this.backlogHistoryDAO
-                .retrieveAddedStories(iteration);
-        List<AgilefantHistoryEntry> deleted = this.backlogHistoryDAO
-                .retrieveDeletedStories(iteration);
 
-        List<Integer> removedDuringIteration = new ArrayList<Integer>();
-        for (AgilefantHistoryEntry entry : deleted) {
-            if (entry.getRevisionDate().isAfter(iteration.getStartDate())
-                    && entry.getRevisionDate().isBefore(iteration.getEndDate())) {
-                removedDuringIteration.add(entry.getObjectId());
-            }
+    public Set<Task> retrieveUnexpectedSTasks(Iteration iteration) {
+        Set<Integer> initialTaskIds = this.iterationHistoryDAO
+                .retrieveInitialTasks(iteration);
+        Set<Task> currentTasks = new HashSet<Task>(iteration.getTasks());
+        for (Story story : iteration.getStories()) {
+            currentTasks.addAll(story.getTasks());
         }
 
-        List<Story> unexpectedStories = new ArrayList<Story>();
-        for (AgilefantHistoryEntry entry : added) {
-            if (entry.getRevisionDate().isAfter(iteration.getStartDate())
-                    && entry.getRevisionDate().isBefore(iteration.getEndDate())
-                    && !removedDuringIteration.contains(entry.getObjectId())) {
-                unexpectedStories.add((Story) entry.getObject());
+        Set<Task> newTasks = new HashSet<Task>();
+        for (Task task : currentTasks) {
+            if (!initialTaskIds.contains(task.getId())) {
+                newTasks.add(task);
             }
         }
-        
-        // update stories to their current revisions if possible (the story has
-        // not been deleted)
-        List<Story> unexpected = new ArrayList<Story>();
-        for (Story story : unexpectedStories) {
-            Story current = this.storyBusiness.retrieveIfExists(story.getId());
-            if (current != null) {
-                unexpected.add(current);
-            } else {
-                unexpected.add(story);
-            }
-        }
-
-        return unexpected;
+        return newTasks;
     }
 }

@@ -9,11 +9,11 @@ import org.joda.time.LocalDate;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
-import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
-import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 
 public interface IterationBusiness extends GenericBusiness<Iteration> {
 
@@ -41,12 +41,5 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
 
     public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(
             Iteration iteration);
-
-    /**
-     * Retrieve stories that have been added to the iteration after the
-     * iteration has started, but have not been removed from the iteration
-     * before the iteration ended. Notice: will return stories which have been
-     * removed from the iteration after iteration has ended.
-     */
-    public List<Story> retrieveUnexpectedStories(Iteration iteration);
+    public Set<Task> retrieveUnexpectedSTasks(Iteration iteration);
 }

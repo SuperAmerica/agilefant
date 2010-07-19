@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import org.joda.time.Days;
@@ -8,6 +9,7 @@ import org.joda.time.Days;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Schedulable;
+import fi.hut.soberit.agilefant.model.Story;
 
 /**
  * This description contains generic information on <code>Business</code>
@@ -63,4 +65,12 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
     
     public Days daysLeftInSchedulableBacklog(Schedulable backlog);
     public float calculateBacklogTimeframePercentageLeft(Schedulable backlog);
+    
+    /**
+     * Retrieve stories that have been added to the iteration after the
+     * iteration has started, but have not been removed from the iteration
+     * before the iteration ended. Notice: will return stories which have been
+     * removed from the iteration after iteration has ended.
+     */
+    public List<Story> retrieveUnexpectedStories(Schedulable backlog);
 }

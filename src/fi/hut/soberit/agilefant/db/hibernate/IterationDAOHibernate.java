@@ -23,7 +23,6 @@ import org.joda.time.DateTime;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.IterationDAO;
-import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
@@ -273,13 +272,13 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         
         for(Object[] row : taskData) {
             Story story = (Story)row[0];
-            ExactEstimate el = (ExactEstimate)row[1];
-            ExactEstimate oe = (ExactEstimate)row[2];
+//            ExactEstimate el = (ExactEstimate)row[1];
+//            ExactEstimate oe = (ExactEstimate)row[2];
             result.put(story.getId(), new StoryMetrics());
-            if(el != null)
-                result.get(story.getId()).setEffortLeft(el.longValue());
-            if(oe != null)
-                result.get(story.getId()).setOriginalEstimate(oe.longValue());
+            if(row[1] != null)
+                result.get(story.getId()).setEffortLeft((Long)row[1]);
+            if(row[2] != null)
+                result.get(story.getId()).setOriginalEstimate((Long)row[2]);
         }
         
         for (Object[] row : storySpentEffortData) {

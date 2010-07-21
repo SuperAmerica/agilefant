@@ -17,7 +17,7 @@ $(document).ready(function() {
     $("#productWidget").stop().animate({"marginTop": offset + "px"},"slow");
   });
 
-
+  $('#filterByTime').click();
 });
 </script>
 

@@ -166,7 +166,7 @@ $(document).ready(function() {
   var filterByTime = function() {
     var filterStartDate = Date.fromString($('#startDateInput').val());
     var filterEndDate = Date.fromString($('#endDateInput').val()); 
-    
+
     $('.scheduled').each(function() {
       var me = $(this);
       var startDate = Date.fromString(me.find('input[name=startDate]').val());
@@ -181,25 +181,50 @@ $(document).ready(function() {
     });
 
     /* Save to cookie */
-    var cookieData = [ filterStartDate.asString().substr(0,10), filterEndDate.asString().substr(0,10) ];
+    var cookieData = [ filterStartDate.getTime(), filterEndDate.getTime() ];
     jQuery.cookie('agilefant_productleafstories_timeframe_${product.id}', cookieData);
   };
   
-  $('#filterByTime').click(filterByTime);
+  $('#filterByTime').click(function() {
+    $('#productTimelineSlider').slider("values",[ Date.fromString($("#startDateInput").val()).getTime(), Date.fromString($("#endDateInput").val()).getTime() ]);
+    filterByTime();
+  });
   
   /* Get the dates from cookie */
   var timeframeCookie = jQuery.cookie('agilefant_productleafstories_timeframe_${product.id}');
+  var start = new Date(${defaultStartDate.millis});
+  var end = new Date(${defaultEndDate.millis});
   if (timeframeCookie) {
     var cookieData = timeframeCookie.split(',');
-    var start = cookieData[0];
-    var end = cookieData[1];
-    
+    start = new Date(parseInt(cookieData[0],10));
+    end = new Date(parseInt(cookieData[1],10));
+
     /* Set the textfields to match the cookie */
-    $('#startDateInput').val(start);
-    $('#endDateInput').val(end);
+    $('#startDateInput').val(start.asString().substr(0,10));
+    $('#endDateInput').val(end.asString().substr(0,10));
   }
   
-  $('#filterByTime').click();
+  
+  <c:if test="${scheduleStart != null && scheduleEnd != null}">
+  $('#productTimelineSlider').slider({
+    range: true,
+    min: ${scheduleStart.millis},
+    max: ${scheduleEnd.millis},
+    values: [ start.getTime(), end.getTime() ],
+    step: 86400000,
+    slide: function(event, ui) {
+      var sliderStart = new Date(ui.values[0]);
+      var sliderEnd = new Date(ui.values[1]);
+
+      $('#startDateInput').val(sliderStart.asString().substr(0,10));
+      $('#endDateInput').val(sliderEnd.asString().substr(0,10));
+
+      filterByTime();
+    }
+  });
+
+  </c:if>
+
 });
 
 </script>
@@ -218,22 +243,37 @@ $(document).ready(function() {
 <form onsubmit="return false;">
   <div class="details" id="storyTreeContainer" style="position: relative;"></div>
   <div class="details" id="leafStories" style="position: relative;">
-    <div class="static">
-      <h2>Product's leaf stories</h2>
-      <p>
-        Display backlogs from
-        <input type="text" name="startDate" id="startDateInput" size="8" value='<joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" />'/> to
-        <input type="text" name="endDate" id="endDateInput" size="8" value='<joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" />' />
-        <button class="dynamics-button" id="filterByTime">Filter</button>
-         
-      </p>
-    </div>
-    <div class="overlay loadingOverlay">
-      <div><img src="static/img/pleasewait.gif" /> Please wait... </div>
-    </div>
-    <div class="content">
-      
-    </div>
+    
+    <c:choose>
+    <c:when test="${empty product.children}">
+      <div class="static">
+        <h2>Product's leaf stories</h2>
+        <p>This product has no projects</p>
+      </div>
+    </c:when>
+    <c:otherwise>
+      <div class="static">
+        <h2>Product's leaf stories</h2>
+        <div>
+          Display backlogs from
+          <input type="text" name="startDate" id="startDateInput" size="8" value='<joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" />'/> to
+          <input type="text" name="endDate" id="endDateInput" size="8" value='<joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" />' />
+          <button class="dynamics-button" id="filterByTime">Filter</button>
+          
+          <p style="font-size: 8pt; color: #666;">Product timeline</p>
+          <div id="productTimelineSlider"> </div>
+          
+        </div>
+      </div>
+      <div class="overlay loadingOverlay">
+        <div><img src="static/img/pleasewait.gif" /> Please wait... </div>
+      </div>
+      <div class="content">
+        
+      </div>
+    </c:otherwise>
+    </c:choose>
+    
   </div>
   <div class="details" id="projects"></div>
 </form>

@@ -17,7 +17,6 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
-import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.Pair;
 

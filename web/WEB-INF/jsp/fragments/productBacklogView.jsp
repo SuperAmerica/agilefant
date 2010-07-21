@@ -28,7 +28,7 @@ $(document).ready(function() {
 <ul class="widgetList">
   <li class="widget productWidget staticWidget droppableWidget" id="productWidget" backlogid="${product.id}">
     <struct:widget name="${product.name}" widgetId="-1">
-      <ul class="storyList">
+      <ul class="storyList" style="min-height: 20px;">
         <c:forEach items="${product.leafStories}" var="story">
           <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
         </c:forEach>

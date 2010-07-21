@@ -3,7 +3,7 @@
 <%
 org.joda.time.DateTime now = new org.joda.time.DateTime();
 pageContext.setAttribute("defaultStartDate", now.minusWeeks(2));
-pageContext.setAttribute("defaultEndDate", now.plusWeeks(4));
+pageContext.setAttribute("defaultEndDate", now.plusMonths(3));
 %>
 
 

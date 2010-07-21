@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ import fi.hut.soberit.agilefant.transfer.ProductTO;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.Scheduled;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
+import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.StoryComparator;
 
 @Service("productBusiness")
@@ -224,5 +226,9 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
                     (IterationTO) backlogTO);
         }
         return backlogTO;
+    }
+
+    public Pair<DateTime, DateTime> calculateProductSchedule(Product product) {
+        return productDAO.retrieveScheduleStartAndEnd(product);
     }
 }

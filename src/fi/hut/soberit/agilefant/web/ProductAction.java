@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.util.Pair;
 
 @Component("productAction")
 @Scope("prototype")
@@ -35,6 +37,9 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
     private List<ProjectTO> childBacklogs = new ArrayList<ProjectTO>();
     
     private List<Story> stories = new ArrayList<Story>();
+    
+    private DateTime scheduleStart;
+    private DateTime scheduleEnd;
 
     public String create() {
         productId = 0;
@@ -49,6 +54,9 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
 
     public String retrieve() {
         product = productBusiness.retrieve(productId);
+        Pair<DateTime, DateTime> schedule = productBusiness.calculateProductSchedule(product);
+        this.scheduleEnd = schedule.second;
+        this.scheduleStart = schedule.first;
         return Action.SUCCESS;
     }
     
@@ -121,6 +129,14 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
 
     public List<ProjectTO> getChildBacklogs() {
         return childBacklogs;
+    }
+
+    public DateTime getScheduleStart() {
+        return scheduleStart;
+    }
+
+    public DateTime getScheduleEnd() {
+        return scheduleEnd;
     }
 
 }

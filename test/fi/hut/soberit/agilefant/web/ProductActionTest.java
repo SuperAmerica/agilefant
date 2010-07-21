@@ -10,6 +10,7 @@ import static org.junit.Assert.assertSame;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +19,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.transfer.ProductTO;
+import fi.hut.soberit.agilefant.util.Pair;
 
 public class ProductActionTest {
 
@@ -60,10 +62,14 @@ public class ProductActionTest {
     @Test
     public void testRetrieve() {
         productAction.setProductId(1);
+        Pair<DateTime, DateTime> schedule = new Pair<DateTime, DateTime>(new DateTime(), new DateTime());
         expect(productBusiness.retrieve(1)).andReturn(product);
+        expect(productBusiness.calculateProductSchedule(product)).andReturn(schedule);
         replayAll();
         productAction.retrieve();
         assertEquals(product, productAction.getProduct());
+        assertSame(schedule.first, productAction.getScheduleStart());
+        assertSame(schedule.second, productAction.getScheduleEnd());
         verifyAll();
     }
 

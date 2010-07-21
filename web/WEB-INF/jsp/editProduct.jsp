@@ -1,10 +1,77 @@
 <%@ include file="./inc/_taglibs.jsp"%>
 
-<struct:htmlWrapper navi="backlog">
+<%
+org.joda.time.DateTime now = new org.joda.time.DateTime();
+pageContext.setAttribute("defaultStartDate", now.minusWeeks(2));
+pageContext.setAttribute("defaultEndDate", now.plusWeeks(4));
+%>
 
+
+<struct:htmlWrapper navi="backlog">
+<jsp:attribute name="includeInHeader">
+  
 <script type="text/javascript" src="static/js/widgets/agilefantWidget.js"></script>
 
+<style type="text/css">
+.placeholder {
+  height: 1em;
+  width: 100%;
+  background: #ffc;
+  border: 1px dashed #ccc; 
+}
+.widgetContainer {
+  width: 33% !important;
+}
+.widget {
+  min-width: 200px !important;
+}
+.widgetHeader, .widgetHeader > div {
+  cursor: auto !important;
+}
+.productWidget {
+  max-height: 600px !important;
+}
+.productWidget .widgetContent {
+  max-height: 500px !important;
+}
+.storyList {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.storyList li {
+  list-style-type: none;
+  margin-bottom: 3px;
+  cursor: move;
+  font-weight: normal !important;
+}
+.storyList li:hover {
+  font-weight: bold;
+}.
+.ui-draggable-dragging {
+  list-style-type: none !important;
+  white-space: normal !important;
+  max-width: 200px !important;
+}
+.ui-droppable-widget-hover {
+  background-color: #e5f0f9;
+  background-image: url('static/img/ui/ui-widget-droppable-gradient.png');
+  background-repeat: repeat-x;
+  font-weight: bold;
+  color: #1d5987;
+}
+.timeframe {
+  font-size: 8pt;
+  margin-bottom: 5px;
+}
+.timeframe span {
+  color: #666;
+}
+</style>
+  
+</jsp:attribute>
 
+<jsp:body>
 
 <aef:backlogBreadCrumb backlog="${product}" />
 
@@ -81,8 +148,58 @@ $(document).ready(function() {
     });
   };
 
- $('#productActions').click(function() { openMenu(); });
+  $('#productActions').click(function() { openMenu(); });
 
+  /**
+   * DATE FILTER TO LEAF STORIES
+   */
+ 
+  var datepickerOptions = {
+    dateFormat: 'yy-mm-dd',
+    numberOfMonths: 3,
+    restrictInput: true
+  };
+ 
+  $('#startDateInput').datepicker(datepickerOptions);
+  $('#endDateInput').datepicker(datepickerOptions);
+
+  var filterByTime = function() {
+    var filterStartDate = Date.fromString($('#startDateInput').val());
+    var filterEndDate = Date.fromString($('#endDateInput').val()); 
+    
+    $('.scheduled').each(function() {
+      var me = $(this);
+      var startDate = Date.fromString(me.find('input[name=startDate]').val());
+      var endDate = Date.fromString(me.find('input[name=endDate]').val());
+      
+      if (endDate.before(filterStartDate) || startDate.after(filterEndDate)) {
+        me.hide();
+      }
+      else {
+        me.show();
+      }
+    });
+
+    /* Save to cookie */
+    var cookieData = [ filterStartDate.asString().substr(0,10), filterEndDate.asString().substr(0,10) ];
+    jQuery.cookie('agilefant_productleafstories_timeframe_${product.id}', cookieData);
+  };
+  
+  $('#filterByTime').click(filterByTime);
+  
+  /* Get the dates from cookie */
+  var timeframeCookie = jQuery.cookie('agilefant_productleafstories_timeframe_${product.id}');
+  if (timeframeCookie) {
+    var cookieData = timeframeCookie.split(',');
+    var start = cookieData[0];
+    var end = cookieData[1];
+    
+    /* Set the textfields to match the cookie */
+    $('#startDateInput').val(start);
+    $('#endDateInput').val(end);
+  }
+  
+  $('#filterByTime').click();
 });
 
 </script>
@@ -100,9 +217,22 @@ $(document).ready(function() {
 
 <form onsubmit="return false;">
   <div class="details" id="storyTreeContainer" style="position: relative;"></div>
-  <div class="details" id="leafStories">
-    <div style="text-align:center; vertical-align: middle;">
-      <img src="static/img/pleasewait.gif" style="display: inline-block; vertical-align: middle;"/> Loading...
+  <div class="details" id="leafStories" style="position: relative;">
+    <div class="static">
+      <h2>Product's leaf stories</h2>
+      <p>
+        Display backlogs from
+        <input type="text" name="startDate" id="startDateInput" size="8" value='<joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" />'/> to
+        <input type="text" name="endDate" id="endDateInput" size="8" value='<joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" />' />
+        <button class="dynamics-button" id="filterByTime">Filter</button>
+         
+      </p>
+    </div>
+    <div class="overlay loadingOverlay">
+      <div><img src="static/img/pleasewait.gif" /> Please wait... </div>
+    </div>
+    <div class="content">
+      
     </div>
   </div>
   <div class="details" id="projects"></div>
@@ -111,5 +241,5 @@ $(document).ready(function() {
 </div>
 
 
-
+</jsp:body>
 </struct:htmlWrapper>

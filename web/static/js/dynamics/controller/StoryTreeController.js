@@ -221,21 +221,8 @@ StoryTreeController.prototype.initTree = function() {
   // Url params
   var me = this;
   
-  var overlay = $('<div><div style="border: 1px solid #ccc; display: inline-block; vertical-align: middle; margin-top: 5%; background-color: white;"><img src="static/img/pleasewait.gif" style="display: inline-block; vertical-align: middle;" /> Please wait...</div></div>').css({
-    "background-color": "#999999",
-    "position": "absolute",
-    "opacity": "0.5",
-    "border": "1px solid #666666",
-    "width": "100%",
-    "height": "100%",
-    "top": "0",
-    "left": "-1px",
-    "text-align": "center",
-    "vertical-align": "middle",
-    "-moz-border-radius": "5px",
-    "-webkit-border-radius": "5px",
-    "border-radius": "5px"
-  }).appendTo(this.parentElement);
+  var overlay = $('<div class="loadingOverlay"><div><img src="static/img/pleasewait.gif" /> Please wait...</div></div>')
+    .appendTo(this.parentElement).fadeIn();
   
   this.tree = $(this.element).jstree({
     plugins: [ "html_data", "themes", "types", "dnd", "crrm", "cookies", "ui", "search", "aefCheckbox" ],
@@ -262,7 +249,7 @@ StoryTreeController.prototype.initTree = function() {
           return data;
         },
         complete: function() {
-          overlay.fadeOut('fast');
+          overlay.fadeOut();
           me._searchByText();
           me.renderComplete();
         }

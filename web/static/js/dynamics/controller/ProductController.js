@@ -13,7 +13,9 @@ var ProductController = function ProductController(options) {
   this.iterationListElement = options.iterationListElement;
   this.assigmentListElement = options.assigmentListElement;
   this.hourEntryListElement = options.hourEntryListElement;
-  this.backlogsElement = options.backlogsElement;
+  this.backlogsContainer = options.backlogsElement;
+  this.backlogsElement = this.backlogsContainer.find('.content');
+  this.backlogsOverlay = this.backlogsContainer.find('.overlay');
   this.storyTreeElement = options.storyTreeElement;
   this.tabs = options.tabs;
   
@@ -82,7 +84,9 @@ ProductController.prototype.paintProductDetails = function() {
  */
 ProductController.prototype.paintLeafStories = function() {
   var me = this;
+  this.backlogsOverlay.fadeIn();
   this.backlogsElement.load('ajax/productBacklogView.action?productId=' + this.id, jQuery.proxy(function() {
+    this.backlogsOverlay.fadeOut();
     this.backlogsElement.find('.widgetList > li').each(function() {
       var staticWidget = $(this).hasClass('staticWidget');
       $(this).aefWidget({

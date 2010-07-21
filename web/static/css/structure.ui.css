@@ -51,7 +51,7 @@
 }
 
 .menu-collapsed #quickSearchLinkText {
-  display: none;  
+  display: none;
 }
 
 /**
@@ -378,15 +378,19 @@ div.smallBurndown {
 .load-maximum {
   background-color: rgba(150, 8, 8, 0.7);
 }
+
 .load-critical {
   background-color: rgba(224, 17, 2, 0.7);
 }
+
 .load-optimal-high {
   background-color: rgba(245, 221, 57, 0.7);
 }
+
 .load-optimal-low {
   background-color: rgba(9, 144, 14, 0.7);
 }
+
 .load-low {
   background-color: rgba(130, 180, 244, 0.7);
 }
@@ -394,26 +398,25 @@ div.smallBurndown {
 /**
  * AUTOCOMPLETE
  */
-
 ul.ui-autocomplete {
   max-width: 400px;
   list-style-type: none;
   margin: 0;
   padding: 0;
-  overflow: hidden;  
+  overflow: hidden;
 }
- 
+
 ul.ui-autocomplete li {
   white-space: nowrap;
   border-bottom: 1px solid #ccc;
 }
+
 ul.ui-autocomplete li a {
   display: block;
   padding: 0.3em;
   width: 100%;
-  height: 100%;  
+  height: 100%;
 }
-
 
 /**
  * QUICK SEARCH BOX
@@ -430,17 +433,18 @@ ul.ui-autocomplete li a {
 .quickSearchBox input {
   width: 15ex;
 }
+
 .ui-autocomplete-category {
-  font-weight:bold;
-  padding:.2em .4em;
-  margin:.8em 0 .2em;
-  line-height:1.5;
+  font-weight: bold;
+  padding: .2em .4em;
+  margin: .8em 0 .2em;
+  line-height: 1.5;
 }
 
 #quickSearchLink img {
   display: inline-block;
   vertical-align: middle;
-  margin-right: 0.2em;  
+  margin-right: 0.2em;
 }
 
 ul.quickSearchAutocompleteMenu {
@@ -459,7 +463,7 @@ ul.quickSearchAutocompleteMenu .topBorder {
 
 ul.quickSearchAutocompleteMenu li {
   border: none;
-  cursor: pointer !important;  
+  cursor: pointer !important;
 }
 
 ul.quickSearchAutocompleteMenu li a {
@@ -468,8 +472,9 @@ ul.quickSearchAutocompleteMenu li a {
   padding: 2px;
   width: auto;
   height: 100%;
-  vertical-align: middle;  
+  vertical-align: middle;
 }
+
 ul.quickSearchAutocompleteMenu li span.categoryName {
   display: inline-block;
   border-right: 1px solid #ccc;
@@ -485,28 +490,59 @@ ul.quickSearchAutocompleteMenu li span.categoryName {
  * BUTTONS
  */
 input.dynamics-button {
-  -moz-border-radius:5px;
-  -webkit-border-radius:5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
   border-radius: 5px;
   border: 1px solid #999;
-  
-  background-color:#fff;
+  background-color: #fff;
   background-image: url('../img/button_fade.png');
   background-position: 0 3px;
   background-repeat: repeat-x;
-  
   min-height: 1.8em;
   min-width: 6em;
   margin-right: 0.5em;
   padding: 3px 5px;
-  
-  white-space:nowrap !important;
+  white-space: nowrap !important;
   font-size: 80%;
   text-align: center;
-  
   cursor: pointer;
 }
-input.dynamics-button:focus, input.dynamics-button:hover {
+
+input.dynamics-button:focus,input.dynamics-button:hover {
   background: #eed;
 }
 
+/**
+ * OVERLAY FOR POSITION:RELATIVE BLOCKS
+ */
+.loadingOverlay {
+  background-color: #999999;
+  position: absolute;
+  z-index: 1500;
+  opacity: 0.5;
+  border: 1px solid #666666;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -1px;
+  text-align: center;
+  vertical-align: middle;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  display: none;
+}
+
+.loadingOverlay > div {
+  border: 1px solid #ccc;
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 5%;
+  background-color: white;
+  padding-right: 0.5em;
+}
+
+.loadingOverlay > div > img {
+  display: inline-block;
+  vertical-align: middle;
+}

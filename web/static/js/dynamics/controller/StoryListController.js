@@ -116,18 +116,27 @@ StoryListController.prototype.hideTasks = function() {
 
 StoryListController.prototype.confirmTasksToDone = function(model) {
   var changedData = model.getChangedData();
-  if (changedData.state && changedData.state === "DONE" && model.getTasks().length > 0) {
-    var msg = new DynamicsConfirmationDialog(
-        "Set all tasks' states to done?",
-        "Do you want to mark all tasks as done as well?",
-        function() {
-          model.currentData.tasksToDone = true;
-          model.commit();
-        },
-        function() {
-          model.commit();
-        }
-      );
+  var tasks = model.getTasks();
+  if (changedData.state && changedData.state === "DONE" && tasks.length > 0) {
+    var nonDoneTasks = false;
+    for (var i = 0; i < tasks.length; i++) {
+      if (tasks[i].getState() !== "DONE") {
+        nonDoneTasks = true;
+      }
+    }
+    if (nonDoneTasks) {
+      var msg = new DynamicsConfirmationDialog(
+          "Set all tasks' states to done?",
+          "Do you want to mark all tasks as done as well?",
+          function() {
+            model.currentData.tasksToDone = true;
+            model.commit();
+          },
+          function() {
+            model.commit();
+          }
+        );
+    }
   }
   else {
     model.commit();

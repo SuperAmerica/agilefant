@@ -17,6 +17,7 @@ DailyWorkStoryListController.prototype._getTableConfig = function() {
     },
     cssClass: "ui-widget-content ui-corner-all iteration-story-table",
     dataSource: DailyWorkModel.prototype.getAssignedStories,
+    beforeCommitFunction: StoryListController.prototype.confirmTasksToDone,    
     rowControllerFactory : StoryListController.prototype.storyControllerFactory
   });
   return config;

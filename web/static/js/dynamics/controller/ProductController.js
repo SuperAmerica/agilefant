@@ -15,7 +15,7 @@ var ProductController = function ProductController(options) {
   this.hourEntryListElement = options.hourEntryListElement;
   this.backlogsContainer = options.backlogsElement;
   this.backlogsElement = this.backlogsContainer.find('.content');
-  this.backlogsOverlay = this.backlogsContainer.find('.overlay');
+  this.backlogsOverlay = this.backlogsContainer.find('.loadingOverlay');
   this.storyTreeElement = options.storyTreeElement;
   this.tabs = options.tabs;
   

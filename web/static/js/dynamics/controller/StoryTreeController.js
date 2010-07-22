@@ -221,7 +221,7 @@ StoryTreeController.prototype.initTree = function() {
   // Url params
   var me = this;
   
-  var overlay = $('<div class="loadingOverlay"><div><img src="static/img/pleasewait.gif" /> Please wait...</div></div>')
+  var overlay = $('<div class="loadingOverlay"><div class="pleaseWait"><img src="static/img/pleasewait.gif" /> Please wait... </div><div class="overlay"></div></div>')
     .appendTo(this.parentElement).fadeIn();
   
   this.tree = $(this.element).jstree({

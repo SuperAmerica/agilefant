@@ -89,6 +89,29 @@ pageContext.setAttribute("defaultEndDate", now.plusMonths(3));
 
 
 <script type="text/javascript">
+var filterByTime = function() {
+  var filterStartDate = Date.fromString($('#startDateInput').val());
+  var filterEndDate = Date.fromString($('#endDateInput').val()); 
+
+  $('.scheduled').each(function() {
+    var me = $(this);
+    var startDate = Date.fromString(me.find('input[name=startDate]').val());
+    var endDate = Date.fromString(me.find('input[name=endDate]').val());
+    
+    if (endDate.before(filterStartDate) || startDate.after(filterEndDate)) {
+      me.hide();
+    }
+    else {
+      me.show();
+    }
+  });
+
+  /* Save to cookie */
+  var cookieData = [ filterStartDate.getTime(), filterEndDate.getTime() ];
+  jQuery.cookie('agilefant_productleafstories_timeframe_${product.id}', cookieData, {expires: 60});
+};
+
+
 $(document).ready(function() {
   $("#backlogInfo").tabs();
   $('#productContents').tabs({
@@ -163,31 +186,12 @@ $(document).ready(function() {
   $('#startDateInput').datepicker(datepickerOptions);
   $('#endDateInput').datepicker(datepickerOptions);
 
-  var filterByTime = function() {
-    var filterStartDate = Date.fromString($('#startDateInput').val());
-    var filterEndDate = Date.fromString($('#endDateInput').val()); 
 
-    $('.scheduled').each(function() {
-      var me = $(this);
-      var startDate = Date.fromString(me.find('input[name=startDate]').val());
-      var endDate = Date.fromString(me.find('input[name=endDate]').val());
-      
-      if (endDate.before(filterStartDate) || startDate.after(filterEndDate)) {
-        me.hide();
-      }
-      else {
-        me.show();
-      }
-    });
-
-    /* Save to cookie */
-    var cookieData = [ filterStartDate.getTime(), filterEndDate.getTime() ];
-    jQuery.cookie('agilefant_productleafstories_timeframe_${product.id}', cookieData);
-  };
   
   $('#filterByTime').click(function() {
     $('#productTimelineSlider').slider("values",[ Date.fromString($("#startDateInput").val()).getTime(), Date.fromString($("#endDateInput").val()).getTime() ]);
     filterByTime();
+    $('.togglable').toggle();
   });
   
   /* Get the dates from cookie */
@@ -201,13 +205,16 @@ $(document).ready(function() {
 
     /* Set the textfields to match the cookie */
     $('#startDateInput').val(start.asString().substr(0,10));
+    $('#startDateDisplay').text(start.asString().substr(0,10));
     $('#endDateInput').val(end.asString().substr(0,10));
+    $('#endDateDisplay').text(end.asString().substr(0,10));
   }
   
   
   <c:if test="${scheduleStart != null && scheduleEnd != null}">
   $('#productTimelineSlider').slider({
     range: true,
+    animate: true,
     min: ${scheduleStart.millis},
     max: ${scheduleEnd.millis},
     values: [ start.getTime(), end.getTime() ],
@@ -216,14 +223,24 @@ $(document).ready(function() {
       var sliderStart = new Date(ui.values[0]);
       var sliderEnd = new Date(ui.values[1]);
 
+      if (sliderStart.getTime() === sliderEnd.getTime()) {
+        return false;
+      }
+      
       $('#startDateInput').val(sliderStart.asString().substr(0,10));
+      $('#startDateDisplay').text(sliderStart.asString().substr(0,10));
       $('#endDateInput').val(sliderEnd.asString().substr(0,10));
-
+      $('#endDateDisplay').text(sliderEnd.asString().substr(0,10));
+      
       filterByTime();
     }
   });
 
+  $('#showInputs').click(function() {
+    $('.togglable').toggle();
+  });
   </c:if>
+
 
 });
 
@@ -255,19 +272,28 @@ $(document).ready(function() {
       <div class="static">
         <h2>Product's leaf stories</h2>
         <div>
-          Display backlogs from
-          <input type="text" name="startDate" id="startDateInput" size="10" value='<joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" />'/> to
-          <input type="text" name="endDate" id="endDateInput" size="10" value='<joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" />' />
-          <button class="dynamics-button" id="filterByTime">Filter</button>
-          
-          <p style="font-size: 8pt; color: #666;">Product timeline</p>
+          <p style="font-size: 8pt; color: #666;">
+            Displaying projects and iterations between
+            <span id="startDateDisplay" class="togglable"><joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" /></span>
+            <input type="text" style="display: none;" name="startDate" class="togglable" id="startDateInput" size="10" value='<joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" />'/>
+            
+            and
+            
+            <span id="endDateDisplay" class="togglable"><joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" /></span><span class="togglable">.</span>
+            <input type="text" style="display: none;" name="endDate" class="togglable" id="endDateInput" size="10" value='<joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" />' />
+            
+            <a href="#" id="showInputs" class="togglable linkColors">Change dates</a>
+            <button class="dynamics-button togglable" style="display: none;" id="filterByTime">Filter</button>
+          </p>
           <div id="productTimelineSlider"> </div>
+          
+          
           
         </div>
       </div>
-      <div class="overlay loadingOverlay">
-        <div><img src="static/img/pleasewait.gif" /> Please wait... </div>
-      </div>
+
+      <%@ include file="/WEB-INF/jsp/inc/overlay.jsp" %>
+
       <div class="content">
         
       </div>

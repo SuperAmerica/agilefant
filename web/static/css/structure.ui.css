@@ -516,6 +516,15 @@ input.dynamics-button:focus,input.dynamics-button:hover {
  * OVERLAY FOR POSITION:RELATIVE BLOCKS
  */
 .loadingOverlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;  
+  top: 0;
+  left: 0;
+  text-align: center;
+  display: none;
+}
+.loadingOverlay > .overlay {
   background-color: #999999;
   position: absolute;
   z-index: 1500;
@@ -530,19 +539,21 @@ input.dynamics-button:focus,input.dynamics-button:hover {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  display: none;
 }
 
-.loadingOverlay > div {
+.loadingOverlay > .pleaseWait {
   border: 1px solid #ccc;
+  z-index: 1501;
+  position: relative;
   display: inline-block;
   vertical-align: middle;
   margin-top: 5%;
   background-color: white;
   padding-right: 0.5em;
+  color: #666;
 }
 
-.loadingOverlay > div > img {
+.loadingOverlay > .pleaseWait > img {
   display: inline-block;
   vertical-align: middle;
 }

@@ -68,13 +68,20 @@ h4 {
 }
 
 /* LINKS */
+
 a:link, a:visited {
   color: #1E5EEE;
   text-decoration: none;
 }
+.linkColors:link, .linkColors:visited, .linkColors:active, .linkColors {
+  color: #1E5EEE !important;
+}
+.linkColors:hover {
+  color: #e50 !important;  
+}
 
 a:hover,a:active {
-  color: #e50;
+  
 }
 
 .referenceLink {

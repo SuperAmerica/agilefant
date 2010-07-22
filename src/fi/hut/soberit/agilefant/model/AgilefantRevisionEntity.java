@@ -12,6 +12,9 @@ import fi.hut.soberit.agilefant.db.history.impl.AgilefantRevisionListener;
 @RevisionEntity(AgilefantRevisionListener.class)
 @Table(name="agilefant_revisions")
 public class AgilefantRevisionEntity extends DefaultRevisionEntity {
+    
+    private static final long serialVersionUID = 5256226401100437772L;
+    
     private String userName = "";
     private int userId;
 

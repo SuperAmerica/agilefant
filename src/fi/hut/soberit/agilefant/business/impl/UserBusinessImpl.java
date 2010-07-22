@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Holiday;
@@ -35,7 +34,6 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
 public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         UserBusiness {
 
-    private StoryDAO storyDAO;
     private UserDAO userDAO;
     
     private TeamBusiness teamBusiness;
@@ -48,11 +46,6 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     public void setUserDAO(UserDAO userDAO) {
         this.genericDAO = userDAO;
         this.userDAO = userDAO;
-    }
-
-    @Autowired
-    public void setStoryDAO(StoryDAO storyDAO) {
-        this.storyDAO = storyDAO;
     }
 
     @Autowired
@@ -82,11 +75,6 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         return userDAO.listUsersByEnabledStatus(true);
     }
 
-    @Transactional(readOnly = true)
-    public boolean hasUserCreatedStories(User user) {
-        return storyDAO.countByCreator(user) > 0;
-    }
-    
     @Transactional
     public User storeUser(User data, Set<Integer> teamIds, String password, String passwordConfirm) {
         

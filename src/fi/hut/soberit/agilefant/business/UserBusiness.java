@@ -28,14 +28,6 @@ public interface UserBusiness extends GenericBusiness<User> {
      */
     User storeUser(User data, Set<Integer> teamIds, String password, String passwordConfirm);
 
-    /**
-     * Check if user is creator of any stories.
-     * 
-     * @param user
-     * @return true is user has created stories, false otherwise.
-     */
-    boolean hasUserCreatedStories(User user);
-
     User retrieveByLoginName(String loginName);
 
     public boolean isLoginNameUnique(String loginName);

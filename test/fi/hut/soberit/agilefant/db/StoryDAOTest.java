@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 @ContextConfiguration
 @Transactional
@@ -28,6 +29,8 @@ public class StoryDAOTest extends AbstractHibernateTests {
 
     @Autowired
     private StoryDAO storyDAO;
+    
+    
     
     @Test
     public void testGetStoryPointSumByBacklog_firstBacklog() {
@@ -70,10 +73,17 @@ public class StoryDAOTest extends AbstractHibernateTests {
         assertEquals(1, actual.size());
         assertEquals(1, (int) actual.get(1));
     }
+    
+    @Test
+    public void testGetNumberOfResponsiblesByStory_noStory() {
+        executeClassSql();
+        Map<Integer, Integer> actual = this.storyDAO.getNumOfResponsiblesByStory(null);
+        assertEquals(0, actual.size());
+        actual = this.storyDAO.getNumOfResponsiblesByStory(new HashSet<Integer>());
+        assertEquals(0, actual.size());
+    }
 
-   
 
-   
    @Test
    public void testGetAllIterationStoriesByResponsibleAndInterval() {
        executeClassSql();
@@ -129,5 +139,22 @@ public class StoryDAOTest extends AbstractHibernateTests {
        executeClassSql();
        List<Story> stories = storyDAO.searchByName(search);
        assertEquals(0, stories.size());
+   }
+   
+   
+   @Test
+   public void testCalculateMetrics() {
+       executeClassSql();
+       StoryMetrics actualMetrics = storyDAO.calculateMetrics(100);
+       assertEquals(150L, actualMetrics.getEffortLeft());
+       assertEquals(400L, actualMetrics.getOriginalEstimate());
+   }
+   
+   @Test
+   public void testCalculateMetrics_noTasks() {
+       executeClassSql();
+       StoryMetrics actualMetrics = storyDAO.calculateMetrics(4);
+       assertEquals(0L, actualMetrics.getEffortLeft());
+       assertEquals(0L, actualMetrics.getOriginalEstimate());    
    }
 }

@@ -18,6 +18,7 @@ INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (7, 3,    
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (8, 4,     5, 1, 'Story 8');
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (9, 4,  null, 1, 'Story 9');
 
+
 -- Create user --
 INSERT INTO users (id, enabled) VALUES (1, true);
 INSERT INTO story_user (story_id, user_id) VALUES(1, 1); -- in product --
@@ -36,4 +37,12 @@ INSERT INTO hourentries (id, dtype, minutesspent, user_id, task_id) VALUES (1, '
 
 -- Hour entries for story 2 --
 INSERT INTO hourentries (id, dtype, minutesspent, user_id, story_id) VALUES (13, 'StoryHourEntry', 20, 1, 2);
+
+
+-- Story metrics test data
+INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (100, 4,  null, 1, 'Story 10');
+
+INSERT INTO tasks (id, story_id, state, originalestimate, effortLeft) VALUES (100, 100, 1, 40, 30);
+INSERT INTO tasks (id, story_id, state, originalestimate, effortLeft) VALUES (101, 100, 0, 120, 120);
+INSERT INTO tasks (id, story_id, state, originalestimate, effortLeft) VALUES (102, 100, 5, 240, 0);
 

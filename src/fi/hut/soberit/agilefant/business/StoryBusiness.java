@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.List;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -32,8 +31,6 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     int create(Story story);
 
-    public List<Story> getStoriesByBacklog(Backlog backlog);
-    
     StoryMetrics calculateMetrics(Story story);
 
     /**

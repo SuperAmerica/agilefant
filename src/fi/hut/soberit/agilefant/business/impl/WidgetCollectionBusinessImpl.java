@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import fi.hut.soberit.agilefant.business.AgilefantWidgetBusiness;
 import fi.hut.soberit.agilefant.business.WidgetCollectionBusiness;
 import fi.hut.soberit.agilefant.db.WidgetCollectionDAO;
 import fi.hut.soberit.agilefant.model.AgilefantWidget;
@@ -20,9 +19,6 @@ public class WidgetCollectionBusinessImpl extends
         GenericBusinessImpl<WidgetCollection> implements WidgetCollectionBusiness {
 
     private WidgetCollectionDAO widgetCollectionDAO;
-    
-    @Autowired
-    private AgilefantWidgetBusiness agilefantWidgetBusiness;
     
     @Autowired
     public void setWidgetCollectionDAO(WidgetCollectionDAO widgetCollectionDAO) {

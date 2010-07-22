@@ -33,7 +33,6 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -79,11 +78,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public void setStoryDAO(StoryDAO storyDAO) {
         this.genericDAO = storyDAO;
         this.storyDAO = storyDAO;
-    }
-
-    @Transactional(readOnly = true)
-    public List<Story> getStoriesByBacklog(Backlog backlog) {
-        return storyDAO.getStoriesByBacklog(backlog);
     }
 
     @Transactional(readOnly = true)
@@ -514,27 +508,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     @Transactional(readOnly = true)
     public StoryMetrics calculateMetrics(Story story) {
-        StoryMetrics metrics = new StoryMetrics();
-        int tasks = 0;
-        int doneTasks = 0;
-        for (Task task : story.getTasks()) {
-            if (task.getOriginalEstimate() != null) {
-                metrics.setOriginalEstimate(metrics.getOriginalEstimate()
-                        + task.getOriginalEstimate().getMinorUnits());
-            }
-            if (task.getEffortLeft() != null) {
-                metrics.setEffortLeft(metrics.getEffortLeft()
-                        + task.getEffortLeft().getMinorUnits());
-            }
-            tasks += 1;
-            if (task.getState() == TaskState.DONE) {
-                doneTasks += 1;
-            }
-        }
-        metrics.setEffortSpent(hourEntryDAO.calculateSumByStory(story.getId()));
-        metrics.setDoneTasks(doneTasks);
-        metrics.setTotalTasks(tasks);
-        return metrics;
+        return this.calculateMetrics(story.getId());
     }
 
     @Transactional(readOnly = true)

@@ -1,20 +1,8 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -42,7 +30,12 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 import fi.hut.soberit.agilefant.util.TaskHandlingChoice;
+
+import static org.junit.Assert.*;
+
+import static org.easymock.EasyMock.*;
 
 public class StoryBusinessTest {
 
@@ -164,17 +157,6 @@ public class StoryBusinessTest {
     }
 
     
-    @Test
-    public void testGetStoriesByBacklog() {
-        List<Story> storiesList = Arrays.asList(story1, story2);
-        expect(storyDAO.getStoriesByBacklog(backlog)).andReturn(storiesList);
-        replayAll();
-        
-        assertSame(storiesList, storyBusiness.getStoriesByBacklog(backlog));
-        
-        verifyAll();
-    }
-        
     private void store_createMockStoryBusiness() {       
         this.storyBusiness = new StoryBusinessImpl() {
             @Override
@@ -599,9 +581,11 @@ public class StoryBusinessTest {
         StoryTO storyTo = new StoryTO(story1);
         expect(storyDAO.get(story1.getId())).andReturn(story1);
         expect(transferObjectBusiness.constructStoryTO(story1)).andReturn(storyTo);
+        expect(storyDAO.calculateMetrics(story1.getId())).andReturn(new StoryMetrics());
         expect(hourEntryDAO.calculateSumByStory(story1.getId())).andReturn(100l);
         replayAll();
         assertEquals(storyTo, storyBusiness.retrieveStoryWithMetrics(story1.getId()));
+        verifyAll();
     }
     
     @Test

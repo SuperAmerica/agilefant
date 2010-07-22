@@ -256,8 +256,8 @@ $(document).ready(function() {
         <h2>Product's leaf stories</h2>
         <div>
           Display backlogs from
-          <input type="text" name="startDate" id="startDateInput" size="8" value='<joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" />'/> to
-          <input type="text" name="endDate" id="endDateInput" size="8" value='<joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" />' />
+          <input type="text" name="startDate" id="startDateInput" size="10" value='<joda:format value="${defaultStartDate}" pattern="YYYY-MM-dd" />'/> to
+          <input type="text" name="endDate" id="endDateInput" size="10" value='<joda:format value="${defaultEndDate}" pattern="YYYY-MM-dd" />' />
           <button class="dynamics-button" id="filterByTime">Filter</button>
           
           <p style="font-size: 8pt; color: #666;">Product timeline</p>

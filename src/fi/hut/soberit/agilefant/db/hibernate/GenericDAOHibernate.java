@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -79,6 +80,9 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     
     /** {@inheritDoc} */
     public Collection<T> getMultiple(Collection<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new HashSet<T>();
+        }
         Criteria c = getCurrentSession().createCriteria(getPersistentClass());
         c.add(Restrictions.in("id", ids));
         return asCollection(c);

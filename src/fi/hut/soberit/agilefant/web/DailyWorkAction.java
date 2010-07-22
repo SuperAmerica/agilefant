@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +24,6 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
-import fi.hut.soberit.agilefant.util.UserComparator;
 
 @Component("dailyWorkAction")
 @Scope("prototype")
@@ -55,6 +55,7 @@ public class DailyWorkAction extends ActionSupport {
     private Task task;
 
     
+    @SuppressWarnings("unchecked")
     @Override
     public String execute() {
         if (userId == 0) {
@@ -64,7 +65,7 @@ public class DailyWorkAction extends ActionSupport {
         user = getDefaultUser();
 
         enabledUsers.addAll(userBusiness.getEnabledUsers());
-        Collections.sort(enabledUsers, new UserComparator());
+        Collections.sort(enabledUsers, new PropertyComparator("fullName", true, true));
         return Action.SUCCESS;
     }
     /**

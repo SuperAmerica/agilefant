@@ -21,14 +21,6 @@
 		</attribute>
 		<description>Wrapper for struts2 text tag</description>
 	</tag>
-	<tag>
-		<name>productList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.ProductListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Lists all products to variable productList
-	    </description>
-	</tag>
 	
 	<tag>
 		<name>existingObjects</name>
@@ -40,224 +32,6 @@
 	   </description>
 	</tag>
 	
-	<tag>
-		<name>userList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.UserListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Lists all users to variable userList
-	    </description>
-	</tag>
-	
-
-	<tag>
-		<name>teamList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.TeamListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Lists all teams to variable teamList
-	    </description>
-	</tag>
-	
-	<tag>
-    <name>enabledUserList</name>
-    <tag-class>fi.hut.soberit.agilefant.web.tag.EnabledUserListTag</tag-class>
-    <body-content>JSP</body-content>
-    <description>
-        Lists all enabled users to variable enabledUserList
-    </description>
-  </tag>
-	
-	<tag>
-		<name>priorityList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.PriorityListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>Lists all priorities</description>
-		<attribute>
-			<name>id</name>
-			<required>true</required>		
-		</attribute>
-	</tag>
-	
-	<tag>
-		<name>responsibleColumn</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.ResponsibleColumnTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Prints out a string of responsibles initials.
-		</description>
-		<attribute>
-			<name>storyId</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
-	
-	<tag>
-		<name>percentDone</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.PercentDoneTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Calculates story's percent done todos 
-	    </description>
-	    <attribute>
-	    	<name>storyId</name>
-	    	<required>true</required>
-	    	<rtexprvalue>true</rtexprvalue>
-	    </attribute>
-	</tag>
-	
-	<tag>
-		<name>storyPointFormat</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.StoryPointFormatTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Gets a story and transforms it's estimate to string.
-	    </description>
-	    <attribute>
-	    	<name>story</name>
-	    	<required>true</required>
-	    	<rtexprvalue>true</rtexprvalue>
-	    </attribute>
-	</tag>
-	
-	<tag>
-		<name>iterationList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Stores available iterations
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	</tag>
-	
-	
-	<tag>
-		<name>iterationList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.IterationListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Stores available iterations
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	</tag>
-	
-	
-	<tag>
-		<name>stateList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.StateListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Stores todos by state
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	    <attribute>
-	    	<name>storyId</name>
-	    	<required>true</required>
-	    	<rtexprvalue>true</rtexprvalue>
-	    </attribute>
-	</tag>
-	
-	
-	<tag>
-		<name>projectList</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.ProjectListTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Stores available projects
-	    </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	    
-	    </attribute>
-	</tag>
-	
-	<tag>
-		<name>hourEntries</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.HourEntryTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Get hour entries according to story
-	   </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	  
-	    </attribute>    
-	    <attribute>
-	    	<name>target</name>
-	    	<required>true</required>	    
-	    	<rtexprvalue>true</rtexprvalue> 
-	    </attribute>
-	</tag>
-
-	<tag>
-		<name>backlogHourEntrySums</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.BacklogHourEntrySumsTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Get hour entry sums by story for BL
-	   </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	  
-	    </attribute>  
-	    <attribute>
-	    	<name>groupBy</name>
-	    	<required>false</required>	  
-	    </attribute>  
-	    <attribute>
-	    	<name>target</name>
-	    	<required>true</required>	    
-	    	<rtexprvalue>true</rtexprvalue> 
-	    </attribute>
-	</tag>
-
-	<tag>
-		<name>userEffortSum</name>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.UserEffortSumTag</tag-class>
-		<body-content>JSP</body-content>
-		<description>
-			Calculate the user's hour entry sums for Today/Yesterday/This week/This month.
-	   </description>
-	    <attribute>
-	    	<name>id</name>
-	    	<required>true</required>	  
-	    </attribute>    
-	    <attribute>
-	    	<name>user</name>
-	    	<required>true</required>	    
-	    	<rtexprvalue>true</rtexprvalue> 
-	    </attribute>
-	    <attribute>
-	    	<name>timeInterval</name>
-	    	<required>true</required>
-	    </attribute>
-	</tag>
-	
-	<tag>
-		<name>resolveObjectNamespace</name>
-		<description>Resolve object name-space and include tag body if name-space can be resolved.</description>
-		<body-content>JSP</body-content>
-		<tag-class>fi.hut.soberit.agilefant.web.tag.ResolveObjectNamespaceTag</tag-class>
-		<attribute>
-			<name>var</name>
-			<required>true</required>
-		</attribute>
-		<attribute>
-			<name>item</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-	</tag>
 	
   <tag>
     <name>currentBacklog</name>
@@ -325,20 +99,10 @@
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isIteration(java.lang.Object)</function-signature>
 	</function>
-		<function>
-	  <name>isIterationGoal</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isIterationGoal(java.lang.Object)</function-signature>
-	</function>  	 
 	<function>
 	  <name>isStory</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isStory(java.lang.Object)</function-signature>
-	</function>  	 
-	<function>
-	  <name>isTodo</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isTodo(java.lang.Object)</function-signature>
 	</function>  	 
 	<function>
 	  <name>isUser</name>
@@ -347,28 +111,10 @@
 	</function>  	   	 
 	 	 
 	<function>
-	  <name>out</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String out(java.lang.String)</function-signature>
-	</function>  	 
-	 	 
-	<function>
 	  <name>subString</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String out(java.lang.String, int)</function-signature>
 	</function>  	 
-	 	 
-	<function>
-	  <name>nl2br</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String nl2br(java.lang.String)</function-signature>
-	</function>  	 
-	
-	<function>
-	  <name>escapeHTML</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String escapeHTML(java.lang.String)</function-signature>
-	</function>  
 	
 	<function>
 	  <name>dateTimeToFormattedString</name>
@@ -389,39 +135,21 @@
 	</function>
 	
 	<function>
-	  <name>html</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String htmlOut(java.lang.String)</function-signature>
-	</function> 
-	
-	<function>
 	  <name>minutesToString</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>String minutesToString(java.lang.Long)</function-signature>
 	</function> 
   
-     <function>
-      <name>estimateToHours</name>
-      <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-      <function-signature>String estimateToHours(fi.hut.soberit.agilefant.model.ExactEstimate)</function-signature>
-    </function>
-  	 	 
 	<function>
-	  <name>htmlSubString</name>
+	  <name>estimateToHours</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String htmlOut(java.lang.String, int)</function-signature>
-	</function>  	 
-	 
+	  <function-signature>String estimateToHours(fi.hut.soberit.agilefant.model.ExactEstimate)</function-signature>
+	</function>
+  	 	 
 	<function>
 	  <name>isBeforeThisDay</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>boolean isBeforeThisDay(org.joda.time.DateTime)</function-signature>
-	</function>
-	
-	<function>
-	  <name>isUserAssignedTo</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>boolean isUserAssignedTo(fi.hut.soberit.agilefant.model.Backlog, fi.hut.soberit.agilefant.model.User)</function-signature>
 	</function>
 	
 	<function>
@@ -443,30 +171,6 @@
     <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
     <function-signature>java.lang.String joinNamedObjects(java.util.Collection)</function-signature>
   </function>
-	
-	<function>
-	  <name>calculateAFTimeSum</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>fi.hut.soberit.agilefant.model.AFTime calculateAFTimeSum(fi.hut.soberit.agilefant.model.AFTime, fi.hut.soberit.agilefant.model.AFTime)</function-signature>
-	</function>
-	
-	<function>
-	  <name>currentTime</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String currentTime()</function-signature>
-	</function>
-	
-    <function>
-	  <name>timestampToString</name>
-	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-	  <function-signature>String timestampToString(java.sql.Timestamp)</function-signature>
-	</function>
-	
-	<function>
-		<name>stripHTML</name>
-		<function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
-		<function-signature>String stripHTML(java.lang.String)</function-signature>
-	</function>
 	
 	<function>
     <name>scheduleStatus</name>

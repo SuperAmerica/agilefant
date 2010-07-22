@@ -56,6 +56,11 @@ public abstract class GenericBusinessImpl<T> implements GenericBusiness<T> {
     public Collection<T> retrieveAll() {
         return genericDAO.getAll();
     }
+    
+    @Transactional(readOnly = true)
+    public Collection<T> retrieveMultiple(Collection<Integer> ids) {
+        return genericDAO.getMultiple(ids);
+    }
 
     @Transactional(readOnly = true)
     public T retrieveIfExists(int id) {

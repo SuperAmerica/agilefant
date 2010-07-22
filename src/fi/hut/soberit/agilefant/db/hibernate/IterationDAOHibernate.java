@@ -15,7 +15,6 @@ import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -43,15 +42,6 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
 
     public IterationDAOHibernate() {
         super(Iteration.class);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Collection<Task> getTasksWithoutStoryForIteration(Iteration iteration) {
-        DetachedCriteria crit = DetachedCriteria.forClass(Task.class);
-        crit.add(Restrictions.eq("iteration", iteration));
-        crit.add(Restrictions.isNull("story"));
-        //crit.setFetchMode("responsibles", FetchMode.JOIN);
-        return hibernateTemplate.findByCriteria(crit);
     }
 
     private Criteria addIterationRestriction(Criteria criteria,
@@ -143,15 +133,6 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
             Iteration iteration) {
         return getCounOfDoneAndAll(Story.class, StoryState.DONE, Arrays
                 .asList("backlog"), iteration);
-    }
-
-    public List<Iteration> retrieveIterationsByIds(Set<Integer> iterationIds) {
-        if (iterationIds == null || iterationIds.size() == 0) {
-            return Collections.emptyList();
-        }
-        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
-        crit.add(Restrictions.in("id", iterationIds));
-        return asList(crit);
     }
 
     public Map<Integer, Integer> getTotalAvailability(Set<Integer> iterationIds) {

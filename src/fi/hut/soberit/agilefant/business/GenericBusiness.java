@@ -13,6 +13,11 @@ public interface GenericBusiness<T> {
      */
     T retrieve(int id);
     
+    /**
+     * Retrieve multiple objects by id collection.
+     */
+    Collection<T> retrieveMultiple(Collection<Integer> ids);
+    
     public T retrieveDetached(int id);
 
     void store(T object);

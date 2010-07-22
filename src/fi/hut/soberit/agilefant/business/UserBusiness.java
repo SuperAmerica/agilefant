@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +55,5 @@ public interface UserBusiness extends GenericBusiness<User> {
      */
     public Duration calculateWorktimePerPeriod(User user, Interval interval);
     public ExactEstimate calculateWorkHoursPerPeriod(User user, Interval interval);
-
-    public Collection<User> retrieveMultiple(Set<Integer> userIds);
 
 }

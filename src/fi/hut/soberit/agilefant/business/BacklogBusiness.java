@@ -38,8 +38,6 @@ import fi.hut.soberit.agilefant.model.Story;
  */
 public interface BacklogBusiness extends GenericBusiness<Backlog> {
 
-    Collection<Backlog> retrieveMultiple(Collection<Integer> idList);
-
     /**
      * Get the number of backlog's child backlogs.
      */

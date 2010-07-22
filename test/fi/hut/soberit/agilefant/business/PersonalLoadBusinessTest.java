@@ -444,7 +444,7 @@ public class PersonalLoadBusinessTest {
         Capture<Set<Integer>> iterationIdsAvailSum = new Capture<Set<Integer>>();
 
         expect(
-                iterationDAO.retrieveIterationsByIds(EasyMock
+                iterationDAO.getMultiple(EasyMock
                         .capture(iterationIds))).andReturn(
                 Arrays.asList(iter1, iter2));
         expect(
@@ -492,7 +492,7 @@ public class PersonalLoadBusinessTest {
         expect(taskDAO.getUnassignedStoryTasksWithEffortLeft(user, interval))
                 .andReturn(Arrays.asList(transfer2, transfer3));
 
-        expect(iterationDAO.retrieveIterationsByIds(iterationIds)).andReturn(
+        expect(iterationDAO.getMultiple(iterationIds)).andReturn(
                 Arrays.asList(iter1, iter2));
         expect(iterationDAO.getTotalAvailability(iterationIds)).andReturn(
                 availabilitySums);

@@ -221,16 +221,6 @@ public class UserBusinessTest {
         assertEquals(0, teams.size());
     }
     
-    @Test
-    public void testRetrieveMultiple() {
-        Set<Integer> userIds = new HashSet<Integer>(Arrays.asList(1,2));
-        expect(userDAO.get(1)).andReturn(new User());
-        expect(userDAO.get(2)).andReturn(new User());
-        replayAll();
-        Collection<User> actual = userBusiness.retrieveMultiple(userIds);
-        verifyAll();
-        assertEquals(2, actual.size());
-    }
     
     @Test
     public void testIsLoginNameUnique() {

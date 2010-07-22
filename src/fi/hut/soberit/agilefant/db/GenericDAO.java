@@ -33,6 +33,16 @@ public interface GenericDAO<T> {
     T get(int id);
 
     /**
+     * Get multiple model objects of the type by id collection.
+     * 
+     * @param ids
+     *            the requested id collection
+     * @return collection of the given objects, or empty collection if none
+     *         found
+     */
+    Collection<T> getMultiple(Collection<Integer> ids); 
+    
+    /**
      * Get data model object of this type by id.
      * 
      * Will detach the object from Hibernate session.

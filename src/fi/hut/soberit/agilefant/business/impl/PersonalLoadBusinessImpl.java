@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -235,8 +236,8 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         for (UnassignedLoadTO row : rawUnassignedLoad) {
             iterationIds.add(row.iterationId);
         }
-        List<Iteration> iterations = this.iterationDAO
-                .retrieveIterationsByIds(iterationIds);
+        Collection<Iteration> iterations = this.iterationDAO.getMultiple(iterationIds);
+        
         // get availability sums per iteration
         Map<Integer, Integer> totalAvailabilities = this.iterationDAO
                 .getTotalAvailability(iterationIds);

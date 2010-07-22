@@ -1,12 +1,9 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
@@ -37,16 +34,6 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         criteria.createCriteria("children");
         criteria.setProjection(Projections.rowCount());
         return ((Long) criteria.list().get(0)).intValue();
-    }
-
-    @SuppressWarnings("unchecked")
-    public Collection<Backlog> retrieveMultiple(Collection<Integer> idList) {
-        if (idList == null || idList.isEmpty()) {
-            return new ArrayList<Backlog>();
-        }
-        DetachedCriteria crit = DetachedCriteria.forClass(Backlog.class);
-        crit.add(Restrictions.in("id", idList));
-        return hibernateTemplate.findByCriteria(crit);
     }
 
     @SuppressWarnings("unchecked")

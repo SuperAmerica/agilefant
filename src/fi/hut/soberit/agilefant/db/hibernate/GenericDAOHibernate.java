@@ -76,6 +76,13 @@ public abstract class GenericDAOHibernate<T> implements GenericDAO<T> {
     public Collection<T> getAll() {
         return hibernateTemplate.loadAll(getPersistentClass());
     }
+    
+    /** {@inheritDoc} */
+    public Collection<T> getMultiple(Collection<Integer> ids) {
+        Criteria c = getCurrentSession().createCriteria(getPersistentClass());
+        c.add(Restrictions.in("id", ids));
+        return asCollection(c);
+    }
 
     /** {@inheritDoc} */
     public void remove(int id) {

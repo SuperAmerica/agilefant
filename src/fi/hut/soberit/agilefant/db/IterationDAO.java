@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.db;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,8 +20,6 @@ import fi.hut.soberit.agilefant.util.StoryMetrics;
  */
 public interface IterationDAO extends GenericDAO<Iteration> {
 
-    public Collection<Task> getTasksWithoutStoryForIteration(Iteration iteration);
-
     public List<Task> getAllTasksForIteration(Iteration iteration);
 
     public Map<StoryState, Integer> countIterationStoriesByState(int iterationId);
@@ -31,8 +28,6 @@ public interface IterationDAO extends GenericDAO<Iteration> {
 
     public Pair<Integer, Integer> getCountOfDoneAndAllStories(
             Iteration iteration);
-
-    public List<Iteration> retrieveIterationsByIds(Set<Integer> iterationIds);
 
     public Map<Integer, Integer> getTotalAvailability(Set<Integer> iterationIds);
 

@@ -148,8 +148,6 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(storyRankBusiness.retrieveByRankingContext(iteration)).andReturn(stories);
         Map<Integer, StoryMetrics> emptyMetricsMap = Collections.emptyMap();
         expect(iterationDAO.calculateIterationDirectStoryMetrics(iteration)).andReturn(emptyMetricsMap);
-        expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
-            .andReturn(new ArrayList<Task>(Arrays.asList(new Task(), new Task())));
         Map<Integer, Long> emptyTaskMap = Collections.emptyMap();
         expect(iterationDAO.calculateIterationTaskEffortSpent(iteration)).andReturn(emptyTaskMap);
         
@@ -179,8 +177,6 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(storyRankBusiness.retrieveByRankingContext(iteration)).andReturn(stories);
         Map<Integer, StoryMetrics> emptyMetricsMap = Collections.emptyMap();
         expect(iterationDAO.calculateIterationDirectStoryMetrics(iteration)).andReturn(emptyMetricsMap);
-        expect(iterationDAO.getTasksWithoutStoryForIteration(iteration))
-            .andReturn(new ArrayList<Task>(Arrays.asList(new Task(), new Task())));
         Map<Integer, Long> emptyTaskMap = Collections.emptyMap();
         expect(iterationDAO.calculateIterationTaskEffortSpent(iteration)).andReturn(emptyTaskMap);
         

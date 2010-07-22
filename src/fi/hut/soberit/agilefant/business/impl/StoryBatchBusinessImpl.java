@@ -25,10 +25,7 @@ public class StoryBatchBusinessImpl implements StoryBatchBusiness {
             List<String> labelNames) {
         Set<Story> stories = new HashSet<Story>();
 
-        // retrieve stories
-        for (int storyId : storyIds) {
-            stories.add(storyBusiness.retrieve(storyId));
-        }
+        stories.addAll(storyBusiness.retrieveMultiple(storyIds));
 
         updateStates(state, stories);
 

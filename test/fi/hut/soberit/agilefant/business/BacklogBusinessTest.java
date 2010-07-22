@@ -73,23 +73,6 @@ public class BacklogBusinessTest extends MockedTestCase {
         verify(backlogDAO);
     }
 
-    @Test
-    @DirtiesContext
-    public void testRetrieveMultipleBacklogs() {
-        Collection<Integer> idList = Arrays.asList(1,2);
-        Collection<Backlog> retrievedBacklogs = new ArrayList<Backlog>();
-        Product prod1 = new Product();
-        Product prod2 = new Product();
-        retrievedBacklogs.add(prod1);
-        retrievedBacklogs.add(prod2);
-        
-        expect(backlogDAO.retrieveMultiple(idList)).andReturn(retrievedBacklogs);
-        replay(backlogDAO, productDAO);
-        
-        backlogBusiness.retrieveMultiple(idList);
-        
-        verify(backlogDAO, productDAO);
-    }
     
     @Test
     @DirtiesContext

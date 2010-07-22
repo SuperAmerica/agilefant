@@ -1,12 +1,10 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +19,10 @@ import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
+
+import static org.junit.Assert.*;
+
+import static org.easymock.EasyMock.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -41,12 +43,13 @@ public class StoryBatchBusinessTest extends MockedTestCase{
         Story story2 = new Story();
         story2.setId(2);
         
+        Set<Integer> storyIds = new HashSet<Integer>(Arrays.asList(1,2));
+        
         List<String> labels = new ArrayList<String>();
         labels.add("test");
         StoryState state = StoryState.IMPLEMENTED;
         
-        expect(storyBusiness.retrieve(1)).andReturn(story1);
-        expect(storyBusiness.retrieve(2)).andReturn(story2);
+        expect(storyBusiness.retrieveMultiple(storyIds)).andReturn(Arrays.asList(story1, story2));
         
         storyBusiness.store(story1);
         storyBusiness.store(story2);
@@ -55,7 +58,7 @@ public class StoryBatchBusinessTest extends MockedTestCase{
         labelBusiness.createStoryLabels(labels, 2);
         
         replayAll();
-        storyBatchBusiness.modifyMultiple(new HashSet<Integer>(Arrays.asList(1,2)), state, labels);
+        storyBatchBusiness.modifyMultiple(storyIds, state, labels);
         verifyAll();
         assertEquals(state, story1.getState());
         assertEquals(state, story2.getState());
@@ -69,16 +72,18 @@ public class StoryBatchBusinessTest extends MockedTestCase{
         Story story2 = new Story();
         story2.setId(2);
         
+        Set<Integer> storyIds = new HashSet<Integer>(Arrays.asList(1,2));
+
+        
         StoryState state = StoryState.IMPLEMENTED;
         
-        expect(storyBusiness.retrieve(1)).andReturn(story1);
-        expect(storyBusiness.retrieve(2)).andReturn(story2);
+        expect(storyBusiness.retrieveMultiple(storyIds)).andReturn(Arrays.asList(story1, story2));
 
         storyBusiness.store(story1);
         storyBusiness.store(story2);
         
         replayAll();
-        storyBatchBusiness.modifyMultiple(new HashSet<Integer>(Arrays.asList(1,2)), state, null);
+        storyBatchBusiness.modifyMultiple(storyIds, state, null);
         verifyAll();
         assertEquals(state, story1.getState());
         assertEquals(state, story2.getState());
@@ -92,13 +97,15 @@ public class StoryBatchBusinessTest extends MockedTestCase{
         Story story2 = new Story();
         story2.setId(2);
         
+        Set<Integer> storyIds = new HashSet<Integer>(Arrays.asList(1,2));
+
+        
         List<String> labels = new ArrayList<String>();
         
-        expect(storyBusiness.retrieve(1)).andReturn(story1);
-        expect(storyBusiness.retrieve(2)).andReturn(story2);
+        expect(storyBusiness.retrieveMultiple(storyIds)).andReturn(Arrays.asList(story1, story2));
         
         replayAll();
-        storyBatchBusiness.modifyMultiple(new HashSet<Integer>(Arrays.asList(1,2)), null, labels);
+        storyBatchBusiness.modifyMultiple(storyIds, null, labels);
         verifyAll();
 
         assertEquals(StoryState.NOT_STARTED, story1.getState());

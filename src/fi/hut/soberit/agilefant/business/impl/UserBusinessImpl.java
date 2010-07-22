@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -166,14 +165,5 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         User user = userDAO.get(id);
         user.setEnabled(true);  
     }
-
-    public Collection<User> retrieveMultiple(Set<Integer> userIds) {
-        Collection<User> users = new ArrayList<User>();
-        for(int userId : userIds) {
-            users.add(this.retrieve(userId));
-        }
-        return users;
-    }
-    
 
 }

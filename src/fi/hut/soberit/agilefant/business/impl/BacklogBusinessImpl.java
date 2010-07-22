@@ -58,11 +58,6 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         this.backlogDAO = backlogDAO;
     }
 
-    @Transactional(readOnly = true)
-    public Collection<Backlog> retrieveMultiple(Collection<Integer> idList) {
-        return backlogDAO.retrieveMultiple(idList);
-    }
-
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public int getNumberOfChildren(Backlog backlog) {

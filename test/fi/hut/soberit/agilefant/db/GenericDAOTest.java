@@ -1,7 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
-import static org.junit.Assert.*;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 import fi.hut.soberit.agilefant.test.SampleDAO;
 import fi.hut.soberit.agilefant.test.SampleEntity;
+
+import static org.junit.Assert.*;
 
 @ContextConfiguration
 @Transactional
@@ -51,6 +53,31 @@ public class GenericDAOTest extends AbstractHibernateTests {
         assertTrue(foundIds.contains(2));
         assertTrue(foundIds.contains(3));
         assertTrue(foundIds.contains(4));
+    }
+    
+    @Test
+    public void testGetMultiple() {
+        executeClassSql();
+        Collection<SampleEntity> entries = sampleDAO.getMultiple(Arrays.asList(1,3));
+        assertTrue(containsEntry(entries, 1, "Sample 1"));
+        assertTrue(containsEntry(entries, 3, "Sample 3"));
+    }
+    
+    @Test
+    public void testGetMultiple_noIds() {
+        executeClassSql();
+        Collection<SampleEntity> entries = sampleDAO.getMultiple(new ArrayList<Integer>());
+        assertNotNull(entries);
+        assertEquals(0, entries.size());
+    }
+    
+    private boolean containsEntry(Collection<SampleEntity> entities, int id, String name) {
+        for (SampleEntity e : entities) {
+            if (e.getId() == id && e.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
     
     @Test

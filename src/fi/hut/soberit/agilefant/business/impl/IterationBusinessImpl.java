@@ -182,8 +182,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         iterationTO.setRankedStories(rankedStories);
         // Set the tasks without a story
-        Collection<Task> tasksWithoutStory = iterationDAO
-                .getTasksWithoutStoryForIteration(iteration);
+        Collection<Task> tasksWithoutStory = iteration.getTasks();
 
         iterationTO.setTasks(new HashSet<Task>());
 

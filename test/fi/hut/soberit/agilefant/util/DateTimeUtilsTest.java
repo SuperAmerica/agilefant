@@ -43,7 +43,10 @@ public class DateTimeUtilsTest {
         assertDateEquals(original, 2010, 2, 6, 0, 0, 0, 0);
     }
     
-    
+    @Test
+    public void testRoundToNearestMidnight_null() {
+        assertNull(DateTimeUtils.roundToNearestMidnight(null));
+    }
 
     
     private void assertDateEquals(DateTime original, int year, int month,

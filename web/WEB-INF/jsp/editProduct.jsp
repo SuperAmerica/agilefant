@@ -285,7 +285,11 @@ $(document).ready(function() {
             <a href="#" id="showInputs" class="togglable linkColors">Change dates</a>
             <button class="dynamics-button togglable" style="display: none;" id="filterByTime">Filter</button>
           </p>
-          <div id="productTimelineSlider"> </div>
+          <div>
+            <div id="productTimelineSlider" style="margin-bottom: 0.4em;"> </div>
+            <div style="font-size: 8pt; color: #666; float: right; width: 12ex; text-align: right;"><joda:format value="${scheduleEnd}" pattern="YYYY-MM-dd" /></div>
+            <div style="font-size: 8pt; color: #666; float: left; width: 12ex;"><joda:format value="${scheduleStart}" pattern="YYYY-MM-dd" /></div>
+          </div>
           
           
           

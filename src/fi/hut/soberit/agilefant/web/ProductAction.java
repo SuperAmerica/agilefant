@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.util.DateTimeUtils;
 import fi.hut.soberit.agilefant.util.Pair;
 
 @Component("productAction")
@@ -55,8 +56,10 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
     public String retrieve() {
         product = productBusiness.retrieve(productId);
         Pair<DateTime, DateTime> schedule = productBusiness.calculateProductSchedule(product);
-        this.scheduleEnd = schedule.second;
-        this.scheduleStart = schedule.first;
+        // Round the dates
+        
+        this.scheduleEnd = DateTimeUtils.roundToNearestMidnight(schedule.second);
+        this.scheduleStart = DateTimeUtils.roundToNearestMidnight(schedule.first);
         return Action.SUCCESS;
     }
     

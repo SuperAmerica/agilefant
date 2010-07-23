@@ -19,6 +19,7 @@ import com.opensymphony.xwork2.Action;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.transfer.ProductTO;
+import fi.hut.soberit.agilefant.util.DateTimeUtils;
 import fi.hut.soberit.agilefant.util.Pair;
 
 public class ProductActionTest {
@@ -68,8 +69,8 @@ public class ProductActionTest {
         replayAll();
         productAction.retrieve();
         assertEquals(product, productAction.getProduct());
-        assertSame(schedule.first, productAction.getScheduleStart());
-        assertSame(schedule.second, productAction.getScheduleEnd());
+        assertEquals(DateTimeUtils.roundToNearestMidnight(schedule.first), productAction.getScheduleStart());
+        assertEquals(DateTimeUtils.roundToNearestMidnight(schedule.second), productAction.getScheduleEnd());
         verifyAll();
     }
 

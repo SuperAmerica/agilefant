@@ -57,7 +57,6 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
         product = productBusiness.retrieve(productId);
         Pair<DateTime, DateTime> schedule = productBusiness.calculateProductSchedule(product);
         // Round the dates
-        
         this.scheduleEnd = DateTimeUtils.roundToNearestMidnight(schedule.second);
         this.scheduleStart = DateTimeUtils.roundToNearestMidnight(schedule.first);
         return Action.SUCCESS;

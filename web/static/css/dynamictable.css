@@ -808,7 +808,7 @@ ul.dynamics-error-container {
   border-radius: 5px;
 }
 
-.dynamics-validation-invalid input, .dynamics-validation-invalid select {
+.dynamics-validation-invalid input, .dynamics-validation-invalid select, input.validation-error {
   border: 1px solid #c55;
   background-color: #fcc;
 }

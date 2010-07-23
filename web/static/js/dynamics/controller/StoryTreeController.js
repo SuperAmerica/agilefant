@@ -462,17 +462,21 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
       
       var dialog = new CreateDialog.StoryFromTree(mockModel, ajax);
     });
-    
-    $('<input type="button" value="save" />').appendTo(container).click(jQuery.proxy(function(event) {
-      event.stopPropagation();
-      event.preventDefault();
-      me.saveStory(refNode, position, node, { "story.name": nameField.val() }, parentStory);
-    }, this));
-    nameField.keyup(jQuery.proxy(function(event) {
-      if(event.keyCode === 13) {
+    var requestSave = function(event) {
+      if(jQuery.trim(nameField.val())) {
         event.stopPropagation();
         event.preventDefault();
         me.saveStory(refNode, position, node, { "story.name": nameField.val() }, parentStory);
+      } else {
+        nameField.addClass("validation-error"); 
+      }
+    };
+    $('<input type="button" value="save" />').appendTo(container).click(jQuery.proxy(function(event) {
+      requestSave(event);
+    }, this));
+    nameField.keyup(jQuery.proxy(function(event) {
+      if(event.keyCode === 13) {
+        requestSave(event);
       } else if(event.keyCode === 27) {
         cancelFunc();
       }    

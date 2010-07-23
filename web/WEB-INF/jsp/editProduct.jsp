@@ -111,7 +111,6 @@ var filterByTime = function() {
   jQuery.cookie('agilefant_productleafstories_timeframe_${product.id}', cookieData, {expires: 60});
 };
 
-
 $(document).ready(function() {
   $("#backlogInfo").tabs();
   $('#productContents').tabs({
@@ -212,6 +211,7 @@ $(document).ready(function() {
   
   
   <c:if test="${scheduleStart != null && scheduleEnd != null}">
+  var slideTimer = null;
   $('#productTimelineSlider').slider({
     range: true,
     animate: true,
@@ -220,9 +220,15 @@ $(document).ready(function() {
     values: [ start.getTime(), end.getTime() ],
     step: 86400000,
     slide: function(event, ui) {
+      // Clear previous timer
+      if (slideTimer) {
+        clearTimeout(slideTimer);
+      }
+      
+      // Update field
       var sliderStart = new Date(ui.values[0]);
       var sliderEnd = new Date(ui.values[1]);
-
+    
       if (sliderStart.getTime() === sliderEnd.getTime()) {
         return false;
       }
@@ -232,7 +238,10 @@ $(document).ready(function() {
       $('#endDateInput').val(sliderEnd.asString().substr(0,10));
       $('#endDateDisplay').text(sliderEnd.asString().substr(0,10));
       
-      filterByTime();
+      // Set the slide timer
+      slideTimer = setTimeout(function() {
+        filterByTime();
+      }, 300);
     }
   });
 
@@ -288,7 +297,7 @@ $(document).ready(function() {
           <div>
             <div id="productTimelineSlider" style="margin-bottom: 0.4em;"> </div>
             <div style="font-size: 8pt; color: #666; float: right; width: 12ex; text-align: right;"><joda:format value="${scheduleEnd}" pattern="YYYY-MM-dd" /></div>
-            <div style="font-size: 8pt; color: #666; float: left; width: 12ex;"><joda:format value="${scheduleStart}" pattern="YYYY-MM-dd" /></div>
+            <div style="font-size: 8pt; color: #666; width: 12ex;"><joda:format value="${scheduleStart}" pattern="YYYY-MM-dd" /></div>
           </div>
           
           

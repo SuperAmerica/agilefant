@@ -79,78 +79,79 @@ var toggleElement = function toggleElement(selector, type) {
     </div>
   </div>
 </div>
+<div class="possibleAction">
 
-<h3>Possible actions</h3>
-
-
-
-<style>
-.action-message {
-  border: 1px dashed #A6C9E2;
-  margin: 0.5em 0;
-  padding: 0.3em;
-}
-.action-message h4 {
-  margin-top: 0.5em;
-  margin-bottom: 0.3em;
-}
-.closable {
-  display: none;
-}
-</style>
-
-<ul style="list-style-type: none;">
-  
-    <%--
-  !! LEFT OUT CURRENTLY !!
+  <h3>Possible actions</h3>
   
   
-  <c:if test="${parentStoryConflict == true}">
-    <li>
-      <input type="checkbox" value="" name="moveParentsToProduct" onchange="toggleElement('#suggestion_moveParentsToProduct','moveParentsToProduct');return false;"/>
-      Move story's parents to product
-    </li>
-    <li id="suggestion_moveParentsToProduct" style="display: none;">
-      <div class="action-message">
-        <div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div>
-      </div>
-    </li>
-  </c:if>
-   --%>
   
+  <style>
+  .action-message {
+    border: 1px dashed #A6C9E2;
+    margin: 0.5em 0;
+    padding: 0.3em;
+  }
+  .action-message h4 {
+    margin-top: 0.5em;
+    margin-bottom: 0.3em;
+  }
+  .closable {
+    display: none;
+  }
+  </style>
   
-  <li>
-    <input type="radio" value="moveTargetStoryOnly" name="selectedAction" onchange="openElement('#suggestion_storyOnlyMessage','moveStoryOnly');return false;"/> 
-    Move the story and leave the children behind
-  </li>
+  <ul style="list-style-type: none;">
     
-  <li id="suggestion_storyOnlyMessage" class="closable">
-    <div class="action-message">
-      <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryOnly.jsp" %>
-      <%--<div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div> --%>
-    </div>
-  </li>
-  
-  
-  <c:if test="${!aef:isIteration(backlog)}">
+      <%--
+    !! LEFT OUT CURRENTLY !!
+    
+    
+    <c:if test="${parentStoryConflict == true}">
+      <li>
+        <input type="checkbox" value="" name="moveParentsToProduct" onchange="toggleElement('#suggestion_moveParentsToProduct','moveParentsToProduct');return false;"/>
+        Move story's parents to product
+      </li>
+      <li id="suggestion_moveParentsToProduct" style="display: none;">
+        <div class="action-message">
+          <div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div>
+        </div>
+      </li>
+    </c:if>
+     --%>
+    
+    
     <li>
-      <input type="radio" value="moveTargetAndItsChildren" name="selectedAction" onchange="openElement('#suggestion_storyAndChildrenMessage','moveStoryAndChildren');return false;"/>
-      Move the story and all of its children
+      <input type="radio" value="moveTargetStoryOnly" name="selectedAction" onchange="openElement('#suggestion_storyOnlyMessage','moveStoryOnly');return false;"/> 
+      Move the story and leave the children behind
     </li>
-    <li id="suggestion_storyAndChildrenMessage" class="closable">
+      
+    <li id="suggestion_storyOnlyMessage" class="closable">
       <div class="action-message">
-        <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryAndChildren.jsp" %>
+        <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryOnly.jsp" %>
+        <%--<div style="text-align: center;"><img src="static/img/pleasewait.gif" alt="Please wait..." style="vertical-align: middle;" /> <span style="color: #666;">Loading suggestion..</span></div> --%>
       </div>
     </li>
-  </c:if>
-
-</ul>
+    
+    
+    <c:if test="${!aef:isIteration(backlog)}">
+      <li>
+        <input type="radio" value="moveTargetAndItsChildren" name="selectedAction" onchange="openElement('#suggestion_storyAndChildrenMessage','moveStoryAndChildren');return false;"/>
+        Move the story and all of its children
+      </li>
+      <li id="suggestion_storyAndChildrenMessage" class="closable">
+        <div class="action-message">
+          <%@ include file="/WEB-INF/jsp/forms/moveOptions/moveOption_moveStoryAndChildren.jsp" %>
+        </div>
+      </li>
+    </c:if>
+  
+  </ul>
+  
+  </div>
+  
+  <div id="please-select-an-option" class="warning-note" style="display:none;">
+    Please select an option from the list!
+  </div>
 
 </div>
-
-<div id="please-select-an-option" class="warning-note" style="display:none;">
-  Please select an option from the list!
-</div>
-
-
 </c:if>

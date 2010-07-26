@@ -160,6 +160,19 @@ ProductController.prototype.moveStory = function(storyId, backlogId, revert) {
       }
     });
   };
+  var error = function(error) {
+    var el = $('<div></div>').html(error).appendTo(document.body);
+    el.find("div.possibleAction").hide();
+    el.dialog({
+      modal: true,
+      width: '500px',
+      close: function() {
+        el.dialog("destroy");
+      },
+      buttons: {OK: function() { el.dialog("destroy"); }},
+      title: "Unable to move story"
+    });
+  };
   jQuery.ajax({
     url: "ajax/checkChangeBacklog.action",
     data: { storyId: storyId, backlogId: backlogId },
@@ -172,8 +185,8 @@ ProductController.prototype.moveStory = function(storyId, backlogId, revert) {
         doMove();
       }
       else {
-        MessageDisplay.Error("Unable to move story: " + data);
         revert();
+        error(data);
       }
     }
   });

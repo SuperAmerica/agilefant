@@ -1,6 +1,6 @@
-Agilefant 2.0.1
+Agilefant 2.0.2
 Release notes
-2010-06-28
+2010-07-26
 --
 
 
@@ -42,6 +42,13 @@ For more information and questions, visit http://www.agilefant.org/.
 +--------------------+
 |     CHANGESET      |
 +--------------------+
+Changes from 2.0.1
+2010-07-26
++ Renewed portfolios with customizable widgets
++ Product leaf stories view for easy drag'n'drop moving of stories
++ Editing multiple stories at a time in story tree is now possible
+
+
 Changes from 2.0
 2010-06-28
 + Quick search functionality

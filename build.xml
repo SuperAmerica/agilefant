@@ -38,7 +38,7 @@
 			<pathelement location="${test.conf.dir}" />
 			<pathelement path="${clover.jar}" />
 		</path>
-
+		
 		<path id="hibernatetoolslib">
 			<path refid="compile.classpath" />
 			<fileset dir="${hibernatetools.dir}">
@@ -136,6 +136,7 @@
 					<exclude name="**/TestUtility.java" />
 					<exclude name="**/SpringEnabledTestCase.java" />
 					<exclude name="**/SpringTestCase.java" />
+					<exclude name="**/selenium/*.java" />
 					<include name="**/*Test.java" />
 				</fileset>
 			</batchtest>
@@ -479,4 +480,76 @@
   </target>
   
   <target name="development-redeploy" depends="clean, undeploy-local, jrebel, deploy-local-web" />
+  
+  
+  <!-- Selenium tests -->
+  <target name="tomcat-start" description="Start Tomcat application">
+    <taskdef name="start" classname="org.apache.catalina.ant.StartTask">
+      <classpath>
+        <fileset dir="lib/">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </taskdef>
+    <start url="http://localhost:8080/manager" username="test" password="m0t0rh0m3" path="/agilefant" />
+  </target>
+  
+  <target name="tomcat-stop" description="Stop Tomcat application">
+    <taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+      <classpath>
+        <fileset dir="lib/">
+          <include name="**/*.jar" />
+        </fileset>
+      </classpath>
+    </taskdef>
+    <stop failonerror="no" url="http://localhost:8080/manager" username="test" password="m0t0rh0m3" path="/agilefant" />
+  </target>
+  
+  <target name="selenium-start" description="Start the Selenium server">
+    <java jar="lib/build/selenium-server-1.0.3-standalone.jar" fork="true" spawn="true">
+      <arg line="-timeout 30" />
+    </java>
+    <echo message="Selenium server started" />
+  </target>
+   
+  <target name="selenium-stop" description="Stop the Selenium server">
+    <get taskname="selenium-shutdown"
+      src="http://localhost:4444/selenium-server/driver/?cmd=shutDown"
+      dest="${build.dir}/selenium_result.txt" ignoreerrors="true" />
+    <echo taskname="selenium-shutdown" message="DGF Errors during shutdown are expected" />
+  </target>
+  
+  <target name="selenium" depends="selenium-start, selenium-tests, selenium-stop" />
+  
+  <target name="compile-selenium-tests" depends="compile">
+    <mkdir dir="${build.test.selenium.classes.dir}" />
+    <javac debug="${javac.debug}" destdir="${build.test.selenium.classes.dir}" srcdir="${test.selenium.dir}">
+      <classpath refid="compile.test.classpath" />
+    </javac>
+  </target>
+  
+  <target name="selenium-tests" depends="compile-selenium-tests">
+    <mkdir dir="${test.conf.dir}/WEB-INF" />
+    <mkdir dir="${test.reports.junit}" />
+    <junit fork="true" forkmode="once" dir="${basedir}" printsummary="true">
+      <jvmarg value="-Xmx512m"/> 
+      <jvmarg value="-Xms512m"/>
+      <jvmarg value="-XX:PermSize=512m"/> 
+      <jvmarg value="-XX:MaxPermSize=512m"/>
+      <classpath refid="compile.test.classpath"/>
+      <classpath>
+        <path refid="compile.classpath" />
+        <pathelement location="${build.test.selenium.classes.dir}" />
+        <!-- <pathelement location="${build.test.selenium.classes.dir}/selenium" /> -->
+      </classpath>
+      <formatter type="xml" usefile="true"/>
+      <formatter type="plain" usefile="false"/>
+      <batchtest todir="${test.reports.junit}">
+        <fileset dir="${test.selenium.dir}">
+          <include name="**/*Test.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+  
 </project>

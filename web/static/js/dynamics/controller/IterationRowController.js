@@ -19,7 +19,7 @@ IterationRowController.prototype = new BacklogController();
  * @member IterationRowController
  */
 IterationRowController.columnNames =
-  ["expand", "link", "name", "assignees", "startDate", "endDate", "storiesData"];
+  ["expand", "link", "name", "assignees", "startDate", "endDate", "storiesData", "buttons"];
 IterationRowController.columnIndices = CommonController.createColumnIndices(IterationRowController.columnNames);
 
 

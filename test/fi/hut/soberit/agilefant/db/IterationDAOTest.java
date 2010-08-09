@@ -1,8 +1,7 @@
 package fi.hut.soberit.agilefant.db;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -19,10 +18,11 @@ import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.AbstractHibernateTests;
 import fi.hut.soberit.agilefant.util.Pair;
 
+import static org.junit.Assert.*;
+
 @ContextConfiguration
 @Transactional
-public class IterationDAOTest extends AbstractHibernateTests {
-
+public class IterationDAOTest extends  AbstractHibernateTests {
     @Autowired
     private IterationDAO iterationDAO;
 
@@ -110,4 +110,12 @@ public class IterationDAOTest extends AbstractHibernateTests {
         assertEquals(new Integer(5), data.get(StoryState.DONE));
     }
 
+    @Test
+    public void testGetTotalAvailability() {
+        executeClassSql();
+        Map<Integer, Integer> result = iterationDAO.getTotalAvailability(new HashSet<Integer>(Arrays.asList(1, 2)));
+        assertEquals(2, result.size());
+        assertEquals(new Integer(100), (Integer)result.get(1));
+        assertEquals(new Integer(100), (Integer)result.get(2));
+    }
 }

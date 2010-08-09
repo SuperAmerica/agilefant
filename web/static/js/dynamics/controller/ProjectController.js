@@ -557,6 +557,11 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
     visible : false,
     delayedRender: true
   });
+  config.addColumnConfiguration(IterationRowController.columnIndices.buttons, {
+    fullWidth : true,
+    visible : false,
+    subViewFactory : DynamicsButtons.commonButtonFactory
+  });
 };
 
 

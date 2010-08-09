@@ -148,7 +148,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         List<Object[]> data = asList(crit);
         Map<Integer, Integer> result = new HashMap<Integer, Integer>();
         for (Object[] row : data) {
-            result.put((Integer) row[0], (Integer) row[1]);
+            result.put((Integer) row[0], ((Long) row[1]).intValue());
         }
         return result;
     }

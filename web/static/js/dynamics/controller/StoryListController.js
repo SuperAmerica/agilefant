@@ -136,6 +136,8 @@ StoryListController.prototype.confirmTasksToDone = function(model) {
             model.commit();
           }
         );
+    } else {
+      model.commit();
     }
   }
   else {

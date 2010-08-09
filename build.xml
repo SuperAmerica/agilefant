@@ -519,7 +519,7 @@
     <echo taskname="selenium-shutdown" message="DGF Errors during shutdown are expected" />
   </target>
   
-  <target name="selenium" depends="selenium-start, selenium-tests, selenium-stop" />
+  <target name="selenium" depends="sync-dbs, selenium-start, selenium-tests, selenium-stop" description="Drop-create agilefant and aeftest databases, and run selenium tests"/>
   
   <target name="compile-selenium-tests" depends="compile">
     <mkdir dir="${build.test.selenium.classes.dir}" />

@@ -1,11 +1,11 @@
 <%@ include file="../jsp/inc/_taglibs.jsp" %>
 <%@tag description = "Datepicker" %>
 <%@ attribute name="name" %>
-<%@ attribute name="value" %>
+<%@ attribute name="value" type="org.joda.time.DateTime" %>
 <%@ attribute name="format" %>
 <%@ attribute name="id" %>
 
-<input type="text" id="${id}" value="${value}" name="${name}" size="14" class="datePickerField" style="float: left;" />
+<input type="text" id="${id}" value="<joda:format value='${value}' pattern='${format}' />" name="${name}" size="14" class="datePickerField" style="float: left;" />
 
 <script type="text/javascript">
 <!--

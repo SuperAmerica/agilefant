@@ -238,14 +238,14 @@ Timesheets
 							<td>Start date</td>
 							<td><aef:datepicker value="${startDate}" id="effStartDate"
 								name="startDate"
-								format="%{getText('struts.shortDateTime.format')}" /></td>
+								format="yyyy-MM-dd HH:mm" /></td>
 						</tr>
 						<!--  End date -->
 						<tr class="dateSelectRow" style="display: none;">
 							<td>End date</td>
 							<td><aef:datepicker value="${endDate}" id="effEndDate"
 								name="endDate"
-								format="%{getText('struts.shortDateTime.format')}" /></td>
+								format="yyyy-MM-dd HH:mm" /></td>
 						</tr>
 						<!--  User selection -->
 						<tr id="userSelect">

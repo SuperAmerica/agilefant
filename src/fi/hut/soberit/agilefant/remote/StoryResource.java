@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.remote;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Story;
 @Path("/story/{storyId}")
 @Component
 @Scope("prototype")
+@RolesAllowed("agilefantremote")
 public class StoryResource {
     
     @Autowired

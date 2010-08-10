@@ -20,8 +20,10 @@
       <init-param>
           <param-name>com.sun.jersey.config.property.packages</param-name>
           <param-value>fi.hut.soberit.agilefant.remote</param-value>
-      </init-param>         
+      </init-param>   
+   
   </servlet>
+
   <servlet-mapping>
       <servlet-name>Jersey Spring</servlet-name>
       <url-pattern>/rs/*</url-pattern>
@@ -114,4 +116,24 @@
 			<page-encoding>utf-8</page-encoding>
 		</jsp-property-group>
 	</jsp-config>
+  
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Remote</web-resource-name>
+      <url-pattern>/rs/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>agilefantremote</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Agilefant</realm-name>
+  </login-config>
+  <security-role>
+    <role-name>agilefantremote</role-name>
+  </security-role>
+
 </web-app>
+
+

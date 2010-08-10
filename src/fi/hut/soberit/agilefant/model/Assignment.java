@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
@@ -51,6 +52,7 @@ public class Assignment {
 
     @ManyToOne
     @JSON(include = false)
+    @XmlTransient
     public Backlog getBacklog() {
         return backlog;
     }

@@ -176,6 +176,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     @JSON(include=false)
     @NotAudited
     @OneToMany(fetch = FetchType.LAZY, mappedBy="backlog", targetEntity=StoryRank.class, cascade=CascadeType.REMOVE)
+    @XmlTransient
     public Set<StoryRank> getStoryRanks() {
         return storyRanks;
     }

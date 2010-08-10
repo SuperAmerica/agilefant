@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 
@@ -22,6 +23,7 @@ public class BacklogHourEntry extends HourEntry {
     private Backlog backlog;
 
     @ManyToOne
+    @XmlTransient
     public Backlog getBacklog() {
         return backlog;
     }

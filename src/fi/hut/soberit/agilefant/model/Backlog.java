@@ -16,6 +16,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -121,6 +122,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @JSON(include = false)
     @ManyToOne
+    @XmlTransient
     public Backlog getParent() {
         return parent;
     }

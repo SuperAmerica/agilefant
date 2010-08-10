@@ -19,6 +19,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
@@ -32,13 +37,13 @@ import flexjson.JSON;
 @Entity
 @Table(name = "stories")
 @Audited
+@XmlRootElement
 public class Story implements TimesheetLoggable, LabelContainer, NamedObject, TaskContainer {
     private int id;
     private String name;
     private String description;
     private Backlog backlog;
     private StoryState state = StoryState.NOT_STARTED;
-//    private int rank = 0;
     private int treeRank = 0;
     private Story parent;
     private List<Story> children = new ArrayList<Story>();
@@ -54,6 +59,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @XmlAttribute
     public int getId() {
         return id;
     }
@@ -63,6 +69,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     @Column(nullable = false)
+    @XmlAttribute
     public String getName() {
         return name;
     }
@@ -81,6 +88,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     @ManyToOne(optional = false)
+    @XmlTransient
     public Backlog getBacklog() {
         return backlog;
     }
@@ -90,6 +98,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     @Column(nullable = false)
+    @XmlAttribute
     public StoryState getState() {
         return state;
     }
@@ -116,6 +125,8 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     )
     @BatchSize(size=20)
     @Fetch(FetchMode.SUBSELECT)
+    @XmlElementWrapper
+    @XmlElement(name = "user")
     public Set<User> getResponsibles() {
         return responsibles;
     }
@@ -124,6 +135,8 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
             mappedBy = "story"
     )
     @NotAudited
+    @XmlElementWrapper
+    @XmlElement(name = "task")
     public Set<Task> getTasks() {
         return tasks;
     }
@@ -133,6 +146,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     @JSON
+    @XmlAttribute
     public Integer getStoryPoints() {
         return storyPoints;
     }
@@ -144,6 +158,8 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @OneToMany(mappedBy = "story",
             targetEntity = fi.hut.soberit.agilefant.model.StoryHourEntry.class )
     @NotAudited
+    @XmlElementWrapper
+    @XmlElement(name = "hourEntry")
     public Set<StoryHourEntry> getHourEntries() {
         return hourEntries;
     }
@@ -155,6 +171,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @JSON
     @ManyToOne
     @Fetch(FetchMode.JOIN)
+    @XmlTransient
     public Story getParent() {
         return parent;
     }
@@ -168,6 +185,8 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @Fetch(FetchMode.SELECT)
     @OrderBy("treeRank")
     @NotAudited
+    @XmlElementWrapper
+    @XmlElement(name = "story")
     public List<Story> getChildren() {
         return children;
     }
@@ -179,6 +198,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @JSON(include=false)
     @NotAudited
     @OneToMany(fetch = FetchType.LAZY, targetEntity=StoryRank.class, mappedBy="story", cascade=CascadeType.REMOVE )
+    @XmlTransient
     public Set<StoryRank> getStoryRanks() {
         return storyRanks;
     }
@@ -189,6 +209,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
 
     @Column(nullable = false, columnDefinition = "int default 0")
     @JSON
+    @XmlTransient
     public int getTreeRank() {
         return treeRank;
     }
@@ -204,6 +225,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
     @NotAudited
     @JSON(include = false)
+    @XmlTransient
     public Set<Label> getLabels() {
         return labels;
     }

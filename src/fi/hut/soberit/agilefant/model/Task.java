@@ -21,6 +21,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -88,6 +89,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @ManyToOne
     @JSON(include = false)
+    @XmlTransient
     public Iteration getIteration() {
         return iteration;
     }
@@ -98,6 +100,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @ManyToOne
     @JSON(include = false)
+    @XmlTransient
     public Story getStory() {
         return story;
     }
@@ -162,6 +165,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
             cascade = CascadeType.REMOVE
     )
     @JSON(include = false)
+    @XmlTransient
     public Set<WhatsNextEntry> getWhatsNextEntries() {
         return whatsNextEntries;
     }

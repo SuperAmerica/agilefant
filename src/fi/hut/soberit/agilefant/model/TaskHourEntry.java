@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 
@@ -19,6 +20,7 @@ public class TaskHourEntry extends HourEntry {
 
     @ManyToOne
     @JSON(include = false)
+    @XmlTransient
     public Task getTask() {
         return task;
     }

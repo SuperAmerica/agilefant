@@ -25,7 +25,8 @@
 <div class="ui-widget-content ui-corner-all timesheet-backlog ${backlogBoxCssClass}">
  
 <div class="ui-widget-header">
-<ul>
+<ul class="timesheet-header-ul">
+  <li class="hoursum" title="Recursive sum of all of the backlogs' children">${aef:minutesToString(node.effortSum)}</li>
   <c:choose>
   <c:when test="${aef:isProduct(node.backlog) && !empty node.backlogNodes}">
     <li><a href="#" rel="backlog_${node.backlog.id}_subBacklogs" class="timesheetOpenListLink">${node.name}</a></li>
@@ -34,7 +35,7 @@
     <li>${node.name}</li>
   </c:otherwise>
   </c:choose>
-  <li class="hoursum" title="Recursive sum of all of the backlogs' children">${aef:minutesToString(node.effortSum)}</li>
+  
 </ul>
 </div>
 
@@ -45,8 +46,8 @@
 <ul class="timesheet-content">
   <c:if test="${!empty node.storyNodes}">
     <li>
-      <div><a href="#" rel="backlog_${node.backlog.id}_storyContainer" class="timesheetOpenListLink"><div class="timesheetOpenListImage"></div> Stories</a></div>
       <div class="hoursum">${aef:minutesToString(node.storyEffortSum)}</div>
+      <div><a href="#" rel="backlog_${node.backlog.id}_storyContainer" class="timesheetOpenListLink"><div class="timesheetOpenListImage"></div> Stories</a></div>
     </li>
     <li id="backlog_${node.backlog.id}_storyContainer" class="timesheet-closable">
       <div class="timesheet-hourEntryContainer">
@@ -57,8 +58,8 @@
   
   <c:if test="${!empty node.taskNodes}">
     <li>
-      <div><a href="#" rel="backlog_${node.backlog.id}_taskContainer" class="timesheetOpenListLink"><div class="timesheetOpenListImage"></div> Tasks</a></div>
       <div class="hoursum">${aef:minutesToString(node.taskEffortSum)}</div>
+      <div><a href="#" rel="backlog_${node.backlog.id}_taskContainer" class="timesheetOpenListLink"><div class="timesheetOpenListImage"></div> Tasks</a></div>
     </li>
     <li id="backlog_${node.backlog.id}_taskContainer" class="timesheet-closable">
       <div class="timesheet-hourEntryContainer">
@@ -69,8 +70,9 @@
   
   <c:if test="${!empty node.hourEntries}">
     <li>
-      <div style="color: #666;">Direct spent effort</div>
       <div class="hoursum">${aef:minutesToString(node.ownEffortSpentSum)}</div>
+      <div style="color: #666;">Direct spent effort</div>
+      
     </li>
     <%--
     <li id="backlog_${node.backlog.id}_hourEntryContainer" class="timesheet-closable">
@@ -83,8 +85,8 @@
   
   <c:if test="${!empty node.backlogNodes}">
     <li>
-      <div style="color: #666;">Child backlogs sum</div>
       <div class="hoursum">${aef:minutesToString(node.backlogEffortSum)}</div>
+      <div style="color: #666;">Child backlogs sum</div>
     </li>
   </c:if>
 </ul>

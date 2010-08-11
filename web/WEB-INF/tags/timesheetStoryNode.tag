@@ -7,8 +7,8 @@
 <ul class="timesheet-content">
 <c:forEach items="${nodes}" var="sNode">
   <li>
-    <div>${sNode.name}</div>
     <div class="hoursum">${aef:minutesToString(sNode.effortSum)}</div>
+    <div>${sNode.name}</div>
   </li>
 </c:forEach>
 </ul>

@@ -29,6 +29,7 @@
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   border-radius: 10px;
+  min-height: 40px;
 }
 
 .timesheet-backlog .ui-widget-header {
@@ -44,7 +45,9 @@
 .timesheet-backlog .ui-widget-header ul {
   margin: 0;
   padding: 0;
-  list-style-type: none;  
+  list-style-type: none;
+  height: 30px;
+  overflow: hidden;  
 }
 
 .timesheet-backlog .ui-widget-header ul li {
@@ -60,6 +63,9 @@
   padding: 0 1em;
   background: rgba(0, 0, 0, 0.15);
   width: 100px;
+  border-radius: 0 5px 0 0;
+  -moz-border-radius: 0 5px 0 0;
+  -webkit-border-radius: 0 5px 0 0;
 }
 
 .timesheet-hourEntryContainer {
@@ -143,4 +149,6 @@ ul.timesheet-content > li > div.hoursum {
 .reportTable td {
   margin: 0.2em 0.5em;  
 }
+
+
 

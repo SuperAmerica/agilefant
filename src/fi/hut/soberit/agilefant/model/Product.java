@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Entity
 @BatchSize(size = 20)
 @Audited
+@XmlAccessorType( XmlAccessType.NONE )
 public class Product extends Backlog {
     
     @Transactional(readOnly=true)

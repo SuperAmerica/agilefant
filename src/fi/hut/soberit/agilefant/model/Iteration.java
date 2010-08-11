@@ -9,9 +9,10 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -44,6 +45,7 @@ import flexjson.JSON;
 @BatchSize(size = 20)
 @Audited
 @XmlRootElement
+@XmlAccessorType( XmlAccessType.NONE )
 public class Iteration extends Backlog implements Schedulable, TaskContainer {
  
     private DateTime startDate;
@@ -85,7 +87,6 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     @JSON
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "backlogSize")))
-    @XmlAttribute
     public ExactEstimate getBacklogSize() {
         return backlogSize;
     }
@@ -119,7 +120,6 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     @OneToMany(mappedBy = "iteration", cascade=javax.persistence.CascadeType.REMOVE)
     @JSON(include = false)
     @NotAudited
-    @XmlTransient
     public Set<IterationHistoryEntry> getHistoryEntries() {
         return historyEntries;
     }

@@ -6,6 +6,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.envers.Audited;
 
@@ -13,6 +15,7 @@ import org.hibernate.envers.Audited;
 @Audited
 @Table(name = "storyrank", uniqueConstraints = { @UniqueConstraint(columnNames = {
         "backlog_id", "story_id" }) })
+@XmlAccessorType( XmlAccessType.NONE )        
 public class StoryRank {
 
     private int id;

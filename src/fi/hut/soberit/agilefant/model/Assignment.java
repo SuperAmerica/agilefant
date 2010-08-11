@@ -10,7 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
@@ -21,6 +22,7 @@ import flexjson.JSON;
 @Entity
 @Table(name = "assignment")
 @Audited
+@XmlAccessorType( XmlAccessType.NONE )
 public class Assignment {
      
     private int id;
@@ -52,7 +54,6 @@ public class Assignment {
 
     @ManyToOne
     @JSON(include = false)
-    @XmlTransient
     public Backlog getBacklog() {
         return backlog;
     }

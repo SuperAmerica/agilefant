@@ -12,6 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -29,6 +31,7 @@ import flexjson.JSON;
 @BatchSize(size = 20)
 @Entity
 @Table(name = "teams")
+@XmlAccessorType( XmlAccessType.NONE )
 public class Team implements Comparable<Team> {
 
     private int id;

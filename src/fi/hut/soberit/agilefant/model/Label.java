@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.Index;
 import org.hibernate.annotations.Type;
@@ -18,6 +20,7 @@ import flexjson.JSON;
 
 @Entity
 @Table(name = "labels")
+@XmlAccessorType( XmlAccessType.NONE )
 public class Label implements NamedObject, Serializable {
 
     private static final long serialVersionUID = 175091151639389468L;

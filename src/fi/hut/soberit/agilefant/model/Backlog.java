@@ -16,7 +16,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -55,6 +56,7 @@ import flexjson.JSON;
 @DiscriminatorColumn(name = "backlogtype", discriminatorType = DiscriminatorType.STRING)
 @Table(name = "backlogs")
 @Audited
+@XmlAccessorType( XmlAccessType.NONE )
 public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     private int id;
@@ -122,7 +124,6 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @JSON(include = false)
     @ManyToOne
-    @XmlTransient
     public Backlog getParent() {
         return parent;
     }
@@ -176,7 +177,6 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     @JSON(include=false)
     @NotAudited
     @OneToMany(fetch = FetchType.LAZY, mappedBy="backlog", targetEntity=StoryRank.class, cascade=CascadeType.REMOVE)
-    @XmlTransient
     public Set<StoryRank> getStoryRanks() {
         return storyRanks;
     }

@@ -20,9 +20,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -44,6 +45,7 @@ import flexjson.JSON;
 @Table(name = "users")
 @Audited
 @XmlRootElement(name = "user")
+@XmlAccessorType( XmlAccessType.NONE )
 public class User implements NamedObject {
 
     private int id;
@@ -138,7 +140,6 @@ public class User implements NamedObject {
     @Type(type = "truncated_varchar")
     @JSON(include = false)
     @NotAudited
-    @XmlTransient
     public String getPassword() {
         return password;
     }
@@ -163,7 +164,6 @@ public class User implements NamedObject {
     @Email
     @Type(type = "truncated_varchar")
     @JSON
-    @XmlTransient
     public String getEmail() {
         return email;
     }
@@ -205,7 +205,6 @@ public class User implements NamedObject {
     @JoinTable(name = "team_user", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = { @JoinColumn(name = "Team_id") })
     @JSON(include = false)
     @NotAudited
-    @XmlTransient
     public Collection<Team> getTeams() {
         return teams;
     }
@@ -245,7 +244,6 @@ public class User implements NamedObject {
     @OneToMany(mappedBy = "user")
     @JSON(include = false)
     @NotAudited
-    @XmlTransient
     public Collection<Assignment> getAssignments() {
         return assignments;
     }
@@ -263,7 +261,6 @@ public class User implements NamedObject {
             targetEntity = fi.hut.soberit.agilefant.model.Story.class,
             fetch = FetchType.LAZY)
     @NotAudited
-    @XmlTransient
     public Collection<Story> getStories() {
         return stories;
     }
@@ -277,7 +274,6 @@ public class User implements NamedObject {
             targetEntity = fi.hut.soberit.agilefant.model.Task.class,
             fetch = FetchType.LAZY)
     @NotAudited
-    @XmlTransient
     public Set<Task> getTasks() {
         return tasks;
     }
@@ -288,14 +284,12 @@ public class User implements NamedObject {
     
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "weekEffort")))
-    @XmlTransient
     public ExactEstimate getWeekEffort() {
         return weekEffort;
     }
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
     @NotAudited
-    @XmlTransient
     public Collection<Holiday> getHolidays() {
         return holidays;
     }
@@ -306,7 +300,6 @@ public class User implements NamedObject {
 
     @OneToMany(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
     @NotAudited
-    @XmlTransient
     public Collection<HolidayAnomaly> getHolidayAnomalies() {
         return holidayAnomalies;
     }
@@ -318,7 +311,6 @@ public class User implements NamedObject {
     @JSON
     @NotAudited
     @Column(columnDefinition = "bit default 1")
-    @XmlTransient
     public boolean isAutoassignToTasks() {
         return autoassignToTasks;
     }
@@ -330,7 +322,6 @@ public class User implements NamedObject {
     @JSON
     @NotAudited
     @Column(columnDefinition = "bit default 0")
-    @XmlTransient
     public boolean isAutoassignToStories() {
         return autoassignToStories;
     }
@@ -342,7 +333,6 @@ public class User implements NamedObject {
     @JSON
     @NotAudited
     @Column(columnDefinition = "integer default 1")
-    @XmlTransient
     public UserSettingType getMarkStoryStarted() {
         return markStoryStarted;
     }

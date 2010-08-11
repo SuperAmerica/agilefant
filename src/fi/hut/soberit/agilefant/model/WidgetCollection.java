@@ -11,9 +11,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 @Entity
 @Table(name = "widgetcollections")
+@XmlAccessorType( XmlAccessType.NONE )
 public class WidgetCollection {
 
     @Id

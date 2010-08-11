@@ -8,12 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
 
 @Entity
 @Table(name = "history_iterations", uniqueConstraints = @UniqueConstraint(columnNames={"iteration_id","timestamp"}))
+@XmlAccessorType( XmlAccessType.NONE )
 public class IterationHistoryEntry {
 
     private int id;

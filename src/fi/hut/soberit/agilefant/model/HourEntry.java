@@ -10,6 +10,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -42,6 +44,7 @@ import fi.hut.soberit.agilefant.util.XmlDateTimeAdapter;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "hourentries")
+@XmlAccessorType( XmlAccessType.NONE )
 public class HourEntry {
 
     private int id;

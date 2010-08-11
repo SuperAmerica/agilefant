@@ -21,7 +21,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -39,6 +40,7 @@ import flexjson.JSON;
 @Entity
 @Table(name = "tasks")
 @Audited
+@XmlAccessorType( XmlAccessType.NONE )
 public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     private int id;
@@ -89,7 +91,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @ManyToOne
     @JSON(include = false)
-    @XmlTransient
     public Iteration getIteration() {
         return iteration;
     }
@@ -100,7 +101,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @ManyToOne
     @JSON(include = false)
-    @XmlTransient
     public Story getStory() {
         return story;
     }
@@ -165,7 +165,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
             cascade = CascadeType.REMOVE
     )
     @JSON(include = false)
-    @XmlTransient
     public Set<WhatsNextEntry> getWhatsNextEntries() {
         return whatsNextEntries;
     }

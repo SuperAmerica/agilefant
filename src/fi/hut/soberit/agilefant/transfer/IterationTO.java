@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 
 @XmlRootElement(name="iteration")
+@XmlAccessorType( XmlAccessType.NONE )
 public class IterationTO extends Iteration implements LeafStoryContainer, Scheduled {
 
     private ScheduleStatus scheduleStatus;
@@ -32,7 +34,6 @@ public class IterationTO extends Iteration implements LeafStoryContainer, Schedu
         return scheduleStatus;
     }
 
-    @XmlTransient
     public List<StoryTO> getRankedStories() {
         return rankedStories;
     }
@@ -49,7 +50,6 @@ public class IterationTO extends Iteration implements LeafStoryContainer, Schedu
         this.assignees = assignees;
     }
 
-    @XmlTransient
     public List<StoryTO> getLeafStories() {
         return this.rankedStories;
     }

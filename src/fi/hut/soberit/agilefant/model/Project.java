@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -52,6 +54,7 @@ import flexjson.JSON;
 @Entity
 @BatchSize(size = 20)
 @Audited
+@XmlAccessorType( XmlAccessType.NONE )
 public class Project extends Backlog implements Schedulable, Rankable {
 
     private DateTime endDate;

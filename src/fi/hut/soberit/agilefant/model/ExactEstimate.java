@@ -1,12 +1,15 @@
 package fi.hut.soberit.agilefant.model;
 
 import javax.persistence.Embeddable;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @SuppressWarnings("serial")
 @Embeddable
+@XmlAccessorType( XmlAccessType.NONE )
 public class ExactEstimate extends Number implements Comparable<ExactEstimate> {
 
     public static final ExactEstimate ZERO = new ExactEstimate(0);

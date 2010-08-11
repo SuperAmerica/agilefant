@@ -19,11 +19,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
@@ -38,6 +39,7 @@ import flexjson.JSON;
 @Table(name = "stories")
 @Audited
 @XmlRootElement
+@XmlAccessorType( XmlAccessType.NONE )
 public class Story implements TimesheetLoggable, LabelContainer, NamedObject, TaskContainer {
     private int id;
     private String name;
@@ -88,7 +90,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     @ManyToOne(optional = false)
-    @XmlTransient
     public Backlog getBacklog() {
         return backlog;
     }
@@ -171,7 +172,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @JSON
     @ManyToOne
     @Fetch(FetchMode.JOIN)
-    @XmlTransient
     public Story getParent() {
         return parent;
     }
@@ -198,7 +198,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @JSON(include=false)
     @NotAudited
     @OneToMany(fetch = FetchType.LAZY, targetEntity=StoryRank.class, mappedBy="story", cascade=CascadeType.REMOVE )
-    @XmlTransient
     public Set<StoryRank> getStoryRanks() {
         return storyRanks;
     }
@@ -209,7 +208,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
 
     @Column(nullable = false, columnDefinition = "int default 0")
     @JSON
-    @XmlTransient
     public int getTreeRank() {
         return treeRank;
     }
@@ -225,7 +223,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE)
     @NotAudited
     @JSON(include = false)
-    @XmlTransient
     public Set<Label> getLabels() {
         return labels;
     }

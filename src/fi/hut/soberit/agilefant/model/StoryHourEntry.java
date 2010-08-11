@@ -2,7 +2,8 @@ package fi.hut.soberit.agilefant.model;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.annotations.BatchSize;
 
@@ -17,12 +18,12 @@ import org.hibernate.annotations.BatchSize;
  */
 @Entity
 @BatchSize(size = 20)
+@XmlAccessorType( XmlAccessType.NONE )
 public class StoryHourEntry extends HourEntry {
 
     private Story story;
 
     @ManyToOne
-    @XmlTransient
     public Story getStory() {
         return story;
     }

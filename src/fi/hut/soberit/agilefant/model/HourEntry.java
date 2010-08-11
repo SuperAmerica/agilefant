@@ -57,18 +57,6 @@ public class HourEntry {
 
     private String description;
 
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
-    @XmlElement
-    public DateTime getDate() {
-        return this.date;
-    }
-
-    @Type(type = "escaped_text")
-    public String getDescription() {
-        return this.description;
-    }
-
     /**
      * Get the id of this object.
      * <p>
@@ -83,31 +71,39 @@ public class HourEntry {
         return this.id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     @ManyToOne(optional = false)
     @XmlElement
     public User getUser() {
         return this.user;
     }
 
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
+    @XmlAttribute
+    public DateTime getDate() {
+        return this.date;
+    }
+
     public void setDate(DateTime date) {
         this.date = date;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Set the id of this object.
-     * <p>
-     * You shouldn't normally call this.
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setUser(User user) {
         this.user = user;
+    }
+    
+    @Type(type = "escaped_text")
+    @XmlElement
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Transient

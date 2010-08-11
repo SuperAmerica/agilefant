@@ -23,6 +23,7 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -115,12 +116,14 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "effortleft")))
+    @XmlAttribute
     public ExactEstimate getEffortLeft() {
         return effortLeft;
     }
 
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "originalestimate")))
+    @XmlAttribute
     public ExactEstimate getOriginalEstimate() {
         return originalEstimate;
     }

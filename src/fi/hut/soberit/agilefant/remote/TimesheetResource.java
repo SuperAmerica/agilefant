@@ -38,23 +38,26 @@ public class TimesheetResource {
 
     @GET
     @Produces("application/xml")
-    public JAXBElement<TimesheetReportTO> get(@QueryParam("userIds") Set<Integer> userIds,
+    public JAXBElement<TimesheetReportTO> get(
+            @QueryParam("userIds") Set<Integer> userIds,
             @QueryParam("backlogIds") Set<Integer> backlogIds,
             @QueryParam("startDate") String startDateStr,
             @QueryParam("endDate") String endDateStr) {
         DateTime endDate = null, startDate = null;
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm");
-        if(endDateStr != null) {
+        if (endDateStr != null) {
             endDate = fmt.parseDateTime(endDateStr);
         }
-        if(startDateStr != null) {
+        if (startDateStr != null) {
             startDate = fmt.parseDateTime(startDateStr);
         }
-        List<BacklogTimesheetNode> rootNodes = this.timesheetBusiness.getRootNodes(backlogIds, startDate, endDate, userIds);
+        List<BacklogTimesheetNode> rootNodes = this.timesheetBusiness
+                .getRootNodes(backlogIds, startDate, endDate, userIds);
         long effortSum = this.timesheetBusiness.getRootNodeSum(rootNodes);
         TimesheetReportTO report = new TimesheetReportTO();
         report.setProductNodes(rootNodes);
         report.setTotalEffortSum(effortSum);
-        return new JAXBElement<TimesheetReportTO>(new QName("timesheetReport"), TimesheetReportTO.class, report);
+        return new JAXBElement<TimesheetReportTO>(new QName("timesheetReport"),
+                TimesheetReportTO.class, report);
     }
 }

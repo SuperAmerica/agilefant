@@ -3,13 +3,16 @@ package fi.hut.soberit.agilefant.model;
 import javax.persistence.Embeddable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-@XmlRootElement
+import fi.hut.soberit.agilefant.util.XmlExactEstimateAdapter;
+
 @SuppressWarnings("serial")
 @Embeddable
 @XmlAccessorType( XmlAccessType.NONE )
+@XmlType
+@XmlJavaTypeAdapter(XmlExactEstimateAdapter.class)
 public class ExactEstimate extends Number implements Comparable<ExactEstimate> {
 
     public static final ExactEstimate ZERO = new ExactEstimate(0);
@@ -27,7 +30,6 @@ public class ExactEstimate extends Number implements Comparable<ExactEstimate> {
         this.minorUnits = minorUnits;
     }
 
-    @XmlAttribute
     public Long getMinorUnits() {
         return minorUnits;
     }

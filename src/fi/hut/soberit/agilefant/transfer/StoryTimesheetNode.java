@@ -3,9 +3,12 @@ package fi.hut.soberit.agilefant.transfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlType;
 
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.TimesheetNode;
@@ -17,7 +20,8 @@ import fi.hut.soberit.agilefant.util.TimesheetNode;
  * @author Pasi Pekkanen, Vesa Pirilä
  *
  */
-@XmlRootElement
+@XmlType
+@XmlAccessorType( XmlAccessType.NONE )
 public class StoryTimesheetNode extends TimesheetNode {
     private Story story;
     private long taskEffortSum;
@@ -42,6 +46,8 @@ public class StoryTimesheetNode extends TimesheetNode {
     }
 
     @Override
+    @XmlElementWrapper(name="taskNodes")
+    @XmlElement(name="taskNode")
     public List<? extends TimesheetNode> getChildren() {
         return this.childTasks;
     }
@@ -66,7 +72,6 @@ public class StoryTimesheetNode extends TimesheetNode {
         this.childTasks.add(node);
     }
 
-    @XmlTransient
     public Story getStory() {
         return this.story;
     }

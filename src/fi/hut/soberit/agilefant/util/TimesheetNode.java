@@ -3,10 +3,13 @@ package fi.hut.soberit.agilefant.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 
 import fi.hut.soberit.agilefant.model.HourEntry;
@@ -19,6 +22,9 @@ import fi.hut.soberit.agilefant.model.HourEntry;
  * @author Pasi Pekkanen, Vesa Pirilä
  *
  */
+
+@XmlType
+@XmlAccessorType( XmlAccessType.NONE )
 public abstract class TimesheetNode {
     List<HourEntry> hourEntries = new ArrayList<HourEntry>();
     protected long effortSum = 0;

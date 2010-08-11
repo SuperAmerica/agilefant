@@ -3,11 +3,13 @@ package fi.hut.soberit.agilefant.transfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.util.TimesheetNode;
@@ -20,7 +22,8 @@ import fi.hut.soberit.agilefant.util.TimesheetNode;
  * @author Pasi Pekkanen, Vesa Pirilä
  *
  */
-@XmlRootElement
+@XmlType
+@XmlAccessorType( XmlAccessType.NONE )
 public class BacklogTimesheetNode extends TimesheetNode {
     List<BacklogTimesheetNode> childBacklogs = new ArrayList<BacklogTimesheetNode>();
     List<StoryTimesheetNode> childStories = new ArrayList<StoryTimesheetNode>();
@@ -39,7 +42,6 @@ public class BacklogTimesheetNode extends TimesheetNode {
         this.backlog = backlog;
     }
     @Override
-    @XmlTransient
     public List<? extends TimesheetNode> getChildren() {
         List<TimesheetNode> children = new ArrayList<TimesheetNode>();
         children.addAll(this.childBacklogs);
@@ -88,8 +90,8 @@ public class BacklogTimesheetNode extends TimesheetNode {
         return this.backlog;
     }
     
-    @XmlElementWrapper
-    @XmlElement(name="storyNodes")
+    @XmlElementWrapper(name="storyNodes")
+    @XmlElement(name="storyNode")
     public List<StoryTimesheetNode> getStoryNodes() {
         return this.childStories;
     }
@@ -103,13 +105,13 @@ public class BacklogTimesheetNode extends TimesheetNode {
     public void addChild(BacklogTimesheetNode backlogNode) {
         this.childBacklogs.add(backlogNode);
     }
-    @XmlElementWrapper
-    @XmlElement(name="taskNodes")
+    @XmlElementWrapper(name="taskNodes")
+    @XmlElement(name="taskNode")
     public List<TaskTimesheetNode> getTaskNodes() {
         return this.childTasks;
     }
-    @XmlElementWrapper
-    @XmlElement(name="backlogNodes")
+    @XmlElementWrapper(name="backlogNodes")
+    @XmlElement(name="backlogNode")
     public List<BacklogTimesheetNode> getBacklogNodes() {
         return this.childBacklogs;
     }

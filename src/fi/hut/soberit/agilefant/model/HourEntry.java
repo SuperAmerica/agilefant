@@ -10,10 +10,16 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+
+import fi.hut.soberit.agilefant.util.XmlDateTimeAdapter;
 
 /**
  * Hibernate entity bean which represents an hour entry.
@@ -49,6 +55,8 @@ public class HourEntry {
     private String description;
 
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
+    @XmlElement
     public DateTime getDate() {
         return this.date;
     }
@@ -67,11 +75,13 @@ public class HourEntry {
     @Id
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @XmlAttribute
     public int getId() {
         return this.id;
     }
 
     @ManyToOne(optional = false)
+    @XmlElement
     public User getUser() {
         return this.user;
     }
@@ -98,16 +108,19 @@ public class HourEntry {
     }
 
     @Transient
+    @XmlTransient
     public boolean isBacklogEffortEntry() {
         return (this instanceof BacklogHourEntry);
     }
 
     @Transient
+    @XmlTransient
     public boolean isStoryEffortEntry() {
         return (this instanceof StoryHourEntry);
     }
 
     @Column(nullable = false)
+    @XmlAttribute
     public long getMinutesSpent() {
         return minutesSpent;
     }

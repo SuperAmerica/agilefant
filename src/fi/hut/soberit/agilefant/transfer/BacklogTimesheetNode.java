@@ -3,6 +3,12 @@ package fi.hut.soberit.agilefant.transfer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.util.TimesheetNode;
 
@@ -14,6 +20,7 @@ import fi.hut.soberit.agilefant.util.TimesheetNode;
  * @author Pasi Pekkanen, Vesa Pirilä
  *
  */
+@XmlRootElement
 public class BacklogTimesheetNode extends TimesheetNode {
     List<BacklogTimesheetNode> childBacklogs = new ArrayList<BacklogTimesheetNode>();
     List<StoryTimesheetNode> childStories = new ArrayList<StoryTimesheetNode>();
@@ -25,11 +32,14 @@ public class BacklogTimesheetNode extends TimesheetNode {
     
     Backlog backlog;
     
+    public BacklogTimesheetNode() {}
+    
     public BacklogTimesheetNode(Backlog backlog) {
         super();
         this.backlog = backlog;
     }
     @Override
+    @XmlTransient
     public List<? extends TimesheetNode> getChildren() {
         List<TimesheetNode> children = new ArrayList<TimesheetNode>();
         children.addAll(this.childBacklogs);
@@ -59,6 +69,7 @@ public class BacklogTimesheetNode extends TimesheetNode {
     }
     
     @Override
+    @XmlAttribute(name="backlogName")
     public String getName() {
         return this.backlog.getName();
     }
@@ -67,14 +78,18 @@ public class BacklogTimesheetNode extends TimesheetNode {
         return (this.childBacklogs.size() > 0 || this.childStories.size() > 0 || this.childTasks.size() > 0);
     }
     @Override
+    @XmlAttribute(name="backlogId")
     public int getId() {
         return backlog.getId();
     }
     
+    @XmlTransient
     public Backlog getBacklog() {
         return this.backlog;
     }
     
+    @XmlElementWrapper
+    @XmlElement(name="storyNodes")
     public List<StoryTimesheetNode> getStoryNodes() {
         return this.childStories;
     }
@@ -88,10 +103,13 @@ public class BacklogTimesheetNode extends TimesheetNode {
     public void addChild(BacklogTimesheetNode backlogNode) {
         this.childBacklogs.add(backlogNode);
     }
-    
+    @XmlElementWrapper
+    @XmlElement(name="taskNodes")
     public List<TaskTimesheetNode> getTaskNodes() {
         return this.childTasks;
     }
+    @XmlElementWrapper
+    @XmlElement(name="backlogNodes")
     public List<BacklogTimesheetNode> getBacklogNodes() {
         return this.childBacklogs;
     }

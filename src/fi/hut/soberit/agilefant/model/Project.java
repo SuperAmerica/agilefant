@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -19,6 +21,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.joda.time.DateTime;
 
+import fi.hut.soberit.agilefant.util.XmlDateTimeAdapter;
 import flexjson.JSON;
 
 /**
@@ -73,6 +76,8 @@ public class Project extends Backlog implements Schedulable, Rankable {
 
     @JSON
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
+    @XmlElement
     public DateTime getEndDate() {
         return endDate;
     }
@@ -83,6 +88,8 @@ public class Project extends Backlog implements Schedulable, Rankable {
 
     @JSON
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
+    @XmlElement
     public DateTime getStartDate() {
         return startDate;
     }

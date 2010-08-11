@@ -163,6 +163,7 @@ public class User implements NamedObject {
     @Email
     @Type(type = "truncated_varchar")
     @JSON
+    @XmlTransient
     public String getEmail() {
         return email;
     }

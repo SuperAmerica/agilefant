@@ -3,6 +3,12 @@ package fi.hut.soberit.agilefant.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlTransient;
+
+
 import fi.hut.soberit.agilefant.model.HourEntry;
 
 /**
@@ -31,10 +37,12 @@ public abstract class TimesheetNode {
         }
         return effortSum;
     }
+    @XmlAttribute(name="effortSum",required=true)
     public long getEffortSum() {
         return this.effortSum;
     }
     public abstract boolean getHasChildren();
+    
     public abstract List<? extends TimesheetNode> getChildren();
     public abstract String getName();
     public abstract int getId();
@@ -42,11 +50,12 @@ public abstract class TimesheetNode {
     public void addHourEntry(HourEntry entry) {
         this.hourEntries.add(entry);
     }
-    
+    @XmlElementWrapper(name="hourEntries")
+    @XmlElement(name="hourEntry")
     public List<HourEntry> getHourEntries() {
         return this.hourEntries;
     }
-    
+    @XmlTransient
     public long getOwnEffortSpentSum() {
         long sum = 0;
         for(HourEntry entry : this.hourEntries) {

@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -21,6 +23,8 @@ public class IterationTO extends Iteration implements LeafStoryContainer, Schedu
     private List<StoryTO> rankedStories = new ArrayList<StoryTO>();
     
     private Set<User> assignees;
+    
+    public IterationTO() {}
     
     public IterationTO(Iteration iter) {
         BeanCopier.copy(iter, this);
@@ -42,6 +46,8 @@ public class IterationTO extends Iteration implements LeafStoryContainer, Schedu
         this.rankedStories = rankedStories;
     }
 
+    @XmlElementWrapper(name = "assignees")
+    @XmlElement(name = "user")
     public Set<User> getAssignees() {
         return assignees;
     }
@@ -50,6 +56,8 @@ public class IterationTO extends Iteration implements LeafStoryContainer, Schedu
         this.assignees = assignees;
     }
 
+    @XmlElementWrapper(name="stories")
+    @XmlElement(name="story")
     public List<StoryTO> getLeafStories() {
         return this.rankedStories;
     }

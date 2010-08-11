@@ -1,10 +1,17 @@
 package fi.hut.soberit.agilefant.transfer;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlType;
+
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
 import flexjson.JSON;
 
+@XmlType
+@XmlAccessorType( XmlAccessType.NONE )
 public class StoryTO extends Story {
 
     // Additional fields
@@ -12,6 +19,8 @@ public class StoryTO extends Story {
     // Context-specific rank
     private Integer rank;
 
+    public StoryTO() {}
+    
     public StoryTO(Story story) {
         BeanCopier.copy(story, this);
     }
@@ -25,6 +34,7 @@ public class StoryTO extends Story {
     }
 
     @JSON
+    @XmlAttribute
     public Integer getRank() {
         return rank;
     }

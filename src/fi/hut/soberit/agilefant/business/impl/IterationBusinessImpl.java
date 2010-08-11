@@ -212,6 +212,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         return iterationTO;
     }
 
+    public IterationTO retrieveIterationOnlyLeafStories(int iterationId) {
+        IterationTO iteration = this.getIterationContents(iterationId);
+        iteration.setStories(null);
+        return iteration;
+    }
     public ExactEstimate calculateDailyVelocity(LocalDate start,
             IterationHistoryEntry yesterdayEntry) {
         LocalDate today = new LocalDate();

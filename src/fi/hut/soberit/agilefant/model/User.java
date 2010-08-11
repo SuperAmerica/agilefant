@@ -113,6 +113,7 @@ public class User implements NamedObject {
     /** Get full name. */
     @Type(type = "escaped_truncated_varchar")
     @JSON
+    @XmlAttribute
     public String getFullName() {
         return fullName;
     }
@@ -126,7 +127,6 @@ public class User implements NamedObject {
     @Column(unique = true)
     @Type(type = "escaped_truncated_varchar")
     @JSON
-    @XmlAttribute
     public String getLoginName() {
         return loginName;
     }
@@ -182,6 +182,7 @@ public class User implements NamedObject {
      * @return the initials
      */
     @JSON
+    @XmlAttribute
     public String getInitials() {
         return initials;
     }
@@ -224,6 +225,7 @@ public class User implements NamedObject {
      * @return true, if user is disabled, false otherwise
      */
     @JSON
+    @XmlAttribute
     public boolean isEnabled() {
         return enabled;
     }

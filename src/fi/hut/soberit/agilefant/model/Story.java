@@ -108,10 +108,6 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
         this.state = state;
     }
 
-    public void setResponsibles(Set<User> responsibles) {
-        this.responsibles = responsibles;
-    }
-
     /**
      * Get the users responsible for this story item.
      * @return Set of the responsible users
@@ -130,6 +126,10 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @XmlElement(name = "user")
     public Set<User> getResponsibles() {
         return responsibles;
+    }
+    
+    public void setResponsibles(Set<User> responsibles) {
+        this.responsibles = responsibles;
     }
     
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Task.class,

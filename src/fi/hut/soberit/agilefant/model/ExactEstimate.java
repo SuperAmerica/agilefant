@@ -1,7 +1,10 @@
 package fi.hut.soberit.agilefant.model;
 
 import javax.persistence.Embeddable;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement
 @SuppressWarnings("serial")
 @Embeddable
 public class ExactEstimate extends Number implements Comparable<ExactEstimate> {
@@ -21,6 +24,7 @@ public class ExactEstimate extends Number implements Comparable<ExactEstimate> {
         this.minorUnits = minorUnits;
     }
 
+    @XmlAttribute
     public Long getMinorUnits() {
         return minorUnits;
     }

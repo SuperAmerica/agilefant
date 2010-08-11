@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 import com.sun.jersey.spi.inject.Inject;
 
 import fi.hut.soberit.agilefant.business.IterationBusiness;
-import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.transfer.IterationTO;
 
 @Path("/iteration/{iterationId}")
 @Component
@@ -32,10 +32,10 @@ public class IterationResource {
 
     @GET
     @Produces("application/xml")
-    public JAXBElement<Iteration> get(
+    public JAXBElement<IterationTO> get(
             @PathParam("iterationId") Integer iterationId) {
-        return new JAXBElement<Iteration>(new QName("iteration"), Iteration.class,
-                iterationBusiness.getIterationContents(iterationId));
+        return new JAXBElement<IterationTO>(new QName("iteration"), IterationTO.class,
+                iterationBusiness.retrieveIterationOnlyLeafStories(iterationId));
     }
 
 }

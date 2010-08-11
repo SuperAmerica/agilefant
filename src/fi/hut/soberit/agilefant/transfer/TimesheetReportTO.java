@@ -18,7 +18,7 @@ public class TimesheetReportTO {
     private long totalEffortSum;
     
     @XmlElementWrapper(name="products")
-    @XmlElement(name="productNode")
+    @XmlElement(name="backlogNode")
     public List<BacklogTimesheetNode> getProductNodes() {
         return productNodes;
     }

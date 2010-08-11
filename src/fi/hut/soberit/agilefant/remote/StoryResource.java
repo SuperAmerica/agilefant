@@ -23,16 +23,18 @@ import fi.hut.soberit.agilefant.model.Story;
 @Scope("prototype")
 @RolesAllowed("agilefantremote")
 public class StoryResource {
-    
+
     @Autowired
     private StoryBusiness storyBusiness;
-    
-    @Inject UriInfo uriInfo;
-    
+
+    @Inject
+    UriInfo uriInfo;
+
     @GET
     @Produces("application/xml")
     public JAXBElement<Story> get(@PathParam("storyId") Integer storyId) {
-        return new JAXBElement<Story>(new QName("story"), Story.class, storyBusiness.retrieve(storyId));
+        return new JAXBElement<Story>(new QName("story"), Story.class,
+                storyBusiness.retrieve(storyId));
     }
-    
+
 }

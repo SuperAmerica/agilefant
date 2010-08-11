@@ -24,6 +24,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
@@ -52,7 +54,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     
     private TaskState state;
     private int rank = 0;
-//    private Priority priority;
     
     private ExactEstimate effortLeft;
     private ExactEstimate originalEstimate;
@@ -62,6 +63,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @XmlAttribute
     public int getId() {
         return id;
     }
@@ -72,6 +74,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @Type(type = "escaped_truncated_varchar")
     @JSON
+    @XmlAttribute
     public String getName() {
         return name;
     }
@@ -82,6 +85,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @JSON
     @Type(type = "escaped_text")
+    @XmlElement
     public String getDescription() {
         return description;
     }
@@ -110,10 +114,6 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
         this.story = story;
     }
 
-    public void setEffortLeft(ExactEstimate estimate) {
-        this.effortLeft = estimate;
-    }
-
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "effortleft")))
     @XmlAttribute
@@ -121,6 +121,10 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
         return effortLeft;
     }
 
+    public void setEffortLeft(ExactEstimate estimate) {
+        this.effortLeft = estimate;
+    }
+    
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "originalestimate")))
     @XmlAttribute
@@ -135,6 +139,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     @JSON
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
+    @XmlAttribute
     public TaskState getState() {
         return state;
     }
@@ -152,6 +157,8 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     )
     @OrderBy("initials asc")
     @JSON(include = false)
+    @XmlElementWrapper(name="resposibles")
+    @XmlElement(name="user")
     public Set<User> getResponsibles() {
         return responsibles;
     }
@@ -178,6 +185,8 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @OneToMany(mappedBy="task")
     @NotAudited
+    @XmlElementWrapper(name="hourEntries")
+    @XmlElement(name="hourEntry")
     public Set<TaskHourEntry> getHourEntries() {
         return hourEntries;
     }
@@ -187,6 +196,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     }
 
     @Column(nullable = false, columnDefinition = "int default 0")
+    @XmlAttribute
     public int getRank() {
         return rank;
     }

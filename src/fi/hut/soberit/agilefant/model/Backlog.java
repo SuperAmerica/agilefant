@@ -18,6 +18,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -150,12 +152,16 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @OneToMany(mappedBy = "parent")
     @NotAudited
+    @XmlElementWrapper
+    @XmlElement(name = "backlog")
     public Set<Backlog> getChildren() {
         return children;
     }
    
     @OneToMany(mappedBy = "backlog")
     @NotAudited
+    @XmlElementWrapper
+    @XmlElement(name = "story")
     public Set<Story> getStories() {
         return stories;
     }

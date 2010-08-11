@@ -4,9 +4,18 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+
+@XmlEnum
 public enum StoryState {
 
-    NOT_STARTED, STARTED, PENDING, BLOCKED, IMPLEMENTED, DONE;
+    @XmlEnumValue("NOT_STARTED") NOT_STARTED,
+    @XmlEnumValue("STARTED")     STARTED,
+    @XmlEnumValue("PENDING")     PENDING,
+    @XmlEnumValue("BLOCKED")     BLOCKED,
+    @XmlEnumValue("IMPLEMENTED") IMPLEMENTED,
+    @XmlEnumValue("DONE")        DONE;
 
     public int getOrdinal() {
         return this.ordinal();

@@ -14,6 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -114,6 +115,7 @@ public class Project extends Backlog implements Schedulable, Rankable {
      */
     @Enumerated(EnumType.ORDINAL)
     @JSON
+    @XmlAttribute
     public Status getStatus() {
         return status;
     }
@@ -136,6 +138,7 @@ public class Project extends Backlog implements Schedulable, Rankable {
     @JSON
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "backlogSize")))
+    @XmlAttribute
     public ExactEstimate getBacklogSize() {
         return backlogSize;
     }
@@ -146,6 +149,7 @@ public class Project extends Backlog implements Schedulable, Rankable {
 
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "baselineLoad")))
+    @XmlAttribute
     public ExactEstimate getBaselineLoad() {
         return baselineLoad;
     }

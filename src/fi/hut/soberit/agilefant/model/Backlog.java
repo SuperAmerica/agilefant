@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 
@@ -102,6 +103,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     @Type(type = "escaped_truncated_varchar")
     @JSON
+    @XmlAttribute
     public String getName() {
         return name;
     }
@@ -112,6 +114,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     @Type(type = "escaped_text")
     @JSON
+    @XmlElement
     public String getDescription() {
         return description;
     }

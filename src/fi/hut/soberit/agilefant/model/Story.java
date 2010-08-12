@@ -81,6 +81,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     @Type(type = "escaped_text")
+    @XmlElement
     public String getDescription() {
         return description;
     }

@@ -12,7 +12,10 @@ import javax.persistence.OneToMany;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -20,6 +23,8 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.joda.time.DateTime;
 
+import fi.hut.soberit.agilefant.util.XmlDateTimeAdapter;
+import fi.hut.soberit.agilefant.util.XmlExactEstimateAdapter;
 import flexjson.JSON;
 
 /**
@@ -63,30 +68,39 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     private ExactEstimate baselineLoad = new ExactEstimate(0);
     
     
+
+
+    @JSON
+    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @XmlAttribute
+    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
+    public DateTime getEndDate() {
+        return endDate;
+    }
+    
     public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
     }
 
+    
     @JSON
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
-    public DateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setStartDate(DateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    @JSON
-    @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+    @XmlAttribute
+    @XmlJavaTypeAdapter(XmlDateTimeAdapter.class)
     public DateTime getStartDate() {
         return startDate;
+    }
+    
+    public void setStartDate(DateTime startDate) {
+        this.startDate = startDate;
     }
 
 
     @JSON
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "backlogSize")))
+    @XmlAttribute
+    @XmlJavaTypeAdapter(XmlExactEstimateAdapter.class)
     public ExactEstimate getBacklogSize() {
         return backlogSize;
     }
@@ -94,16 +108,19 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     public void setBacklogSize(ExactEstimate backlogSize) {
         this.backlogSize = backlogSize;
     }
-
-    public void setTasks(Set<Task> tasks) {
-        this.tasks = tasks;
-    }
+    
     
     @OneToMany(mappedBy = "iteration")
     @JSON(include = false)
     @NotAudited
+    @XmlElementWrapper
+    @XmlElement(name = "task")
     public Set<Task> getTasks() {
         return tasks;
+    }
+    
+    public void setTasks(Set<Task> tasks) {
+        this.tasks = tasks;
     }
     
     @OneToMany(targetEntity = fi.hut.soberit.agilefant.model.Assignment.class,
@@ -131,6 +148,7 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     @Embedded
     @AttributeOverrides(@AttributeOverride(name = "minorUnits", column = @Column(name = "baselineLoad")))
     @XmlAttribute
+    @XmlJavaTypeAdapter(XmlExactEstimateAdapter.class)
     public ExactEstimate getBaselineLoad() {
         return baselineLoad;
     }

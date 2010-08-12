@@ -5,9 +5,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -31,10 +30,9 @@ public class StoryResource {
     UriInfo uriInfo;
 
     @GET
-    @Produces("application/xml")
-    public JAXBElement<Story> get(@PathParam("storyId") Integer storyId) {
-        return new JAXBElement<Story>(new QName("story"), Story.class,
-                storyBusiness.retrieve(storyId));
+    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML,MediaType.APPLICATION_JSON})
+    public Story get(@PathParam("storyId") Integer storyId) {
+        return storyBusiness.retrieve(storyId);
     }
 
 }

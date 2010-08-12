@@ -8,9 +8,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -37,8 +36,8 @@ public class TimesheetResource {
     UriInfo uriInfo;
 
     @GET
-    @Produces("application/xml")
-    public JAXBElement<TimesheetReportTO> get(
+    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML,MediaType.APPLICATION_JSON})
+    public TimesheetReportTO get(
             @QueryParam("userIds") Set<Integer> userIds,
             @QueryParam("backlogIds") Set<Integer> backlogIds,
             @QueryParam("startDate") String startDateStr,
@@ -57,7 +56,6 @@ public class TimesheetResource {
         TimesheetReportTO report = new TimesheetReportTO();
         report.setProductNodes(rootNodes);
         report.setTotalEffortSum(effortSum);
-        return new JAXBElement<TimesheetReportTO>(new QName("timesheetReport"),
-                TimesheetReportTO.class, report);
+        return report;
     }
 }

@@ -36,7 +36,7 @@ public class TimesheetResource {
     UriInfo uriInfo;
 
     @GET
-    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML,MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML})
     public TimesheetReportTO get(
             @QueryParam("userIds") Set<Integer> userIds,
             @QueryParam("backlogIds") Set<Integer> backlogIds,

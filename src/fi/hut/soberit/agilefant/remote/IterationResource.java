@@ -30,7 +30,7 @@ public class IterationResource {
     UriInfo uriInfo;
 
     @GET
-    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML,MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML})
     public IterationTO get(@PathParam("iterationId") Integer iterationId) {
         return iterationBusiness.retrieveIterationOnlyLeafStories(iterationId);
     }

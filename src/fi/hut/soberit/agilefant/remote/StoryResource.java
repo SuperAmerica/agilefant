@@ -30,7 +30,7 @@ public class StoryResource {
     UriInfo uriInfo;
 
     @GET
-    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML,MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML})
     public Story get(@PathParam("storyId") Integer storyId) {
         return storyBusiness.retrieve(storyId);
     }

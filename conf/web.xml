@@ -72,12 +72,8 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>
-		<filter-name>hibernateFilter</filter-name>
-		<url-pattern>*.action</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
     <filter-name>hibernateFilter</filter-name>
-    <url-pattern>/rs/*</url-pattern>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 	<filter-mapping> 
     <filter-name>ResponseHeaderFilter</filter-name> 

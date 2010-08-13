@@ -24,7 +24,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -80,7 +79,6 @@ public class User implements NamedObject {
     /*
      * User-specific settings
      */
-    @XmlTransient
     @XmlAccessorType( XmlAccessType.NONE )
     public enum UserSettingType { never, ask, always };
     

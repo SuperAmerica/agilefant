@@ -575,5 +575,17 @@
 		<include name="model/*.java"/>
   	</schemagen>
   </target>
+	
+  <target name="export-model" depends="schema">
+  	<mkdir dir="${build.dir}/remotesrc"/>
+  	<mkdir dir="${build.dir}/remotesrc_classes"/>
+  	<xjc package="fi.hut.soberit.agilefant.model.export" destdir="${build.dir}/remotesrc">
+  	  <schema dir="${build.dir}/schemas" includes="*.xsd"/>
+  	</xjc>
+	<javac debug="${javac.debug}" destdir="${build.dir}/remotesrc_classes" srcdir="${build.dir}/remotesrc">
+		<classpath refid="compile.classpath" />
+	</javac>
+  	<jar basedir="${build.dir}/remotesrc_classes" includes="**" destfile="${build.dir}/agilefant-model.jar" />
+  </target>
   
 </project>

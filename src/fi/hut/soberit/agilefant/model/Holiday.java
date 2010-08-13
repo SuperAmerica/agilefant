@@ -10,11 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.joda.time.Interval;
 
 @Entity
 @XmlAccessorType( XmlAccessType.NONE )
+@XmlTransient
 public class Holiday {
     private int id;
     private User user;

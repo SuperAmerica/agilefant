@@ -9,8 +9,7 @@
 	<property name="clover.jar" location="${basedir}/lib/build/clover.jar" />
 	<taskdef resource="cloverlib.xml" classpath="${clover.jar}" />
 
-
-
+	
 	<target name="init" description="Initializes build script">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.classes}" />
@@ -64,7 +63,22 @@
 		<property description="The location to store the per run files" name="jmeter.result.dir" value="${test.reports.jmeter}" />
 		<property description="The resulting file location, make sure this is unique for each build" name="jmeter.result.file" value="${jmeter.result.dir}/result_${struts.agilefantVersionNumber}_${build.id}.xml" />
 		<property description="The location to generate the html and charts to. " name="jchav.result.dir" value="${test.reports.jchav}" />
-
+		<path id="jax-ws">
+			<fileset dir="${lib}/build/jax-ws">
+					<include name="*.jar" />
+			</fileset>
+		</path>
+		<taskdef name="schemagen" classname="com.sun.tools.jxc.SchemaGenTask">
+			<classpath refid="jax-ws"/>
+		</taskdef>
+		<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+			<classpath refid="jax-ws"/>
+		</taskdef>
+		
+		<path id="compile.schema.classpath">
+			<path refid="compile.classpath" />
+			<pathelement location="${build.classes}" />
+		</path>
 	</target>
 
 	<target name="compile" depends="init" description="Compiles source files">
@@ -550,6 +564,16 @@
         </fileset>
       </batchtest>
     </junit>
+  </target>
+	
+	
+  <target name="schema" depends="compile">
+  	<mkdir dir="${build.dir}/schemas"/>
+  	<schemagen destdir="${build.dir}/schemas" srcdir="${basedir}/src/fi/hut/soberit/agilefant/">
+  		<schema namespace="http://agilefant.org/remote/" file="datamodel.xsd"/>
+  		<classpath refid="compile.schema.classpath" />
+		<include name="model/*.java"/>
+  	</schemagen>
   </target>
   
 </project>

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlTransient;
 
 import flexjson.JSON;
 
@@ -23,6 +24,7 @@ import flexjson.JSON;
         name = "whatsnextentry",
         uniqueConstraints={@UniqueConstraint(columnNames={"task_id", "user_id"})}
 )
+@XmlTransient
 @XmlAccessorType( XmlAccessType.NONE )
 public class WhatsNextEntry implements Rankable {
     private int id;

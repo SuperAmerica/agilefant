@@ -573,6 +573,9 @@
   		<schema namespace="http://agilefant.org/remote/" file="datamodel.xsd"/>
   		<classpath refid="compile.schema.classpath" />
 		<include name="model/*.java"/>
+  		<include name="util/TimesheetNode.java" />
+  		<include name="transfer/*TimesheetNode.java" />
+  		<include name="transfer/TimesheetReportTO.java" />
   	</schemagen>
   </target>
 	

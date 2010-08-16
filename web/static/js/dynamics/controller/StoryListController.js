@@ -260,7 +260,7 @@ StoryListController.columnConfig.name = {
   headerTooltip : 'Story name',
   get : StoryModel.prototype.getName,
   sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
-  defaultSortColumn: true,
+//  defaultSortColumn: true,
   editable : true,
   dragHandle: true,
   edit : {

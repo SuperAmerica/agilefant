@@ -18,12 +18,12 @@ import fi.hut.soberit.agilefant.business.DailyWorkBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 @Component("dailyWorkAction")
 @Scope("prototype")
@@ -47,7 +47,7 @@ public class DailyWorkAction extends ActionSupport {
 
     private List<User> enabledUsers                 = new ArrayList<User>();
     private Collection<DailyWorkTaskTO> queuedTasks = new ArrayList<DailyWorkTaskTO>();
-    private Collection<Story> stories = new ArrayList<Story>();
+    private Collection<StoryTO> stories = new ArrayList<StoryTO>();
     private Collection<Task> tasksWithoutStory = new ArrayList<Task>();
 
     private int  taskId;
@@ -217,7 +217,7 @@ public class DailyWorkAction extends ActionSupport {
         this.transferObjectBusiness = transferObjectBusiness;
     }
 
-    public Collection<Story> getStories() {
+    public Collection<StoryTO> getStories() {
         return stories;
     }
 

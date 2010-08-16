@@ -67,4 +67,6 @@ public interface StoryHierarchyDAO {
      * @return
      */
     public int getMaximumTreeRank(int productId);
+    
+    
 }

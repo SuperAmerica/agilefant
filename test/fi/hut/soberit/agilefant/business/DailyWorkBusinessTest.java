@@ -16,11 +16,13 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.DailyWorkBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryDAO;
+import fi.hut.soberit.agilefant.db.StoryRankDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
@@ -53,6 +55,8 @@ public class DailyWorkBusinessTest {
     private WhatsNextEntry whatsNextEntry_forTask2AndUser;
 
     private TransferObjectBusiness transferObjectBusiness;
+    
+    private StoryRankDAO storyRankDAO;
 
     private StoryDAO storyDAO;
     
@@ -77,6 +81,9 @@ public class DailyWorkBusinessTest {
         
         transferObjectBusiness = createMock(TransferObjectBusiness.class);
         testable.setTransferObjectBusiness(transferObjectBusiness);
+        
+        storyRankDAO = createMock(StoryRankDAO.class);
+        testable.setStoryRankDAO(storyRankDAO);
 
         backlog = new Product();
         backlog.setId(5);
@@ -103,13 +110,14 @@ public class DailyWorkBusinessTest {
     }
 
     private void replayAll() {
-        replay(taskDAO, storyDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
+        replay(taskDAO, storyDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness, storyRankDAO);
     }
     
     private void verifyAll() {
-        verify(taskDAO, storyDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness);
+        verify(taskDAO, storyDAO, whatsNextEntryDAO, rankingBusiness, taskBusiness, transferObjectBusiness, storyRankDAO);
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     public void testGetAssignedWorkFor() {
         ArrayList<Task> tasks = new ArrayList<Task>();
@@ -126,10 +134,12 @@ public class DailyWorkBusinessTest {
                 EasyMock.and(EasyMock.capture(interval), EasyMock.isA(Interval.class)))).andReturn(tasks);
         expect(storyDAO.getAllIterationStoriesByResponsibleAndInterval(EasyMock.eq(user), 
                 EasyMock.and(EasyMock.capture(interval2), EasyMock.isA(Interval.class)))).andReturn(stories);
-
         AssignedWorkTO assignedWork = new AssignedWorkTO();
+        
         expect(transferObjectBusiness.constructAssignedWorkTO(tasks, stories)).andReturn(assignedWork);
 
+        expect(storyRankDAO.getIterationRanksForStories(EasyMock.isA(Collection.class))).andReturn(new ArrayList<StoryRank>());
+        
         replayAll();
         AssignedWorkTO returned = testable.getAssignedWorkFor(user);
         verifyAll();

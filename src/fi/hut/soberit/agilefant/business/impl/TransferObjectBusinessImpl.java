@@ -266,7 +266,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         return toReturn;
     }
     
-    protected Story createStoryTOWithTaskTOs(Story story) {
+    protected StoryTO createStoryTOWithTaskTOs(Story story) {
         StoryTO to = constructStoryTO(story);
         Set<Task> storyTasks = to.getTasks();
         Set<Task> taskTos = new HashSet<Task>();
@@ -285,7 +285,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         AssignedWorkTO returned = new AssignedWorkTO();
         
         Set<Story> stories = new HashSet<Story>();
-        List<Story> storyTOs = new ArrayList<Story>();
+        List<StoryTO> storyTOs = new ArrayList<StoryTO>();
         List<Task> tasksWithoutStory = new ArrayList<Task>();
         
         for (Task task: tasks) {

@@ -2,10 +2,15 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,21 +20,25 @@ import fi.hut.soberit.agilefant.business.RankingBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.StoryDAO;
+import fi.hut.soberit.agilefant.db.StoryRankDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.WhatsNextEntryDAO;
 import fi.hut.soberit.agilefant.model.Rankable;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
 import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
+import fi.hut.soberit.agilefant.transfer.StoryTO;
 
 @Service("dailyWorkBusiness")
 @Transactional
 public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     private TaskDAO taskDAO;
     private StoryDAO storyDAO;
+    private StoryRankDAO storyRankDAO;
     private WhatsNextEntryDAO whatsNextEntryDAO;
     private RankingBusiness rankingBusiness;
     private TaskBusiness taskBusiness;
@@ -63,6 +72,11 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
     @Autowired
     public void setTransferObjectBusiness(TransferObjectBusiness transferObjectBusiness) {
         this.transferObjectBusiness = transferObjectBusiness;
+    }
+
+    @Autowired
+    public void setStoryRankDAO(StoryRankDAO storyRankDAO) {
+        this.storyRankDAO = storyRankDAO;
     }
 
     public Collection<DailyWorkTaskTO> getQueuedTasksForUser(User user) {
@@ -167,6 +181,34 @@ public class DailyWorkBusinessImpl implements DailyWorkBusiness {
         Collection<Task> tasks = taskDAO.getAllIterationAndStoryTasks(user, interval);
         Collection<Story> stories = storyDAO.getAllIterationStoriesByResponsibleAndInterval(user, interval);
         
-        return transferObjectBusiness.constructAssignedWorkTO(tasks, stories);
+        AssignedWorkTO returnable = transferObjectBusiness.constructAssignedWorkTO(tasks, stories);
+
+        Collection<Story> finalStories = new ArrayList<Story>();
+        finalStories.addAll(returnable.getStories());
+        Collection<StoryRank> ranks = storyRankDAO.getIterationRanksForStories(finalStories);
+
+        setStoryRanks(returnable.getStories(), ranks);
+        
+        return returnable; 
+    }
+    
+    @SuppressWarnings("unchecked")
+    private static void setStoryRanks(List<StoryTO> stories, Collection<StoryRank> ranks) {
+        Map<Integer, Integer> rankMap = new HashMap<Integer, Integer>();
+        for (StoryRank rank : ranks) {
+            rankMap.put(rank.getStory().getId(), rank.getRank());
+        }
+        // Set the ranks for the stories
+        for (StoryTO s : stories) {
+            s.setRank(rankMap.get(s.getId()));
+        }
+        
+        Collections.sort(stories, new PropertyComparator("rank", true, true));
+        Collections.sort(stories, new PropertyComparator("backlog.name", true, true));
+        
+        int i = 0;
+        for (StoryTO s : stories) {
+            s.setRank(i++);
+        }
     }
 }

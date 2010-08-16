@@ -89,23 +89,27 @@ HourEntryListController.prototype.logEffort = function() {
     me.hourEntryTableView.render();
     me.logEffortController.openRowEdit();
     me.logEffortRow.getCellByName("effortSpent").getEditor().focus();
+    me.paintHourEntryButtons();
   }
 
 };
 
 HourEntryListController.prototype.paintHourEntryButtons = function() {
   this.limited = this.model.getHourEntries().length >= 5;
-  var me = this;
   if(this.limited) {
-    this.seeAllButton = new DynamicsButtons(this, [ 
-      {
-        text: "See all",
-        callback: function () {
-          me.showAllEntries();
-        }
-      }
-    ], this.hourEntryButtonsView);
+    this._addSeeAllButton();
   } 
+};
+HourEntryListController.prototype._addSeeAllButton = function() {
+  if(!this.seeAllButton) {
+    this.seeAllButton = new DynamicsButtons(this, [ {
+      text : "See all",
+      callback : jQuery.proxy(function() {
+        this.showAllEntries();
+      }, this)
+    } ], this.hourEntryButtonsView);
+    this.seeAllButton.draw();
+  }
 };
 
 

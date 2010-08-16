@@ -36,6 +36,11 @@ public class ChartAction extends ActionSupport {
     
     private byte[] result;
     
+    private Integer customBdWidth = 1024;
+    
+    private Integer customBdHeight = 768;
+    
+    
     public void setIterationBurndownBusiness(
             IterationBurndownBusiness iterationBurndownBusiness) {
         this.iterationBurndownBusiness = iterationBurndownBusiness;
@@ -50,6 +55,14 @@ public class ChartAction extends ActionSupport {
         this.projectBurnupBusiness = projectBurnupBusiness;
     }
     
+    public void setCustomBdWidth(Integer largeBdWidth) {
+        this.customBdWidth = largeBdWidth;
+    }
+
+    public void setCustomBdHeight(Integer largeBdHeight) {
+        this.customBdHeight = largeBdHeight;
+    }
+
     public String getIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);
         result = iterationBurndownBusiness.getIterationBurndown(iteration);
@@ -73,7 +86,13 @@ public class ChartAction extends ActionSupport {
         result = iterationBurndownBusiness.getSmallIterationBurndown(iteration);
         return Action.SUCCESS;
     }
-    
+                  
+    public String getCustomIterationBurndown() {
+        Iteration iteration = iterationBusiness.retrieve(backlogId);
+        result = iterationBurndownBusiness.getCustomIterationBurndown(iteration, customBdWidth, customBdHeight);
+        return Action.SUCCESS;
+    }
+  
     public InputStream getInputStream() {
         return new ByteArrayInputStream(result);
     }

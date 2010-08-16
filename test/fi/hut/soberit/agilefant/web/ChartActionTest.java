@@ -64,5 +64,26 @@ public class ChartActionTest {
         assertEquals(expected, chartAction.getResult());
         
         
-        verify(iterationBusiness, iterationBurndownBusiness);    }
+        verify(iterationBusiness, iterationBurndownBusiness);
+    }
+    
+        @Test
+    public void testGetCustomIterationBurndown() {
+        byte[] expected = new byte[100];
+
+        chartAction.setBacklogId(iteration.getId());
+        chartAction.setCustomBdWidth(100);
+        chartAction.setCustomBdHeight(100);
+        expect(iterationBusiness.retrieve(iteration.getId())).andReturn(
+                iteration);
+        expect(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 100, 100))
+                .andReturn(expected);
+        replay(iterationBusiness, iterationBurndownBusiness);
+
+        assertEquals(Action.SUCCESS, chartAction.getCustomIterationBurndown());
+        assertEquals(expected, chartAction.getResult());
+        
+      
+        verify(iterationBusiness, iterationBurndownBusiness);    
+    }
 }

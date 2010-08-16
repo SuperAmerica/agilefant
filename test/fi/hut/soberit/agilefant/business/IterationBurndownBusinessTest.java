@@ -106,7 +106,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         replay(iterationHistoryEntryBusiness, iterationBusiness);
         
         assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration));
-        
+             
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
@@ -120,6 +120,19 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
 
         assertNotNull(iterationBurndownBusiness.getSmallIterationBurndown(iteration));
 
+        verify(iterationHistoryEntryBusiness, iterationBusiness);
+    }
+    
+    @Test
+    public void testCustomIterationBurndown() {
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
+            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
+        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        assertNotNull(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 1024, 768));
+        
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     

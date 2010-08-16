@@ -282,6 +282,13 @@
         <param name="inputName">inputStream</param>
       </result>
     </action>
+    
+    <action name="drawCustomIterationBurndown" method="getCustomIterationBurndown" class="chartAction">
+  		<result name="success" type="stream">
+    		<param name="contentType">image/png</param>
+    		<param name="inputName">inputStream</param>
+  		</result>
+	</action>
 
 		<action name="selectBacklog">
 			<result type="dispatcher">/WEB-INF/jsp/selectBacklog.jsp</result>

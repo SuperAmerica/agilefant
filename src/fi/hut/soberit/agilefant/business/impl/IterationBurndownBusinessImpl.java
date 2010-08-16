@@ -173,6 +173,11 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return getChartImageByteArray(constructSmallChart(iteration), SMALL_WIDTH, SMALL_HEIGHT);
     }
     
+    public byte[] getCustomIterationBurndown(Iteration iteration, Integer width,
+            Integer height) {
+        return getChartImageByteArray(constructChart(iteration), width, height);
+    }
+    
     protected JFreeChart constructChart(Iteration iteration, boolean drawLegend) {
         return constructChart(iteration);
     }
@@ -521,5 +526,5 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         timeSeries.addOrUpdate(new Second(instant.toDateMidnight().toDateTime()
                 .toDate()), ExactEstimateUtils.extractMajorUnits(value));
     }
-
+    
 }

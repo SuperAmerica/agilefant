@@ -109,7 +109,9 @@ $(document).ready(function() {
 
 
 <p style="text-align: center;"><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
-	id="bigChart" width="780" height="600" /></p>
+	id="bigChart" width="780" height="600" />
+	<br>
+	<a href="drawCustomIterationBurndown.action?backlogId=${iteration.id}&customBdWidth=1280&customBdHeight=1024">Enlarge</a></p>
 
   </jsp:body>
 </struct:htmlWrapper>

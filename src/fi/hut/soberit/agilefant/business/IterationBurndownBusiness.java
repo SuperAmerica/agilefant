@@ -13,4 +13,6 @@ public interface IterationBurndownBusiness {
     public byte[] getIterationBurndown(Iteration iteration);
 
     public byte[] getSmallIterationBurndown (Iteration iteration);
+    
+        public byte[] getCustomIterationBurndown(Iteration iteration, Integer width, Integer height);
 }

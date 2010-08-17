@@ -508,7 +508,10 @@
                  */
                 $(this.editorDoc).keyup(function() { self.saveContent(); })
                                  .mouseup(function() { self.saveContent(); })
-                                 .mouseout(function() { self.saveContent(); });
+                                 .mouseout(function() { self.saveContent(); })
+                                 .bind('paste',function() { 
+                                   setTimeout(function() { self.saveContent(); }, 100);
+                                 });
             }
 
             if ( this.options.css )

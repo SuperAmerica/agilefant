@@ -493,8 +493,13 @@
     <copy file="${basedir}/tools/rebel.xml.template" tofile="${basedir}/eclipse-classes/rebel.xml" filtering="true" />
   </target>
   
-  <target name="development-redeploy" depends="clean, undeploy-local, jrebel, deploy-local-web" />
-  
+  <target name="development-redeploy" depends="remove-erroneous-webxml, clean, undeploy-local, jrebel, deploy-local-web" />
+
+	<target name="remove-erroneous-webxml">
+		<delete file="${basedir}/web/WEB-INF/web.xml"/>
+	</target>
+	
+	
   
   <!-- Selenium tests -->
   <target name="tomcat-start" description="Start Tomcat application">

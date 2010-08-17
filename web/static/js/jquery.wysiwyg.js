@@ -507,7 +507,8 @@
                  * @link http://code.google.com/p/jwysiwyg/issues/detail?id=11
                  */
                 $(this.editorDoc).keyup(function() { self.saveContent(); })
-                                 .mouseup(function() { self.saveContent(); });
+                                 .mouseup(function() { self.saveContent(); })
+                                 .mouseout(function() { self.saveContent(); });
             }
 
             if ( this.options.css )

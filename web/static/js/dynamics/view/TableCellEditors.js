@@ -1059,7 +1059,9 @@ TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
   var me = this;
   this.actualElement = $('<textarea></textarea>').appendTo(element);
   this.actualElement.width(this.options.width).height(this.options.height);
-  this.actualElement.wysiwyg();
+  this.actualElement.wysiwyg({
+    autoSave: true
+  });
   this.wysiwyg = this._getEditorWindow();
   
   this.actualElement.trigger("editorOpening");
@@ -1074,6 +1076,7 @@ TableEditors.Wysiwyg.prototype.init = function(element, model, options) {
 //      me.actualElement.focus();
     }
   });
+
 };
 TableEditors.Wysiwyg.prototype.resetEditor = function() {
   var iframeElement = this.actualElement.wysiwyg("getFrame")[0];

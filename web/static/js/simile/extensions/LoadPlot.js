@@ -1,3 +1,31 @@
+function generateColors() {
+  var colorpart = ["FF","DD","CC","BB","AA"];
+
+  var number = 7; var mod = 0;
+  var colors = [];
+  for (var x = 0; x < number; x++) {
+    colors[x] = [];
+  }
+  
+  for (var i = 0; i < 5; i++) {
+    for (var j = 0; j < 5; j++) {
+      for (var k = 0; k < 5; k++) {
+        var colorString = '#' + colorpart[i] + colorpart[j] + colorpart[k];
+        
+        colors[mod % number].push(colorString);
+        mod++;
+      }
+    }
+  }
+  
+  var finalColors = [];
+  for (var x = 0; x < number; x++) {
+    finalColors = finalColors.concat(colors[x]);
+  }
+  return finalColors;
+}
+
+
 Timeplot.PlotExtender = function() {};
 Timeplot.PlotExtender.prototype = Timeplot.Plot.prototype;
 Timeplot.OriginalPlot = Timeplot.Plot;
@@ -52,9 +80,9 @@ Timeplot.AgilefantSummaryPlot.prototype.paint = function() {
 
 Timeplot.AgilefantBacklogPlot = function(timeplot, plotInfo) {
   Timeplot.OriginalPlot.call(this, timeplot, plotInfo);
+  this.availableColors = generateColors();
+  this.colorIter = 1;
   this.colors = {};
-  this.iterationColor = new Timeplot.Color("rgb(184,237,254)");
-  this.projectColor = new Timeplot.Color("rgb(251,193,253)");
   this.iIter = 0;
   this.iProj = 0;
 };
@@ -62,17 +90,9 @@ Timeplot.AgilefantBacklogPlot.prototype = new Timeplot.PlotExtender();
 Timeplot.AgilefantBacklogPlot.prototype._boxColor = function(backlog) {
   var oid = backlog.id;
   if(!this.colors[oid]) {
-    var base;
-    if(backlog["class"].indexOf("Project") > 0) {
-      base = this.projectColor;
-    } else {
-      base = this.iterationColor;
-    }
-    base.darken(16);
-    color = base;
-    this.colors[oid] = color.toString();
-    $("<div />").css("background-color", color.toString()).text(backlog.name).appendTo(this._plotInfo.legends);
-    
+    var color = this.availableColors[this.colorIter++];
+    this.colors[oid] = color;
+    $("<div />").css("background-color", color).text(backlog.name).prependTo(this._plotInfo.legends);
   }
   return this.colors[oid];
 };

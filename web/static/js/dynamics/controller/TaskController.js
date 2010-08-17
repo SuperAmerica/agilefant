@@ -116,7 +116,7 @@ TaskController.prototype.markStoryAsStarted = function(model) {
   var changedData = model.getChangedData();
   var story = model.getStory();
   var currentUser = PageController.getInstance().getCurrentUser();
-  if (currentUser.getMarkStoryStarted() === "ask" && story && story.getState() === "NOT_STARTED" && changedData.state !== "NOT_STARTED"
+  if (changedData.state && currentUser.getMarkStoryStarted() === "ask" && story && story.getState() === "NOT_STARTED" && changedData.state !== "NOT_STARTED"
     && model.persistedData.state === "NOT_STARTED") {
     var msg = new DynamicsConfirmationDialog(
         "Mark the story started as well?",

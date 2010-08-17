@@ -510,7 +510,7 @@
                                  .mouseup(function() { self.saveContent(); })
                                  .mouseout(function() { self.saveContent(); })
                                  .bind('paste',function() { 
-                                   setTimeout(function() { self.saveContent(); }, 100);
+                                   setTimeout(function() { self.saveContent(); }, 50);
                                  });
             }
 

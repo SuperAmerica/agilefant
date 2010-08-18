@@ -9,7 +9,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -17,8 +16,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import com.sun.jersey.spi.inject.Inject;
 
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
@@ -31,9 +28,6 @@ import fi.hut.soberit.agilefant.transfer.TimesheetReportTO;
 public class TimesheetResource {
     @Autowired
     private TimesheetBusiness timesheetBusiness;
-
-    @Inject
-    UriInfo uriInfo;
 
     @GET
     @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML})

@@ -165,5 +165,13 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
         User user = userDAO.get(id);
         user.setEnabled(true);  
     }
+    
+    public User retrieveByCredentials(String loginName, String password) {
+        User user = retrieveByLoginName(loginName);
+        if (user.getPassword().equals(password)) {
+            return user;
+        }
+        return null;
+    }
 
 }

@@ -55,5 +55,7 @@ public interface UserBusiness extends GenericBusiness<User> {
      */
     public Duration calculateWorktimePerPeriod(User user, Interval interval);
     public ExactEstimate calculateWorkHoursPerPeriod(User user, Interval interval);
+    
+    public User retrieveByCredentials(String loginName, String password);
 
 }

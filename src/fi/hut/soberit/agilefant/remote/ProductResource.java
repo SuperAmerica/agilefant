@@ -8,13 +8,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import com.sun.jersey.spi.inject.Inject;
 
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
@@ -30,9 +27,6 @@ public class ProductResource {
 
     @Autowired
     private ProductBusiness productBusiness;
-
-    @Inject
-    UriInfo uriInfo;
 
     @GET
     @Path("/{productId}")

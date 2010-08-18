@@ -6,13 +6,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import com.sun.jersey.spi.inject.Inject;
 
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.model.Story;
@@ -25,9 +22,6 @@ public class StoryResource {
 
     @Autowired
     private StoryBusiness storyBusiness;
-
-    @Inject
-    UriInfo uriInfo;
 
     @GET
     @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML})

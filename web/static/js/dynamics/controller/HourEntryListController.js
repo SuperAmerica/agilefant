@@ -32,6 +32,8 @@ HourEntryListController.prototype.paintHourEntryTable = function() {
   this.hourEntryTableView = new DynamicTable(this, this.model, this.hourEntryTableConfig,
       this.hourEntryTableElement);
   
+  this.hourEntryTableView.getElement().css({'overflow':'auto','max-height':'20em'});
+  
   //need to extend existing table configuration as that's the only way to get same with to columns
   var origConf = this.hourEntryTableConfig.getColumns();
   

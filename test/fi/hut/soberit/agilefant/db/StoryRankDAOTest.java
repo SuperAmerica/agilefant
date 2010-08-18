@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -57,6 +58,12 @@ public class StoryRankDAOTest extends AbstractHibernateTests {
         assertTrue(checkRankExists(actual, 4, 101, 1));
     }
 
+    @Test
+    public void testGetIterationRanksForStories_noStories() {
+        executeClassSql();
+        Collection<StoryRank> actual = storyRankDAO.getIterationRanksForStories(new ArrayList<Story>());
+        assertTrue(actual.isEmpty());
+    }
     private boolean checkRankExists(Collection<StoryRank> actual, int storyId, int backlogId, int rank) {
         for (StoryRank sr : actual) {
             if (sr.getStory().getId() == storyId && sr.getBacklog().getId() == backlogId && sr.getRank() == rank) {

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -38,6 +39,9 @@ public class StoryRankDAOHibernate extends GenericDAOHibernate<StoryRank>
     }
     
     public Collection<StoryRank> getIterationRanksForStories(Collection<Story> stories) {
+        if(stories.isEmpty()) {
+            return new ArrayList<StoryRank>();
+        }
         Criteria filter = getCurrentSession().createCriteria(StoryRank.class);
         filter.add(Restrictions.in("story", stories));
         

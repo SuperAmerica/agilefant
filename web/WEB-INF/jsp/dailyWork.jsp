@@ -4,6 +4,23 @@
 
 <jsp:attribute name="includeInHeader">
   <link rel="stylesheet" href="static/css/dailywork.css" type="text/css"/>
+  
+  <script type="text/javascript" src="static/js/excanvas.js"></script>
+  <link rel="stylesheet" href="static/css/timeplot.css" type="text/css"/>
+  <link rel="stylesheet" href="static/css/timeline/timeline.css" type="text/css"/>
+  <link rel="stylesheet" href="static/css/timeline/ether.css" type="text/css"/>
+  <link rel="stylesheet" href="static/css/timeline/event.css" type="text/css"/>
+  <style type="text/css">
+  .ui-tabs .ui-tabs-hide {
+      position: absolute !important;
+      left: -10000px !important;
+      display: block !important;
+  }
+  </style>
+  <script type="text/javascript" src="static/js/simile-widgets.js"></script>
+  <script type="text/javascript" src="static/js/simile/extensions/LoadPlot.js"></script>
+  <script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
+  <script type="text/javascript" src="static/js/simile/extensions/UserLoadPlotWidget.js"></script>
 </jsp:attribute>
 
 <jsp:body>

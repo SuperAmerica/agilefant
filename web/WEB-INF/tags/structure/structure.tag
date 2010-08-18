@@ -19,7 +19,7 @@
 
 <head>
   <title>Agilefant</title>
-  <link rel="stylesheet" type="text/css" href="static/css/structure.css?<ww:text name="struts.agilefantReleaseId" />" />
+  <link rel="stylesheet" type="text/css" href="static/css/main.css?<ww:text name="struts.agilefantReleaseId" />" />
   <!--[if IE 7]><link rel="stylesheet" type="text/css" href="static/css/IE7styles.css?<ww:text name="struts.agilefantReleaseId" />" /><![endif]-->
   <!--[if IE 8]><link rel="stylesheet" type="text/css" href="static/css/IE8styles.css?<ww:text name="struts.agilefantReleaseId" />" /><![endif]-->  
   

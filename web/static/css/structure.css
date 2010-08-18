@@ -1,27 +1,3 @@
-/**
- * AGILEFANT Style sheet
- *
- * This file is intended for the main structure of Agilefant.
- * Don't misuse. 
- *
- * Author:    Reko Jokelainen
- * Date:      09/2009
- */
-@import "structure.tables.css";
-@import "structure.text.css";
-@import "structure.ui.css";
-@import "structure.hierarchy.css";
-
-@import "jquery-ui.css";
-@import "jquery.wysiwyg.css";
-@import "ui.dynatree.css";
-
-@import "autocomplete.css";
-@import "dynamictable.css";
-
-@import "portfolio.css";
-@import "timesheets.css";
-@import "autoSuggest.css";
 
 html, body {
   margin: 0;

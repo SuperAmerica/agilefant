@@ -449,8 +449,8 @@
 	    <filelist dir="${build.webapp}/static/css/" files="structure.css,
 	    	structure.tables.css, structure.text.css, structure.ui.css,
 	    	structure.hierarchy.css, jquery-ui.css, jquery.wysiwyg.css,
-	    	ui.dynatree.css, autocomplete.css, dynamictable.css, portfolio.css,
-	  	  timesheets.css, autoSuggest.css" />
+	    	ui.dynatree.css, autocomplete.css, dynamictable.css, dynamics.messages.css,
+	    	portfolio.css, timesheets.css, autoSuggest.css" />
 		</concat>
 	</target>
 	

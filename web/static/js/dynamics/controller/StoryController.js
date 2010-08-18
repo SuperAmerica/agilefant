@@ -84,11 +84,11 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
     minHeight:  300,
     closeOnEscape: false,
     buttons: {
-      Confirm: function() {
-        me._confirmMoveStory(backlogId);
-      },
       Cancel: function() {
         dialog.dialog('close');
+      },
+      Confirm: function() {
+        me._confirmMoveStory(backlogId);
       }
     },
     close: function() {

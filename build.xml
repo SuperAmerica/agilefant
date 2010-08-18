@@ -298,7 +298,7 @@
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
-	<target name="production-war" depends="replace_version_number, replace-static-expiration-time, compress-js">
+	<target name="production-war" depends="replace_version_number, replace-static-expiration-time, compress-js, concat_css">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
@@ -443,6 +443,17 @@
 			</fileset>
 		</jslint>
 	</target>
+	
+	<target name="concat_css" depends="webapp">
+	  <concat destfile="${build.webapp}/static/css/main.css">
+	    <filelist dir="${build.webapp}/static/css/" files="structure.css,
+	    	structure.tables.css, structure.text.css, structure.ui.css,
+	    	structure.hierarchy.css, jquery-ui.css, jquery.wysiwyg.css,
+	    	ui.dynatree.css, autocomplete.css, dynamictable.css, portfolio.css,
+	  	  timesheets.css, autoSuggest.css" />
+		</concat>
+	</target>
+	
 	<target name="concat_javascript" depends="webapp">
 		<concat destfile="${build.webapp}/static/js/simile-widgets.js">
 			<filelist dir="${build.webapp}/static/js/simile/" files="init.js" />

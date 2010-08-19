@@ -16,11 +16,21 @@
   </c:otherwise>
 </c:choose>
 
-
+<c:set var="forcedClass" value="" />
 <c:if test="${forceOpen}"><c:set var="forcedClass" value="open" /></c:if>
 
+
+
 <li id="storytree_${node.id}" storyid="${node.id}" storystate="${node.state}" rel="${nodeType}" class="${forcedClass}">
-  <a>
+  <c:choose>
+  <c:when test="${aef:isProduct(node.backlog)}">
+    <a class="productStory">
+  </c:when>
+  <c:otherwise>
+    <a>
+  </c:otherwise>
+  </c:choose>
+  
   
   <span style="display: none;">
   <c:forEach items="${node.labels}" var="label">${label.displayName} </c:forEach>

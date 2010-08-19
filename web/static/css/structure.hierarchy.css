@@ -284,3 +284,6 @@ div.storyTreeContainer .openCreateDialogLink:hover {
   cursor: pointer;  
 }
 
+.projectStoryTreeContainer ul > li > a.productStory > span.storyTreeName {
+  color: #666;
+}

@@ -20,6 +20,7 @@
 	<classpathentry kind="lib" path="lib/build/jsdoctoolkit-ant-task-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-jpa-2.0-api-1.0.0.Final.jar"/>
 	<classpathentry kind="lib" path="lib/cglib-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/poi-3.6.jar"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar">
 		<attributes>
@@ -69,7 +70,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/spring-security-core-tiger-2.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flexjson.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/mysql-connector-java-5.1.7-bin.jar"/>
-	<classpathentry kind="lib" path="lib/poi-3.5-beta5-20090219.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-1.6.jar" sourcepath="lib-src/joda-time-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-hibernate-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>

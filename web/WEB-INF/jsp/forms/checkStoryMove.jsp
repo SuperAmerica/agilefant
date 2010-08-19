@@ -1,6 +1,6 @@
 <%@include file="/WEB-INF/jsp/inc/_taglibs.jsp" %>
 
-<c:if test="${fn:length(messages) > 0}">
+<c:if test="${fn:length(messages) > 0 || parentStoryConflict}">
 <div class="messageContainer">
 
 <img alt="" src="static/img/attention.png" style="float:right;"/>
@@ -102,10 +102,7 @@ var toggleElement = function toggleElement(selector, type) {
   
   <ul style="list-style-type: none;">
     
-      <%--
-    !! LEFT OUT CURRENTLY !!
-    
-    
+    <%--
     <c:if test="${parentStoryConflict == true}">
       <li>
         <input type="checkbox" value="" name="moveParentsToProduct" onchange="toggleElement('#suggestion_moveParentsToProduct','moveParentsToProduct');return false;"/>
@@ -119,10 +116,16 @@ var toggleElement = function toggleElement(selector, type) {
     </c:if>
      --%>
     
-    
     <li>
       <input type="radio" value="moveTargetStoryOnly" name="selectedAction" onchange="openElement('#suggestion_storyOnlyMessage','moveStoryOnly');return false;"/> 
-      Move the story and leave the children behind
+      <c:choose>
+      <c:when test="${empty story.children}">
+        Move the story      
+      </c:when>
+      <c:otherwise>
+        Move the story and leave the children behind
+      </c:otherwise>
+      </c:choose>
     </li>
       
     <li id="suggestion_storyOnlyMessage" class="closable">
@@ -133,7 +136,7 @@ var toggleElement = function toggleElement(selector, type) {
     </li>
     
     
-    <c:if test="${!aef:isIteration(backlog)}">
+    <c:if test="${!aef:isIteration(backlog) && !empty story.children}">
       <li>
         <input type="radio" value="moveTargetAndItsChildren" name="selectedAction" onchange="openElement('#suggestion_storyAndChildrenMessage','moveStoryAndChildren');return false;"/>
         Move the story and all of its children

@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
@@ -26,12 +27,19 @@ import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 
 import static org.junit.Assert.*;
 
+import static org.easymock.EasyMock.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
 public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
 
     @TestedBean
     private StoryTreeIntegrityBusinessImpl testable;
+
+    @Mock
+    private BacklogBusiness backlogBusiness;
+
+    List<StoryTreeIntegrityMessage> messages;
 
     /*
      * CHANGING BACKLOG
@@ -40,10 +48,12 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testChangeBacklog_hasChildren_movingToIteration() {
+        expect(backlogBusiness.getParentProduct(story_31.getBacklog()))
+                .andReturn(product);
+        expect(backlogBusiness.getParentProduct(iteration)).andReturn(product);
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable.checkChangeBacklog(
-                story_31, iteration);
+        messages = testable.checkChangeBacklog(story_31, iteration);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
@@ -56,10 +66,12 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testChangeBacklog_hasChildren_notUnderTargetBacklog() {
+        expect(backlogBusiness.getParentProduct(story_21.getBacklog()))
+                .andReturn(product);
+        expect(backlogBusiness.getParentProduct(project2)).andReturn(product);
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable.checkChangeBacklog(
-                story_21, project2);
+        messages = testable.checkChangeBacklog(story_21, project2);
         verifyAll();
 
         assertNumberOfMessages(messages, 3);
@@ -77,10 +89,12 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testChangeBacklog_moveToProduct_parentInProject() {
+        expect(backlogBusiness.getParentProduct(story_41.getBacklog()))
+                .andReturn(product);
+        expect(backlogBusiness.getParentProduct(product)).andReturn(product);
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable.checkChangeBacklog(
-                story_41, product);
+        messages = testable.checkChangeBacklog(story_41, product);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
@@ -93,16 +107,42 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testChangeBacklog_moveToDifferentBranch() {
+        expect(backlogBusiness.getParentProduct(story_33.getBacklog()))
+                .andReturn(product);
+        expect(backlogBusiness.getParentProduct(project1)).andReturn(product);
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable.checkChangeBacklog(
-                story_33, project1);
+        messages = testable.checkChangeBacklog(story_33, project1);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
         assertMessagesContain(messages,
                 StoryHierarchyIntegrityViolationType.PARENT_IN_WRONG_BRANCH,
                 story_33, story_22);
+    }
+
+    @Test
+    @DirtiesContext
+    public void testChangeBacklog_moveToAnotherProduct_noConflict() {
+        replayAll();
+        messages = testable.checkChangeBacklog(story_12, new Product());
+        verifyAll();
+        assertNumberOfMessages(messages, 0);
+    }
+
+    @Test
+    @DirtiesContext
+    public void testChangeBacklog_moveToAnotherProduct_withConflict() {
+        Product another = new Product();
+        
+        expect(backlogBusiness.getParentProduct(story_23.getBacklog()))
+            .andReturn(product);
+        expect(backlogBusiness.getParentProduct(another)).andReturn(another);
+        
+        replayAll();
+        messages = testable.checkChangeBacklog(story_23, another);
+        verifyAll();
+        assertNumberOfMessages(messages, 1);
     }
 
     /*
@@ -115,8 +155,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         // 32 -> 41
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable
-                .checkChangeParentStory(story_32, story_41);
+        messages = testable.checkChangeParentStory(story_32, story_41);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
@@ -132,8 +171,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         // 41 -> 22
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable
-                .checkChangeParentStory(story_41, story_22);
+        messages = testable.checkChangeParentStory(story_41, story_22);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
@@ -150,8 +188,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         // 34 vaihtaa branchia
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable
-                .checkChangeParentStory(story_23, story_22);
+        messages = testable.checkChangeParentStory(story_23, story_22);
         verifyAll();
 
         assertNumberOfMessages(messages, 1);
@@ -168,8 +205,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         // 2 virhettä, 22->31, 33 -> 31
 
         replayAll();
-        List<StoryTreeIntegrityMessage> messages = testable
-                .checkChangeParentStory(story_22, story_31);
+        messages = testable.checkChangeParentStory(story_22, story_31);
         verifyAll();
 
         assertNumberOfMessages(messages, 2);
@@ -213,9 +249,16 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
      * DATA CONSTRUCTION
      */
     /*
-     * Dataset as ASCII: Story 11 (Prod) |- Story 21 (Prod) | |- Story 31
-     * (Proj1) | | |- Story 41 (Iter1) | |- Story 32 (Proj1) |- Story 22 (Proj2)
-     * | |- Story 33 (Proj2) |- Story 23 (Prod)
+     * Dataset as ASCII:
+     * Story 11 (Prod)
+     * |- Story 21 (Prod)
+     * | |- Story 31 (Proj1)
+     * | | |- Story 41 (Iter1)
+     * | |- Story 32 (Proj1)
+     * |- Story 22 (Proj2)
+     * | |- Story 33 (Proj2)
+     * |- Story 23 (Prod)
+     * Story 12 (Prod)
      */
 
     Product product;
@@ -223,6 +266,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     Project project2;
     Iteration iteration;
     Story story_11;
+    Story story_12;
     Story story_21;
     Story story_31;
     Story story_32;
@@ -241,6 +285,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
 
     private void constructStories() {
         story_11 = new Story();
+        story_12 = new Story();
         story_21 = new Story();
         story_31 = new Story();
         story_32 = new Story();
@@ -248,6 +293,16 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         story_22 = new Story();
         story_33 = new Story();
         story_23 = new Story();
+
+        story_11.setName("Story 11");
+        story_12.setName("Story 12");
+        story_21.setName("Story 21");
+        story_31.setName("Story 31");
+        story_32.setName("Story 32");
+        story_41.setName("Story 41");
+        story_22.setName("Story 22");
+        story_33.setName("Story 33");
+        story_23.setName("Story 23");
     }
 
     private void setStoryRelations() {
@@ -267,10 +322,12 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         story_22.setChildren(new ArrayList<Story>(Arrays.asList(story_33)));
         story_33.setParent(story_22);
 
+        story_23.setParent(story_11);
     }
 
     private void setStoryBacklogs() {
         story_11.setBacklog(product);
+        story_12.setBacklog(product);
         story_21.setBacklog(product);
         story_31.setBacklog(project1);
         story_41.setBacklog(iteration);

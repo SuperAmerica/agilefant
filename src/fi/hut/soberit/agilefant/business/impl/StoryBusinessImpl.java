@@ -290,11 +290,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
     
     public void moveStoryAndChildren(Story story, Backlog backlog) {
-        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
-                .getParentProduct(backlog)) {
-            throw new OperationNotPermittedException(
-                    "Can't move a story with children to another product");
-        }
+//        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
+//                .getParentProduct(backlog)) {
+//            throw new OperationNotPermittedException(
+//                    "Can't move a story with children to another product");
+//        }
         if (!story.getChildren().isEmpty() && backlog instanceof Iteration) {
             throw new OperationNotPermittedException(
                     "Story containing child stories can not be moved to an iteration.");
@@ -320,11 +320,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
     
     public void moveSingleStoryToBacklog(Story story, Backlog backlog) {
-        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
-                .getParentProduct(backlog)) {
-            throw new OperationNotPermittedException(
-                    "Can't move a story with children to another product");
-        }
+//        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
+//                .getParentProduct(backlog)) {
+//            throw new OperationNotPermittedException(
+//                    "Can't move a story with children to another product");
+//        }
         //move children to the parent story
         Story parent = story.getParent();
         List<Story> childStories = new ArrayList<Story>(story.getChildren());

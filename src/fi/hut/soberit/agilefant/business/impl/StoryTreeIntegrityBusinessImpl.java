@@ -6,9 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
 import fi.hut.soberit.agilefant.exception.StoryTreeIntegrityViolationException;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -24,6 +26,9 @@ import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
 @Service("storyTreeIntegrityBusiness")
 @Transactional(readOnly = true)
 public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusiness {
+    
+    @Autowired
+    private BacklogBusiness backlogBusiness;
 
     /** {@inheritDoc} */
     public List<StoryTreeIntegrityMessage> checkChangeBacklog(
@@ -58,6 +63,11 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
              * product level.
              */
             checkParentDifferentProjectRule(story, newBacklog, messages);
+            
+            /*
+             * Check if the parent story restricts moving 
+             */
+            checkParentStoryConflict(story, newBacklog, messages);
         }
         
         return messages;
@@ -264,11 +274,35 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         return messages.isEmpty();
     }
     
-    public boolean hasParentStoryConflict(Story story, Backlog newBacklog) {
-        /*
-         * A conflict exists if the story being moved has a parent story in project backlog
-         * and that project backlog is not the backlog where the story is being moved to. 
-         */
+    
+    private List<StoryTreeIntegrityMessage> checkParentStoryConflict(
+            Story story, Backlog newBacklog, List<StoryTreeIntegrityMessage> messages) {
+        
+        if (story.getParent() != null &&
+                originalAndTargetProductEqual(story.getBacklog(), newBacklog)) {
+            messages
+                    .add(new StoryTreeIntegrityMessage(
+                            story,
+                            story.getParent(),
+                            StoryHierarchyIntegrityViolationType.PARENT_IN_WRONG_PRODUCT));
+        }
+        return messages;
+    }
+    
+    /**
+     * A conflict exists if the old and new backlogs are under different products.
+     */
+    protected boolean originalAndTargetProductEqual(Backlog original, Backlog target) {
+        Backlog targetProduct = backlogBusiness.getParentProduct(target);
+        Backlog currentProduct = backlogBusiness.getParentProduct(original);
+        return targetProduct != currentProduct;
+    }
+    
+    /**
+     * A conflict exists if the story being moved has a parent story in project backlog
+     * and that project backlog is not the backlog where the story is being moved to.
+     */
+    protected boolean parentStoryInDifferentBranch(Story story, Backlog newBacklog) {
         for(Story parent = story.getParent(); parent != null; parent = parent.getParent()) {
             if(parent.getBacklog() instanceof Project && parent.getBacklog() != newBacklog) {
                 return true;
@@ -276,5 +310,10 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         }
         return false;
     }
-
+    
+    public boolean hasParentStoryConflict(Story story, Backlog newBacklog) {
+        return (story.getParent() != null)
+                && (originalAndTargetProductEqual(story.getBacklog(), newBacklog)
+                || parentStoryInDifferentBranch(story, newBacklog));
+    }
 }

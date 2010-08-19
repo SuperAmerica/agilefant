@@ -423,8 +423,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         story.getChildren().add(child);
         child.setParent(story);
         
-        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
-        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct).anyTimes();
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct).anyTimes();
         
         storyDAO.store(child);
         storyDAO.store(story);
@@ -454,8 +454,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         story.getChildren().add(child);
         child.setParent(story);
         
-        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
-        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct).anyTimes();
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct).anyTimes();
         
         storyDAO.store(child);
         storyDAO.store(story);
@@ -486,8 +486,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         story.getChildren().add(child);
         child.setParent(story);
         
-        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
-        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct).anyTimes();
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct).anyTimes();
         
         storyDAO.store(child);
         storyDAO.store(story);
@@ -534,8 +534,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, secondProject)).andReturn(true);
         storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         
-        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);
-        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct);
+        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct).anyTimes();
+        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct).anyTimes();
                 
         storyDAO.store(child2);
         

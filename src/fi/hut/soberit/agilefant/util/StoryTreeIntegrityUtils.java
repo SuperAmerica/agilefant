@@ -25,6 +25,7 @@ public class StoryTreeIntegrityUtils {
         i18n.put(StoryHierarchyIntegrityViolationType.MOVE_TO_ITERATION_HAS_CHILDREN, "story.constraint.moveToIterationHasChildren");
         i18n.put(StoryHierarchyIntegrityViolationType.PARENT_DEEPER_IN_HIERARCHY, "story.constraint.parentDeeperInHierarchy");
         i18n.put(StoryHierarchyIntegrityViolationType.PARENT_IN_WRONG_BRANCH, "story.constraint.parentInWrongBranch");
+        i18n.put(StoryHierarchyIntegrityViolationType.PARENT_IN_WRONG_PRODUCT, "story.constraint.parentInWrongProduct");
         i18n.put(StoryHierarchyIntegrityViolationType.TARGET_PARENT_DEEPER_IN_HIERARCHY, "story.constraint.targetParentDeeperInHierarchy");
         i18n.put(StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_ITERATION, "story.constraint.targetParentInIteration");
         i18n.put(StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_WRONG_BRANCH, "story.constraint.targetParentInWrongBranch");

@@ -23,11 +23,11 @@ LazyLoadedDialog.prototype.init = function(options) {
       me.contentElement.load(me.url, me.data, function(responseText, textStatus, xhr) {
         if (textStatus === 'success') {
           me.contentElement.dialog('option', 'buttons', {
-            "Ok": function() {
-              me._ok();
-            },
             "Cancel": function() {
               me._cancel();
+            },
+            "Ok": function() {
+              me._ok();
             }
           });
           if (me.loadCallback) {

@@ -68,5 +68,5 @@ TaskSplitContainer.prototype.serializeData = function() {
   }
   data.newTasks = newTaskArray;
   
-  return HttpParamSerializer.serialize(data);
+  return HttpParamSerializer.param(data, ["responsibles"]);
 };

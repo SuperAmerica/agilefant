@@ -52,21 +52,36 @@ TaskSplitContainer.prototype.serializeData = function() {
   
   data.original = originalChangedData;
   data.originalTaskId = this.originalTask.getId();
+  
+  if (data.original.responsiblesChanged) {
+    delete data.original.responsiblesChanged;
+    delete data.original.responsibles;
+  }
+  
+  data.responsibles = this._responsibleIds(this.originalTask.getResponsibles()); 
 
   var newTaskArray = [];
   for (var i = 0; i < this.newTasks.length; i++) {
     var taskData = this.newTasks[i].getChangedData();
     var responsibleUids = [];
-    var responsibles = this.newTasks[i].getResponsibles();
-
-    for (var j = 0; j < responsibles.length; j ++) {
-      responsibleUids.push(responsibles[j].getId());
-    }
+    var responsibles = this._responsibleIds(this.newTasks[i].getResponsibles());
     
     taskData.responsibles = responsibleUids;
+    
+    if (taskData.responsiblesChanged) {
+      delete taskData.responsiblesChanged;
+    }
     newTaskArray.push(taskData);
   }
   data.newTasks = newTaskArray;
   
   return HttpParamSerializer.param(data, ["responsibles"]);
+};
+
+TaskSplitContainer.prototype._responsibleIds = function(responsibles) {
+  var responsibleUids = [];
+  for (var j = 0; j < responsibles.length; j ++) {
+    responsibleUids.push(responsibles[j].getId());
+  }
+  return responsibleUids;
 };

@@ -25,7 +25,7 @@ public class TaskSplitBusinessImpl implements TaskSplitBusiness {
         if (original.getId() == 0) {
             throw new RuntimeException("Original story not persisted.");
         }
-
+        taskBusiness.store(original);
         persistNewTasks(original, newTasks);
         return original;
     }

@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,6 +15,7 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.business.TaskSplitBusiness;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.User;
 
 @Component("taskSplitAction")
 @Scope("prototype")
@@ -30,15 +33,18 @@ public class TaskSplitAction implements Prefetching {
    
     private Task original;
     
+    private List<User> responsibles = new ArrayList<User>();
+    
     private Collection<Task> newTasks = new ArrayList<Task>(); 
     
     public String split() {
-        taskSplitBusiness.splitTask(original, newTasks);
+        original.setResponsibles(new HashSet<User>(responsibles));
+        original = taskSplitBusiness.splitTask(original, newTasks);
         return Action.SUCCESS;
     }
     
     public void initializePrefetchedData(int objectId) {
-        original = taskBusiness.retrieve(objectId);
+        original = taskBusiness.retrieveDetached(objectId);
     }
 
     /* GETTERS AND SETTERS */
@@ -68,5 +74,13 @@ public class TaskSplitAction implements Prefetching {
     
     public void setOriginalTaskId(int originalTaskId) {
         this.originalTaskId = originalTaskId;
+    }
+
+    public List<User> getResponsibles() {
+        return responsibles;
+    }
+
+    public void setResponsibles(List<User> responsibles) {
+        this.responsibles = responsibles;
     }
 }

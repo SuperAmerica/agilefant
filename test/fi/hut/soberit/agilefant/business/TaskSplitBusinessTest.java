@@ -77,6 +77,7 @@ public class TaskSplitBusinessTest {
         originalTask.setIteration(iteration);
         originalTask.setStory(null);
         
+        taskBusiness.store(originalTask);
         createChildTasks(null, 3);
         
         replayAll();
@@ -89,6 +90,7 @@ public class TaskSplitBusinessTest {
         originalTask.setIteration(null);
         originalTask.setStory(parentStory);
 
+        taskBusiness.store(originalTask);
         createChildTasks(5, null);
         
         replayAll();

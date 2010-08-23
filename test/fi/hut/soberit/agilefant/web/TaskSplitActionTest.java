@@ -62,7 +62,7 @@ public class TaskSplitActionTest {
     @Test
     public void testPrefetch() {
         Task task = new Task();
-        expect(taskBusiness.retrieve(123)).andReturn(task);
+        expect(taskBusiness.retrieveDetached(123)).andReturn(task);
         replayAll();
         testable.setOriginalTaskId(123);
         testable.initializePrefetchedData(123);

@@ -68,28 +68,10 @@ var HttpParamSerializer = {
     },
     /** borrowed from jqeury 1.4 **/
     param: function(a, serializeAsSet) {
+      var s = [];
       if(!serializeAsSet) {
         serializeAsSet = [];
       }
-      var s = [];
-      // If an array was passed in, assume that it is an array of form elements.
-      if ( jQuery.isArray(a) || a.jquery ) {
-        // Serialize the form elements
-        jQuery.each( a, function() {
-          add( this.name, this.value );
-        });
-        
-      } else {
-        // If traditional, encode the "old" way (the way 1.3.2 or older
-        // did it), otherwise encode params recursively.
-        for ( var prefix in a ) {
-          buildParams( prefix, a[prefix], prefix );
-        }
-      }
-
-      // Return the resulting serialization
-      return s.join("&").replace(" ", "+");
-
       function buildParams( prefix, obj, objName ) {
         if ( jQuery.isArray(obj) ) {
           // Serialize array item.
@@ -108,7 +90,7 @@ var HttpParamSerializer = {
             }
           });
             
-        } else if (obj != null && typeof obj === "object" ) {
+        } else if (obj !== null && typeof obj === "object" ) {
           // Serialize object item.
           jQuery.each( obj, function( k, v ) {
             buildParams( prefix + "." + k, v, k );
@@ -125,5 +107,28 @@ var HttpParamSerializer = {
         value = jQuery.isFunction(value) ? value() : value;
         s[ s.length ] = encodeURIComponent(key) + "=" + encodeURIComponent(value);
       }
+
+      
+      // If an array was passed in, assume that it is an array of form elements.
+      if ( jQuery.isArray(a) || a.jquery ) {
+        // Serialize the form elements
+        jQuery.each( a, function() {
+          add( this.name, this.value );
+        });
+        
+      } else {
+        // If traditional, encode the "old" way (the way 1.3.2 or older
+        // did it), otherwise encode params recursively.
+        for ( var prefix in a ) {
+          if (a.hasOwnProperty(prefix)) {
+            buildParams( prefix, a[prefix], prefix );
+          }
+        }
+      }
+
+      // Return the resulting serialization
+      return s.join("&").replace(" ", "+");
+
+
     }
 };

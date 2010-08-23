@@ -52,6 +52,7 @@ LabelModel.prototype._remove = function(successCallback, extraData) {
       async: true,
       cache: false,
       success: function(data, status) {
+        me.relations.story.reload();
         MessageDisplay.Ok("Label removed");
         if (successCallback) {
           successCallback();

@@ -1,6 +1,6 @@
-Agilefant 2.0.2
+Agilefant 2.0.3
 Release notes
-2010-07-26
+2010-08-25
 --
 
 
@@ -42,6 +42,14 @@ For more information and questions, visit http://www.agilefant.org/.
 +--------------------+
 |     CHANGESET      |
 +--------------------+
+Changes from 2.0.2
+2010-08-25
++ New RESTful web API, see further details at http://www.agilefant.org/wiki/display/AEF/RESTful+API
++ Numerous bugfixes 
+  - mantis issues: 0000154, 0000155, 0000140, 0000151, 0000152, 0000146, 0000150, 0000147 and 0000148
+  - see http://www.agilefant.org/mantis/
+
+
 Changes from 2.0.1
 2010-07-26
 + Renewed portfolios with customizable widgets

@@ -44,6 +44,7 @@ For more information and questions, visit http://www.agilefant.org/.
 +--------------------+
 Changes from 2.0.2
 2010-08-25
+! NOTE ! Agilefant 2.0.3 requires Java 6
 + New RESTful web API, see further details at http://www.agilefant.org/wiki/display/AEF/RESTful+API
 + Numerous bugfixes 
   - mantis issues: 0000154, 0000155, 0000140, 0000151, 0000152, 0000146, 0000150, 0000147 and 0000148

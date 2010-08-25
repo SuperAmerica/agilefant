@@ -168,7 +168,7 @@ public class UserBusinessImpl extends GenericBusinessImpl<User> implements
     
     public User retrieveByCredentials(String loginName, String password) {
         User user = retrieveByLoginName(loginName);
-        if (user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(password)) {
             return user;
         }
         return null;

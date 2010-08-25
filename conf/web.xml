@@ -21,7 +21,6 @@
           <param-name>com.sun.jersey.config.property.packages</param-name>
           <param-value>fi.hut.soberit.agilefant.remote</param-value>
       </init-param>   
-   
   </servlet>
 
   <servlet-mapping>
@@ -133,7 +132,13 @@
   <security-role>
     <role-name>agilefantremote</role-name>
   </security-role>
-
+  
+  <env-entry>
+    <env-entry-name>remoteEnabled</env-entry-name>
+    <env-entry-type>java.lang.Boolean</env-entry-type>
+    <env-entry-value>false</env-entry-value>
+  </env-entry>
+  
 </web-app>
 
 

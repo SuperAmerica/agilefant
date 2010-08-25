@@ -16,7 +16,7 @@
 	<bean id="filterChainProxy"
 		class="org.springframework.security.util.FilterChainProxy">
 		<security:filter-chain-map path-type="ant">
-		  <security:filter-chain filters="none" pattern="/rs/**"/>
+		  <security:filter-chain filters="remoteServicesFilter" pattern="/rs/**"/>
 		  <security:filter-chain
         filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
         pattern="/ajax/**"/>
@@ -25,6 +25,8 @@
 		    pattern="/**"/>
 		</security:filter-chain-map>
 	</bean>
+	
+	<bean id="remoteServicesFilter" class="fi.hut.soberit.agilefant.security.RemoteServicesFilter" />
 	
 
 	<bean id="httpSessionContextIntegrationFilter"

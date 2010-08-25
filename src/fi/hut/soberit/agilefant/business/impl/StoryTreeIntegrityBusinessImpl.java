@@ -303,8 +303,14 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
      * and that project backlog is not the backlog where the story is being moved to.
      */
     protected boolean parentStoryInDifferentBranch(Story story, Backlog newBacklog) {
+        Project targetProject = null;
+        if(newBacklog instanceof Project) {
+            targetProject = (Project)newBacklog;
+        } else if (newBacklog instanceof Iteration) {
+            targetProject = (Project)newBacklog.getParent();
+        }
         for(Story parent = story.getParent(); parent != null; parent = parent.getParent()) {
-            if(parent.getBacklog() instanceof Project && parent.getBacklog() != newBacklog) {
+            if(parent.getBacklog() instanceof Project && parent.getBacklog() != targetProject) {
                 return true;
             }
         }
@@ -312,8 +318,9 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
     }
     
     public boolean hasParentStoryConflict(Story story, Backlog newBacklog) {
-        return (story.getParent() != null)
-                && (originalAndTargetProductEqual(story.getBacklog(), newBacklog)
-                || parentStoryInDifferentBranch(story, newBacklog));
+        boolean differentProduct = originalAndTargetProductEqual(story.getBacklog(), newBacklog);
+        boolean parentInDifferentBranch = parentStoryInDifferentBranch(story,
+                newBacklog);
+        return (story.getParent() != null) && (differentProduct || parentInDifferentBranch);
     }
 }

@@ -351,4 +351,80 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
 
         project2.setParent(product);
     }
+    
+    @Test
+    @DirtiesContext
+    public void testHasParentStoryConflict_toIteration() {
+        Product product = new Product();
+        Project project = new Project();
+        Iteration iteration = new Iteration();
+        
+        Story parentStory = new Story();
+        Story story = new Story();
+        
+        iteration.setParent(project);
+        project.setParent(product);
+        
+        parentStory.setBacklog(project);
+        story.setBacklog(project);
+        story.setParent(parentStory);
+        
+        expect(this.backlogBusiness.getParentProduct(iteration)).andReturn(product);
+        expect(this.backlogBusiness.getParentProduct(project)).andReturn(product);
+        
+        replayAll();
+        assertFalse(this.testable.hasParentStoryConflict(story, iteration));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testHasParentStoryConflict_toOtherProject() {
+        Product product = new Product();
+        Project project = new Project();
+        Project targetProject = new Project();
+        
+        Story parentStory = new Story();
+        Story story = new Story();
+        
+        targetProject.setParent(product);
+        project.setParent(product);
+        
+        parentStory.setBacklog(project);
+        story.setBacklog(project);
+        story.setParent(parentStory);
+        
+        expect(this.backlogBusiness.getParentProduct(targetProject)).andReturn(product);
+        expect(this.backlogBusiness.getParentProduct(project)).andReturn(product);
+        
+        replayAll();
+        assertTrue(this.testable.hasParentStoryConflict(story, targetProject));
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testHasParentStoryConflict_differentProduct() {
+        Product product = new Product();
+        Product targetProduct = new Product();
+        Project project = new Project();
+        Project targetProject = new Project();
+        
+        Story parentStory = new Story();
+        Story story = new Story();
+        
+        targetProject.setParent(targetProduct);
+        project.setParent(product);
+        
+        parentStory.setBacklog(project);
+        story.setBacklog(project);
+        story.setParent(parentStory);
+        
+        expect(this.backlogBusiness.getParentProduct(targetProject)).andReturn(targetProduct);
+        expect(this.backlogBusiness.getParentProduct(project)).andReturn(product);
+        
+        replayAll();
+        assertTrue(this.testable.hasParentStoryConflict(story, targetProject));
+        verifyAll();
+    }
 }

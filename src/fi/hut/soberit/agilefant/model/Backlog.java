@@ -155,8 +155,8 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
      */
     @OneToMany(mappedBy = "parent")
     @NotAudited
-    @XmlElementWrapper
-    @XmlElement(name = "backlog")
+//    @XmlElementWrapper
+//    @XmlElement(name = "backlog")
     public Set<Backlog> getChildren() {
         return children;
     }

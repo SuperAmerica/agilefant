@@ -592,6 +592,7 @@
   		<include name="util/TimesheetNode.java" />
   		<include name="transfer/*TimesheetNode.java" />
   		<include name="transfer/TimesheetReportTO.java" />
+  		<include name="transfer/BacklogInfoCollectionTO.java" />
   	</schemagen>
   </target>
 	

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
@@ -50,6 +51,7 @@ public class Team implements Comparable<Team> {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JSON
+    @XmlAttribute(name = "objectId")
     public int getId() {
         return id;
     }

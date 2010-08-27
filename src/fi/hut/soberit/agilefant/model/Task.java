@@ -63,7 +63,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @XmlAttribute
+    @XmlAttribute(name = "objectId")
     public int getId() {
         return id;
     }

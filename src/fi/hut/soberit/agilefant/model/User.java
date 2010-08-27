@@ -97,7 +97,7 @@ public class User implements NamedObject {
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JSON
-    @XmlAttribute
+    @XmlAttribute(name = "objectId")
     public int getId() {
         return id;
     }

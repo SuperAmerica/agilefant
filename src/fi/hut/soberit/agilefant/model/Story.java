@@ -61,7 +61,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @XmlAttribute
+    @XmlAttribute(name = "objectId")
     public int getId() {
         return id;
     }

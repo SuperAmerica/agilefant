@@ -30,7 +30,7 @@ public class BacklogInfoTO {
         return BacklogType.iteration;
     }
 
-    @XmlAttribute
+    @XmlAttribute(name = "objectId")
     public int getId() {
         return id;
     }

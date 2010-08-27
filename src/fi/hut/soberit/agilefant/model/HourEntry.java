@@ -66,7 +66,7 @@ public class HourEntry {
     @Id
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @XmlAttribute
+    @XmlAttribute(name = "objectId")
     public int getId() {
         return this.id;
     }

@@ -88,6 +88,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
     // generate automatically
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JSON
+    @XmlAttribute(name = "objectId")
     public int getId() {
         return id;
     }

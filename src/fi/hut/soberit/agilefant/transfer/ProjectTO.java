@@ -4,11 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 import flexjson.JSON;
 
+@XmlRootElement(name = "projectto")
+@XmlAccessorType(XmlAccessType.NONE)
 public class ProjectTO extends Project implements LeafStoryContainer, Scheduled {
 
     private ScheduleStatus scheduleStatus;
@@ -41,6 +49,8 @@ public class ProjectTO extends Project implements LeafStoryContainer, Scheduled 
         this.leafStories = leafStories;
     }
 
+    @XmlElement(name = "user")
+    @XmlElementWrapper(name = "assignees")
     public Set<User> getAssignees() {
         return assignees;
     }
@@ -49,6 +59,8 @@ public class ProjectTO extends Project implements LeafStoryContainer, Scheduled 
         this.assignees = assignees;
     }
 
+    @XmlElement(name = "iteration")
+    @XmlElementWrapper(name = "iterations")
     public List<IterationTO> getChildIterations() {
         return iterations;
     }
@@ -56,5 +68,4 @@ public class ProjectTO extends Project implements LeafStoryContainer, Scheduled 
     public void setChildIterations(List<IterationTO> iterations) {
         this.iterations = iterations;
     }
-
 }

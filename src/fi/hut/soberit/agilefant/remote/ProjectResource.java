@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.transfer.BacklogInfoCollectionTO;
 import fi.hut.soberit.agilefant.transfer.BacklogInfoTO;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
+import fi.hut.soberit.agilefant.transfer.ProjectTO;
 
 @Path("/project")
 @Component
@@ -31,8 +32,8 @@ public class ProjectResource {
     @GET
     @Path("/{projectId}")
     @Produces({MediaType.APPLICATION_XML,MediaType.TEXT_XML})
-    public Project get(@PathParam("projectId") Integer projectId) {
-        return projectBusiness.retrieve(projectId);
+    public ProjectTO get(@PathParam("projectId") Integer projectId) {
+        return projectBusiness.getProjectData(projectId);
     }
     
     @GET

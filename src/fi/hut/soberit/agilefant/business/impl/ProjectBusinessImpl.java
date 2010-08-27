@@ -221,6 +221,7 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
     public ProjectTO getProjectData(int projectId) {
         Project original = this.retrieve(projectId);
         ProjectTO project = transferObjectBusiness.constructProjectTO(original);
+        project.setChildIterations(this.retrieveProjectIterations(projectId));
         return project;
     }
     

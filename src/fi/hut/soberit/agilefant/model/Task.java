@@ -157,7 +157,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     )
     @OrderBy("initials asc")
     @JSON(include = false)
-    @XmlElementWrapper(name="resposibles")
+    @XmlElementWrapper(name="responsibles")
     @XmlElement(name="user")
     public Set<User> getResponsibles() {
         return responsibles;

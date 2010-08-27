@@ -14,7 +14,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.BeanCopier;
 
-@XmlRootElement(name="iteration")
+@XmlRootElement(name="iterationto")
 @XmlAccessorType( XmlAccessType.NONE )
 public class IterationTO extends Iteration implements LeafStoryContainer, Scheduled {
 

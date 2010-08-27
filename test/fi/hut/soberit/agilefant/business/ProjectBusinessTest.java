@@ -247,7 +247,7 @@ public class ProjectBusinessTest  extends MockedTestCase {
         proj.setName("Foo faa");
                
                
-        expect(projectDAO.get(111)).andReturn(proj);
+        expect(projectDAO.get(111)).andReturn(proj).times(2);
         expect(transferObjectBusiness.constructProjectTO(proj)).andReturn(new ProjectTO(proj));
         replayAll();
         ProjectTO actual = projectBusiness.getProjectData(111);

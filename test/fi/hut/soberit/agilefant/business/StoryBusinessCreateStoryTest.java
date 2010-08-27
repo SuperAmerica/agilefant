@@ -5,8 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -74,7 +76,8 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     private TaskBusiness taskBusiness;
     @Mock
     private StoryHierarchyBusiness storyHierarchyBusiness;
-
+    @Mock
+    private LabelBusiness labelBusiness;
     
     
     @Test
@@ -97,6 +100,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         iheBusiness.updateIterationHistory(blog.getId());
         
         Story returnedStory = new Story();
+        returnedStory.setId(88);
         expect(storyDAO.get(88)).andReturn(returnedStory);
         
         Story dataItem = new Story();
@@ -106,9 +110,10 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         dataItem.setState(StoryState.STARTED);
         
         storyHierarchyBusiness.moveToBottom(returnedStory);
+        labelBusiness.createStoryLabels(null, 88);
         
         replayAll();
-        Story actual = this.storyBusiness.create(dataItem, 5, null);
+        Story actual = this.storyBusiness.create(dataItem, 5, null, null);
         verifyAll();
         
         assertEquals(actual.getClass(), Story.class);
@@ -126,6 +131,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         User user1 = new User();
         User user2 = new User();
         Story tmp = new Story();
+        List<String> labels = new ArrayList<String>();
         Backlog blog = new Project();
         expect(backlogBusiness.retrieve(5)).andReturn(blog);
         expect(userDAO.get(2)).andReturn(user1);
@@ -141,13 +147,16 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         blheBusiness.updateHistory(blog.getId());
         
         Story returnedStory = new Story();
+        returnedStory.setId(88);
         expect(storyDAO.get(88)).andReturn(returnedStory);
         
         storyHierarchyBusiness.moveToBottom(returnedStory);
         
+        labelBusiness.createStoryLabels(labels, 88);
+        
         replayAll();
         Story actual = this.storyBusiness.create(new Story(), 5,
-                new HashSet<Integer>(Arrays.asList(2,23)));
+                new HashSet<Integer>(Arrays.asList(2,23)), labels);
         verifyAll();
         
         assertSame(actual, returnedStory);
@@ -158,19 +167,19 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     
     @Test(expected = IllegalArgumentException.class)
     public void testCreateStory_nullDataItem() {
-        this.storyBusiness.create(null, 123, new HashSet<Integer>());
+        this.storyBusiness.create(null, 123, new HashSet<Integer>(), null);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testCreateStory_nullBacklogId() {
-        this.storyBusiness.create(new Story(), null, new HashSet<Integer>());
+        this.storyBusiness.create(new Story(), null, new HashSet<Integer>(), null);
     }
     
     @Test(expected = ObjectNotFoundException.class)
     @DirtiesContext
     public void testCreateStory_backlogNotFound() {
         expect(backlogBusiness.retrieve(5)).andThrow(new ObjectNotFoundException());
-        this.storyBusiness.create(new Story(), 222, new HashSet<Integer>());
+        this.storyBusiness.create(new Story(), 222, new HashSet<Integer>(), null);
     }
     
     @Test
@@ -230,6 +239,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         Story reference = new Story();
         reference.setBacklog(product);
         Story data = new Story();
+        data.setId(2);
         
         expect(storyDAO.get(1)).andReturn(reference);
         
@@ -237,9 +247,10 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
         expect(storyDAO.get(2)).andReturn(data).times(2);
         storyHierarchyBusiness.moveUnder(data, reference);
+        labelBusiness.createStoryLabels(null, 2);
         
         replayAll();
-        storyBusiness.createStoryUnder(1, data, null);
+        storyBusiness.createStoryUnder(1, data, null, null);
         verifyAll();
     }
     
@@ -252,6 +263,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         Story reference = new Story();
         reference.setBacklog(product);
         Story data = new Story();
+        data.setId(2);
         
         expect(storyDAO.get(1)).andReturn(reference);
         
@@ -259,9 +271,9 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
         expect(storyDAO.get(2)).andReturn(data).times(2);
         storyHierarchyBusiness.moveAfter(data, reference);
-        
+        labelBusiness.createStoryLabels(null, 2);
         replayAll();
-        storyBusiness.createStorySibling(1, data, null);
+        storyBusiness.createStorySibling(1, data, null, null);
         verifyAll();
     }
 }

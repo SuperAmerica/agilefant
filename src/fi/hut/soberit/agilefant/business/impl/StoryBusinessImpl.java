@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.BacklogHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
+import fi.hut.soberit.agilefant.business.LabelBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
@@ -69,7 +70,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private StoryHierarchyBusiness storyHierarchyBusiness;
     @Autowired
     private StoryTreeIntegrityBusiness storyTreeIntegrityBusiness;
-
+    @Autowired
+    private LabelBusiness labelBusiness;
+    
     public StoryBusinessImpl() {
         super(Story.class);
     }
@@ -201,28 +204,35 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
     
-    public Story createStoryUnder(int referenceStoryId, Story data, Set<Integer> responsibleIds) {
+    public Story createStoryUnder(int referenceStoryId, Story data,
+            Set<Integer> responsibleIds, List<String> labelNames) {
         Story referenceStory = this.retrieve(referenceStoryId);
         Backlog backlog = referenceStory.getBacklog();
-        Story story = this.persistNewStory(data, backlog.getId(), responsibleIds);
-        this.storyHierarchyBusiness.moveUnder(story,referenceStory);
+        Story story = this.persistNewStory(data, backlog.getId(),
+                responsibleIds);
+        this.storyHierarchyBusiness.moveUnder(story, referenceStory);
+        this.labelBusiness.createStoryLabels(labelNames, story.getId());
         return story;
     }
-    
-    public Story createStorySibling(int referenceStoryId, Story data, Set<Integer> responsibleIds) {
+
+    public Story createStorySibling(int referenceStoryId, Story data,
+            Set<Integer> responsibleIds, List<String> labelNames) {
         Story referenceStory = this.retrieve(referenceStoryId);
         Backlog backlog = referenceStory.getBacklog();
-        Story story = this.persistNewStory(data, backlog.getId(), responsibleIds);
-        this.storyHierarchyBusiness.moveAfter(story,referenceStory);
+        Story story = this.persistNewStory(data, backlog.getId(),
+                responsibleIds);
+        this.storyHierarchyBusiness.moveAfter(story, referenceStory);
+        this.labelBusiness.createStoryLabels(labelNames, story.getId());
         return story;
     }
 
     public Story create(Story dataItem, Integer backlogId,
-            Set<Integer> responsibleIds) throws IllegalArgumentException,
+            Set<Integer> responsibleIds, List<String> labelNames) throws IllegalArgumentException,
             ObjectNotFoundException {
         
         Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);        
         storyHierarchyBusiness.moveToBottom(persisted);
+        this.labelBusiness.createStoryLabels(labelNames, persisted.getId());
         return persisted;
     }
     

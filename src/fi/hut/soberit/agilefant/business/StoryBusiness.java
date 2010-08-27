@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.business;
 
+import java.util.List;
 import java.util.Set;
 
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -26,7 +27,7 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     /**
      * Create and persist a new story.
      */
-    Story create(Story dataItem, Integer backlogId, Set<Integer> responsibleIds)
+    Story create(Story dataItem, Integer backlogId, Set<Integer> responsibleIds, List<String> labelNames)
             throws IllegalArgumentException, ObjectNotFoundException;
 
     int create(Story story);
@@ -77,10 +78,10 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     void forceDelete(Story story);
     
     public Story createStoryUnder(int referenceStoryId, Story data,
-            Set<Integer> responsibleIds);
+            Set<Integer> responsibleIds, List<String> labelNames);
 
     public Story createStorySibling(int referenceStoryId, Story data,
-            Set<Integer> responsibleIds);
+            Set<Integer> responsibleIds, List<String> labelNames);
     
     public void moveSingleStoryToBacklog(Story story, Backlog backlog);
     

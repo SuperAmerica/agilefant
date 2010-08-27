@@ -60,6 +60,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     private List<HistoryRowTO> storyHistory;
     
     private boolean tasksToDone = false;
+    
+    private List<String> labelNames;
 
     
 
@@ -87,7 +89,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     // CRUD
     
     public String create() {
-        story = this.storyBusiness.create(story, backlogId, userIds);
+        story = this.storyBusiness.create(story, backlogId, userIds, labelNames);
         StoryRank rank = storyRankBusiness.getRankByBacklog(story, story.getBacklog());
         
         story = new StoryTO(story);
@@ -179,12 +181,12 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     }
     
     public String createStoryUnder() {
-        story = storyBusiness.createStoryUnder(storyId, story, userIds);
+        story = storyBusiness.createStoryUnder(storyId, story, userIds, labelNames);
         return Action.SUCCESS;
     }
     
     public String createStorySibling() {
-        story = storyBusiness.createStorySibling(storyId, story, userIds);
+        story = storyBusiness.createStorySibling(storyId, story, userIds, labelNames);
         return Action.SUCCESS;
     }
 
@@ -327,5 +329,13 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     public void setChildHandlingChoice(ChildHandlingChoice childHandlingChoice) {
         this.childHandlingChoice = childHandlingChoice;
+    }
+
+    public List<String> getLabelNames() {
+        return labelNames;
+    }
+
+    public void setLabelNames(List<String> labelNames) {
+        this.labelNames = labelNames;
     }
 }

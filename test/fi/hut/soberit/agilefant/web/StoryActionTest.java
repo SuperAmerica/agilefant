@@ -1,9 +1,13 @@
 package fi.hut.soberit.agilefant.web;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.Before;
@@ -98,14 +102,16 @@ public class StoryActionTest extends MockedTestCase {
         Story returnedStory = new Story();
         returnedStory.setName("Tested story");
         returnedStory.setBacklog(new Project());
+        List<String> labelNames = new ArrayList<String>();
         
         StoryRank rank = new StoryRank();
         rank.setRank(222);
         
-        expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), storyAction.getUserIds())).andReturn(returnedStory);
+        expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), storyAction.getUserIds(), labelNames)).andReturn(returnedStory);
         expect(storyRankBusiness.getRankByBacklog(returnedStory, returnedStory.getBacklog())).andReturn(rank);
         
         replayAll();
+        storyAction.setLabelNames(labelNames);
         assertEquals(Action.SUCCESS, storyAction.create());
         verifyAll();
         
@@ -342,14 +348,16 @@ public class StoryActionTest extends MockedTestCase {
         Story data = new Story();
         Story res = new Story();
         Set<Integer> userIds = Collections.emptySet();
+        List<String> labelNames = new ArrayList<String>();
         
-        expect(storyBusiness.createStoryUnder(1, data, userIds)).andReturn(res);
+        expect(storyBusiness.createStoryUnder(1, data, userIds, labelNames)).andReturn(res);
         replayAll();
+        storyAction.setLabelNames(labelNames);
         storyAction.setStory(data);
         storyAction.setStoryId(1);
         storyAction.createStoryUnder();
         verifyAll();
-        assertEquals(res, storyAction.getStory());
+        storyAction.setLabelNames(labelNames);
     }
     
     @Test
@@ -358,11 +366,13 @@ public class StoryActionTest extends MockedTestCase {
         Story data = new Story();
         Story res = new Story();
         Set<Integer> userIds = Collections.emptySet();
+        List<String> labelNames = new ArrayList<String>();
         
-        expect(storyBusiness.createStorySibling(1, data, userIds)).andReturn(res);
+        expect(storyBusiness.createStorySibling(1, data, userIds, labelNames)).andReturn(res);
         replayAll();
         storyAction.setStory(data);
         storyAction.setStoryId(1);
+        storyAction.setLabelNames(labelNames);
         storyAction.createStorySibling();
         verifyAll();
         assertEquals(res, storyAction.getStory());

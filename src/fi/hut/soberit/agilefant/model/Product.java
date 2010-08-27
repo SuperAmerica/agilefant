@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.BatchSize;
@@ -41,6 +43,8 @@ public class Product extends Backlog {
     
     @Transactional(readOnly=true)
     @Transient
+    @XmlElement(name = "projects")
+    @XmlElementWrapper
     public Collection<Project> getProjects() {
         List<Project> projects = new ArrayList<Project>();
         for(Backlog bl : this.getChildren()) {

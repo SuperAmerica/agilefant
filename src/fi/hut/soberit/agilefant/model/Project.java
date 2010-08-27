@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
@@ -12,10 +14,12 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
@@ -78,6 +82,19 @@ public class Project extends Backlog implements Schedulable, Rankable {
 
     public void setEndDate(DateTime endDate) {
         this.endDate = endDate;
+    }
+    
+    @XmlElementWrapper
+    @XmlElement(name = "iterations")
+    @Transient
+    public List<Iteration> getIterations() {
+        List<Iteration> iterations = new ArrayList<Iteration>();
+        for(Backlog bl : this.getChildren()) {
+            if(bl instanceof Iteration) {
+                iterations.add((Iteration)bl);
+            }
+        }
+        return iterations;    
     }
 
     @JSON

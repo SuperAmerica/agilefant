@@ -16,6 +16,7 @@ public class AssignmentTO extends Assignment {
     private boolean unassigned = false;
     private int loadPercentage = 0;
 
+    public AssignmentTO() {};
     public AssignmentTO(Assignment assignment) {
         BeanCopier.copy(assignment, this);
     }

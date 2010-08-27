@@ -19,6 +19,7 @@ public class ProjectTO extends Project implements LeafStoryContainer, Scheduled 
     
     private Set<User> assignees;
 
+    public ProjectTO() {};
     public ProjectTO(Project project) {
         BeanCopier.copy(project, this);
     }

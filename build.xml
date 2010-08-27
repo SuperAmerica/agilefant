@@ -591,8 +591,7 @@
 		<include name="model/*.java"/>
   		<include name="util/TimesheetNode.java" />
   		<include name="transfer/*TimesheetNode.java" />
-  		<include name="transfer/TimesheetReportTO.java" />
-  		<include name="transfer/BacklogInfoCollectionTO.java" />
+  		<include name="transfer/*TO.java" />
   	</schemagen>
   </target>
 	

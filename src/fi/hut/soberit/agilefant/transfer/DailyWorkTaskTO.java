@@ -5,6 +5,7 @@ import fi.hut.soberit.agilefant.model.Task;
 public class DailyWorkTaskTO extends TaskTO {
     private int workQueueRank;
     
+    public DailyWorkTaskTO() {};
     public DailyWorkTaskTO(Task task) {
         super(task);
     }

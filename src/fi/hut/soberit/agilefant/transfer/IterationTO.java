@@ -56,7 +56,7 @@ public class IterationTO extends Iteration implements LeafStoryContainer, Schedu
         this.assignees = assignees;
     }
 
-    @XmlElementWrapper(name="stories")
+    @XmlElementWrapper(name="leafStories")
     @XmlElement(name="story")
     public List<StoryTO> getLeafStories() {
         return this.rankedStories;

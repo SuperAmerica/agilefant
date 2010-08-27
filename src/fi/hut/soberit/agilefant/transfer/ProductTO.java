@@ -11,6 +11,7 @@ public class ProductTO extends Product implements LeafStoryContainer {
     private List<StoryTO> leafStories = new ArrayList<StoryTO>();
     private List<ProjectTO> childProjects = new ArrayList<ProjectTO>();
     
+    public ProductTO() {};
     public ProductTO(Product product) {
         BeanCopier.copy(product, this);
     }

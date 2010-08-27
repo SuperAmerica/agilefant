@@ -14,6 +14,7 @@ public class TaskTO extends Task {
     // Helper fields
     private long effortSpent;    
 
+    public TaskTO() {};
     public TaskTO(Task task) {
         BeanCopier.copy(task, this);
     }

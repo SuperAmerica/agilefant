@@ -10,6 +10,7 @@ public class UnassignedLoadTO {
     public int availabilitySum;
     public int availability;
     
+    public UnassignedLoadTO() {};
     public UnassignedLoadTO(ExactEstimate effortLeft, int iterationId, int userAvailability) {
         this.availability = userAvailability;
         this.effortLeft = effortLeft;

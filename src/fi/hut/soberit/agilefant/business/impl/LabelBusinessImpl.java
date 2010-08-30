@@ -60,7 +60,9 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
                     label.setCreator(currentUser);
                     label.setStory(story);
                     label.setTimestamp(new DateTime());
-                    labelDAO.create(label);
+                    int labelId = (Integer)labelDAO.create(label);
+                    Label persisted = labelDAO.get(labelId);
+                    story.getLabels().add(persisted);
                 }
         }
     }

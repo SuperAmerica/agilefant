@@ -50,6 +50,7 @@ $(document).ready(function() {
 <div id="empty-note" class="warning-note" style="display: none;">
 <strong>Note!</strong><br/>
 You don't currently have any stories or tasks assigned to you.<br/>
+Daily Work contains tasks and stories, which are in an <em>ongoing iteration</em>, and of which you are responsible.
 <a href="#" style="font-size: 80%; color: #1e5eee; text-decoration: underline;" onclick="HelpUtils.openHelpPopup(this,'Daily Work','static/html/help/dailyWorkPopup.html'); return false;">What is Daily Work?</a>
 </div>
 

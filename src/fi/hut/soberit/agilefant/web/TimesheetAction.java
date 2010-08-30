@@ -91,7 +91,7 @@ public class TimesheetAction extends ActionSupport {
     public String generateTree(){
         Set<Integer> selectedBacklogIds = this.getSelectedBacklogs();
         if(selectedBacklogIds == null || selectedBacklogIds.size() == 0) {
-            //addActionError("No backlogs selected.");
+            addActionError("No backlogs selected.");
             return Action.ERROR;
         }        
         products = timesheetBusiness.getRootNodes(selectedBacklogIds, startDate, endDate, this.userIds);

@@ -331,7 +331,8 @@ CreateDialog.Story.columnIndices = {
   state:      2,
   storyPoints:3,
   responsibles:4,
-  description:5
+  labels:     5,
+  description:6
 };
 CreateDialog.Story.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -398,6 +399,17 @@ CreateDialog.Story.prototype.initFormConfig = function() {
       dialogTitle: "Select users",
       dataType: "usersAndTeams",
       set : StoryModel.prototype.setResponsibles
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.labels,{
+    title : "Labels",
+    get : StoryModel.prototype.getLabels,
+    editable : true,
+    openOnRowEdit: true,
+    edit : {
+      editor : "Labels",
+      set : StoryModel.prototype.setLabels
     }
   });
 

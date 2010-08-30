@@ -1379,3 +1379,60 @@ TableEditors.Autocomplete.prototype.init = function(element, model, options) {
   TableEditors.AutocompleteDialog.prototype.init.call(this, element, model, opts);
 };
 
+
+
+/**
+ * NOTE: This editor is only available, when creating a new story.
+ * 
+ * No previous values are loaded.
+ */
+TableEditors.Labels = function(element, model, options) {
+  this.init(element, model, options);
+  
+  this.labelsView = new AutoSuggest("ajax/lookupLabels.action", {
+    startText: "Enter labels here.",
+    queryParam: "labelName",
+    searchObj: "name",
+    selectedItem: "displayName",
+    disableButtons: true,
+    cancelCallback: function() {
+      console.log("Cancel");
+    },
+    successCallback: function(data) {
+      console.log("Success");
+    },
+    retrieveComplete: function(data) {
+      var newData = [];
+      for (var i = 0, len = data.length; i < len; i++) {
+        var oneLabel = {
+            value: data[i].displayName,
+            name: data[i].name,
+            displayName: data[i].displayName
+        };
+        newData[i] = oneLabel;
+      }
+      return newData;
+    },
+    minChars: 1
+  }, this.element);
+  
+  this._registerEditField(this.element);
+};
+TableEditors.Labels.prototype = new TableEditors.CommonEditor();
+TableEditors.Labels.defaultOptions = {};
+TableEditors.Labels.prototype.getEditorValue = function() {
+  return this.labelsView.getValues();
+};
+TableEditors.Labels.prototype._handleKeyEvent = function(event) {
+  if (event.keyCode === 27) {
+    event.stopPropagation();
+    event.preventDefault();
+    this._requestCancel();
+    return false;
+  } else if (event.keyCode === 13) {
+    event.stopPropagation();
+    event.preventDefault();
+//    this._requestSave();
+    return false;
+  }
+};

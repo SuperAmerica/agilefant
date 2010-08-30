@@ -454,9 +454,12 @@ StoryTreeController.prototype.createNode = function(refNode, position, parentSto
       
       var ajax = function(model) {
         var userIds = model.currentData.userIds;
+        var labels = model.currentData.labels;
         delete model.currentData.userIds;
+        delete model.currentData.labels;
         var ajaxData = model.serializeFields("story", model.currentData);
         ajaxData.userIds = userIds;
+        ajaxData.labelNames = labels;
         me.saveStory(refNode, position, node, ajaxData, parentStory);
       };
       

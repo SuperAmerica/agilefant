@@ -115,6 +115,12 @@ StoryModel.prototype._saveData = function(id, changedData) {
     delete this.currentData.backlog;
   }
 
+  if (changedData.labels) {
+    data.labelNames = changedData.labels;
+    delete this.currentData.labels;
+    delete changedData.labels;
+  }
+  
   jQuery.extend(data, this.serializeFields("story", changedData));
   if(ArrayUtils.countObjectFields(data) === 0) {
     return;
@@ -457,6 +463,10 @@ StoryModel.prototype.getTotalOriginalEstimate = function() {
 
 StoryModel.prototype.getLabels = function() {
   return this.relations.label;
+};
+
+StoryModel.prototype.setLabels = function(labels) {
+  this.currentData.labels = labels;
 };
 
 

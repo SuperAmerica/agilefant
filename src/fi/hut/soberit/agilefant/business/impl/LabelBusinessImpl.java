@@ -46,6 +46,9 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
     }
         
     public void createStoryLabels(List<String> labelNames, Integer storyId) {
+        if(labelNames == null) {
+            return;
+        }
         User currentUser = SecurityUtil.getLoggedUser();
         Story story = storybusiness.retrieve(storyId);
         for (String name : labelNames){

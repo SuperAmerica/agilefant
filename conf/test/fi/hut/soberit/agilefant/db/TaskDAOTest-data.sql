@@ -72,3 +72,7 @@ INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (21,1,10000,55,1
 INSERT INTO tasks (id,state, effortLeft, story_id, rank) VALUES (22,1,10000,55,666);
 
 
+
+INSERT INTO backlogs (id,backlogtype,startDate, endDate) VALUES (4,'Iteration','2009-05-20 10:15:00', '2009-07-01 10:15:00');
+INSERT INTO assignment (user_id, backlog_id, availability) VALUES (1,4,100);
+INSERT INTO tasks (id,state, effortLeft, originalEstimate, iteration_id, rank) VALUES (31,1,null,null,4,1);

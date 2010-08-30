@@ -132,7 +132,7 @@ public class TaskDAOTest extends AbstractHibernateTests {
         user.setId(1);
         Interval interval = new Interval(start, start.plusDays(5));
         List<UnassignedLoadTO> actual = this.taskDAO.getUnassignedIterationTasksWithEffortLeft(user, interval);
-        assertEquals(1, actual.size());
+        assertEquals(2, actual.size());
         assertEquals(970, actual.get(0).effortLeft.intValue());
         assertEquals(100, actual.get(0).availability);
         assertEquals(1, actual.get(0).iterationId);

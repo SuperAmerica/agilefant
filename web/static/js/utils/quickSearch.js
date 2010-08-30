@@ -4,6 +4,7 @@
 $.widget("custom.agilefantQuickSearch", $.ui.autocomplete, {
   _renderMenu: function( ul, items ) {
     var categories = {
+      "noclass": " ",
       "fi.hut.soberit.agilefant.model.Story":     "Story",
       "fi.hut.soberit.agilefant.model.Iteration": "Iteration",
       "fi.hut.soberit.agilefant.model.Project":   "Project",
@@ -32,5 +33,17 @@ $.widget("custom.agilefantQuickSearch", $.ui.autocomplete, {
     $('<span class="categoryName">' + data.category + "</span>").appendTo(item);
     $("<a>" + data.label + "</a>" ).appendTo(item);
     return item.data( "item.autocomplete", data ).appendTo(ul);
-  }
+  },
+  _response: function( content ) {
+    if ( content.length ) {
+      content = this._normalize( content );
+      this._suggest( content );
+      this._trigger( "open" );
+    } else {
+      var tmpItem = {value: "No results found", label: "No results found", id: -1, category: "&nbsp;", originalObject: { 'class': 'noclass' }};
+      this._suggest( [ tmpItem ] );
+      this._trigger( "open" );
+    }
+    this.element.removeClass( "ui-autocomplete-loading" );
+  },
 });

@@ -105,7 +105,12 @@
       source: "ajax/search.action",
       minLength: 3,
       select: function(event, ui) {
-        window.location.href = "searchResult.action?targetClassName=" + ui.item.originalObject['class'] + "&targetObjectId=" + ui.item.originalObject.id;
+        if (ui.item.originalObject['class'] !== 'noclass') {
+          window.location.href = "searchResult.action?targetClassName=" + ui.item.originalObject['class'] + "&targetObjectId=" + ui.item.originalObject.id;
+        }
+      },
+      close: function(event, ui) {
+        console.log("Search input close", event, ui);
       }
     });
 

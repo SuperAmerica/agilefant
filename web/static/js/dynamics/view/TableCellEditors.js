@@ -1396,10 +1396,8 @@ TableEditors.Labels = function(element, model, options) {
     selectedItem: "displayName",
     disableButtons: true,
     cancelCallback: function() {
-      console.log("Cancel");
     },
     successCallback: function(data) {
-      console.log("Success");
     },
     retrieveComplete: function(data) {
       var newData = [];

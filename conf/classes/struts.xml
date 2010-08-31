@@ -180,7 +180,13 @@
       </result>
 		</action>
 		
-		
+    <action name="exportIteration" method="execute" class="exportIterationAction">
+      <result name="success" type="stream">
+        <param name="contentType">application/xls</param>
+        <param name="inputName">iterationData</param>
+        <param name="contentDisposition">filename="${exportFileName}.xls"</param>
+      </result>
+    </action>
 		
 		<!-- /Iteration actions -->
 

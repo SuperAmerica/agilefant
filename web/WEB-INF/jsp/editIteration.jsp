@@ -72,6 +72,11 @@ $(document).ready(function() {
     controller.openLogEffort();
   }).appendTo(actionMenu);
 
+  $('<li/>').text('Export').click(function() {
+    closeMenu();
+    window.location="exportIteration.action?iterationId=${iterationId}";
+  }).appendTo(actionMenu);
+ 
   $('<li/>').text('Delete').click(function() {
     closeMenu();
     controller.removeIteration();

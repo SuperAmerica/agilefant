@@ -14,7 +14,7 @@
     <action name="createStory" method="create" class="storyAction">
       <result type="json">
         <param name="target">story</param>
-        <param name="patterns">+responsibles</param>
+        <param name="patterns">+responsibles, +labels</param>
       </result>
     </action>
     

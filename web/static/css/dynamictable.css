@@ -850,3 +850,16 @@ a.context, span.context {
   margin-left: 3ex;
 }
 
+
+.inline-labeleditor {
+  vertical-align: middle;
+  display: inline-block;
+  width: 75%;
+}
+span.labelsText {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+.inline-labeleditor ul {
+  width: 100% !important;
+}

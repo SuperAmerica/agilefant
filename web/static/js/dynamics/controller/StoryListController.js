@@ -213,7 +213,7 @@ StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
   if (Configuration.isLabelsInStoryList()) {
-    config.addColumnConfiguration(StoryController.columnIndices.labels, StoryListController.columnConfig.labels);
+    config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
@@ -225,6 +225,7 @@ StoryListController.prototype._addColumnConfigs = function(config) {
     config.addColumnConfiguration(StoryController.columnIndices.es, StoryListController.columnConfig.effortSpent);
   }
   config.addColumnConfiguration(StoryController.columnIndices.actions, StoryListController.columnConfig.actions);
+  config.addColumnConfiguration(StoryController.columnIndices.labels, StoryListController.columnConfig.labels);
   config.addColumnConfiguration(StoryController.columnIndices.description, StoryListController.columnConfig.description);
   config.addColumnConfiguration(StoryController.columnIndices.buttons, StoryListController.columnConfig.buttons);
   config.addColumnConfiguration(StoryController.columnIndices.details, StoryListController.columnConfig.details);
@@ -246,13 +247,27 @@ StoryListController.columnConfig.prio = {
   defaultSortColumn: true,
   subViewFactory : StoryController.prototype.taskToggleFactory
 };
-StoryListController.columnConfig.labels = {
+StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,
   autoScale: true,
   title: "Labels",
   headerTooltip: "Story's labels",
   subViewFactory : StoryController.prototype.labelsIconFactory
 };
+StoryListController.columnConfig.labels = {
+  columnName: "labels",
+  fullWidth : true,
+  visible : false,
+  get : StoryModel.prototype.getLabels,
+//  decorator: DynamicsDecorators.emptyDescriptionDecorator,
+  editable : true,
+  edit : {
+    editor : "Labels",
+    showText: true,
+    set : StoryModel.prototype.setLabels
+  }
+};
+
 StoryListController.columnConfig.name = {
   minWidth : 250,
   autoScale : true,

@@ -3,11 +3,11 @@ var StoryController = function StoryController(model, view, backlogController) {
   this.view = view;
   this.parentController = backlogController;
   this.init();
-  this.autohideCells = [ "description", "buttons" ]; 
+  this.autohideCells = [ "labels", "description", "buttons" ]; 
 };
 
 StoryController.columnNames =
-  ["priority", "labels", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "description", "buttons", "details", "tasksData"];
+  ["priority", "labelsIcon", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 

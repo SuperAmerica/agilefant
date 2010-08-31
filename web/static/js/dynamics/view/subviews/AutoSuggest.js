@@ -10,7 +10,7 @@ AutoSuggest.prototype = new ViewPart();
 AutoSuggest.prototype.addKeydownHandler = function() {
   var me = this;
   this.inputElement.keydown(function(e) {
-    if ((e.keyCode === 188 || e.keyCode === 13) && this.value !== "") {
+    if ((e.keyCode === 188 || e.keyCode === 13 || e.keyCode === 9) && this.value !== "") {
       var label = me.inputElement.val();
     
       var existingData = me.valuesElement.val().indexOf(label + ",");

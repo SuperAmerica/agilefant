@@ -1389,6 +1389,14 @@ TableEditors.Autocomplete.prototype.init = function(element, model, options) {
 TableEditors.Labels = function(element, model, options) {
   this.init(element, model, options);
   
+  if (this.options.showText) {
+    var parent = $('<div style="width: 90%;" />').appendTo(this.element);
+    parent.append('<span class="labelsText">Labels:</span>');
+    this.labelsElement = $('<div class="inline-labeleditor"/>').appendTo(parent);
+  } else {
+    this.labelsElement = $('<div />').appendTo(this.element);
+  }
+  
   this.labelsView = new AutoSuggest("ajax/lookupLabels.action", {
     startText: "Enter labels here.",
     queryParam: "labelName",
@@ -1412,12 +1420,23 @@ TableEditors.Labels = function(element, model, options) {
       return newData;
     },
     minChars: 1
-  }, this.element);
+  }, this.labelsElement);
   
-  this._registerEditField(this.element);
+  this._registerEditField(this.labelsElement);
 };
 TableEditors.Labels.prototype = new TableEditors.CommonEditor();
-TableEditors.Labels.defaultOptions = {};
+TableEditors.Labels.defaultOptions = {
+  /**
+   * {@member TableEditors.Labels}
+   * Default: false
+   */
+  showText: false,
+  /**
+   * {@member TableEditors.Labels}
+   * Default: "Labels"
+   */
+  text: "Labels"
+};
 TableEditors.Labels.prototype.getEditorValue = function() {
   return this.labelsView.getValues();
 };

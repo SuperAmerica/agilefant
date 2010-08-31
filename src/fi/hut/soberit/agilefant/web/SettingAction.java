@@ -23,6 +23,7 @@ public class SettingAction extends ActionSupport {
     private boolean dailyWorkEnabled = false;
     private boolean devPortfolioEnabled = false;
     private boolean labelsInStoryList = false;
+    private boolean weekendsInBurndown = false;
     private String storyTreeFieldOrder;
     private SettingBusiness.BranchMetricsType branchMetricsType;
     
@@ -41,6 +42,7 @@ public class SettingAction extends ActionSupport {
         this.storyTreeFieldOrder = this.settingBusiness.getStoryTreeFieldOrder();
         this.branchMetricsType = this.settingBusiness.getBranchMetricsType();
         this.labelsInStoryList = this.settingBusiness.isLabelsInStoryList();
+        this.weekendsInBurndown = this.settingBusiness.isWeekendsInBurndown();
         return Action.SUCCESS;
     }
     
@@ -60,6 +62,7 @@ public class SettingAction extends ActionSupport {
         settingBusiness.setStoryTreeFieldOrder(storyTreeFieldOrder);
         settingBusiness.setBranchMetricsType(branchMetricsType);
         settingBusiness.setLabelsInStoryList(labelsInStoryList);
+        settingBusiness.setWeekendsInBurndown(weekendsInBurndown);
         return Action.SUCCESS;
     }
     
@@ -192,6 +195,14 @@ public class SettingAction extends ActionSupport {
 
     public void setLabelsInStoryList(boolean labelsInStoryList) {
         this.labelsInStoryList = labelsInStoryList;
+    }
+
+    public boolean isWeekendsInBurndown() {
+        return weekendsInBurndown;
+    }
+
+    public void setWeekendsInBurndown(boolean weekendsInBurndown) {
+        this.weekendsInBurndown = weekendsInBurndown;
     }
     
 }

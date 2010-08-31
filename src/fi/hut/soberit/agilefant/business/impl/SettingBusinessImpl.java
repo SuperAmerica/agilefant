@@ -44,6 +44,7 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     public static final String SETTING_NAME_STORY_TREE_FIELD_ORDER = "StoryTreeFieldOrder";
     public static final String SETTING_NAME_BRANCH_METRICS = "branchMetricsType";
     public static final String SETTING_NAME_LABELS_IN_STORY_LIST = "labelsInStoryList";
+    public static final String SETTING_NAME_WEEKENDS_IN_BURNDOWN = "weekendsInBurndown";
     
     public SettingBusinessImpl() {
         super(Setting.class);
@@ -352,5 +353,21 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
 
         return setting.getValue().equals("true");
     }
+    
+    public void setWeekendsInBurndown(boolean mode) {
+        this.storeSetting(SETTING_NAME_WEEKENDS_IN_BURNDOWN, mode);
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean isWeekendsInBurndown() {
+        Setting setting = this.retrieveByName(SETTING_NAME_WEEKENDS_IN_BURNDOWN);
+        if (setting == null) {
+            return true;
+        }
+        
+        return setting.getValue().equals("true");
+    }
+    
+    
     
 }

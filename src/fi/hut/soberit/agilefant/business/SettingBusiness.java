@@ -155,7 +155,17 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
     
     /**
      * Toggle labels display in story lists. 
-     * @param mode TODO
      */
     void setLabelsInStoryList(boolean mode);
+    
+    /**
+     *  Get the "Weekends in burndown" setting.
+     *  Returns true by default.
+     */
+    boolean isWeekendsInBurndown();
+    
+    /**
+     * Toggle the displaying of weekends in burndown.
+     */
+    void setWeekendsInBurndown(boolean mode);
 }

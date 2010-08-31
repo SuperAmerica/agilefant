@@ -41,6 +41,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     IterationBurndownBusinessImpl iterationBurndownBusiness;
     IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
     IterationBusiness iterationBusiness;
+    SettingBusiness settingBusiness;
     
     Iteration iteration;
     DateTime startDate;
@@ -66,6 +67,9 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         iterationBusiness = createMock(IterationBusiness.class);
         iterationBurndownBusiness.setIterationBusiness(iterationBusiness);
         super.setIterationBusiness(iterationBusiness);
+        settingBusiness = createMock(SettingBusiness.class);
+        iterationBurndownBusiness.setSettingBusiness(settingBusiness);
+        super.setSettingBusiness(settingBusiness);
         
         startDate = new DateTime(2009,1,1,0,0,0,0);
         endDate = new DateTime(2009,1,10,0,0,0,0);
@@ -398,15 +402,19 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     }
     
     @Test
-    public void testGetReferenceVelocityTimeSeries() {
+    public void testGetReferenceVelocityTimeSeries_noWeekends() {
         
         TimeSeriesDataItem startPoint = new TimeSeriesDataItem(new Second(
                 startDate.toDate()), 100.0);
         TimeSeriesDataItem endPoint = new TimeSeriesDataItem(new Second(endDate
                 .plusDays(1).toDate()), 0.0);
         
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(false);
+        
+        replay(settingBusiness);
         TimeSeries actualSeries
             = super.getReferenceVelocityTimeSeries(startDate, endDate, originalEstimateSum);
+        verify(settingBusiness);
         
         assertEquals("Reference series name incorrect",
                 REFERENCE_SERIES_NAME, actualSeries.getKey());
@@ -419,6 +427,35 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 actualSeries.getDataItem(1).getValue());
         assertEquals("Reference end instant not correct", endPoint.getPeriod(),
                 actualSeries.getDataItem(1).getPeriod());
+        
+    }
+    
+    @Test
+    public void testGetReferenceVelocityTimeSeries_withWeekends() {
+        
+        TimeSeriesDataItem startPoint = new TimeSeriesDataItem(new Second(
+                startDate.toDate()), 100.0);
+        TimeSeriesDataItem endPoint = new TimeSeriesDataItem(
+                new Second(endDate.toDateMidnight().plusDays(1).toDate()), 0.0);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        
+        replay(settingBusiness);
+        TimeSeries actualSeries
+            = super.getReferenceVelocityTimeSeries(startDate, endDate, originalEstimateSum);
+        verify(settingBusiness);
+        
+        assertEquals("Reference series name incorrect",
+                REFERENCE_SERIES_NAME, actualSeries.getKey());
+        
+        assertEquals("Reference start value not correct",
+                startPoint.getValue(), actualSeries.getDataItem(0).getValue());
+        assertEquals("Reference start instant not correct", startPoint
+                .getPeriod(), actualSeries.getDataItem(0).getPeriod());
+        assertEquals("Reference end value not correct", endPoint.getValue(),
+                actualSeries.getDataItem(actualSeries.getItemCount() - 1).getValue());
+        assertEquals("Reference end instant not correct", endPoint.getPeriod(),
+                actualSeries.getDataItem(actualSeries.getItemCount() - 1).getPeriod());
         
     }
     

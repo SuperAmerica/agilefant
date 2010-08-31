@@ -172,6 +172,13 @@ $(document).ready(function() {
       <td><label for="labelsInStoryList">Display labels in story lists</label></td>
       <td colspan="2"><ww:checkbox name="labelsInStoryList" fieldValue="true" value="%{labelsInStoryList}"></ww:checkbox></td>
     </tr>
+    <tr>
+      <td><label for="weekendsInBurndown">Display reference velocity in Burndown</label></td>
+      <td colspan="2">
+        <ww:radio list="#{'false':'as straight line', 'true':'take weekends to account'}" name="weekendsInBurndown" value="%{weekendsInBurndown}"/>
+      </td>
+    </tr>
+    
     </table>
     
     <ww:submit value="Save all" cssClass="dynamics-button"></ww:submit>

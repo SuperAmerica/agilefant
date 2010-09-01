@@ -1,5 +1,9 @@
 package fi.hut.soberit.agilefant.business.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -15,6 +19,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 
 import fi.hut.soberit.agilefant.business.ExportIterationBusiness;
@@ -22,7 +27,10 @@ import fi.hut.soberit.agilefant.business.IterationBurndownBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.Label;
 import fi.hut.soberit.agilefant.model.StoryState;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
@@ -39,10 +47,10 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
     @Autowired
     private IterationBurndownBusiness iterationBurndownBusiness;
 
-    private static String STORY_POINT_COL = "B";
-    private static String EL_COL = "E";
-    private static String OE_COL = "F";
-    private static String ES_COL = "G";
+    private static final String STORY_POINT_COL = "B";
+    private static final String EL_COL = "E";
+    private static final String OE_COL = "F";
+    private static final String ES_COL = "G";
 
     private class SheetStyles {
         public CellStyle boxedBold;
@@ -57,6 +65,8 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
                 .getIterationContents(iterationId);
         SheetStyles styles = createStyles(wb);
         createSummary(wb, styles, iteration);
+        createStories(wb, styles, iteration);
+        createTasks(wb, styles, iteration);
         return wb;
     }
 
@@ -101,7 +111,96 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         return styles;
     }
 
-    public Sheet createSummary(Workbook wb, SheetStyles styles, IterationTO iter) {
+    @SuppressWarnings("unchecked")
+    private Sheet createStories(Workbook wb, SheetStyles styles,
+            IterationTO iter) {
+        Sheet storiesSheet = wb.createSheet("Stories");
+        Row headerRow = storiesSheet.createRow(0);
+
+        formatCell(headerRow.createCell(0), styles.boxedBold, "ID");
+        formatCell(headerRow.createCell(1), styles.boxedBold, "Name");
+        formatCell(headerRow.createCell(2), styles.boxedBold, "Points");
+        formatCell(headerRow.createCell(3), styles.boxedBold, "State");
+        formatCell(headerRow.createCell(4), styles.boxedBold, "Assignees");
+        formatCell(headerRow.createCell(5), styles.boxedBold, "Labels");
+        formatCell(headerRow.createCell(6), styles.boxedBold, "Description");
+        List<StoryTO> stories = iter.getRankedStories();
+        Collections.sort(stories, new PropertyComparator("rank",true, true));
+        
+        int curentRow = 1;
+        for(StoryTO story : stories) {
+            Row row = storiesSheet.createRow(curentRow++);
+            formatCell(row.createCell(0), styles.whiteRow, story.getId());
+            formatCell(row.createCell(1), styles.whiteRow, story.getName());
+            formatCell(row.createCell(2), styles.whiteRow, story.getStoryPoints());
+            formatCell(row.createCell(3), styles.whiteRow, story.getState());
+            formatCellUsers(row.createCell(4), styles.whiteRow, story.getResponsibles());
+            formatCellLabels(row.createCell(5), styles.whiteRow, story.getLabels());
+            formatCell(row.createCell(6), styles.whiteRow, story.getDescription());
+        }
+        
+        for(int i = 0; i < 7; i++) {
+            storiesSheet.autoSizeColumn(i);
+        }
+
+        return storiesSheet;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Sheet createTasks(Workbook wb, SheetStyles styles, IterationTO iter) {
+        Sheet tasksSheet = wb.createSheet("Tasks");
+        List<Task> tasks = new ArrayList<Task>();
+        
+        //build task list in rank order
+        List<StoryTO> stories = iter.getRankedStories();
+        Collections.sort(stories, new PropertyComparator("rank",true, true));
+        Comparator<Task> taskComparator = new PropertyComparator("rank",true, true);
+        for(StoryTO story : stories) {
+            List<Task> storyTasks = new ArrayList<Task>(story.getTasks());
+            Collections.sort(storyTasks, taskComparator);
+            tasks.addAll(storyTasks);
+        }
+        List<Task> tasksWoStory = new ArrayList<Task>(iter.getTasks());
+        Collections.sort(tasksWoStory, taskComparator);
+        tasks.addAll(tasksWoStory);
+        
+        Row headerRow = tasksSheet.createRow(0);
+
+        formatCell(headerRow.createCell(0), styles.boxedBold, "ID");
+        formatCell(headerRow.createCell(1), styles.boxedBold, "Name");
+        formatCell(headerRow.createCell(2), styles.boxedBold, "Story");
+        formatCell(headerRow.createCell(3), styles.boxedBold, "Story ID");
+        formatCell(headerRow.createCell(4), styles.boxedBold, "State");
+        formatCell(headerRow.createCell(5), styles.boxedBold, "Assignees");
+        formatCell(headerRow.createCell(6), styles.boxedBold, "Effort Left");
+        formatCell(headerRow.createCell(7), styles.boxedBold, "Original Estimate");
+        formatCell(headerRow.createCell(8), styles.boxedBold, "Description");
+        
+        int currentRow = 1;
+        for(Task task : tasks) {
+            Row row = tasksSheet.createRow(currentRow++);
+            formatCell(row.createCell(0), styles.whiteRow, task.getId());
+            formatCell(row.createCell(1), styles.whiteRow, task.getName());
+            if(task.getStory() != null) {
+                formatCell(row.createCell(2), styles.whiteRow, task.getStory().getName());
+                formatCell(row.createCell(3), styles.whiteRow, task.getStory().getId());
+            }
+            formatCell(row.createCell(4), styles.whiteRow, task.getState());
+            formatCellUsers(row.createCell(5), styles.whiteRow, task.getResponsibles());
+            formatCell(row.createCell(6), styles.whiteRow, task.getEffortLeft());
+            formatCell(row.createCell(7), styles.whiteRow, task.getOriginalEstimate());
+            formatCell(row.createCell(8), styles.whiteRow, task.getDescription());
+        }
+        
+        for(int i = 0; i < 9; i++) {
+            tasksSheet.autoSizeColumn(i);
+        }
+        
+        return tasksSheet;
+    }
+
+    private Sheet createSummary(Workbook wb, SheetStyles styles,
+            IterationTO iter) {
         Sheet info = wb.createSheet("Summary");
 
         renderIterationInfo(styles, iter, info);
@@ -133,7 +232,7 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
             formatCell(currentRow.createCell(1), currentStyle,
                     story.getStoryPoints());
             formatCell(currentRow.createCell(2), currentStyle, story.getState());
-            formatCell(currentRow.createCell(3), currentStyle,
+            formatCellUsers(currentRow.createCell(3), currentStyle,
                     story.getResponsibles());
             StoryMetrics storymetrics = story.getMetrics();
             if (storymetrics == null) {
@@ -287,7 +386,7 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
 
         formatCell(iterationAssigneesRow.createCell(0), styles.boxedBold,
                 "Assignees");
-        formatCell(iterationAssigneesRow.createCell(1), styles.boxed,
+        formatCellUsers(iterationAssigneesRow.createCell(1), styles.boxed,
                 iter.getAssignees());
 
         formatCell(iterationDescriptionRow.createCell(0), styles.boxedBold,
@@ -311,6 +410,12 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
     }
 
     private void formatCell(Cell cell, CellStyle style, StoryState value) {
+        cell.setCellType(Cell.CELL_TYPE_STRING);
+        cell.setCellStyle(style);
+        cell.setCellValue(value.getName());
+    }
+    
+    private void formatCell(Cell cell, CellStyle style, TaskState value) {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         cell.setCellStyle(style);
         cell.setCellValue(value.getName());
@@ -345,7 +450,7 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         cell.setCellValue(value);
     }
 
-    private void formatCell(Cell cell, CellStyle style, Set<User> users) {
+    private void formatCellUsers(Cell cell, CellStyle style, Set<User> users) {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         cell.setCellStyle(style);
         if (users == null || users.isEmpty()) {
@@ -354,6 +459,20 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
             StringBuilder strb = new StringBuilder();
             for (User user : users) {
                 strb.append(user.getFullName());
+                strb.append(", ");
+            }
+            String str = strb.substring(0, strb.length() - 2).toString();
+            cell.setCellValue(str);
+        }
+    }
+    
+    private void formatCellLabels(Cell cell, CellStyle style, Set<Label> labels) {
+        cell.setCellType(Cell.CELL_TYPE_STRING);
+        cell.setCellStyle(style);
+        if(labels != null && !labels.isEmpty()) {
+            StringBuilder strb = new StringBuilder();
+            for(Label label : labels) {
+                strb.append(label.getDisplayName());
                 strb.append(", ");
             }
             String str = strb.substring(0, strb.length() - 2).toString();

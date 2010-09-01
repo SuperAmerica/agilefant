@@ -64,8 +64,8 @@ CreateDialogClass.prototype.init = function(config) {
     width: 750,
     position: 'top',
     buttons: {
-      "Ok": function() { me._ok(); },
-      "Cancel": function() { me._cancel(); }  
+      "Cancel": function() { me._cancel(); },
+      "Ok": function() { me._ok(); }
     }
   };
   jQuery.extend(opts, config);

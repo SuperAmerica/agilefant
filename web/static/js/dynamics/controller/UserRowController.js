@@ -69,12 +69,12 @@ UserRowController.prototype.changePassword = function() {
   var dialog = element.dialog({
     modal: true,
     buttons: {
-      'Ok': function() {
-        model.setPassword1(input.val());
+      'Cancel': function() {
         element.dialog('destroy');
         element.remove();
       },
-      'Cancel': function() {
+      'Ok': function() {
+        model.setPassword1(input.val());
         element.dialog('destroy');
         element.remove();
       }

@@ -39,8 +39,8 @@ ChangePasswordDialog.prototype._createDialog = function() {
     height: 250,
     modal: true,
     buttons: {
-      'Ok': function() { me._ok(); },
-      'Cancel': function() { me._cancel(); }
+      'Cancel': function() { me._cancel(); },
+      'Ok': function() { me._ok(); }
     },
     close: function() { me._cancel(); },
     title: 'Change password'

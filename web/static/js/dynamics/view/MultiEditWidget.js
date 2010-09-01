@@ -35,6 +35,7 @@ MultiEditWidget.prototype.init = function() {
     queryParam: "labelName",
     searchObj: "name",
     selectedItem: "displayName",
+    disableButtons: true,
     cancelCallback: function() {
     },
     successCallback: function(data) {

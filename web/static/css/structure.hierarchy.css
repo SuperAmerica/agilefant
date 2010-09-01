@@ -270,9 +270,6 @@ div.storyTreeContainer .openCreateDialogLink:hover {
 }
 
 /* For Labels */ 
-.multiEditContainer img.label-ok, .multiEditContainer img.label-cancel {
-  display: none;  
-}
 .multiEditContainer .as-list {
   bottom: 60px;  
 }

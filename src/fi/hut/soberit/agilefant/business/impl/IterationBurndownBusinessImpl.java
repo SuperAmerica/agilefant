@@ -15,6 +15,9 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.DateTickUnit;
+import org.jfree.chart.axis.DateTickUnitType;
+import org.jfree.chart.axis.TickUnits;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.Second;
@@ -127,6 +130,29 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final String CURRENT_DAY_SERIES_NAME = "Current day";
     protected static final String EXPECTED_SERIES_NAME = "Predicted velocity";
 
+    
+    protected static final TickUnits tickUnits = getTickUnits();
+    
+    private static TickUnits getTickUnits() {
+        TickUnits units = new TickUnits();
+        units.add(new DateTickUnit(DateTickUnitType.DAY, 1));
+        units.add(new DateTickUnit(DateTickUnitType.DAY, 2));
+        units.add(new DateTickUnit(DateTickUnitType.DAY, 5));
+        units.add(new DateTickUnit(DateTickUnitType.DAY, 7));
+        units.add(new DateTickUnit(DateTickUnitType.DAY, 14));
+        units.add(new DateTickUnit(DateTickUnitType.DAY, 21));
+        units.add(new DateTickUnit(DateTickUnitType.MONTH, 1));
+        units.add(new DateTickUnit(DateTickUnitType.MONTH, 2));
+        units.add(new DateTickUnit(DateTickUnitType.MONTH, 5));
+        units.add(new DateTickUnit(DateTickUnitType.YEAR, 1));
+        units.add(new DateTickUnit(DateTickUnitType.YEAR, 2));
+        units.add(new DateTickUnit(DateTickUnitType.YEAR, 5));
+        units.add(new DateTickUnit(DateTickUnitType.YEAR, 10));
+        units.add(new DateTickUnit(DateTickUnitType.YEAR, 100));
+        return units;
+    }
+    
+    
     @Autowired
     public void setIterationHistoryEntryBusiness(
             IterationHistoryEntryBusiness iterationHistoryEntryBusiness) {
@@ -315,6 +341,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         axis.setMaximumDate(end.plusDays(1).toDateMidnight().toDate());
         axis.setMinimumDate(start.toDateMidnight().toDate());
         axis.setDateFormatOverride(new SimpleDateFormat("EEE d.M."));
+
+        axis.setStandardTickUnits(tickUnits);
 
         plot.setDomainGridlinePaint(GRIDLINE_COLOR);
         plot.setRangeGridlinePaint(GRIDLINE_COLOR);

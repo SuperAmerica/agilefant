@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
@@ -125,21 +127,25 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         formatCell(headerRow.createCell(5), styles.boxedBold, "Labels");
         formatCell(headerRow.createCell(6), styles.boxedBold, "Description");
         List<StoryTO> stories = iter.getRankedStories();
-        Collections.sort(stories, new PropertyComparator("rank",true, true));
-        
+        Collections.sort(stories, new PropertyComparator("rank", true, true));
+
         int curentRow = 1;
-        for(StoryTO story : stories) {
+        for (StoryTO story : stories) {
             Row row = storiesSheet.createRow(curentRow++);
             formatCell(row.createCell(0), styles.whiteRow, story.getId());
             formatCell(row.createCell(1), styles.whiteRow, story.getName());
-            formatCell(row.createCell(2), styles.whiteRow, story.getStoryPoints());
+            formatCell(row.createCell(2), styles.whiteRow,
+                    story.getStoryPoints());
             formatCell(row.createCell(3), styles.whiteRow, story.getState());
-            formatCellUsers(row.createCell(4), styles.whiteRow, story.getResponsibles());
-            formatCellLabels(row.createCell(5), styles.whiteRow, story.getLabels());
-            formatCell(row.createCell(6), styles.whiteRow, story.getDescription());
+            formatCellUsers(row.createCell(4), styles.whiteRow,
+                    story.getResponsibles());
+            formatCellLabels(row.createCell(5), styles.whiteRow,
+                    story.getLabels());
+            formatCell(row.createCell(6), styles.whiteRow,
+                    story.getDescription());
         }
-        
-        for(int i = 0; i < 7; i++) {
+
+        for (int i = 0; i < 7; i++) {
             storiesSheet.autoSizeColumn(i);
         }
 
@@ -150,12 +156,13 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
     private Sheet createTasks(Workbook wb, SheetStyles styles, IterationTO iter) {
         Sheet tasksSheet = wb.createSheet("Tasks");
         List<Task> tasks = new ArrayList<Task>();
-        
-        //build task list in rank order
+
+        // build task list in rank order
         List<StoryTO> stories = iter.getRankedStories();
-        Collections.sort(stories, new PropertyComparator("rank",true, true));
-        Comparator<Task> taskComparator = new PropertyComparator("rank",true, true);
-        for(StoryTO story : stories) {
+        Collections.sort(stories, new PropertyComparator("rank", true, true));
+        Comparator<Task> taskComparator = new PropertyComparator("rank", true,
+                true);
+        for (StoryTO story : stories) {
             List<Task> storyTasks = new ArrayList<Task>(story.getTasks());
             Collections.sort(storyTasks, taskComparator);
             tasks.addAll(storyTasks);
@@ -163,7 +170,7 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         List<Task> tasksWoStory = new ArrayList<Task>(iter.getTasks());
         Collections.sort(tasksWoStory, taskComparator);
         tasks.addAll(tasksWoStory);
-        
+
         Row headerRow = tasksSheet.createRow(0);
 
         formatCell(headerRow.createCell(0), styles.boxedBold, "ID");
@@ -173,29 +180,35 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         formatCell(headerRow.createCell(4), styles.boxedBold, "State");
         formatCell(headerRow.createCell(5), styles.boxedBold, "Assignees");
         formatCell(headerRow.createCell(6), styles.boxedBold, "Effort Left");
-        formatCell(headerRow.createCell(7), styles.boxedBold, "Original Estimate");
+        formatCell(headerRow.createCell(7), styles.boxedBold,
+                "Original Estimate");
         formatCell(headerRow.createCell(8), styles.boxedBold, "Description");
-        
+
         int currentRow = 1;
-        for(Task task : tasks) {
+        for (Task task : tasks) {
             Row row = tasksSheet.createRow(currentRow++);
             formatCell(row.createCell(0), styles.whiteRow, task.getId());
             formatCell(row.createCell(1), styles.whiteRow, task.getName());
-            if(task.getStory() != null) {
-                formatCell(row.createCell(2), styles.whiteRow, task.getStory().getName());
-                formatCell(row.createCell(3), styles.whiteRow, task.getStory().getId());
+            if (task.getStory() != null) {
+                formatCell(row.createCell(2), styles.whiteRow, task.getStory()
+                        .getName());
+                formatCell(row.createCell(3), styles.whiteRow, task.getStory()
+                        .getId());
             }
             formatCell(row.createCell(4), styles.whiteRow, task.getState());
-            formatCellUsers(row.createCell(5), styles.whiteRow, task.getResponsibles());
+            formatCellUsers(row.createCell(5), styles.whiteRow,
+                    task.getResponsibles());
             formatCell(row.createCell(6), styles.whiteRow, task.getEffortLeft());
-            formatCell(row.createCell(7), styles.whiteRow, task.getOriginalEstimate());
-            formatCell(row.createCell(8), styles.whiteRow, task.getDescription());
+            formatCell(row.createCell(7), styles.whiteRow,
+                    task.getOriginalEstimate());
+            formatCell(row.createCell(8), styles.whiteRow,
+                    task.getDescription());
         }
-        
-        for(int i = 0; i < 9; i++) {
+
+        for (int i = 0; i < 9; i++) {
             tasksSheet.autoSizeColumn(i);
         }
-        
+
         return tasksSheet;
     }
 
@@ -204,21 +217,18 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         Sheet info = wb.createSheet("Summary");
 
         renderIterationInfo(styles, iter, info);
-        Row storyTableHeaderRow = info.createRow(9);
+        Row storyHeaders = info.createRow(9);
 
-        formatCell(storyTableHeaderRow.createCell(0), styles.boxedBold,
-                "Story name");
-        formatCell(storyTableHeaderRow.createCell(1), styles.boxedBold,
-                "Points");
-        formatCell(storyTableHeaderRow.createCell(2), styles.boxedBold, "State");
-        formatCell(storyTableHeaderRow.createCell(3), styles.boxedBold,
-                "Assignees");
-        formatCell(storyTableHeaderRow.createCell(4), styles.boxedBold,
+        formatCell(storyHeaders.createCell(0), styles.boxedBold, "Story name");
+        formatCell(storyHeaders.createCell(1), styles.boxedBold, "Points");
+        formatCell(storyHeaders.createCell(2), styles.boxedBold, "State");
+        formatCell(storyHeaders.createCell(3), styles.boxedBold, "Assignees");
+        formatCell(storyHeaders.createCell(4), styles.boxedBold,
                 "Effort left (h)");
-        formatCell(storyTableHeaderRow.createCell(5), styles.boxedBold,
+        formatCell(storyHeaders.createCell(5), styles.boxedBold,
                 "Original estimate (h)");
         if (settingBusiness.isHourReportingEnabled()) {
-            formatCell(storyTableHeaderRow.createCell(6), styles.boxedBold,
+            formatCell(storyHeaders.createCell(6), styles.boxedBold,
                     "Effort Spent (h)");
         }
 
@@ -369,6 +379,10 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
 
     private void renderIterationInfo(SheetStyles styles, IterationTO iter,
             Sheet info) {
+        Cell metadata = info.createRow(0).createCell(0);
+        metadata.setCellValue("Exported at "
+                + new DateTime().toString("yyyy.MM.dd HH:mm") + " by "
+                + SecurityUtil.getLoggedUser().getFullName());
         Row iterationNameRow = info.createRow(2);
         Row iterationTimeframeRow = info.createRow(3);
         Row iterationAssigneesRow = info.createRow(4);
@@ -409,25 +423,26 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         info.addMergedRegion(new CellRangeAddress(5, 6, 1, 6));
     }
 
-    private void formatCell(Cell cell, CellStyle style, StoryState value) {
-        cell.setCellType(Cell.CELL_TYPE_STRING);
-        cell.setCellStyle(style);
-        cell.setCellValue(value.getName());
-    }
-    
-    private void formatCell(Cell cell, CellStyle style, TaskState value) {
+    private static void formatCell(Cell cell, CellStyle style, StoryState value) {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         cell.setCellStyle(style);
         cell.setCellValue(value.getName());
     }
 
-    private void formatCell(Cell cell, CellStyle style, ExactEstimate value) {
+    private static void formatCell(Cell cell, CellStyle style, TaskState value) {
+        cell.setCellType(Cell.CELL_TYPE_STRING);
+        cell.setCellStyle(style);
+        cell.setCellValue(value.getName());
+    }
+
+    private static void formatCell(Cell cell, CellStyle style,
+            ExactEstimate value) {
         if (value != null) {
             formatCell(cell, style, value.getMinorUnits());
         }
     }
 
-    private void formatCell(Cell cell, CellStyle style, Integer value) {
+    private static void formatCell(Cell cell, CellStyle style, Integer value) {
         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         cell.setCellStyle(style);
         if (value != null) {
@@ -435,7 +450,7 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         }
     }
 
-    private void formatCell(Cell cell, CellStyle style, Long value) {
+    private static void formatCell(Cell cell, CellStyle style, Long value) {
         cell.setCellType(Cell.CELL_TYPE_NUMERIC);
         cell.setCellStyle(style);
         if (value == null) {
@@ -444,13 +459,14 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
         cell.setCellValue(value / 60.0);
     }
 
-    private void formatCell(Cell cell, CellStyle style, String value) {
+    private static void formatCell(Cell cell, CellStyle style, String value) {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         cell.setCellStyle(style);
         cell.setCellValue(value);
     }
 
-    private void formatCellUsers(Cell cell, CellStyle style, Set<User> users) {
+    private static void formatCellUsers(Cell cell, CellStyle style,
+            Set<User> users) {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         cell.setCellStyle(style);
         if (users == null || users.isEmpty()) {
@@ -465,13 +481,14 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
             cell.setCellValue(str);
         }
     }
-    
-    private void formatCellLabels(Cell cell, CellStyle style, Set<Label> labels) {
+
+    private static void formatCellLabels(Cell cell, CellStyle style,
+            Set<Label> labels) {
         cell.setCellType(Cell.CELL_TYPE_STRING);
         cell.setCellStyle(style);
-        if(labels != null && !labels.isEmpty()) {
+        if (labels != null && !labels.isEmpty()) {
             StringBuilder strb = new StringBuilder();
-            for(Label label : labels) {
+            for (Label label : labels) {
                 strb.append(label.getDisplayName());
                 strb.append(", ");
             }

@@ -176,11 +176,32 @@ levels of planning. Product backlog is maintained as a story tree.</p>
 4. Stories and Tasks
 </div>
 
+<div class="rightHandImage">
+  <img src="static/img/help/story_info_bubble.png" alt="Story info bubble" />
+  <br/>
+  <p>By clicking on a story in the tree, you can see and change its details</p>
+</div>
+
 <h3>Story tree</h3>
+
+<p>
+Stories are gathered in a story tree at product and project levels. Story tree is a hierarchical
+representation of the requirements and needs of a product. <em>Leaf stories</em> are the stories that have no children.
+</p>
+
+<p>
+
+</p>
 
 
 <h3>Iteration tasks</h3>
 
+<p>
+The actual work to be done is presented on iteration level as tasks. Tasks can be thought
+as the means of getting the stories done, i.e. the means of bringing customer value. The
+stories represent the iterations goals. Tasks can reside either under a story or directly
+in the iteration.
+</p>
 
 </div>
 </div>
@@ -193,14 +214,28 @@ levels of planning. Product backlog is maintained as a story tree.</p>
 5. Additional Views
 </div>
 
+<%--
 <div class="rightHandImage">
   <img src="static/img/help/additional_views.png" alt="Additional Views" />
   <br/>
   <p>Additional view settings</p>
 </div>
+ --%>
 
 <p>Beside the basic functionality of managing backlogs, Agilefant has the possibility
 to toggle some specialized views on or off on the system settings page.</p>
+
+<h3>Daily Work</h3>
+
+<%@include file="/static/html/help/dailyWorkPopup.html" %>
+
+<h3>Timesheets</h3>
+
+<%@include file="/static/html/help/timesheetsPopup.html" %>
+
+<h3>Portfolio</h3>
+
+<%@include file="/static/html/help/devPortfolioPopup.html" %>
 
 </div>
 </div>

@@ -45,5 +45,5 @@ $.widget("custom.agilefantQuickSearch", $.ui.autocomplete, {
       this._trigger( "open" );
     }
     this.element.removeClass( "ui-autocomplete-loading" );
-  },
+  }
 });

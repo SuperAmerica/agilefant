@@ -1,10 +1,10 @@
-Agilefant 2.0.3
+Agilefant 2.0.4
 Release notes
-2010-08-25
+2010-09-08
 --
 
 
-Compared to the previous major version, Agilefant 1.6, the new version has the
+Compared to the previous major version, Agilefant 1.6, the 2.0 version has the
 following changes.
 
 For more information and questions, visit http://www.agilefant.org/.
@@ -42,6 +42,15 @@ For more information and questions, visit http://www.agilefant.org/.
 +--------------------+
 |     CHANGESET      |
 +--------------------+
+Changes from 2.0.3
+2010-09-08
++ Labels can be added when creating a new story
++ Possibility to show weekends as flat-lines in iteration burndown
++ Iteration summary, stories and tasks can be exported in Excel spreadsheet 
++ Fixes to RESTful API and data format
++ Bugfixes: 0000145, 0000131, 0000159 and 0000159
+
+
 Changes from 2.0.2
 2010-08-25
 ! NOTE ! Agilefant 2.0.3 requires Java 6

@@ -6,11 +6,8 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
-
 
 import fi.hut.soberit.agilefant.model.HourEntry;
 
@@ -56,8 +53,6 @@ public abstract class TimesheetNode {
     public void addHourEntry(HourEntry entry) {
         this.hourEntries.add(entry);
     }
-    @XmlElementWrapper(name="hourEntries")
-    @XmlElement(name="hourEntry")
     public List<HourEntry> getHourEntries() {
         return this.hourEntries;
     }

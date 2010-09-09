@@ -46,12 +46,16 @@ public class StoryTimesheetNode extends TimesheetNode {
     }
 
     @Override
-    @XmlElementWrapper(name="taskNodes")
-    @XmlElement(name="taskNode")
     public List<? extends TimesheetNode> getChildren() {
         return this.childTasks;
     }
 
+    @XmlElementWrapper(name="taskNodes")
+    @XmlElement(name="taskNode")
+    public List<TaskTimesheetNode> getTaskNodes() {
+        return this.childTasks;
+    }
+    
     @Override
     @XmlAttribute(name="storyName")
     public String getName() {

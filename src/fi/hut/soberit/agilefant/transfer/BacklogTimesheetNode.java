@@ -12,6 +12,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.BacklogHourEntry;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.util.TimesheetNode;
 
 /**
@@ -125,5 +127,11 @@ public class BacklogTimesheetNode extends TimesheetNode {
         return backlogEffortSum;
     }
     
+    @XmlElementWrapper(name="hourEntries")
+    @XmlElement(name="hourEntry", type=BacklogHourEntry.class)
+    @Override
+    public List<HourEntry> getHourEntries() {
+        return super.getHourEntries();
+    }
 
 }

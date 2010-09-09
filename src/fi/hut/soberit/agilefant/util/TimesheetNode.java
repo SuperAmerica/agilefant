@@ -53,6 +53,7 @@ public abstract class TimesheetNode {
     public void addHourEntry(HourEntry entry) {
         this.hourEntries.add(entry);
     }
+    
     public List<HourEntry> getHourEntries() {
         return this.hourEntries;
     }

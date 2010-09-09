@@ -6,9 +6,13 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.util.TimesheetNode;
 
 @XmlType
@@ -46,6 +50,13 @@ public class TaskTimesheetNode extends TimesheetNode {
     
     public Task getTask() {
         return this.task;
+    }
+    
+    @XmlElementWrapper(name="hourEntries")
+    @XmlElement(name="hourEntry", type=TaskHourEntry.class)
+    @Override
+    public List<HourEntry> getHourEntries() {
+        return super.getHourEntries();
     }
 
 }

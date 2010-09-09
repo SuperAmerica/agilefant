@@ -10,7 +10,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.util.TimesheetNode;
 
 /**
@@ -82,5 +84,12 @@ public class StoryTimesheetNode extends TimesheetNode {
 
     public long getTaskEffortSum() {
         return taskEffortSum;
+    }
+    
+    @XmlElementWrapper(name="hourEntries")
+    @XmlElement(name="hourEntry", type=StoryHourEntry.class)
+    @Override
+    public List<HourEntry> getHourEntries() {
+        return super.getHourEntries();
     }
 }

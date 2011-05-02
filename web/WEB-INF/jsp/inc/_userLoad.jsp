@@ -33,7 +33,12 @@
 	            </div>
 			</div>
 			<div id="spentEffortStatistics">
-			alooha!
+				<div id="spentEffortStats" style="float: left; width: 76%; height: 180px; margin-top: 10px; position: relative;"></div>
+				 <div class="load-legends">
+				  <div class="legend-box" style="background-color: #284452; color: white;">Assigned</div>
+	              <div class="legend-box" style="background-color: #82A6A2;">Non-assigned</div>
+	              <div class="legend-box" style="background-color: rgba(51,85,221, .2);">Cummulative</div>
+	            </div>
 			</div>
 		</div>
 	</div>
@@ -48,6 +53,7 @@ $(document).ready(function() {
     userId: ${userId},
     totalPlot: $("#loadPlot"),
     detailedPlot: $("#detailedLoadPlot"),
+    spentEffortStatistics: $("#spentEffortStats"),
     legend: $("#detailedLoadLegend")
   });
 });

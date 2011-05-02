@@ -97,6 +97,7 @@
 <script type="text/javascript" src="static/js/dynamics/controller/MyAssignmentsMenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/AdministrationMenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/PersonalLoadController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/SpentEffortStatisticsController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>

@@ -7,11 +7,13 @@ PersonalLoadController.prototype = new CommonController();
 PersonalLoadController.totalLoadTab = 0;
 PersonalLoadController.detailedLoadTab = 1;
 PersonalLoadController.userSpentEffortElementIndex = 2;
+PersonalLoadController.userSpentEffortElementIndex = 3;
 
 PersonalLoadController.prototype.init = function(options) {
   this.tabs = options.tabs;
   this.userSpentEffortElement = options.spentEffortTab;
   this.userId = options.userId;
+  this.spentEffortStatsElement = options.spentEffortStatistics;
   
   var me = this;
   this.userLoadView = new UserLoadPlotWidget(this.userId,{ 
@@ -47,6 +49,12 @@ PersonalLoadController.prototype.updateLoadGraph = function() {
   this.userLoadView.reset();
 };
 
+PersonalLoadController.prototype.paintSpentEffortStats = function() {
+  if(!this.spentEffortStats) {
+    this.spentEffortStats = new SpentEffortStatisticsController();
+    this.spentEffortStats.init({element: this.spentEffortStatsElement, userId: this.userId});
+  }
+};
 PersonalLoadController.prototype._tabSelect = function(ui) {
   if(ui.index === PersonalLoadController.userSpentEffortElementIndex) {
     this._selectuserSpentEffortElement();
@@ -56,5 +64,8 @@ PersonalLoadController.prototype._tabSelect = function(ui) {
   }
   if(ui.index === PersonalLoadController.detailedLoadTab) {
     this.userLoadView.paintDetailed();
+  }
+  if(ui.index === PersonalLoadController.userSpentEffortElementIndex) {
+	this.paintSpentEffortStats();
   }
 };

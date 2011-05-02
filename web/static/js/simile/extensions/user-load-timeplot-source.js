@@ -30,3 +30,23 @@ AgilefantTimeplot.DefaultEventSource.prototype.userLoadData = function(
 	  this._fire("onAddMany", []);
 	}
 }
+
+AgilefantTimeplot.DefaultEventSource.prototype.spentEffortStatistics = function() {
+	this._events.maxValues = new Array();
+	var added = false;
+	//var startDate= new Date();
+	//var endDate = startDate.addMonths(2);
+	for ( var i = 1; i < 30; i++) {
+			var start = (new Date()).addDays(i);
+			var data = [Math.round(10*Math.random())%5 + 3, Math.round(Math.random()*10)%3 + 1];
+			data[2] = data[0] + data[1];
+			var evt = new Timeplot.DefaultEventSource.NumericEvent(start,
+					data);
+			this._events.add(evt);
+			
+			added = true;
+		}
+	if (added) {
+	  this._fire("onAddMany", []);
+	}
+}

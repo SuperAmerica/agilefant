@@ -74,5 +74,14 @@ SpentEffortStatisticsController.prototype.init = function(options) {
     ];
     
     timeplot1 = Timeplot.create(this.element[0], this.plotInfo);
-    this.eventSource.spentEffortStatistics();
+    var me = this;
+    $.ajax({
+	    url: "ajax/retrieveSpentEffortStatistics.action",
+	    data: {userId: this.userId}, 
+	    async: true,
+	    dataType: "json",
+	    type: "post",
+	    success: function(data) {
+	    	me.eventSource.spentEffortStatistics(data);
+	 }});
 };

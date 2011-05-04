@@ -31,17 +31,18 @@ AgilefantTimeplot.DefaultEventSource.prototype.userLoadData = function(
 	}
 }
 
-AgilefantTimeplot.DefaultEventSource.prototype.spentEffortStatistics = function() {
+AgilefantTimeplot.DefaultEventSource.prototype.spentEffortStatistics = function(data) {
 	this._events.maxValues = new Array();
 	var added = false;
 	//var startDate= new Date();
 	//var endDate = startDate.addMonths(2);
-	for ( var i = 1; i < 30; i++) {
-			var start = (new Date()).addDays(i);
-			var data = [Math.round(10*Math.random())%5 + 3, Math.round(Math.random()*10)%3 + 1];
-			data[2] = data[0] + data[1];
+	for ( var i = 0; i < data.length; i++) {
+			var start = new Date();		
+			var row = data[i];
+			var rowData = [row.assignedEffort, row.unassignedEffort, row.totalEffort];
+			start.setTime(row.date);
 			var evt = new Timeplot.DefaultEventSource.NumericEvent(start,
-					data);
+					rowData);
 			this._events.add(evt);
 			
 			added = true;

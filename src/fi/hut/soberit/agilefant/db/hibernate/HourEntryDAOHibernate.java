@@ -11,6 +11,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.db.HourEntryDAO;
@@ -313,6 +314,15 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         if (limit > 0) {
             crit.setMaxResults(limit);
         }
+        return asList(crit);
+    }
+
+    public List<HourEntry> retrieveByUserAndInterval(User user,
+            Interval interval) {
+        Criteria crit = getCurrentSession().createCriteria(HourEntry.class);
+        crit.add(Restrictions.eq("user", user));
+        crit.add(Restrictions.between("date", interval.getStart(), interval.getEnd()));
+      
         return asList(crit);
     }
 }

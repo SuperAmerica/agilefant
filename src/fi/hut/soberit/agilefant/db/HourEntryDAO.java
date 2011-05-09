@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.HourEntry;
@@ -64,4 +65,6 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
     List<HourEntry> getTaskHourEntries(int taskId, int limit);
 
     List<HourEntry> getStoryHourEntries(int storyId, int limit);
+    
+    public List<HourEntry> retrieveByUserAndInterval(User user, Interval interval);
 }

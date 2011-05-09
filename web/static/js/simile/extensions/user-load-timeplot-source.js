@@ -39,7 +39,7 @@ AgilefantTimeplot.DefaultEventSource.prototype.spentEffortStatistics = function(
 	for ( var i = 0; i < data.length; i++) {
 			var start = new Date();		
 			var row = data[i];
-			var rowData = [row.assignedEffort, row.unassignedEffort, row.totalEffort];
+			var rowData = [row.assignedEffort/60, row.unassignedEffort/60, row.totalEffort/60];
 			start.setTime(row.date);
 			var evt = new Timeplot.DefaultEventSource.NumericEvent(start,
 					rowData);

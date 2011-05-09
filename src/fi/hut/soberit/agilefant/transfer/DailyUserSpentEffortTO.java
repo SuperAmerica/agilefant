@@ -7,6 +7,7 @@ import flexjson.JSON;
 public class DailyUserSpentEffortTO {
     private long assignedEffort;
     private long unassignedEffort;
+    private long totalEffort;
     private DateTime date;
     
     @JSON
@@ -38,7 +39,11 @@ public class DailyUserSpentEffortTO {
     
     @JSON
     public long getTotalEffort() {
-        return this.assignedEffort + this.unassignedEffort;
+        return this.totalEffort;
+    }
+    
+    public void setTotalEffort(long effort) {
+        this.totalEffort = effort;
     }
     
     

@@ -78,7 +78,7 @@ StoryInfoBubble.prototype.populateContent = function() {
   this.storyInfoElement = $('<div style="clear: both;"/>').appendTo(this.element);
   
   $('<div style="width: 100%; text-align:center;"><span><img src="static/img/pleasewait.gif" /></span></div>').appendTo(this.storyInfoElement);
-  
+  var sid = this.id;
   this.treeController._getStoryForId(this.id, function(object) {
     me.model = object;
     me.attachModelListener();
@@ -86,6 +86,7 @@ StoryInfoBubble.prototype.populateContent = function() {
     me.storyInfoView = new DynamicVerticalTable(me, me.model, me.storyInfoConfig, me.storyInfoElement);
     me.storyInfoView.render();
     me.addLinks();
+    $.post("ajax/storyViewed.action", {storyId: sid});
   });
   
   if (Configuration.getBranchMetricsType() !== 'off') {

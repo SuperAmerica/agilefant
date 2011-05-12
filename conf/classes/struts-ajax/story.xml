@@ -170,6 +170,12 @@
         <param name="status">200</param>
       </result>
     </action>
+    
+   <action name="storyViewed" method="addAccessEntry" class="storyAccessAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+    </action>
   
   </package>
   

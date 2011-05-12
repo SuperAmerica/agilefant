@@ -56,6 +56,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     private Set<Task> tasks = new HashSet<Task>();
     private Set<StoryHourEntry> hourEntries = new HashSet<StoryHourEntry>();
     private Set<StoryRank> storyRanks = new HashSet<StoryRank>();
+    private Set<StoryAccess> storyAccesses;
 
     private Integer storyPoints;
     
@@ -226,6 +227,17 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     @JSON(include = false)
     public Set<Label> getLabels() {
         return labels;
+    }
+    
+    @OneToMany(mappedBy = "story", cascade = CascadeType.REMOVE, orphanRemoval=true)
+    @NotAudited
+    @JSON(include = false)
+    public Set<StoryAccess> getStoryAccesses() {
+        return this.storyAccesses;
+    }
+
+    public void setStoryAccesses(Set<StoryAccess> storyAccesses) {
+        this.storyAccesses = storyAccesses;
     }
 
 }

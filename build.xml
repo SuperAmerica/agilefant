@@ -488,7 +488,7 @@
 				controller/TaskSplitDialog.js, controller/UserController.js, controller/StoryInfoBubble.js, controller/UserListController.js, controller/UserRowController.js, 
 				controller/TeamListController.js, controller/TeamRowController.js, controller/CreateDialog.js, controller/TaskInfoDialog.js, controller/HourEntryController.js, 
 				controller/HourEntryListController.js, controller/StoryTreeController.js, controller/PortfolioController.js, controller/PortfolioRowController.js, 
-				controller/MyAssignmentsMenuController.js, controller/AdministrationMenuController.js, controller/PersonalLoadController.js, controller/SpentEffortStatisticsController.js"></filelist>
+				controller/MyAssignmentsMenuController.js, controller/AdministrationMenuController.js, controller/PersonalLoadController.js"></filelist>
 		</concat>
 		<!--<copy tofile="${build.webapp}/WEB-INF/jsp/inc/includeDynamics.jsp" file="${build.webapp}/WEB-INF/jsp/inc/includeDynamicsSingle.jsp" overwrite="on"/>
 		-->

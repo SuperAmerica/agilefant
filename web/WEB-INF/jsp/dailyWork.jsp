@@ -21,6 +21,7 @@
   <script type="text/javascript" src="static/js/simile/extensions/LoadPlot.js"></script>
   <script type="text/javascript" src="static/js/simile/extensions/user-load-timeplot-source.js"></script>
   <script type="text/javascript" src="static/js/simile/extensions/UserLoadPlotWidget.js"></script>
+  <script type="text/javascript" src="static/js/jquery.tagcloud.min.js"></script>
 </jsp:attribute>
 
 <jsp:body>

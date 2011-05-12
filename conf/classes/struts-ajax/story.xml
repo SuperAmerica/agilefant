@@ -176,6 +176,13 @@
         <param name="status">200</param>
       </result>
     </action>
+    
+    <action name="storyAccessData" method="calculateAccesses" class="storyAccessAction">
+      <result name="success" type="json">
+        <param name="target">entries</param>
+        <param name="patterns">+story.name, +story.id,-story.*,-user</param>
+      </result>
+    </action>
   
   </package>
   

@@ -8,8 +8,7 @@
 			<c:if test="${settings.hourReportingEnabled}">
 				<li><a href="#Spent_Effort" title="Spent Effort"><span>Spent
 				effort</span></a></li>
-				<li><a href="#spentEffortStatistics" title="Spent Effort Statistics"><span>Spent
-				effort statistics</span></a></li>
+				<li><a href="#recent" title="Recently accessed"><span>Recently accessed</span></a></li>
 			</c:if>
 		</ul>
 		<div class="subItems" style="width: 100%; margin-top: 0; overflow: hidden;">
@@ -32,13 +31,7 @@
 	              <div class="legend-box load-low"><ww:text name="load.threshold.low" /></div>
 	            </div>
 			</div>
-			<div id="spentEffortStatistics">
-				<div id="spentEffortStats" style="float: left; width: 76%; height: 180px; margin-top: 10px; position: relative;"></div>
-				 <div class="load-legends">
-				  <div class="legend-box" style="background-color: #284452; color: white;">Assigned</div>
-	              <div class="legend-box" style="background-color: #82A6A2;">Non-assigned</div>
-	              <div class="legend-box" style="background-color: rgba(51,85,221, .2);">Cummulative</div>
-	            </div>
+			<div id="recent" style="min-height: 180px">
 			</div>
 		</div>
 	</div>
@@ -53,7 +46,7 @@ $(document).ready(function() {
     userId: ${userId},
     totalPlot: $("#loadPlot"),
     detailedPlot: $("#detailedLoadPlot"),
-    spentEffortStatistics: $("#spentEffortStats"),
+    recent: $("#recent"),
     legend: $("#detailedLoadLegend")
   });
 });

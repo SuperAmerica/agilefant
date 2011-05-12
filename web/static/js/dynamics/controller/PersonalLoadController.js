@@ -7,13 +7,13 @@ PersonalLoadController.prototype = new CommonController();
 PersonalLoadController.totalLoadTab = 0;
 PersonalLoadController.detailedLoadTab = 1;
 PersonalLoadController.userSpentEffortElementIndex = 2;
-PersonalLoadController.userSpentEffortElementIndex = 3;
+PersonalLoadController.recent = 3;
 
 PersonalLoadController.prototype.init = function(options) {
   this.tabs = options.tabs;
   this.userSpentEffortElement = options.spentEffortTab;
   this.userId = options.userId;
-  this.spentEffortStatsElement = options.spentEffortStatistics;
+  this.recentElement = options.recent;
   
   var me = this;
   this.userLoadView = new UserLoadPlotWidget(this.userId,{ 
@@ -49,11 +49,20 @@ PersonalLoadController.prototype.updateLoadGraph = function() {
   this.userLoadView.reset();
 };
 
-PersonalLoadController.prototype.paintSpentEffortStats = function() {
-  if(!this.spentEffortStats) {
-    this.spentEffortStats = new SpentEffortStatisticsController();
-    this.spentEffortStats.init({element: this.spentEffortStatsElement, userId: this.userId});
-  }
+PersonalLoadController.prototype.paintRecent = function() {
+	if(!this.tagCloud) {
+		this.tagCloud = $('<ul></ul>').appendTo(this.recentElement);
+	}
+	$.get("ajax/storyAccessData.action",{userId: this.userId}, $.proxy(function(data) {
+		for(var i = 0; i < data.length; i++) {
+			var row = data[i];
+			$('<li value='+row.count+'" style="cursor: pointer;">'+row.story.name+'</li>').appendTo(this.tagCloud)
+			  .click(function() {
+				  window.location = "qr.action?q=story:"+row.story.id;
+			  });
+		}
+		this.tagCloud.tagcloud({height: 160,sizemax:25 });
+	}, this));
 };
 PersonalLoadController.prototype._tabSelect = function(ui) {
   if(ui.index === PersonalLoadController.userSpentEffortElementIndex) {
@@ -65,7 +74,7 @@ PersonalLoadController.prototype._tabSelect = function(ui) {
   if(ui.index === PersonalLoadController.detailedLoadTab) {
     this.userLoadView.paintDetailed();
   }
-  if(ui.index === PersonalLoadController.userSpentEffortElementIndex) {
-	this.paintSpentEffortStats();
+  if(ui.index === PersonalLoadController.recent) {
+	this.paintRecent();
   }
 };

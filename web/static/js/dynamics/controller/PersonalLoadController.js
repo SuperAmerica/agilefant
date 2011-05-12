@@ -54,6 +54,7 @@ PersonalLoadController.prototype.paintRecent = function() {
 		this.tagCloud = $('<ul></ul>').appendTo(this.recentElement);
 	}
 	$.get("ajax/storyAccessData.action",{userId: this.userId}, $.proxy(function(data) {
+		this.tagCloud.empty();
 		for(var i = 0; i < data.length; i++) {
 			var row = data[i];
 			$('<li value='+row.count+'" style="cursor: pointer;">'+row.story.name+'</li>').appendTo(this.tagCloud)

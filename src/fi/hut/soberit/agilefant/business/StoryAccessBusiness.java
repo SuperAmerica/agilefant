@@ -11,10 +11,18 @@ import fi.hut.soberit.agilefant.transfer.StoryAccessCloudTO;
 
 public interface StoryAccessBusiness extends GenericBusiness<StoryAccess> {
     public void addAccessEntry(Story story);
+
     public void addAccessEntry(int storyId);
+
     public List<StoryAccessCloudTO> calculateOccurences(DateTime start,
             DateTime end, int userId);
-    
+
     public List<StoryAccessCloudTO> calculateOccurences(DateTime start,
+            DateTime end, User user);
+
+    public List<StoryAccessCloudTO> calculateEditOccurences(DateTime start,
+            DateTime end, int userId);
+
+    public List<StoryAccessCloudTO> calculateEditOccurences(DateTime start,
             DateTime end, User user);
 }

@@ -38,6 +38,12 @@ public class StoryAccessAction extends ActionSupport {
                 new DateTime().minusMonths(4), new DateTime(), userId);
         return Action.SUCCESS;
     }
+    
+    public String calculateEditAccesses() {
+        entries = this.storyAccessBusiness.calculateEditOccurences(
+                new DateTime().minusMonths(4), new DateTime(), userId);
+        return Action.SUCCESS;
+    }
 
     public void setStoryId(int storyId) {
         this.storyId = storyId;

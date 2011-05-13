@@ -183,7 +183,12 @@
         <param name="patterns">+story.name, +story.id,-story.*,-user</param>
       </result>
     </action>
-  
+    <action name="storyEditAccessData" method="calculateEditAccesses" class="storyAccessAction">
+      <result name="success" type="json">
+        <param name="target">entries</param>
+        <param name="patterns">+story.name, +story.id,-story.*,-user</param>
+      </result>
+    </action>  
   </package>
   
 </struts>

@@ -52,18 +52,24 @@ PersonalLoadController.prototype.updateLoadGraph = function() {
 PersonalLoadController.prototype.paintRecent = function() {
 	if(!this.tagCloud) {
 		this.tagCloud = $('<ul></ul>').appendTo(this.recentElement);
+		this.editTagCloud = $('<ul></ul>').appendTo(this.recentElement);
 	}
-	$.get("ajax/storyAccessData.action",{userId: this.userId}, $.proxy(function(data) {
-		this.tagCloud.empty();
-		for(var i = 0; i < data.length; i++) {
-			var row = data[i];
-			$('<li value='+row.count+'" style="cursor: pointer;">'+row.story.name+'</li>').appendTo(this.tagCloud)
-			  .click(function() {
-				  window.location = "qr.action?q=story:"+row.story.id;
-			  });
-		}
-		this.tagCloud.tagcloud({height: 160,sizemax:25 });
-	}, this));
+	var tg = this.tagCloud;
+	var cb = function(tg) {
+		return function(data) {
+			tg.empty();
+			for(var i = 0; i < data.length; i++) {
+				var row = data[i];
+				$('<li value='+row.count+'" style="cursor: pointer;">'+row.story.name+'</li>').appendTo(tg)
+				  .click(function() {
+					  window.location = "qr.action?q=story:"+row.story.id;
+				  });
+			}
+			tg.tagcloud({height: 160,sizemax:25 });
+		};
+	}
+	$.get("ajax/storyAccessData.action",{userId: this.userId}, $.proxy(cb(this.tagCloud),this));
+	$.get("ajax/storyEditAccessData.action",{userId: this.userId}, $.proxy(cb(this.editTagCloud),this));
 };
 PersonalLoadController.prototype._tabSelect = function(ui) {
   if(ui.index === PersonalLoadController.userSpentEffortElementIndex) {

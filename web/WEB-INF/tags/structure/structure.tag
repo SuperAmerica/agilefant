@@ -153,10 +153,7 @@
     			tg.empty();
     			for(var i = 0; i < data.length; i++) {
     				var row = data[i];
-    				$('<li value='+row.count+'" style="cursor: pointer;">'+row.story.name+'</li>').appendTo(tg)
-    				  .click(function() {
-    					  window.location = "qr.action?q=story:"+row.story.id;
-    				  });
+    				$('<li value='+row.count+'""><a style="text-decoration: none" href="qr.action?q=story:'+row.story.id+'">'+row.story.name+'</a></li>').appendTo(tg);
     			}
     			tg.tagcloud({height: 160,sizemax:25, type: "list", seed: 23 });
     			//tg.find("li").tsort({attr:"value"});

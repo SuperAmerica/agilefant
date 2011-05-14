@@ -8,7 +8,6 @@
 			<c:if test="${settings.hourReportingEnabled}">
 				<li><a href="#Spent_Effort" title="Spent Effort"><span>Spent
 				effort</span></a></li>
-				<li><a href="#recent" title="Recently accessed"><span>Recently accessed</span></a></li>
 			</c:if>
 		</ul>
 		<div class="subItems" style="width: 100%; margin-top: 0; overflow: hidden;">
@@ -31,8 +30,6 @@
 	              <div class="legend-box load-low"><ww:text name="load.threshold.low" /></div>
 	            </div>
 			</div>
-			<div id="recent" style="min-height: 180px">
-			</div>
 		</div>
 	</div>
 </div>
@@ -46,7 +43,6 @@ $(document).ready(function() {
     userId: ${userId},
     totalPlot: $("#loadPlot"),
     detailedPlot: $("#detailedLoadPlot"),
-    recent: $("#recent"),
     legend: $("#detailedLoadLegend")
   });
 });

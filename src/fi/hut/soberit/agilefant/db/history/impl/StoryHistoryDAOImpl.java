@@ -46,17 +46,18 @@ public class StoryHistoryDAOImpl extends GenericHistoryDAOImpl<Story> implements
     }
 
     @SuppressWarnings("unchecked")
-    public Map<Integer, Long> calculateAccessCounts(DateTime start, DateTime end,
-            User user) {
-        
+    public Map<Integer, Long> calculateAccessCounts(DateTime start,
+            DateTime end, User user) {
+
         AuditQuery query = this.getAuditReader().createQuery()
                 .forRevisionsOfEntity(Story.class, true, false);
         query.add(AuditEntity.revisionProperty("userId").eq(user.getId()));
-        query.add(AuditEntity.revisionProperty("timestamp").between(start.getMillis(), end.getMillis()));
+        query.add(AuditEntity.revisionProperty("timestamp").between(
+                start.getMillis(), end.getMillis()));
         List<Story> data = query.getResultList();
         Map<Integer, Long> result = new HashMap<Integer, Long>();
-        for(Story row : data) {
-            if(!result.containsKey(row.getId())) {
+        for (Story row : data) {
+            if (!result.containsKey(row.getId())) {
                 result.put(row.getId(), 0l);
             }
             result.put(row.getId(), result.get(row.getId()) + 1);

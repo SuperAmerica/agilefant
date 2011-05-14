@@ -51,7 +51,6 @@ public class StoryAccessBusinessImp extends GenericBusinessImpl<StoryAccess>
         this.storyAccessDAO.create(entry);
     }
 
-    @Transactional(readOnly=true)
     public void addAccessEntry(int storyId) {
         Story story = this.storyBusiness.retrieve(storyId);
         this.addAccessEntry(story);

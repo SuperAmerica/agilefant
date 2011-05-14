@@ -50,7 +50,7 @@
   background-position: 100% 100%;
 }
 
-.menu-collapsed #quickSearchLinkText {
+.menu-collapsed #quickSearchLinkText, .menu-collapsed #quickRecentLink {
   display: none;
 }
 

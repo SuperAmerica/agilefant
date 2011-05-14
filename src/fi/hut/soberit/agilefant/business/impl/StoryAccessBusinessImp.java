@@ -2,11 +2,13 @@ package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,35 +60,41 @@ public class StoryAccessBusinessImp extends GenericBusinessImpl<StoryAccess>
 
     @Transactional(readOnly=true)
     public List<StoryAccessCloudTO> calculateOccurences(DateTime start,
-            DateTime end, int userId) {
+            DateTime end, int userId, int numberOfItems) {
         User user = this.userBusiness.retrieve(userId);
-        return this.calculateOccurences(start, end, user);
+        return this.calculateOccurences(start, end, user, numberOfItems);
 
     }
 
     @Transactional(readOnly=true)
     public List<StoryAccessCloudTO> calculateEditOccurences(DateTime start,
-            DateTime end, int userId) {
+            DateTime end, int userId, int numberOfItems) {
         User user = this.userBusiness.retrieve(userId);
-        return this.calculateEditOccurences(start, end, user);
+        return this.calculateEditOccurences(start, end, user, numberOfItems);
 
     }
     
+    @SuppressWarnings("unchecked")
     @Transactional(readOnly=true)
     public List<StoryAccessCloudTO> calculateOccurences(DateTime start,
-            DateTime end, User user) {
+            DateTime end, User user, int numberOfItems) {
         Map<Story, Long> data = this.storyAccessDAO.calculateAccessCounts(
                 start, end, user);
         List<StoryAccessCloudTO> res = new ArrayList<StoryAccessCloudTO>();
         for (Story story : data.keySet()) {
             res.add(new StoryAccessCloudTO(story, data.get(story)));
         }
+        Collections.sort(res, new PropertyComparator("count", true, false));
+        if(res.size() > numberOfItems) {
+            return res.subList(0, numberOfItems - 1);
+        }
         return res;
     }
 
+    @SuppressWarnings("unchecked")
     @Transactional(readOnly=true)
     public List<StoryAccessCloudTO> calculateEditOccurences(DateTime start,
-            DateTime end, User user) {
+            DateTime end, User user, int numberOfItems) {
         Map<Integer, Long> data = this.storyHistoryDAO.calculateAccessCounts(
                 start, end, user);
         
@@ -95,6 +103,10 @@ public class StoryAccessBusinessImp extends GenericBusinessImpl<StoryAccess>
         List<StoryAccessCloudTO> res = new ArrayList<StoryAccessCloudTO>();
         for (Story story : stories) {
             res.add(new StoryAccessCloudTO(story, data.get(story.getId())));
+        }
+        Collections.sort(res, new PropertyComparator("count", true, false));
+        if(res.size() > numberOfItems) {
+            return res.subList(0, numberOfItems - 1);
         }
         return res;
     }

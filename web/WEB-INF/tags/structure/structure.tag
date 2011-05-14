@@ -44,8 +44,9 @@
   <script type="text/javascript" src="static/js/jquery.jstree.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.tooltip.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/jquery.autoSuggest.minified.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-  <script type="text/javascript" src="static/js/jquery.labelify.js?<ww:text name="struts.agilefantReleaseId" />"></script>
-  
+  <script type="text/javascript" src="static/js/jquery.labelify.js?<ww:text name="struts.agilefantReleaseId" />"></script>  
+  <script type="text/javascript" src="static/js/jquery.tagcloud.min.js?<ww:text name="struts.agilefantReleaseId" />"></script>  
+
   <script type="text/javascript" src="static/js/utils/HelpUtils.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/utils/menuTimer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
   <script type="text/javascript" src="static/js/utils/quickSearch.js?<ww:text name="struts.agilefantReleaseId" />"></script>
@@ -100,6 +101,7 @@
     var searchInput = $('#quickSearchInput');
     var searchBox = $('#quickSearchBox');
     var searchLink = $('#quickSearchLink');
+    var recentLink = $("#quickRecentLink");
     
     searchInput.agilefantQuickSearch({
       source: "ajax/search.action",
@@ -139,6 +141,30 @@
         });
       }
       return false;
+    });
+    recentLink.click(function() {
+    	var recentBubble = new Bubble(recentLink, {title: "My recent items", offsetX: 10});
+    	var container = $('<div></div>').appendTo(recentBubble.getElement());
+    	var access = $('<ul />').appendTo(container).css({});
+    	$('<h3>My recently edited items</h3>)').appendTo(container).css({"margin-top": "1.5em", "margin-bottom": "0em"});
+    	var hist = $('<ul />').appendTo(container).css({});
+    	var cb = function(tg) {
+    		return function(data) {
+    			tg.empty();
+    			for(var i = 0; i < data.length; i++) {
+    				var row = data[i];
+    				$('<li value='+row.count+'" style="cursor: pointer;">'+row.story.name+'</li>').appendTo(tg)
+    				  .click(function() {
+    					  window.location = "qr.action?q=story:"+row.story.id;
+    				  });
+    			}
+    			tg.tagcloud({height: 160,sizemax:25, type: "list", seed: 23 });
+    			//tg.find("li").tsort({attr:"value"});
+    		};
+    	}
+    	var userId = PageController.getInstance().getCurrentUser().getId();
+    	$.get("ajax/storyAccessData.action",{userId: userId}, $.proxy(cb(access),this));
+    	$.get("ajax/storyEditAccessData.action",{userId: userId}, $.proxy(cb(hist),this));
     });
 
 
@@ -180,6 +206,10 @@
     
     <div style="position: absolute; left: 1em;">
       <a id="quickSearchLink" href="#"><img src="static/img/search_small.png" alt="Search..." /><span id="quickSearchLinkText" style="font-size: 80%;">Search...</span></a>
+    </div>
+    
+    <div style="position: absolute; left: 12em;">
+      <a id="quickRecentLink" href="#"><span id="quickRecentLinkText" style="font-size: 80%;">Recent</span></a>
     </div>
   </c:if>
 </div>

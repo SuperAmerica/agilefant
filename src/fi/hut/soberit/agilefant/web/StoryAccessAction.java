@@ -11,6 +11,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.StoryAccessBusiness;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.StoryAccessCloudTO;
 
 @Component("storyAccessAction")
@@ -34,14 +35,16 @@ public class StoryAccessAction extends ActionSupport {
     }
 
     public String calculateAccesses() {
+        int weeks = SecurityUtil.getLoggedUser().getRecentItemsNumberOfWeeks();
         entries = this.storyAccessBusiness.calculateOccurences(
-                new DateTime().minusMonths(4), new DateTime(), userId);
+                new DateTime().minusWeeks(weeks), new DateTime(), userId, 20);
         return Action.SUCCESS;
     }
     
     public String calculateEditAccesses() {
+        int weeks = SecurityUtil.getLoggedUser().getRecentItemsNumberOfWeeks();
         entries = this.storyAccessBusiness.calculateEditOccurences(
-                new DateTime().minusMonths(4), new DateTime(), userId);
+                new DateTime().minusWeeks(weeks), new DateTime(), userId, 20);
         return Action.SUCCESS;
     }
 

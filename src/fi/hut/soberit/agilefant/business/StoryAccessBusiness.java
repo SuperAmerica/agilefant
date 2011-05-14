@@ -15,14 +15,14 @@ public interface StoryAccessBusiness extends GenericBusiness<StoryAccess> {
     public void addAccessEntry(int storyId);
 
     public List<StoryAccessCloudTO> calculateOccurences(DateTime start,
-            DateTime end, int userId);
+            DateTime end, int userId, int numberOfItems);
 
     public List<StoryAccessCloudTO> calculateOccurences(DateTime start,
-            DateTime end, User user);
+            DateTime end, User user, int numberOfItems);
 
     public List<StoryAccessCloudTO> calculateEditOccurences(DateTime start,
-            DateTime end, int userId);
+            DateTime end, int userId, int numberOfItems);
 
     public List<StoryAccessCloudTO> calculateEditOccurences(DateTime start,
-            DateTime end, User user);
+            DateTime end, User user, int numberOfItems);
 }

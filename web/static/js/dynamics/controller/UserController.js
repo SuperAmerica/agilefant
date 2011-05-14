@@ -54,7 +54,8 @@ UserController.columnIndices = {
   initials:   2,
   email:      3,
   weekEffort: 4,
-  teams:      5
+  recentItemsNumberOfWeeks: 5,
+  teams:      6
 };
 
 UserController.prototype._initUserInfoConfig = function() {
@@ -132,6 +133,17 @@ UserController.prototype._initUserInfoConfig = function() {
       decorator: DynamicsDecorators.exactEstimateEditDecorator
     }
   });
+  config.addColumnConfiguration(UserController.columnIndices.recentItemsNumberOfWeeks, {
+	    title : "Recent items (weeks)",
+	    get : UserModel.prototype.getRecentItemsNumberOfWeeks,
+	    editable : true,
+	    edit : {
+	      editor : "Number",
+	      required: true,
+	      set: UserModel.prototype.setRecentItemsNumberOfWeeks
+	      //decorator: DynamicsDecorators.exactEstimateEditDecorator
+	    }
+	  });
   
   config.addColumnConfiguration(UserController.columnIndices.teams, {
     title: "Teams",

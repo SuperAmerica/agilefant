@@ -28,7 +28,8 @@ var UserModel = function UserModel() {
       "enabled":    "enabled",
       "autoassignToTasks": "autoassignToTasks",
       "markStoryStarted": "markStoryStarted",
-      "autoassignToStories": "autoassignToStories"
+      "autoassignToStories": "autoassignToStories",
+      "recentItemsNumberOfWeeks": "recentItemsNumberOfWeeks"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Story":         "story",
@@ -223,6 +224,14 @@ UserModel.prototype.getLoginName = function() {
 
 UserModel.prototype.setLoginName = function(loginName) {
   this.currentData.loginName = loginName;
+};
+
+UserModel.prototype.getRecentItemsNumberOfWeeks = function() {
+  return this.currentData.recentItemsNumberOfWeeks;
+};
+
+UserModel.prototype.setRecentItemsNumberOfWeeks = function(recentItemsNumberOfWeeks) {
+  this.currentData.recentItemsNumberOfWeeks = recentItemsNumberOfWeeks;
 };
 
 UserModel.prototype.getPassword1 = function() {

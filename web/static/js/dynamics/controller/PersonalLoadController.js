@@ -65,7 +65,8 @@ PersonalLoadController.prototype.paintRecent = function() {
 					  window.location = "qr.action?q=story:"+row.story.id;
 				  });
 			}
-			tg.tagcloud({height: 160,sizemax:25 });
+			tg.tagcloud({height: 160,sizemax:25, type: "list", seed: 23 });
+			//tg.find("li").tsort({attr:"value"});
 		};
 	}
 	$.get("ajax/storyAccessData.action",{userId: this.userId}, $.proxy(cb(this.tagCloud),this));

@@ -76,6 +76,8 @@ public class User implements NamedObject {
     
     private Collection<HolidayAnomaly> holidayAnomalies = new HashSet<HolidayAnomaly>();
     
+    private int recentItemsNumberOfWeeks = 16;
+    
     /*
      * User-specific settings
      */
@@ -342,6 +344,16 @@ public class User implements NamedObject {
 
     public void setMarkStoryStarted(UserSettingType markStoryStarted) {
         this.markStoryStarted = markStoryStarted;
+    }
+
+    @JSON
+    @NotAudited
+    public int getRecentItemsNumberOfWeeks() {
+        return recentItemsNumberOfWeeks;
+    }
+
+    public void setRecentItemsNumberOfWeeks(int recentItemsNumberOfWeeks) {
+        this.recentItemsNumberOfWeeks = recentItemsNumberOfWeeks;
     }
 
     

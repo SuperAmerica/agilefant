@@ -6,6 +6,8 @@
   name="node"%>
 
 <%@ attribute type="java.lang.Boolean" name="forceOpen" %>
+<%@ attribute type="java.lang.Boolean" name="displayLinksToStories" %>
+
 
 <c:choose>
   <c:when test="${aef:isIteration(node.backlog)}">
@@ -37,14 +39,14 @@
   </span>
      
   <c:forEach items="${settings.storyTreeFieldOrder}" var="fieldType">
-    <aef:storyTreeField story="${node}" type="${fn:trim(fieldType)}"/>  
+    <aef:storyTreeField story="${node}" displayLinksToStories="${displayLinksToStories}" type="${fn:trim(fieldType)}"/>  
   </c:forEach>
 
   </a>
   <c:if test="${!empty node.children}">
   <ul>
     <c:forEach items="${node.children}" var="childStory">
-     <aef:storyTreeNode node="${childStory}" forceOpen="${forceOpen}"/>
+     <aef:storyTreeNode node="${childStory}" displayLinksToStories="${displayLinksToStories}" forceOpen="${forceOpen}"/>
     </c:forEach>
   </ul>
   </c:if>

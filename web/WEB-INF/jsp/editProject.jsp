@@ -6,11 +6,12 @@
 <aef:backlogBreadCrumb backlog="${project}" />
 
 <div class="structure-main-block project-color-header" id="backlogInfo">
+
 <ul class="backlogTabs">
-  <li class=""><a href="#backlogDetails"><span><img
-    alt="Edit" src="static/img/info.png" /> Info</span></a></li>
-  <!-- <li class=""><a href="#backlogAssignees"><span><img
-    alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>-->
+  <li class="">
+  	<a href="#backlogDetails"><span><img alt="Edit" src="static/img/info.png" /> Info</span></a>
+  </li>
+  <!-- <li class=""><a href="#backlogAssignees"><span><img alt="Edit" src="static/img/team.png" /> Assignees</span></a></li>-->
   <li id="projectActions" class="ui-state-disabled dynamictable-captionaction ui-corner-all" style="float: right; opacity: 1 !important; filter: alpha(opacity = 100) !important; border-width: 1px !important;">
     Actions
   </li>
@@ -27,6 +28,7 @@ var agilefantTimesheetsEnabled = ${settings.hourReportingEnabled};
 
 $(document).ready(function() {
   $("#backlogInfo").tabs();
+  
   $("#releaseContents").tabs({
     cookie: { name: 'agilefant-project-tabs' }
   });
@@ -39,6 +41,7 @@ $(document).ready(function() {
   });
 
   var actionMenu = $('<ul class="actionCell backlogActions"/>').appendTo(document.body).hide();
+  
   $('<li/>').text('Spent effort').click(function() {
     closeMenu();
     controller.openLogEffort();
@@ -54,6 +57,7 @@ $(document).ready(function() {
     actionMenu.fadeOut('fast');
     actionMenu.menuTimer('destroy');
   };
+  
   var openMenu = function(element) {
     var pos = $("#projectActions").offset();
     actionMenu.css({
@@ -71,24 +75,23 @@ $(document).ready(function() {
   };
 
  $('#projectActions').click(function() { openMenu(); });
-
   
 });
 </script>
 
 <div style="margin-top: 3em;" class="structure-main-block project-color-header" id="releaseContents">
+
 <ul class="backlogTabs">
-  <li class=""><a href="#storyTreeContainer"><span><img
-        alt="Edit" src="static/img/story_tree.png" /> Story tree</span></a></li>
-  <li class=""><a href="#stories"><span><img
-				alt="Edit" src="static/img/leaf_stories.png" /> Leaf stories</span></a></li>
-  <li class=""><a href="#iterations"><span><img
-				alt="Edit" src="static/img/backlog.png" /> Iterations</span></a></li>
+  <li class="">
+    <a href="#stories"><span><img alt="Edit" src="static/img/leaf_stories.png" /> Leaf stories</span></a>
+  </li>
+  <li class="">
+  	<a href="#iterations"><span><img alt="Edit" src="static/img/backlog.png" /> Iterations</span></a>
+  </li>
   <li id="searchByText" style="float: right;"> </li>
 </ul>
 
 <form onsubmit="return false;">
-  <div class="details projectStoryTreeContainer" id="storyTreeContainer" style="position: relative;"></div>
   <div class="details" id="stories"></div>
   <div class="details" id="iterations">
   		<div id="iterations">&nbsp;</div>
@@ -99,8 +102,9 @@ $(document).ready(function() {
 
 
 
-<p style="text-align: center;"><img src="drawProjectBurnup.action?backlogId=${project.id}"
-						id="bigChart" width="780" height="600" /></p>
+<p style="text-align: center;">
+	<img src="drawProjectBurnup.action?backlogId=${project.id}" id="bigChart" width="780" height="600" />
+</p>
 
 </jsp:body>
 </struct:htmlWrapper>

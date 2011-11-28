@@ -16,6 +16,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -193,5 +194,16 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     public void setStoryRanks(Set<StoryRank> storyRanks) {
         this.storyRanks = storyRanks;
+    }
+    
+    @Transient
+    public Backlog getRoot() {
+        Backlog rootCandidate = this;
+ 
+        while(rootCandidate.getParent() != null) {
+            rootCandidate = rootCandidate.getParent();
+        }
+        
+        return rootCandidate;
     }
 }

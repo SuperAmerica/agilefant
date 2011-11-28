@@ -1,47 +1,28 @@
-Agilefant 2.0.4
+Agilefant 2.0.5
 Release notes
-2010-09-08
+2011-11-26
 --
 
-
-Compared to the previous major version, Agilefant 1.6, the 2.0 version has the
-following changes.
-
-For more information and questions, visit http://www.agilefant.org/.
-
-- Totally renewed user interface
- * The interface has been streamlined and works similarly in every view
- * Performance and ease-of-use is now on a totally different level
-
-- Conceptual model has been fundamentally changed
- * Instead of a workaround on iteration level, the stories are now consistent
-   throughout the whole system
- * The former tags have been changed to a more intuitive and easy-to-use labeling
-   system
- * A work queue for tasks has been added to the Daily Work page
-  
-- Hierarchical backlog management
- * Product level backlog has been replaced with a story tree
- * Project backlog is now a collection of all of its iterations' stories
- * Hierarchy is allowed on project and product levels. Iteration stories can't
-   have children
-
-- Disabling unneeded views
- * The Timesheets, Daily Work, and Portfolio views can be disabled through the
-   Settings page. 
-
-- Browser support:
- * Firefox 3.0+ and Google Chrome are officially supported
- * Safari should work fine
- * IE8 is not guaranteed to work, but works to some standard
- * Opera probably works to some extent, but has not been tested
- 
-
-
+Please spend a couple of minutes to register your organization at
+http://tinyurl.com/agilefant-registration-2011
+This helps us keep a full-featured Agilefant free-of-charge forever!
 
 +--------------------+
 |     CHANGESET      |
 +--------------------+
+
+Changes from 2.0.4, also known as Agilefant 2.0.3 (r4337)
+2011-11-26
++ Usability improvements:
+  + Navigation between Story tree and Iteration views now possible from the context info bubbles
+  + Added a 'Recent items' tag cloud to ease finding the stories recently worked on
+  + Improved help page texts
++ Bugfixes (agilefant.googlecode.com ids):
+  + 22: NullpointerException in Daily work
+  + 20: Trying to add spent effort when creating a task gives an error (if the task is not yet saved)
+  + 34: Team names are not unique
+
+
 Changes from 2.0.3
 2010-09-08
 + Labels can be added when creating a new story
@@ -132,4 +113,38 @@ Changes from Alpha 2
  + Splitting stories
  + New layout
  + Lots of changes to Daily Work
+
+=================================================================
+
+Compared to the previous major version, Agilefant 1.6, the 2.0 version has the
+following changes.
+
+For more information and questions, visit http://www.agilefant.org/.
+
+- Totally renewed user interface
+ * The interface has been streamlined and works similarly in every view
+ * Performance and ease-of-use is now on a totally different level
+
+- Conceptual model has been fundamentally changed
+ * Instead of a workaround on iteration level, the stories are now consistent
+   throughout the whole system
+ * The former tags have been changed to a more intuitive and easy-to-use labeling
+   system
+ * A work queue for tasks has been added to the Daily Work page
+  
+- Hierarchical backlog management
+ * Product level backlog has been replaced with a story tree
+ * Project backlog is now a collection of all of its iterations' stories
+ * Hierarchy is allowed on project and product levels. Iteration stories can't
+   have children
+
+- Disabling unneeded views
+ * The Timesheets, Daily Work, and Portfolio views can be disabled through the
+   Settings page. 
+
+- Browser support:
+ * Firefox 3.0+ and Google Chrome are officially supported
+ * Safari should work fine
+ * IE8 is not guaranteed to work, but works to some standard
+ * Opera probably works to some extent, but has not been tested
  

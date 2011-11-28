@@ -125,6 +125,17 @@ public class TaskDAOTest extends AbstractHibernateTests {
     }
     
     @Test
+    public void testGetUnassignedStoryTasksWithEffortLeftWithNullEffortSpent() {
+        executeClassSql();
+        DateTime start = new DateTime(2009,6,10,1,0,0,0);
+        User user = new User();
+        user.setId(3);
+        Interval interval = new Interval(start, start.plusDays(5));
+        List<UnassignedLoadTO> actual = this.taskDAO.getUnassignedStoryTasksWithEffortLeft(user, interval);
+        assertTrue(actual.isEmpty());
+    }    
+    
+    @Test
     public void testGetUnassignedIterationTasksWithEffortLeft() {
         executeClassSql();
         DateTime start = new DateTime(2009,6,10,1,0,0,0);
@@ -290,7 +301,7 @@ public class TaskDAOTest extends AbstractHibernateTests {
         DateTime start = new DateTime(2009,6,10,1,0,0,0);
         Interval interval = new Interval(start, start.plusDays(5));
         User user = new User();
-        user.setId(3);
+        user.setId(4);
        
         List<Task> actual = this.taskDAO.getAllIterationAndStoryTasks(user, interval);
         assertEquals(0, actual.size());

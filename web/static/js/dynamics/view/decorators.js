@@ -139,6 +139,7 @@ var DynamicsDecorators = {
     if (!backlog) {
       return "(no backlog selected)";
     }
+
     return backlog.getName();
   },
   dateDecorator: function(value) {
@@ -279,6 +280,12 @@ var DynamicsDecorators = {
       return "";
     };
   },
+  
+  linkToWorkItem: function(objectId) {
+	  var text = "story:" + objectId;
+      return '<a href="qr.action?q='+text+'" title="Click to open the work item">'+text+'</a>';
+  },
+  
   quickReference: function(objectId) {
     var text = "";
     if(this instanceof StoryModel) {

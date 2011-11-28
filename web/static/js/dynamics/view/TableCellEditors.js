@@ -4,7 +4,8 @@
  */
 var ValidationMessages = {
   textField: {
-    required: "Required field"
+    required: "Required field",
+    unique: "Already exists"
   },
   email: {
     notValid: "Email not in correct form: abc@def.com"
@@ -351,6 +352,64 @@ TableEditors.Text.prototype.init = function(element, model, options) {
 
 TableEditors.Text.prototype._validate = function() {
   return TableEditors.TextFieldEditor.prototype._validate.call(this);
+};
+
+/**
+ * Unique team name input.
+ * 
+ * @constructor
+ * @base TableEditors.Text
+ */
+TableEditors.TeamName = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+  this.focus();
+};
+TableEditors.TeamName.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.TeamName</code>
+ */
+TableEditors.TeamName.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.TeamName */
+  required: true
+};
+
+TableEditors.TeamName.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.TeamName.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.TeamName.prototype._validate = function() {
+  var value = jQuery.trim(this.textField.val());
+  var result = true;
+  
+  jQuery.ajax({
+    async: false,
+    url: 'ajax/retrieveAllTeams.action',
+    cache: false,
+    dataType: "json",
+    success: function(data,status) {
+      $.each(data, function(index, team) {
+    	if(team['name'] == value) {
+    	  result = false;
+    	}
+      })
+    },
+    error: function(request, status, error) {
+      MessageDisplay.Error("Unable to load data for checking teams");
+    }
+  });
+  
+  if(!result) {
+	this.addErrorMessage(ValidationMessages.textField.unique);
+  }
+  
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && result;
 };
 
 /**

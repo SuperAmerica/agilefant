@@ -139,6 +139,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         
         Criteria tasks = stories.createCriteria("tasks","task");
         tasks.add(Restrictions.isEmpty("responsibles"));
+        tasks.add(Restrictions.isNotNull("effortLeft"));
         
         ProjectionList effortLeftSum = Projections.projectionList();
         effortLeftSum.add(Projections.sum("task.effortLeft"));
@@ -149,8 +150,9 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         
         List<Object[]> data = asList(iteration);
         List<UnassignedLoadTO> result = new ArrayList<UnassignedLoadTO>();
-        for(Object[] rowData : data) {
+        for(Object[] rowData : data) {             
             UnassignedLoadTO row = new UnassignedLoadTO(new ExactEstimate((Long)rowData[0]),(Integer)rowData[1], ((Integer)rowData[2]).intValue());
+            
             result.add(row);
         }
         

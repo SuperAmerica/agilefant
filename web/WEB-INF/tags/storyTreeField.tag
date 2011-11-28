@@ -4,6 +4,7 @@
 <%@ attribute type="fi.hut.soberit.agilefant.model.Story" name="story"%>
 
 <%@ attribute type="java.lang.String" name="type" %>
+<%@ attribute type="java.lang.Boolean" name="displayLinksToStories" %>
 
 <c:choose>
 <c:when test="${type == 'state'}">
@@ -36,7 +37,17 @@
   </c:choose>
 </c:when>
 <c:when test="${type == 'name'}">
-  <span class="storyTreeName"><c:out value="${story.name}" /></span>
+		<span class="storyTreeName"> <c:choose>
+				<c:when test="${displayLinksToStories}">
+					<a href="editProduct.action?productId=${story.backlog.root.id}#fi.hut.soberit.agilefant.model.Story_${story.id}"> 
+					<c:out value="${story.name}" />
+					</a>
+				</c:when>
+				<c:otherwise>
+					<c:out value="${story.name}" />
+				</c:otherwise>
+			</c:choose>
+  </span>
 </c:when>
 <c:when test="${type == 'backlog'}">
   <span style="font-size:80%; color: #666;" title="${story.backlog.name}">(<c:out value="${story.backlog.name}"/>)</span>

@@ -3,11 +3,21 @@
 
 	<property file="build-user.properties" />
 	<property file="build.properties" />
-	<property file="conf/database-mysql5.properties" />
+	<property file="conf/classes/database-mysql5.properties" />
 
 	<!-- Clover parameters -->
 	<property name="clover.jar" location="${basedir}/lib/build/clover.jar" />
 	<taskdef resource="cloverlib.xml" classpath="${clover.jar}" />
+	
+	<!-- Configure the custom Ant tasks for the Tomcat Manager application -->
+	<taskdef name="tomcat-manager-deploy"    classname="org.apache.catalina.ant.DeployTask" classpath="${catalina-ant.dir}"/>
+	<taskdef name="tomcat-manager-list"      classname="org.apache.catalina.ant.ListTask" classpath="${catalina-ant.dir}"/>
+	<taskdef name="tomcat-manager-reload"    classname="org.apache.catalina.ant.ReloadTask" classpath="${catalina-ant.dir}"/>
+	<taskdef name="tomcat-manager-resources" classname="org.apache.catalina.ant.ResourcesTask" classpath="${catalina-ant.dir}"/>
+	<taskdef name="tomcat-manager-roles"     classname="org.apache.catalina.ant.RolesTask" classpath="${catalina-ant.dir}"/>
+	<taskdef name="tomcat-manager-start"     classname="org.apache.catalina.ant.StartTask" classpath="${catalina-ant.dir}"/>
+	<taskdef name="tomcat-manager-stop"      classname="org.apache.catalina.ant.StopTask" classpath="${catalina-ant.dir}"/>
+	<taskdef name="tomcat-manager-undeploy"  classname="org.apache.catalina.ant.UndeployTask" classpath="${catalina-ant.dir}"/>
 
 	
 	<target name="init" description="Initializes build script">
@@ -240,7 +250,7 @@
 			<fileset dir="${conf.dir}" excludes="database-*.properties" />
 		</copy>
 		<copy tofile="${build.webapp}/WEB-INF/database.properties">
-			<fileset file="${conf.dir}/database-${database.type}.properties" />
+			<fileset file="${conf.dir}/classes/database-${database.type}.properties" />
 		</copy>
 		<copy todir="${build.webapp}/WEB-INF/lib/">
 			<fileset dir="${lib}">
@@ -294,11 +304,11 @@
 		</javadoc>
 	</target>
 
-	<target name="war" depends="webapp">
+	<target name="war" depends="webapp, concat_javascript, concat_css">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
-	<target name="production-war" depends="replace_version_number, replace-static-expiration-time, compress-js, concat_css">
+	<target name="production-war" depends="replace-static-expiration-time, compress-js, concat_css">
 		<jar basedir="${build.webapp}" includes="**" destfile="${warFile}" />
 	</target>
 
@@ -450,7 +460,7 @@
 	    	structure.tables.css, structure.text.css, structure.ui.css,
 	    	structure.hierarchy.css, jquery-ui.css, jquery.wysiwyg.css,
 	    	ui.dynatree.css, autocomplete.css, dynamictable.css, dynamics.messages.css,
-	    	portfolio.css, timesheets.css, autoSuggest.css" />
+	    	portfolio.css, timesheets.css, autoSuggest.css, main.css" />
 		</concat>
 	</target>
 	
@@ -505,11 +515,8 @@
     <copy file="${basedir}/tools/rebel.xml.template" tofile="${basedir}/eclipse-classes/rebel.xml" filtering="true" />
   </target>
   
-  <target name="development-redeploy" depends="remove-erroneous-webxml, clean, undeploy-local, jrebel, deploy-local-web" />
+  <target name="development-redeploy" depends="clean, undeploy-local, jrebel, deploy-local-web" />
 
-	<target name="remove-erroneous-webxml">
-		<delete file="${basedir}/web/WEB-INF/web.xml"/>
-	</target>
 	
 	
   
@@ -607,5 +614,19 @@
 	</javac>
   	<jar basedir="${build.dir}/remotesrc_classes" includes="**" destfile="${build.dir}/agilefant-model.jar" />
   </target>
-  
+
+  <target name="tomcat-manager-deploy" description="Install web application" depends="war">
+    <tomcat-manager-deploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${webapp.name}" war="file:${warFile}"/>
+  </target>
+
+  <target name="tomcat-manager-reload" description="Reload web application">
+    <tomcat-manager-reload  url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${webapp.name}"/>
+  </target>
+
+  <target name="tomcat-manager-undeploy" description="Remove web application">
+    <tomcat-manager-undeploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}" path="/${webapp.name}"/>
+  </target>
+
+  <target name="tomcat-manager-redeploy" description="Undeploy and deploy web application" depends="tomcat-manager-undeploy,tomcat-manager-deploy" />
+	
 </project>

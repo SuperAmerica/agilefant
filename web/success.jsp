@@ -75,4 +75,3 @@
       </c:otherwise>
      </c:choose>
 
-<%@ include file="./WEB-INF/jsp/inc/_footer.jsp" %>

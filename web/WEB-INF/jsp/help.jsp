@@ -39,7 +39,7 @@ div.rightHandImage p {
 </style>
 
 <p>
-This is a quick start guide on using Agilefant. More detailed instructions and online support are available at <a href="http://www.agilefant.org/">http://www.agilefant.org/</a>.
+This is a quick start guide on using <a href="http://www.agilefant.org/">Agilefant</a>. More detailed instructions and online support is available on the <a href="http://agilefant.freeforums.org/">Agilefant forum</a>.
 </p>
 
 <h4>Table of Contents</h4>
@@ -95,8 +95,8 @@ This is a quick start guide on using Agilefant. More detailed instructions and o
 <p class="infoBox">
 <strong>Note on user rights</strong><br/>
 Currently, Agilefant does not support user rights management. 
-Please use the <a href="http://www.agilefant.org/wiki/display/FORUM/Agilefant+Forum">Agilefant forum</a> to discuss this topic.
-Also, if you would like to implement this (or an other) feature to Agilefant, please contact us by email: <img src="static/img/help/mail.gif" style="vertical-align: middle;" />
+Please use the <a href="http://agilefant.freeforums.org">Agilefant forum</a> to discuss this topic.
+For feature requests, please post to the forum.
 </p>
 
 <ol>
@@ -137,14 +137,12 @@ Also, if you would like to implement this (or an other) feature to Agilefant, pl
 
 <h3>Backlog hierarchy</h3>
 
-<p>Agilefant has three different levels of backlogs: products, projects, and iterations. They represent different
-levels of planning. Product backlog is maintained as a story tree.</p>
+<p>Agilefant has three different levels of backlogs: products, projects,
+and iterations to represent different levels of planning.</p>
 
-<p>Please note that you can not create iterations before projects, or projects before products.</p>
+<p>Currently, you cannot create iterations before projects, or projects
+before products.</p>
 
-<h4>Products</h4>
-<h4>Projects</h4>
-<h4>Iterations</h4>
 
 <div style="width:40%; border: 1px solid #ccc; margin: 1em; -moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px;">
 <h4>Example</h4>
@@ -185,8 +183,10 @@ levels of planning. Product backlog is maintained as a story tree.</p>
 <h3>Story tree</h3>
 
 <p>
-Stories are gathered in a story tree at product and project levels. Story tree is a hierarchical
-representation of the requirements and needs of a product. <em>Leaf stories</em> are the stories that have no children.
+The story tree is a view into the product and project backlogs that
+displays how the smaller stories have been refined from the higher
+level epics and features. Stories that have no children are called
+<em>leaf stories</em>. Iterations can contain only leaf stories.
 </p>
 
 <p>
@@ -197,10 +197,9 @@ representation of the requirements and needs of a product. <em>Leaf stories</em>
 <h3>Iteration tasks</h3>
 
 <p>
-The actual work to be done is presented on iteration level as tasks. Tasks can be thought
-as the means of getting the stories done, i.e. the means of bringing customer value. The
-stories represent the iterations goals. Tasks can reside either under a story or directly
-in the iteration.
+Tasks are the means of getting the stories done. They can reside
+within a story, or directly in an iteration. Tasks can only be viewed
+and edited in the iteration view.
 </p>
 
 </div>

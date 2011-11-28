@@ -6,88 +6,90 @@
 <struts>
 	<!-- Include struts defaults (from Struts JAR). -->
 	<include file="struts-default.xml" />
-	
+
 	<!-- Include AJAX action mappings -->
 	<include file="struts-ajax.xml" />
 
 	<!-- Configuration for the default package. -->
 	<package name="default" extends="struts-default">
 		<interceptors>
-			<interceptor name="refreshUser"	class="refreshUserInterceptor" />
-			<interceptor name="contextView"	class="contextViewInterceptor" />
-			<interceptor name="settings"	class="settingsInterceptor" />
+			<interceptor name="refreshUser" class="refreshUserInterceptor" />
+			<interceptor name="contextView" class="contextViewInterceptor" />
+			<interceptor name="settings" class="settingsInterceptor" />
 			<interceptor name="prefetch" class="prefetchInterceptor" />
-			
+
 			<interceptor-stack name="authenticationStack">
-				<interceptor-ref name="exception"  />
+				<interceptor-ref name="exception" />
 				<interceptor-ref name="completeStack" />
 				<interceptor-ref name="refreshUser" />
 				<interceptor-ref name="contextView" />
 				<interceptor-ref name="settings" />
 				<interceptor-ref name="validation">
-          <param name="validateAnnotatedMethodOnly">true</param>
-        </interceptor-ref>
+					<param name="validateAnnotatedMethodOnly">true</param>
+				</interceptor-ref>
 			</interceptor-stack>
 			<interceptor-stack name="noAuthenticationStack">
 				<interceptor-ref name="exception" />
 				<interceptor-ref name="completeStack" />
 			</interceptor-stack>
-			
+
 			<interceptor-stack name="prefetchStack">
-        <interceptor-ref name="exception" />
-        <interceptor-ref name="prefetch" />
-        <interceptor-ref name="completeStack" />
-        <interceptor-ref name="refreshUser" />
-        <interceptor-ref name="settings" />
-        <interceptor-ref name="validation">
-          <param name="validateAnnotatedMethodOnly">true</param>
-        </interceptor-ref>
-      </interceptor-stack>
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="prefetch" />
+				<interceptor-ref name="completeStack" />
+				<interceptor-ref name="refreshUser" />
+				<interceptor-ref name="settings" />
+				<interceptor-ref name="validation">
+					<param name="validateAnnotatedMethodOnly">true</param>
+				</interceptor-ref>
+			</interceptor-stack>
 		</interceptors>
-		
+
 		<default-interceptor-ref name="authenticationStack" />
-		
+
 		<global-results>
 			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
-			<result name="error">/WEB-INF/jsp/genericError.jsp</result>		
+			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
 			<result name="rootException" type="chain">exceptionHandler</result>
 		</global-results>
 
 
 		<global-exception-mappings>
-      <exception-mapping exception="java.lang.Exception" result="rootException"/>
-    </global-exception-mappings>
-    
-		<action name="exceptionHandler"
-			class="fi.hut.soberit.agilefant.web.ExceptionHandler" method="handleException">
-			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp</result>
+			<exception-mapping exception="java.lang.Exception"
+				result="rootException" />
+		</global-exception-mappings>
+
+		<action name="exceptionHandler" class="fi.hut.soberit.agilefant.web.ExceptionHandler"
+			method="handleException">
+			<result name="success" type="dispatcher">/WEB-INF/jsp/fatalError.jsp
+			</result>
 		</action>
 		<!-- Context view -->
-		
+
 		<action name="loginContext" class="loginContextAction">
-		  <result name="dailyWork" type="redirectAction">
-		    <param name="actionName">dailyWork</param>
-		  </result>
-		  <result name="help" type="redirectAction">
-        <param name="actionName">help</param>
-      </result>
-      <result name="selectBacklog" type="redirectAction">
-        <param name="actionName">selectBacklog</param>
-      </result>
+			<result name="dailyWork" type="redirectAction">
+				<param name="actionName">dailyWork</param>
+			</result>
+			<result name="help" type="redirectAction">
+				<param name="actionName">help</param>
+			</result>
+			<result name="selectBacklog" type="redirectAction">
+				<param name="actionName">selectBacklog</param>
+			</result>
 		</action>
-		
+
 		<action name="contextView" class="contextViewAction">
 			<result name="success_backlog" type="redirectAction">
 				<param name="actionName">editBacklog</param>
 				<param name="backlogId">${contextObjectId}</param>
 			</result>
-			
+
 			<result name="success_portfolio" type="redirectAction">
-        <param name="actionName">portlets</param>
-        <param name="collectionId">${contextObjectId}</param>
-      </result>
-			
-			
+				<param name="actionName">portlets</param>
+				<param name="collectionId">${contextObjectId}</param>
+			</result>
+
+
 			<result name="success_dailyWork" type="redirectAction">
 				<param name="actionName">dailyWork</param>
 			</result>
@@ -95,60 +97,59 @@
 				<param name="actionName">listUsers</param>
 			</result>
 			<result name="success_teams" type="redirectAction">
-        <param name="actionName">listTeams</param>
-      </result>
+				<param name="actionName">listTeams</param>
+			</result>
 			<result name="success_settings" type="redirectAction">
 				<param name="actionName">settings</param>
 			</result>
 			<result name="success_timesheet" type="redirectAction">
 				<param name="actionName">timesheet</param>
 			</result>
-			<result name="success_projectPortfolio"
-				type="redirectAction">
+			<result name="success_projectPortfolio" type="redirectAction">
 				<param name="actionName">projectPortfolio</param>
 			</result>
-			
+
 			<result name="success_noContext" type="redirectAction">
-        <param name="actionName">loginContext</param>
-      </result>
+				<param name="actionName">loginContext</param>
+			</result>
 			<result name="success_" type="redirectAction">
 				<param name="actionName">selectBacklog</param>
 			</result>
 		</action>
 
-    <!-- Backlog actions -->
-    <action name="editBacklog" method="resolveResult" class="backlogAction">
-      <result name="product" type="redirectAction">
-        <param name="actionName">editProduct</param>
-        <param name="productId">${backlogId}</param>
-      </result>
-      <result name="project" type="redirectAction">
-        <param name="actionName">editProject</param>
-        <param name="projectId">${backlogId}</param>
-      </result>
-      <result name="iteration" type="redirectAction">
-        <param name="actionName">editIteration</param>
-        <param name="iterationId">${backlogId}</param>
-      </result>
-      <result name="selectBacklog" type="redirectAction">
-        <param name="actionName">selectBacklog</param>
-      </result>
-    </action>
+		<!-- Backlog actions -->
+		<action name="editBacklog" method="resolveResult" class="backlogAction">
+			<result name="product" type="redirectAction">
+				<param name="actionName">editProduct</param>
+				<param name="productId">${backlogId}</param>
+			</result>
+			<result name="project" type="redirectAction">
+				<param name="actionName">editProject</param>
+				<param name="projectId">${backlogId}</param>
+			</result>
+			<result name="iteration" type="redirectAction">
+				<param name="actionName">editIteration</param>
+				<param name="iterationId">${backlogId}</param>
+			</result>
+			<result name="selectBacklog" type="redirectAction">
+				<param name="actionName">selectBacklog</param>
+			</result>
+		</action>
 
-    <!-- /Backlog actions -->
+		<!-- /Backlog actions -->
 
 		<!-- Product actions -->
-		
+
 		<action name="editProduct" method="retrieve" class="productAction">
 			<result>/WEB-INF/jsp/editProduct.jsp</result>
 		</action>
-		
-    <action name="deleteProduct" method="delete" class="productAction">
+
+		<action name="deleteProduct" method="delete" class="productAction">
 			<result type="redirectAction">
-			  <param name="actionName">selectBacklog</param>
+				<param name="actionName">selectBacklog</param>
 			</result>
 		</action>
-		
+
 
 		<!-- /Product actions -->
 
@@ -158,62 +159,70 @@
 		</action>
 
 		<action name="deleteProject" method="delete" class="projectAction">
-      <result name="success" type="redirectAction">
-        <param name="actionName">editBacklog</param>
-        <param name="backlogId">${productId}</param>
-      </result>
+			<result name="success" type="redirectAction">
+				<param name="actionName">editBacklog</param>
+				<param name="backlogId">${productId}</param>
+			</result>
 		</action>
 		<!-- /Project actions -->
 
-    
+
 
 		<!-- Iteration actions -->
-		 
+
 		<action name="editIteration" method="retrieve" class="iterationAction">
 			<result type="dispatcher">/WEB-INF/jsp/editIteration.jsp</result>
 		</action>
-	 
-    <action name="deleteIteration" method="delete" class="iterationAction">
+
+		<action name="deleteIteration" method="delete" class="iterationAction">
 			<result name="success" type="redirectAction">
-        <param name="actionName">editBacklog</param>
-        <param name="backlogId">${parentBacklog.id}</param>
-      </result>
+				<param name="actionName">editBacklog</param>
+				<param name="backlogId">${parentBacklog.id}</param>
+			</result>
 		</action>
-		
-    <action name="exportIteration" method="execute" class="exportIterationAction">
-      <result name="success" type="stream">
-        <param name="contentType">application/xls</param>
-        <param name="inputName">iterationData</param>
-        <param name="contentDisposition">filename="${exportFileName}.xls"</param>
-      </result>
-    </action>
-		
+
+		<action name="exportIteration" method="execute" class="exportIterationAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/xls</param>
+				<param name="inputName">iterationData</param>
+				<param name="contentDisposition">filename="${exportFileName}.xls"</param>
+			</result>
+		</action>
+
 		<!-- /Iteration actions -->
 
 		<!-- User actions -->
 		<action name="editUser" class="userAction">
-      <result type="dispatcher">/WEB-INF/jsp/administration/editUser.jsp</result>
-    </action>
-    
-    <action name="storeUser" class="userAction" method="store">
-      <interceptor-ref name="prefetchStack" />
-      <result type="redirectAction">
-        <param name="actionName">editUser</param>
-        <param name="userId">${userId}</param>
-      </result>
-    </action>
-		
+			<result type="dispatcher">/WEB-INF/jsp/administration/editUser.jsp</result>
+		</action>
+
+		<action name="storeUser" class="userAction" method="store">
+			<interceptor-ref name="prefetchStack" />
+			<result type="redirectAction">
+				<param name="actionName">editUser</param>
+				<param name="userId">${userId}</param>
+			</result>
+		</action>
+
 		<action name="listUsers" class="userAction">
-			<result type="dispatcher">/WEB-INF/jsp/administration/listUsers.jsp</result>
+			<result type="dispatcher">/WEB-INF/jsp/administration/listUsers.jsp
+			</result>
 		</action>
 
 		<!-- /User actions -->
+		
+		
+		<!--  Database dump actions -->
+		
+		<!--  /dbdump -->
+		
 
 		<!-- Team actions -->
 		<action name="listTeams" class="teamAction">
-      <result type="dispatcher">/WEB-INF/jsp/administration/listTeams.jsp</result>
-    </action>
-		
+			<result type="dispatcher">/WEB-INF/jsp/administration/listTeams.jsp
+			</result>
+		</action>
+
 		<action name="deleteTeam" method="delete" class="teamAction">
 			<result type="redirectAction">listTeams</result>
 		</action>
@@ -225,92 +234,99 @@
 		</action>
 		<!-- /Daily work -->
 
-    <!-- Dev portfolio -->
-		<action name="projectPortfolio" class="projectPortfolioAction" method="retrieve">
+		<!-- Dev portfolio -->
+		<action name="projectPortfolio" class="projectPortfolioAction"
+			method="retrieve">
 			<result type="dispatcher">/WEB-INF/jsp/projectPortfolio.jsp</result>
 		</action>
-		
+
 		<action name="portlets" class="portletAction" method="retrieve">
-		  <result name="success_projectPortfolio" type="redirectAction">
-		    <param name="actionName">projectPortfolio</param>
-		  </result>
-		  <result name="success" type="dispatcher">/WEB-INF/jsp/portlets.jsp</result>
+			<result name="success_projectPortfolio" type="redirectAction">
+				<param name="actionName">projectPortfolio</param>
+			</result>
+			<result name="success" type="dispatcher">/WEB-INF/jsp/portlets.jsp</result>
 		</action>
-		
+
 		<action name="createPortfolio" class="portletAction" method="create">
-      <result name="success" type="redirectAction">
-        <param name="actionName">portlets.action</param>
-        <param name="collectionId">${collectionId}</param>
-      </result>
-    </action>
-    
-    <action name="storePortfolio" class="portletAction" method="store">
-      <interceptor-ref name="prefetchStack"/>
-      <result name="success" type="redirectAction">
-        <param name="actionName">portlets.action</param>
-        <param name="collectionId">${collectionId}</param>
-      </result>
-    </action>
-    
-    <action name="deletePortfolio" class="portletAction" method="delete">
-      <result name="success" type="redirectAction">
-        <param name="actionName">portlets.action</param>
-        <param name="collectionId">0</param>
-      </result>
-    </action>
-		
+			<result name="success" type="redirectAction">
+				<param name="actionName">portlets.action</param>
+				<param name="collectionId">${collectionId}</param>
+			</result>
+		</action>
+
+		<action name="storePortfolio" class="portletAction" method="store">
+			<interceptor-ref name="prefetchStack" />
+			<result name="success" type="redirectAction">
+				<param name="actionName">portlets.action</param>
+				<param name="collectionId">${collectionId}</param>
+			</result>
+		</action>
+
+		<action name="deletePortfolio" class="portletAction" method="delete">
+			<result name="success" type="redirectAction">
+				<param name="actionName">portlets.action</param>
+				<param name="collectionId">0</param>
+			</result>
+		</action>
+
 		<!-- /Dev portfolio -->
 
-		<action name="drawProjectBurnup" method="getProjectBurnup" class="chartAction">
+		<action name="drawProjectBurnup" method="getProjectBurnup"
+			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">image/png</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
-		
-		<action name="drawSmallProjectBurnup" method="getSmallProjectBurnup" class="chartAction">
-      <result name="success" type="stream">
-        <param name="contentType">image/png</param>
-        <param name="inputName">inputStream</param>
-      </result>
-    </action>
 
-		<action name="drawIterationBurndown" method="getIterationBurndown" class="chartAction">
+		<action name="drawSmallProjectBurnup" method="getSmallProjectBurnup"
+			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">image/png</param>
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
-		
-    <action name="drawSmallIterationBurndown" method="getSmallIterationBurndown" class="chartAction">
-      <result name="success" type="stream">
-        <param name="contentType">image/png</param>
-        <param name="inputName">inputStream</param>
-      </result>
-    </action>
-    
-    <action name="drawCustomIterationBurndown" method="getCustomIterationBurndown" class="chartAction">
-  		<result name="success" type="stream">
-    		<param name="contentType">image/png</param>
-    		<param name="inputName">inputStream</param>
-  		</result>
-	</action>
+
+		<action name="drawIterationBurndown" method="getIterationBurndown"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+
+		<action name="drawSmallIterationBurndown" method="getSmallIterationBurndown"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+
+		<action name="drawCustomIterationBurndown" method="getCustomIterationBurndown"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
 
 		<action name="selectBacklog">
 			<result type="dispatcher">/WEB-INF/jsp/selectBacklog.jsp</result>
 		</action>
-		
+
 		<action name="help">
-      <result type="dispatcher">/WEB-INF/jsp/help.jsp</result>
-    </action>
-		
+			<result type="dispatcher">/WEB-INF/jsp/help.jsp</result>
+		</action>
+
 		<!-- Actions for generating a new password and e-mailing it to an <code>User</code> -->
- 
+
 		<action name="newPassword">
 			<interceptor-ref name="noAuthenticationStack" />
 			<result>/WEB-INF/jsp/newPassword.jsp</result>
 		</action>
-		<action name="generateNewPassword" class="passwordAction"	method="generate">
+		<action name="generateNewPassword" class="passwordAction"
+			method="generate">
 			<interceptor-ref name="noAuthenticationStack" />
 			<result name="success">success.jsp</result>
 			<result name="error">success.jsp?error=1</result>
@@ -318,54 +334,86 @@
 
 		<!-- Actions for changing settings -->
 		<action name="settings">
-		  <result type="redirectAction">
-        <param name="actionName">systemSettings</param>
-      </result>
+			<result type="redirectAction">
+				<param name="actionName">systemSettings</param>
+			</result>
 		</action>
-		
+
 		<action name="systemSettings" class="settingAction" method="edit">
-		  <result>/WEB-INF/jsp/administration/settings.jsp</result>
+			<result>/WEB-INF/jsp/administration/settings.jsp</result>
 		</action>
-		
+
 		<action name="storeSettings" class="settingAction" method="storeSettings">
 			<result name="success" type="redirectAction">systemSettings</result>
 		</action>
-		
+
 		<!-- timesheet actions -->
-		  
+
 		<action name="timesheet" method="initialize" class="timesheetAction">
 			<result>/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
-		
+
 		<action name="generateTree" method="generateTree" class="timesheetAction">
 			<result name="success">/WEB-INF/jsp/timesheet.jsp</result>
 		</action>
-		
-		<action name="generateExcel" method="generateExeclReport" class="timesheetAction">
+
+		<action name="generateExcel" method="generateExeclReport"
+			class="timesheetAction">
 			<result name="success" type="stream">
 				<param name="contentType">application/xls</param>
 				<param name="inputName">sheetData</param>
 				<param name="contentDisposition">filename="agilefantTimesheet.xls"</param>
 			</result>
-		</action>		
-		
+		</action>
+
 		<!-- Hour Entry actions -->
-		
-		<action name="weeklySpentEffort" method="getDaySumsByWeek" class="spentEffortAction">
+
+		<action name="weeklySpentEffort" method="getDaySumsByWeek"
+			class="spentEffortAction">
 			<result type="dispatcher">/WEB-INF/jsp/inc/spentEffort.jsp</result>
 		</action>
-	
+
 		<!-- /Session actions -->
-        
-        <action name="searchResult" class="resolveSearchResultAction" method="execute">
-            <result name="iteration" type="redirect">editIteration.action?iterationId=${targetBacklogId}#${hash}</result>
-            <result name="project" type="redirect">editProject.action?projectId=${targetBacklogId}#${hash}</result>
-            <result name="product" type="redirect">editProduct.action?productId=${targetBacklogId}#${hash}</result>
-        </action>    
-        <action name="qr" class="referenceIDAction" method="execute">
-            <result name="iteration" type="redirect">editIteration.action?iterationId=${backlogId}#${hash}</result>
-            <result name="project" type="redirect">editProject.action?projectId=${backlogId}#${hash}</result>
-            <result name="product" type="redirect">editProduct.action?productId=${backlogId}#${hash}</result>
-        </action>    
-</package>
+
+		<action name="searchResult" class="resolveSearchResultAction"
+			method="execute">
+			<result name="iteration" type="redirect">editIteration.action?iterationId=${targetBacklogId}#${hash}
+			</result>
+			<result name="project" type="redirect">editProject.action?projectId=${targetBacklogId}#${hash}
+			</result>
+			<result name="product" type="redirect">editProduct.action?productId=${targetBacklogId}#${hash}
+			</result>
+		</action>
+		<action name="qr" class="referenceIDAction" method="execute">
+			<result name="iteration" type="redirect">editIteration.action?iterationId=${backlogId}#${hash}
+			</result>
+			<result name="project" type="redirect">editProject.action?projectId=${backlogId}#${hash}
+			</result>
+			<result name="product" type="redirect">editProduct.action?productId=${backlogId}#${hash}
+			</result>
+		</action>
+		
+		
+		<action name="dbexport">
+			<result type="redirectAction">
+				<param name="actionName">databaseExport</param>
+			</result>
+		</action>
+
+		<action name="databaseExport" class="dbExportAction" method="edit">
+			<result>/WEB-INF/jsp/administration/dbexport.jsp</result>
+		</action>
+		
+		
+		<action name="generateDbExport" method="generateDatabaseExport"
+			class="dbExportAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/octet-stream</param>
+				<param name="inputName">databaseStream</param>
+				<param name="contentDisposition">filename="AgilefantDatabaseExport.zip"</param>
+			</result>
+		</action>
+		
+		
+	</package>
 </struts>

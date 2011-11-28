@@ -61,12 +61,7 @@
 	     <param name="status">200</param>
 	   </result>
 	  </action>
- 
-	  <action name="retrieveSpentEffortStatistics" class="spentEffortStatisticsAction" method="retrieveMonthlyStatisticsByUser">
-	    <result name="success" type="json">
-	      <param name="target">entries</param>
-	    </result>
-	  </action> 
+  
   </package>
   
 </struts>

@@ -219,8 +219,10 @@ TaskController.prototype.isEditable = function () {
 };
 
 TaskController.prototype.openQuickLogEffort = function(model, view) {
-  this.openLogEffort();
-  //view.openEditor(false, null, true);
+  if (model.id !== null) {
+  	this.openLogEffort();
+    //view.openEditor(false, null, true);
+  }
 };
 
 TaskController.prototype.quickLogEffort = function (spentEffort) {

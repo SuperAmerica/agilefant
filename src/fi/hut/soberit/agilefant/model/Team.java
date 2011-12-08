@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.model;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -72,6 +73,7 @@ public class Team implements Comparable<Team> {
      * @return the name
      */
     @Type(type = "escaped_truncated_varchar")
+    @Column(unique = true)
     @JSON
     public String getName() {
         return name;

@@ -593,7 +593,7 @@ CreateDialog.Team.prototype.initFormConfig = function() {
     editable: true,
     get: TeamModel.prototype.getName,
     edit: {
-      editor: "Text",
+      editor: "TeamName",
       required: true,
       set: TeamModel.prototype.setName
     }

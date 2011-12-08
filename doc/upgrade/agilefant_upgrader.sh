@@ -26,7 +26,11 @@ if [ -z "$mysql_password" ]; then
  mysql_password="agilefant"
 fi
 
-mysql -u$mysql_user -p$mysql_password -D$mysql_database -h$mysql_server -e "select 1;" >/dev/null 2>&1
+function run_sql() {
+  mysql -u$mysql_user -p$mysql_password -D$mysql_database -h$mysql_server -e "${1}"
+}
+
+run_sql "select 1;" >/dev/null 2>&1
 
 if [ "$?" -ne "0" ]; then
  echo "Unable to connect to the database server. Exiting..."
@@ -47,7 +51,7 @@ fi
 
 checkVersion() {
   unset agilefant_db_version
-  agilefant_db_version=`mysql -u$mysql_user -p$mysql_password -h$mysql_server -D$mysql_database -e"SELECT value FROM settings WHERE name='AgilefantDatabaseVersion'" | awk 'NR==2'`
+  agilefant_db_version=$(run_sql "SELECT value FROM settings WHERE name='AgilefantDatabaseVersion'" | awk 'NR==2')
   echo "Current database version: $agilefant_db_version"
 }
 findUpdateFile() {
@@ -63,6 +67,14 @@ runUpdate() {
     exit 1
   fi
 }
+
+echo "Checking if currently set AgilefantDatabaseVersion is out of sync"
+run_sql "
+UPDATE settings SET value = '202'
+WHERE name = 'AgilefantDatabaseVersion'
+  AND value = '200b2'
+  AND EXISTS (SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'widgetcollections')"
+
 continueLoop=1
 
 while [ "$continueLoop" -eq "1" ]

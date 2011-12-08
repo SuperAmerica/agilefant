@@ -27,7 +27,7 @@ $(document).ready(function() {
 <h3>Product</h3>
 <ul class="widgetList">
   <li class="widget productWidget staticWidget droppableWidget" id="productWidget" backlogid="${product.id}">
-    <struct:widget name="${product.name}" widgetId="-1">
+    <struct:widget name="${product.name}" widgetId="-1" backlogId="${product.id}" >
       <ul class="storyList" style="min-height: 20px;">
         <c:forEach items="${product.leafStories}" var="story">
           <li storyId="${story.id}"><aef:storyTreeField story="${story}" type="state" /> ${story.name}</li>
@@ -43,7 +43,7 @@ $(document).ready(function() {
 <ul class="widgetList">
   <c:forEach items="${product.childProjects}" var="project">
     <li class="widget projectWidget droppableWidget scheduled staticWidget" backlogid="${project.id}">
-      <struct:widget name="${project.name}" widgetId="-1">
+      <struct:widget name="${project.name}" widgetId="-1" backlogId="${project.id}">
         <div class="timeframe">Timeframe: <span><joda:format value="${project.startDate}" pattern="YYYY-MM-dd" /></span> to <span><joda:format value="${project.endDate}" pattern="YYYY-MM-dd" /></span></div>
         <input type="hidden" name="startDate" value='<joda:format value="${project.startDate}" pattern="YYYY-MM-dd" />' />
         <input type="hidden" name="endDate" value='<joda:format value="${project.endDate}" pattern="YYYY-MM-dd" />' />
@@ -65,7 +65,7 @@ $(document).ready(function() {
   <c:forEach items="${product.childProjects}" var="project">
     <c:forEach items="${project.childIterations}" var="iteration">
       <li class="widget iterationWidget droppableWidget scheduled staticWidget" backlogid="${iteration.id}">
-        <struct:widget name="${project.name} > ${iteration.name}" widgetId="-1">
+        <struct:widget name="${project.name} > ${iteration.name}" widgetId="-1" backlogId="${iteration.id}">
           <div class="timeframe">Timeframe: <span><joda:format value="${iteration.startDate}" pattern="YYYY-MM-dd" /></span> to <span><joda:format value="${iteration.endDate}" pattern="YYYY-MM-dd" /></span></div>
           <input type="hidden" name="startDate" value='<joda:format value="${iteration.startDate}" pattern="YYYY-MM-dd" />' />
           <input type="hidden" name="endDate" value='<joda:format value="${iteration.endDate}" pattern="YYYY-MM-dd" />' />

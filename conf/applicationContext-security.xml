@@ -134,6 +134,7 @@
 				/generatenewpassword.action=IS_AUTHENTICATED_ANONYMOUSLY
 				/static/**=IS_AUTHENTICATED_ANONYMOUSLY
 				/**=IS_AUTHENTICATED_REMEMBERED
+				<!-- /showReadOnlyIteration.action?**=IS_AUTHENTICATED_ANONYMOUSLY -->
 			</value>
 		</property>
 	</bean>

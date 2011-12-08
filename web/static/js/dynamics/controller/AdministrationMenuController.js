@@ -56,6 +56,13 @@ AdministrationMenuController.prototype.initTree = function() {
     icon: false,
     key: "systemSettings.action"
   });
+  
+  rootNode.addChild({
+	  title: "Database export",
+	  icon:false,
+	  key: "databaseExport.action"
+  });  
+  
   this.element.find("a.ui-dynatree-title").each(function(key, item) {
     item.href = $(item.parentNode).attr("dtnode").data.key;
   });

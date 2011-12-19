@@ -2,7 +2,7 @@ INSERT INTO backlogs (id, backlogtype, name) VALUES (1, 'Project', 'Project 1');
 INSERT INTO backlogs (id, backlogtype, name, parent_id) VALUES (2, 'Iteration', 'Iteration 1', 1);
 INSERT INTO backlogs (id, backlogtype, name) VALUES (3, 'Project', 'Project 2');
 INSERT INTO backlogs (id, backlogtype, name) VALUES (4, 'Project', 'Project 3');
-INSERT INTO users (id, enabled) VALUES (1, true);
+INSERT INTO users (id, enabled, recentItemsNumberOfWeeks) VALUES (1, true, 2);
 INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (1, 1, 'Story 1', 10, 0);
 INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (2, 1, 'Story 2', 5,  0);
 INSERT INTO stories (id, backlog_id, name, storypoints, state) VALUES (3, 2, 'Story 3', 5,  0);

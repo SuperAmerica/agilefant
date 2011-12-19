@@ -9,8 +9,8 @@ INSERT INTO backlogs (id, parent_id, backlogtype, name, rank) VALUES (4, 1, 'Pro
 INSERT INTO backlogs (id, parent_id, backlogtype, name) VALUES (5, 3, 'Iteration', 'Iteration 1');
 INSERT INTO backlogs (id, parent_id, backlogtype, name) VALUES (6, 3, 'Iteration', 'Iteration 2');
 
-INSERT INTO users (id, enabled) VALUES (1, true);
-INSERT INTO users (id, enabled) VALUES (2, true);
+INSERT INTO users (id, enabled, recentItemsNumberOfWeeks) VALUES (1, true, 1);
+INSERT INTO users (id, enabled, recentItemsNumberOfWeeks) VALUES (2, true, 1);
 
 INSERT INTO stories (id, backlog_id, name, state) VALUES (1, 5, 'Story 1', 0);
 INSERT INTO stories (id, backlog_id, name, state) VALUES (2, 5, 'Story 2', 0);

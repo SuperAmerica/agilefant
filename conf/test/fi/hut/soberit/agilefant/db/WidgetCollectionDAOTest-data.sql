@@ -1,6 +1,6 @@
 -- User
-INSERT INTO users(id,loginName,enabled) VALUES (1,'Testuser',true);
-INSERT INTO users(id,loginName,enabled) VALUES (2,'User with no collections',true);
+INSERT INTO users(id, loginName, enabled, recentItemsNumberOfWeeks) VALUES (1, 'Testuser', true, 1);
+INSERT INTO users(id, loginName, enabled, recentItemsNumberOfWeeks) VALUES (2, 'User with no collections', true, 1);
 
 -- Widget collections
 INSERT INTO widgetcollections(id,name,user_id) VALUES (1,'B: First',null);

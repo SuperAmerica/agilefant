@@ -1,10 +1,9 @@
-INSERT INTO users (id,enabled) VALUES (1,true);
-INSERT INTO users (id,enabled) VALUES (2,true);
+INSERT INTO users (id,enabled, recentItemsNumberOfWeeks) VALUES (1, true, 1);
+INSERT INTO users (id,enabled, recentItemsNumberOfWeeks) VALUES (2, true, 1);
+
 INSERT INTO backlogs (id,backlogtype, rank) VALUES (1,'Project',1);
 INSERT INTO backlogs (id,backlogtype, rank) VALUES (2,'Project',2);
 INSERT INTO backlogs (id,backlogtype, rank) VALUES (3,'Project',3);
-
-
 
 INSERT INTO backlogs (id,backlogtype, rank, parent_id) VALUES (4,'Iteration',4,3);
 INSERT INTO backlogs (id,backlogtype, rank, parent_id) VALUES (5,'Iteration',5,3);

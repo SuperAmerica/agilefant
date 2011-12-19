@@ -20,7 +20,7 @@ INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (9, 4,  nu
 
 
 -- Create user --
-INSERT INTO users (id, enabled) VALUES (1, true);
+INSERT INTO users (id, enabled, recentItemsNumberOfWeeks) VALUES (1, true, 1);
 INSERT INTO story_user (story_id, user_id) VALUES(1, 1); -- in product --
 INSERT INTO story_user (story_id, user_id) VALUES(6, 1); -- in iteration 3 --
 INSERT INTO story_user (story_id, user_id) VALUES(7, 1); -- in iteration 3 --

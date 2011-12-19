@@ -12,6 +12,8 @@
   |
   <a href="help.action">Help</a>
   |
+  <a href="http://tinyurl.com/agilefant-registration-2011">Register</a>
+  |
   <a href="j_spring_security_logout?exit=Logout">Logout</a>
 
 <struct:createNewMenu />

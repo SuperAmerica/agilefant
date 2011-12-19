@@ -76,14 +76,12 @@ REM  -> update found -> update -> start
 REM  -> not found -> :eof
 REM end 
 
+echo Checking if currently set AgilefantDatabaseVersion is out of sync
+mysql -u%aef_mysql_user% -p%aef_mysql_password% -D%aef_mysql_database% -h%aef_mysql_host% -e "UPDATE settings SET value = '202' WHERE name = 'AgilefantDatabaseVersion' AND value = '200b2' AND EXISTS (SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'widgetcollections');"
+
 :updateStart
 
 call :getversion
-
-if %aef_db_version%.==. (
-  echo Unable to detect database version number. Exiting...
-  goto error
-)
 
 set aef_update_filename=
 for %%a in (%aef_db_version%-*.sql) do (
@@ -109,6 +107,12 @@ goto exit
   mysql -u%aef_mysql_user% -p%aef_mysql_password% -D%aef_mysql_database% -h%aef_mysql_host% -e"SELECT value FROM settings WHERE name='AgilefantDatabaseVersion'"  > temp.txt
   call :parseversion<temp.txt
   del temp.txt
+  
+  if %aef_db_version%.==. (
+    echo Unable to detect database version number. Exiting...
+    goto error
+  )
+  
   echo Current database version: %aef_db_version%
 goto :eof
 

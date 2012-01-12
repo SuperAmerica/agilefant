@@ -265,7 +265,7 @@ ProjectController.prototype.paint = function() {
   var selectedTab = this.tabs.tabs("option","selected");
   var tmpSel = (selectedTab === 2) ? 0 : 2;
   
-  this.tabs.tabs("select", tmpSel);x	
+  this.tabs.tabs("select", tmpSel);
   this.tabs.bind("tabsselect",function(event, ui){
     me.textFilter.clear();
     

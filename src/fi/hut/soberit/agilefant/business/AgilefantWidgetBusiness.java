@@ -17,7 +17,7 @@ public interface AgilefantWidgetBusiness extends GenericBusiness<AgilefantWidget
     
     
     /**
-     * Move the widget to a specified position in its collection.
+     * Move the widget to a specified position in its collection. 
      */
     public void move(AgilefantWidget widget, int position, int listNumber);
     

@@ -23,7 +23,7 @@ public interface AgilefantWidgetBusiness extends GenericBusiness<AgilefantWidget
     
     /**
      * Arranges the given widgets to lists according to their listNumber property.
-     * @param minNumberOfLists TODO
+     * @param minNumberOfLists  TODO
      */
     public List<List<AgilefantWidget>> generateWidgetGrid(WidgetCollection collection, int minNumberOfLists);
     

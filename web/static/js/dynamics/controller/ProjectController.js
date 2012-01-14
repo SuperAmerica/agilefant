@@ -35,14 +35,17 @@ ProjectController.prototype = new BacklogController();
 ProjectController.prototype.filter = function() {
   var me = this;
   var activeTab = this.tabs.tabs("option","selected");
-  
-  if (activeTab === 0) {
+  if (activeTab === 1) {
     this.storyListView.showInfoMessage("Searching...");
     this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
       me.storyListView.hideInfoMessage("Searching...");
     });
   }
-  else if (activeTab === 1) {
+  else if (activeTab === 0) {
+    this.storyTreeController.filter(this.getTextFilter(),
+        this.getStoryTreeStateFilters());
+  }
+  else if (activeTab === 2) {
     this.iterationsView.filter();
   }
 };
@@ -63,6 +66,10 @@ ProjectController.prototype.getLeafStoryFilters = function() {
     filters.states = this.leafStoriesStateFilters;
   }
   return filters; 
+};
+
+ProjectController.prototype.getStoryTreeStateFilters = function() {
+  return this.storyTreeController.storyFilters.statesToKeep;
 };
 
 ProjectController.prototype.getTextFilter = function() {
@@ -260,22 +267,32 @@ ProjectController.prototype._paintIterations = function(element) {
   });
 };
 
+ProjectController.prototype._paintStoryTree = function(element) {
+  if(!this.storyTreeController) {
+   this.storyTreeController =  new StoryTreeController(this.id, "project", element, {}, this);
+  } 
+  this.storyTreeController.refresh();
+  
+};
+
 ProjectController.prototype.paint = function() {
   var me = this;
   var selectedTab = this.tabs.tabs("option","selected");
   var tmpSel = (selectedTab === 2) ? 0 : 2;
-  
-  this.tabs.tabs("select", tmpSel);x	
+  this.tabs.tabs("select", tmpSel);
   this.tabs.bind("tabsselect",function(event, ui){
     me.textFilter.clear();
-    
-    if(ui.index === 0) { //leaf stories
+    if(me.storyTreeController) {
+      me.storyTreeController.resetFilter();
+    }
+    if(ui.index === 1) { //leaf stories
       me._paintLeafStories(ui.panel);
-    } else if(ui.index === 1) { //iteration list
+    } else if(ui.index === 0) { //Story tree
+      me._paintStoryTree(ui.panel);
+    } else if(ui.index === 2) { //iteration list
       me._paintIterations(ui.panel);
     }
   });
-  
   ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
       this.id, function(model) {
         me.model = model;

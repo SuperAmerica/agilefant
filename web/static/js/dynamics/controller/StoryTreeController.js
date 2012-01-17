@@ -19,7 +19,7 @@ var StoryTreeController = function StoryTreeController(id, type, element, option
     disableRootSort: false
   };
   this.storyFilters = {
-      statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"]
+      statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE", "DEFERRED"]
   };
   jQuery.extend(this.options, options);
   this.initHeader();
@@ -38,7 +38,7 @@ StoryTreeController.moveNodeUrls =  {
 
 StoryTreeController.prototype.resetFilter = function() {
   this.storyFilters = {
-      statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE"]
+      statesToKeep: ["NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE", "DEFERRED"]
   };
   this.filterImg.removeClass("storytree-filterimg-active");
 };

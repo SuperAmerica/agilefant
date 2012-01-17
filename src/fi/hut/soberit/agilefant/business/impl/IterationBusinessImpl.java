@@ -32,6 +32,7 @@ import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
 import fi.hut.soberit.agilefant.db.history.IterationHistoryDAO;
 import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
+import fi.hut.soberit.agilefant.db.history.TaskHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -86,6 +87,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private StoryHistoryDAO storyHistoryDAO;
     @Autowired
     private IterationHistoryDAO iterationHistoryDAO;
+    @Autowired
+    private TaskHistoryDAO taskHistoryDAO;
     
     public IterationBusinessImpl() {
         super(Iteration.class);
@@ -520,9 +523,20 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
                     .getObjectId(), entry.getRevision().getId());
             entry.setObject(story);
         }
+        
+        List<AgilefantHistoryEntry> modified = this.backlogHistoryDAO
+                .retrieveModifiedStories(iteration);
+        for (AgilefantHistoryEntry entry : modified) {
+            Story story = this.storyHistoryDAO.retrieveClosestRevision(entry
+                    .getObjectId(), entry.getRevision().getId());
+            entry.setObject(story);
+        }
+        
         List<AgilefantHistoryEntry> ret = new ArrayList<AgilefantHistoryEntry>();
         ret.addAll(added);
         ret.addAll(deleted);
+        ret.addAll(modified);
+        
         Collections.sort(ret, new PropertyComparator("revision.timestamp",
                 true, false));
         return ret;
@@ -543,5 +557,61 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             }
         }
         return newTasks;
+    }
+
+    /**
+     * This is to retrieve task history given an iteration, for all possible
+     * task modifications
+     * 
+     * Task revisions are stored in table 'tasks_AUD' given the current
+     * iteration (iteration_id). Note that if story_id is NULL, the selected
+     * task does not belong to any story.     
+     *       
+     * Interface needed: TaskHistoryDAO in db.history package
+     *  --> add function retrieveAllTaskRevisions(iteration)
+     * Implementation: TaskHistoryDAOImpl in db.history.impl package
+     *  --> implement the added function. --> Note that this is the same
+     *  as BacklogHistoryDAO, except that it uses the Iteration class instead
+     *  of the Backlog class.
+     * 
+     * @author aborici
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public List<AgilefantHistoryEntry> retrieveChangesInIterationTasks(
+            Iteration iteration) {
+        
+        List<AgilefantHistoryEntry> allTasks = this.taskHistoryDAO
+                .retrieveAllTaskRevisions(iteration);
+       
+        List<AgilefantHistoryEntry> ret = new ArrayList<AgilefantHistoryEntry>();
+        ret.addAll(allTasks);
+        
+        Collections.sort(ret, new PropertyComparator("revision.timestamp",
+                true, false));
+        
+        return ret;
+    }
+    
+    /**
+     * This is to mingle task and story revisions by sorting them based on
+     * timestamp.
+     * 
+     * @author aborici
+     * 
+     */
+    @SuppressWarnings("unchecked")
+    public List<AgilefantHistoryEntry> renderSortedTaskAndStoryRevisions (
+            Iteration iteration) {
+
+        // merge tasks and stories into list 'ret':
+        List<AgilefantHistoryEntry> ret = new ArrayList<AgilefantHistoryEntry>();
+        ret.addAll(this.retrieveChangesInIterationStories(iteration));
+        ret.addAll(this.retrieveChangesInIterationTasks(iteration));
+        
+        Collections.sort(ret, new PropertyComparator("revision.timestamp",
+                true, false));
+
+        return ret;
     }
 }

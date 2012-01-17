@@ -123,6 +123,12 @@
 	</function>  
 	
 	<function>
+		<name>mergeAndSort</name>
+		<function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
+	  	<function-signature>java.util.List mergeAndSort(java.util.List, java.util.List)</function-signature>
+	</function>
+	
+	<function>
 	  <name>dateTimeToDate</name>
 	  <function-class>fi.hut.soberit.agilefant.web.function.AEFFunctions</function-class>
 	  <function-signature>public static Date dateTimeToDate(org.joda.time.DateTime)</function-signature>

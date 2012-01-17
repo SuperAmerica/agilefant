@@ -24,7 +24,7 @@ public class AgilefantHistoryEntry {
         this.revisionType = revisionType;
         this.objectId = object.getId();
     }
-
+    
     public NamedObject getObject() {
         return object;
     }

@@ -251,7 +251,7 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
      */
     @Transactional
     public void setCriticalLow(Integer value) {
-        if(value == null) {
+        if(value != null) {
             this.storeSetting(SETTING_NAME_CRITICAL_LOW, value);
         } else {
             this.storeSetting(SETTING_NAME_CRITICAL_LOW, DEFAULT_CRITICAL_LOW);

@@ -1,5 +1,11 @@
 package fi.hut.soberit.agilefant.web;
 
+/**
+ * Class extended to include Task History feature
+ * 
+ * @author aborici
+ * 
+ */
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +27,9 @@ public class IterationHistoryAction extends ActionSupport {
     private IterationBusiness iterationBusiness;
     
     private List<AgilefantHistoryEntry> storyHistory;
+    private List<AgilefantHistoryEntry> taskHistory;
+    private List<AgilefantHistoryEntry> mingledHistory;
+    
     private int iterationId;
 
     
@@ -28,6 +37,9 @@ public class IterationHistoryAction extends ActionSupport {
     public String execute() {
         Iteration iteration = this.iterationBusiness.retrieve(iterationId);
         storyHistory = this.iterationBusiness.retrieveChangesInIterationStories(iteration);
+        taskHistory = this.iterationBusiness.retrieveChangesInIterationTasks(iteration);
+        mingledHistory = this.iterationBusiness.renderSortedTaskAndStoryRevisions(iteration);
+
         return SUCCESS;
     }
     
@@ -35,6 +47,14 @@ public class IterationHistoryAction extends ActionSupport {
         return storyHistory;
     }
 
+    public List<AgilefantHistoryEntry> getTaskHistory() {
+        return taskHistory;
+    }
+    
+    public List<AgilefantHistoryEntry> getMingledHistory() {
+        return mingledHistory;
+    }
+    
     public int getIterationId() {
         return iterationId;
     }

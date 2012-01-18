@@ -26,6 +26,8 @@ public interface IterationDAO extends GenericDAO<Iteration> {
 
     public Pair<Integer, Integer> getCountOfDoneAndAllTasks(Iteration iteration);
 
+    public Pair<Integer, Integer> getCountOfDoneAndNonDeferred(Iteration iteration);
+    
     public Pair<Integer, Integer> getCountOfDoneAndAllStories(
             Iteration iteration);
 

@@ -11,8 +11,8 @@ public enum TaskState {
     @XmlEnumValue("PENDING")     PENDING,
     @XmlEnumValue("BLOCKED")     BLOCKED,
     @XmlEnumValue("IMPLEMENTED") IMPLEMENTED,
-    @XmlEnumValue("DONE")        DONE;
-
+    @XmlEnumValue("DONE")        DONE,
+    @XmlEnumValue("DEFERRED")    DEFERRED;
 
     public int getOrdinal() {
         return this.ordinal();

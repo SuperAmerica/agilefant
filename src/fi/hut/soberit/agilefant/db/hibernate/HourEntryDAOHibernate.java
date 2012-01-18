@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.TaskState;
 
 @Repository("hourEntryDAO")
 public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
@@ -47,8 +48,8 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         crit.setProjection(Projections.sum("minutesSpent"));
         if(task)
             crit = crit.createCriteria("task");
-        crit.createCriteria("story").add(
-                Restrictions.idEq(storyId));
+        crit = crit.createCriteria("story").add(Restrictions.idEq(storyId)).add(
+                Restrictions.ne("state", TaskState.DEFERRED));
         Long result = (Long) crit.uniqueResult();
         
         if (result == null)

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
@@ -17,6 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.Interval;
 import org.springframework.stereotype.Repository;
 
+import fi.hut.soberit.agilefant.business.SearchBusiness;
 import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -231,5 +233,15 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         else if (story != null) {
             crit.add(Restrictions.eq("story.id", story.getId()));
         }
+    }
+    
+    /** {@inheritDoc} */
+    public List<Task> searchByName(String name)
+    {
+        Criteria crit = getCurrentSession().createCriteria(Task.class);
+        crit.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+        crit.addOrder(Order.asc("name"));
+        crit.setMaxResults(SearchBusiness.MAX_RESULTS_PER_TYPE);
+        return asList(crit);
     }
 }

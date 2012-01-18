@@ -10,11 +10,13 @@ import fi.hut.soberit.agilefant.business.SearchBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
+import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.SearchResultRow;
 
@@ -27,6 +29,8 @@ public class SearchBusinessImpl implements SearchBusiness {
     private BacklogDAO backlogDAO;
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private TaskDAO taskDAO;
 
     public List<SearchResultRow> searchStoriesAndBacklog(String searchTerm) {
         List<SearchResultRow> result = new ArrayList<SearchResultRow>();
@@ -39,6 +43,8 @@ public class SearchBusinessImpl implements SearchBusiness {
         backlogListSearchResult(result, backlogs);
         List<Story> stories = storyDAO.searchByName(searchTerm);
         storyListSearchResult(result, stories);
+        List<Task> tasks = taskDAO.searchByName(searchTerm);
+        taskListSearchResult(result, tasks);
         return result;
     }
 
@@ -47,6 +53,18 @@ public class SearchBusinessImpl implements SearchBusiness {
         for (Story story : stories) {
             result.add(new SearchResultRow(story.getBacklog().getName() + " > "
                     + story.getName(), story));
+        }
+    }
+    
+    private void taskListSearchResult(List<SearchResultRow> result,
+            List<Task> tasks) {
+        for(Task task : tasks) {
+            if(task.getStory()!= null)
+                result.add(new SearchResultRow(task.getStory().getName() + " > " + 
+                        task.getName(), task));
+            if(task.getIteration() != null)
+                result.add(new SearchResultRow(task.getIteration().getName() + " > " + 
+                        task.getName(), task));
         }
     }
 
@@ -116,6 +134,20 @@ public class SearchBusinessImpl implements SearchBusiness {
         List<User> users = userDAO.searchByName(searchTerm);
         for(User user : users) {
             result.add(new SearchResultRow(user.getFullName(), user));
+        }
+        return result;
+    }
+    
+    public List<SearchResultRow> searchTasks(String searchTerm) {
+        List<SearchResultRow> result = new ArrayList<SearchResultRow>();
+        List<Task> tasks = taskDAO.searchByName(searchTerm);
+        for(Task task : tasks) {
+            if(task.getStory() != null)
+                result.add(new SearchResultRow(task.getIteration().getName() + " > " + task.getStory().getName() + " > " + 
+                        task.getName(), task));
+            else
+                result.add(new SearchResultRow(task.getIteration().getName() + " > No Story > " + 
+                        task.getName(), task));
         }
         return result;
     }

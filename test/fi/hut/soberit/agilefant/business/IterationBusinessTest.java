@@ -225,7 +225,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(10);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(expectedSpentEffort);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iteration)).andReturn(
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(1, 2));
@@ -263,7 +263,7 @@ public class IterationBusinessTest  extends MockedTestCase {
     public void testGetIterationMetricsZeroTotals() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(null).times(2);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iteration)).andReturn(
                 Pair.create(0, 0));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(0, 0));
@@ -292,7 +292,7 @@ public class IterationBusinessTest  extends MockedTestCase {
     public void testGetIterationMetrics_nullLatestHistoryEntry() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(null).times(2);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iteration)).andReturn(
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(1, 3));
@@ -337,7 +337,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(backlogBusiness.calculateDoneStoryPointSum(iter.getId())).andReturn(5);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iter))
                 .andReturn((long) 10);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iter)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iter)).andReturn(
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iter)).andReturn(
                 Pair.create(1, 2));

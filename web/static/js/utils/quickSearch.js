@@ -8,7 +8,8 @@ $.widget("custom.agilefantQuickSearch", $.ui.autocomplete, {
       "fi.hut.soberit.agilefant.model.Story":     "Story",
       "fi.hut.soberit.agilefant.model.Iteration": "Iteration",
       "fi.hut.soberit.agilefant.model.Project":   "Project",
-      "fi.hut.soberit.agilefant.model.Product":   "Product"
+      "fi.hut.soberit.agilefant.model.Product":   "Product",
+      "fi.hut.soberit.agilefant.model.Task":      "Task"
     };
   
     ul.addClass('quickSearchAutocompleteMenu');

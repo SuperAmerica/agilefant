@@ -238,9 +238,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
 
     public ExactEstimate calculateDailyVelocity(Iteration iteration) {
-        LocalDate today = new LocalDate();
-        IterationHistoryEntry entry = iterationHistoryEntryDAO.retrieveByDate(
-                iteration.getId(), today.minusDays(1));
+        IterationHistoryEntry entry = iterationHistoryEntryBusiness
+                .retrieveLatest(iteration);
+        
         return calculateDailyVelocity(new LocalDate(iteration.getStartDate()),
                 entry);
     }

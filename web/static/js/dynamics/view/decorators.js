@@ -5,7 +5,8 @@ var DynamicsDecorators = {
       "PENDING" : "Pending",
       "BLOCKED" : "Blocked",
       "IMPLEMENTED" : "Ready",
-      "DONE" : "Done"
+      "DONE" : "Done",
+      "DEFERRED" : "Deferred"
     },
   stateDecorator: function(val) {
     return DynamicsDecorators.stateOptions[val];

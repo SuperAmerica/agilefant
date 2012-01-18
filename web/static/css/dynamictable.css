@@ -450,6 +450,12 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 	background-color: #00bb44;
 	color: #eee !important;
 }
+
+.taskStateDEFERRED {
+	background-color: black;
+	color: white;
+}
+
 .storyState {
 	display: block;
 	width: 80px;
@@ -473,12 +479,18 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 	background-color: #e33;
 	color: #eee;
 }
+
 .storyStateIMPLEMENTED {
 	background-color: #66ff66;
 }
 .storyStateDONE {
 	background-color: #00bb44;
 	color: #eee;
+}
+
+.storyStateDEFERRED {
+	background-color: #000000;
+	color: white;
 }
 .dynamictable .dynamictable-row .description-cell {
 	min-height: 0px !important;	

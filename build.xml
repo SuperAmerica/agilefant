@@ -19,7 +19,6 @@
 	<taskdef name="tomcat-manager-stop"      classname="org.apache.catalina.ant.StopTask" classpath="${catalina-ant.dir}"/>
 	<taskdef name="tomcat-manager-undeploy"  classname="org.apache.catalina.ant.UndeployTask" classpath="${catalina-ant.dir}"/>
 
-	
 	<target name="init" description="Initializes build script">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.classes}" />

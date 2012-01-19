@@ -1,3 +1,4 @@
 build
 eclipse-classes
-build.properties
+build-user.properties
+

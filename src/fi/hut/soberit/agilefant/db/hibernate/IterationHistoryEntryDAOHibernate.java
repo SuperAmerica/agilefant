@@ -79,9 +79,6 @@ public class IterationHistoryEntryDAOHibernate extends
     private Pair<ExactEstimate, ExactEstimate> calculateCurrentHistoryData_tasksInsideStory(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         
-        //TODO JB - change this to deferred
-        crit.add(Restrictions.ne("state", TaskState.BLOCKED));
-                
         crit.setProjection(Projections.projectionList().add(
                 Projections.sum("effortLeft")).add(
                 Projections.sum("originalEstimate")));

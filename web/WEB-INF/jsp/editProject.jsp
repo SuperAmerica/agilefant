@@ -75,23 +75,24 @@ $(document).ready(function() {
   };
 
  $('#projectActions').click(function() { openMenu(); });
+
   
 });
 </script>
 
 <div style="margin-top: 3em;" class="structure-main-block project-color-header" id="releaseContents">
-
 <ul class="backlogTabs">
-  <li class="">
-    <a href="#stories"><span><img alt="Edit" src="static/img/leaf_stories.png" /> Leaf stories</span></a>
-  </li>
-  <li class="">
-  	<a href="#iterations"><span><img alt="Edit" src="static/img/backlog.png" /> Iterations</span></a>
-  </li>
+  <li class=""><a href="#storyTreeContainer"><span><img
+        alt="Edit" src="static/img/story_tree.png" /> Story tree</span></a></li>
+  <li class=""><a href="#stories"><span><img
+				alt="Edit" src="static/img/leaf_stories.png" /> Leaf stories</span></a></li>
+  <li class=""><a href="#iterations"><span><img
+				alt="Edit" src="static/img/backlog.png" /> Iterations</span></a></li>
   <li id="searchByText" style="float: right;"> </li>
 </ul>
 
 <form onsubmit="return false;">
+  <div class="details projectStoryTreeContainer" id="storyTreeContainer" style="position: relative;"></div>
   <div class="details" id="stories"></div>
   <div class="details" id="iterations">
   		<div id="iterations">&nbsp;</div>

@@ -1,2 +1,7 @@
 build
+<<<<<<< HEAD
 /build.properties
+=======
+eclipse-classes
+build.properties
+>>>>>>> refs/remotes/origin/master

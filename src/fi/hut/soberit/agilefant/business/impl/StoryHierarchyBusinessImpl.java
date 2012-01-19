@@ -270,28 +270,36 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     public StoryTreeBranchMetrics calculateStoryTreeMetrics(Story story) {
         StoryTreeBranchMetrics metrics = new StoryTreeBranchMetrics();
         
+        StoryState deferred = StoryState.DEFERRED;
+        
         if(story.getChildren().isEmpty()) {
-            metrics.leafPoints = storyPointsAsLong(story);
-            if(story.getState() == StoryState.DONE) {
-                metrics.doneLeafPoints = storyPointsAsLong(story);
+            if(story.getState() != deferred) {
+                metrics.leafPoints = storyPointsAsLong(story);
+                if(story.getState() == StoryState.DONE) {
+                    metrics.doneLeafPoints = storyPointsAsLong(story);
+                }
             }
         }
         
         for(Story child : story.getChildren()) {
-            StoryTreeBranchMetrics childMetrics = this.calculateStoryTreeMetrics(child);
-            metrics.estimatedDonePoints += childMetrics.estimatedDonePoints;
-            metrics.estimatedPoints += childMetrics.estimatedPoints;
-            metrics.leafPoints += childMetrics.leafPoints;
-            metrics.doneLeafPoints += childMetrics.doneLeafPoints;
+            if(child.getState() != deferred) {
+                StoryTreeBranchMetrics childMetrics = this.calculateStoryTreeMetrics(child);
+                metrics.estimatedDonePoints += childMetrics.estimatedDonePoints;
+                metrics.estimatedPoints += childMetrics.estimatedPoints;
+                metrics.leafPoints += childMetrics.leafPoints;
+                metrics.doneLeafPoints += childMetrics.doneLeafPoints;
+            }
         }
         
         if(storyPointsAsLong(story) > metrics.estimatedPoints) {
-            metrics.estimatedPoints = storyPointsAsLong(story);
-            if(story.getState() == StoryState.DONE) {
-                metrics.estimatedDonePoints = storyPointsAsLong(story);
+            if(story.getState() != deferred) {
+                metrics.estimatedPoints = storyPointsAsLong(story);
+                if(story.getState() == StoryState.DONE) {
+                    metrics.estimatedDonePoints = storyPointsAsLong(story);
+                }
             }
         }
-
+        
         return metrics;
     }
 }

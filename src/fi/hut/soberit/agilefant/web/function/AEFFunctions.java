@@ -2,10 +2,12 @@ package fi.hut.soberit.agilefant.web.function;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.support.PropertyComparator;
 
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -14,6 +16,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.util.MinorUnitsParser;
 
 /**
@@ -101,4 +104,30 @@ public class AEFFunctions {
         }
         return "CURRENT";
     }
+    
+    /**
+     * Merge story and task histories and sort them per the timestamp field.
+     * This is needed to generate mingled revision history for stories and tasks.
+     * 
+     * @param first
+     * @param second
+     * @return merged list: first+second
+     * 
+     * @author aborici
+     */
+    @SuppressWarnings("unchecked")
+    public static List<AgilefantHistoryEntry> mergeAndSort(List<AgilefantHistoryEntry> first, List<AgilefantHistoryEntry> second) {
+        List<AgilefantHistoryEntry> listFirst = new ArrayList<AgilefantHistoryEntry>(first);
+        List<AgilefantHistoryEntry> listSecond = new ArrayList<AgilefantHistoryEntry>(second);
+        List<AgilefantHistoryEntry> list = new ArrayList<AgilefantHistoryEntry>();
+      
+        list.addAll(listFirst);
+        list.addAll(listSecond);
+        
+        Collections.sort(list, new PropertyComparator("revision.timestamp",
+                true, false));
+        
+        return list;
+    }
+    
 }

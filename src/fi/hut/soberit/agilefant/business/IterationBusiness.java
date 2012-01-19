@@ -44,4 +44,10 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     public Set<Task> retrieveUnexpectedSTasks(Iteration iteration);
     
     public IterationTO retrieveIterationOnlyLeafStories(int iterationId);
+
+    public List<AgilefantHistoryEntry> retrieveChangesInIterationTasks(
+            Iteration iteration);
+    
+    public List<AgilefantHistoryEntry> renderSortedTaskAndStoryRevisions(
+            Iteration iteration);
 }

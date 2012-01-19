@@ -114,4 +114,12 @@ public interface TaskDAO extends GenericDAO<Task> {
      * Only one id should be supplied, otherwise will return <code>null</code>.
      */
     public Task getLastTaskInRank(Story story, Iteration iteration);
+    
+    /**
+     * Gets the list of all tasks that are found in the given search term.
+     * @param name Search term
+     * 
+     * @return List of all tasks in search term
+     */
+    public List<Task> searchByName(String name);
 }

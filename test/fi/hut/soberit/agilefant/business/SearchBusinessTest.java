@@ -13,11 +13,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import fi.hut.soberit.agilefant.business.impl.SearchBusinessImpl;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
+import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -40,6 +42,8 @@ public class SearchBusinessTest extends MockedTestCase {
     @Mock
     private BacklogDAO backlogDAO;
     @Mock
+    private TaskDAO taskDAO;
+    @Mock
     private UserDAO userDAO;
     
     @Test
@@ -50,6 +54,7 @@ public class SearchBusinessTest extends MockedTestCase {
         story.setBacklog(new Iteration());
         expect(backlogDAO.searchByName(search)).andReturn(Arrays.asList((Backlog)(new Iteration())));
         expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(story));
+        expect(taskDAO.searchByName(search)).andReturn(Arrays.asList((Task)(new Task())));
         replayAll();
         List<SearchResultRow> result = searchBusiness.searchStoriesAndBacklog(search);
         assertEquals(2, result.size());
@@ -65,6 +70,7 @@ public class SearchBusinessTest extends MockedTestCase {
         expect(backlogDAO.searchByName(search)).andReturn(new ArrayList<Backlog>());
         expect(storyDAO.searchByName(search)).andReturn(new ArrayList<Story>());
         expect(storyDAO.get(123)).andReturn(new Story());
+        expect(taskDAO.searchByName(search)).andReturn(Arrays.asList((Task)(new Task())));
         replayAll();
         List<SearchResultRow> result = searchBusiness.searchStoriesAndBacklog(search);
         assertEquals(1, result.size());

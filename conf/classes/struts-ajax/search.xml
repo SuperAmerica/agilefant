@@ -34,6 +34,13 @@
         <param name="patterns">+originalObject.id,+label,+value, +originalObject.class,-*</param>
       </result>
     </action>
+    
+    <action name="tasks" method="searchTasks" class="searchAction">
+      <result name="success" type="json">
+        <param name="target">results</param>
+        <param name="patterns">+originalObject.id,+label,+value, +originalObject.class,-*</param>
+      </result>
+    </action>
 
     <action name="users" method="searchUsers" class="searchAction">
       <result name="success" type="json">

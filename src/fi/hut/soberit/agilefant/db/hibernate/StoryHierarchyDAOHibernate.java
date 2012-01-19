@@ -75,9 +75,8 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 .createCriteria(Story.class);
         this.attachLeafFilters(projectCrit, iterationCrit, project);
         
-        // TODO @DF change BLOCKED to "Def'd". 
-        iterationCrit.add(Restrictions.ne("state", StoryState.BLOCKED));
-        projectCrit.add(Restrictions.ne("state", StoryState.BLOCKED));
+        iterationCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
+        projectCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
         
         projectCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));
@@ -159,9 +158,8 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 .createCriteria(Story.class);
         this.attachRootFilters(projectCrit, iterationCrit, project.getId());
         
-        // TODO @DF change BLOCKED to "Def'd". 
-        iterationCrit.add(Restrictions.ne("state", StoryState.BLOCKED));
-        projectCrit.add(Restrictions.ne("state", StoryState.BLOCKED));
+        iterationCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
+        projectCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
         
         projectCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));

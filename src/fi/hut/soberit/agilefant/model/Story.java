@@ -59,6 +59,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     private Set<StoryAccess> storyAccesses;
 
     private Integer storyPoints;
+    private Integer storyValue;
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -156,6 +157,16 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
 
     public void setStoryPoints(Integer storyPoints) {
         this.storyPoints = storyPoints;
+    }
+    
+    @JSON
+    @XmlAttribute
+    public Integer getStoryValue() {
+        return storyValue;
+    }
+
+    public void setStoryVAlue(Integer storyValue) {
+        this.storyValue = storyValue;
     }
 
     @OneToMany(mappedBy = "story",

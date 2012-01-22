@@ -216,6 +216,7 @@ StoryListController.prototype._addColumnConfigs = function(config) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
+  config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.value);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
   config.addColumnConfiguration(StoryController.columnIndices.state, StoryListController.columnConfig.state);
   config.addColumnConfiguration(StoryController.columnIndices.responsibles, StoryListController.columnConfig.responsibles);
@@ -284,6 +285,23 @@ StoryListController.columnConfig.name = {
     required: true
   }
 };
+
+StoryListController.columnConfig.value = {
+		  minWidth : 50,
+		  autoScale : true,
+		  title : "Value",
+		  headerTooltip : 'Give a story value',
+		  get : StoryModel.prototype.getStoryValue,
+		  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
+		  decorator: DynamicsDecorators.estimateDecorator,
+		  editable : true,
+		  editableCallback: StoryController.prototype.storyValueEditable,
+		  edit : {
+		    editor : "Estimate",
+		    set : StoryModel.prototype.setStoryValue
+		  }
+		};
+
 StoryListController.columnConfig.points = {
   minWidth : 50,
   autoScale : true,
@@ -299,6 +317,7 @@ StoryListController.columnConfig.points = {
     set : StoryModel.prototype.setStoryPoints
   }
 };
+
 StoryListController.columnConfig.state = {
   minWidth : 70,
   autoScale : true,

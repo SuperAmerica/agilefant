@@ -197,7 +197,7 @@ PortfolioController.prototype.initConfig = function() {
     }
   });
   columns.push({
-	    minWidth : 26,
+	    minWidth : 16,
 	    autoScale : true,
 	    title : "Product",
 	    headerTooltip : 'Product name',

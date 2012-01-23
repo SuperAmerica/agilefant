@@ -1,7 +1,7 @@
 /**
  * Implementation of TaskHistoryDAO interface
  * 
- * @author aborici
+ * @author Arber Borici (changed comment to test github notifications)
  * 
  */
 package fi.hut.soberit.agilefant.db.history.impl;

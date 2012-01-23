@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Repository;
 
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
@@ -66,10 +67,7 @@ public class IterationHistoryEntryDAOHibernate extends
     private Pair<ExactEstimate, ExactEstimate> calculateCurrentHistoryData_tasksWithoutStory(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         crit.add(Restrictions.eq("iteration.id", iterationId));
-        
-        //TODO JB - change this to deferred
-        crit.add(Restrictions.ne("state", TaskState.BLOCKED));
-        
+        crit.add(Restrictions.ne("state", TaskState.DEFERRED));
         crit.setProjection(Projections.projectionList().add(
                 Projections.sum("effortLeft")).add(
                 Projections.sum("originalEstimate")));
@@ -81,13 +79,10 @@ public class IterationHistoryEntryDAOHibernate extends
     private Pair<ExactEstimate, ExactEstimate> calculateCurrentHistoryData_tasksInsideStory(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Task.class);
         
-        //TODO JB - change this to deferred
-        crit.add(Restrictions.ne("state", TaskState.BLOCKED));
-                
         crit.setProjection(Projections.projectionList().add(
                 Projections.sum("effortLeft")).add(
                 Projections.sum("originalEstimate")));
-        
+        crit.add(Restrictions.ne("state", TaskState.DEFERRED));
         crit = crit.createCriteria("story");
 
         crit.setFetchMode("story", FetchMode.SELECT);

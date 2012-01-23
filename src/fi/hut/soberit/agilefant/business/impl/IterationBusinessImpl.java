@@ -291,7 +291,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
         // 3. Tasks done and Total
         Pair<Integer, Integer> pairTasks = iterationDAO
-                .getCountOfDoneAndAllTasks(iteration);
+                .getCountOfDoneAndNonDeferred(iteration);
         metrics.setTotalTasks(pairTasks.second);
         metrics.setCompletedTasks(pairTasks.first);
         
@@ -558,7 +558,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         return newTasks;
     }
-
+    
     /**
      * This is to retrieve task history given an iteration, for all possible
      * task modifications

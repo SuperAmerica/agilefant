@@ -44,6 +44,7 @@ public class StoryBusinessTest {
     StoryDAO storyDAO;
     IterationDAO iterationDAO;
     UserDAO userDAO;
+    IterationHistoryEntryBusiness iterationBusiness;
     
     BacklogBusiness backlogBusiness;
     BacklogHistoryEntryBusiness blheBusiness;
@@ -178,6 +179,9 @@ public class StoryBusinessTest {
         userDAO = createMock(UserDAO.class);
         storyBusiness.setUserDAO(userDAO);
         
+        iterationBusiness = createMock(IterationHistoryEntryBusiness.class);
+        storyBusiness.setIterationHistoryEntryBusiness(iterationBusiness);
+        
         blheBusiness = createMock(BacklogHistoryEntryBusiness.class);
         storyBusiness.setBacklogHistoryEntryBusiness(blheBusiness);
     }
@@ -249,6 +253,7 @@ public class StoryBusinessTest {
     
     @Test
     public void testStore_dontSetTasksToDone() {
+        this.store_createMockStoryBusiness();
         Task task1 = new Task();
         task1.setId(11);
         task1.setState(TaskState.BLOCKED);
@@ -263,7 +268,6 @@ public class StoryBusinessTest {
         expect(storyDAO.get(story1.getId())).andReturn(story1);
         storyDAO.store(story1);
         blheBusiness.updateHistory(story1.getBacklog().getId());
-        
         replayAll();
         Story actual = storyBusiness.store(story1.getId(), story1, null, null, false);
         verifyAll();

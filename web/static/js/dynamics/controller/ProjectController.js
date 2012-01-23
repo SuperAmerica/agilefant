@@ -603,6 +603,22 @@ ProjectController.prototype.initializeStoryConfig = function() {
     config.addColumnConfiguration(1, StoryListController.columnConfig.labels);
   }
   
+  config.addColumnConfiguration(1, {
+	    minWidth : 50,
+	    autoScale : true,
+	    title : "Value",
+	    headerTooltip : 'A given story value or weight',
+	    get : StoryModel.prototype.getStoryValue,
+	    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
+	    editable : true,
+	    editableCallback: StoryController.prototype.storyValueEditable,
+	    decorator: DynamicsDecorators.estimateDecorator,
+	    edit : {
+	      editor : "Value",
+	      set : StoryModel.prototype.setStoryValue
+	    }
+	  });
+  
   config.addColumnConfiguration(2, {
     minWidth : 280,
     autoScale : true,
@@ -634,6 +650,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
+  
   config.addColumnConfiguration(4, {
     minWidth : 70,
     autoScale : true,

@@ -327,12 +327,13 @@ CreateDialog.Story = function() {
 CreateDialog.Story.prototype = new CreateDialogClass();
 CreateDialog.Story.columnIndices = {
   name:       0,
-  backlog:    1,
-  state:      2,
-  storyPoints:3,
-  responsibles:4,
-  labels:     5,
-  description:6
+  storyValue: 1,
+  backlog:    2,
+  state:      3,
+  storyPoints:4,
+  responsibles:5,
+  labels:     6,
+  description:7,
 };
 CreateDialog.Story.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -352,6 +353,17 @@ CreateDialog.Story.prototype.initFormConfig = function() {
       set: StoryModel.prototype.setName
     }
   });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.storyValue,{
+	    title: "Story value",
+	    editable: true,
+	    get: StoryModel.prototype.getStoryValue,
+	    edit: {
+	      editor: "Number",
+	      required: false,
+	      set: StoryModel.prototype.setStoryValue
+	    }
+	  });
   
   config.addColumnConfiguration(CreateDialog.Story.columnIndices.backlog,{
     title : "Backlog",

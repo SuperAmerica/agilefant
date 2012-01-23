@@ -197,6 +197,14 @@ PortfolioController.prototype.initConfig = function() {
     }
   });
   columns.push({
+	    minWidth : 26,
+	    autoScale : true,
+	    title : "Product",
+	    headerTooltip : 'Product name',
+	    get : ProjectModel.prototype.getProductName,
+	    editable : false
+	  });
+  columns.push({
 	    minWidth : 16,
 	    autoScale : true,
 	    title : "Assignees",
@@ -250,9 +258,10 @@ PortfolioController.prototype.initConfig = function() {
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.status, columns[0]);
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, columns[1]);
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, columns[2]);
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, columns[3]);
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, columns[4]);   
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.product, columns[2]);   
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, columns[3]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, columns[4]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, columns[5]);   
   
   config.addColumnConfiguration(PortfolioRowController.columnIndices.actions,{
 	    minWidth : 6,
@@ -276,9 +285,10 @@ PortfolioController.prototype.initConfig = function() {
   });
   config.addColumnConfiguration(PortfolioRowController.columnIndices.status, columns[0]);
   config.addColumnConfiguration(PortfolioRowController.columnIndices.name, columns[1]);
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, columns[2]);
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, columns[3]);
-  config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, columns[4]);  
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.product, columns[2]);   
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.assignees, columns[3]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.startDate, columns[4]);
+  config.addColumnConfiguration(PortfolioRowController.columnIndices.endDate, columns[5]);  
 
   config.addColumnConfiguration(PortfolioRowController.columnIndices.actions, {
 	    minWidth : 6,

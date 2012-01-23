@@ -9,10 +9,11 @@ PortfolioRowController.prototype = new CommonController();
 PortfolioRowController.columnIndices = {
   status: 0,
   name: 1,
-  assignees: 2,
-  startDate: 3,
-  endDate: 4,
-  actions: 5
+  product: 2,
+  assignees: 3,
+  startDate: 4,
+  endDate: 5,
+  actions: 6
 };
 
 PortfolioRowController.prototype.handleModelEvents = function(event) {

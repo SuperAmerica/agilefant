@@ -327,9 +327,9 @@ CreateDialog.Story = function() {
 CreateDialog.Story.prototype = new CreateDialogClass();
 CreateDialog.Story.columnIndices = {
   name:       0,
-  storyValue: 1,
-  backlog:    2,
-  state:      3,
+  backlog:    1,
+  state:      2,
+  storyValue: 3,
   storyPoints:4,
   responsibles:5,
   labels:     6,
@@ -386,6 +386,17 @@ CreateDialog.Story.prototype.initFormConfig = function() {
       editor : "Selection",
       set : StoryModel.prototype.setState,
       items : DynamicsDecorators.stateOptions
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.Story.columnIndices.storyValue,{
+    title: "Story value",
+    editable: true,
+    get: StoryModel.prototype.getStoryValue,
+    edit: {
+      editor: "Number",
+      required: false,
+      set: StoryModel.prototype.setStoryValue
     }
   });
   

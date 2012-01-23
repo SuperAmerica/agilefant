@@ -165,7 +165,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
         return storyValue;
     }
 
-    public void setStoryVAlue(Integer storyValue) {
+    public void setStoryValue(Integer storyValue) {
         this.storyValue = storyValue;
     }
 

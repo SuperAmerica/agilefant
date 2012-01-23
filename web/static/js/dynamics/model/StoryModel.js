@@ -436,11 +436,11 @@ StoryModel.prototype.setStoryPoints = function(storyPoints) {
 
 
 StoryModel.prototype.getStoryValue = function() {
-	  return this.currentData.storyValue;
-	};
-	StoryModel.prototype.setStoryValue = function(storyValue) {
-	  this.currentData.storyValue = storyValue;
-	};
+  return this.currentData.storyValue;
+};
+StoryModel.prototype.setStoryValue = function(storyValue) {
+  this.currentData.storyValue = storyValue;
+};
 
 
 StoryModel.prototype.getTasks = function() {

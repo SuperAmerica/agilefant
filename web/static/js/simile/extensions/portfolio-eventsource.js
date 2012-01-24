@@ -7,6 +7,15 @@ Timeline.NoopEventPainter.prototype._onClickDurationEvent = function(icon, domEv
 };
 Timeline.NoopEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
 };
+/**
+ * An event painter that has a page load instead of a bubble
+ */
+
+Timeline.ClickEventPainter = Timeline.OriginalEventPainter;
+
+Timeline.ClickEventPainter.prototype._showBubble = function(x, y, evt) {
+	document.location.href=evt.getLink();
+}
 
 Timeline.PortfolioEventSource = Timeline.DefaultEventSource;
 

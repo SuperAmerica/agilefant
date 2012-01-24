@@ -39,6 +39,8 @@ public class IterationHistoryActionTest extends MockedTestCase {
         
         expect(iterationBusiness.retrieve(1)).andReturn(iter);
         expect(iterationBusiness.retrieveChangesInIterationStories(iter)).andReturn(items);
+        expect(iterationBusiness.retrieveChangesInIterationTasks(iter)).andReturn(new ArrayList<AgilefantHistoryEntry>());
+        expect(iterationBusiness.renderSortedTaskAndStoryRevisions(iter)).andReturn(null);
         replayAll();
         iterationHistoryAction.setIterationId(1);
         assertEquals(ActionSupport.SUCCESS, iterationHistoryAction.execute());

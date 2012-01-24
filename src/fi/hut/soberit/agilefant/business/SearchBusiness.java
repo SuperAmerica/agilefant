@@ -15,5 +15,6 @@ public interface SearchBusiness {
     public List<SearchResultRow> searchIterations(String searchTerm);
     public List<SearchResultRow> searchProjects(String searchTerm);
     public List<SearchResultRow> searchUsers(String searchTerm);
+    public List<SearchResultRow> searchTasks(String searchTerm);
     
 }

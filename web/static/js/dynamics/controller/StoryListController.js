@@ -158,6 +158,22 @@ StoryListController.prototype.firstRenderComplete = function() {
       var pos = row.getElement().offset();
       window.scrollTo(pos.left, pos.top);
     }
+    else {
+    	var type = "story";
+    	var invocationTarget = StoryController.prototype.showTasks
+    	if (this.childControllers[type]) {
+    		for ( var i = 0; i < this.childControllers[type].length; i++) {
+      			invocationTarget.call(this.childControllers[type][i]);
+      			StoryController.prototype.searchForTask.call(this.childControllers[type][i]);
+      			if(!window.location.hash) {
+      				break;
+      			}
+      			else {
+      				StoryController.prototype.hideTasks.call(this.childControllers[type][i]);
+      			}
+    		}
+  		}
+    }
   }
 };
 

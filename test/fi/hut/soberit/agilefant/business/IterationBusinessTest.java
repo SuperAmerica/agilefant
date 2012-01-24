@@ -225,7 +225,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(10);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(expectedSpentEffort);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iteration)).andReturn(
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(1, 2));
@@ -263,7 +263,7 @@ public class IterationBusinessTest  extends MockedTestCase {
     public void testGetIterationMetricsZeroTotals() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(null).times(2);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iteration)).andReturn(
                 Pair.create(0, 0));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(0, 0));
@@ -292,7 +292,7 @@ public class IterationBusinessTest  extends MockedTestCase {
     public void testGetIterationMetrics_nullLatestHistoryEntry() {
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(null).times(2);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iteration)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iteration)).andReturn(
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(1, 3));
@@ -337,7 +337,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(backlogBusiness.calculateDoneStoryPointSum(iter.getId())).andReturn(5);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iter))
                 .andReturn((long) 10);
-        expect(iterationDAO.getCountOfDoneAndAllTasks(iter)).andReturn(
+        expect(iterationDAO.getCountOfDoneAndNonDeferred(iter)).andReturn(
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iter)).andReturn(
                 Pair.create(1, 2));
@@ -635,15 +635,23 @@ public class IterationBusinessTest  extends MockedTestCase {
         revAdded.setTimestamp(10000);
         AgilefantHistoryEntry added = new AgilefantHistoryEntry(new Story(), revAdded, RevisionType.ADD);
         
+        AgilefantRevisionEntity revModified = new AgilefantRevisionEntity();
+        revModified.setId(2400);
+        revModified.setTimestamp(20000);
+        AgilefantHistoryEntry modified = new AgilefantHistoryEntry(20000, RevisionType.MOD, revModified);
+        
         expect(backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(added));
         expect(backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(Arrays.asList(deleted));
+        expect(backlogHistoryDAO.retrieveModifiedStories(iteration)).andReturn(Arrays.asList(modified));
         expect(storyHistoryDAO.retrieveClosestRevision(200, 1200)).andReturn(null);
+        expect(storyHistoryDAO.retrieveClosestRevision(20000, 2400)).andReturn(null);
         
         replayAll();
         List<AgilefantHistoryEntry> actual = this.iterationBusiness.retrieveChangesInIterationStories(iteration);
         verifyAll();
-        assertEquals(added, actual.get(0));
-        assertEquals(deleted, actual.get(1));     
+        assertEquals(modified, actual.get(0));
+        assertEquals(added, actual.get(1));
+        assertEquals(deleted, actual.get(2));
     }
     
     @Test

@@ -179,6 +179,11 @@ TaskModel.prototype._saveData = function(id, changedData) {
       if ((data.storyToStarted || PageController.getInstance().getCurrentUser().getMarkStoryStarted() === "always")&& me.relations.story) {
         me.relations.story.callListeners(new DynamicsEvents.EditEvent(me.relations.story));
       }
+      // Reload the metrics.
+      if (me.getStory())
+      	me.getStory().reloadMetrics();
+      if (PageController.getInstance().mainController instanceof IterationController)
+      	PageController.getInstance().mainController.reloadMetricsBox();
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving task", xhr);

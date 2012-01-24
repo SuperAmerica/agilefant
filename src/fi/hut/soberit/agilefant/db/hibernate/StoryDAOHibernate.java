@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
+import fi.hut.soberit.agilefant.model.TaskState;
 
 @Repository("storyDAO")
 public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
@@ -43,7 +44,8 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
                 .add(Projections.sum("originalEstimate"), "originalEstimateSum")
                 .add(Projections.sum("effortLeft"), "effortLeftSum")
                 );
-        criteria.add(Restrictions.eq("story.id", storyId));            
+        criteria.add(Restrictions.eq("story.id", storyId));
+        criteria.add(Restrictions.ne("state", TaskState.DEFERRED));
         Object[] result = (Object[])criteria.uniqueResult();
         if (result[0] != null) {
             metrics.setOriginalEstimate((Long)result[0]);

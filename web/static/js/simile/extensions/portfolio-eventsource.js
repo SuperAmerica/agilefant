@@ -52,6 +52,11 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
         color = "#FFFF00";
         break;
     }
+    var name = event.getName();
+    var productName = event.getProductName();
+    if (productName.length > 0) {
+    	name = name + " (" + productName + ")";
+    }
     var evt = new Timeline.DefaultEventSource.Event({
                   id: ""+event.getId(),
                start: this.model.startDate,
@@ -59,7 +64,7 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
                  latestStart: start,
                  earliestEnd: end,
              instant: false,
-                text: event.getName(),
+                text: name,
          description: event.getDescription(),
          image: this._resolveRelativeURL(event.image, ""),
          link: this._resolveRelativeURL(event.link , ""),

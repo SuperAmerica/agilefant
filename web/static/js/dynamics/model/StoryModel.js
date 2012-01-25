@@ -89,6 +89,31 @@ StoryModel.prototype._setData = function(newData) {
 };
 
 /**
+ * Saves a copy of the given story as a sibling of the current. 
+ * @author braden
+ */
+StoryModel.prototype._copyStory = function(story)
+{
+  var me = this, data = {}, url = "ajax/copyStorySibling.action";
+  data.storyId = story.id;
+  jQuery.ajax({
+    type: "POST",
+    url: url,
+    async: true,
+    cache: false,
+    data: data,
+    dataType: "json",
+    success: function(newData, status) {
+      // TODO @braden change front end with data.
+      MessageDisplay.Ok("Story created successfully");
+    },
+    error: function(xhr, status, error) {
+      MessageDisplay.Error("Error saving story", xhr);
+    }
+  });
+}
+
+/**
  * Internal function to send the data to server.
  */
 StoryModel.prototype._saveData = function(id, changedData) {

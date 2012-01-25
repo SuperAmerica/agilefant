@@ -227,7 +227,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.labelBusiness.createStoryLabels(labelNames, story.getId());
         return story;
     }
-
+    
+    public Story copyStorySibling(Story story, int backlogId, Set<Integer> userIds, List<String> labelNames)
+    {
+        story = create(story, backlogId, userIds, labelNames);
+        // TODO copy over story details.
+        return story;
+    }
+    
     public Story create(Story dataItem, Integer backlogId,
             Set<Integer> responsibleIds, List<String> labelNames) throws IllegalArgumentException,
             ObjectNotFoundException {
@@ -728,5 +735,4 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public void setStoryHierarchyBusiness(StoryHierarchyBusiness storyHierarchyBusiness) {
         this.storyHierarchyBusiness = storyHierarchyBusiness;
     }
-
 }

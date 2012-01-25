@@ -90,13 +90,25 @@ StoryListController.prototype.createStory = function() {
     mockModel.setResponsibles([user.getId()]);
   }
   
-  
   var controller = new StoryController(mockModel, null, this);
   var row = this.getCurrentView().createRow(controller, mockModel, "top");
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.labels, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
   controller.openRowEdit();
+  row.getCellByName("tasksData").hide();
+};
+
+StoryListController.prototype.copyStorySibling = function(originalStory) { 
+	var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+	mockModel.setBacklog(this.model);
+	
+	mockModel._copyStory(originalStory);
+	var controller = new StoryController(mockModel, null, this);
+  var row = this.getCurrentView().createRow(controller, mockModel, "top");
+  controller.view = row;
+  row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.labels, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
+  row.render();
   row.getCellByName("tasksData").hide();
 };
 

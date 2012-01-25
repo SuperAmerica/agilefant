@@ -97,6 +97,19 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         
         return Action.SUCCESS;
     }
+    
+    /**
+     * Creates a new deep copy of a given story and places it
+     * as a sibling.
+     * @author braden
+     * 
+     * @return Successful action.
+     */
+    public String copyStorySibling() {
+        story = storyBusiness.retrieve(this.storyId);
+        storyBusiness.copyStorySibling(story, story.getBacklog().getId(), userIds, labelNames);
+        return Action.SUCCESS;
+    }
 
     public String delete() {
         storyBusiness.deleteAndUpdateHistory(storyId, taskHandlingChoice, storyHourEntryHandlingChoice, taskHourEntryHandlingChoice, childHandlingChoice);

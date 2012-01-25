@@ -106,6 +106,10 @@ StoryController.prototype._moveStory = function(id) {
   }
 };
 
+StoryController.prototype.copyStorySibling = function(storyObj) {
+  this.parentController.copyStorySibling(storyObj);
+};
+
 /**
  * Remove story associated with controllers row and the row itself.
  */
@@ -337,6 +341,10 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
   actionItems.push({
     text : "Move",
     callback : StoryController.prototype.moveStory
+  });
+  actionItems.push({
+    text: "Copy",
+    callback : StoryController.prototype.copyStorySibling
   });
   if (isProject) {
     actionItems.push({

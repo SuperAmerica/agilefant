@@ -100,11 +100,14 @@ StoryListController.prototype.createStory = function() {
 };
 
 StoryListController.prototype.copyStorySibling = function(originalStory) { 
-	var mockModel = ModelFactory.createObject(ModelFactory.types.story);
-	mockModel.setBacklog(this.model);
+  var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+  mockModel.setBacklog(this.model);
 	
-	mockModel._copyStory(originalStory);
-	var controller = new StoryController(mockModel, null, this);
+  // Copy story in the server
+  mockModel._copyStory(originalStory);
+  
+  // Create a temporary row at the top
+  var controller = new StoryController(mockModel, null, this);
   var row = this.getCurrentView().createRow(controller, mockModel, "top");
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.labels, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);

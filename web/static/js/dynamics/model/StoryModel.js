@@ -22,6 +22,7 @@ var StoryModel = function StoryModel() {
   this.metrics = {};
   this.copiedFields = {
     "name": "name",
+    "storyValue": "storyValue",
     "description": "description",
     "state": "state",
     "storyPoints": "storyPoints",
@@ -37,6 +38,7 @@ var StoryModel = function StoryModel() {
       "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
       "fi.hut.soberit.agilefant.model.Story":         "story"
   };
+  this.metricFields = ["storyValue", "state"];
   this.metricFields = ["storyPoints", "state"];
 };
 
@@ -455,6 +457,14 @@ StoryModel.prototype.getStoryPoints = function() {
 };
 StoryModel.prototype.setStoryPoints = function(storyPoints) {
   this.currentData.storyPoints = storyPoints;
+};
+
+
+StoryModel.prototype.getStoryValue = function() {
+  return this.currentData.storyValue;
+};
+StoryModel.prototype.setStoryValue = function(storyValue) {
+  this.currentData.storyValue = storyValue;
 };
 
 

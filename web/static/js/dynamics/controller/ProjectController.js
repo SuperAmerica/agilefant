@@ -603,7 +603,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     config.addColumnConfiguration(1, StoryListController.columnConfig.labels);
   }
   
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(1, {
     minWidth : 280,
     autoScale : true,
     title : "Name",
@@ -618,6 +618,22 @@ ProjectController.prototype.initializeStoryConfig = function() {
       required: true
     }
   });
+  
+  config.addColumnConfiguration(2, {
+    minWidth : 50,
+    autoScale : true,
+    title : "Value",
+    headerTooltip : 'A given story value or weight',
+    get : StoryModel.prototype.getStoryValue,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
+    editable : true,
+    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
+    decorator: DynamicsDecorators.estimateDecorator,
+    edit : {
+      editor : "Number",
+      set : StoryModel.prototype.setStoryValue
+    }
+  });
 
   config.addColumnConfiguration(3, {
     minWidth : 50,
@@ -627,13 +643,14 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getStoryPoints,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
     editable : true,
-    editableCallback: StoryController.prototype.storyPointsEditable,
+    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
     decorator: DynamicsDecorators.estimateDecorator,
     edit : {
       editor : "Estimate",
       set : StoryModel.prototype.setStoryPoints
     }
   });
+  
   config.addColumnConfiguration(4, {
     minWidth : 70,
     autoScale : true,

@@ -198,7 +198,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     }
 
     /** {@inheritDoc} */
-    public byte[] getIterationBurndown(Iteration iteration) {
+    public byte[] getIterationBurndown(Iteration iteration, Integer timeZoneOffset) {
         return getChartImageByteArray(constructChart(iteration));
     }
 

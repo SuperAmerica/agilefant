@@ -109,7 +109,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
         replay(iterationHistoryEntryBusiness, iterationBusiness);
         
-        assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration));
+        assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration, 0));
              
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }

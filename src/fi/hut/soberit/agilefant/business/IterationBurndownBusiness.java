@@ -10,7 +10,7 @@ public interface IterationBurndownBusiness {
      * Transforms the <code>JFreeChart</code> object to an image byte array.
      * @return the byte array containing the burndown chart as image
      */
-    public byte[] getIterationBurndown(Iteration iteration);
+    public byte[] getIterationBurndown(Iteration iteration, Integer timeZoneOffset);
 
     public byte[] getSmallIterationBurndown (Iteration iteration);
     

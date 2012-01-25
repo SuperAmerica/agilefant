@@ -97,7 +97,26 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         return results;
     }
 
-    private Pair<Integer, Integer> getCounOfDoneAndAll(Class<?> type,
+    private Pair<Integer, Integer> getGenericCountDoneNonDeferred(Class<?> type,
+            Collection<String> joins, Iteration iteration) {
+            Criteria criteria = getCurrentSession().createCriteria(type);
+            criteria.setProjection(Projections.projectionList().add(
+                    Projections.property("state")).add(Projections.rowCount(),
+                    "taskCount").add(Projections.groupProperty("state"), "state"));
+            criteria = addIterationRestriction(criteria, joins, iteration);
+            
+            List<Object[]> results = asList(criteria);
+            int total = 0;
+            int done = 0;
+            for (Object[] row : results) {
+                Long count = (Long) row[1];
+                total += (row[0].equals(TaskState.DEFERRED)) ? 0 : count;
+                done  += (row[0].equals(TaskState.DONE)) ? count : 0;
+            }
+        return Pair.create(done, total);
+    }
+    
+    private Pair<Integer, Integer> getCounOfDoneAndAllNonDeffered(Class<?> type,
             Object doneValue, Collection<String> joins, Iteration iteration) {
         Criteria criteria = getCurrentSession().createCriteria(type);
         criteria.setProjection(Projections.projectionList().add(
@@ -112,7 +131,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
 
         for (Object[] row : results) {
             Long count = (Long) row[1];
-            total += count;
+            total += (row[0].equals(StoryState.DEFERRED)) ? 0 : count;
             if (row[0].equals(doneValue))
                 done += count;
         }
@@ -121,17 +140,26 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
     }
 
     public Pair<Integer, Integer> getCountOfDoneAndAllTasks(Iteration iteration) {
-        Pair<Integer, Integer> noStory = getCounOfDoneAndAll(Task.class,
+        Pair<Integer, Integer> noStory = getCounOfDoneAndAllNonDeffered(Task.class,
                 TaskState.DONE, Arrays.asList("iteration"), iteration);
-        Pair<Integer, Integer> inStory = getCounOfDoneAndAll(Task.class,
+        Pair<Integer, Integer> inStory = getCounOfDoneAndAllNonDeffered(Task.class,
                 TaskState.DONE, Arrays.asList("story", "backlog"), iteration);
         return Pair.create(noStory.first + inStory.first, noStory.second
                 + inStory.second);
     }
-
+    
+    public Pair<Integer, Integer> getCountOfDoneAndNonDeferred(Iteration iteration) {
+        Pair<Integer, Integer> noStory = getGenericCountDoneNonDeferred(Task.class,
+                Arrays.asList("iteration"), iteration);
+        Pair<Integer, Integer> inStory = getGenericCountDoneNonDeferred(Task.class,
+                Arrays.asList("story", "backlog"), iteration);
+        return Pair.create(noStory.first + inStory.first, noStory.second
+                + inStory.second);
+    }
+    
     public Pair<Integer, Integer> getCountOfDoneAndAllStories(
             Iteration iteration) {
-        return getCounOfDoneAndAll(Story.class, StoryState.DONE, Arrays
+        return getCounOfDoneAndAllNonDeffered(Story.class, StoryState.DONE, Arrays
                 .asList("backlog"), iteration);
     }
 
@@ -219,6 +247,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         
         Criteria taskMetrics = this.getCurrentSession().createCriteria(
                 Task.class);
+        taskMetrics.add(Restrictions.ne("state", TaskState.DEFERRED));
         taskMetrics.createCriteria("story", "story").add(
                 Restrictions.eq("backlog", iteration));
         ProjectionList taskSums = Projections.projectionList();

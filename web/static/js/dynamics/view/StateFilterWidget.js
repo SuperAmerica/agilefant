@@ -11,7 +11,8 @@ var StateFilterWidget = function(reference, options) {
      { name: "PENDING", abbr: "P" },
      { name: "BLOCKED", abbr: "B" },
      { name: "IMPLEMENTED", abbr: "R" },
-     { name: "DONE", abbr: "D" }
+     { name: "DONE", abbr: "D" },
+     { name: "DEFERRED", abbr: "D"}
    ];
   
   this.options = {
@@ -20,7 +21,7 @@ var StateFilterWidget = function(reference, options) {
     callback: function(active) {
       MessageDisplay.Ok("Filter active: " + active);
     },
-    activeStates: [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE" ]
+    activeStates: [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE", "DEFERRED"]
   };
   jQuery.extend(this.options, options);
   
@@ -63,7 +64,7 @@ StateFilterWidget.prototype.initActiveStates = function() {
 
 StateFilterWidget.prototype.clearFilter = function() {
   this.parentElement.find('.inlineTaskState').fadeTo("fast", 1);
-  this.activeStates = [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE" ];
+  this.activeStates = [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE", "DEFERRED"];
   this.options.callback(this.isActive());
   this.closeAndFilter();
 };

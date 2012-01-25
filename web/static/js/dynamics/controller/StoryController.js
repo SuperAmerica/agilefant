@@ -414,6 +414,32 @@ StoryController.prototype.storyPointsEditable = function() {
 };
 
 /**
+ * Checks if the given #(hash in the URL) task is in the current story
+ * If it is there is sets the window to display it.
+ */
+StoryController.prototype.searchForTask = function() {
+	if(window.location.hash) {
+	    var hash = window.location.hash;
+	    var type = "task";
+	    var id = hash.substring(hash.lastIndexOf("_")+1);
+	    var row;
+    	if (this.childControllers[type]) {
+    		for ( var i = 0; i < this.childControllers[type].length; i++) {
+      			if(this.childControllers[type][i].model.id == id) {
+      				row = this.childControllers[type][i].view;
+      				if(!$.browser.msie) {
+				        window.location.hash = "#";
+				    }
+				    var pos = row.getElement().offset();
+	      			window.scrollTo(pos.left, pos.top);
+      				break;
+      			}
+    		}
+  		}
+	}
+};
+
+/**
  * 
  */
 (function() {
@@ -433,7 +459,7 @@ StoryController.prototype.storyPointsEditable = function() {
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     },
-    beforeCommitFunction: TaskController.prototype.markStoryAsStarted
+    beforeCommitFunction: TaskController.prototype.checkTaskAndCommit
   });
   config.addCaptionItem( {
     name : "createTask",

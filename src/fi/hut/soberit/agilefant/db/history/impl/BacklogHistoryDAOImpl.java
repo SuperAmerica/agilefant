@@ -74,6 +74,38 @@ public class BacklogHistoryDAOImpl extends GenericHistoryDAOImpl<Backlog>
         return result;
     }
 
+    
+    @SuppressWarnings("unchecked")
+    public List<AgilefantHistoryEntry> retrieveModifiedStories(Backlog backlog) {
+        AuditQuery query = this.getAuditReader().createQuery()
+                .forRevisionsOfEntity(StoryRank.class, false, true);
+        query.add(AuditEntity.property("backlog_id").eq(backlog.getId()));
+        query.add(AuditEntity.revisionType().eq(RevisionType.MOD));
+        query.addProjection(AuditEntity.revisionType());
+        query.addProjection(AuditEntity.property("story"));
+        
+        query.addProjection(AuditEntity.revisionNumber());
+        query.addProjection(AuditEntity.revisionProperty("timestamp"));
+        query.addProjection(AuditEntity.revisionProperty("userId"));
+        query.addProjection(AuditEntity.revisionProperty("userName"));
+
+        List<Object[]> data = query.getResultList();
+
+        List<AgilefantHistoryEntry> result = new ArrayList<AgilefantHistoryEntry>();
+        
+        for (Object[] row : data) {
+            Map<String, Object> rowData = (Map<String, Object>)row[1];
+            AgilefantRevisionEntity rev = new AgilefantRevisionEntity();
+            rev.setId((Integer)row[2]);
+            rev.setTimestamp((Long)row[3]);
+            rev.setUserId((Integer)row[4]);
+            rev.setUserName((String)row[5]);
+            result.add(new AgilefantHistoryEntry((Integer)rowData.get("story_id"), (RevisionType)row[0], rev));
+        }
+        return result;
+    }
+    
+    
     public List<HistoryRowTO> retrieveLatestChanges(int objectId,
             Integer numberOfChanges) {
         // TODO Auto-generated method stub

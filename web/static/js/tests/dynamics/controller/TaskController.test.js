@@ -69,6 +69,12 @@ $(document).ready(function() {
       originalEstimate: null
     });
     
+    var deferrableTask = new TaskModel();
+    editableTask.setData({
+        state: "DEFERRED",
+        originalEstimate: null
+    });
+    
     var doneTC = new ExtendedTaskController();
     var startedTC = new ExtendedTaskController();
     var blockedTC = new ExtendedTaskController();

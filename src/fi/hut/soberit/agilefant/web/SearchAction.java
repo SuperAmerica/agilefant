@@ -48,6 +48,11 @@ public class SearchAction extends ActionSupport {
         results = this.searchBusiness.searchUsers(term);
         return Action.SUCCESS;
     }
+    
+    public String searchTasks() {
+        results = this.searchBusiness.searchTasks(term);
+        return Action.SUCCESS;
+    }
 
     public List<SearchResultRow> getResults() {
         return results;

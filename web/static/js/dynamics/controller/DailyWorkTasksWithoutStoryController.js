@@ -26,7 +26,8 @@ DailyWorkTasksWithoutStoryController.prototype._getTableConfig = function() {
     dataType: "tasksWithoutStory",
     rowControllerFactory: TasksWithoutStoryController.prototype.taskControllerFactory,
     dataSource: DailyWorkModel.prototype.getTasksWithoutStory,
-    validators: [ TaskModel.Validators.backlogSelectedValidator ]
+    validators: [ TaskModel.Validators.backlogSelectedValidator ],
+    beforeCommitFunction: TaskController.prototype.checkTaskAndCommit
   });
 
   config.addCaptionItem({

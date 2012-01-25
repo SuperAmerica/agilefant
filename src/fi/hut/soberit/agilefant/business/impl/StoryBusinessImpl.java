@@ -142,8 +142,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             for (Task t : persisted.getTasks()) {
                 taskBusiness.setTaskToDone(t);
             }
-            iterationHistoryEntryBusiness.updateIterationHistory(persisted
-                    .getBacklog().getId());
+        }
+        
+        if (persisted.getBacklog() instanceof Iteration) {
+            iterationHistoryEntryBusiness.updateIterationHistory(persisted.getBacklog().getId());
         }
         
         // Set the backlog if backlogId given

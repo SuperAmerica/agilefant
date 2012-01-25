@@ -83,7 +83,6 @@ public class IterationMetrics {
     public Integer getTotalTasks() {
         return totalTasks;
     }
-
     public void setCompletedStories(Integer completedStories) {
         this.completedStories = completedStories;
     }

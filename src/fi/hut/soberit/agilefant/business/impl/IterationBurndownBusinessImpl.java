@@ -206,8 +206,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return getChartImageByteArray(constructChart(iteration, timeZoneOffset));
     }
 
-    public byte[] getSmallIterationBurndown(Iteration iteration) {
-        return getChartImageByteArray(constructSmallChart(iteration),
+    public byte[] getSmallIterationBurndown(Iteration iteration, Integer timeZoneOffset) {
+        return getChartImageByteArray(constructSmallChart(iteration, timeZoneOffset),
                 SMALL_WIDTH, SMALL_HEIGHT);
     }
 

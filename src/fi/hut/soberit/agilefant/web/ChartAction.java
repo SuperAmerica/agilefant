@@ -84,7 +84,7 @@ public class ChartAction extends ActionSupport {
 
     public String getSmallIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);
-        result = iterationBurndownBusiness.getSmallIterationBurndown(iteration);
+        result = iterationBurndownBusiness.getSmallIterationBurndown(iteration, timeZoneOffset);
         return Action.SUCCESS;
     }
                   

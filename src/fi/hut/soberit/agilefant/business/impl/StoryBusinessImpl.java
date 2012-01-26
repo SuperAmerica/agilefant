@@ -30,6 +30,7 @@ import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Label;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
@@ -231,9 +232,17 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     
     public Story copyStorySibling(Story story, int backlogId, Set<Integer> userIds, List<String> labelNames)
     {
-        story = create(story, backlogId, userIds, labelNames);
+        Story refstory = create(story, backlogId, userIds, labelNames);
+        refstory.setName("Copy of " + story.getName());
+        this.labelBusiness.createStoryLabels(labelNames, refstory.getId());
+        Set<Label> labels = new HashSet<Label>();
+        labels.addAll(story.getLabels());
+        
         // TODO copy over story details.
-        return story;
+        Backlog backlog = this.backlogBusiness.retrieve(backlogId);
+        this.storyHierarchyBusiness.moveAfter(refstory, story);
+        rankStoryUnder(refstory, story,backlog );
+        return refstory;
     }
     
     public Story create(Story dataItem, Integer backlogId,

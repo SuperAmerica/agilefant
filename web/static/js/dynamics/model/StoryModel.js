@@ -98,6 +98,7 @@ StoryModel.prototype._copyStory = function(story)
 {
   var me = this, data = {}, url = "ajax/copyStorySibling.action";
   data.storyId = story.id;
+  document.body.style.cursor = "wait";
   jQuery.ajax({
     type: "POST",
     url: url,

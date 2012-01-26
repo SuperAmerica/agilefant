@@ -101,18 +101,32 @@ StoryListController.prototype.createStory = function() {
 
 StoryListController.prototype.copyStorySibling = function(originalStory) { 
   var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+  
   mockModel.setBacklog(this.model);
-	
+  /*
+  mockModel.setName("copy of " + originalStory.currentData.name);
+  mockModel.setDescription(originalStory.currentData.description); 
+  mockModel.setRank(originalStory.currentData.rank - 1);
+     
+  mockModel.setState(originalStory.currentData.state);
+  mockModel.setStoryPoints(originalStory.currentData.storyPoints);
+  mockModel.setStoryValue (originalStory.currentData.storyValue);
+  */
+ 
+  //Todo Need to reload the page to add the story
+  
   // Copy story in the server
   mockModel._copyStory(originalStory);
-  
+	
+    
   // Create a temporary row at the top
   var controller = new StoryController(mockModel, null, this);
-  var row = this.getCurrentView().createRow(controller, mockModel, "top");
+ /* var row = this.getCurrentView().createRow(controller, mockModel, "top");
   controller.view = row;
   row.autoCreateCells([StoryController.columnIndices.priority, StoryController.columnIndices.labels, StoryController.columnIndices.actions, StoryController.columnIndices.tasksData]);
   row.render();
   row.getCellByName("tasksData").hide();
+  */
 };
 
 /**

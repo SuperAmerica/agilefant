@@ -42,7 +42,7 @@ DailyWorkController.prototype.handleModelEvents = function(event) {
     }
   }
   //task oe/el changed
-  if(event instanceof DynamicsEvents.MetricsEvent && event.getObject() instanceof TaskModel) {
+  if ((event instanceof DynamicsEvents.MetricsEvent && event.getObject() instanceof TaskModel) || (event.object.currentData.state === "DEFERRED")){
     this.options.onUserLoadUpdate();
   }
   

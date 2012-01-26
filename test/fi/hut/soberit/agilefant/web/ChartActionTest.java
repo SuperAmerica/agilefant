@@ -56,7 +56,7 @@ public class ChartActionTest {
         chartAction.setBacklogId(iteration.getId());
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(
                 iteration);
-        expect(iterationBurndownBusiness.getSmallIterationBurndown(iteration))
+        expect(iterationBurndownBusiness.getSmallIterationBurndown(iteration, 0))
                 .andReturn(expected);
         replay(iterationBusiness, iterationBurndownBusiness);
 

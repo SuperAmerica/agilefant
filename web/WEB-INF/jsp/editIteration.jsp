@@ -105,7 +105,7 @@ $(document).ready(function() {
 
  $('#iterationActions').click(function() { openMenu(); });
  
- var d = new Date()
+ var d = new Date();
  $("#chartid").attr("src", $("#chartid").attr('src') + -d.getTimezoneOffset());
  $("#chartlink").attr("href", $("#chartlink").attr('href') + -d.getTimezoneOffset());
 });

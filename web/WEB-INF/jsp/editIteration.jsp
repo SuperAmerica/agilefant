@@ -111,12 +111,10 @@ $(document).ready(function() {
 
 <form onsubmit="return false;"><div id="tasksWithoutStory" class="structure-main-block">&nbsp;</div></form>
 
-
-
-<p style="text-align: center;"><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
+<p style="text-align: center;"><img src="drawIterationBurndown.action?backlogId=${iteration.id}&timeZoneOffset=-1640"
 	id="bigChart" width="780" height="600" />
 	<br>
-	<a href="drawCustomIterationBurndown.action?backlogId=${iteration.id}&customBdWidth=1280&customBdHeight=1024">Enlarge</a></p>
+	<a href="drawCustomIterationBurndown.action?backlogId=${iteration.id}&customBdWidth=1280&customBdHeight=1024&timeZoneOffset=1440">Enlarge</a></p>
 
   </jsp:body>
 </struct:htmlWrapper>

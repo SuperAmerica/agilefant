@@ -38,7 +38,7 @@ public class ChartActionTest {
         chartAction.setBacklogId(iteration.getId());
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(
                 iteration);
-        expect(iterationBurndownBusiness.getIterationBurndown(iteration))
+        expect(iterationBurndownBusiness.getIterationBurndown(iteration, 0))
                 .andReturn(expected);
         replay(iterationBusiness, iterationBurndownBusiness);
 
@@ -56,7 +56,7 @@ public class ChartActionTest {
         chartAction.setBacklogId(iteration.getId());
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(
                 iteration);
-        expect(iterationBurndownBusiness.getSmallIterationBurndown(iteration))
+        expect(iterationBurndownBusiness.getSmallIterationBurndown(iteration, 0))
                 .andReturn(expected);
         replay(iterationBusiness, iterationBurndownBusiness);
 
@@ -76,7 +76,7 @@ public class ChartActionTest {
         chartAction.setCustomBdHeight(100);
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(
                 iteration);
-        expect(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 100, 100))
+        expect(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 100, 100, 0))
                 .andReturn(expected);
         replay(iterationBusiness, iterationBurndownBusiness);
 

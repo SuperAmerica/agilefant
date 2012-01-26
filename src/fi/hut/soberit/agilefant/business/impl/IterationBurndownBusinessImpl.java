@@ -243,9 +243,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         return burndown;
     }
 
-    protected JFreeChart constructSmallChart(Iteration iteration) {
-        //thumbnail chart doesn't need to deal with timeZoneOffset
-        JFreeChart burndown = this.constructChart(iteration, 0);
+    protected JFreeChart constructSmallChart(Iteration iteration, Integer timeZoneOffset) {
+        JFreeChart burndown = this.constructChart(iteration, timeZoneOffset);
         return transformToSmallChart(burndown);
     }
 

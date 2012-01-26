@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.util.SerializationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -239,13 +238,20 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         Story newStory = new Story(story);
         newStory.setName("Copy of " + newStory.getName());
-        
         // Persist the tasks. 
         for (Task t : newStory.getTasks())
+        {
+            t.setEffortLeft(null);
+            t.setOriginalEstimate(null);
+            t.setHourEntries(null);
             taskBusiness.store(t);
+        }
         
         newStory.setBacklog(backlog);
         create(newStory);
+        labelBusiness.createStoryLabels(newStory.getLabels(), newStory.getId());
+        this.storyHierarchyBusiness.moveAfter(newStory, story);
+        rankStoryUnder(newStory, story,backlog );
         return newStory;
     }
     

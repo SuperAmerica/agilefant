@@ -125,7 +125,7 @@ TaskController.prototype.checkTaskAndCommit = function(model) {
   	// User has changed a task from "NOT_STARTED" state while the containing story is still "NOT_STARTED". 
   	
 	this.markStoryAsStarted(model);	
-  } else if (changedData.state && changedData.state === "IMPLEMENTED") {
+  } else if (changedData.state && changedData.state === "IMPLEMENTED" && model.currentData.effortLeft > 0) {
 	// User has changed a task to "READY" while there is still effort left. 
 
 	this.clearEffortLeftWhenTaskReady(model);

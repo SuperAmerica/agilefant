@@ -76,7 +76,7 @@ public class ChartActionTest {
         chartAction.setCustomBdHeight(100);
         expect(iterationBusiness.retrieve(iteration.getId())).andReturn(
                 iteration);
-        expect(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 100, 100))
+        expect(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 100, 100, 0))
                 .andReturn(expected);
         replay(iterationBusiness, iterationBurndownBusiness);
 

@@ -135,7 +135,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
         replay(iterationHistoryEntryBusiness, iterationBusiness);
         
-        assertNotNull(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 1024, 768));
+        assertNotNull(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 1024, 768, 0));
         
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
@@ -148,7 +148,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
         replay(iterationHistoryEntryBusiness, iterationBusiness);
         
-        JFreeChart newChart = super.constructChart(iteration);
+        JFreeChart newChart = super.constructChart(iteration, 0);
         
         assertEquals(REFERENCE_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));

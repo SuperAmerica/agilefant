@@ -90,7 +90,7 @@ public class ChartAction extends ActionSupport {
                   
     public String getCustomIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);
-        result = iterationBurndownBusiness.getCustomIterationBurndown(iteration, customBdWidth, customBdHeight);
+        result = iterationBurndownBusiness.getCustomIterationBurndown(iteration, customBdWidth, customBdHeight, timeZoneOffset);
         return Action.SUCCESS;
     }
   

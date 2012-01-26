@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.util.SerializationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -229,11 +230,23 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return story;
     }
     
-    public Story copyStorySibling(Story story, int backlogId, Set<Integer> userIds, List<String> labelNames)
+    public Story copyStorySibling(Integer storyId, Story story)
     {
-        story = create(story, backlogId, userIds, labelNames);
-        // TODO copy over story details.
-        return story;
+        story = this.retrieve(storyId);
+        Backlog backlog = this.backlogBusiness.retrieve(story.getBacklog().getId());
+        if (backlog == null) {
+            throw new ObjectNotFoundException("backlog.notFound");
+        }
+        Story newStory = new Story(story);
+        newStory.setName("Copy of " + newStory.getName());
+        
+        // Persist the tasks. 
+        for (Task t : newStory.getTasks())
+            taskBusiness.store(t);
+        
+        newStory.setBacklog(backlog);
+        create(newStory);
+        return newStory;
     }
     
     public Story create(Story dataItem, Integer backlogId,

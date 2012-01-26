@@ -106,8 +106,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
      * @return Successful action.
      */
     public String copyStorySibling() {
-        story = storyBusiness.retrieve(this.storyId);
-        storyBusiness.copyStorySibling(story, story.getBacklog().getId(), userIds, labelNames);
+        storyBusiness.copyStorySibling(storyId, story);
         return Action.SUCCESS;
     }
 

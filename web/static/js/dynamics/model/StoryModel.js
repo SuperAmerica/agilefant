@@ -108,7 +108,8 @@ StoryModel.prototype._copyStory = function(story)
     dataType: "json",
     success: function(newData, status) {
       // TODO @braden change front end with data.
-      MessageDisplay.Ok("Story created successfully");
+    	alert("asdfasdfa");
+    	MessageDisplay.Ok("Story created successfully");
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving story", xhr);

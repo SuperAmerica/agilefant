@@ -134,8 +134,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
     
     protected static final TickUnits tickUnits = getTickUnits();
-    
-    private int timeDifferenceHours = 0;
+
+    private int timeDifferenceMinutes = 0;
     
     private static TickUnits getTickUnits() {
         TickUnits units = new TickUnits();
@@ -228,15 +228,15 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         //server timezone offset in minutes
         int rawOffset = localTimeZone.getRawOffset() / 60000;
         
-        //get offset difference in hours
-        timeDifferenceHours = (rawOffset - timeZoneOffset.intValue()) / 60;
+        //get offset difference in minutes
+        timeDifferenceMinutes = rawOffset - timeZoneOffset.intValue();
         
         JFreeChart burndown = ChartFactory.createTimeSeriesChart("'"
                 + iteration.getName() + "' burndown", DATE_AXIS_LABEL,
                 EFFORT_AXIS_LABEL, getDataset(iteration), true, true, false);
 
-        formatChartAxes(burndown, new DateTime(iteration.getStartDate().minusHours(timeDifferenceHours)),
-                new DateTime(iteration.getEndDate()).minusHours(timeDifferenceHours));
+        formatChartAxes(burndown, new DateTime(iteration.getStartDate().minusMinutes(timeDifferenceMinutes)),
+                new DateTime(iteration.getEndDate()).minusMinutes(timeDifferenceMinutes));
 
         formatChartStyle(burndown);
 
@@ -463,7 +463,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         }
         else {
             return this.getSeriesByStartAndEndPoints(REFERENCE_SERIES_NAME,
-                startDate.minusHours(timeDifferenceHours), originalEstimateSum, endDate.minusHours(timeDifferenceHours).plusDays(1),
+                startDate.minusMinutes(timeDifferenceMinutes), originalEstimateSum, endDate.minusMinutes(timeDifferenceMinutes).plusDays(1),
                 new ExactEstimate(0));
         }
     }
@@ -471,8 +471,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected TimeSeries getReferenceVelocityWithWeekends(String seriesKey, DateTime startDate, DateTime endDate, ExactEstimate oeSum) {
         TimeSeries ts = new TimeSeries(seriesKey);
         MutableDateTime date;
-        startDate = startDate.minusHours(timeDifferenceHours).toDateMidnight().toDateTime();
-        endDate = endDate.minusHours(timeDifferenceHours).toDateMidnight().toDateTime();
+        startDate = startDate.minusMinutes(timeDifferenceMinutes).toDateMidnight().toDateTime();
+        endDate = endDate.minusMinutes(timeDifferenceMinutes).toDateMidnight().toDateTime();
         
         double originalEstimate = ExactEstimateUtils.extractMajorUnits(oeSum);
         
@@ -521,8 +521,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         endDate = endDate.plusDays(1);
         if (startDate.isEqual(endDate))
             return null;
-        return this.getSeriesByStartAndEndPoints(EXPECTED_SERIES_NAME, today.toDateTimeAtCurrentTime().minusHours(timeDifferenceHours).toLocalDate()
-                .toDateTimeAtStartOfDay(), startValue, endDate.toDateTimeAtCurrentTime().minusHours(timeDifferenceHours).toLocalDate()
+        return this.getSeriesByStartAndEndPoints(EXPECTED_SERIES_NAME, today.toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toLocalDate()
+                .toDateTimeAtStartOfDay(), startValue, endDate.toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toLocalDate()
                 .toDateTimeAtStartOfDay(), ExactEstimate.ZERO);
     }
 
@@ -540,8 +540,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
                 .getEffortLeftSum());
 
         return this.getSeriesByStartAndEndPoints(CURRENT_DAY_SERIES_NAME,
-                todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusHours(timeDifferenceHours).toDateMidnight().toDateTime(),
-                startValue, todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusHours(timeDifferenceHours).toDateMidnight()
+                todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toDateMidnight().toDateTime(),
+                startValue, todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toDateMidnight()
                         .toDateTime().plusDays(1), endValue);
     }
 
@@ -578,7 +578,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected TimeSeriesDataItem getBurndownDataItemForDay(
             IterationHistoryEntry entry) {
         TimeSeriesDataItem item = new TimeSeriesDataItem(new Second(entry
-                .getTimestamp().toDateTimeAtCurrentTime().minusHours(timeDifferenceHours).toDateMidnight().plusDays(1).toDate()),
+                .getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toDateMidnight().plusDays(1).toDate()),
                 ExactEstimateUtils.extractMajorUnits(new ExactEstimate(entry
                         .getEffortLeftSum())));
         return item;
@@ -588,7 +588,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected Pair<TimeSeriesDataItem, TimeSeriesDataItem> getBurndownScopedDataItemForDay(
             IterationHistoryEntry yesterdayEntry,
             IterationHistoryEntry todayEntry) {
-        DateTime timestamp = todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusHours(timeDifferenceHours).toDateMidnight()
+        DateTime timestamp = todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toDateMidnight()
                 .toDateTime().plusSeconds(2);
         Second period = new Second(timestamp.toDate());
 
@@ -611,11 +611,11 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         // Second item is places 2 seconds after the first
         // Resulting in a almost vertical line in the graph
         // Null value is added to break the line
-        Second firstItemPeriod = new Second(todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusHours(timeDifferenceHours)
+        Second firstItemPeriod = new Second(todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes)
                 .toDateMidnight().toDate());
-        Second secondItemPeriod = new Second(todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusHours(timeDifferenceHours)
+        Second secondItemPeriod = new Second(todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes)
                 .toDateMidnight().toDateTime().plusSeconds(2).toDate());
-        Second nullItemPeriod = new Second(todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusHours(timeDifferenceHours)
+        Second nullItemPeriod = new Second(todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes)
                 .toDateMidnight().toDateTime().plusSeconds(3).toDate());
 
         ExactEstimate firstValue = new ExactEstimate(yesterdayEntry

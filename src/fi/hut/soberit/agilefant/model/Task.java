@@ -59,7 +59,7 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     private ExactEstimate originalEstimate;
     private Set<User> responsibles = new HashSet<User>();
     private Set<TaskHourEntry> hourEntries = new HashSet<TaskHourEntry>();
-    private Set<WhatsNextEntry> whatsNextEntries;
+    private Set<WhatsNextEntry> whatsNextEntries = new HashSet<WhatsNextEntry>();
 
     public Task() { }
     

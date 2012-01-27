@@ -41,10 +41,11 @@ DailyWorkController.prototype.handleModelEvents = function(event) {
       this.model.reloadWorkQueue(this.options.userId);
     }
   }
+
   //task oe/el changed
-  //if ((event instanceof DynamicsEvents.MetricsEvent && event.getObject() instanceof TaskModel) || (event.object.currentData.state === "DEFERRED")){
+  if (event.getObject() instanceof TaskModel) {
     this.options.onUserLoadUpdate();
-  //}
+  }
   
   if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof TaskModel) {
     //task responsibles changed

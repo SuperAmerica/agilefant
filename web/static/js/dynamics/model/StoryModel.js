@@ -97,6 +97,7 @@ StoryModel.prototype._setData = function(newData) {
 StoryModel.prototype._copyStory = function(story)
 {
   var me = this;
+  var idClosure = function() { return story.id; };	// Create closure to access the story
   var data = {};
   var url = "ajax/copyStorySibling.action";
   var possibleBacklog = this.getBacklog();
@@ -109,13 +110,13 @@ StoryModel.prototype._copyStory = function(story)
     cache: false,
     data: data,
     dataType: "json",
-    success: function(newData, status, rank) {    	
+    success: function(newData, status) {    	
       var object = ModelFactory.updateObject(newData);
       if(newData && newData.id) {
         possibleBacklog.addStory(object);
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
-      new StoryController().rank
+      object.rankUnder(story.id, object);
       MessageDisplay.Ok("Story created successfully");
     },
     error: function(xhr, status, error) {

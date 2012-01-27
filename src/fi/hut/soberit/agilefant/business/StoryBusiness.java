@@ -87,6 +87,5 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     
     public void moveStoryAndChildren(Story story, Backlog backlog);
 
-    public Story copyStorySibling(Story story, int backlogId, Set<Integer> userIds,
-            List<String> labelNames);
+    public Story copyStorySibling(Integer storyID, Story story);
 }

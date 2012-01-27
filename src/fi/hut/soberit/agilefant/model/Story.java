@@ -250,5 +250,57 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     public void setStoryAccesses(Set<StoryAccess> storyAccesses) {
         this.storyAccesses = storyAccesses;
     }
-
+    
+    public Story()
+    { }
+    
+    /**
+     * Copying Constructor
+     * @author bradens
+     * @param otherStory
+     */
+    public Story(Story otherStory)
+    {
+        this.setDescription(otherStory.getDescription());
+        this.setStoryValue(otherStory.getStoryValue());
+        this.setName(otherStory.getName());
+        this.setBacklog(otherStory.getBacklog());
+        this.setTreeRank(otherStory.getTreeRank() - 1);
+        this.setState(otherStory.getState());
+        this.setStoryPoints(otherStory.getStoryPoints());
+        this.setParent(otherStory.getParent());
+        otherStory.getParent().getChildren().add(this);
+        
+        // Copy the complex members: tasks, users, labels, parents
+        for (Task t : otherStory.getTasks())
+        {
+            // TODO @bradens find way to persist this task in this entity?  for now persisting it in the
+            // StoryBusinessImpl.
+            t.setStory(this); // To make sure we set the tasks to the new story.
+            Task newTask = new Task(t);
+            t.setStory(otherStory); // set it back
+            this.getTasks().add(newTask);
+        } 
+        this.getResponsibles().addAll(otherStory.getResponsibles());
+        for (StoryHourEntry entry : this.getHourEntries())
+        {
+            entry.setStory(this);
+            StoryHourEntry newEntry = new StoryHourEntry(entry);
+            this.getHourEntries().add(newEntry);
+            entry.setStory(otherStory);
+        }
+        for (Label l : otherStory.getLabels())
+        {
+            l.setStory(this);
+            Label newLabel = new Label(l);
+            this.getLabels().add(newLabel);
+            l.setStory(otherStory);
+        }
+        for (Story childStory : otherStory.getChildren())
+        {
+            Story newChild = new Story(childStory);
+            newChild.setParent(this);
+            this.getChildren().add(newChild);
+        }
+    }
 }

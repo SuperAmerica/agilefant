@@ -120,16 +120,18 @@ TaskController.prototype.checkTaskAndCommit = function(model) {
   var story = model.getStory();
   var currentUser = PageController.getInstance().getCurrentUser();
 	
-  if (story && changedData.state && currentUser.getMarkStoryStarted() === "ask" && story.getState() === "NOT_STARTED" 
-    	                && changedData.state !== "NOT_STARTED" && model.persistedData.state === "NOT_STARTED") {
-  	// User has changed a task from "NOT_STARTED" state while the containing story is still "NOT_STARTED". 
-  	
-	this.markStoryAsStarted(model);	
-  } else if (changedData.state && changedData.state === "IMPLEMENTED" && model.currentData.effortLeft > 0) {
+  if (changedData.state && changedData.state === "IMPLEMENTED" && model.currentData.effortLeft > 0) {
 	// User has changed a task to "READY" while there is still effort left. 
 
 	this.clearEffortLeftWhenTaskReady(model);
-  } else {
+  } 
+  else if (story && changedData.state && currentUser.getMarkStoryStarted() === "ask" && story.getState() === "NOT_STARTED" 
+      && changedData.state !== "NOT_STARTED" && model.persistedData.state === "NOT_STARTED") {
+// User has changed a task from "NOT_STARTED" state while the containing story is still "NOT_STARTED". 
+
+	this.markStoryAsStarted(model);	
+  } 
+  else {
   	// Don't need to wait for user to complete dialog boxes, so save task.
   	
   	model.commit();
@@ -152,8 +154,8 @@ TaskController.prototype.markStoryAsStarted = function(model) {
 
 TaskController.prototype.clearEffortLeftWhenTaskReady = function(model) {
 	var msg = new DynamicsConfirmationDialog(
-	    "Set effort left to 0?",
-	    "Story marked as ready. Set effort left to 0 as well?",
+	    "Set effort left to zero?",
+	    "Story marked as ready. Set effort left to zero as well?",
 	    function() {
 	      model.currentData.effortLeft = 0;
 	      model.commit();

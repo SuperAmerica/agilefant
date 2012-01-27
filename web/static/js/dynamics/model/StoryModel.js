@@ -100,7 +100,6 @@ StoryModel.prototype._copyStory = function(story)
   var idClosure = function() { return story.id; };	// Create closure to access the story
   var data = {};
   var url = "ajax/copyStorySibling.action";
-  var possibleBacklog = this.getBacklog();
   data.storyId = story.id;
   document.body.style.cursor = "wait";
   jQuery.ajax({
@@ -112,7 +111,8 @@ StoryModel.prototype._copyStory = function(story)
     dataType: "json",
     success: function(newData, status) {    	
       var object = ModelFactory.updateObject(newData);
-      if(newData && newData.id) {
+      possibleBacklog = story.getBacklog();
+      if(newData && newData.id && possibleBacklog) {
         possibleBacklog.addStory(object);
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }

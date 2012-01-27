@@ -338,14 +338,17 @@ StoryController.prototype.rankStoryToBottom = function(story, view) {
  */
 StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
-  actionItems.push({
+  actionItems.push({ 
     text : "Move",
     callback : StoryController.prototype.moveStory
   });
-  actionItems.push({
-    text: "Copy",
-    callback : StoryController.prototype.copyStorySibling
-  });
+  if (!(this.parentController instanceof DailyWorkStoryListController))
+  {
+	  actionItems.push({
+	    text: "Copy",
+	    callback : StoryController.prototype.copyStorySibling
+	  });
+  }
   if (isProject) {
     actionItems.push({
       text: "Rank to top",

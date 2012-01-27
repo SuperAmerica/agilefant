@@ -59,12 +59,12 @@ StoryModel.Validators = {
 StoryModel.prototype._setData = function(newData) { 
   // Set the id
   this.id = newData.id;
-    /*
+    
   //set the rank by hand if it exists in the data
-  if(newData.rank !== undefined && newData.rank !== null) {
-    this.setRank(newData.rank);
-  }
-  */
+//  if(newData.rank !== undefined && newData.rank !== null) {
+//    this.setRank(newData.rank);
+//  }
+  
   // Set the tasks
   if (newData.tasks) {
     this._updateRelations(ModelFactory.types.task, newData.tasks);
@@ -96,7 +96,10 @@ StoryModel.prototype._setData = function(newData) {
  */
 StoryModel.prototype._copyStory = function(story)
 {
-  var me = this, data = {}, url = "ajax/copyStorySibling.action";
+  var me = this;
+  var data = {};
+  var url = "ajax/copyStorySibling.action";
+  var possibleBacklog = this.getBacklog();
   data.storyId = story.id;
   document.body.style.cursor = "wait";
   jQuery.ajax({
@@ -106,10 +109,14 @@ StoryModel.prototype._copyStory = function(story)
     cache: false,
     data: data,
     dataType: "json",
-    success: function(newData, status) {
-      // TODO @braden change front end with data.
-    	alert("asdfasdfa");
-    	MessageDisplay.Ok("Story created successfully");
+    success: function(newData, status, rank) {    	
+      var object = ModelFactory.updateObject(newData);
+      if(newData && newData.id) {
+        possibleBacklog.addStory(object);
+        object.callListeners(new DynamicsEvents.AddEvent(object));
+      }
+      new StoryController().rank
+      MessageDisplay.Ok("Story created successfully");
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving story", xhr);
@@ -193,7 +200,7 @@ StoryModel.prototype.reload = function(callback) {
     {storyId: me.getId()},
     function(data,status) {
       me.setData(data, false);
-      //me.callListeners(new DynamicsEvents.EditEvent(me));
+      me.callListeners(new DynamicsEvents.EditEvent(me));
       if (callback) {
         callback();
       }

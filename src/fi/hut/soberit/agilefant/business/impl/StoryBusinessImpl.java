@@ -29,11 +29,13 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -241,18 +243,18 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // Persist the tasks. 
         for (Task t : newStory.getTasks())
         {
-            t.setEffortLeft(null);
-            t.setOriginalEstimate(null);
-            t.setHourEntries(null);
+            t.setEffortLeft(new ExactEstimate());
+            t.setOriginalEstimate(new ExactEstimate());
+            t.setHourEntries(new HashSet<TaskHourEntry>());
             taskBusiness.store(t);
         }
         
         newStory.setBacklog(backlog);
         create(newStory);
-        labelBusiness.createStoryLabels(newStory.getLabels(), newStory.getId());
+        labelBusiness.createStoryLabelsSet(newStory.getLabels(), newStory.getId());
         this.storyHierarchyBusiness.moveAfter(newStory, story);
         rankStoryUnder(newStory, story,backlog );
-        return newStory;
+        return this.transferObjectBusiness.constructStoryTO(newStory);
     }
     
     public Story create(Story dataItem, Integer backlogId,

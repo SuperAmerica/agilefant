@@ -269,7 +269,8 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
         this.setState(otherStory.getState());
         this.setStoryPoints(otherStory.getStoryPoints());
         this.setParent(otherStory.getParent());
-        otherStory.getParent().getChildren().add(this);
+        if (otherStory.getParent() != null)
+            otherStory.getParent().getChildren().add(this);
         
         // Copy the complex members: tasks, users, labels, parents
         for (Task t : otherStory.getTasks())

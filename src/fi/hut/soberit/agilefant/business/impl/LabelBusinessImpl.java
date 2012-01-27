@@ -46,7 +46,7 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
        labelDAO.remove(label);
     }
      
-    public void createStoryLabels(Set<Label> labels, Integer storyId)
+    public void createStoryLabelsSet(Set<Label> labels, Integer storyId)
     {
         if (labels == null)
             return;

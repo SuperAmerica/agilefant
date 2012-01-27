@@ -7,7 +7,7 @@ import fi.hut.soberit.agilefant.model.Label;
 
 public interface LabelBusiness extends GenericBusiness<Label> {
    
-    public void createStoryLabels(Set<Label> labels, Integer storyId);
+    public void createStoryLabelsSet(Set<Label> labels, Integer storyId);
     
     public void createStoryLabels(List<String> labelNames, Integer storyId);
 

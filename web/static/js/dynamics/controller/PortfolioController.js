@@ -126,7 +126,7 @@ PortfolioController.prototype.paintTimeline = function() {
         intervalPixels: this._calculateTimelineUnitSize(),
         eventSource: eventSource,
         theme: theme,
-        eventPainter: Timeline.NoopEventPainter
+        eventPainter: Timeline.ClickEventPainter
       })
   ];
   

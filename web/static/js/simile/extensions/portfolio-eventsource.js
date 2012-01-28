@@ -7,6 +7,19 @@ Timeline.NoopEventPainter.prototype._onClickDurationEvent = function(icon, domEv
 };
 Timeline.NoopEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
 };
+/**
+ * An event painter that loads the page instead of displaying a bubble (the default)
+ */
+
+Timeline.ClickEventPainter = Timeline.OriginalEventPainter;
+
+Timeline.ClickEventPainter.prototype._onClickDurationEvent = function(icon, domEvt, evt) {
+	document.location.href=evt.getLink();
+}
+
+Timeline.ClickEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
+	document.location.href=evt.getLink();
+}
 
 Timeline.PortfolioEventSource = Timeline.DefaultEventSource;
 
@@ -67,7 +80,7 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
                 text: name,
          description: event.getDescription(),
          image: this._resolveRelativeURL(event.image, ""),
-         link: this._resolveRelativeURL(event.link , ""),
+         link: "editBacklog.action?backlogId=" + event.getId(),
          icon: this._resolveRelativeURL(event.icon , ""),
         color: color,
     textColor: "#000000",

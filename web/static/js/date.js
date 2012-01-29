@@ -148,7 +148,7 @@ Date.fullYearStart = '20';
 	 */
 	add("getUserTimeZone", function(){ 
 		var currentDate =  new Date();
-	    var gmtOffset = currentDate.getTimezoneOffset() / 60;
+	    var gmtOffset = 12 - (currentDate.getTimezoneOffset() / 60);
 	    return gmtOffset;
 	});
 	

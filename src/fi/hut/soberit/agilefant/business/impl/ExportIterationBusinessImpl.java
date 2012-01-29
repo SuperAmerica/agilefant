@@ -365,7 +365,7 @@ public class ExportIterationBusinessImpl implements ExportIterationBusiness {
     private void addIterationBurndown(Workbook wb, IterationTO iter,
             Sheet info, int currentRowNum) {
         int burndownPicId = wb.addPicture(
-                iterationBurndownBusiness.getIterationBurndown(iter),
+                iterationBurndownBusiness.getIterationBurndown(iter, 0),
                 Workbook.PICTURE_TYPE_PNG);
 
         Drawing dwr = info.createDrawingPatriarch();

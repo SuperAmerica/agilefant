@@ -41,8 +41,9 @@ DailyWorkController.prototype.handleModelEvents = function(event) {
       this.model.reloadWorkQueue(this.options.userId);
     }
   }
+
   //task oe/el changed
-  if(event instanceof DynamicsEvents.MetricsEvent && event.getObject() instanceof TaskModel) {
+  if (event.getObject() instanceof TaskModel) {
     this.options.onUserLoadUpdate();
   }
   

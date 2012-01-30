@@ -7,7 +7,7 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
-  ["priority", "labelsIcon", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+  ["priority", "labelsIcon", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -104,6 +104,10 @@ StoryController.prototype._moveStory = function(id) {
   if(this.model.canMoveStory(id)) {
     this.model.moveStory(id);
   }
+};
+
+StoryController.prototype.copyStorySibling = function(storyObj) {
+  this.parentController.copyStorySibling(storyObj);
 };
 
 /**
@@ -334,10 +338,17 @@ StoryController.prototype.rankStoryToBottom = function(story, view) {
  */
 StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
-  actionItems.push({
+  actionItems.push({ 
     text : "Move",
     callback : StoryController.prototype.moveStory
   });
+  if (!(this.parentController instanceof DailyWorkStoryListController))
+  {
+	  actionItems.push({
+	    text: "Copy",
+	    callback : StoryController.prototype.copyStorySibling
+	  });
+  }
   if (isProject) {
     actionItems.push({
       text: "Rank to top",
@@ -405,7 +416,7 @@ StoryController.prototype.quickLogEffort = function(spentEffort) {
 /**
  * Checks whether the story points field should be editable or not.
  */
-StoryController.prototype.storyPointsEditable = function() {
+StoryController.prototype.storyValueOrPointsEditable = function() {
   if (this.model.getState() === "DONE") {
     MessageDisplay.Warning("Changing story points is not allowed for done stories");
     return false;

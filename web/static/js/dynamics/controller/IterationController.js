@@ -210,6 +210,7 @@ IterationController.prototype.reloadBurndown = function() {
 IterationController.prototype.reloadMetricsBox = function() {
   this.metricsElement.load("ajax/iterationMetrics.action", {iterationId: this.id});
   this.reloadBurndown();
+  document.body.style.cursor = "default";
 };
 
 IterationController.prototype.reloadMetrics = function() {

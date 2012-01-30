@@ -193,7 +193,6 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         tmp.setDayOfWeek(DateTimeConstants.MONDAY);
         tmp.setSecondOfDay(1);
         DateTime start = tmp.toDateTime(); 
-        // TODO
         tmp.addDays(6);
         tmp.setHourOfDay(23);
         tmp.setMinuteOfHour(59);

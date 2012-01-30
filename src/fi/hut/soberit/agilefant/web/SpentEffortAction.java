@@ -79,12 +79,12 @@ public class SpentEffortAction extends ActionSupport {
         return Action.SUCCESS;
     }
 
-    private int getUserHourTimeZone()
+    public int getUserHourTimeZone()
     {
         return (int)userTimeZone - 12;
     }
     
-    private int getUserMinuteTimeZone()
+    public int getUserMinuteTimeZone()
     {
         return (int)((userTimeZone - (int)userTimeZone) * 60);
     }

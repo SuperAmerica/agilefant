@@ -2,13 +2,13 @@
 <table style="width: 100%;" class="listTable">
 	<tr>
 		<th rowspan="2" class="spentEffortArrow"><a title="Previous week" 
-			href="weeklySpentEffort.action?userId=${userId}&amp;week=${prevWeek.weekOfWeekyear}&amp;year=${prevWeek.year}">&laquo;</a></th>
+			href="weeklySpentEffort.action?userId=${userId}&amp;userTimeZone=${userTimeZone}&amp;week=${prevWeek.weekOfWeekyear}&amp;year=${prevWeek.year}">&laquo;</a></th>
 		<c:forEach items="${dailyEffort}" var="dayEffort">
 			<th style="min-width: 8ex;">${dayEffort.date}.${dayEffort.month}.</th>
 		</c:forEach>
 		<th style="min-width: 10ex;">Total</th>
 		<th rowspan="2" class="spentEffortArrow"><a title="Next week" 
-			href="weeklySpentEffort.action?userId=${userId}&week=${nextWeek.weekOfWeekyear}&year=${nextWeek.year}">&raquo;</a></th>
+			href="weeklySpentEffort.action?userId=${userId}&userTimeZone=${userTimeZone}&week=${nextWeek.weekOfWeekyear}&year=${nextWeek.year}">&raquo;</a></th>
 			<td>
 			 <select>
 			   <c:forEach items="${weeks}" var="curWeek">
@@ -39,6 +39,6 @@
 			</td>
 		</c:forEach>
     <td>${aef:minutesToString(weekEffort)}</td>
-		<td><a href="weeklySpentEffort.action?userId=${userId}&week=${currentWeek}&year=${currentYear}">Current week</a></td>
+		<td><a href="weeklySpentEffort.action?userId=${userId}&userTimeZone=${userTimeZone}&week=${currentWeek}&year=${currentYear}">Current week</a></td>
 	</tr>
 </table>

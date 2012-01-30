@@ -58,15 +58,15 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
     public List<HourEntry> getEntriesByUserAndTimeInterval(int userId,
             DateTime startDate, DateTime endDate);
 
-    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId);
+    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
 
     public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week,
-            int userId);
+            int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
 
     public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
-            DateTime end, int userId);
+            DateTime end, int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
 
-    public long calculateWeekSum(LocalDate week, int userId);
+    public long calculateWeekSum(LocalDate week, int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
 
     List<HourEntry> retrieveBacklogHourEntries(int backlogId,
             boolean limited);

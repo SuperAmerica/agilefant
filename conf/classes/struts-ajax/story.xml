@@ -154,7 +154,7 @@
       </result>
     </action>
     
-    <action name="rankStoryToBottom" method="rankStoryToTop" class="storyAction">
+    <action name="rankStoryToBottom" method="rankStoryToBottom" class="storyAction">
       <result name="success" type="json">
         <param name="target">story</param>
         <param name="patterns">-backlog, -parent</param>

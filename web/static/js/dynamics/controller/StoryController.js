@@ -345,7 +345,7 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
     });
     actionItems.push({
       text: "Rank to bottom",
-      callback: StoryController.prototype.rankStoryToTop
+      callback: StoryController.prototype.rankStoryToBottom
     });
   }
   if (Configuration.isTimesheetsEnabled()) {

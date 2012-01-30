@@ -213,7 +213,7 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
             rank = createRank(story, context);
         }
         
-        if(rank.getRank() == tailRank.getRank()){
+        if(tailRank != null && (rank.getRank() == tailRank.getRank())){
             //story is already at the bottom
             return;
         }

@@ -183,9 +183,7 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     
     public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId, int userHourTimeZone, int userMinuteTimeZone) {
         DateTime start = day.toDateMidnight().toDateTime();
-        // TODO
         DateTime end = start.plusDays(1).minusSeconds(1);
-        
         return this.hourEntryDAO.getHourEntriesByFilter(start, end, userId);
     }
 
@@ -194,7 +192,7 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         MutableDateTime tmp = new MutableDateTime(week.toDateMidnight());
         tmp.setDayOfWeek(DateTimeConstants.MONDAY);
         tmp.setSecondOfDay(1);
-        DateTime start = tmp.toDateTime();
+        DateTime start = tmp.toDateTime(); 
         // TODO
         tmp.addDays(6);
         tmp.setHourOfDay(23);

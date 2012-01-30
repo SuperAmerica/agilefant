@@ -160,12 +160,24 @@ StoryInfoBubble.prototype._createConfig = function() {
       set: StoryModel.prototype.setName
     }
   });
+  
   config.addColumnConfiguration(1, {
+	    title : "Value",
+	    get : StoryModel.prototype.getStoryValue,
+	    decorator: DynamicsDecorators.estimateDecorator,
+	    editable : true,
+	    edit : {
+	      editor : "Number",
+	      set : StoryModel.prototype.setStoryValue
+	    }
+	  });
+  
+  config.addColumnConfiguration(2, {
     title: "Reference ID",
     get: StoryModel.prototype.getId,
     decorator: DynamicsDecorators.linkToWorkItem ,
   });
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(3, {
     title : "State",
     get : StoryModel.prototype.getState,
     decorator: DynamicsDecorators.stateColorDecorator,
@@ -176,7 +188,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(4, {
     title : "Points",
     get : StoryModel.prototype.getStoryPoints,
     decorator: DynamicsDecorators.estimateDecorator,
@@ -186,7 +198,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(5, {
     title : "Backlog",
     headerTooltip : 'The backlog, where the story resides',
     get : StoryModel.prototype.getBacklog,
@@ -199,7 +211,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       set: StoryModel.prototype.setBacklogByModel
     }
   });
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(6, {
     title : "Responsibles",
     get : StoryModel.prototype.getResponsibles,
     decorator: DynamicsDecorators.responsiblesDecorator,
@@ -211,11 +223,11 @@ StoryInfoBubble.prototype._createConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(6, {
+  config.addColumnConfiguration(7, {
     title : "Labels",
     subViewFactory: StoryInfoBubble.prototype.labelsViewFactory
   });
-  config.addColumnConfiguration(7, {
+  config.addColumnConfiguration(8, {
     title : "Description",
     get : StoryModel.prototype.getDescription,
     editable : true,

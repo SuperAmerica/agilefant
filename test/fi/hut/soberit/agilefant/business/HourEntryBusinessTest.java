@@ -150,7 +150,7 @@ public class HourEntryBusinessTest {
         expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
 
         replay(hourEntryDAO);
-        assertEquals(7, hourEntryBusiness.getDailySpentEffortByWeek(start.toLocalDate(), 0).size());
+        assertEquals(7, hourEntryBusiness.getDailySpentEffortByWeek(start.toLocalDate(), 0, 5, 0).size());
         verify(hourEntryDAO);
     }
     
@@ -162,7 +162,7 @@ public class HourEntryBusinessTest {
         expect(hourEntryDAO.calculateSumByUserAndTimeInterval(0, start, end)).andReturn(0L);
 
         replay(hourEntryDAO);
-        assertEquals(0L, hourEntryBusiness.calculateWeekSum(start.plusDays(3).toLocalDate(), 0));
+        assertEquals(0L, hourEntryBusiness.calculateWeekSum(start.plusDays(3).toLocalDate(), 0,5,0), 0);
         verify(hourEntryDAO);
     }
     
@@ -176,7 +176,7 @@ public class HourEntryBusinessTest {
         expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
 
         replay(hourEntryDAO);
-        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0, 5, 0);
         assertEquals(7, res.size());
         assertEquals(null, res.get(0).getSpentEffort());
         assertEquals(null, res.get(1).getSpentEffort());
@@ -204,7 +204,7 @@ public class HourEntryBusinessTest {
         
         expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
         replay(hourEntryDAO);
-        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0, 5, 0);
         assertEquals(8, res.size());
         assertEquals(null, res.get(0).getSpentEffort());
         assertEquals(1900L, (long)res.get(1).getSpentEffort());
@@ -233,7 +233,7 @@ public class HourEntryBusinessTest {
         
         expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
         replay(hourEntryDAO);
-        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0);
+        List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0, 5, 0);
         assertEquals(4, res.size());
         assertEquals(1900L, (long)res.get(0).getSpentEffort());
         assertEquals(null, res.get(1).getSpentEffort());
@@ -248,7 +248,7 @@ public class HourEntryBusinessTest {
         DateTime end = new DateTime(2009,6,2,23,59,59,0);
         expect(hourEntryDAO.getHourEntriesByFilter(start, end, 42)).andReturn(null);
         replay(hourEntryDAO);
-        assertEquals(null, hourEntryBusiness.getEntriesByUserAndDay(start.toLocalDate(), 42));
+        assertEquals(null, hourEntryBusiness.getEntriesByUserAndDay(start.toLocalDate(), 42,5,0));
         verify(hourEntryDAO);
     }
     

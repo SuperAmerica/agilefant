@@ -11,7 +11,7 @@ var UserSpentEffortWidget = function UserSpentEffortWidget(element, userId) {
   this.reload();
 };
 
-UserSpentEffortWidget.prototype.reload = function() { ////////////////////CHANGE!!! ADD gtmoffset
+UserSpentEffortWidget.prototype.reload = function() { 
 	var me = this;
 	var currentDate = new Date();
 	var gmtOffset = currentDate.getUserTimeZone();
@@ -19,7 +19,7 @@ UserSpentEffortWidget.prototype.reload = function() { ////////////////////CHANGE
 	me._registerSpentEffortEvents(); 
 	});
 };
-UserSpentEffortWidget.prototype._parseDateValues = function(strValue) { /////////////////////////////CHANGE TIMEZONE!!!!
+UserSpentEffortWidget.prototype._parseDateValues = function(strValue) { 
   var parts = strValue.split("-");
   if(parts.length != 3) {
     return {};

@@ -59,12 +59,12 @@ StoryModel.Validators = {
 StoryModel.prototype._setData = function(newData) { 
   // Set the id
   this.id = newData.id;
-    /*
+    
   //set the rank by hand if it exists in the data
-  if(newData.rank !== undefined && newData.rank !== null) {
-    this.setRank(newData.rank);
-  }
-  */
+//  if(newData.rank !== undefined && newData.rank !== null) {
+//    this.setRank(newData.rank);
+//  }
+  
   // Set the tasks
   if (newData.tasks) {
     this._updateRelations(ModelFactory.types.task, newData.tasks);
@@ -89,6 +89,41 @@ StoryModel.prototype._setData = function(newData) {
     this.metrics = newData.metrics;
   }
 };
+
+/**
+ * Saves a copy of the given story as a sibling of the current. 
+ * @author braden
+ */
+StoryModel.prototype._copyStory = function(story)
+{
+  var me = this;
+  var idClosure = function() { return story.id; };	// Create closure to access the story
+  var data = {};
+  var url = "ajax/copyStorySibling.action";
+  data.storyId = story.id;
+  document.body.style.cursor = "wait";
+  jQuery.ajax({
+    type: "POST",
+    url: url,
+    async: true,
+    cache: false,
+    data: data,
+    dataType: "json",
+    success: function(newData, status) {    	
+      var object = ModelFactory.updateObject(newData);
+      possibleBacklog = story.getBacklog();
+      if(newData && newData.id && possibleBacklog) {
+        possibleBacklog.addStory(object);
+        object.callListeners(new DynamicsEvents.AddEvent(object));
+      }
+      object.rankUnder(story.id, object);
+      MessageDisplay.Ok("Story created successfully");
+    },
+    error: function(xhr, status, error) {
+      MessageDisplay.Error("Error saving story", xhr);
+    }
+  });
+}
 
 /**
  * Internal function to send the data to server.
@@ -166,7 +201,7 @@ StoryModel.prototype.reload = function(callback) {
     {storyId: me.getId()},
     function(data,status) {
       me.setData(data, false);
-      //me.callListeners(new DynamicsEvents.EditEvent(me));
+      me.callListeners(new DynamicsEvents.EditEvent(me));
       if (callback) {
         callback();
       }

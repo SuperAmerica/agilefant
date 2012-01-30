@@ -29,11 +29,13 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -228,7 +230,33 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.labelBusiness.createStoryLabels(labelNames, story.getId());
         return story;
     }
-
+    
+    public Story copyStorySibling(Integer storyId, Story story)
+    {
+        story = this.retrieve(storyId);
+        Backlog backlog = this.backlogBusiness.retrieve(story.getBacklog().getId());
+        if (backlog == null) {
+            throw new ObjectNotFoundException("backlog.notFound");
+        }
+        Story newStory = new Story(story);
+        newStory.setName("Copy of " + newStory.getName());
+        // Persist the tasks. 
+        for (Task t : newStory.getTasks())
+        {
+            t.setEffortLeft(new ExactEstimate());
+            t.setOriginalEstimate(new ExactEstimate());
+            t.setHourEntries(new HashSet<TaskHourEntry>());
+            taskBusiness.store(t);
+        }
+        
+        newStory.setBacklog(backlog);
+        create(newStory);
+        labelBusiness.createStoryLabelsSet(newStory.getLabels(), newStory.getId());
+        this.storyHierarchyBusiness.moveAfter(newStory, story);
+        rankStoryUnder(newStory, story,backlog );
+        return this.transferObjectBusiness.constructStoryTO(newStory);
+    }
+    
     public Story create(Story dataItem, Integer backlogId,
             Set<Integer> responsibleIds, List<String> labelNames) throws IllegalArgumentException,
             ObjectNotFoundException {
@@ -729,5 +757,4 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public void setStoryHierarchyBusiness(StoryHierarchyBusiness storyHierarchyBusiness) {
         this.storyHierarchyBusiness = storyHierarchyBusiness;
     }
-
 }

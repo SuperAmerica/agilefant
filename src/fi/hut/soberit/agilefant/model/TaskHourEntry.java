@@ -16,6 +16,13 @@ public class TaskHourEntry extends HourEntry {
 
     private Task task;
 
+    public TaskHourEntry() { }
+    
+    public TaskHourEntry(TaskHourEntry other)
+    {
+        this.setTask(other.getTask());
+    }
+    
     public void setTask(Task task) {
         this.task = task;
     }

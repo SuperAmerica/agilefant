@@ -57,6 +57,16 @@ public class HourEntry {
 
     private String description;
 
+    public HourEntry() { }
+    
+    public HourEntry(HourEntry other)
+    {
+        this.setDate(other.getDate());
+        this.setDescription(other.getDescription());
+        this.setMinutesSpent(other.getMinutesSpent());
+        this.setUser(other.getUser());
+    }
+    
     /**
      * Get the id of this object.
      * <p>

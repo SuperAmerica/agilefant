@@ -106,6 +106,10 @@ StoryController.prototype._moveStory = function(id) {
   }
 };
 
+StoryController.prototype.copyStorySibling = function(storyObj) {
+  this.parentController.copyStorySibling(storyObj);
+};
+
 /**
  * Remove story associated with controllers row and the row itself.
  */
@@ -334,10 +338,17 @@ StoryController.prototype.rankStoryToBottom = function(story, view) {
  */
 StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
-  actionItems.push({
+  actionItems.push({ 
     text : "Move",
     callback : StoryController.prototype.moveStory
   });
+  if (!(this.parentController instanceof DailyWorkStoryListController))
+  {
+	  actionItems.push({
+	    text: "Copy",
+	    callback : StoryController.prototype.copyStorySibling
+	  });
+  }
   if (isProject) {
     actionItems.push({
       text: "Rank to top",
@@ -411,6 +422,32 @@ StoryController.prototype.storyValueOrPointsEditable = function() {
     return false;
   }
   return true;
+};
+
+/**
+ * Checks if the given #(hash in the URL) task is in the current story
+ * If it is there is sets the window to display it.
+ */
+StoryController.prototype.searchForTask = function() {
+	if(window.location.hash) {
+	    var hash = window.location.hash;
+	    var type = "task";
+	    var id = hash.substring(hash.lastIndexOf("_")+1);
+	    var row;
+    	if (this.childControllers[type]) {
+    		for ( var i = 0; i < this.childControllers[type].length; i++) {
+      			if(this.childControllers[type][i].model.id == id) {
+      				row = this.childControllers[type][i].view;
+      				if(!$.browser.msie) {
+				        window.location.hash = "#";
+				    }
+				    var pos = row.getElement().offset();
+	      			window.scrollTo(pos.left, pos.top);
+      				break;
+      			}
+    		}
+  		}
+	}
 };
 
 /**

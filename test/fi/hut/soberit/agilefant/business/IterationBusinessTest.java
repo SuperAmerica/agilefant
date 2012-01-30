@@ -635,15 +635,23 @@ public class IterationBusinessTest  extends MockedTestCase {
         revAdded.setTimestamp(10000);
         AgilefantHistoryEntry added = new AgilefantHistoryEntry(new Story(), revAdded, RevisionType.ADD);
         
+        AgilefantRevisionEntity revModified = new AgilefantRevisionEntity();
+        revModified.setId(2400);
+        revModified.setTimestamp(20000);
+        AgilefantHistoryEntry modified = new AgilefantHistoryEntry(20000, RevisionType.MOD, revModified);
+        
         expect(backlogHistoryDAO.retrieveAddedStories(iteration)).andReturn(Arrays.asList(added));
         expect(backlogHistoryDAO.retrieveDeletedStories(iteration)).andReturn(Arrays.asList(deleted));
+        expect(backlogHistoryDAO.retrieveModifiedStories(iteration)).andReturn(Arrays.asList(modified));
         expect(storyHistoryDAO.retrieveClosestRevision(200, 1200)).andReturn(null);
+        expect(storyHistoryDAO.retrieveClosestRevision(20000, 2400)).andReturn(null);
         
         replayAll();
         List<AgilefantHistoryEntry> actual = this.iterationBusiness.retrieveChangesInIterationStories(iteration);
         verifyAll();
-        assertEquals(added, actual.get(0));
-        assertEquals(deleted, actual.get(1));     
+        assertEquals(modified, actual.get(0));
+        assertEquals(added, actual.get(1));
+        assertEquals(deleted, actual.get(2));
     }
     
     @Test

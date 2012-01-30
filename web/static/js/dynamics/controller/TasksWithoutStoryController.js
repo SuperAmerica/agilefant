@@ -213,6 +213,20 @@ TasksWithoutStoryController.prototype.initConfig = function() {
   this._addColumnConfigs(this.taskListConfig);
 };
 
+TasksWithoutStoryController.prototype.firstRenderComplete = function() {
+  if(window.location.hash) {
+    var hash = window.location.hash;
+    var row = this.view.getRowById(hash.substring(1));
+    if(row) {
+      if(!$.browser.msie) {
+        window.location.hash = "#";
+      }
+      var pos = row.getElement().offset();
+      window.scrollTo(pos.left, pos.top);
+    }
+  }
+};
+
 
 TasksWithoutStoryController.prototype._getTableConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -236,7 +250,10 @@ TasksWithoutStoryController.prototype._getTableConfig = function() {
         return (model instanceof TaskModel);
       },
       callback: TaskController.prototype.moveTask
-    }
+    },
+    afterFirstRender: $.proxy(function() {
+      this.firstRenderComplete();
+    }, this)
   });
   
   config.addCaptionItem({

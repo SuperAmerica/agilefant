@@ -558,7 +558,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         return newTasks;
     }
-    
+
     /**
      * This is to retrieve task history given an iteration, for all possible
      * task modifications

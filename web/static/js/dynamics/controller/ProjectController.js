@@ -687,12 +687,26 @@ ProjectController.prototype.initializeStoryConfig = function() {
     title : "Edit",
     subViewFactory : StoryController.prototype.projectStoryActionFactory
   });
+  config.addColumnConfiguration(7, {
+    minWidth : 75,
+    columnName: "ranktotop",
+    autoScale : true,
+    title : "",
+    subViewFactory : StoryController.prototype.rankToTopAction
+  });
+  config.addColumnConfiguration(8, {
+    minWidth : 75,
+    columnName: "ranktobottom",
+    autoScale : true,
+    title : "",
+    subViewFactory : StoryController.prototype.rankToBottomAction
+  });
   
   if (Configuration.isLabelsInStoryList()) {
-	  config.addColumnConfiguration(7, StoryListController.columnConfig.labels);
+	  config.addColumnConfiguration(9, StoryListController.columnConfig.labels);
   }
   
-  config.addColumnConfiguration(8, {
+  config.addColumnConfiguration(10, {
     columnName: "description",
     fullWidth: true,
     visible: false,
@@ -703,14 +717,14 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(9, {
+  config.addColumnConfiguration(11, {
     fullWidth : true,
     visible : false,
     columnName: "details",
     subViewFactory : StoryController.prototype.storyDetailsFactory,
     delayedRender: true
   });
-  config.addColumnConfiguration(10, {
+  config.addColumnConfiguration(12, {
     columnName: "buttons",
     fullWidth : true,
     visible : false,

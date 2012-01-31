@@ -370,11 +370,28 @@ StoryController.prototype.projectStoryActionFactory = function(view, model) {
 
 StoryController.prototype.storyActionFactory = function(view, model) {
   var actionItems = this._getStoryActionItems(false);
-  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
-      view);
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model, view);
   return actionView;
 };
 
+StoryController.prototype.rankToTopAction = function(view, model) {
+  var actionItem = {
+		  label : "Rank to top",
+		  callback : StoryController.prototype.rankStoryToTop
+  };
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view);
+  return actionView;
+};
+	
+StoryController.prototype.rankToBottomAction = function(view, model) {
+  var actionItem = {
+		  label : "Rank to bottom",
+		  callback : StoryController.prototype.rankStoryToBottom
+  };
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view);
+  return actionView;
+};
+		
 StoryController.prototype.acceptsDraggable = function(model) {
   if (model instanceof TaskModel) {
     return true;

@@ -228,6 +228,7 @@ StoryListController.prototype._getTableConfig = function() {
 StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
+  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
@@ -262,6 +263,13 @@ StoryListController.columnConfig.prio = {
   sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
   defaultSortColumn: true,
   subViewFactory : StoryController.prototype.taskToggleFactory
+};
+StoryListController.columnConfig.id = {
+  minWidth: 30,
+  autoScale: true,
+  title: "ID",
+  headerTooltip: "Story ID",
+  get: CommonModel.prototype.getId,
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,

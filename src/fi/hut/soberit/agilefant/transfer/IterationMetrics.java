@@ -12,6 +12,7 @@ public class IterationMetrics {
     private Integer completedTasks = new Integer(0);
     private Integer totalTasks = new Integer(0);
     private Integer percentDoneTasks = new Integer(0);
+    private Integer percentSpentEffort = new Integer(0);
     
     private Integer completedStories = new Integer(0);
     private Integer totalStories = new Integer(0);
@@ -100,6 +101,12 @@ public class IterationMetrics {
     }
     public Integer getPercentDoneStories() {
         return percentDoneStories;
+    }
+    public void setPercentSpentEffort(Integer percentEffortSpent) {
+        this.percentSpentEffort = percentEffortSpent;
+    }
+    public Integer getPercentSpentEffort() {
+        return percentSpentEffort;
     }
 
     public ExactEstimate getDailyVelocity() {

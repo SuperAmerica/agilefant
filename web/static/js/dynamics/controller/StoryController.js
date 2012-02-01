@@ -376,19 +376,19 @@ StoryController.prototype.storyActionFactory = function(view, model) {
 
 StoryController.prototype.rankToTopAction = function(view, model) {
   var actionItem = {
-		  label : "Rank to top",
+		  label : "To top",
 		  callback : StoryController.prototype.rankStoryToTop
   };
-  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view);
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 60);
   return actionView;
 };
 	
 StoryController.prototype.rankToBottomAction = function(view, model) {
   var actionItem = {
-		  label : "Rank to bottom",
+		  label : "To bottom",
 		  callback : StoryController.prototype.rankStoryToBottom
   };
-  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view);
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 78);
   return actionView;
 };
 		

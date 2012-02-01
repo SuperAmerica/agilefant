@@ -647,7 +647,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
   });
   
   config.addColumnConfiguration(4, {
-    minWidth : 60,
+    minWidth : 70,
     autoScale : true,
     title : "Responsibles",
     headerTooltip : 'Story responsibles',
@@ -688,17 +688,17 @@ ProjectController.prototype.initializeStoryConfig = function() {
     subViewFactory : StoryController.prototype.projectStoryActionFactory
   });
   config.addColumnConfiguration(7, {
-    minWidth : 75,
+    minWidth : 40,
     columnName: "ranktotop",
     autoScale : true,
-    title : "",
+    title : "Rank",
     subViewFactory : StoryController.prototype.rankToTopAction
   });
   config.addColumnConfiguration(8, {
-    minWidth : 75,
+    minWidth : 50,
     columnName: "ranktobottom",
     autoScale : true,
-    title : "",
+    title : "Rank",
     subViewFactory : StoryController.prototype.rankToBottomAction
   });
   

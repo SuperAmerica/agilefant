@@ -349,16 +349,6 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
 	    callback : StoryController.prototype.copyStorySibling
 	  });
   }
-  if (isProject) {
-    actionItems.push({
-      text: "Rank to top",
-      callback: StoryController.prototype.rankStoryToTop
-    });
-    actionItems.push({
-      text: "Rank to bottom",
-      callback: StoryController.prototype.rankStoryToBottom
-    });
-  }
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
       text: "Spent effort",
@@ -390,7 +380,7 @@ StoryController.prototype.rankToTopAction = function(view, model) {
 		  label : "To top",
 		  callback : StoryController.prototype.rankStoryToTop
   };
-  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 60);
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 50);
   return actionView;
 };
 	
@@ -399,7 +389,7 @@ StoryController.prototype.rankToBottomAction = function(view, model) {
 		  label : "To bottom",
 		  callback : StoryController.prototype.rankStoryToBottom
   };
-  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 78);
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 70);
   return actionView;
 };
 		

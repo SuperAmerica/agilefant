@@ -681,7 +681,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
   config.addColumnConfiguration(6, {
-    minWidth : 35,
+    minWidth : 40,
     columnName: "edit",
     autoScale : true,
     title : "Edit",
@@ -691,14 +691,14 @@ ProjectController.prototype.initializeStoryConfig = function() {
     minWidth : 40,
     columnName: "ranktotop",
     autoScale : true,
-    title : "Rank",
+    title : "",
     subViewFactory : StoryController.prototype.rankToTopAction
   });
   config.addColumnConfiguration(8, {
-    minWidth : 50,
+    minWidth : 60,
     columnName: "ranktobottom",
     autoScale : true,
-    title : "Rank",
+    title : "",
     subViewFactory : StoryController.prototype.rankToBottomAction
   });
   

@@ -371,7 +371,8 @@ StoryController.prototype.projectStoryActionFactory = function(view, model) {
 
 StoryController.prototype.storyActionFactory = function(view, model) {
   var actionItems = this._getStoryActionItems(false);
-  var actionView = new DynamicTableRowActions(actionItems, this, this.model, view);
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+      view);
   return actionView;
 };
 

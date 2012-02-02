@@ -623,10 +623,9 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getStoryValue,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
     editable : true,
-    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
     decorator: DynamicsDecorators.estimateDecorator,
     edit : {
-      editor : "Number",
+      editor : "StoryValue",
       set : StoryModel.prototype.setStoryValue
     }
   });
@@ -639,7 +638,6 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getStoryPoints,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
     editable : true,
-    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
     decorator: DynamicsDecorators.estimateDecorator,
     edit : {
       editor : "Estimate",

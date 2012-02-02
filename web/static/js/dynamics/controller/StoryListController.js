@@ -327,7 +327,7 @@ StoryListController.columnConfig.value = {
   editable : true,
   editableCallback: StoryController.prototype.storyValueOrPointsEditable,
   edit : {
-    editor : "Estimate",
+    editor : "StoryValue",
     set : StoryModel.prototype.setStoryValue
   }
 };

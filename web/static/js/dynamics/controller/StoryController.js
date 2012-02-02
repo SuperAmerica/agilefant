@@ -414,17 +414,6 @@ StoryController.prototype.quickLogEffort = function(spentEffort) {
 };
 
 /**
- * Checks whether the story points field should be editable or not.
- */
-StoryController.prototype.storyValueOrPointsEditable = function() {
-  if (this.model.getState() === "DONE") {
-    MessageDisplay.Warning("Changing story points is not allowed for done stories");
-    return false;
-  }
-  return true;
-};
-
-/**
  * Checks if the given #(hash in the URL) task is in the current story
  * If it is there is sets the window to display it.
  */

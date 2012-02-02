@@ -160,7 +160,7 @@ ProjectController.columnConfigs = {
   plannedSize: {
     title : "Planned Size",
     get : ProjectModel.prototype.getBacklogSize,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
+    decorator: DynamicsDecorators.exactEstimateAppendManHourDecorator,
     editable: true,
     edit: {
       editor: "ExactEstimate",

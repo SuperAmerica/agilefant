@@ -231,6 +231,7 @@ StoryListController.prototype._addColumnConfigs = function(config) {
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
+  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
   config.addColumnConfiguration(StoryController.columnIndices.state, StoryListController.columnConfig.state);
@@ -262,6 +263,15 @@ StoryListController.columnConfig.prio = {
   sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank),
   defaultSortColumn: true,
   subViewFactory : StoryController.prototype.taskToggleFactory
+};
+StoryListController.columnConfig.id = {
+  minWidth: 30,
+  autoScale: true,
+  title: "ID",
+  headerTooltip: 'Story ID',
+  get: CommonModel.prototype.getId,
+  decorator: DynamicsDecorators.storyIdWithHash,
+  editable: false
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,

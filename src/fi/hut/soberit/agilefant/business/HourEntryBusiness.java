@@ -65,6 +65,9 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
 
     public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
             DateTime end, int userId);
+    
+    List<DailySpentEffort> getDailySpentEffortForHourEntries(List<? extends HourEntry> entries,
+            DateTime start, DateTime end);
 
     public long calculateWeekSum(LocalDate week, int userId);
 

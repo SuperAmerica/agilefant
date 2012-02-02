@@ -26,6 +26,17 @@ public class Label implements NamedObject, Serializable {
 
     private static final long serialVersionUID = 175091151639389468L;
 
+    public Label() { }
+    
+    public Label(Label other)
+    {
+        this.setCreator(other.getCreator());
+        this.setDisplayName(other.getDisplayName());
+        this.setName(other.getName());
+        this.setStory(other.getStory());
+        this.setTimestamp(other.getTimestamp());
+    }
+    
     @ManyToOne
     private User creator;
 

@@ -11,6 +11,8 @@ public class ProjectMetrics {
     private int daysLeft = 0;
     private int totalDays = 0;
     private int daysLeftPercentage = 0;
+    private int effortSpent = 0;
+    private int originalEstimate = 0;
 
     public void setStoryPoints(int storyPoints) {
         this.storyPoints = storyPoints;
@@ -82,5 +84,21 @@ public class ProjectMetrics {
 
     public void setCompletedStoriesPercentage(int completedStoriesPercentage) {
         this.completedStoriesPercentage = completedStoriesPercentage;
+    }
+    
+    public void setEffortSpent(int effortSpent) {
+        this.effortSpent = effortSpent;
+    }
+    
+    public int getEffortSpent() {
+        return effortSpent;
+    }
+    
+    public void setOriginalEstimate(int originalEstimate) {
+        this.originalEstimate = originalEstimate;
+    }
+    
+    public int getOriginalEstimate() {
+        return originalEstimate;
     }
 }

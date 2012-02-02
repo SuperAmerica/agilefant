@@ -40,6 +40,31 @@
     </tr>
   </table>
   
+  <table>
+    <tr>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Effort left</td>
+      <td>
+        <c:out value="${storyMetrics.effortLeft/60}" />h
+      </td>
+    </tr>
+    <tr>
+      <td>Effort spent</td>
+      <td>
+        <c:out value="${storyMetrics.effortSpent/60}" />h
+      </td>
+    </tr>
+    <tr>
+      <td>Original estimate</td>
+      <td>
+        <c:out value="${storyMetrics.originalEstimate/60}" />h
+      </td>
+    </tr>
+  </table>
+  
   <div class="expandable">
     <div id="treeContent_${widgetId}"> </div>
   </div>

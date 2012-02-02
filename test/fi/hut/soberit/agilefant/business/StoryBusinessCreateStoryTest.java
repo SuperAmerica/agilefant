@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -34,6 +35,8 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
+import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Label;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
@@ -275,5 +278,132 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.createStorySibling(1, data, null, null);
         verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCopyStory_withoutResponsibles() {
+        Product product = new Product();
+        product.setId(10);
+        
+        Story reference = new Story();
+        reference.setBacklog(product);
+        reference.setName("origin");
+        reference.setId(1);
+        reference.setTreeRank(5);
+        reference.setStoryPoints(4);
+        reference.setStoryValue(10);
+        reference.setState(StoryState.STARTED);
+        reference.setDescription("Foofaa");
+               
+        // Copy new story
+        Story data = new Story(reference);
+        data.setId(2);
+        
+        expect(storyDAO.get(1)).andReturn(reference);
+        
+        expect(backlogBusiness.retrieve(10)).andReturn(product);
+        expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
+        expect(storyDAO.get(2)).andReturn(data).times(2);
+        expect(storyDAO.get(2)).andReturn(data).times(2);
+        assertSame(data.getName(), "origin");
+        assertSame(data.getTreeRank(), 4);
+        assertSame(data.getStoryPoints(), 4);
+        assertSame(data.getStoryValue(), 10);
+        assertSame(data.getState(), StoryState.STARTED);
+        assertSame(data.getDescription(), "Foofaa");
+       }
+    
+    @Test
+    @DirtiesContext
+    public void testCopyStory_withResponsibles() {
+        User user1 = new User();
+        User user2 = new User();
+        Story tmp = new Story();
+        
+        Set<User> users = new HashSet<User>();
+        users.add(user1);
+        users.add(user2);
+        tmp.setResponsibles(users);
+        
+        Story returnedStory = new Story(tmp);
+        assertTrue(returnedStory.getResponsibles().contains(user1));
+        assertTrue(returnedStory.getResponsibles().contains(user2));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCopyStory_withTask() {
+        Task t1 = new Task();
+        t1.setName("task1");
+        Task t2 = new Task(t1);
+        Story tmp = new Story();
+        t2.setStory(tmp);
+        
+        tmp.getTasks().add(t2);
+        
+        Story returnedStory = new Story(tmp);
+        assertTrue(returnedStory.getTasks().size() == 1);
+        assertSame(returnedStory.getTasks().iterator().next().getName(),"task1");
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCopyStory_withLabels() {
+        Label label1 = new Label();
+        label1.setName("label1");
+        Label label2 = new Label(label1);
+        label2.setName("label2");
+        
+        // Copy story
+        Story tmp = new Story();
+        tmp.getLabels().add(label1);
+        tmp.getLabels().add(label2);
+        Story returnedStory = new Story(tmp);
+        
+        // Check if labels get copied over
+        assertTrue(returnedStory.getLabels().size() == 2);
+        boolean label1Exist = false;
+        boolean label2Exist = false;
+        for( Label l : returnedStory.getLabels())
+        {
+            if(l.getName() == "label1")
+                label1Exist = true;
+            if(l.getName() == "label2")
+                label2Exist = true;
+        }
+        assertTrue(label1Exist);
+        assertTrue(label2Exist);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCopyStory_withChildStories() {
+        
+        // Create stories
+        Story originStory = new Story();
+        
+        List<Story> storyList = new ArrayList<Story>();
+        for(Integer i=0; i<10; i++)
+        {
+            Story tmp = new Story();
+            tmp.setName(i.toString());
+            //tmp.setParent(originStory); TODO: promperror if we set the child's parent here
+            storyList.add(tmp);
+        }
+        
+        originStory.setChildren(storyList);
+        Story copyStory = new Story(originStory);
+                
+        // Check if child stories get copied over
+        assertTrue(copyStory.getChildren().size() == 10);
+        int count = 0;
+        for( Story st : copyStory.getChildren())
+        {
+            Integer countInt = count;
+            String countName = countInt.toString();
+            assertTrue(st.getName().compareTo(countInt.toString()) == 0);
+            count++;
+        }
     }
 }

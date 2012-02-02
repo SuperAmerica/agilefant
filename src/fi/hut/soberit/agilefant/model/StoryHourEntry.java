@@ -23,6 +23,13 @@ public class StoryHourEntry extends HourEntry {
 
     private Story story;
 
+    public StoryHourEntry() { }
+    
+    public StoryHourEntry(StoryHourEntry other)
+    {
+        this.setStory(other.getStory());
+    }
+    
     @ManyToOne
     public Story getStory() {
         return story;

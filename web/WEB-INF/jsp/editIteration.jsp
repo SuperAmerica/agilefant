@@ -104,6 +104,10 @@ $(document).ready(function() {
   };
 
  $('#iterationActions').click(function() { openMenu(); });
+ 
+ var d = new Date();
+ $("#chartid").attr("src", $("#chartid").attr('src') + -d.getTimezoneOffset());
+ $("#chartlink").attr("href", $("#chartlink").attr('href') + -d.getTimezoneOffset());
 });
 </script>
 
@@ -111,12 +115,10 @@ $(document).ready(function() {
 
 <form onsubmit="return false;"><div id="tasksWithoutStory" class="structure-main-block">&nbsp;</div></form>
 
-
-
-<p style="text-align: center;"><img src="drawIterationBurndown.action?backlogId=${iteration.id}"
+<p style="text-align: center;"><img id="chartid" src="drawIterationBurndown.action?backlogId=${iteration.id}&timeZoneOffset="
 	id="bigChart" width="780" height="600" />
 	<br>
-	<a href="drawCustomIterationBurndown.action?backlogId=${iteration.id}&customBdWidth=1280&customBdHeight=1024">Enlarge</a></p>
+	<a id="chartlink" href="drawCustomIterationBurndown.action?backlogId=${iteration.id}&customBdWidth=1280&customBdHeight=1024&timeZoneOffset=">Enlarge</a></p>
 
   </jsp:body>
 </struct:htmlWrapper>

@@ -244,6 +244,7 @@ TasksWithoutStoryController.prototype._getTableConfig = function() {
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     },
+    beforeCommitFunction: TaskController.prototype.checkTaskAndCommit,
     tableDroppable: true,
     dropOptions: {
       accepts: function(model) {

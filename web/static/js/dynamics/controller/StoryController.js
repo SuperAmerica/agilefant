@@ -459,7 +459,7 @@ StoryController.prototype.searchForTask = function() {
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     },
-    beforeCommitFunction: TaskController.prototype.markStoryAsStarted
+    beforeCommitFunction: TaskController.prototype.checkTaskAndCommit
   });
   config.addCaptionItem( {
     name : "createTask",

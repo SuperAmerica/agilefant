@@ -45,6 +45,11 @@ public class BacklogHistoryEntryBusinessImpl extends
         Backlog backlog = backlogDAO.get(backlogId);
         Project project = null;
         if (backlog instanceof Iteration) {
+            
+            if (backlog.isStandAlone()) {
+                return;
+            }
+            
             project = (Project) backlog.getParent();
         } else if (backlog instanceof Product) {
             return;
@@ -55,7 +60,7 @@ public class BacklogHistoryEntryBusinessImpl extends
         BacklogHistoryEntry entry = backlogHistoryEntryDAO.retrieveLatest(
                 currentTime, project.getId());
         // if an existing entry is within the set interval update that entry,
-        // else create a new one 
+        // else create a new one
         if (entry == null || entry.getTimestamp().isBefore(
                 currentTime.minus(BacklogHistoryEntryBusiness.UPDATE_INTERVAL))) {
             entry = new BacklogHistoryEntry();

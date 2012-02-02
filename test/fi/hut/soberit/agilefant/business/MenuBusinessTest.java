@@ -7,6 +7,7 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +36,8 @@ public class MenuBusinessTest {
     
     ProductBusiness productBusiness;
     
+    IterationBusiness iterationBusiness;
+    
     ProjectDAO projectDAO;
     
     IterationDAO iterationDAO;
@@ -54,6 +57,9 @@ public class MenuBusinessTest {
         
         transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
         menuBusiness.setTransferObjectBusiness(transferObjectBusiness);
+        
+        iterationBusiness = createStrictMock(IterationBusiness.class);
+        menuBusiness.setIterationBusiness(iterationBusiness);
         
         iterationDAO = createStrictMock(IterationDAO.class);
         menuBusiness.setIterationDAO(iterationDAO);
@@ -106,20 +112,25 @@ public class MenuBusinessTest {
         proj1.getChildren().add(iter3);
     }
     private void replayAll() {
-        replay(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness);
+        replay(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness, iterationBusiness);
     }
 
     private void verifyAll() {
-        verify(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness);
+        verify(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness, iterationBusiness);
     }
     
     @Test
     public void constructBacklogMenuData() {  
         expect(productBusiness.retrieveAllOrderByName()).andReturn(
                 products);
+
+        final ArrayList<Iteration> emptyStandAloneIterations = new ArrayList<Iteration>();
+        expect(iterationBusiness.retrieveAllStandAloneIterations())
+            .andReturn(emptyStandAloneIterations);
         
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
             .andReturn(ScheduleStatus.FUTURE).times(8);
+        
         replayAll();
         List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData();
         verifyAll();

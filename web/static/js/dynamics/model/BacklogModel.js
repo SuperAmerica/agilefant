@@ -23,9 +23,6 @@ BacklogModel.Validators = {
     }
   },
   parentValidator: function(model) {
-    if (!model.getParent()) {
-      throw "Please select a parent backlog";
-    }
   }
 };
 

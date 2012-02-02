@@ -135,6 +135,13 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
         return parent;
     }
 
+    
+    @Transient
+    public boolean isStandAlone() {
+        return getParent() == null;
+    }
+    
+    
     /**
      * Set the backlog's parent backlog.
      * @param parent the parent backlog

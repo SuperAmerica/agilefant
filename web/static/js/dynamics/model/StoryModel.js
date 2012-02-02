@@ -12,6 +12,7 @@ var StoryModel = function StoryModel() {
   this.relations = {
     backlog: null,
     project: null,
+    iteration: null,
     task: [],
     hourEntry: [],
     user: [],
@@ -30,7 +31,7 @@ var StoryModel = function StoryModel() {
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "backlog",
       "fi.hut.soberit.agilefant.model.Project":       "project",
-      "fi.hut.soberit.agilefant.model.Iteration":     "backlog",
+      "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
       "fi.hut.soberit.agilefant.model.User":          "user",
       "fi.hut.soberit.agilefant.model.Label":         "label",
       "fi.hut.soberit.agilefant.model.Task":          "task",
@@ -80,6 +81,9 @@ StoryModel.prototype._setData = function(newData) {
   if(newData.backlog) {
     this.setBacklog(ModelFactory.updateObject(newData.backlog, true));
   }
+  if (newData.iteration) {
+    this.setIteration(ModelFactory.updateObject(newData.iteration, true));
+  }
   if (newData.labels) {
     this._updateRelations(ModelFactory.types.label, newData.labels);
   }
@@ -92,7 +96,9 @@ StoryModel.prototype._setData = function(newData) {
  * Internal function to send the data to server.
  */
 StoryModel.prototype._saveData = function(id, changedData) {
-  var me = this, possibleBacklog = this.getBacklog();
+  var me = this;
+  var possibleBacklog = this.getBacklog();
+  var possibleIteration = this.getIteration();
   
   var url = "ajax/storeStory.action";
   var data = {};
@@ -131,7 +137,16 @@ StoryModel.prototype._saveData = function(id, changedData) {
   }
   else {
     url = "ajax/createStory.action";
-    data.backlogId = possibleBacklog.getId();
+    
+    if (possibleBacklog) {
+      data.backlogId = possibleBacklog.getId();
+    } else if (possibleIteration) {
+      possibleBacklog = possibleIteration;
+      data.backlogId = possibleIteration.getId();
+    }
+    if (possibleIteration) {
+      data.iterationId = possibleIteration.getId();
+    }
   }
 
   
@@ -147,7 +162,9 @@ StoryModel.prototype._saveData = function(id, changedData) {
       var object = ModelFactory.updateObject(newData);
       
       if(!id) {
-        possibleBacklog.addStory(object);
+        if (possibleBacklog) {
+          possibleBacklog.addStory(object);
+        }
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
     },
@@ -221,6 +238,7 @@ StoryModel.prototype._moveStory = function(backlogId, url, moveParents) {
   var me = this;
   var oldBacklog = this.relations.backlog;
   var oldProject = this.relations.project;
+  var oldIteration = this.relations.iteration;
 
   jQuery.ajax({
     url: url,
@@ -233,6 +251,7 @@ StoryModel.prototype._moveStory = function(backlogId, url, moveParents) {
       me.callListeners(new DynamicsEvents.NamedEvent(me, "storyMoved"));
       me.relations.backlog = null;
       me.relations.project = null;
+      me.relations.iteration = null;
       me._setData(data);
       
       //remove unneccesary old backlog relations
@@ -241,10 +260,16 @@ StoryModel.prototype._moveStory = function(backlogId, url, moveParents) {
         //LEAF STORIES: moved to another project
         oldProject.reloadStoryRanks();
       }
+      
       if (oldBacklog && oldBacklog !== me.relations.backlog) {        
         oldBacklog.removeStory(me);
       }
-     
+      
+      // moved from assigned iteration
+      if (oldIteration && oldIteration !== me.relations.iteration) {
+    	oldIteration.removeStory(me);
+      }
+      
       me.callListeners(new DynamicsEvents.EditEvent(me));
       MessageDisplay.Ok("Story moved");
     },
@@ -298,6 +323,9 @@ StoryModel.prototype._rank = function(direction, targetStoryId, targetBacklog) {
     success: function(data, status) {
       MessageDisplay.Ok("Story ranked");
       var oldParent = me.getParent();
+      if (!oldParent) {
+        oldParent = me.getIteration();
+      }
       me.setData(data);
       //and again hack!
       if(me.relations.project) {
@@ -361,12 +389,29 @@ StoryModel.prototype.getBacklog = function() {
   }
   return this.relations.backlog;
 };
+
+StoryModel.prototype.getIteration = function() {
+  if (this.currentData.iteration) {
+    return ModelFactory.getObject(ModelFactory.types.iteration, this.currentData.iteration);
+  }
+  return this.relations.iteration;
+};
+
 StoryModel.prototype.setBacklog = function(backlog) {
   this.addRelation(backlog);
 };
 
+StoryModel.prototype.setIteration = function(backlog) {
+  this.addRelation(backlog);
+};
+
+
 StoryModel.prototype.setBacklogByModel = function(backlog) {
   this.currentData.backlog = backlog.getId();
+};
+
+StoryModel.prototype.setIterationByModel = function(iteration) {
+  this.currentData.iteration = iteration.getId();
 };
 
 StoryModel.prototype.getDescription = function() {

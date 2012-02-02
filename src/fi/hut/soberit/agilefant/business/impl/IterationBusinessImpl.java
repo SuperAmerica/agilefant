@@ -110,7 +110,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Iteration iteration = retrieve(id);
         Backlog project = iteration.getParent();
         delete(iteration);
-        backlogHistoryEntryBusiness.updateHistory(project.getId());      
+        if (project != null) {
+            backlogHistoryEntryBusiness.updateHistory(project.getId());      
+        }
     }
 
     @Override
@@ -154,8 +156,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         IterationTO iterationTO = transferObjectBusiness.constructIterationTO(iteration);
 
-        List<Story> stories = this.storyRankBusiness
-                .retrieveByRankingContext(iteration);
+        List<Story> stories = this.storyBusiness.retrieveStoriesInIteration(iteration);
+
         Map<Integer, StoryMetrics> metricsData = this.iterationDAO
                 .calculateIterationDirectStoryMetrics(iteration);
         int rank = 0;
@@ -176,7 +178,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         
         for (Story story : stories) {
-            StoryTO storyTO = new StoryTO(tmp.get(story.getId()));
+            StoryTO storyTO = new StoryTO(story);
             if (metricsData.containsKey(story.getId())) {
                 storyTO.setMetrics(metricsData.get(story.getId()));
             }
@@ -184,6 +186,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             rankedStories.add(storyTO);
         }
         iterationTO.setRankedStories(rankedStories);
+        
         // Set the tasks without a story
         Collection<Task> tasksWithoutStory = iteration.getTasks();
 
@@ -323,6 +326,13 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         return metrics;
     }
 
+    
+    public IterationTO storeStandAlone(int iterationId, Iteration iterationData, Set<Integer> assigneeIds) {
+        final int emptyParentId = 0;
+        return store(iterationId, emptyParentId, iterationData, assigneeIds);
+    }
+    
+    
     public IterationTO store(int iterationId, int parentBacklogId,
             Iteration iterationData, Set<Integer> assigneeIds) {
         Backlog parent = null;
@@ -358,7 +368,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
 
     private Iteration create(Backlog parentBacklog, Iteration iterationData, Set<Integer> assigneeIds) {
-        iterationData.setParent(parentBacklog);
+        if (parentBacklog != null) {
+            iterationData.setParent(parentBacklog);
+        }
         int iterationId = (Integer) this.iterationDAO.create(iterationData);
         Iteration iter = this.retrieve(iterationId);
         
@@ -394,6 +406,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         DateTime dayStart = now.withMillisOfDay(0);
 
         return iterationDAO.retrieveCurrentAndFutureIterationsAt(dayStart);
+    }
+    
+    
+    public Collection<Iteration> retrieveAllStandAloneIterations() {
+        return iterationDAO.retrieveAllStandAloneIterations();
     }
     
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter) {

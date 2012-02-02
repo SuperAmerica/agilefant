@@ -233,10 +233,10 @@ StoryListController.prototype._getTableConfig = function() {
 StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
-  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
+  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.value, StoryListController.columnConfig.value);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
@@ -274,9 +274,9 @@ StoryListController.columnConfig.id = {
   minWidth: 30,
   autoScale: true,
   title: "ID",
-  headerTooltip: "Story ID",
+  headerTooltip: 'Story ID',
   get: CommonModel.prototype.getId,
-  editable: true
+  editable: false
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,

@@ -7,7 +7,7 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
-  ["priority", "id", "labelsIcon", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+  ["priority", "labelsIcon", "id", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 

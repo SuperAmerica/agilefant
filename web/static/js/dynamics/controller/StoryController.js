@@ -349,16 +349,6 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
 	    callback : StoryController.prototype.copyStorySibling
 	  });
   }
-  if (isProject) {
-    actionItems.push({
-      text: "Rank to top",
-      callback: StoryController.prototype.rankStoryToTop
-    });
-    actionItems.push({
-      text: "Rank to bottom",
-      callback: StoryController.prototype.rankStoryToTop
-    });
-  }
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
       text: "Spent effort",

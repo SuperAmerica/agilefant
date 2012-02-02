@@ -50,6 +50,21 @@
         <c:out value="${projectMetrics.storyPoints}" /> points
       </td>
     </tr>
+    <tr>
+      <td>Effort spent</td>
+      <td>
+      <div style="width: 50px; height: 1em;"  class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${projectMetrics.storyPointsCompletedPercentage}%; height: 1em;"></div>
+      </div>
+      </td>
+      <td>
+        <c:out value="${projectMetrics.storyPointsCompletedPercentage}" />%
+      </td>
+      <td style="text-align: center; white-space: nowrap;">
+        <c:out value="${projectMetrics.completedStoryPoints}" /> / 
+        <c:out value="${projectMetrics.storyPoints}" /> points
+      </td>
+    </tr>
     </table>
     </td>
       <td style="padding-left: 1em; vertical-align: middle;">

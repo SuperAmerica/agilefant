@@ -21,6 +21,21 @@
       <td>Completed / Total</td>
     </tr>
     <tr>
+      <td>Value</td>
+      <td>
+      <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${projectMetrics.completedStoriesPercentage}%; height: 1em;"></div>
+      </div>
+      </td>
+      <td>
+        <c:out value="${projectMetrics.completedStoriesPercentage}" />%
+      </td>
+      <td style="text-align: center; white-space: nowrap;">
+        <c:out value="${projectMetrics.completedValue}" /> / 
+        <c:out value="${projectMetrics.totalValue}" />
+      </td>
+    </tr>
+    <tr>
       <td>Leaf stories</td>
       <td>
       <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">

@@ -46,6 +46,13 @@
       <td></td>
     </tr>
     <tr>
+      <td>Value</td>
+      <td>
+        <c:out value="${story.storyValue}" />
+      </td>
+    </tr>
+    <tr>
+    <tr>
       <td>Effort left</td>
       <td>
         <c:out value="${storyMetrics.effortLeft/60}" />h

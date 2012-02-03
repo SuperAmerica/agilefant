@@ -86,6 +86,15 @@ var DynamicsDecorators = {
     }
     return Math.round(10*value/60)/10+"h";
   },
+  exactEstimateEditAppendManHourDecorator: function(value) {
+	    if (typeof (value) === 'string') {
+	      return value;
+	    }
+	    if (!value) {
+	      return "";
+	    }
+	    return Math.round(10*value/60)/10+" man-hours";
+	  },
   exactEstimateSumDecorator: function(value) {
     return DynamicsDecorators.exactEstimateDecorator(value);
   },

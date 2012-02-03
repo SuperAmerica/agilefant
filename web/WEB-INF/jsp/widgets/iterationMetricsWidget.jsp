@@ -24,6 +24,21 @@
       <td>Completed / Total</td>
     </tr>
     <tr>
+      <td>Value</td>
+      <td>
+      <div style="width: 50px; height: 1em;"  class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.percentCompletedValue}%; height: 1em;"></div>
+      </div>
+      </td>
+      <td>
+        <c:out value="${iterationMetrics.percentCompletedValue}" />%
+      </td>
+      <td style="text-align: center; white-space: nowrap;">
+        <c:out value="${iterationMetrics.completedValue}" /> / 
+        <c:out value="${iterationMetrics.totalValue}" />
+      </td>
+    </tr>
+    <tr>
       <td>Story points</td>
       <td>
       <div style="width: 50px; height: 1em;"  class="storyStateNOT_STARTED">

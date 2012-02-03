@@ -321,6 +321,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             int effortDone = metrics.getOriginalEstimate().intValue() - metrics.getEffortLeft().intValue();
             metrics.setCompletedEffortPercentage(calculatePercent(effortDone, metrics.getOriginalEstimate().intValue()));
         }
+        
+        //7. calculate 'Value'
+        metrics.setTotalValue(backlogBusiness.getStoryValueSumByBacklog(iteration));
+        metrics.setCompletedValue(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration));
+        metrics.setPercentCompletedValue(calculatePercent(metrics.getCompletedValue(), metrics.getTotalValue()));
         return metrics;
     }
 

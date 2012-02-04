@@ -614,8 +614,24 @@ ProjectController.prototype.initializeStoryConfig = function() {
       required: true
     }
   });
-
+  
   config.addColumnConfiguration(2, {
+    minWidth : 50,
+    autoScale : true,
+    title : "Value",
+    headerTooltip : 'A given story value or weight',
+    get : StoryModel.prototype.getStoryValue,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
+    editable : true,
+    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
+    decorator: DynamicsDecorators.estimateDecorator,
+    edit : {
+      editor : "Number",
+      set : StoryModel.prototype.setStoryValue
+    }
+  });
+
+  config.addColumnConfiguration(3, {
     minWidth : 50,
     autoScale : true,
     title : "Points",
@@ -623,14 +639,15 @@ ProjectController.prototype.initializeStoryConfig = function() {
     get : StoryModel.prototype.getStoryPoints,
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
     editable : true,
-    editableCallback: StoryController.prototype.storyPointsEditable,
+    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
     decorator: DynamicsDecorators.estimateDecorator,
     edit : {
       editor : "Estimate",
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(3, {
+  
+  config.addColumnConfiguration(4, {
     minWidth : 70,
     autoScale : true,
     title : 'State',
@@ -646,8 +663,8 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(4, {
-    minWidth : 60,
+  config.addColumnConfiguration(5, {
+    minWidth : 70,
     autoScale : true,
     title : "Responsibles",
     headerTooltip : 'Story responsibles',
@@ -663,7 +680,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
 
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(6, {
     minWidth : 100,
     autoScale : true,
     columnName: "backlog",
@@ -680,19 +697,33 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set: StoryModel.prototype.moveStory
     }
   });
-  config.addColumnConfiguration(6, {
-    minWidth : 35,
-    columnName: "edit",
+  config.addColumnConfiguration(7, {
+    minWidth : 40,
+	columnName: "edit",
     autoScale : true,
     title : "Edit",
     subViewFactory : StoryController.prototype.projectStoryActionFactory
   });
+  config.addColumnConfiguration(8, {
+    minWidth : 40,
+    columnName: "ranktotop",
+    autoScale : true,
+    title : "",
+    subViewFactory : StoryController.prototype.rankToTopAction
+  });
+  config.addColumnConfiguration(9, {
+    minWidth : 60,
+    columnName: "ranktobottom",
+    autoScale : true,
+    title : "",
+    subViewFactory : StoryController.prototype.rankToBottomAction
+  });
   
   if (Configuration.isLabelsInStoryList()) {
-	  config.addColumnConfiguration(7, StoryListController.columnConfig.labels);
+	  config.addColumnConfiguration(10, StoryListController.columnConfig.labels);
   }
   
-  config.addColumnConfiguration(8, {
+  config.addColumnConfiguration(11, {
     columnName: "description",
     fullWidth: true,
     visible: false,
@@ -703,14 +734,14 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setDescription
     }
   });
-  config.addColumnConfiguration(9, {
+  config.addColumnConfiguration(12, {
     fullWidth : true,
     visible : false,
     columnName: "details",
     subViewFactory : StoryController.prototype.storyDetailsFactory,
     delayedRender: true
   });
-  config.addColumnConfiguration(10, {
+  config.addColumnConfiguration(13, {
     columnName: "buttons",
     fullWidth : true,
     visible : false,

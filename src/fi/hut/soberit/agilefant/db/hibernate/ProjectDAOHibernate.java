@@ -12,12 +12,15 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.db.ProjectDAO;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryHourEntry;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
@@ -132,6 +135,7 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         Criteria crit = getCurrentSession().createCriteria(Story.class);
         ProjectionList proj = Projections.projectionList();
         proj.add(Projections.sum("storyPoints"));
+        proj.add(Projections.sum("storyValue"));
         proj.add(Projections.count("id"));
         proj.add(Projections.groupProperty("state"));
         crit.setProjection(proj);
@@ -139,13 +143,19 @@ public class ProjectDAOHibernate extends GenericDAOHibernate<Project> implements
         List<Object[]> res = asList(crit);
         ProjectMetrics metrics = new ProjectMetrics();
         for(Object[] row : res) {
-            if((StoryState)row[2] == StoryState.DONE) {
+            if((StoryState)row[3] == StoryState.DONE) {
                 metrics.setCompletedStoryPoints(metrics.getCompletedStoryPoints() + toInt(row[0]));
-                metrics.setNumberOfDoneStories(metrics.getNumberOfDoneStories() + toInt(row[1]));
+                metrics.setNumberOfDoneStories(metrics.getNumberOfDoneStories() + toInt(row[2]));
+                
+                // Value metric
+                metrics.setCompletedValue(metrics.getCompletedValue() + toInt(row[1]));
             } 
-            if((StoryState)row[2] != StoryState.DEFERRED) {
+            if((StoryState)row[3] != StoryState.DEFERRED) {
                 metrics.setStoryPoints(metrics.getStoryPoints() + toInt(row[0]));
-                metrics.setNumberOfStories(metrics.getNumberOfStories() + toInt(row[1]));
+                metrics.setNumberOfStories(metrics.getNumberOfStories() + toInt(row[2]));
+                
+                // Value metric
+                metrics.setTotalValue(metrics.getTotalValue() + toInt(row[1]));
             }
         }
         return metrics;

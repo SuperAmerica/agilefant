@@ -59,8 +59,35 @@ public class Task implements TimesheetLoggable, NamedObject, Rankable {
     private ExactEstimate originalEstimate;
     private Set<User> responsibles = new HashSet<User>();
     private Set<TaskHourEntry> hourEntries = new HashSet<TaskHourEntry>();
-    private Set<WhatsNextEntry> whatsNextEntries;
+    private Set<WhatsNextEntry> whatsNextEntries = new HashSet<WhatsNextEntry>();
 
+    public Task() { }
+    
+    public Task(Task other)
+    {
+        this.setDescription(other.getDescription());
+        this.setEffortLeft(other.getEffortLeft());
+        this.setIteration(other.getIteration());
+        this.setName(other.getName());
+        this.setOriginalEstimate(other.getOriginalEstimate());
+        this.setRank(other.getRank());
+        this.setState(other.getState());
+        this.setStory(other.getStory());
+        this.getResponsibles().addAll(other.getResponsibles());
+        
+        // Complex members
+        for (TaskHourEntry t : other.getHourEntries())
+        {
+            TaskHourEntry he = new TaskHourEntry(t);
+            this.getHourEntries().add(he);
+        }
+        for (WhatsNextEntry we : other.getWhatsNextEntries())
+        {
+            WhatsNextEntry newEntry = new WhatsNextEntry(we);
+            this.getWhatsNextEntries().add(newEntry);
+        }
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @XmlAttribute(name = "objectId")

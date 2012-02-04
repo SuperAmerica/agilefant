@@ -29,6 +29,16 @@ public class WhatsNextEntry implements Rankable {
     private int rank = 0;
     private User user;
     private Task task;
+   
+    public WhatsNextEntry() { }
+    
+    public WhatsNextEntry(WhatsNextEntry other)
+    {
+        this.setRank(other.getRank());
+        this.setTask(other.getTask());
+        this.setUser(other.getUser());
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int getId() {

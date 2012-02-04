@@ -7,6 +7,19 @@ Timeline.NoopEventPainter.prototype._onClickDurationEvent = function(icon, domEv
 };
 Timeline.NoopEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
 };
+/**
+ * An event painter that loads the page instead of displaying a bubble (the default)
+ */
+
+Timeline.ClickEventPainter = Timeline.OriginalEventPainter;
+
+Timeline.ClickEventPainter.prototype._onClickDurationEvent = function(icon, domEvt, evt) {
+	document.location.href=evt.getLink();
+}
+
+Timeline.ClickEventPainter.prototype._onClickInstantEvent = function(icon, domEvt, evt) {
+	document.location.href=evt.getLink();
+}
 
 Timeline.PortfolioEventSource = Timeline.DefaultEventSource;
 
@@ -52,6 +65,11 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
         color = "#FFFF00";
         break;
     }
+    var name = event.getName();
+    var productName = event.getProductName();
+    if (productName.length > 0) {
+    	name = name + " (" + productName + ")";
+    }
     var evt = new Timeline.DefaultEventSource.Event({
                   id: ""+event.getId(),
                start: this.model.startDate,
@@ -59,10 +77,10 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
                  latestStart: start,
                  earliestEnd: end,
              instant: false,
-                text: event.getName(),
+                text: name,
          description: event.getDescription(),
          image: this._resolveRelativeURL(event.image, ""),
-         link: this._resolveRelativeURL(event.link , ""),
+         link: "editBacklog.action?backlogId=" + event.getId(),
          icon: this._resolveRelativeURL(event.icon , ""),
         color: color,
     textColor: "#000000",

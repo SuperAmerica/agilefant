@@ -78,6 +78,11 @@ ProjectModel.prototype._setData = function(newData) {
   if(newData.hourEntries) {
     this._updateRelations(ModelFactory.types.hourEntry, newData.hourEntries);
   }
+
+  // set parent info
+  if (newData.root) {
+    this._updateRelations("product", newData.root);
+  }
   
 };
 
@@ -250,6 +255,16 @@ ProjectModel.prototype._getChildrenByScheduleStatus = function(status) {
 ProjectModel.prototype.getParent = function() {
   return this.relations.product;
 };
+
+ProjectModel.prototype.getProductName = function() {
+  var product = this.relations.product;
+  if (product) {
+    return product.getName();
+  } else {
+    return "";
+  }
+};
+
 
 ProjectModel.prototype.setParent = function(backlog) {
   this.relations.product = backlog;

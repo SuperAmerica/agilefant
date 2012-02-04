@@ -43,6 +43,7 @@ import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 @Service("projectBusiness")
 @Transactional
@@ -132,6 +133,27 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
             metrics.setCompletedStoriesPercentage(Math.round((float) metrics
                     .getNumberOfDoneStories()
                     * 100f / (float) metrics.getNumberOfStories()));
+        }
+        if (metrics.getTotalValue() != 0) {
+            metrics.setValuePercentage(Math.round((float) metrics
+                    .getCompletedValue()
+                    * 100f / (float) metrics.getTotalValue()));
+        }
+        
+        // Effort spent
+        Project original = this.retrieve(project.getId());
+        List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(original);
+        StoryMetrics storyMetrics;
+        for(Story story : leafStories)
+        {
+            storyMetrics = storyBusiness.calculateMetrics(story);
+            metrics.setEffortSpent(metrics.getEffortSpent() + (int)storyMetrics.getEffortSpent());
+            metrics.setOriginalEstimate(metrics.getOriginalEstimate() + (int)storyMetrics.getOriginalEstimate());
+        }
+        if(metrics.getOriginalEstimate() != 0) {
+            metrics.setEfforSpentPercentage(Math.round((float) metrics
+                    .getEffortSpent()
+                    * 100f / (float) metrics.getOriginalEstimate()));
         }
 
         return metrics;

@@ -6,7 +6,9 @@
 <%@taglib uri="/struts-tags" prefix="ww" %>
 
 <div id="logoutDiv">
-  <a href="#" id="createNewMenuLink" onclick="return false;">Create new</a>
+  <a href="#" id="createNewMenuLink" onclick="return false;">Create new</a> 
+  | 
+  <a href="#" id="editExistingMenuLink" onclick="return false;">Edit existing</a>
   |
   <a href="editUser.action">${currentUser.fullName}</a>
   |

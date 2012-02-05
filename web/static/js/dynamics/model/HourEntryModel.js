@@ -189,6 +189,28 @@ HourEntryModel.prototype.setMinutesSpent = function(minutesSpent) {
   this.currentData.minutesSpent = minutesSpent;
 };
 
+HourEntryModel.prototype.getRelatedTask = function() {
+  return this.relations.task;
+};
+
+HourEntryModel.prototype.getEffortLeft = function() {
+  if(this.relations.task === null)
+    return "--";
+  else
+    return this.relations.task.getEffortLeft();
+};
+
+HourEntryModel.prototype.setEffortLeft = function(effortLeft) {
+  if(this.relations.task != null) {
+    this.relations.task.setEffortLeft(effortLeft);
+    this.relations.task.commit();
+  }
+};
+
+HourEntryModel.prototype.effortLeftEditable = function() {
+  return true;
+};
+
 HourEntryModel.prototype.setDescription = function(description) {
   this.currentData.description = description;
 };

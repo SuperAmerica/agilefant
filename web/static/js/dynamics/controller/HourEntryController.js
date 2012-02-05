@@ -9,10 +9,11 @@ HourEntryController.columnIndices = {
     date: 0,
     user: 1,
     spentEffort: 2,
-    description: 3,
-    actions: 4,
-    buttons: 5,
-    data: 6
+    effortLeft: 3,
+    description: 4,
+    actions: 5,
+    buttons: 6,
+    data: 7
 };
 
 HourEntryController.prototype = new CommonController();

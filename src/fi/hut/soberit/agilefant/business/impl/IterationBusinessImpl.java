@@ -163,20 +163,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         int rank = 0;
         List<StoryTO> rankedStories = new ArrayList<StoryTO>();
 
-        HashMap<Integer, Story> tmp = new HashMap<Integer, Story>();
-        for (Story story : iteration.getStories()) {
-            tmp.put(story.getId(), story);
-        }
-        //validate tree ranks as the ranks have had a tendency to get corrupted
-        //fix ranks if invalid ones are found
-        for(Story story : stories) {
-            if(tmp.get(story.getId()) == null) {
-                this.storyRankBusiness.fixContext(iteration);
-                stories = this.storyRankBusiness.retrieveByRankingContext(iteration);
-                break;
-            }
-        }
-        
         for (Story story : stories) {
             StoryTO storyTO = new StoryTO(story);
             if (metricsData.containsKey(story.getId())) {
@@ -338,9 +324,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Backlog parent = null;
         if(parentBacklogId != 0) {
             parent = this.backlogBusiness.retrieve(parentBacklogId);
-        }
-        if (parent == null && iterationId == 0) {
-            throw new IllegalArgumentException("Invalid parent.");
         }
         if (parent instanceof Iteration) {
             throw new IllegalArgumentException(

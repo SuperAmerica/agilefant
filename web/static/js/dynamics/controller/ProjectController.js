@@ -295,6 +295,7 @@ ProjectController.prototype.paint = function() {
   });
   ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
       this.id, function(model) {
+	    ModelFactory.reloadEvery(model, 30000);
         me.model = model;
         me.attachModelListener();
         me.paintProjectDetails();

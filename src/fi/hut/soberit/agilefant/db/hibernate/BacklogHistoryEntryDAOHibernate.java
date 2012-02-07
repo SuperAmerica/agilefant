@@ -41,7 +41,7 @@ public class BacklogHistoryEntryDAOHibernate extends
                 .setProjection(Projections.projectionList().add(
                         Projections.groupProperty("timestamp")).add(
                         Projections.max("estimateSum")).add(
-                        Projections.max("doneSum")));
+                        Projections.max("doneSum")).add(Projections.max("branchMax")));
         List<Object[]> data = asList(crit);
         return ProjectBurnupData.createFromRawData(data);
     }

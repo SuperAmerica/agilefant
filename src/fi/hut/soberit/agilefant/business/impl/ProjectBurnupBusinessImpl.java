@@ -32,6 +32,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.CustomXYStepRenderer;
 import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.ProjectBurnupData;
+import fi.hut.soberit.agilefant.util.Triple;
 
 @Service("projectBurnupBusiness")
 public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
@@ -58,6 +59,7 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
     protected static final String CHART_NAME = "Project burnup";
     protected static final String PLANNED_NAME = "Work planned";
     protected static final String DONE_NAME = "Work done";
+    protected static final String BRANCH_MAX_NAME = "Branch Maximum";
 
     
     @Transactional(readOnly = true)
@@ -107,13 +109,15 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
                 DATE_AXIS_LABEL, STORYPOINTS_AXIS_LABEL, null,
                 PlotOrientation.VERTICAL, true, true, false);
 
-        Pair<TimeSeriesCollection, TimeSeriesCollection> datasets = convertToDatasets(data);
+        Triple<TimeSeriesCollection, TimeSeriesCollection, TimeSeriesCollection> datasets = convertToDatasets(data);
 
         XYPlot plot = burnup.getXYPlot();
         plot.setRenderer(0, getPlannedRenderer());
         plot.setDataset(0, datasets.first);
         plot.setRenderer(1, getDoneRenderer());
         plot.setDataset(1, datasets.second);
+        plot.setRenderer(2, getBranchMaxRenderer());
+        plot.setDataset(2, datasets.third);
 
         formatChartAxes(burnup, new DateTime(project.getStartDate()),
                 new DateTime(project.getEndDate()));
@@ -155,13 +159,15 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         return chart;
     }
 
-    protected Pair<TimeSeriesCollection, TimeSeriesCollection> convertToDatasets(
+    protected Triple<TimeSeriesCollection, TimeSeriesCollection, TimeSeriesCollection> convertToDatasets(
             ProjectBurnupData data) {
         TimeSeries planned = new TimeSeries(PLANNED_NAME);
         TimeSeries done = new TimeSeries(DONE_NAME);
+        TimeSeries branchMax = new TimeSeries(BRANCH_MAX_NAME);
         DateTime now = new DateTime();
 
         ProjectBurnupData.Entry lastEntry = null;
+        //ProjectBurnupData.Entry lastBranchMaxEntry = null;
         ProjectBurnupData.Entry lastDoneEntry = null;
         for (ProjectBurnupData.Entry entry : data) {
             if (entry.timestamp.isAfter(now)) {
@@ -177,6 +183,9 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
             TimeSeriesDataItem item = new TimeSeriesDataItem(second,
                     entry.estimateSum);
             planned.add(item);
+            TimeSeriesDataItem branchItem = new TimeSeriesDataItem(second, 
+                    entry.branchMax);
+            branchMax.add(branchItem);
             lastEntry = entry;
         }
 
@@ -185,6 +194,9 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
             TimeSeriesDataItem nowItem = new TimeSeriesDataItem(nowSecond,
                     lastEntry.estimateSum);
             planned.add(nowItem);
+            TimeSeriesDataItem branchItem = new TimeSeriesDataItem(nowSecond,
+                    lastEntry.branchMax);
+            branchMax.add(branchItem);
         }
         if (lastDoneEntry != null && !lastDoneEntry.timestamp.isEqual(now)) {
             TimeSeriesDataItem nowItem = new TimeSeriesDataItem(nowSecond,
@@ -192,8 +204,8 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
             done.add(nowItem);
         }
 
-        return Pair.create(new TimeSeriesCollection(planned),
-                new TimeSeriesCollection(done));
+        return Triple.create(new TimeSeriesCollection(planned),
+                new TimeSeriesCollection(done), new TimeSeriesCollection(branchMax));
     }
 
     /**
@@ -237,4 +249,16 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         return result;
     }
 
+    protected XYStepRenderer getBranchMaxRenderer() {
+        CustomXYStepRenderer result = new CustomXYStepRenderer();
+        result.setSeriesPaint(0, new Color(255, 0, 255));
+        Stroke stroke = new BasicStroke(1.5f);
+        Stroke stepStroke = new BasicStroke(1.5f, BasicStroke.CAP_ROUND,
+                BasicStroke.JOIN_ROUND, 1.0f, new float[] { 6.0f, 6.0f }, 0.0f);
+        result.setSeriesStroke(0, stroke);
+        result.setSeriesShape(0, null);
+        result.setStepStroke(stepStroke);
+        return result;
+    }
+    
 }

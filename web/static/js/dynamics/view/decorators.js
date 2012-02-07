@@ -25,11 +25,11 @@ var DynamicsDecorators = {
   },
   taskStateColorDecorator: function(state) {
     var text = DynamicsDecorators.stateDecorator(state);
-    return '<div class="giant taskState taskState'+state+'">'+text+'</div>';
+    return '<div class="taskState taskState'+state+'">'+text+'</div>';
   },
   storyStateColorDecorator: function(state) {
     var text = DynamicsDecorators.stateDecorator(state);
-    return '<div class="giant-bold storyState storyState'+state+'">'+text+'</div>';
+    return '<div class="storyState storyState'+state+'">'+text+'</div>';
   },
   enabledDisabledOptions: {
     "true":  "Enabled",

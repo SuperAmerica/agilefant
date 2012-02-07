@@ -413,10 +413,10 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 	padding: 1px;
 	text-align: center;
 	-moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  border: 1px solid rgba(0,0,0,0.3);
-  font-size: 80%;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	font-size: 80%;
 }
 .inlineTaskState {
   font-size: 80%;
@@ -429,27 +429,21 @@ button.dynamics-button:focus, button.dynamics-button:hover {
   width: 1em;
   text-align: center;
 }
-.giant-bold {
-	font-weight: bold;
-	font-size: 200%;
-}
-.giant {
-	font-size: 200%;
-}
 .storyState {
 	display: block;
-	width: 80px;
+	width: 65px;
 	padding: 1px;
-	font-size: 9pt;
 	text-align: center;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-  border-radius: 2px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	font-size: 80%;
 }
 
 .inlineStoryState {
   font-size: 80%;
-  border: 31px solid rgba(0,0,0,0.3);
+  border: 1px solid rgba(0,0,0,0.3);
   -moz-border-radius: 1em;
   -webkit-border-radius: 1em;
   border-radius: 1em;

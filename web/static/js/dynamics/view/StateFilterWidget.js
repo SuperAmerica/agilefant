@@ -63,7 +63,7 @@ StateFilterWidget.prototype.initActiveStates = function() {
 };
 
 StateFilterWidget.prototype.clearFilter = function() {
-  this.parentElement.find('.inlineTaskState').fadeTo("fast", 1);
+  this.parentElement.find('.inlineStoryState').fadeTo("fast", 1);
   this.activeStates = [ "NOT_STARTED", "STARTED", "PENDING", "BLOCKED", "IMPLEMENTED", "DONE", "DEFERRED"];
   this.options.callback(this.isActive());
   this.closeAndFilter();
@@ -110,7 +110,7 @@ StateFilterWidget.prototype.init = function() {
 
 StateFilterWidget.prototype.addStateButton = function(state) {
   var me = this;
-  var stateDiv = $('<span class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.abbr + '</div>');
+  var stateDiv = $('<span class="inlineStoryState storyState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.abbr + '</div>');
   stateDiv.click(function() {
     if ($.inArray(state.name, me.activeStates) != -1) {
       stateDiv.fadeTo("fast", 0.5, function() {

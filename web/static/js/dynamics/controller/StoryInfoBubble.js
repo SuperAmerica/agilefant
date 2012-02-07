@@ -44,6 +44,37 @@ StoryInfoBubble.prototype.checkForMoveStory = function(model) {
   }
 };
 
+StoryInfoBubble.prototype.confirmTasksToDone = function(model) {
+  var changedData = model.getChangedData();
+  var tasks = model.getTasks();
+  if (changedData.state && changedData.state === "DONE" && tasks.length > 0) {
+    var nonDoneTasks = false;
+    for (var i = 0; i < tasks.length; i++) {
+      if (tasks[i].getState() !== "DONE") {
+        nonDoneTasks = true;
+      }
+    }
+    if (nonDoneTasks) {
+      var msg = new DynamicsConfirmationDialog(
+          "Set all tasks' states to done?",
+          "Do you want to mark all tasks as done as well?",
+          function() {
+            model.currentData.tasksToDone = true;
+            model.commit();
+          },
+          function() {
+            model.commit();
+          }
+        );
+    } else {
+      model.commit();
+    }
+  }
+  else {
+    model.commit();
+  }
+};
+
 StoryInfoBubble.prototype.handleModelEvents = function(event) {
   StoryController.prototype.handleModelEvents.call(this, event);
   if(event instanceof DynamicsEvents.NamedEvent && event.getEventName() === "storyMoved") {
@@ -148,6 +179,7 @@ StoryInfoBubble.prototype._createConfig = function() {
     rightWidth: '74%',
     closeRowCallback: null,
     beforeCommitFunction: StoryInfoBubble.prototype.checkForMoveStory,
+	beforeCommitFunction: StoryInfoBubble.prototype.confirmTasksToDone,
     validators: [ ]
   });
   config.addColumnConfiguration(0, {

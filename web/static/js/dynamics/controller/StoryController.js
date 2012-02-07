@@ -7,7 +7,7 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
-  ["priority", "labelsIcon", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+  ["priority", "labelsIcon", "id", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -459,7 +459,7 @@ StoryController.prototype.searchForTask = function() {
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     },
-    beforeCommitFunction: TaskController.prototype.markStoryAsStarted
+    beforeCommitFunction: TaskController.prototype.checkTaskAndCommit
   });
   config.addCaptionItem( {
     name : "createTask",

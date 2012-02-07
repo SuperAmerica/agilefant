@@ -599,11 +599,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
   });
   
-  if (Configuration.isLabelsInStoryList()) {
-    config.addColumnConfiguration(1, StoryListController.columnConfig.labels);
-  }
-  
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(1, {
     minWidth : 280,
     autoScale : true,
     title : "Name",
@@ -619,7 +615,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
 
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(2, {
     minWidth : 50,
     autoScale : true,
     title : "Points",
@@ -634,7 +630,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(3, {
     minWidth : 70,
     autoScale : true,
     title : 'State',
@@ -650,7 +646,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
   
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(4, {
     minWidth : 60,
     autoScale : true,
     title : "Responsibles",
@@ -667,7 +663,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     }
   });
 
-  config.addColumnConfiguration(6, {
+  config.addColumnConfiguration(5, {
     minWidth : 100,
     autoScale : true,
     columnName: "backlog",
@@ -684,13 +680,18 @@ ProjectController.prototype.initializeStoryConfig = function() {
       set: StoryModel.prototype.moveStory
     }
   });
-  config.addColumnConfiguration(7, {
+  config.addColumnConfiguration(6, {
     minWidth : 35,
     columnName: "edit",
     autoScale : true,
     title : "Edit",
     subViewFactory : StoryController.prototype.projectStoryActionFactory
   });
+  
+  if (Configuration.isLabelsInStoryList()) {
+	  config.addColumnConfiguration(7, StoryListController.columnConfig.labels);
+  }
+  
   config.addColumnConfiguration(8, {
     columnName: "description",
     fullWidth: true,

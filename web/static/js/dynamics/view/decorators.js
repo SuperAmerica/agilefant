@@ -297,5 +297,11 @@ var DynamicsDecorators = {
     if(text) {
       return '<a href="qr.action?q='+text+'" id="reflink_'+text+'" title="Click to copy the reference link" onclick="showQuickRefLink(this); return false;" class="referenceLink">'+text+'</a>';
     }
+  },
+
+  storyIdWithHash: function(objectId) {
+    var display = "#" + objectId;
+    var text = "story:" + objectId;
+    return '<a href="qr.action?q='+text+'" title="Click to Open Story">'+display+'</a>';
   }
 };

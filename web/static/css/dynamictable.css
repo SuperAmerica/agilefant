@@ -429,33 +429,13 @@ button.dynamics-button:focus, button.dynamics-button:hover {
   width: 1em;
   text-align: center;
 }
-
-.taskStateNOT_STARTED {
-	background-color: #dddddd;
+.giant-bold {
+	font-weight: bold;
+	font-size: 200%;
 }
-.taskStateSTARTED {
-	background-color: #ffdd88;
+.giant {
+	font-size: 200%;
 }
-.taskStatePENDING {
-	background-color: #66ddff;
-}
-.taskStateBLOCKED {
-	background-color: #e33;
-	color: #eee !important;
-}
-.taskStateIMPLEMENTED {
-	background-color: #99ff99;
-}
-.taskStateDONE {
-	background-color: #00bb44;
-	color: #eee !important;
-}
-
-.taskStateDEFERRED {
-	background-color: black;
-	color: white;
-}
-
 .storyState {
 	display: block;
 	width: 80px;
@@ -466,32 +446,47 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 	-webkit-border-radius: 2px;
   border-radius: 2px;
 }
-.storyStateNOT_STARTED {
+
+.inlineStoryState {
+  font-size: 80%;
+  border: 31px solid rgba(0,0,0,0.3);
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  border-radius: 1em;
+  padding: 0 0.3em !important;
+  display: inline;
+  width: 1em;
+  text-align: center;
+  
+}
+.taskStateNOT_STARTED, .storyStateNOT_STARTED {
 	background-color: #dddddd;
 }
-.storyStateSTARTED {
+.taskStateSTARTED, .storyStateSTARTED {
 	background-color: #ffdd88;
 }
-.storyStatePENDING {
+.taskStatePENDING, .storyStatePENDING {
 	background-color: #66ddff;
 }
-.storyStateBLOCKED {
+.taskStateBLOCKED, .storyStateBLOCKED {
 	background-color: #e33;
 	color: #eee;
 }
 
-.storyStateIMPLEMENTED {
+.taskStateIMPLEMENTED, .storyStateIMPLEMENTED {
 	background-color: #66ff66;
 }
-.storyStateDONE {
+.taskStateDONE, .storyStateDONE {
 	background-color: #00bb44;
 	color: #eee;
 }
 
-.storyStateDEFERRED {
+.taskStateDEFERRED, .storyStateDEFERRED {
 	background-color: #000000;
 	color: white;
 }
+
+
 .dynamictable .dynamictable-row .description-cell {
 	min-height: 0px !important;	
 /*	max-height: 15em !important;*/

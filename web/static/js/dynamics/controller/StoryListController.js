@@ -329,7 +329,7 @@ StoryListController.columnConfig.state = {
   title : "State",
   headerTooltip : 'Story state',
   get : StoryModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
+  decorator: DynamicsDecorators.storyStateColorDecorator,
   filter: StoryListController.prototype.filterStoriesByState,
   editable : true,
   edit : {

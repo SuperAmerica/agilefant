@@ -168,7 +168,7 @@ StoryInfoBubble.prototype._createConfig = function() {
   config.addColumnConfiguration(2, {
     title : "State",
     get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
+    decorator: DynamicsDecorators.storyStateColorDecorator,
     editable : true,
     edit : {
       editor : "Selection",

@@ -154,8 +154,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_NAME,
-                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(SCOPING_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
         
@@ -176,8 +176,8 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_NAME,
-                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(SCOPING_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
                
@@ -193,11 +193,11 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer)chart.getXYPlot().getRenderer();
         assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(BURNDOWN_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
-        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_SERIES_NO));
+        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
         
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(BURNDOWN_SERIES_NO));
-        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(REFERENCE_SERIES_NO));
         
@@ -209,7 +209,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertFalse(rend.getSeriesShapesVisible(BURNDOWN_SERIES_NO));
         assertFalse(rend.getSeriesShapesVisible(REFERENCE_SERIES_NO));
         assertFalse(rend.getSeriesShapesVisible(SCOPING_SERIES_NO));
-        assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         
         assertEquals(null, plot.getDomainAxis().getLabel());
         assertEquals(null, plot.getRangeAxis().getLabel());
@@ -255,11 +255,11 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
         
-        assertEquals(CURRENT_DAY_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_STROKE, rend.getSeriesStroke(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_SERIES_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         
         assertEquals(SCOPING_SERIES_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
         assertEquals(SCOPING_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
@@ -276,7 +276,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         TimeSeriesCollection actualTimeSeries = super.getDataset(iteration);
         assertNotNull(actualTimeSeries.getSeries(REFERENCE_SERIES_NAME));
         assertNotNull(actualTimeSeries.getSeries(BURNDOWN_SERIES_NAME));
-        assertNotNull(actualTimeSeries.getSeries(CURRENT_DAY_SERIES_NAME));
+        assertNotNull(actualTimeSeries.getSeries(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME));
         assertNotNull(actualTimeSeries.getSeries(SCOPING_SERIES_NAME));
         
         verify(iterationHistoryEntryBusiness, iterationBusiness);
@@ -559,10 +559,10 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 startEntry.getEffortLeftSum() + endEntry.getDeltaOriginalEstimate());
         ExactEstimate expectedEndvalue = new ExactEstimate(endEntry.getEffortLeftSum());
         
-        TimeSeries actualSeries = super.getCurrentDayTimeSeries(startEntry, endEntry);
+        TimeSeries actualSeries = super.getCurrentDayEffortLeftSeries(startEntry, endEntry);
         testSeriesStartAndEndCorrect(actualSeries, expectedStartValue, expectedEndvalue);
         
-        assertEquals(CURRENT_DAY_SERIES_NAME, actualSeries.getKey());
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME, actualSeries.getKey());
         assertEquals(ExactEstimateUtils.extractMajorUnits(expectedStartValue),
                 actualSeries.getDataItem(0).getValue());
     }

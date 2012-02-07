@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -97,15 +98,17 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     /* Series numbers */
     protected static final int BURNDOWN_SERIES_NO = 0;
     protected static final int EFFORT_SPENT_SERIES_NO = 1;
-    protected static final int CURRENT_DAY_SERIES_NO = 2;
-    protected static final int SCOPING_SERIES_NO = 3;
-    protected static final int REFERENCE_SERIES_NO = 4;
-    protected static final int EXPECTED_SERIES_NO = 5;
+    protected static final int CURRENT_DAY_EFFORT_LEFT_SERIES_NO = 2;
+    protected static final int CURRENT_DAY_EFFORT_SPENT_SERIES_NO = 3;
+    protected static final int SCOPING_SERIES_NO = 4;
+    protected static final int REFERENCE_SERIES_NO = 5;
+    protected static final int EXPECTED_SERIES_NO = 6;
 
     /* Series colors */
     protected static final Color BURNDOWN_SERIES_COLOR = new Color(220, 100, 87);
     protected static final Color EFFORT_SPENT_SERIES_COLOR = new Color(33, 33, 33);
-    protected static final Color CURRENT_DAY_SERIES_COLOR = BURNDOWN_SERIES_COLOR;
+    protected static final Color CURRENT_DAY_EFFORT_LEFT_SERIES_COLOR = BURNDOWN_SERIES_COLOR;
+    protected static final Color CURRENT_DAY_EFFORT_SPENT_SERIES_COLOR = EFFORT_SPENT_SERIES_COLOR;
     protected static final Color SCOPING_SERIES_COLOR = BURNDOWN_SERIES_COLOR;
     protected static final Color REFERENCE_SERIES_COLOR = new Color(90, 145,
             210);
@@ -118,10 +121,16 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final Shape EFFORT_SPENT_SERIES_SHAPE = new Rectangle(-2, -2,
             4, 4);
     protected static final boolean EFFORT_SPENT_SERIES_SHAPE_VISIBLE = true;
-    protected static final Shape CURRENT_DAY_SERIES_SHAPE = new Rectangle(-2,
+    protected static final Shape CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE = new Rectangle(-2,
             -2, 4, 4);
-    protected static final boolean CURRENT_DAY_SERIES_SHAPE_VISIBLE = true;
-    protected static final boolean CURRENT_DAY_SERIES_SHAPE_FILLED = false;
+    protected static final boolean CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_VISIBLE = true;
+    protected static final boolean CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_FILLED = false;
+    
+    protected static final Shape CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE = new Rectangle(-2,
+            -2, 4, 4);
+    protected static final boolean CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_VISIBLE = true;
+    protected static final boolean CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_FILLED = false;
+
 
     /* Series stroke */
     protected static final Stroke SMALL_BURNDOWN_STROKE = new BasicStroke(1.0f);
@@ -140,7 +149,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final String EFFORT_SPENT_SERIES_NAME = "Effort spent";
     protected static final String REFERENCE_SERIES_NAME = "Reference velocity";
     protected static final String SCOPING_SERIES_NAME = "Scoping";
-    protected static final String CURRENT_DAY_SERIES_NAME = "Current day";
+    protected static final String CURRENT_DAY_EFFORT_LEFT_SERIES_NAME = "Current day";
+    protected static final String CURRENT_DAY_EFFORT_SPENT_SERIES_NAME = "Current day";
     protected static final String EXPECTED_SERIES_NAME = "Predicted velocity";
 
     
@@ -278,19 +288,22 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
         renderer.setSeriesPaint(BURNDOWN_SERIES_NO, BURNDOWN_SERIES_COLOR);
         renderer.setSeriesPaint(EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_COLOR);
-        renderer.setSeriesPaint(CURRENT_DAY_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_COLOR);
         renderer.setSeriesPaint(SCOPING_SERIES_NO, BURNDOWN_SERIES_COLOR);
         renderer.setSeriesPaint(REFERENCE_SERIES_NO, REFERENCE_SERIES_COLOR);
 
         renderer.setSeriesStroke(BURNDOWN_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(EFFORT_SPENT_SERIES_NO, SMALL_BURNDOWN_STROKE);
-        renderer.setSeriesStroke(CURRENT_DAY_SERIES_NO, SMALL_BURNDOWN_STROKE);
+        renderer.setSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, SMALL_BURNDOWN_STROKE);
+        renderer.setSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(SCOPING_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(REFERENCE_SERIES_NO, SMALL_BURNDOWN_STROKE);
 
         renderer.setSeriesShapesVisible(BURNDOWN_SERIES_NO, false);
         renderer.setSeriesShapesVisible(EFFORT_SPENT_SERIES_NO, false);
-        renderer.setSeriesShapesVisible(CURRENT_DAY_SERIES_NO, false);
+        renderer.setSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, false);
+        renderer.setSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, false);
         renderer.setSeriesShapesVisible(SCOPING_SERIES_NO, false);
         renderer.setSeriesShapesVisible(REFERENCE_SERIES_NO, false);
 
@@ -354,13 +367,21 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
         rend.setSeriesPaint(REFERENCE_SERIES_NO, REFERENCE_SERIES_COLOR);
 
-        rend.setSeriesPaint(CURRENT_DAY_SERIES_NO, CURRENT_DAY_SERIES_COLOR);
-        rend.setSeriesStroke(CURRENT_DAY_SERIES_NO, CURRENT_DAY_SERIES_STROKE);
-        rend.setSeriesShape(CURRENT_DAY_SERIES_NO, CURRENT_DAY_SERIES_SHAPE);
-        rend.setSeriesShapesVisible(CURRENT_DAY_SERIES_NO,
-                CURRENT_DAY_SERIES_SHAPE_VISIBLE);
-        rend.setSeriesShapesFilled(CURRENT_DAY_SERIES_NO,
-                CURRENT_DAY_SERIES_SHAPE_FILLED);
+        rend.setSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, CURRENT_DAY_EFFORT_LEFT_SERIES_COLOR);
+        rend.setSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, CURRENT_DAY_SERIES_STROKE);
+        rend.setSeriesShape(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE);
+        rend.setSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO,
+                CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_VISIBLE);
+        rend.setSeriesShapesFilled(CURRENT_DAY_EFFORT_LEFT_SERIES_NO,
+                CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_FILLED);
+        
+        rend.setSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, CURRENT_DAY_EFFORT_SPENT_SERIES_COLOR);
+        rend.setSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, CURRENT_DAY_SERIES_STROKE);
+        rend.setSeriesShape(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE);
+        rend.setSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO,
+                CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_VISIBLE);
+        rend.setSeriesShapesFilled(CURRENT_DAY_EFFORT_SPENT_SERIES_NO,
+                CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_FILLED);
 
         rend.setSeriesPaint(SCOPING_SERIES_NO, SCOPING_SERIES_COLOR);
         rend.setSeriesStroke(SCOPING_SERIES_NO, SCOPING_SERIES_STROKE);
@@ -408,14 +429,17 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         DateTime iterationStartDate = new DateTime(iteration.getStartDate());
         DateTime iterationEndDate = new DateTime(iteration.getEndDate());
 
-        chartDataset.addSeries(getBurndownTimeSeries(iterationEntries,
+        /*chartDataset.addSeries(getBurndownTimeSeries(iterationEntries,
                 new LocalDate(iteration.getStartDate()),
                 determineEndDate(new LocalDate(iteration.getEndDate()))));
         
         chartDataset.addSeries(getEffortSpentTimeSeries(hourEntries, 
+                iterationStartDate, iterationEndDate));*/
+        
+        chartDataset.addSeries(getCurrentDaySpentEffortSeries(hourEntries, 
                 iterationStartDate, iterationEndDate));
 
-        chartDataset.addSeries(getCurrentDayTimeSeries(yesterdayEntry,
+        /*chartDataset.addSeries(getCurrentDayEffortLeftSeries(yesterdayEntry,
                 todayEntry));
 
         chartDataset.addSeries(getScopingTimeSeries(iterationEntries,
@@ -424,7 +448,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
         chartDataset.addSeries(getReferenceVelocityTimeSeries(
                 iterationStartDate, iterationEndDate, new ExactEstimate(
-                        todayEntry.getOriginalEstimateSum())));
+                        todayEntry.getOriginalEstimateSum())));*/
 
         TimeSeries predictedVelocity = getPredictedVelocityTimeSeries(
                 iterationStartDate.toLocalDate(), iterationEndDate
@@ -561,7 +585,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
      * Get the <code>TimeSeries</code> for drawing the current day line.
      * @param timeDifferenceHours 
      */
-    protected TimeSeries getCurrentDayTimeSeries(
+    protected TimeSeries getCurrentDayEffortLeftSeries(
             IterationHistoryEntry yesterdayEntry,
             IterationHistoryEntry todayEntry) {
         ExactEstimate startValue = this.getTodaysStartValueWithScoping(
@@ -570,10 +594,41 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         ExactEstimate endValue = new ExactEstimate(todayEntry
                 .getEffortLeftSum());
 
-        return this.getSeriesByStartAndEndPoints(CURRENT_DAY_SERIES_NAME,
+        return this.getSeriesByStartAndEndPoints(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME,
                 todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toDateMidnight().toDateTime(),
                 startValue, todayEntry.getTimestamp().toDateTimeAtCurrentTime().minusMinutes(timeDifferenceMinutes).toDateMidnight()
                         .toDateTime().plusDays(1), endValue);
+    }
+    
+    /**
+     * Get the <code>TimeSeries</code> for drawing the current day line.
+     * @param timeDifferenceHours 
+     */
+    protected TimeSeries getCurrentDaySpentEffortSeries(List<? extends HourEntry> hourEntries,
+            DateTime startDate, DateTime endDate) {
+        TimeSeries effortSpentSeries = new TimeSeries(EFFORT_SPENT_SERIES_NAME);
+        
+        Date date = new Date();
+        DateTime dateTime = new DateTime();
+        
+        List<DailySpentEffort> spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
+                startDate, dateTime);
+        
+        double cumulativeSum = 0.0;
+        
+        for (DailySpentEffort spentEffort : spentEffortList) {
+            TimeSeriesDataItem dateItem = getEffortSpentDataItemForDay(spentEffort);
+            
+            cumulativeSum += dateItem.getValue().doubleValue();
+            dateItem.setValue(cumulativeSum);
+            
+            // Add only values for yesterday and today
+            //if (dateItem.getPeriod().getEnd().equals(dateTime.minusDays(1)) || dateItem.getPeriod().getEnd().equals(date)) {
+                effortSpentSeries.add(dateItem);
+            //}
+        }
+        
+        return effortSpentSeries;
     }
 
     /**
@@ -588,12 +643,19 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             DateTime startDate, DateTime endDate) {
         TimeSeries effortSpentSeries = new TimeSeries(EFFORT_SPENT_SERIES_NAME);
         
+        // @TODO: Give either yesterday or the sprint end date as a parameter (which ever is earlier)
         List<DailySpentEffort> spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate, endDate);
+                startDate.minusDays(1), endDate.plusDays(1));
         
-        // @TODO: Make the effort spent cumulative (each day adds to the value)
+        double cumulativeSum = 0.0;
+        
         for (DailySpentEffort spentEffort : spentEffortList) {
-            effortSpentSeries.add(getEffortSpentDataItemForDay(spentEffort));
+            TimeSeriesDataItem dateItem = getEffortSpentDataItemForDay(spentEffort);
+            
+            cumulativeSum += dateItem.getValue().doubleValue();
+            dateItem.setValue(cumulativeSum);
+            
+            effortSpentSeries.add(dateItem);
         }
         
         return effortSpentSeries;
@@ -601,7 +663,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     
     protected TimeSeriesDataItem getEffortSpentDataItemForDay(DailySpentEffort entry) {
         Second second  = new Second(new DateTime(entry.getDay().getTime()).
-                minusMinutes(timeDifferenceMinutes).toDateMidnight().plusDays(1).toDate());
+                minusMinutes(timeDifferenceMinutes).toDateMidnight().toDate());
         double value = 0.0;
         
         if (entry.getSpentEffort() != null) {

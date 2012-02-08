@@ -8,9 +8,9 @@ import java.awt.Stroke;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -429,26 +429,26 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         DateTime iterationStartDate = new DateTime(iteration.getStartDate());
         DateTime iterationEndDate = new DateTime(iteration.getEndDate());
 
-        /*chartDataset.addSeries(getBurndownTimeSeries(iterationEntries,
+        chartDataset.addSeries(getBurndownTimeSeries(iterationEntries,
                 new LocalDate(iteration.getStartDate()),
                 determineEndDate(new LocalDate(iteration.getEndDate()))));
         
         chartDataset.addSeries(getEffortSpentTimeSeries(hourEntries, 
-                iterationStartDate, iterationEndDate));*/
+                iterationStartDate, iterationEndDate));
+
+        chartDataset.addSeries(getCurrentDayEffortLeftSeries(yesterdayEntry,
+                todayEntry));
         
         chartDataset.addSeries(getCurrentDaySpentEffortSeries(hourEntries, 
                 iterationStartDate, iterationEndDate));
-
-        /*chartDataset.addSeries(getCurrentDayEffortLeftSeries(yesterdayEntry,
-                todayEntry));
-
+        
         chartDataset.addSeries(getScopingTimeSeries(iterationEntries,
                 iterationStartDate.toLocalDate(), iterationEndDate
                         .toLocalDate()));
 
         chartDataset.addSeries(getReferenceVelocityTimeSeries(
                 iterationStartDate, iterationEndDate, new ExactEstimate(
-                        todayEntry.getOriginalEstimateSum())));*/
+                        todayEntry.getOriginalEstimateSum())));
 
         TimeSeries predictedVelocity = getPredictedVelocityTimeSeries(
                 iterationStartDate.toLocalDate(), iterationEndDate
@@ -604,28 +604,28 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
      * Get the <code>TimeSeries</code> for drawing the current day line.
      * @param timeDifferenceHours 
      */
+    @SuppressWarnings("deprecation")
     protected TimeSeries getCurrentDaySpentEffortSeries(List<? extends HourEntry> hourEntries,
             DateTime startDate, DateTime endDate) {
-        TimeSeries effortSpentSeries = new TimeSeries(EFFORT_SPENT_SERIES_NAME);
+        TimeSeries effortSpentSeries = new TimeSeries(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME);
         
-        Date date = new Date();
-        DateTime dateTime = new DateTime();
-        
+        MutableDateTime today = new MutableDateTime();
         List<DailySpentEffort> spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate, dateTime);
+                startDate, today.toDateTime());
         
         double cumulativeSum = 0.0;
-        
+     
         for (DailySpentEffort spentEffort : spentEffortList) {
             TimeSeriesDataItem dateItem = getEffortSpentDataItemForDay(spentEffort);
             
             cumulativeSum += dateItem.getValue().doubleValue();
             dateItem.setValue(cumulativeSum);
-            
+                   
             // Add only values for yesterday and today
-            //if (dateItem.getPeriod().getEnd().equals(dateTime.minusDays(1)) || dateItem.getPeriod().getEnd().equals(date)) {
+            if ((dateItem.getPeriod().getEnd().getDate()) == (today.toDate().getDate()) || 
+                    ((dateItem.getPeriod().getEnd().getDate()) == ((today.toDate().getDate()) - 1))) {
                 effortSpentSeries.add(dateItem);
-            //}
+            }
         }
         
         return effortSpentSeries;
@@ -643,9 +643,18 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             DateTime startDate, DateTime endDate) {
         TimeSeries effortSpentSeries = new TimeSeries(EFFORT_SPENT_SERIES_NAME);
         
-        // @TODO: Give either yesterday or the sprint end date as a parameter (which ever is earlier)
-        List<DailySpentEffort> spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate.minusDays(1), endDate.plusDays(1));
+        List<DailySpentEffort> spentEffortList = new ArrayList<DailySpentEffort>();
+        MutableDateTime today = new MutableDateTime();
+        if (!today.equals(endDate)) {
+           
+           spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
+                startDate.minusDays(1), today.toDateTime().minusDays(1));
+        }
+        
+        else {
+            spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
+                    startDate.minusDays(1), endDate.plusDays(1));
+        }
         
         double cumulativeSum = 0.0;
         

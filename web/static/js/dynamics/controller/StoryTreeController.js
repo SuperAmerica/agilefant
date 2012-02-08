@@ -252,9 +252,6 @@ StoryTreeController.prototype.initTree = function() {
           overlay.fadeOut();
 		  me.renderComplete();
           me._searchByText();
-        },
-		success: function() {
-          //me.confirmTasksToDone();
         }
       }
     },
@@ -512,40 +509,4 @@ StoryTreeController.prototype.removeNode = function(node) {
  */
 StoryTreeController.prototype.openNodeDetails = function(node) {
   var bubble = new StoryInfoBubble($(node).attr('storyid'), this, $(node), {});
-};
-
-/**
- * Confirmation dialog for when a story is marked as done
- */
-
-StoryListController.prototype.confirmTasksToDone = function(model) {
-  
-  var changedData = model.getChangedData();
-  var tasks = model.getTasks();
-  if (changedData.state && changedData.state === "DONE" && tasks.length > 0) {
-    var nonDoneTasks = false;
-    for (var i = 0; i < tasks.length; i++) {
-      if (tasks[i].getState() !== "DONE") {
-        nonDoneTasks = true;
-      }
-    }
-    if (nonDoneTasks) {
-      var msg = new DynamicsConfirmationDialog(
-          "Set all tasks' states to done?",
-          "Do you want to mark all tasks as done as well?",
-          function() {
-            model.currentData.tasksToDone = true;
-            model.commit();
-          },
-          function() {
-            model.commit();
-          }
-        );
-    } else {
-      model.commit();
-    }
-  }
-  else {
-    model.commit();
-  }
 };

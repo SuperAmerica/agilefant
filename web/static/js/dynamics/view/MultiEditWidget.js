@@ -58,6 +58,37 @@ MultiEditWidget.prototype.init = function() {
   // storyIds, labelNames, ajax/editMultiple.action
   var buttonLi = $('<li/>').appendTo(this.content);
   $('<button class="dynamics-button">Save</button>').click(jQuery.proxy(function() {
+  
+	/* Confirms setting tasks to done */
+	if (this.stateSelect.val() == "DONE") {
+		for (var i=0; i<this.getSelected().length; i++) { // for each story selected
+			var storyID = this.getSelected()[i];
+			this.storyTreeController._getStoryForId(storyID, function(object) {
+				var tasks = object.getTasks(); // get the tasks
+				
+				if (tasks.length > 0) { // if tasks exist
+					var nonDoneTasks = false;
+					for (var i = 0; i < tasks.length; i++) {
+					  if (tasks[i].getState() != "DONE") {
+						nonDoneTasks = true;
+					  }
+					}
+					if (nonDoneTasks) {
+					  var msg = new DynamicsConfirmationDialog(
+						  "Set all tasks' states to done?",
+						  "Do you want to mark all tasks under the '" + object.getName() + "' story as done as well?",
+						  function() {
+							object.currentData.tasksToDone = true;
+							object.commit();
+						  }
+						);
+					}
+				}
+			});
+
+		}
+	}
+	
     jQuery.ajax({
       type: 'post',
       async:  'true',
@@ -100,5 +131,3 @@ MultiEditWidget.prototype.close = function() {
     this.element.hide();
   }, this));
 };
-
-

@@ -38,7 +38,7 @@ BEGIN
     END IF;
 
     UPDATE stories SET iteration_id = backlog_id WHERE id = story_id;
-    UPDATE stories SET backlog_id = project_id;
+    UPDATE stories SET backlog_id = project_id WHERE id = story_id;
   END LOOP;
 END //
 

@@ -3,7 +3,6 @@ package fi.hut.soberit.agilefant.db.hibernate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;

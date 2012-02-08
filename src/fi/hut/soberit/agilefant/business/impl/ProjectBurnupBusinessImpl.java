@@ -30,7 +30,6 @@ import fi.hut.soberit.agilefant.business.ProjectBurnupBusiness;
 import fi.hut.soberit.agilefant.db.BacklogHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.util.CustomXYStepRenderer;
-import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.ProjectBurnupData;
 import fi.hut.soberit.agilefant.util.Triple;
 
@@ -167,7 +166,6 @@ public class ProjectBurnupBusinessImpl implements ProjectBurnupBusiness {
         DateTime now = new DateTime();
 
         ProjectBurnupData.Entry lastEntry = null;
-        //ProjectBurnupData.Entry lastBranchMaxEntry = null;
         ProjectBurnupData.Entry lastDoneEntry = null;
         for (ProjectBurnupData.Entry entry : data) {
             if (entry.timestamp.isAfter(now)) {

@@ -364,52 +364,7 @@ span.right {
 	height: 1px;
 	padding: 0;
 }
-
-
-/* Edit existing menu */
-
-#editExistingMenuLink {
-	position: absolute;
-	top: 95px;
-	left: 5px;
-}
-
-#editExistingMenuLink img {
-    vertical-align: bottom;	
-}
-
-#editExistingMenu {
-	position: absolute;
-	border: 1px solid #aaa;
-	top: 114px;
-	border-top: 0;
-	width: 160px;
-}
-
-#editExistingMenu li {
-	height: 20px;
-	background-color: #eee;
-}
-
-#editExistingMenu li:hover {
-    background-color: #ccc;
-}
-
-#editExistingMenu a, #editExistingMenu span.inactive {
-	display: block;
-    padding-left: 8px;
-    width: 100%;
-    height: 100%;
-}
-
-#editExistingMenu li.separator, #editExistingMenu li.separator:hover {
-	display: block;
-	background: #aaa;
-	width: 100%;
-	height: 1px;
-	padding: 0;
-}
-
+	
 
 /* Tabs menu */
 

@@ -11,11 +11,7 @@
 $(document).ready(function() {
   var createNewMenu = $('#createNewMenu');
 
-  <%-- TODO @DF remove this hacking here. Replace in editExistingMenu.tag --%>
-  var editExistingMenu = $('#editExistingMenu');
-
   $('#createNewMenuLink').click(function() {
-    editExistingMenu.hide();
     createNewMenu.show();
     createNewMenu.menuTimer();
   });
@@ -25,21 +21,6 @@ $(document).ready(function() {
     createNewMenu.menuTimer('destroy');
     CreateDialog.createById($(this).attr('id'));
   });
-  
-  <%-- TODO @DF remove this hacking here. Replace in editExistingMenu.tag 
-  ALSO REMOVE UNORDERED LIST BELOW!!
-  --%>
-  $('#editExistingMenuLink').click(function() {
-    createNewMenu.hide();
-    editExistingMenu.show();
-    editExistingMenu.menuTimer();
-  });
-  $('#editExistingMenu a').click(function() {
-    editExistingMenu.hide();
-    editExistingMenu.menuTimer('destroy');
-    CreateDialog.createById($(this).attr('id'));
-  });
-  
 });
 </script>
 
@@ -95,17 +76,6 @@ $(document).ready(function() {
  
     <li>
       <a href="#" id="createNewUser" onclick="return false;"  title="Create a new user">User &raquo;</a>
-    </li>
-    
-</ul>
-
-
-<ul id="editExistingMenu" style="display: none">
-
-    <li class="separator"></li>
- 
-    <li>
-      <a href="#" id="createNewUser" onclick="return false;"  title="Edit existing users">Users &raquo;</a>
     </li>
     
 </ul>

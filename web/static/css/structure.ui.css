@@ -6,7 +6,6 @@
  *  - Left hand menu
  *  - Backlog info tables
  *  - Create new menu
- *  - Edit existing menu
  *  - Navigation tabs
  *  - Footer
  *  - Daily work styles
@@ -152,58 +151,6 @@ ul#createNewMenu a,ul#createNewMenu span.inactive {
 }
 
 ul#createNewMenu li.separator,ul#createNewMenu li.separator:hover {
-  display: block;
-  background: #aaa;
-  width: 100%;
-  height: 1px;
-  padding: 0;
-  margin: 5px 0;
-}
-
-/**
- * EDIT EXISTING -menu
- */
-#editExistingMenuWrapper {
-  margin-right: 1em;
-  float: right;
-}
-
-ul#editExistingMenu {
-  margin: 0;
-  padding: 5px 0;
-  position: absolute;
-  border: 1px solid #aaa;
-  background: #fcfcfc;
-  top: 4em;
-  width: 9em;
-  z-index: 300;
-  overflow: hidden;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}
-
-ul#editExistingMenu li {
-  height: 1.5em;
-  background-color: transparent;
-  list-style-type: none;
-  margin: 0;
-  padding-top: 0.2em;
-}
-
-ul#editExistingMenu li:hover {
-  background-color: #ccc;
-}
-
-ul#editExistingMenu a,ul#editExistingMenu span.inactive {
-  text-decoration: none !important;
-  display: block;
-  padding-left: 8px;
-  width: 100%;
-  height: 100%;
-}
-
-ul#editExistingMenu li.separator,ul#editExistingMenu li.separator:hover {
   display: block;
   background: #aaa;
   width: 100%;

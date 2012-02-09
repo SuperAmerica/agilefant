@@ -21,11 +21,6 @@
   </tag-file>
 
   <tag-file>
-    <name>editExistingMenu</name>
-    <path>/WEB-INF/tags/structure/editExistingMenu.tag</path>
-  </tag-file>
-
-  <tag-file>
     <name>mainTabs</name>
     <path>/WEB-INF/tags/structure/defaultTabs.tag</path>
   </tag-file>

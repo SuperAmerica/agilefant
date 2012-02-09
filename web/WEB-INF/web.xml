@@ -9,9 +9,9 @@
 		<param-value>WEB-INF/applicationContext*.xml</param-value>
 	</context-param>
 
-  <!-- Jersey REST service initialization   -->
+  <!-- Jersey REST service initialization for remote package  -->
   <servlet>
-        <servlet-name>Jersey Spring</servlet-name>
+      <servlet-name>Jersey Spring</servlet-name>
       <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
       <init-param>
           <param-name>com.sun.jersey.config.property.resourceConfigClass</param-name>
@@ -22,6 +22,26 @@
           <param-value>fi.hut.soberit.agilefant.remote</param-value>
       </init-param>   
   </servlet>
+  
+  <!-- Servlet to facilitate read-only access to Agilefant data -->
+  <servlet>
+      <servlet-name>ReadOnly</servlet-name>
+      <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+      <init-param>
+          <param-name>com.sun.jersey.config.property.resourceConfigClass</param-name>
+          <param-value>com.sun.jersey.api.core.PackagesResourceConfig</param-value>
+      </init-param>
+      <init-param>
+          <param-name>com.sun.jersey.config.property.packages</param-name>
+          <param-value>fi.hut.soberit.agilefant.readonly</param-value>
+      </init-param>  
+  </servlet>
+
+  <!-- Map read-only URI's to ReadOnly servlet -->
+  <servlet-mapping>
+      <servlet-name>ReadOnly</servlet-name>
+      <url-pattern>/ro/*</url-pattern>
+  </servlet-mapping>
 
   <servlet-mapping>
       <servlet-name>Jersey Spring</servlet-name>
@@ -40,22 +60,26 @@
 			</param-value>
 		</init-param>
 	</filter>
+	
 	<filter>
 		<filter-name>hibernateFilter</filter-name>
 		<filter-class>
 			org.springframework.orm.hibernate3.support.OpenSessionInViewFilter
 		</filter-class>
 	</filter>
+	
 	<filter>
 		<filter-name>struts</filter-name>
 		<filter-class>
 			org.apache.struts2.dispatcher.FilterDispatcher
 		</filter-class>
 	</filter>
+	
 	<filter> 
 	  <filter-name>GzipFilter</filter-name> 
 	  <filter-class>com.cj.gzipflt.GzipFilter</filter-class> 
 	</filter>
+	
 	<filter> 
     <filter-name>ResponseHeaderFilter</filter-name> 
     <filter-class>fi.hut.soberit.agilefant.web.filters.ResponseHeaderFilter</filter-class>
@@ -66,41 +90,53 @@
   </filter>
 
 	<!-- the order matters - spring security must come first -->
-	<filter-mapping>
-		<filter-name>filterChainProxy</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
+  <filter-mapping>
+    <filter-name>filterChainProxy</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
     <filter-name>hibernateFilter</filter-name>
     <url-pattern>*.action</url-pattern>
   </filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>hibernateFilter</filter-name>
+    <url-pattern>/ro/*</url-pattern>
+  </filter-mapping>
+  
   <filter-mapping>
     <filter-name>hibernateFilter</filter-name>
     <url-pattern>/rs/*</url-pattern>
   </filter-mapping>
-	<filter-mapping> 
+  
+  <filter-mapping> 
     <filter-name>ResponseHeaderFilter</filter-name> 
     <url-pattern>/static/*</url-pattern> 
   </filter-mapping>
-	<filter-mapping>
-		<filter-name>struts</filter-name>
-		<url-pattern>*.action</url-pattern>
-	</filter-mapping>
-	<filter-mapping>
+  
+  <filter-mapping>
+    <filter-name>struts</filter-name>
+    <url-pattern>*.action</url-pattern>
+  </filter-mapping>
+	
+  <filter-mapping>
     <filter-name>struts</filter-name>
     <url-pattern>*.jsp</url-pattern>
   </filter-mapping>
+
   <filter-mapping> 
 	  <filter-name>GzipFilter</filter-name> 
 	  <url-pattern>/*</url-pattern> 
-	</filter-mapping>
-	
+  </filter-mapping>
 
-	<listener>
+
+  <listener>
 		<listener-class>
 			org.springframework.web.context.ContextLoaderListener
 		</listener-class>
 	</listener>
+	
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 		<welcome-file>index.html</welcome-file>
@@ -125,12 +161,33 @@
       <role-name>agilefantremote</role-name>
     </auth-constraint>
   </security-constraint>
+  
+  <!-- Only allow GET requests from URI's with pattern "/ro/*" -->
+  <security-constraint>
+   <display-name>Read-Only Access</display-name>
+   <web-resource-collection>
+      <web-resource-name>Read-Only Access - Get Only</web-resource-name>
+      <url-pattern>/ro/*</url-pattern>
+      <http-method>GET</http-method>
+   </web-resource-collection>
+   <auth-constraint>
+      <role-name>agilefantreadonly</role-name>
+   </auth-constraint>
+   <user-data-constraint>
+      <transport-guarantee>NONE</transport-guarantee>
+   </user-data-constraint>
+  </security-constraint>
+  
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>Agilefant</realm-name>
   </login-config>
+  
   <security-role>
     <role-name>agilefantremote</role-name>
+  </security-role>
+  <security-role>
+    <role-name>agilefantreadonly</role-name>
   </security-role>
   
   <env-entry>

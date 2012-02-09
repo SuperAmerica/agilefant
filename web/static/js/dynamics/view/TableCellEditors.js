@@ -713,7 +713,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
 };
 
 TableEditors.Date.prototype.close = function() {
-  $(window).unbind("click.dynamicsDatePicker", this.windowListener);
+  $(window).unbind("dblclick.dynamicsDatePicker", this.windowListener);
   this.element.find('img').remove();
   this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
@@ -753,7 +753,7 @@ TableEditors.Date.prototype._registerEditField = function(element) {
     me.element.trigger("DynamicsBlur");
     me.focused = false;
   };
-  $(window).bind("click.dynamicsDatePicker",this.windowListener);
+  $(window).bind("dblclick.dynamicsDatePicker",this.windowListener);
   element.keydown(function(event) {
     me._handleKeyEvent(event);
     return true;
@@ -765,6 +765,7 @@ TableEditors.Date.prototype._registerEditField = function(element) {
   });
   
   element.data("editor", this).addClass("dynamics-editor-element");
+  
 };
 
 TableEditors.Date.prototype.getEditorValue = function() {

@@ -22,6 +22,7 @@ var DynamicTableColumnConfiguration = function DynamicTableColumnConfiguration(o
 			visible: true,
 			dragHandle: false,
 			onDoubleClick: null,
+			onClick: null,
 			delayedRender: false,
 			editableCallback: function() { return true; },
 			draggableOnly: false,
@@ -125,6 +126,9 @@ DynamicTableColumnConfiguration.prototype.getSubViewFactory = function() {
 };
 DynamicTableColumnConfiguration.prototype.getDoubleClickCallback = function() {
   return this.options.onDoubleClick;
+};
+DynamicTableColumnConfiguration.prototype.getClickCallback = function() {
+  return this.options.onClick;
 };
 DynamicTableColumnConfiguration.prototype.getColumnName = function() {
   return this.options.columnName;

@@ -232,8 +232,6 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
                         new LocalDate().minusDays(1))).andReturn(null).times(2);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iteration)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration)).andReturn(0);
 
         replayAll();
 
@@ -277,8 +275,6 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
                         new LocalDate().minusDays(1))).andReturn(null).times(1);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iteration)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration)).andReturn(0);
 
         replayAll();
 
@@ -308,8 +304,6 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(0);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(0L);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iteration)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration)).andReturn(0);
 
         replayAll();
 
@@ -347,11 +341,10 @@ public class IterationBusinessTest  extends MockedTestCase {
                 Pair.create(2, 4));
         expect(iterationDAO.getCountOfDoneAndAllStories(iter)).andReturn(
                 Pair.create(1, 2));
+
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(100, new LocalDate()
                         .minusDays(1))).andReturn(null).times(2);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iter)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iter)).andReturn(0);
         replayAll();
         IterationMetrics iterRow = iterationBusiness.getIterationMetrics(iter);
         assertEquals(100, iterRow.getDaysLeft());

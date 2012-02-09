@@ -3,11 +3,9 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -111,7 +109,6 @@ public class ProjectBusinessTest  extends MockedTestCase {
     @DirtiesContext
     public void testGetProjectMetrics() {
         ProjectMetrics metrics = new ProjectMetrics();
-        List<Story> leafStories = new ArrayList<Story>();
         project.setStartDate(new DateTime().minusDays(7));
         project.setEndDate(project.getStartDate().plusDays(10));
 
@@ -124,16 +121,9 @@ public class ProjectBusinessTest  extends MockedTestCase {
         metrics.setStoryPoints(1000);
         metrics.setCompletedStoryPoints(10);
         
-        metrics.setCompletedValue(3);
-        metrics.setTotalValue(10);
-        
         
         expect(projectDAO.calculateProjectStoryMetrics(project.getId())).andReturn(metrics);
         expect(backlogBusiness.daysLeftInSchedulableBacklog(project)).andReturn(Days.days(3));
-        expect(storyRankBusiness.retrieveByRankingContext(project)).andReturn(leafStories);
-        for(Story story : leafStories)
-            expect(storyBusiness.calculateMetrics(story));
-        
 
         replayAll();
 

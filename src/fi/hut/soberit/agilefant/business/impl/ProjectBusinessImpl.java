@@ -141,7 +141,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         }
         
         // Effort spent
-        List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(project);
+        Project original = this.retrieve(project.getId());
+        List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(original);
         StoryMetrics storyMetrics;
         for(Story story : leafStories)
         {

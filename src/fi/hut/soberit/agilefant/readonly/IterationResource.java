@@ -15,7 +15,7 @@ import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 
 // TODO @DF ... probably need to change this to something like @Path("/{urlToken") ? This could actually work somehow. 
-@Path("/iteration/{iterationId}")
+@Path("/ro/{urlToken}")
 @Component
 @Scope("prototype")
 @RolesAllowed("agilefantreadonly")

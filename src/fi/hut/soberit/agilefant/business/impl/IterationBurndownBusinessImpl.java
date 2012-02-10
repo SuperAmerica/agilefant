@@ -610,8 +610,9 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         TimeSeries effortSpentSeries = new TimeSeries(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME);
         
         MutableDateTime today = new MutableDateTime();
+        DateTime mtoday = today.toDateTime().plusDays(1);
         List<DailySpentEffort> spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate, today.toDateTime());
+                startDate, mtoday);
         
         double cumulativeSum = 0.0;
      
@@ -621,11 +622,12 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             cumulativeSum += dateItem.getValue().doubleValue();
             dateItem.setValue(cumulativeSum);
                    
-            // Add only values for yesterday and today
-            if ((dateItem.getPeriod().getEnd().getDate()) == (today.toDate().getDate()) || 
-                    ((dateItem.getPeriod().getEnd().getDate()) == ((today.toDate().getDate()) - 1))) {
+            // Add only values for tomorrow and today
+            if ((dateItem.getPeriod().getEnd().getDate()) == (mtoday.getDayOfMonth()) ||
+                    ((dateItem.getPeriod().getEnd().getDate()) == (mtoday.getDayOfMonth() - 1))) {
                 effortSpentSeries.add(dateItem);
             }
+            
         }
         
         return effortSpentSeries;
@@ -648,7 +650,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         if (!today.equals(endDate)) {
            
            spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate.minusDays(1), today.toDateTime().minusDays(1));
+                startDate.minusDays(1), today.toDateTime());
         }
         
         else {

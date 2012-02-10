@@ -11,9 +11,6 @@
 $(document).ready(function() {
   var createNewMenu = $('#createNewMenu');
 
-  <%-- TODO @DF remove this hacking here. Replace in editExistingMenu.tag --%>
-  var editExistingMenu = $('#editExistingMenu');
-
   $('#createNewMenuLink').click(function() {
     editExistingMenu.hide();
     createNewMenu.show();
@@ -23,20 +20,6 @@ $(document).ready(function() {
   $('#createNewMenu a').click(function() {
     createNewMenu.hide();
     createNewMenu.menuTimer('destroy');
-    CreateDialog.createById($(this).attr('id'));
-  });
-  
-  <%-- TODO @DF remove this hacking here. Replace in editExistingMenu.tag 
-  ALSO REMOVE UNORDERED LIST BELOW!!
-  --%>
-  $('#editExistingMenuLink').click(function() {
-    createNewMenu.hide();
-    editExistingMenu.show();
-    editExistingMenu.menuTimer();
-  });
-  $('#editExistingMenu a').click(function() {
-    editExistingMenu.hide();
-    editExistingMenu.menuTimer('destroy');
     CreateDialog.createById($(this).attr('id'));
   });
   

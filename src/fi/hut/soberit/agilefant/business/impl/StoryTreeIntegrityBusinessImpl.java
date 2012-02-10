@@ -323,7 +323,18 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
     }
     
     public boolean hasParentStoryConflict(Story story, Backlog newBacklog) {
-        boolean differentProduct = originalAndTargetProductEqual(story.getBacklog(), newBacklog);
+        
+        boolean differentProduct;
+        /**
+         * we have to take account that if story is located in standalone iter. because it has no backlog on that case.
+         * First if-caluse checks if story is located in standalone and it is moved into product 
+         * OR story and new backlog both are standalone but story is moved into different standalone
+         */
+        if ((story.getIteration().isStandAlone())) {
+            differentProduct = true;
+        } else {
+            differentProduct = originalAndTargetProductEqual(story.getBacklog(), newBacklog);
+        }
         boolean parentInDifferentBranch = parentStoryInDifferentBranch(story,
                 newBacklog);
         return (story.getParent() != null) && (differentProduct || parentInDifferentBranch);

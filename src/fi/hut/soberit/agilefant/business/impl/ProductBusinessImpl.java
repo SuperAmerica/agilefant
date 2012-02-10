@@ -157,7 +157,8 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
         List<Story> stories = this.productDAO.retrieveLeafStories(product);
         for (Story story : stories) {
             final Iteration assignedIteration = story.getIteration();
-            if (assignedIteration != null) {
+
+            if (assignedIteration != null && !assignedIteration.isStandAlone()) {
                 backlogs.get(assignedIteration.getId()).getLeafStories().add(new StoryTO(story));
             } else {
                 backlogs.get(story.getBacklog().getId()).getLeafStories().add(new StoryTO(story));

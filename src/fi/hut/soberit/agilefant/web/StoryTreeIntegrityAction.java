@@ -55,8 +55,7 @@ public class StoryTreeIntegrityAction extends ActionSupport {
 
         data = storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages);
         
-        parentStoryConflict = storyTreeIntegrityBusiness
-                .hasParentStoryConflict(story, backlog);
+        parentStoryConflict = storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog);
         
         if (StoryTreeIntegrityUtils.getFatalMessages(messages)) {
             return FATAL_CONSTRAINT; 

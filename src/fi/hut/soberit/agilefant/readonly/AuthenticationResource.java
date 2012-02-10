@@ -20,7 +20,6 @@ import fi.hut.soberit.agilefant.model.User;
 
 @Component
 @Scope("prototype")
-@RolesAllowed("agilefantreadonly")
 @Path("/authenticate")
 public class AuthenticationResource {
     @Autowired
@@ -28,7 +27,7 @@ public class AuthenticationResource {
 
     @POST
     @Produces( { MediaType.APPLICATION_XML, MediaType.TEXT_XML })
-    public User authenticate(@FormParam("urlToken") String urlToken) {
+    public User authenticate() {
         // This function will run if a HTTP POST request for (APPLICATION_XML, TEXT_XML) is made using this resource. 
         
         // TODO @DF: This whole method is not tested or working yet, but I think this is a path that could work. 

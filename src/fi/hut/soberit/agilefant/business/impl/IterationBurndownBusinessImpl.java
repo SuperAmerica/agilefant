@@ -416,8 +416,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         List<IterationHistoryEntry> iterationEntries = iterationHistoryEntryBusiness
                 .getHistoryEntriesForIteration(iteration);
         
-        // @TODO: retrieve all hour entries for the sprint (direct, story tasks, tasks without story)
-        List<BacklogHourEntry> hourEntries = hourEntryBusiness.retrieveByParent(iteration);
+        List<HourEntry> hourEntries = hourEntryBusiness.getHourEntriesForIteration(iteration);
 
         LocalDate yesterday = new LocalDate().minusDays(1);
         LocalDate today = new LocalDate();

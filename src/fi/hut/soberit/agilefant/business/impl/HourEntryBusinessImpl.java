@@ -166,6 +166,18 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     }
     
     @Transactional(readOnly = true)
+    public List<DailySpentEffort> getDailySpentEffortByIteration(Iteration iteration) {
+        List<HourEntry> entries = hourEntryDAO.getAllIterationHourEntries(iteration.getId());
+        
+        return this.getDailySpentEffortForHourEntries(entries, iteration.getStartDate(), iteration.getEndDate());
+    }
+    
+    @Transactional(readOnly = true)
+    public List<HourEntry> getHourEntriesForIteration(Iteration iteration) {
+        return hourEntryDAO.getAllIterationHourEntries(iteration.getId());        
+    }
+    
+    @Transactional(readOnly = true)
     public long calculateSumOfIterationsHourEntries(Iteration iteration) {
         if (iteration == null) {
             throw new IllegalArgumentException("Iteration can't be null");

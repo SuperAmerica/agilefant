@@ -49,6 +49,7 @@ import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
 import fi.hut.soberit.agilefant.util.Pair;
+import fi.hut.soberit.agilefant.web.SettingAction;
 
 /**
  * A business class for calculating the burndown for iterations.
@@ -120,15 +121,15 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final boolean BURNDOWN_SERIES_SHAPE_VISIBLE = true;
     protected static final Shape EFFORT_SPENT_SERIES_SHAPE = new Rectangle(-2, -2,
             4, 4);
-    protected static final boolean EFFORT_SPENT_SERIES_SHAPE_VISIBLE = true;
+    protected static final boolean EFFORT_SPENT_SERIES_SHAPE_VISIBLE = true; 
     protected static final Shape CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE = new Rectangle(-2,
             -2, 4, 4);
-    protected static final boolean CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_VISIBLE = true;
+    protected static final boolean CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_VISIBLE = true; 
     protected static final boolean CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_FILLED = false;
     
     protected static final Shape CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE = new Rectangle(-2,
             -2, 4, 4);
-    protected static final boolean CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_VISIBLE = true;
+    protected static final boolean CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_VISIBLE = true;  
     protected static final boolean CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_FILLED = false;
 
 
@@ -307,6 +308,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         renderer.setSeriesShapesVisible(SCOPING_SERIES_NO, false);
         renderer.setSeriesShapesVisible(REFERENCE_SERIES_NO, false);
 
+        
         plot.setDomainGridlinesVisible(false);
         plot.setRangeGridlinesVisible(false);
         plot.getDomainAxis().setVisible(false);
@@ -362,7 +364,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         
         rend.setSeriesPaint(EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_COLOR);
         rend.setSeriesShape(EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_SHAPE);
-        rend.setSeriesShapesVisible(EFFORT_SPENT_SERIES_NO,
+        rend.setSeriesShapesVisible(EFFORT_SPENT_SERIES_NO, 
                 EFFORT_SPENT_SERIES_SHAPE_VISIBLE);
 
         rend.setSeriesPaint(REFERENCE_SERIES_NO, REFERENCE_SERIES_COLOR);
@@ -378,7 +380,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         rend.setSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, CURRENT_DAY_EFFORT_SPENT_SERIES_COLOR);
         rend.setSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, CURRENT_DAY_SERIES_STROKE);
         rend.setSeriesShape(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE);
-        rend.setSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO,
+        rend.setSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, 
                 CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_VISIBLE);
         rend.setSeriesShapesFilled(CURRENT_DAY_EFFORT_SPENT_SERIES_NO,
                 CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_FILLED);
@@ -388,6 +390,14 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
 
         rend.setSeriesPaint(EXPECTED_SERIES_NO, EXPECTED_SERIES_COLOR);
         rend.setSeriesStroke(EXPECTED_SERIES_NO, EXPECTED_SERIES_STROKE);
+        
+        // if the hourReporting was disabled, the effort spent line will be invisible.
+        if (!settingBusiness.isHourReportingEnabled()) {
+            rend.setSeriesVisible(EFFORT_SPENT_SERIES_NO, false);
+            rend.setSeriesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, false);
+            
+        }
+            
     }
 
     /**

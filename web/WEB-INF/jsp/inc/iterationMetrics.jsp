@@ -19,6 +19,11 @@
 		</tr>
 	</c:if>
 	<tr>
+		<th>Value</th>
+			<td><c:out value="${iterationMetrics.completedValue}" /> / 
+			<c:out value="${iterationMetrics.totalValue}" /></td>
+	</tr>
+	<tr>
 		<th>Velocity</th>
 		<td><c:out value="${aef:minutesToString(iterationMetrics.dailyVelocity.minorUnits)} / day" /></td>
 	</tr>

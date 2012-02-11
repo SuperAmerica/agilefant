@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.GenericFilterBean;
 
+import fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate;
+import fi.hut.soberit.agilefant.model.Iteration;
 
 public class ReadonlyFilter extends GenericFilterBean {
 
@@ -22,10 +24,33 @@ public class ReadonlyFilter extends GenericFilterBean {
     
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
-      
-            HttpServletResponse resp = (HttpServletResponse) response;
-            resp.sendRedirect("http://www.google.ca");
+        
+        // These are HttpServlet requests and responses.
+        HttpServletResponse resp = (HttpServletResponse) response;
+        HttpServletRequest reqt = (HttpServletRequest) request;
+        
+        // Fetch url token from request.
+        String urlToken = reqt.getPathInfo().substring(1);
+        
+        // Test url token against db(?) of known read-only urls. 
+        // Integer iterationId = fetchIterationIdFromURLToken(urlToken);
+        Integer iterationId = 9; // TODO @DF Dummy Need to figure out authentication.
+        
+        // If url checks out, create iterationTO and supply it somewhere? 
+        if (iterationId != null) {
+            
+            //IterationDAOHibernate iterationDAO = new IterationDAOHibernate();
+            //Iteration iteration = iterationDAO.get(9);
 
+            String path = reqt.getPathInfo();
+            
+            resp.sendRedirect("http://www.google.ca/" + urlToken);
+            
+        } else {
+            
+            // Redirect to urltoken failure page? 
+            chain.doFilter(request, response);
+        }
     }
 
 }

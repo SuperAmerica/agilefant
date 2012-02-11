@@ -20,7 +20,7 @@ import fi.hut.soberit.agilefant.model.User;
 
 @Component
 @Scope("prototype")
-@Path("/authenticate")
+@Path("/ro/*")
 public class AuthenticationResource {
     @Autowired
     private UserBusiness userBusiness;

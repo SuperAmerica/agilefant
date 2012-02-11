@@ -9,29 +9,23 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.filter.GenericFilterBean;
 
+
 public class ReadonlyFilter extends GenericFilterBean {
 
+    public static final String LAST_URL_REDIRECT_KEY = ReadonlyFilter.class.getName() + "LAST_URL_REDIRECT_KEY";
+    
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
-      InitialContext ictx;
-      Context environment;
-      Boolean remoteServicesEnabled = false;
       
-      try {
-          ictx = new InitialContext();
-          environment = (Context)ictx.lookup("java:comp/env");
-          remoteServicesEnabled = (Boolean)environment.lookup("remoteEnabled");
-      } catch (NamingException e) {
-          throw new ServletException("Remote services not enabled");
-      }
-      if (!remoteServicesEnabled) {
-          throw new ServletException("Remote services not enabled");
-      }
-      
-      chain.doFilter(request, response);
+            HttpServletResponse resp = (HttpServletResponse) response;
+            resp.sendRedirect("http://www.google.ca");
+
     }
 
 }

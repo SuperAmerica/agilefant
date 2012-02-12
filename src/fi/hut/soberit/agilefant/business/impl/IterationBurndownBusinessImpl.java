@@ -659,7 +659,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         
         if (today.isBefore(endDate)) {
            spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate.minusDays(1), today.toDateTime());
+                startDate.minusDays(1), today.toDateTime().minusDays(1));
         }
         else {
             spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
@@ -682,7 +682,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     
     protected TimeSeriesDataItem getEffortSpentDataItemForDay(DailySpentEffort entry) {
         Second second  = new Second(new DateTime(entry.getDay().getTime()).
-                minusMinutes(timeDifferenceMinutes).toDateMidnight().toDate());
+                minusMinutes(timeDifferenceMinutes).toDateMidnight().plusDays(1).toDate());
         double value = 0.0;
         
         if (entry.getSpentEffort() != null) {

@@ -183,9 +183,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     private void createStoryRanks(Story story, Backlog backlog) {
-        if(!(backlog instanceof Product)) {
+        if(!(backlog instanceof Product)) {            
             this.storyRankBusiness.rankToBottom(story, backlog);
-            if (backlog instanceof Iteration) {
+            if (backlog instanceof Iteration) {                
                 this.storyRankBusiness.rankToBottom(story, backlog.getParent());
             }
         }
@@ -261,8 +261,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             Set<Integer> responsibleIds, List<String> labelNames) throws IllegalArgumentException,
             ObjectNotFoundException {
         
-        Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);        
-        storyHierarchyBusiness.moveToBottom(persisted);
+        Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);
+
+        //old - prevents tree view from exploding until it's fixed 
+        storyHierarchyBusiness.moveToBottom(persisted);   
+        
+        //new
+        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 
+        
         this.labelBusiness.createStoryLabels(labelNames, persisted.getId());
         return persisted;
     }

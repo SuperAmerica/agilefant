@@ -97,7 +97,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final String EFFORT_AXIS_LABEL = "Hours";
 
     /* Series numbers */
-    protected static final int BURNDOWN_SERIES_NO = 0;
+    protected static final int EFFORT_LEFT_SERIES_NO = 0;
     protected static final int EFFORT_SPENT_SERIES_NO = 1;
     protected static final int CURRENT_DAY_EFFORT_LEFT_SERIES_NO = 2;
     protected static final int CURRENT_DAY_EFFORT_SPENT_SERIES_NO = 3;
@@ -106,19 +106,19 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected static final int EXPECTED_SERIES_NO = 6;
 
     /* Series colors */
-    protected static final Color BURNDOWN_SERIES_COLOR = new Color(220, 100, 87);
+    protected static final Color EFFORT_LEFT_SERIES_COLOR = new Color(220, 100, 87);
     protected static final Color EFFORT_SPENT_SERIES_COLOR = new Color(33, 33, 33);
-    protected static final Color CURRENT_DAY_EFFORT_LEFT_SERIES_COLOR = BURNDOWN_SERIES_COLOR;
+    protected static final Color CURRENT_DAY_EFFORT_LEFT_SERIES_COLOR = EFFORT_LEFT_SERIES_COLOR;
     protected static final Color CURRENT_DAY_EFFORT_SPENT_SERIES_COLOR = EFFORT_SPENT_SERIES_COLOR;
-    protected static final Color SCOPING_SERIES_COLOR = BURNDOWN_SERIES_COLOR;
+    protected static final Color SCOPING_SERIES_COLOR = EFFORT_LEFT_SERIES_COLOR;
     protected static final Color REFERENCE_SERIES_COLOR = new Color(90, 145,
             210);
     protected static final Color EXPECTED_SERIES_COLOR = new Color(80, 80, 80);
 
     /* Series shape */
-    protected static final Shape BURNDOWN_SERIES_SHAPE = new Rectangle(-2, -2,
+    protected static final Shape EFFORT_LEFT_SERIES_SHAPE = new Rectangle(-2, -2,
             4, 4);
-    protected static final boolean BURNDOWN_SERIES_SHAPE_VISIBLE = true;
+    protected static final boolean EFFORT_LEFT_SERIES_SHAPE_VISIBLE = true;
     protected static final Shape EFFORT_SPENT_SERIES_SHAPE = new Rectangle(-2, -2,
             4, 4);
     protected static final boolean EFFORT_SPENT_SERIES_SHAPE_VISIBLE = true; 
@@ -146,7 +146,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             new float[] { 2.0f, 4.0f }, 0.0f);
 
     /* Series names */
-    protected static final String BURNDOWN_SERIES_NAME = "Effort left";
+    protected static final String EFFORT_LEFT_SERIES_NAME = "Effort left";
     protected static final String EFFORT_SPENT_SERIES_NAME = "Effort spent";
     protected static final String REFERENCE_SERIES_NAME = "Reference velocity";
     protected static final String SCOPING_SERIES_NAME = "Scoping";
@@ -287,21 +287,21 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         chart.setBackgroundPaint(CHART_BACKGROUND_COLOR);
         plot.setBackgroundPaint(PLOT_BACKGROUND_COLOR);
 
-        renderer.setSeriesPaint(BURNDOWN_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(EFFORT_LEFT_SERIES_NO, EFFORT_LEFT_SERIES_COLOR);
         renderer.setSeriesPaint(EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_COLOR);
-        renderer.setSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, EFFORT_LEFT_SERIES_COLOR);
         renderer.setSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_COLOR);
-        renderer.setSeriesPaint(SCOPING_SERIES_NO, BURNDOWN_SERIES_COLOR);
+        renderer.setSeriesPaint(SCOPING_SERIES_NO, EFFORT_LEFT_SERIES_COLOR);
         renderer.setSeriesPaint(REFERENCE_SERIES_NO, REFERENCE_SERIES_COLOR);
 
-        renderer.setSeriesStroke(BURNDOWN_SERIES_NO, SMALL_BURNDOWN_STROKE);
+        renderer.setSeriesStroke(EFFORT_LEFT_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(EFFORT_SPENT_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(SCOPING_SERIES_NO, SMALL_BURNDOWN_STROKE);
         renderer.setSeriesStroke(REFERENCE_SERIES_NO, SMALL_BURNDOWN_STROKE);
 
-        renderer.setSeriesShapesVisible(BURNDOWN_SERIES_NO, false);
+        renderer.setSeriesShapesVisible(EFFORT_LEFT_SERIES_NO, false);
         renderer.setSeriesShapesVisible(EFFORT_SPENT_SERIES_NO, false);
         renderer.setSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO, false);
         renderer.setSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, false);
@@ -357,10 +357,10 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer) chart
                 .getXYPlot().getRenderer();
 
-        rend.setSeriesPaint(BURNDOWN_SERIES_NO, BURNDOWN_SERIES_COLOR);
-        rend.setSeriesShape(BURNDOWN_SERIES_NO, BURNDOWN_SERIES_SHAPE);
-        rend.setSeriesShapesVisible(BURNDOWN_SERIES_NO,
-                BURNDOWN_SERIES_SHAPE_VISIBLE);
+        rend.setSeriesPaint(EFFORT_LEFT_SERIES_NO, EFFORT_LEFT_SERIES_COLOR);
+        rend.setSeriesShape(EFFORT_LEFT_SERIES_NO, EFFORT_LEFT_SERIES_SHAPE);
+        rend.setSeriesShapesVisible(EFFORT_LEFT_SERIES_NO,
+                EFFORT_LEFT_SERIES_SHAPE_VISIBLE);
         
         rend.setSeriesPaint(EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_COLOR);
         rend.setSeriesShape(EFFORT_SPENT_SERIES_NO, EFFORT_SPENT_SERIES_SHAPE);
@@ -703,7 +703,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     protected TimeSeries getBurndownTimeSeries(
             List<IterationHistoryEntry> iterationHistoryEntries,
             LocalDate startDate, LocalDate endDate) {
-        TimeSeries burndownSeries = new TimeSeries(BURNDOWN_SERIES_NAME);
+        TimeSeries burndownSeries = new TimeSeries(EFFORT_LEFT_SERIES_NAME);
 
         for (LocalDate iter = startDate.minusDays(1); iter.compareTo(endDate) < 0; iter = iter
                 .plusDays(1)) {

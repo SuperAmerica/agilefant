@@ -166,6 +166,18 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     }
     
     @Transactional(readOnly = true)
+    public List<DailySpentEffort> getDailySpentEffortByIteration(Iteration iteration) {
+        List<HourEntry> entries = hourEntryDAO.getAllIterationHourEntries(iteration.getId());
+        
+        return this.getDailySpentEffortForHourEntries(entries, iteration.getStartDate(), iteration.getEndDate());
+    }
+    
+    @Transactional(readOnly = true)
+    public List<HourEntry> getHourEntriesForIteration(Iteration iteration) {
+        return hourEntryDAO.getAllIterationHourEntries(iteration.getId());        
+    }
+    
+    @Transactional(readOnly = true)
     public long calculateSumOfIterationsHourEntries(Iteration iteration) {
         if (iteration == null) {
             throw new IllegalArgumentException("Iteration can't be null");
@@ -215,34 +227,46 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     @Transactional(readOnly = true)
     public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
             DateTime end, int userId) {
-        Map<Date, Long> dbData = new HashMap<Date, Long>();
-        List<DailySpentEffort> dailyEffort = new ArrayList<DailySpentEffort>();
-
         if(start.compareTo(end) >= 0) {
             return Collections.emptyList();
         }
         List<HourEntry> entries = this.hourEntryDAO.getHourEntriesByFilter(start, end, userId);
         
+        return getDailySpentEffortForHourEntries(entries, start, end);
+    }
+    
+    public List<DailySpentEffort> getDailySpentEffortForHourEntries(List<? extends HourEntry> entries,
+            DateTime start, DateTime end) {
+        Map<Date, Long> dbData = new HashMap<Date, Long>();
+        List<DailySpentEffort> dailyEffort = new ArrayList<DailySpentEffort>();
+
         //sum efforts per day
         for(HourEntry entry : entries) {
             Date date = entry.getDate().toDateMidnight().toDate();
+            
             if(!dbData.containsKey(date)) {
                 dbData.put(date, 0L);
             }
+            
             dbData.put(date, dbData.get(date) + entry.getMinutesSpent());
         }
+        
         MutableDateTime iteratorDate = new MutableDateTime(start.toDateMidnight());
+        
         //construct list that has a single entry per day
         while(iteratorDate.compareTo(end) <= 0) {
             DailySpentEffort effortEntry = new DailySpentEffort();
             Date currentDate = iteratorDate.toDate();
+            
             if(dbData.containsKey(currentDate)) {
                 effortEntry.setSpentEffort(dbData.get(currentDate));
             }
+            
             effortEntry.setDay(currentDate);
             dailyEffort.add(effortEntry);
             iteratorDate.addDays(1);
         }
+        
         return dailyEffort;
     }
     

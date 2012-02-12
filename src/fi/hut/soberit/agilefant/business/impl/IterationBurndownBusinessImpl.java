@@ -657,7 +657,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         List<DailySpentEffort> spentEffortList = new ArrayList<DailySpentEffort>();
         MutableDateTime today = new MutableDateTime();
         
-        if (!today.isBefore(endDate)) {
+        if (today.isBefore(endDate)) {
            spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
                 startDate.minusDays(1), today.toDateTime());
         }

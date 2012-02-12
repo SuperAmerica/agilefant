@@ -35,17 +35,22 @@ ProjectController.prototype = new BacklogController();
 ProjectController.prototype.filter = function() {
   var me = this;
   var activeTab = this.tabs.tabs("option","selected");
-  if (activeTab === 1) {
+  if (activeTab === 1) { // leaf stories
     this.storyListView.showInfoMessage("Searching...");
     this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
       me.storyListView.hideInfoMessage("Searching...");
     });
   }
-  else if (activeTab === 0) {
+  else if (activeTab === 0) { // story tree
     this.storyTreeController.filter(this.getTextFilter(),
         this.getStoryTreeStateFilters());
   }
-  else if (activeTab === 2) {
+  else if (activeTab === 2) { // iterations
+    this.iterationsView.showInfoMessage("Loading...");
+    this.model.reloadIterations(null, function() {
+      me.iterationsView.hideInfoMessage("Loading...");
+      //me.iterationsView.render();
+    });
     this.iterationsView.filter();
   }
 };
@@ -61,9 +66,11 @@ ProjectController.prototype.getLeafStoryFilters = function() {
   var filters = {};
   if(this.getTextFilter()) {
     filters.name = this.getTextFilter();
+    console.log(filters.name);
   }
   if(this.leafStoriesStateFilters) {
     filters.states = this.leafStoriesStateFilters;
+    console.log(filters.states);
   }
   return filters; 
 };
@@ -295,7 +302,13 @@ ProjectController.prototype.paint = function() {
   });
   ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
       this.id, function(model) {
-	    ModelFactory.reloadEvery(model, 30000);
+        ModelFactory.callEvery(30000,
+          function() {
+            model.reload(); // reload the base page and iteration tab
+            
+            me.filter(); // reload the tab content (story tree, leaf stories)
+          }
+        );
         me.model = model;
         me.attachModelListener();
         me.paintProjectDetails();

@@ -704,16 +704,15 @@ TableEditors.Date.prototype.init = function(element, model, options) {
       },
       onClose : function() {
           me.datepickerOpen = false;
+          me.textField.focus();
       },
       buttonImage : 'static/img/calendar.gif',
       buttonImageOnly : true,
-      showOn : 'button',
       constrainInput : false
   });
 };
 
 TableEditors.Date.prototype.close = function() {
-  $(window).unbind("click.dynamicsDatePicker", this.windowListener);
   this.element.find('img').remove();
   this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
@@ -739,31 +738,21 @@ TableEditors.Date.prototype._validate = function() {
 
 TableEditors.Date.prototype._registerEditField = function(element) {
   var me = this;
-  this.windowListener = function(event) {
-    if(event.target === me.textField[0]) { //editor clicked
-      return;
-    }
-    if(me.datepickerOpen) { //picker open
-      return;
-    }
-    if($(event.target).parents("div.ui-datepicker").length) { //picked clicked
-      return;
-    }
+  element.blur(function(event) {
+    if (me.datepickerOpen)
+      return false;
     me._requestSaveIfNotInRowEdit();
     me.element.trigger("DynamicsBlur");
     me.focused = false;
-  };
-  $(window).bind("click.dynamicsDatePicker",this.windowListener);
+  });
   element.keydown(function(event) {
     me._handleKeyEvent(event);
     return true;
   });
-  
   element.focus(function() {
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });
-  
   element.data("editor", this).addClass("dynamics-editor-element");
 };
 

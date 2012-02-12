@@ -52,6 +52,11 @@ DynamicTableRow.prototype.initialize = function() {
       this.htmlIdsToCell[event.currentTarget.id].dblClick(event);
     }
   }, this));
+  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"click", $.proxy(function(event) {
+	    if(this.htmlIdsToCell[event.currentTarget.id]) {
+	      this.htmlIdsToCell[event.currentTarget.id].click(event);
+	    }
+	  }, this));
   
   // FIGURE A BETTER WAY
   if (this.config && this.config.hasOwnProperty("visible") && !this.config.visible) {

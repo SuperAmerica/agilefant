@@ -579,7 +579,7 @@ StoryController.prototype.searchForTask = function() {
       get : TaskModel.prototype.getEffortSpent,
       decorator: DynamicsDecorators.exactEstimateDecorator,
       editable : false,
-      onDoubleClick: TaskController.prototype.openQuickLogEffort,
+      onClick: TaskController.prototype.openQuickLogEffort,
       edit : {
         editor : "ExactEstimate",
         decorator: DynamicsDecorators.empty,

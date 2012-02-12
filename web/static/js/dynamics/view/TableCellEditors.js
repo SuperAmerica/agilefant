@@ -1176,6 +1176,7 @@ TableEditors.Wysiwyg.prototype._registerEditField = function(element) {
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });
+  me.actualElement.focus();
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
   if (event.keyCode === 27 && !this.editRow) {

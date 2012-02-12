@@ -23,8 +23,10 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.IterationBurndownBusinessImpl;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
 import fi.hut.soberit.agilefant.util.Pair;
 
@@ -33,13 +35,14 @@ import fi.hut.soberit.agilefant.util.Pair;
  * <p>
  * Extends the class to be able to test protected methods.
  * 
- * @author rjokelai, jsorvett
+ * @author rjokelai, jsorvett, ahoffman
  *
  */
 public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl {
 
     IterationBurndownBusinessImpl iterationBurndownBusiness;
     IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    HourEntryBusiness hourEntryBusiness;
     IterationBusiness iterationBusiness;
     SettingBusiness settingBusiness;
     
@@ -49,6 +52,9 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     ExactEstimate originalEstimateSum;
     IterationHistoryEntry entry;
     JFreeChart chart;
+    
+    List<DailySpentEffort> dailySpentEffortList;
+    List<HourEntry> hourEntryList;
     
     IterationHistoryEntry entry1;
     IterationHistoryEntry entry2;
@@ -61,12 +67,17 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void setUp() {
         iterationBurndownBusiness = new IterationBurndownBusinessImpl();
         iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
-        iterationBurndownBusiness
-                .setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
+        iterationBurndownBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
         super.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
+        
         iterationBusiness = createMock(IterationBusiness.class);
         iterationBurndownBusiness.setIterationBusiness(iterationBusiness);
         super.setIterationBusiness(iterationBusiness);
+        
+        hourEntryBusiness = createMock(HourEntryBusiness.class);
+        iterationBurndownBusiness.setHourEntryBusiness(hourEntryBusiness);
+        super.setHourEntryBusiness(hourEntryBusiness);
+        
         settingBusiness = createMock(SettingBusiness.class);
         iterationBurndownBusiness.setSettingBusiness(settingBusiness);
         super.setSettingBusiness(settingBusiness);
@@ -99,54 +110,99 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         entry2.setOriginalEstimateSum(100);
         
         entriesList = Arrays.asList(entry1, entry2);
+        
+        dailySpentEffortList = new ArrayList<DailySpentEffort>();
+        hourEntryList = new ArrayList<HourEntry>();
+        
+        
     }
     
     @Test
     public void testGetIterationBurndown() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getDailySpentEffortByIteration(iteration)).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration, 0));
-             
+        
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testGetSmallIterationBurndown() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-        .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
 
         assertNotNull(iterationBurndownBusiness.getSmallIterationBurndown(iteration, 0));
 
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testCustomIterationBurndown() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         assertNotNull(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 1024, 768, 0));
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testConstructChart() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         JFreeChart newChart = super.constructChart(iteration, 0);
         
@@ -163,16 +219,26 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals(SCOPING_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testConstructSmallChart() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         JFreeChart newChart = super.constructSmallChart(iteration, 0);
         
@@ -191,6 +257,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                
         testSmallChartFormating(newChart);
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
@@ -291,11 +358,20 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     
     @Test
     public void testGetDataset() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         TimeSeriesCollection actualTimeSeries = super.getDataset(iteration);
         assertNotNull(actualTimeSeries.getSeries(REFERENCE_SERIES_NAME));
@@ -303,6 +379,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertNotNull(actualTimeSeries.getSeries(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME));
         assertNotNull(actualTimeSeries.getSeries(SCOPING_SERIES_NAME));
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     

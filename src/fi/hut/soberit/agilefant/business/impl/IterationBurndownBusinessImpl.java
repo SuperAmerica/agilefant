@@ -28,6 +28,7 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.time.TimeSeriesDataItem;
 import org.jfree.ui.RectangleInsets;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -41,7 +42,6 @@ import fi.hut.soberit.agilefant.business.IterationBurndownBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
-import fi.hut.soberit.agilefant.model.BacklogHourEntry;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -49,7 +49,6 @@ import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
 import fi.hut.soberit.agilefant.util.Pair;
-import fi.hut.soberit.agilefant.web.SettingAction;
 
 /**
  * A business class for calculating the burndown for iterations.
@@ -73,6 +72,8 @@ import fi.hut.soberit.agilefant.web.SettingAction;
 public class IterationBurndownBusinessImpl implements IterationBurndownBusiness {
 
     private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    
+    @Autowired
     private HourEntryBusiness hourEntryBusiness;
 
     @Autowired
@@ -185,7 +186,6 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         this.iterationHistoryEntryBusiness = iterationHistoryEntryBusiness;
     }
     
-    @Autowired
     public void setHourEntryBusiness(HourEntryBusiness hourEntryBusiness) {
         this.hourEntryBusiness = hourEntryBusiness;
     }
@@ -449,7 +449,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
                 todayEntry));
         
         chartDataset.addSeries(getCurrentDaySpentEffortSeries(hourEntries, 
-                iterationStartDate, iterationEndDate));
+                iterationStartDate));
         
         chartDataset.addSeries(getScopingTimeSeries(iterationEntries,
                 iterationStartDate.toLocalDate(), iterationEndDate
@@ -615,13 +615,13 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
      */
     @SuppressWarnings("deprecation")
     protected TimeSeries getCurrentDaySpentEffortSeries(List<? extends HourEntry> hourEntries,
-            DateTime startDate, DateTime endDate) {
+            DateTime startDate) {
         TimeSeries effortSpentSeries = new TimeSeries(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME);
         
-        MutableDateTime today = new MutableDateTime();
-        DateTime mtoday = today.toDateTime().plusDays(1);
+        DateTime midtoday = new DateMidnight().plusDays(1).toDateTime();
+        
         List<DailySpentEffort> spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate, mtoday);
+                startDate, midtoday);
         
         double cumulativeSum = 0.0;
      
@@ -632,8 +632,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             dateItem.setValue(cumulativeSum);
                    
             // Add only values for tomorrow and today
-            if ((dateItem.getPeriod().getEnd().getDate()) == (mtoday.getDayOfMonth()) ||
-                    ((dateItem.getPeriod().getEnd().getDate()) == (mtoday.getDayOfMonth() - 1))) {
+            if ((dateItem.getPeriod().getEnd().getDate()) == (midtoday.getDayOfMonth()) ||
+                    ((dateItem.getPeriod().getEnd().getDate()) == (midtoday.getDayOfMonth() - 1))) {
                 effortSpentSeries.add(dateItem);
             }
             

@@ -271,7 +271,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     }
 
     protected JFreeChart constructSmallChart(Iteration iteration, Integer timeZoneOffset) {
-        JFreeChart burndown = this.constructChart(iteration, timeZoneOffset);
+        JFreeChart burndown = constructChart(iteration, timeZoneOffset);
         return transformToSmallChart(burndown);
     }
 
@@ -613,15 +613,14 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
      * Get the <code>TimeSeries</code> for drawing the current day line.
      * @param timeDifferenceHours 
      */
-    @SuppressWarnings("deprecation")
     protected TimeSeries getCurrentDaySpentEffortSeries(List<? extends HourEntry> hourEntries,
             DateTime startDate) {
         TimeSeries effortSpentSeries = new TimeSeries(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME);
         
-        DateTime midtoday = new DateMidnight().plusDays(1).toDateTime();
+        DateTime tomorrow = new DateMidnight().plusDays(1).toDateTime();
         
         List<DailySpentEffort> spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate, midtoday);
+                startDate, tomorrow);
         
         double cumulativeSum = 0.0;
      
@@ -630,13 +629,13 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             
             cumulativeSum += dateItem.getValue().doubleValue();
             dateItem.setValue(cumulativeSum);
-                   
+            
+            DateMidnight dateTime = new DateMidnight(dateItem.getPeriod().getStart());
+            
             // Add only values for tomorrow and today
-            if ((dateItem.getPeriod().getEnd().getDate()) == (midtoday.getDayOfMonth()) ||
-                    ((dateItem.getPeriod().getEnd().getDate()) == (midtoday.getDayOfMonth() - 1))) {
+            if (dateTime.equals(tomorrow.toDateMidnight()) || dateTime.equals(tomorrow.minusDays(1).toDateMidnight())) {
                 effortSpentSeries.add(dateItem);
             }
-            
         }
         
         return effortSpentSeries;
@@ -655,15 +654,15 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         TimeSeries effortSpentSeries = new TimeSeries(EFFORT_SPENT_SERIES_NAME);
         
         List<DailySpentEffort> spentEffortList = new ArrayList<DailySpentEffort>();
-        MutableDateTime today = new MutableDateTime();
+        DateMidnight today = new DateMidnight();
         
         if (today.isBefore(endDate)) {
            spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                startDate.minusDays(1), today.toDateTime().minusDays(1));
+                startDate.minusDays(1), today.minusDays(1).toDateTime());
         }
         else {
             spentEffortList = hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntries, 
-                    startDate.minusDays(1), endDate.plusDays(1));
+                startDate.minusDays(1), endDate.plusDays(1));
         }
         
         double cumulativeSum = 0.0;

@@ -66,11 +66,9 @@ ProjectController.prototype.getLeafStoryFilters = function() {
   var filters = {};
   if(this.getTextFilter()) {
     filters.name = this.getTextFilter();
-    console.log(filters.name);
   }
   if(this.leafStoriesStateFilters) {
     filters.states = this.leafStoriesStateFilters;
-    console.log(filters.states);
   }
   return filters; 
 };

@@ -154,6 +154,10 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(SCOPING_SERIES_NAME,
@@ -176,6 +180,10 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(SCOPING_SERIES_NAME,
@@ -192,12 +200,16 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         XYPlot plot = chart.getXYPlot();
         XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer)chart.getXYPlot().getRenderer();
         assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(BURNDOWN_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(EFFORT_SPENT_SERIES_NO));        
         assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
         
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(BURNDOWN_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(EFFORT_SPENT_SERIES_NO));
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(REFERENCE_SERIES_NO));
         
@@ -207,9 +219,11 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertFalse(plot.isRangeGridlinesVisible());
         
         assertFalse(rend.getSeriesShapesVisible(BURNDOWN_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(EFFORT_SPENT_SERIES_NO));
         assertFalse(rend.getSeriesShapesVisible(REFERENCE_SERIES_NO));
         assertFalse(rend.getSeriesShapesVisible(SCOPING_SERIES_NO));
         assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         
         assertEquals(null, plot.getDomainAxis().getLabel());
         assertEquals(null, plot.getRangeAxis().getLabel());
@@ -253,6 +267,10 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals(BURNDOWN_SERIES_SHAPE, rend.getSeriesShape(BURNDOWN_SERIES_NO));
         assertEquals(BURNDOWN_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(BURNDOWN_SERIES_NO));
         
+        assertEquals(EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(EFFORT_SPENT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_SHAPE, rend.getSeriesShape(EFFORT_SPENT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(EFFORT_SPENT_SERIES_NO));
+        
         assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
         
         assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
@@ -260,6 +278,12 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_SERIES_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         
         assertEquals(SCOPING_SERIES_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
         assertEquals(SCOPING_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));

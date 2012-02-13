@@ -680,7 +680,7 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
     }
     
     protected TimeSeriesDataItem getEffortSpentDataItemForDay(DailySpentEffort entry) {
-        Second second  = new Second(new DateTime(entry.getDay().getTime()).
+        Second second  = new Second(entry.getDay().
                 minusMinutes(timeDifferenceMinutes).toDateMidnight().plusDays(1).toDate());
         double value = 0.0;
         

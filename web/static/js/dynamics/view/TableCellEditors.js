@@ -15,6 +15,9 @@ var ValidationMessages = {
     mustBeGreater: "Value must be greater or equal than ",
     mustBeLower: "Value must be lower or equal than "
   },
+  value: {
+	  invalid: "Story value must be equal to or greater than zero"
+  },
   estimate: {
     invalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
   },
@@ -571,6 +574,53 @@ TableEditors.Estimate.prototype._validate = function() {
   if (!format.test(value)) {
     valid = false;
     this.addErrorMessage(ValidationMessages.estimate.invalid);
+  }
+  
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
+/**
+ * Estimate input.
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.StoryValue = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+  this.focus();
+};
+TableEditors.StoryValue.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.Estimate</code>
+ */
+TableEditors.StoryValue.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.Estimate */
+  required: false
+};
+/**
+ * Initializes a Estimate editor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.StoryValue.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Estimate.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.StoryValue.prototype._validate = function() {
+  var valid = true;
+  var value = jQuery.trim(this.textField.val());
+  
+  var format = new RegExp("^([0-9]*)$"); // Removed: (pt|points)?
+  
+  if (!format.test(value)) {
+    valid = false;
+    this.addErrorMessage(ValidationMessages.value.invalid);
   }
   
   return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;

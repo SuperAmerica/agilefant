@@ -58,22 +58,26 @@ public interface HourEntryBusiness extends GenericBusiness<HourEntry> {
     public List<HourEntry> getEntriesByUserAndTimeInterval(int userId,
             DateTime startDate, DateTime endDate);
 
-    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId);
+    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
 
     public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week,
-            int userId);
-    
+            int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
+
     public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
             DateTime end, int userId);
     
+    public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
+            DateTime end, int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
+
     List<DailySpentEffort> getDailySpentEffortForHourEntries(List<? extends HourEntry> entries,
             DateTime start, DateTime end);
     
     List<DailySpentEffort> getDailySpentEffortByIteration(Iteration iteration);
     
     List<HourEntry> getHourEntriesForIteration(Iteration iteration);
+    
 
-    public long calculateWeekSum(LocalDate week, int userId);
+    public long calculateWeekSum(LocalDate week, int userId, int hourTimeZoneDifference, int minuteTimeZoneDifference);
 
     List<HourEntry> retrieveBacklogHourEntries(int backlogId,
             boolean limited);

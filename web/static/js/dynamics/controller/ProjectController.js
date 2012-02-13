@@ -648,7 +648,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     title : 'State',
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
+    decorator: DynamicsDecorators.storyStateColorDecorator,
     editable : true,
     filter: ProjectController.prototype.filterLeafStoriesByState,
     edit : {

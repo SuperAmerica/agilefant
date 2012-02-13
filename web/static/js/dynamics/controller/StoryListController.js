@@ -228,10 +228,10 @@ StoryListController.prototype._getTableConfig = function() {
 StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
+  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
-  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
   config.addColumnConfiguration(StoryController.columnIndices.state, StoryListController.columnConfig.state);
@@ -268,10 +268,8 @@ StoryListController.columnConfig.id = {
   minWidth: 30,
   autoScale: true,
   title: "ID",
-  headerTooltip: 'Story ID',
+  headerTooltip: "Story ID",
   get: CommonModel.prototype.getId,
-  decorator: DynamicsDecorators.storyIdWithHash,
-  editable: false
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,
@@ -331,7 +329,7 @@ StoryListController.columnConfig.state = {
   title : "State",
   headerTooltip : 'Story state',
   get : StoryModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
+  decorator: DynamicsDecorators.storyStateColorDecorator,
   filter: StoryListController.prototype.filterStoriesByState,
   editable : true,
   edit : {

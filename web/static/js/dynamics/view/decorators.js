@@ -23,21 +23,33 @@ var DynamicsDecorators = {
       }
     };
   },
-  stateColorDecorator: function(state) {
+  taskStateColorDecorator: function(state) {
     var text = DynamicsDecorators.stateDecorator(state);
     return '<div class="taskState taskState'+state+'">'+text+'</div>';
+  },
+  storyStateColorDecorator: function(state) {
+    var text = DynamicsDecorators.stateDecorator(state);
+    return '<div class="storyState storyState'+state+'">'+text+'</div>';
   },
   enabledDisabledOptions: {
     "true":  "Enabled",
     "false": "Disabled"
   },
-  enabledDisabledColorDecorator: function(state) {
+  enabledDisabledTaskColorDecorator: function(state) {
     var text = DynamicsDecorators.enabledDisabledOptions[state];
     var stateClass = {
       "false": "NOT_STARTED",
       "true":  "DONE"
     };
     return '<div class="taskState taskState'+stateClass[state]+'">'+text+'</div>';
+  },
+  enabledDisabledStoryColorDecorator: function(state) {
+    var text = DynamicsDecorators.enabledDisabledOptions[state];
+    var stateClass = {
+      "false": "NOT_STARTED",
+      "true":  "DONE"
+    };
+    return '<div class="storyState storyState'+stateClass[state]+'">'+text+'</div>';
   },
   appendDecoratorFactory: function(str) {
     return function(value) {

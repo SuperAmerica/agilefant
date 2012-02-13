@@ -413,10 +413,10 @@ button.dynamics-button:focus, button.dynamics-button:hover {
 	padding: 1px;
 	text-align: center;
 	-moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  border: 1px solid rgba(0,0,0,0.3);
-  font-size: 80%;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	font-size: 80%;
 }
 .inlineTaskState {
   font-size: 80%;
@@ -429,69 +429,58 @@ button.dynamics-button:focus, button.dynamics-button:hover {
   width: 1em;
   text-align: center;
 }
-
-.taskStateNOT_STARTED {
-	background-color: #dddddd;
-}
-.taskStateSTARTED {
-	background-color: #ffdd88;
-}
-.taskStatePENDING {
-	background-color: #66ddff;
-}
-.taskStateBLOCKED {
-	background-color: #e33;
-	color: #eee !important;
-}
-.taskStateIMPLEMENTED {
-	background-color: #99ff99;
-}
-.taskStateDONE {
-	background-color: #00bb44;
-	color: #eee !important;
-}
-
-.taskStateDEFERRED {
-	background-color: black;
-	color: white;
-}
-
 .storyState {
 	display: block;
-	width: 80px;
+	width: 65px;
 	padding: 1px;
-	font-size: 9pt;
 	text-align: center;
-	-moz-border-radius: 2px;
-	-webkit-border-radius: 2px;
-  border-radius: 2px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	border: 1px solid rgba(0,0,0,0.3);
+	font-size: 80%;
 }
-.storyStateNOT_STARTED {
+
+.inlineStoryState {
+  font-size: 80%;
+  border: 1px solid rgba(0,0,0,0.3);
+  -moz-border-radius: 1em;
+  -webkit-border-radius: 1em;
+  border-radius: 1em;
+  padding: 0 0.3em !important;
+  display: inline;
+  width: 1em;
+  text-align: center;
+  
+}
+.taskStateNOT_STARTED, .storyStateNOT_STARTED {
 	background-color: #dddddd;
 }
-.storyStateSTARTED {
+.taskStateSTARTED, .storyStateSTARTED {
 	background-color: #ffdd88;
 }
-.storyStatePENDING {
+.taskStatePENDING, .storyStatePENDING {
 	background-color: #66ddff;
 }
-.storyStateBLOCKED {
+.taskStateBLOCKED, .storyStateBLOCKED {
 	background-color: #e33;
 	color: #eee;
 }
 
-.storyStateIMPLEMENTED {
+.taskStateIMPLEMENTED, .storyStateIMPLEMENTED {
 	background-color: #66ff66;
 }
-.storyStateDONE {
+.taskStateDONE, .storyStateDONE {
 	background-color: #00bb44;
 	color: #eee;
 }
 
-.storyStateDEFERRED {
+.taskStateDEFERRED, .storyStateDEFERRED {
 	background-color: #000000;
 	color: white;
 }
+
+
 .dynamictable .dynamictable-row .description-cell {
 	min-height: 0px !important;	
 /*	max-height: 15em !important;*/

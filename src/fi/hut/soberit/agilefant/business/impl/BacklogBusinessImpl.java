@@ -130,6 +130,16 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         return storyDAO.getStoryPointSumByBacklog(backlog.getId());
     }
     
+    @Transactional(readOnly = true)
+    public int getStoryValueSumByBacklog(Backlog backlog) {
+        return storyDAO.getStoryValueSumByBacklog(backlog.getId());
+    }
+    
+    @Transactional(readOnly = true)
+    public int getCompletedStoryValueSumByBacklog(Backlog backlog) {
+        return storyDAO.getCompletedStoryValueSumByBacklog(backlog.getId());
+    }
+    
     /**
      * {@inheritDoc}
      */

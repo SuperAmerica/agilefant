@@ -7,7 +7,7 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
-  ["priority", "id", "labelsIcon", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+  ["priority", "id", "labelsIcon", "name", "points", "value", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -349,16 +349,6 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
 	    callback : StoryController.prototype.copyStorySibling
 	  });
   }
-  if (isProject) {
-    actionItems.push({
-      text: "Rank to top",
-      callback: StoryController.prototype.rankStoryToTop
-    });
-    actionItems.push({
-      text: "Rank to bottom",
-      callback: StoryController.prototype.rankStoryToTop
-    });
-  }
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
       text: "Spent effort",
@@ -386,6 +376,24 @@ StoryController.prototype.storyActionFactory = function(view, model) {
   return actionView;
 };
 
+StoryController.prototype.rankToTopAction = function(view, model) {
+  var actionItem = {
+		  label : "To top",
+		  callback : StoryController.prototype.rankStoryToTop
+  };
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 50);
+  return actionView;
+};
+	
+StoryController.prototype.rankToBottomAction = function(view, model) {
+  var actionItem = {
+		  label : "To bottom",
+		  callback : StoryController.prototype.rankStoryToBottom
+  };
+  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 70);
+  return actionView;
+};
+		
 StoryController.prototype.acceptsDraggable = function(model) {
   if (model instanceof TaskModel) {
     return true;

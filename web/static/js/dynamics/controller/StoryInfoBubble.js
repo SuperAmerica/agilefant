@@ -89,7 +89,7 @@ StoryInfoBubble.prototype.confirmTasksAndChildrenToDone = function(model, storyT
 				model.commit();
 			  }
 			);
-			}
+		}
 		} else {
 			for (var i = 0; i < children.length; i++) {
 				if (children[i].getState() !== "DONE") {

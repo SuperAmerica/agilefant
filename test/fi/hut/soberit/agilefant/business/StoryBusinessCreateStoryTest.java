@@ -113,7 +113,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         labelBusiness.createStoryLabels(null, 88);
         
         replayAll();
-        Story actual = this.storyBusiness.create(dataItem, 5, null, null);
+        Story actual = this.storyBusiness.create(dataItem, 5, null, null, null);
         verifyAll();
         
         assertEquals(actual.getClass(), Story.class);
@@ -155,7 +155,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         labelBusiness.createStoryLabels(labels, 88);
         
         replayAll();
-        Story actual = this.storyBusiness.create(new Story(), 5,
+        Story actual = this.storyBusiness.create(new Story(), 5, null,
                 new HashSet<Integer>(Arrays.asList(2,23)), labels);
         verifyAll();
         
@@ -167,19 +167,19 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     
     @Test(expected = IllegalArgumentException.class)
     public void testCreateStory_nullDataItem() {
-        this.storyBusiness.create(null, 123, new HashSet<Integer>(), null);
+        this.storyBusiness.create(null, 123, null, new HashSet<Integer>(), null);
     }
     
     @Test(expected = IllegalArgumentException.class)
     public void testCreateStory_nullBacklogId() {
-        this.storyBusiness.create(new Story(), null, new HashSet<Integer>(), null);
+        this.storyBusiness.create(new Story(), null, null, new HashSet<Integer>(), null);
     }
     
     @Test(expected = ObjectNotFoundException.class)
     @DirtiesContext
     public void testCreateStory_backlogNotFound() {
         expect(backlogBusiness.retrieve(5)).andThrow(new ObjectNotFoundException());
-        this.storyBusiness.create(new Story(), 222, new HashSet<Integer>(), null);
+        this.storyBusiness.create(new Story(), 222, null, new HashSet<Integer>(), null);
     }
     
     @Test

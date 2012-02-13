@@ -291,10 +291,15 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
     
     /**
      * A conflict exists if the old and new backlogs are under different products.
+     * If moving story from standalone iteration, original backlog will be null. That's why it
+     * shoud be checked.
      */
     protected boolean originalAndTargetProductEqual(Backlog original, Backlog target) {
         Backlog targetProduct = backlogBusiness.getParentProduct(target);
-        Backlog currentProduct = backlogBusiness.getParentProduct(original);
+        Backlog currentProduct = null;
+        if (original != null) {
+            currentProduct = backlogBusiness.getParentProduct(original); 
+        }
         return targetProduct != currentProduct;
     }
     

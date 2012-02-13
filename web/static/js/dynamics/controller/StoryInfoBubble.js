@@ -272,6 +272,19 @@ StoryInfoBubble.prototype._createConfig = function() {
     }
   });
   config.addColumnConfiguration(5, {
+	    title : "Iteration",
+	    headerTooltip : 'The iteration where the story has been assigned to',
+	    get : StoryModel.prototype.getIteration,
+	    decorator: DynamicsDecorators.iterationSelectDecorator,
+	    editable : true,
+	    edit: {
+	      editor: "AutocompleteSingle",
+	      dialogTitle: "Select iteration",
+	      dataType: "currentIterations",
+	      set: StoryModel.prototype.setIterationByModel
+	    }
+  });
+  config.addColumnConfiguration(6, {
     title : "Responsibles",
     get : StoryModel.prototype.getResponsibles,
     decorator: DynamicsDecorators.responsiblesDecorator,
@@ -283,11 +296,11 @@ StoryInfoBubble.prototype._createConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(6, {
+  config.addColumnConfiguration(7, {
     title : "Labels",
     subViewFactory: StoryInfoBubble.prototype.labelsViewFactory
   });
-  config.addColumnConfiguration(7, {
+  config.addColumnConfiguration(8, {
     title : "Description",
     get : StoryModel.prototype.getDescription,
     editable : true,

@@ -280,6 +280,7 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
     decorator: DynamicsDecorators.backlogSelectDecorator,
     editable : true,
     edit : {
+      required : false,
       editor : "InlineAutocomplete",
       dataType: "projects",
       decorator: DynamicsDecorators.propertyDecoratorFactory(BacklogModel.prototype.getName),

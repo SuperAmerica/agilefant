@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.joda.time.Interval;
 
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.util.StoryMetrics;
@@ -21,6 +22,8 @@ public interface StoryDAO extends GenericDAO<Story> {
     
     public Collection<Story> getAllIterationStoriesByResponsibleAndInterval(User user, Interval interval);
 
+    public List<Story> retrieveStoriesInIteration(Iteration iteration);
+    
     List<Story> retrieveActiveIterationStoriesWithUserResponsible(int userId);
     
     public List<Story> searchByName(String name);

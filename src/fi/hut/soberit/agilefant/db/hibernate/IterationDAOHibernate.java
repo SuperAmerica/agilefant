@@ -15,6 +15,7 @@ import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -241,7 +242,14 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         crit.add(Restrictions.ge("endDate", point));
         return asList(crit);
     }
-
+    
+    public List<Iteration> retrieveAllStandAloneIterations() {
+        final Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.isNull("parent"));
+        crit.addOrder(Order.asc("name"));
+        return asList(crit);
+    }
+    
     public Iteration retrieveDeep(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
 

@@ -180,7 +180,8 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
         return autocompleteData; 
     }
-    
+
+
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public List<AutocompleteDataNode> constructProductAutocompleteData() {

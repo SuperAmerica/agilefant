@@ -59,6 +59,8 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      */
     public Product getParentProduct(Backlog backlog);
     
+    public int getRootParentId(Backlog backlog);
+    
     public int getStoryPointSumByBacklog(Backlog backlog);
     
     public Days daysLeftInSchedulableBacklog(Schedulable backlog);
@@ -71,4 +73,5 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      * removed from the iteration after iteration has ended.
      */
     public List<Story> retrieveUnexpectedStories(Schedulable backlog);
+    
 }

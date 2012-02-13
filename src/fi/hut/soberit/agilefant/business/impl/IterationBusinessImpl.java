@@ -110,7 +110,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Iteration iteration = retrieve(id);
         Backlog project = iteration.getParent();
         delete(iteration);
-        backlogHistoryEntryBusiness.updateHistory(project.getId());      
+        if (project != null) {
+            backlogHistoryEntryBusiness.updateHistory(project.getId());      
+        }
     }
 
     @Override
@@ -154,29 +156,15 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         IterationTO iterationTO = transferObjectBusiness.constructIterationTO(iteration);
 
-        List<Story> stories = this.storyRankBusiness
-                .retrieveByRankingContext(iteration);
+        List<Story> stories = this.storyBusiness.retrieveStoriesInIteration(iteration);
+
         Map<Integer, StoryMetrics> metricsData = this.iterationDAO
                 .calculateIterationDirectStoryMetrics(iteration);
         int rank = 0;
         List<StoryTO> rankedStories = new ArrayList<StoryTO>();
 
-        HashMap<Integer, Story> tmp = new HashMap<Integer, Story>();
-        for (Story story : iteration.getStories()) {
-            tmp.put(story.getId(), story);
-        }
-        //validate tree ranks as the ranks have had a tendency to get corrupted
-        //fix ranks if invalid ones are found
-        for(Story story : stories) {
-            if(tmp.get(story.getId()) == null) {
-                this.storyRankBusiness.fixContext(iteration);
-                stories = this.storyRankBusiness.retrieveByRankingContext(iteration);
-                break;
-            }
-        }
-        
         for (Story story : stories) {
-            StoryTO storyTO = new StoryTO(tmp.get(story.getId()));
+            StoryTO storyTO = new StoryTO(story);
             if (metricsData.containsKey(story.getId())) {
                 storyTO.setMetrics(metricsData.get(story.getId()));
             }
@@ -184,6 +172,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             rankedStories.add(storyTO);
         }
         iterationTO.setRankedStories(rankedStories);
+        
         // Set the tasks without a story
         Collection<Task> tasksWithoutStory = iteration.getTasks();
 
@@ -323,14 +312,18 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         return metrics;
     }
 
+    
+    public IterationTO storeStandAlone(int iterationId, Iteration iterationData, Set<Integer> assigneeIds) {
+        final int emptyParentId = 0;
+        return store(iterationId, emptyParentId, iterationData, assigneeIds);
+    }
+    
+    
     public IterationTO store(int iterationId, int parentBacklogId,
             Iteration iterationData, Set<Integer> assigneeIds) {
         Backlog parent = null;
         if(parentBacklogId != 0) {
             parent = this.backlogBusiness.retrieve(parentBacklogId);
-        }
-        if (parent == null && iterationId == 0) {
-            throw new IllegalArgumentException("Invalid parent.");
         }
         if (parent instanceof Iteration) {
             throw new IllegalArgumentException(
@@ -358,7 +351,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
 
     private Iteration create(Backlog parentBacklog, Iteration iterationData, Set<Integer> assigneeIds) {
-        iterationData.setParent(parentBacklog);
+        if (parentBacklog != null) {
+            iterationData.setParent(parentBacklog);
+        }
         int iterationId = (Integer) this.iterationDAO.create(iterationData);
         Iteration iter = this.retrieve(iterationId);
         
@@ -394,6 +389,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         DateTime dayStart = now.withMillisOfDay(0);
 
         return iterationDAO.retrieveCurrentAndFutureIterationsAt(dayStart);
+    }
+    
+    
+    public Collection<Iteration> retrieveAllStandAloneIterations() {
+        return iterationDAO.retrieveAllStandAloneIterations();
     }
     
     public Set<AssignmentTO> calculateAssignedLoadPerAssignee(Iteration iter) {

@@ -45,69 +45,71 @@ StoryInfoBubble.prototype.checkForMoveStory = function(model) {
 };
 
 StoryInfoBubble.prototype.confirmTasksAndChildrenToDone = function(model, storyTree, isTopStory) {
-	var tasks = model.getTasks();
-	var children = model.getChildren();
-	var nonDoneChildren = false;
-	var nonDoneTasks = false;
-	if (children.length > 0) {
-		for (var i = 0; i < children.length; i++) {
-		  if (children[i].getState() !== "DONE") {
-			nonDoneChildren = true;
-		  }
-		}
-	}
-	if (tasks.length > 0) {
-		for (var i = 0; i < tasks.length; i++) {
-		  if (tasks[i].getState() !== "DONE") {
-			nonDoneTasks = true;
-		  }
-		}
-	}
-	if (nonDoneChildren || nonDoneTasks) {
-	  if (isTopStory) {
-		  var msg = new DynamicsConfirmationDialog(
-			  "Set all tasks' and stories' states to done?",
-			  "The '" + model.getName() + "' story has undone child tasks/stories! Do you want to set them Done as well?",
-			  function() {
-				for (var i = 0; i < children.length; i++) {
-				  if (children[i].getState() !== "DONE") {
-					 children[i].setState("DONE");
-					 children[i].commit();
-					 storyTree._getStoryForId(children[i].getId(), function(object) {
-						StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
-					});
-					storyTree.refresh();
-				  }
-				}
-				if (nonDoneTasks)
-					model.currentData.tasksToDone = true;
-				model.commit();
-				storyTree.refresh();
-			  },
-			  function() {
-				model.commit();
-			  }
-			);
-		} else {
-			for (var i = 0; i < children.length; i++) {
-				if (children[i].getState() !== "DONE") {
-					children[i].setState("DONE");
-					children[i].commit();
-					storyTree._getStoryForId(children[i].getId(), function(object) {
-						StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
-					});
-				storyTree.refresh();
-				}
-			}
-			if (nonDoneTasks)
-				model.currentData.tasksToDone = true;
-			model.commit();
-			storyTree.refresh();
-		}
-	} else {
-	  model.commit();
-	  storyTree.refresh();
-	}
+  var tasks = model.getTasks();
+  var children = model.getChildren();
+  var nonDoneChildren = false;
+  var nonDoneTasks = false;
+  if (children.length > 0) {
+    for (var i = 0; i < children.length; i++) {
+      if (children[i].getState() !== "DONE") {
+      nonDoneChildren = true;
+      }
+    }
+  }
+  if (tasks.length > 0) {
+    for (var i = 0; i < tasks.length; i++) {
+      if (tasks[i].getState() !== "DONE") {
+      nonDoneTasks = true;
+      }
+    }
+  }
+  if (nonDoneChildren || nonDoneTasks) {
+    if (isTopStory) {
+    if (changedData.state && changedData.state === "DONE" && tasks.length > 0) {
+      var msg = new DynamicsConfirmationDialog(
+        "Set all tasks' and stories' states to done?",
+        "The '" + model.getName() + "' story has undone child tasks/stories! Do you want to set them Done as well?",
+        function() {
+        for (var i = 0; i < children.length; i++) {
+          if (children[i].getState() !== "DONE") {
+           children[i].setState("DONE");
+           children[i].commit();
+           storyTree._getStoryForId(children[i].getId(), function(object) {
+            StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
+          });
+          storyTree.refresh();
+          }
+        }
+        if (nonDoneTasks)
+          model.currentData.tasksToDone = true;
+        model.commit();
+        storyTree.refresh();
+        },
+        function() {
+        model.commit();
+        }
+      );
+    }
+    } else {
+      for (var i = 0; i < children.length; i++) {
+        if (children[i].getState() !== "DONE") {
+          children[i].setState("DONE");
+          children[i].commit();
+          storyTree._getStoryForId(children[i].getId(), function(object) {
+            StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
+          });
+        storyTree.refresh();
+        }
+      }
+      if (nonDoneTasks)
+        model.currentData.tasksToDone = true;
+      model.commit();
+      storyTree.refresh();
+    }
+  } else {
+    model.commit();
+    storyTree.refresh();
+  }
 };
 
 StoryInfoBubble.prototype.handleModelEvents = function(event) {

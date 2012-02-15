@@ -60,11 +60,11 @@ public class BacklogHistoryEntryBusinessImpl extends
                 currentTime.minus(BacklogHistoryEntryBusiness.UPDATE_INTERVAL))) {
             entry = new BacklogHistoryEntry();
         }
-
         entry.setTimestamp(new DateTime());
         entry.setDoneSum(storyHierarchyDAO.totalLeafDoneStoryPoints(project));
         entry.setEstimateSum(storyHierarchyDAO.totalLeafStoryPoints(project));
         entry.setRootSum(storyHierarchyDAO.totalRootStoryPoints(project));
+        entry.setBranchMax(storyHierarchyDAO.totalBranchStoryPoints(project));
         entry.setBacklog(project);
         backlogHistoryEntryDAO.store(entry);
     }

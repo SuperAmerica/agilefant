@@ -142,17 +142,18 @@ public class HourEntryBusinessTest {
         entry.setDate(date);
         return entry;
     }
+    
     @Test
     public void testGetDailySpentEffortByWeek() {
         DateTime start = new DateTime(2009,6,1,0,0,1,0);
-        DateTime end = new DateTime(2009,6,7,23,59,59,0);
+        DateTime end   = new DateTime(2009,6,7,23,59,59,0);
         List<HourEntry> entries = Collections.emptyList();
 
         DateTimeZone zone = DateTimeZone.forOffsetHoursMinutes(1, 0);
-        start = start.withZone(zone);
-        end = end.withZone(zone);
+        DateTime userstart = start.withZone(zone);
+        DateTime userend   = end.withZone(zone);
 
-        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        expect(hourEntryDAO.getHourEntriesByFilter(userstart, userend, 0)).andReturn(entries);
 
         replay(hourEntryDAO);
         assertEquals(8, hourEntryBusiness.getDailySpentEffortByWeek(start.toLocalDate(), 0, 1, 0).size());

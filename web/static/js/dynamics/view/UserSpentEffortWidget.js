@@ -11,18 +11,20 @@ var UserSpentEffortWidget = function UserSpentEffortWidget(element, userId) {
   this.reload();
 };
 
-UserSpentEffortWidget.prototype.reload = function() {
-  var me = this;
-  this.element.load("weeklySpentEffort.action",{userId: this.userId}, function() { 
-    me._registerSpentEffortEvents(); 
-  });
+UserSpentEffortWidget.prototype.reload = function() { 
+	var me = this;
+	var currentDate = new Date();
+	var gmtOffset = currentDate.getUserTimeZone();
+	this.element.load("weeklySpentEffort.action",{userTimeZone: gmtOffset, userId: this.userId}, function() { 
+	me._registerSpentEffortEvents(); 
+	});
 };
-UserSpentEffortWidget.prototype._parseDateValues = function(strValue) {
+UserSpentEffortWidget.prototype._parseDateValues = function(strValue) { 
   var parts = strValue.split("-");
-  if(parts.length != 2) {
+  if(parts.length != 3) {
     return {};
   }
-  return {week: parts[1], year: parts[0]};
+  return {userTimeZone: part[2], week: parts[1], year: parts[0]};
 };
 UserSpentEffortWidget.prototype._registerSpentEffortEvents = function() {
   var me = this;

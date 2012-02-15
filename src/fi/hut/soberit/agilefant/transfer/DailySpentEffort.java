@@ -1,37 +1,30 @@
 package fi.hut.soberit.agilefant.transfer;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.DateTime;
 
 public class DailySpentEffort {
     private Long spentEffort = null;
-    private Date day;
+    private DateTime day;
     public Long getSpentEffort() {
         return spentEffort;
     }
     public void setSpentEffort(Long spentEffort) {
         this.spentEffort = spentEffort;
     }
-    public Date getDay() {
+    public DateTime getDay() {
         return day;
     }
-    public void setDay(Date day) {
+    public void setDay(DateTime day) {
         this.day = day;
     }
     public int getDate() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(this.day);
-        return cal.get(Calendar.DAY_OF_MONTH);
+        return day.getDayOfMonth();
     }
     public int getMonth() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(this.day);
-        return cal.get(Calendar.MONTH) +1;  
+        return day.getMonthOfYear();
     }
     
     public int getDayOfYear() {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(this.day);
-        return cal.get(Calendar.DAY_OF_YEAR);
+        return day.getDayOfYear();
     }
 }

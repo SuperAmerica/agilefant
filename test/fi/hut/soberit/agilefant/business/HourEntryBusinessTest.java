@@ -217,9 +217,9 @@ public class HourEntryBusinessTest {
         DateTime start = new DateTime(2008,12,27,0,0,0,0);
         DateTime end = new DateTime(2009,1,3,0,0,0,0);
         DateTimeZone zone = DateTimeZone.forOffsetHoursMinutes(1, 0);
-        start = start.withZone(zone);
-        end = end.withZone(zone);
-        expect(hourEntryDAO.getHourEntriesByFilter(start, end, 0)).andReturn(entries);
+        DateTime userstart = start.withZone(zone);
+        DateTime userend = end.withZone(zone);
+        expect(hourEntryDAO.getHourEntriesByFilter(userstart, userend, 0)).andReturn(entries);
         replay(hourEntryDAO);
         List<DailySpentEffort> res = hourEntryBusiness.getDailySpentEffortByInterval(start, end, 0, 1, 0);
         assertEquals(8, res.size());

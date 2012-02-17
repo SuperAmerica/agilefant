@@ -25,7 +25,7 @@
   
   <!-- Servlet to facilitate read-only access to Agilefant data -->
   <servlet>
-      <servlet-name>ReadOnly</servlet-name>
+      <servlet-name>readonly</servlet-name>
       <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
       <init-param>
           <param-name>com.sun.jersey.config.property.resourceConfigClass</param-name>
@@ -33,13 +33,13 @@
       </init-param>
       <init-param>
           <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>fi.hut.soberit.agilefant.readonly</param-value>
+          <param-value>fi.hut.soberit.agilefant.remote</param-value>
       </init-param>  
   </servlet>
 
   <!-- Map read-only URI's to ReadOnly servlet -->
   <servlet-mapping>
-      <servlet-name>ReadOnly</servlet-name>
+      <servlet-name>readonly</servlet-name>
       <url-pattern>/ro/*</url-pattern>
   </servlet-mapping>
 
@@ -68,6 +68,13 @@
 		</filter-class>
 	</filter>
 	
+	<filter>
+		<filter-name>readonlyFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+	</filter>
+		
 	<filter>
 		<filter-name>struts</filter-name>
 		<filter-class>
@@ -101,7 +108,7 @@
   </filter-mapping>
   
   <filter-mapping>
-    <filter-name>hibernateFilter</filter-name>
+    <filter-name>readonlyFilter</filter-name>
     <url-pattern>/ro/*</url-pattern>
   </filter-mapping>
   
@@ -170,9 +177,6 @@
       <url-pattern>/ro/*</url-pattern>
       <http-method>GET</http-method>
    </web-resource-collection>
-   <auth-constraint>
-      <role-name>agilefantreadonly</role-name>
-   </auth-constraint>
    <user-data-constraint>
       <transport-guarantee>NONE</transport-guarantee>
    </user-data-constraint>

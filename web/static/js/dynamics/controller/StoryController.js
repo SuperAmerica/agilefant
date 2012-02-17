@@ -7,7 +7,7 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
-  ["priority", "id", "labelsIcon", "name", "points", "value", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+  ["priority", "labelsIcon", "id", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -507,7 +507,7 @@ StoryController.prototype.searchForTask = function() {
     title : "State",
     headerTooltip : 'Task state',
     get : TaskModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
+    decorator: DynamicsDecorators.taskStateColorDecorator,
     editable : true,
     edit : {
       editor : "Selection",

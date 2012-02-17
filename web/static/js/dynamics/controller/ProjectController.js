@@ -40,19 +40,26 @@ var ProjectController = function ProjectController(options) {
 ProjectController.prototype = new BacklogController();
 
 ProjectController.prototype.filter = function() {
-	var me = this;
-	var activeTab = this.tabs.tabs("option", "selected");
-	if (activeTab === 1) {
-		this.storyListView.showInfoMessage("Searching...");
-		this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
-			me.storyListView.hideInfoMessage("Searching...");
-		});
-	} else if (activeTab === 0) {
-		this.storyTreeController.filter(this.getTextFilter(), this
-				.getStoryTreeStateFilters());
-	} else if (activeTab === 2) {
-		this.iterationsView.filter();
-	}
+  var me = this;
+  var activeTab = this.tabs.tabs("option","selected");
+  if (activeTab === 1) { // leaf stories
+    this.storyListView.showInfoMessage("Searching...");
+    this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
+      me.storyListView.hideInfoMessage("Searching...");
+    });
+  }
+  else if (activeTab === 0) { // story tree
+    this.storyTreeController.filter(this.getTextFilter(),
+        this.getStoryTreeStateFilters());
+  }
+  else if (activeTab === 2) { // iterations
+    this.iterationsView.showInfoMessage("Loading...");
+    this.model.reloadIterations(null, function() {
+      me.iterationsView.hideInfoMessage("Loading...");
+      //me.iterationsView.render();
+    });
+    this.iterationsView.filter();
+  }
 };
 
 ProjectController.prototype.filterLeafStories = function() {
@@ -298,30 +305,37 @@ ProjectController.prototype._paintStoryTree = function(element) {
 };
 
 ProjectController.prototype.paint = function() {
-	var me = this;
-	var selectedTab = this.tabs.tabs("option", "selected");
-	var tmpSel = (selectedTab === 2) ? 0 : 2;
-	this.tabs.tabs("select", tmpSel);
-	this.tabs.bind("tabsselect", function(event, ui) {
-		me.textFilter.clear();
-		if (me.storyTreeController) {
-			me.storyTreeController.resetFilter();
-		}
-		if (ui.index === 1) { // leaf stories
-			me._paintLeafStories(ui.panel);
-		} else if (ui.index === 0) { // Story tree
-			me._paintStoryTree(ui.panel);
-		} else if (ui.index === 2) { // iteration list
-			me._paintIterations(ui.panel);
-		}
-	});
-	ModelFactory.getInstance()._getData(
-			ModelFactory.initializeForTypes.project, this.id, function(model) {
-				me.model = model;
-				me.attachModelListener();
-				me.paintProjectDetails();
-				me.tabs.tabs("select", selectedTab);
-			});
+  var me = this;
+  var selectedTab = this.tabs.tabs("option","selected");
+  var tmpSel = (selectedTab === 2) ? 0 : 2;
+  this.tabs.tabs("select", tmpSel);
+  this.tabs.bind("tabsselect",function(event, ui){
+    me.textFilter.clear();
+    if(me.storyTreeController) {
+      me.storyTreeController.resetFilter();
+    }
+    if(ui.index === 1) { //leaf stories
+      me._paintLeafStories(ui.panel);
+    } else if(ui.index === 0) { //Story tree
+      me._paintStoryTree(ui.panel);
+    } else if(ui.index === 2) { //iteration list
+      me._paintIterations(ui.panel);
+    }
+  });
+  ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
+      this.id, function(model) {
+        ModelFactory.callEvery(30000,
+          function() {
+            model.reload(); // reload the base page and iteration tab
+            
+            me.filter(); // reload the tab content (story tree, leaf stories)
+          }
+        );
+        me.model = model;
+        me.attachModelListener();
+        me.paintProjectDetails();
+        me.tabs.tabs("select", selectedTab);
+      });
 };
 
 ProjectController.prototype.removeProject = function() {
@@ -707,7 +721,7 @@ ProjectController.prototype.initializeStoryConfig = function() {
     title : 'State',
     headerTooltip : 'Story state',
     get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
+    decorator: DynamicsDecorators.storyStateColorDecorator,
     editable : true,
     filter: ProjectController.prototype.filterLeafStoriesByState,
     edit : {

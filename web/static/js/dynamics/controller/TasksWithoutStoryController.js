@@ -41,7 +41,7 @@ TasksWithoutStoryController.columnConfig.state = {
   title : "State",
   headerTooltip : 'Task state',
   get : TaskModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
+  decorator: DynamicsDecorators.taskStateColorDecorator,
   editable : true,
   edit : {
     editor : "Selection",

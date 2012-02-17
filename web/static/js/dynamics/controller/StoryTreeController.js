@@ -250,8 +250,8 @@ StoryTreeController.prototype.initTree = function() {
         },
         complete: function() {
           overlay.fadeOut();
+		  me.renderComplete();
           me._searchByText();
-          me.renderComplete();
         }
       }
     },
@@ -510,6 +510,3 @@ StoryTreeController.prototype.removeNode = function(node) {
 StoryTreeController.prototype.openNodeDetails = function(node) {
   var bubble = new StoryInfoBubble($(node).attr('storyid'), this, $(node), {});
 };
-
-
-

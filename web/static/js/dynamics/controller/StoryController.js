@@ -421,17 +421,6 @@ StoryController.prototype.quickLogEffort = function(spentEffort) {
 };
 
 /**
- * Checks whether the story points field should be editable or not.
- */
-StoryController.prototype.storyValueOrPointsEditable = function() {
-  if (this.model.getState() === "DONE") {
-    MessageDisplay.Warning("Changing story points is not allowed for done stories");
-    return false;
-  }
-  return true;
-};
-
-/**
  * Checks if the given #(hash in the URL) task is in the current story
  * If it is there is sets the window to display it.
  */
@@ -586,7 +575,7 @@ StoryController.prototype.searchForTask = function() {
       get : TaskModel.prototype.getEffortSpent,
       decorator: DynamicsDecorators.exactEstimateDecorator,
       editable : false,
-      onDoubleClick: TaskController.prototype.openQuickLogEffort,
+      onClick: TaskController.prototype.openQuickLogEffort,
       edit : {
         editor : "ExactEstimate",
         decorator: DynamicsDecorators.empty,

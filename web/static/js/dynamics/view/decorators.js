@@ -65,6 +65,18 @@ var DynamicsDecorators = {
       return Math.round(10*value/60)/10+"h";
     }
   },
+  exactEstimateAppendManHourDecorator: function(value) {
+	    if (typeof (value) === 'string') {
+	      return value;
+	    }
+	    if(!value) {
+	      return "&mdash;";
+	    } else if(value === 0) {
+	      return "0 man-hours";
+	    } else {
+	      return Math.round(10*value/60)/10+" man-hours";
+	    }
+	  },
   exactEstimateEditDecorator: function(value) {
     if (typeof (value) === 'string') {
       return value;

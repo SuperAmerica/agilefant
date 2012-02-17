@@ -34,6 +34,7 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     //setting keys
     public static final String SETTING_NAME_HOUR_REPORTING = "HourReporting";
     public static final String SETTING_NAME_DAILY_WORK = "DailyWork";
+    public static final String SETTING_NAME_TIME_SHEET = "TimeSheet";
     public static final String SETTING_NAME_DEV_PORTFOLIO = "DevPortfolio";
     public static final String SETTING_NAME_RANGE_LOW = "RangeLow";
     public static final String SETTING_NAME_RANGE_HIGH = "RangeHigh";
@@ -127,6 +128,22 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
     @Transactional
     public void setDailyWork(boolean mode) {
         this.storeSetting(SETTING_NAME_DAILY_WORK, mode);
+    }
+    
+    @Transactional(readOnly = true)
+    public boolean isTimeSheet() {
+        Setting setting = this.retrieveByName(SETTING_NAME_TIME_SHEET);
+
+        if (setting == null) {
+            return false;
+        }
+
+        return setting.getValue().equals("true");
+    }
+    
+    @Transactional
+    public void setTimeSheet(boolean mode) {
+        this.storeSetting(SETTING_NAME_TIME_SHEET, mode);
     }
     
     @Transactional(readOnly = true)
@@ -319,7 +336,6 @@ public class SettingBusinessImpl extends GenericBusinessImpl<Setting> implements
             }
         }
     }
-    
     
     public void setBranchMetricsType(BranchMetricsType type) {
         if(type == null) {

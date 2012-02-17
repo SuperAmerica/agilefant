@@ -343,7 +343,7 @@ StoryListController.columnConfig.value = {
   editable : true,
   editableCallback: StoryController.prototype.storyValueOrPointsEditable,
   edit : {
-    editor : "Estimate",
+    editor : "StoryValue",
     set : StoryModel.prototype.setStoryValue
   }
 };
@@ -405,7 +405,7 @@ StoryListController.columnConfig.effortSpent = {
   decorator: DynamicsDecorators.exactEstimateDecorator,
   get : StoryModel.prototype.getTotalEffortSpent,
   editable : false,
-  onDoubleClick: StoryController.prototype.openQuickLogEffort,
+  onClick: StoryController.prototype.openQuickLogEffort,
   edit : {
     editor : "ExactEstimate",
     decorator: DynamicsDecorators.empty,

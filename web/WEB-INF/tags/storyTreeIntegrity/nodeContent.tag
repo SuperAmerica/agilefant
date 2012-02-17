@@ -8,7 +8,7 @@
 <%@ attribute type="java.lang.Boolean" name="omitBacklog" %>
 
 <span>
-    <span class="inlineTaskState taskState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></span>
+    <span class="inlineStoryState storyState${node.state}" title="<aef:text name="story.state.${node.state}" />"><aef:text name="story.stateAbbr.${node.state}" /></span>
     
     <span class="treeStoryPoints" title="Story points">
       <c:choose>

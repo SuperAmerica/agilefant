@@ -36,6 +36,9 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTimeZone;
+
 
 @Service("hourEntryBusiness")
 @Transactional
@@ -166,6 +169,18 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     }
     
     @Transactional(readOnly = true)
+    public List<DailySpentEffort> getDailySpentEffortByIteration(Iteration iteration) {
+        List<HourEntry> entries = hourEntryDAO.getAllIterationHourEntries(iteration.getId());
+        
+        return this.getDailySpentEffortForHourEntries(entries, iteration.getStartDate(), iteration.getEndDate());
+    }
+    
+    @Transactional(readOnly = true)
+    public List<HourEntry> getHourEntriesForIteration(Iteration iteration) {
+        return hourEntryDAO.getAllIterationHourEntries(iteration.getId());        
+    }
+    
+    @Transactional(readOnly = true)
     public long calculateSumOfIterationsHourEntries(Iteration iteration) {
         if (iteration == null) {
             throw new IllegalArgumentException("Iteration can't be null");
@@ -178,18 +193,18 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         return this.hourEntryDAO.getHourEntriesByFilter(startDate, endDate, userId);
     }
     
-    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId) {
+    public List<HourEntry> getEntriesByUserAndDay(LocalDate day, int userId, int userHourTimeZone, int userMinuteTimeZone) {
         DateTime start = day.toDateMidnight().toDateTime();
         DateTime end = start.plusDays(1).minusSeconds(1);
         return this.hourEntryDAO.getHourEntriesByFilter(start, end, userId);
     }
 
     @Transactional(readOnly = true)
-    public long calculateWeekSum(LocalDate week, int userId) {
+    public long calculateWeekSum(LocalDate week, int userId, int userHourTimeZone, int userMinuteTimeZone) {  
         MutableDateTime tmp = new MutableDateTime(week.toDateMidnight());
         tmp.setDayOfWeek(DateTimeConstants.MONDAY);
         tmp.setSecondOfDay(1);
-        DateTime start = tmp.toDateTime();
+        DateTime start = tmp.toDateTime(); 
         tmp.addDays(6);
         tmp.setHourOfDay(23);
         tmp.setMinuteOfHour(59);
@@ -199,7 +214,7 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
     }
     
     @Transactional(readOnly = true)
-    public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week, int userId) {
+    public List<DailySpentEffort> getDailySpentEffortByWeek(LocalDate week, int userId, int userHourTimeZone, int userMinuteTimeZone) {
         MutableDateTime tmp = new MutableDateTime(week.toDateMidnight());
         tmp.setDayOfWeek(DateTimeConstants.MONDAY);
         tmp.setSecondOfDay(1);
@@ -209,13 +224,33 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         tmp.setMinuteOfHour(59);
         tmp.setSecondOfMinute(59);
         DateTime end = tmp.toDateTime();
-        return this.getDailySpentEffortByInterval(start, end, userId);
+        return this.getDailySpentEffortByInterval(start, end, userId, userHourTimeZone, userMinuteTimeZone);
     }
     
+    /**
+     * Calculates the daily spent effort hour entries with no timezone calculations.
+     */
     @Transactional(readOnly = true)
     public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
             DateTime end, int userId) {
-        Map<Date, Long> dbData = new HashMap<Date, Long>();
+        if(start.compareTo(end) >= 0) {
+            return Collections.emptyList();
+        }
+        List<HourEntry> entries = this.hourEntryDAO.getHourEntriesByFilter(start, end, userId);
+        
+        return getDailySpentEffortForHourEntries(entries, start, end);
+    }
+    
+    /**
+     * Calculates the daily spent effort hour entries with a timezone.
+     */
+    @Transactional(readOnly = true)
+    public List<DailySpentEffort> getDailySpentEffortByInterval(DateTime start,
+            DateTime end, int userId, int userHourTimeZone, int userMinuteTimeZone) {
+        DateTimeZone zone = DateTimeZone.forOffsetHoursMinutes(userHourTimeZone, userMinuteTimeZone);
+        start = start.withZone(zone);
+        end = end.withZone(zone);
+        Map<DateMidnight, Long> dbData = new HashMap<DateMidnight, Long>();
         List<DailySpentEffort> dailyEffort = new ArrayList<DailySpentEffort>();
 
         if(start.compareTo(end) >= 0) {
@@ -225,27 +260,61 @@ public class HourEntryBusinessImpl extends GenericBusinessImpl<HourEntry>
         
         //sum efforts per day
         for(HourEntry entry : entries) {
-            Date date = entry.getDate().toDateMidnight().toDate();
-            if(!dbData.containsKey(date)) {
-                dbData.put(date, 0L);
+            DateMidnight md = entry.getDate().withZone(zone).toDateMidnight();
+            if(!dbData.containsKey(md)) {
+                dbData.put(md, 0L);
             }
-            dbData.put(date, dbData.get(date) + entry.getMinutesSpent());
+            dbData.put(md, dbData.get(md) + entry.getMinutesSpent());
         }
         MutableDateTime iteratorDate = new MutableDateTime(start.toDateMidnight());
         //construct list that has a single entry per day
         while(iteratorDate.compareTo(end) <= 0) {
             DailySpentEffort effortEntry = new DailySpentEffort();
-            Date currentDate = iteratorDate.toDate();
-            if(dbData.containsKey(currentDate)) {
-                effortEntry.setSpentEffort(dbData.get(currentDate));
+            
+            if(dbData.containsKey(iteratorDate)) {
+                effortEntry.setSpentEffort(dbData.get(iteratorDate));
             }
-            effortEntry.setDay(currentDate);
+            effortEntry.setDay(iteratorDate.toDateTime());
             dailyEffort.add(effortEntry);
             iteratorDate.addDays(1);
         }
         return dailyEffort;
     }
     
+    public List<DailySpentEffort> getDailySpentEffortForHourEntries(List<? extends HourEntry> entries,
+            DateTime start, DateTime end) {
+        Map<Date, Long> dbData = new HashMap<Date, Long>();
+        List<DailySpentEffort> dailyEffort = new ArrayList<DailySpentEffort>();
+
+        //sum efforts per day
+        for(HourEntry entry : entries) {
+            Date date = entry.getDate().toDateMidnight().toDate();
+            
+            if(!dbData.containsKey(date)) {
+                dbData.put(date, 0L);
+            }
+            
+            dbData.put(date, dbData.get(date) + entry.getMinutesSpent());
+        }
+        
+        MutableDateTime iteratorDate = new MutableDateTime(start.toDateMidnight());
+        
+        //construct list that has a single entry per day
+        while(iteratorDate.compareTo(end) <= 0) {
+            DailySpentEffort effortEntry = new DailySpentEffort();
+            Date currentDate = iteratorDate.toDate();
+            
+            if(dbData.containsKey(currentDate)) {
+                effortEntry.setSpentEffort(dbData.get(currentDate));
+            }
+            
+            effortEntry.setDay(iteratorDate.toDateTime());
+            dailyEffort.add(effortEntry);
+            iteratorDate.addDays(1);
+        }        
+        return dailyEffort;
+    }
+
     public void setBacklogHourEntryDAO(BacklogHourEntryDAO backlogHourEntryDAO) {
         this.backlogHourEntryDAO = backlogHourEntryDAO;
     }

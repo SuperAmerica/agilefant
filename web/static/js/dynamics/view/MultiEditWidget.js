@@ -17,11 +17,13 @@ MultiEditWidget.prototype = new ViewPart();
  * Initialize the content
  */
 MultiEditWidget.prototype.init = function() {
+  var me = this;
   this.content = $('<ul/>');
 
   $('<li>State:</li>').appendTo(this.content);
   var stateElement = $('<li><select name="state" /></li>').appendTo(this.content);
   this.stateSelect = stateElement.find('select');
+
   var states = {'NOT_STARTED':'Not started','STARTED':'Started','PENDING':'Pending','BLOCKED':'Blocked','IMPLEMENTED':'Ready','DONE':'Done', 'DEFERRED':'Deferred' };
   
   $.each(states, jQuery.proxy(function(k,v) {
@@ -58,6 +60,19 @@ MultiEditWidget.prototype.init = function() {
   // storyIds, labelNames, ajax/editMultiple.action
   var buttonLi = $('<li/>').appendTo(this.content);
   $('<button class="dynamics-button">Save</button>').click(jQuery.proxy(function() {
+
+	/* Confirms setting tasks to done */
+	if (this.stateSelect.val() === "DONE") {
+		for (var i=0; i<this.getSelected().length; i++) { // for each story selected
+			var storyID = this.getSelected()[i];
+			var storyTree = this.storyTreeController;
+			
+			storyTree._getStoryForId(storyID, function(object) {
+				MultiEditWidget.prototype.confirmTasksAndChildrenToDone(object, storyTree, true);
+			});
+		}
+	}
+	
     jQuery.ajax({
       type: 'post',
       async:  'true',
@@ -81,6 +96,84 @@ MultiEditWidget.prototype.init = function() {
   this.content.appendTo(this.element);
 };
 
+
+MultiEditWidget.prototype.confirmTasksAndChildrenToDone = function(model, storyTree, isTopStory) {
+	var tasks = model.getTasks();
+	var children = model.getChildren();
+	var nonDoneChildren = false;
+	var nonDoneTasks = false;
+	if (children.length > 0) {
+		for (var i = 0; i < children.length; i++) {
+		  if (children[i].getState() !== "DONE") {
+			nonDoneChildren = true;
+		  }
+		}
+	}
+	if (tasks.length > 0) {
+		for (var i = 0; i < tasks.length; i++) {
+		  if (tasks[i].getState() !== "DONE") {
+			nonDoneTasks = true;
+		  }
+		}
+	}
+	if (nonDoneChildren || nonDoneTasks) {
+	  if (isTopStory) {
+		  var msg = new DynamicsConfirmationDialog(
+			  "Set all tasks' and stories' states to done?",
+			  "The '" + model.getName() + "' story has undone child tasks/stories! Do you want to set them Done as well?",
+			  function() {
+			    if (nonDoneChildren) {
+					for (var i = 0; i < children.length; i++) {
+					  if (children[i].getState() !== "DONE") {
+						 children[i].setState("DONE");
+						 children[i].commit();
+						 storyTree._getStoryForId(children[i].getId(), function(object) {
+							MultiEditWidget.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
+						});
+						 storyTree.refresh();					
+					  }
+					}
+				} else {
+					if (nonDoneTasks)
+						model.currentData.tasksToDone = true;
+					model.commit();
+					storyTree.refresh();
+				}
+			  },
+			  function() {
+				model.commit();
+				storyTree.refresh();
+			  }
+			);
+		} else {
+			if (nonDoneChildren) {
+				for (var i = 0; i < children.length; i++) {
+					if (children[i].getState() !== "DONE") {
+						children[i].setState("DONE");
+						children[i].commit();
+						storyTree._getStoryForId(children[i].getId(), function(object) {
+							MultiEditWidget.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
+						});
+						storyTree.refresh();
+					}
+
+				}
+			} else {
+				if (nonDoneTasks)
+					model.currentData.tasksToDone = true;
+				model.commit();
+				storyTree.refresh();
+			}
+		}
+	} else {
+	  model.commit();
+	  storyTree.refresh();
+	}
+};
+
+MultiEditWidget.prototype.getTree = function() {
+  return this.storyTreeController;
+};
 MultiEditWidget.prototype.getSelected = function() {
   return this.storyTreeController.getSelectedIds();
 };
@@ -100,5 +193,3 @@ MultiEditWidget.prototype.close = function() {
     this.element.hide();
   }, this));
 };
-
-

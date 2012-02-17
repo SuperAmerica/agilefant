@@ -23,8 +23,10 @@ import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.IterationBurndownBusinessImpl;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
+import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
+import fi.hut.soberit.agilefant.transfer.DailySpentEffort;
 import fi.hut.soberit.agilefant.util.ExactEstimateUtils;
 import fi.hut.soberit.agilefant.util.Pair;
 
@@ -33,13 +35,14 @@ import fi.hut.soberit.agilefant.util.Pair;
  * <p>
  * Extends the class to be able to test protected methods.
  * 
- * @author rjokelai, jsorvett
+ * @author rjokelai, jsorvett, ahoffman
  *
  */
 public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl {
 
     IterationBurndownBusinessImpl iterationBurndownBusiness;
     IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
+    HourEntryBusiness hourEntryBusiness;
     IterationBusiness iterationBusiness;
     SettingBusiness settingBusiness;
     
@@ -49,6 +52,9 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     ExactEstimate originalEstimateSum;
     IterationHistoryEntry entry;
     JFreeChart chart;
+    
+    List<DailySpentEffort> dailySpentEffortList;
+    List<HourEntry> hourEntryList;
     
     IterationHistoryEntry entry1;
     IterationHistoryEntry entry2;
@@ -61,12 +67,17 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     public void setUp() {
         iterationBurndownBusiness = new IterationBurndownBusinessImpl();
         iterationHistoryEntryBusiness = createMock(IterationHistoryEntryBusiness.class);
-        iterationBurndownBusiness
-                .setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
+        iterationBurndownBusiness.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
         super.setIterationHistoryEntryBusiness(iterationHistoryEntryBusiness);
+        
         iterationBusiness = createMock(IterationBusiness.class);
         iterationBurndownBusiness.setIterationBusiness(iterationBusiness);
         super.setIterationBusiness(iterationBusiness);
+        
+        hourEntryBusiness = createMock(HourEntryBusiness.class);
+        iterationBurndownBusiness.setHourEntryBusiness(hourEntryBusiness);
+        super.setHourEntryBusiness(hourEntryBusiness);
+        
         settingBusiness = createMock(SettingBusiness.class);
         iterationBurndownBusiness.setSettingBusiness(settingBusiness);
         super.setSettingBusiness(settingBusiness);
@@ -79,7 +90,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         iteration.setEndDate(endDate);
         originalEstimateSum = new ExactEstimate(100 * 60);
         
-        chart = ChartFactory.createTimeSeriesChart(BURNDOWN_SERIES_NAME,
+        chart = ChartFactory.createTimeSeriesChart(EFFORT_LEFT_SERIES_NAME,
                 DATE_AXIS_LABEL,
                 EFFORT_AXIS_LABEL,
                 null, true, true, false);
@@ -99,90 +110,154 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         entry2.setOriginalEstimateSum(100);
         
         entriesList = Arrays.asList(entry1, entry2);
+        
+        dailySpentEffortList = new ArrayList<DailySpentEffort>();
+        hourEntryList = new ArrayList<HourEntry>();
+        
+        
     }
     
     @Test
     public void testGetIterationBurndown() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getDailySpentEffortByIteration(iteration)).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration, 0));
-             
+        
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testGetSmallIterationBurndown() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-        .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
 
         assertNotNull(iterationBurndownBusiness.getSmallIterationBurndown(iteration, 0));
 
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testCustomIterationBurndown() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         assertNotNull(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 1024, 768, 0));
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testConstructChart() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         JFreeChart newChart = super.constructChart(iteration, 0);
         
         assertEquals(REFERENCE_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));
-        assertEquals(BURNDOWN_SERIES_NAME,
-                newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_NAME,
-                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_SERIES_NO));
+        assertEquals(EFFORT_LEFT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(EFFORT_LEFT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(SCOPING_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
     @Test
     public void testConstructSmallChart() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         JFreeChart newChart = super.constructSmallChart(iteration, 0);
         
         assertEquals(REFERENCE_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(REFERENCE_SERIES_NO));
-        assertEquals(BURNDOWN_SERIES_NAME,
-                newChart.getXYPlot().getDataset().getSeriesKey(BURNDOWN_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_NAME,
-                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_SERIES_NO));
+        assertEquals(EFFORT_LEFT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(EFFORT_LEFT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME,
+                newChart.getXYPlot().getDataset().getSeriesKey(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
         assertEquals(SCOPING_SERIES_NAME,
                 newChart.getXYPlot().getDataset().getSeriesKey(SCOPING_SERIES_NO));
                
         testSmallChartFormating(newChart);
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
@@ -191,13 +266,17 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
        
         XYPlot plot = chart.getXYPlot();
         XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer)chart.getXYPlot().getRenderer();
-        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(BURNDOWN_SERIES_NO));
-        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
-        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_SERIES_NO));
+        assertEquals(EFFORT_LEFT_SERIES_COLOR, rend.getSeriesPaint(EFFORT_LEFT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(EFFORT_SPENT_SERIES_NO));        
+        assertEquals(EFFORT_LEFT_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
+        assertEquals(EFFORT_LEFT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
         
-        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(BURNDOWN_SERIES_NO));
-        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(EFFORT_LEFT_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(EFFORT_SPENT_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
         assertEquals(SMALL_BURNDOWN_STROKE, rend.getSeriesStroke(REFERENCE_SERIES_NO));
         
@@ -206,10 +285,12 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         assertFalse(plot.isDomainGridlinesVisible());
         assertFalse(plot.isRangeGridlinesVisible());
         
-        assertFalse(rend.getSeriesShapesVisible(BURNDOWN_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(EFFORT_LEFT_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(EFFORT_SPENT_SERIES_NO));
         assertFalse(rend.getSeriesShapesVisible(REFERENCE_SERIES_NO));
         assertFalse(rend.getSeriesShapesVisible(SCOPING_SERIES_NO));
-        assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertFalse(rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         
         assertEquals(null, plot.getDomainAxis().getLabel());
         assertEquals(null, plot.getRangeAxis().getLabel());
@@ -249,17 +330,27 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         XYLineAndShapeRenderer rend = (XYLineAndShapeRenderer) ((XYPlot) chart
                 .getPlot()).getRenderer();
         
-        assertEquals(BURNDOWN_SERIES_COLOR, rend.getSeriesPaint(BURNDOWN_SERIES_NO));
-        assertEquals(BURNDOWN_SERIES_SHAPE, rend.getSeriesShape(BURNDOWN_SERIES_NO));
-        assertEquals(BURNDOWN_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(BURNDOWN_SERIES_NO));
+        assertEquals(EFFORT_LEFT_SERIES_COLOR, rend.getSeriesPaint(EFFORT_LEFT_SERIES_NO));
+        assertEquals(EFFORT_LEFT_SERIES_SHAPE, rend.getSeriesShape(EFFORT_LEFT_SERIES_NO));
+        assertEquals(EFFORT_LEFT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(EFFORT_LEFT_SERIES_NO));
+        
+        assertEquals(EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(EFFORT_SPENT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_SHAPE, rend.getSeriesShape(EFFORT_SPENT_SERIES_NO));
+        assertEquals(EFFORT_SPENT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(EFFORT_SPENT_SERIES_NO));
         
         assertEquals(REFERENCE_SERIES_COLOR, rend.getSeriesPaint(REFERENCE_SERIES_NO));
         
-        assertEquals(CURRENT_DAY_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_STROKE, rend.getSeriesStroke(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_SERIES_NO));
-        assertEquals(CURRENT_DAY_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_SERIES_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_EFFORT_LEFT_SERIES_NO));
+        
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_COLOR, rend.getSeriesPaint(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_SERIES_STROKE, rend.getSeriesStroke(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE, rend.getSeriesShape(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_VISIBLE, rend.getSeriesShapesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
+        assertEquals(CURRENT_DAY_EFFORT_SPENT_SERIES_SHAPE_FILLED, rend.getSeriesShapesFilled(CURRENT_DAY_EFFORT_SPENT_SERIES_NO));
         
         assertEquals(SCOPING_SERIES_STROKE, rend.getSeriesStroke(SCOPING_SERIES_NO));
         assertEquals(SCOPING_SERIES_COLOR, rend.getSeriesPaint(SCOPING_SERIES_NO));
@@ -267,18 +358,28 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
     
     @Test
     public void testGetDataset() {
-        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration))
-            .andReturn(Arrays.asList(entry));
+        expect(iterationHistoryEntryBusiness.getHistoryEntriesForIteration(iteration)).andReturn(Arrays.asList(entry));
         expect(iterationHistoryEntryBusiness.calculateExpectedEffortDoneDate(isA(LocalDate.class), isA(ExactEstimate.class), isA(ExactEstimate.class))).andReturn(null);
+        
         expect(iterationBusiness.calculateDailyVelocity(isA(LocalDate.class), isA(IterationHistoryEntry.class))).andReturn(ExactEstimate.ZERO);
-        replay(iterationHistoryEntryBusiness, iterationBusiness);
+        
+        expect(hourEntryBusiness.getHourEntriesForIteration(iteration)).andReturn(hourEntryList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), iteration.getEndDate().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate().minusDays(1), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
+        
+        expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
+        
+        replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         TimeSeriesCollection actualTimeSeries = super.getDataset(iteration);
         assertNotNull(actualTimeSeries.getSeries(REFERENCE_SERIES_NAME));
-        assertNotNull(actualTimeSeries.getSeries(BURNDOWN_SERIES_NAME));
-        assertNotNull(actualTimeSeries.getSeries(CURRENT_DAY_SERIES_NAME));
+        assertNotNull(actualTimeSeries.getSeries(EFFORT_LEFT_SERIES_NAME));
+        assertNotNull(actualTimeSeries.getSeries(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME));
         assertNotNull(actualTimeSeries.getSeries(SCOPING_SERIES_NAME));
         
+        // TODO: Verify hourEntryBusiness
         verify(iterationHistoryEntryBusiness, iterationBusiness);
     }
     
@@ -559,10 +660,10 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
                 startEntry.getEffortLeftSum() + endEntry.getDeltaOriginalEstimate());
         ExactEstimate expectedEndvalue = new ExactEstimate(endEntry.getEffortLeftSum());
         
-        TimeSeries actualSeries = super.getCurrentDayTimeSeries(startEntry, endEntry);
+        TimeSeries actualSeries = super.getCurrentDayEffortLeftSeries(startEntry, endEntry);
         testSeriesStartAndEndCorrect(actualSeries, expectedStartValue, expectedEndvalue);
         
-        assertEquals(CURRENT_DAY_SERIES_NAME, actualSeries.getKey());
+        assertEquals(CURRENT_DAY_EFFORT_LEFT_SERIES_NAME, actualSeries.getKey());
         assertEquals(ExactEstimateUtils.extractMajorUnits(expectedStartValue),
                 actualSeries.getDataItem(0).getValue());
     }

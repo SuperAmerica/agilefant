@@ -86,7 +86,7 @@ IterationController.columnConfigs = {
   plannedSize: {
     title : "Planned Size",
     get : IterationModel.prototype.getBacklogSize,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
+    decorator: DynamicsDecorators.exactEstimateAppendManHourDecorator,
     editable: true,
     edit: {
       editor: "ExactEstimate",

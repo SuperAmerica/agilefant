@@ -24,11 +24,11 @@
       <td>Value</td>
       <td>
       <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">
-      <div class="storyStateDONE" style="display: inline-block; width: ${projectMetrics.completedStoriesPercentage}%; height: 1em;"></div>
+      <div class="storyStateDONE" style="display: inline-block; width: ${projectMetrics.valuePercentage}%; height: 1em;"></div>
       </div>
       </td>
       <td>
-        <c:out value="${projectMetrics.completedStoriesPercentage}" />%
+        <c:out value="${projectMetrics.valuePercentage}" />%
       </td>
       <td style="text-align: center; white-space: nowrap;">
         <c:out value="${projectMetrics.completedValue}" /> / 
@@ -69,15 +69,15 @@
       <td>Effort spent</td>
       <td>
       <div style="width: 50px; height: 1em;"  class="storyStateNOT_STARTED">
-      <div class="storyStateDONE" style="display: inline-block; width: ${projectMetrics.storyPointsCompletedPercentage}%; height: 1em;"></div>
+      <div class="storyStateDONE" style="display: inline-block; width: ${projectMetrics.effortSpentPercentage}%; height: 1em;"></div>
       </div>
       </td>
       <td>
-        <c:out value="${projectMetrics.storyPointsCompletedPercentage}" />%
+        <c:out value="${projectMetrics.effortSpentPercentage}" />%
       </td>
       <td style="text-align: center; white-space: nowrap;">
-        <c:out value="${projectMetrics.completedStoryPoints}" /> / 
-        <c:out value="${projectMetrics.storyPoints}" /> points
+        <c:out value="${projectMetrics.effortSpent/60}" />h / 
+        <c:out value="${projectMetrics.originalEstimate/60}" />h
       </td>
     </tr>
     </table>
@@ -95,4 +95,3 @@
     </tr>
   </table>
 </struct:widget>
-    

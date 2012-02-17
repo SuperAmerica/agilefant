@@ -68,5 +68,10 @@ public interface StoryHierarchyDAO {
      */
     public int getMaximumTreeRank(int productId);
     
-    
+    /**
+     * Get a sum of all the story points for branch stories for a project, including leaf stories.
+     * @param productId
+     * @return
+     */
+    public long totalBranchStoryPoints(Project project);
 }

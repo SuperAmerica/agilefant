@@ -200,8 +200,7 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * {@inheritDoc}
      */
     public void rankToBottom(Story story, Backlog context) {
-        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
-                story);
+        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context, story);
         LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();
         ranks.addAll(this.storyRankDAO.retrieveRanksByBacklog(context));
         StoryRank tailRank = null;
@@ -213,6 +212,12 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
         if (rank == null) {
             rank = createRank(story, context);
         }
+        
+        if(tailRank != null && (rank.getRank() == tailRank.getRank())){
+            //story is already at the bottom
+            return;
+        }
+        
         if (tailRank != null) {
             rankBelow(rank, tailRank);
         }
@@ -220,19 +225,25 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
     }
 
     public void rankToHead(Story story, Backlog backlog) {
-        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(backlog,
-                story);
+        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(backlog, story);
+        
+        if (rank == null) {
+            rank = createRank(story, backlog);
+        } 
+        
+        if (rank.getRank() == 0){
+            //story is already at top
+            return;
+        }
+        
         LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();
         ranks.addAll(this.storyRankDAO.retrieveRanksByBacklog(backlog));
         StoryRank topRank = null;
         try {
             topRank = ranks.getFirst();
         } catch (Exception e) {
-
         }
-        if (rank == null) {
-            rank = createRank(story, backlog);
-        }
+        
         if (topRank != null) {
             rankAbove(rank, topRank);
         }

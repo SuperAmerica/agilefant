@@ -40,19 +40,26 @@ var ProjectController = function ProjectController(options) {
 ProjectController.prototype = new BacklogController();
 
 ProjectController.prototype.filter = function() {
-	var me = this;
-	var activeTab = this.tabs.tabs("option", "selected");
-	if (activeTab === 1) {
-		this.storyListView.showInfoMessage("Searching...");
-		this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
-			me.storyListView.hideInfoMessage("Searching...");
-		});
-	} else if (activeTab === 0) {
-		this.storyTreeController.filter(this.getTextFilter(), this
-				.getStoryTreeStateFilters());
-	} else if (activeTab === 2) {
-		this.iterationsView.filter();
-	}
+  var me = this;
+  var activeTab = this.tabs.tabs("option","selected");
+  if (activeTab === 1) { // leaf stories
+    this.storyListView.showInfoMessage("Searching...");
+    this.model.reloadLeafStories(this.getLeafStoryFilters(), function() {
+      me.storyListView.hideInfoMessage("Searching...");
+    });
+  }
+  else if (activeTab === 0) { // story tree
+    this.storyTreeController.filter(this.getTextFilter(),
+        this.getStoryTreeStateFilters());
+  }
+  else if (activeTab === 2) { // iterations
+    this.iterationsView.showInfoMessage("Loading...");
+    this.model.reloadIterations(null, function() {
+      me.iterationsView.hideInfoMessage("Loading...");
+      //me.iterationsView.render();
+    });
+    this.iterationsView.filter();
+  }
 };
 
 ProjectController.prototype.filterLeafStories = function() {
@@ -298,30 +305,37 @@ ProjectController.prototype._paintStoryTree = function(element) {
 };
 
 ProjectController.prototype.paint = function() {
-	var me = this;
-	var selectedTab = this.tabs.tabs("option", "selected");
-	var tmpSel = (selectedTab === 2) ? 0 : 2;
-	this.tabs.tabs("select", tmpSel);
-	this.tabs.bind("tabsselect", function(event, ui) {
-		me.textFilter.clear();
-		if (me.storyTreeController) {
-			me.storyTreeController.resetFilter();
-		}
-		if (ui.index === 1) { // leaf stories
-			me._paintLeafStories(ui.panel);
-		} else if (ui.index === 0) { // Story tree
-			me._paintStoryTree(ui.panel);
-		} else if (ui.index === 2) { // iteration list
-			me._paintIterations(ui.panel);
-		}
-	});
-	ModelFactory.getInstance()._getData(
-			ModelFactory.initializeForTypes.project, this.id, function(model) {
-				me.model = model;
-				me.attachModelListener();
-				me.paintProjectDetails();
-				me.tabs.tabs("select", selectedTab);
-			});
+  var me = this;
+  var selectedTab = this.tabs.tabs("option","selected");
+  var tmpSel = (selectedTab === 2) ? 0 : 2;
+  this.tabs.tabs("select", tmpSel);
+  this.tabs.bind("tabsselect",function(event, ui){
+    me.textFilter.clear();
+    if(me.storyTreeController) {
+      me.storyTreeController.resetFilter();
+    }
+    if(ui.index === 1) { //leaf stories
+      me._paintLeafStories(ui.panel);
+    } else if(ui.index === 0) { //Story tree
+      me._paintStoryTree(ui.panel);
+    } else if(ui.index === 2) { //iteration list
+      me._paintIterations(ui.panel);
+    }
+  });
+  ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
+      this.id, function(model) {
+        ModelFactory.callEvery(30000,
+          function() {
+            model.reload(); // reload the base page and iteration tab
+            
+            me.filter(); // reload the tab content (story tree, leaf stories)
+          }
+        );
+        me.model = model;
+        me.attachModelListener();
+        me.paintProjectDetails();
+        me.tabs.tabs("select", selectedTab);
+      });
 };
 
 ProjectController.prototype.removeProject = function() {
@@ -625,175 +639,183 @@ ProjectController.prototype._iterationListColumnConfig = function(config) {
  * Initialize configuration for story lists.
  */
 ProjectController.prototype.initializeStoryConfig = function() {
-	var me = this;
-	var config = new DynamicTableConfiguration(
-			{
-				rowControllerFactory : ProjectController.prototype.storyControllerFactory,
-				dataSource : ProjectModel.prototype.getLeafStories,
-				dataType : "story",
-				cssClass : "project-story-table",
-				sortCallback : StoryController.prototype.rankStory,
-				caption : "Leaf stories"
-			});
+  var me = this;
+  var config = new DynamicTableConfiguration( {
+    rowControllerFactory : ProjectController.prototype.storyControllerFactory,
+    dataSource : ProjectModel.prototype.getLeafStories,
+    dataType: "story",
+    cssClass: "project-story-table",
+    sortCallback: StoryController.prototype.rankStory,
+    caption : "Leaf stories"
+  });
 
-	config.addCaptionItem({
-		name : "createStory",
-		text : "Create story",
-		cssClass : "create",
-		callback : ProjectController.prototype.createStory
-	});
+  config.addCaptionItem( {
+    name : "createStory",
+    text : "Create story",
+    cssClass : "create",
+    callback : ProjectController.prototype.createStory
+  });
+  
+  config.addColumnConfiguration(0, {
+    minWidth : 24,
+    autoScale : true,
+    title : "#",
+    columnName: "expand",
+    headerTooltip : 'Priority',
+    defaultSortColumn: true,
+    subViewFactory: StoryController.prototype.descriptionToggleFactory,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getRank)
+  });
+  
+  config.addColumnConfiguration(1, {
+    minWidth : 280,
+    autoScale : true,
+    title : "Name",
+    headerTooltip : 'Story name',
+    get : StoryModel.prototype.getName,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getName),
+    dragHandle: true,
+    editable : true,
+    edit : {
+      editor : "Text",
+      set : StoryModel.prototype.setName,
+      required: true
+    }
+  });
+  
+  config.addColumnConfiguration(2, {
+    minWidth : 50,
+    autoScale : true,
+    title : "Value",
+    headerTooltip : 'A given story value or weight',
+    get : StoryModel.prototype.getStoryValue,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
+    editable : true,
+    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
+    decorator: DynamicsDecorators.estimateDecorator,
+    edit : {
+      editor : "StoryValue",
+      set : StoryModel.prototype.setStoryValue
+    }
+  });
 
-	config.addColumnConfiguration(0, {
-		minWidth : 24,
-		autoScale : true,
-		title : "#",
-		columnName : "expand",
-		headerTooltip : 'Priority',
-		defaultSortColumn : true,
-		subViewFactory : StoryController.prototype.descriptionToggleFactory,
-		sortCallback : DynamicsComparators
-				.valueComparatorFactory(StoryModel.prototype.getRank)
-	});
+  config.addColumnConfiguration(3, {
+    minWidth : 50,
+    autoScale : true,
+    title : "Points",
+    headerTooltip : 'Estimate in story points',
+    get : StoryModel.prototype.getStoryPoints,
+    sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
+    editable : true,
+    editableCallback: StoryController.prototype.storyValueOrPointsEditable,
+    decorator: DynamicsDecorators.estimateDecorator,
+    edit : {
+      editor : "Estimate",
+      set : StoryModel.prototype.setStoryPoints
+    }
+  });
+  
+  config.addColumnConfiguration(4, {
+    minWidth : 70,
+    autoScale : true,
+    title : 'State',
+    headerTooltip : 'Story state',
+    get : StoryModel.prototype.getState,
+    decorator: DynamicsDecorators.storyStateColorDecorator,
+    editable : true,
+    filter: ProjectController.prototype.filterLeafStoriesByState,
+    edit : {
+      editor : "Selection",
+      set : StoryModel.prototype.setState,
+      items : DynamicsDecorators.stateOptions
+    }
+  });
+  
+  config.addColumnConfiguration(5, {
+    minWidth : 70,
+    autoScale : true,
+    title : "Responsibles",
+    headerTooltip : 'Story responsibles',
+    get : StoryModel.prototype.getResponsibles,
+    decorator: DynamicsDecorators.responsiblesDecorator,
+    editable : true,
+    openOnRowEdit: false,
+    edit : {
+      editor : "Autocomplete",
+      dialogTitle: "Select users",
+      dataType: "usersAndTeams",
+      set : StoryModel.prototype.setResponsibles
+    }
+  });
 
-	config.addColumnConfiguration(1, {
-		minWidth : 280,
-		autoScale : true,
-		title : "Name",
-		headerTooltip : 'Story name',
-		get : StoryModel.prototype.getName,
-		sortCallback : DynamicsComparators
-				.valueComparatorFactory(StoryModel.prototype.getName),
-		dragHandle : true,
-		editable : true,
-		edit : {
-			editor : "Text",
-			set : StoryModel.prototype.setName,
-			required : true
-		}
-	});
+  config.addColumnConfiguration(6, {
+    minWidth : 100,
+    autoScale : true,
+    columnName: "backlog",
+    title : "Backlog",
+    headerTooltip : 'The backlog, where the story resides',
+    get : StoryModel.prototype.getBacklog,
+    decorator: DynamicsDecorators.backlogSelectDecorator,
+    sortCallback: DynamicsComparators.storyBacklogNameComparator,
+    editable : true,
+    openOnRowEdit: false,
+    edit: {
+      editor: "Selection",
+      items: function() { return me.getSelectableBacklogs(); },
+      set: StoryModel.prototype.moveStory
+    }
+  });
+  config.addColumnConfiguration(7, {
+    minWidth : 40,
+    columnName: "edit",
+    autoScale : true,
+    title : "Edit",
+    subViewFactory : StoryController.prototype.projectStoryActionFactory
+  });
+  config.addColumnConfiguration(8, {
+    minWidth : 40,
+    columnName: "ranktotop",
+    autoScale : true,
+    title : "",
+    subViewFactory : StoryController.prototype.rankToTopAction
+  });
+  config.addColumnConfiguration(9, {
+    minWidth : 60,
+    columnName: "ranktobottom",
+    autoScale : true,
+    title : "",
+    subViewFactory : StoryController.prototype.rankToBottomAction
+  });
+  
+  if (Configuration.isLabelsInStoryList()) {
+	  config.addColumnConfiguration(10, StoryListController.columnConfig.labels);
+  }
+  
+  config.addColumnConfiguration(11, {
+    columnName: "description",
+    fullWidth: true,
+    visible: false,
+    editable : true,
+    get: StoryModel.prototype.getDescription,
+    edit : {
+      editor : "Wysiwyg",
+      set : StoryModel.prototype.setDescription
+    }
+  });
+  config.addColumnConfiguration(12, {
+    fullWidth : true,
+    visible : false,
+    columnName: "details",
+    subViewFactory : StoryController.prototype.storyDetailsFactory,
+    delayedRender: true
+  });
+  config.addColumnConfiguration(13, {
+    columnName: "buttons",
+    fullWidth : true,
+    visible : false,
+    cssClass : 'projectstory-data',
+    subViewFactory : DynamicsButtons.commonButtonFactory
+  });
 
-	config.addColumnConfiguration(2, {
-		minWidth : 50,
-		autoScale : true,
-		title : "Value",
-		headerTooltip : 'A given story value or weight',
-		get : StoryModel.prototype.getStoryValue,
-		sortCallback : DynamicsComparators
-				.valueComparatorFactory(StoryModel.prototype.getStoryValue),
-		editable : true,
-		decorator : DynamicsDecorators.estimateDecorator,
-		edit : {
-			editor : "StoryValue",
-			set : StoryModel.prototype.setStoryValue
-		}
-	});
-
-	config.addColumnConfiguration(3, {
-		minWidth : 50,
-		autoScale : true,
-		title : "Points",
-		headerTooltip : 'Estimate in story points',
-		get : StoryModel.prototype.getStoryPoints,
-		sortCallback : DynamicsComparators
-				.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
-		editable : true,
-		decorator : DynamicsDecorators.estimateDecorator,
-		edit : {
-			editor : "Estimate",
-			set : StoryModel.prototype.setStoryPoints
-		}
-	});
-
-	config.addColumnConfiguration(4, {
-		minWidth : 70,
-		autoScale : true,
-		title : 'State',
-		headerTooltip : 'Story state',
-		get : StoryModel.prototype.getState,
-		decorator : DynamicsDecorators.stateColorDecorator,
-		editable : true,
-		filter : ProjectController.prototype.filterLeafStoriesByState,
-		edit : {
-			editor : "Selection",
-			set : StoryModel.prototype.setState,
-			items : DynamicsDecorators.stateOptions
-		}
-	});
-
-	config.addColumnConfiguration(5, {
-		minWidth : 60,
-		autoScale : true,
-		title : "Responsibles",
-		headerTooltip : 'Story responsibles',
-		get : StoryModel.prototype.getResponsibles,
-		decorator : DynamicsDecorators.responsiblesDecorator,
-		editable : true,
-		openOnRowEdit : false,
-		edit : {
-			editor : "Autocomplete",
-			dialogTitle : "Select users",
-			dataType : "usersAndTeams",
-			set : StoryModel.prototype.setResponsibles
-		}
-	});
-
-	config.addColumnConfiguration(6, {
-		minWidth : 100,
-		autoScale : true,
-		columnName : "backlog",
-		title : "Backlog",
-		headerTooltip : 'The backlog, where the story resides',
-		get : StoryModel.prototype.getBacklog,
-		decorator : DynamicsDecorators.backlogSelectDecorator,
-		sortCallback : DynamicsComparators.storyBacklogNameComparator,
-		editable : true,
-		openOnRowEdit : false,
-		edit : {
-			editor : "Selection",
-			items : function() {
-				return me.getSelectableBacklogs();
-			},
-			set : StoryModel.prototype.moveStory
-		}
-	});
-	config.addColumnConfiguration(7, {
-		minWidth : 35,
-		columnName : "edit",
-		autoScale : true,
-		title : "Edit",
-		subViewFactory : StoryController.prototype.projectStoryActionFactory
-	});
-
-	if (Configuration.isLabelsInStoryList()) {
-		config.addColumnConfiguration(8,
-				StoryListController.columnConfig.labels);
-	}
-
-	config.addColumnConfiguration(9, {
-		columnName : "description",
-		fullWidth : true,
-		visible : false,
-		editable : true,
-		get : StoryModel.prototype.getDescription,
-		edit : {
-			editor : "Wysiwyg",
-			set : StoryModel.prototype.setDescription
-		}
-	});
-	config.addColumnConfiguration(10, {
-		fullWidth : true,
-		visible : false,
-		columnName : "details",
-		subViewFactory : StoryController.prototype.storyDetailsFactory,
-		delayedRender : true
-	});
-	config.addColumnConfiguration(11, {
-		columnName : "buttons",
-		fullWidth : true,
-		visible : false,
-		cssClass : 'projectstory-data',
-		subViewFactory : DynamicsButtons.commonButtonFactory
-	});
-
-	this.storyListConfig = config;
+  this.storyListConfig = config;
 };

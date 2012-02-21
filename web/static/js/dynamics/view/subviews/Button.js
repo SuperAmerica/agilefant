@@ -1,9 +1,10 @@
-var DynamicTableRowButton = function DynamicTableRowButton(options, controller, model, parentView) {
+var DynamicTableRowButton = function DynamicTableRowButton(options, controller, model, parentView, width) {
     this.label = options.label;
     this.callback = options.callback;
     this.controller = controller;
     this.model = model;
     this.parentView = parentView;
+    this.width = width;
 };
 
 DynamicTableRowButton.prototype = new CommonFragmentSubView();
@@ -12,20 +13,15 @@ DynamicTableRowButton.prototype = new CommonFragmentSubView();
  * @private
  */
 DynamicTableRowButton.prototype.getHTML = function() {
-  return '<div id="'+this.getId()+'" style="width: 68px;"><div class="actionColumn"><div class="edit" style="width: 44px">' + this.label + '</div></div></div>';
-  /*
-  var me = this;
-    this.container = $('<div />').width("68px").appendTo(
-        this.parentView.getElement());
-    
-    this.button = $('<div class="actionColumn"><div class="edit" style="width: 44px">' + this.label + '</div></div>');
-    this.button.appendTo(this.container);
+	var me = this;
+	this.container = $('<div />').width(this.width + "px").appendTo(this.parentView.getElement());
+	
+	this.button = $('<div class="actionColumn"><div class="edit" style="width: ' + (this.width - 20) + 'px">' + this.label + '</div></div>');
+	this.button.appendTo(this.container);
+	this.button.click(function(event) { me._click(); });
+	return "";
+};
 
-    this.clickListener = function(event) {
-        me.callback();
-    };
-    
-    this.button.click(function(event) { me.callback.call(me.controller); });
-    this.element = this.container;
-*/
+DynamicTableRowButton.prototype._click = function() {
+	this.callback.call(this.controller, this.model, this.parentView);
 };

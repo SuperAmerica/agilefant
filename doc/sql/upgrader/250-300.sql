@@ -1,0 +1,1 @@
+create table admin_product (productId integer not null, adminId integer not null, primary key (productId, adminId)) ENGINE=InnoDB;

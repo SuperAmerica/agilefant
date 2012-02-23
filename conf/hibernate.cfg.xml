@@ -21,6 +21,7 @@
         
 		<mapping package="fi.hut.soberit.agilefant.model" />
 
+		<mapping class="fi.hut.soberit.agilefant.model.Administrator" />
 		<mapping class="fi.hut.soberit.agilefant.model.Assignment" />
 		<mapping class="fi.hut.soberit.agilefant.model.Backlog" />
 		<mapping class="fi.hut.soberit.agilefant.model.BacklogHistoryEntry" />

@@ -90,7 +90,7 @@ StoryFiltersView.prototype.initInputHighlights = function() {
 StoryFiltersView.prototype.clear = function() {
   this.nameField.val("");
   this.labelAutosuggest.empty();
-  this.filters.find('.inlineTaskState').fadeTo("fast", 1);
+  this.filters.find('.inlineStoryState').fadeTo("fast", 1);
   this.initInputHighlights();
   this.storyStates = this.allStoryStates.slice();
   this.filter();
@@ -111,7 +111,7 @@ StoryFiltersView.prototype.renderFully = function() {
 
 StoryFiltersView.prototype.addStateButton = function(state) {
   var me = this;
-  var stateDiv = $('<span class="inlineTaskState taskState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.abbr + '</div>');
+  var stateDiv = $('<span class="inlineStoryState storyState' + state.name + '" style="float:left; cursor:pointer; margin-right: 4px">' + state.abbr + '</div>');
   stateDiv.click(function() {
     if ($.inArray(state, me.storyStates) != -1) {
       stateDiv.fadeTo("fast", 0.5);

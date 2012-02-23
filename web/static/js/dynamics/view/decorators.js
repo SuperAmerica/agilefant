@@ -23,21 +23,33 @@ var DynamicsDecorators = {
       }
     };
   },
-  stateColorDecorator: function(state) {
+  taskStateColorDecorator: function(state) {
     var text = DynamicsDecorators.stateDecorator(state);
     return '<div class="taskState taskState'+state+'">'+text+'</div>';
+  },
+  storyStateColorDecorator: function(state) {
+    var text = DynamicsDecorators.stateDecorator(state);
+    return '<div class="storyState storyState'+state+'">'+text+'</div>';
   },
   enabledDisabledOptions: {
     "true":  "Enabled",
     "false": "Disabled"
   },
-  enabledDisabledColorDecorator: function(state) {
+  enabledDisabledTaskColorDecorator: function(state) {
     var text = DynamicsDecorators.enabledDisabledOptions[state];
     var stateClass = {
       "false": "NOT_STARTED",
       "true":  "DONE"
     };
     return '<div class="taskState taskState'+stateClass[state]+'">'+text+'</div>';
+  },
+  enabledDisabledStoryColorDecorator: function(state) {
+    var text = DynamicsDecorators.enabledDisabledOptions[state];
+    var stateClass = {
+      "false": "NOT_STARTED",
+      "true":  "DONE"
+    };
+    return '<div class="storyState storyState'+stateClass[state]+'">'+text+'</div>';
   },
   appendDecoratorFactory: function(str) {
     return function(value) {
@@ -65,6 +77,18 @@ var DynamicsDecorators = {
       return Math.round(10*value/60)/10+"h";
     }
   },
+  exactEstimateAppendManHourDecorator: function(value) {
+	    if (typeof (value) === 'string') {
+	      return value;
+	    }
+	    if(!value) {
+	      return "&mdash;";
+	    } else if(value === 0) {
+	      return "0 man-hours";
+	    } else {
+	      return Math.round(10*value/60)/10+" man-hours";
+	    }
+	  },
   exactEstimateEditDecorator: function(value) {
     if (typeof (value) === 'string') {
       return value;
@@ -297,5 +321,11 @@ var DynamicsDecorators = {
     if(text) {
       return '<a href="qr.action?q='+text+'" id="reflink_'+text+'" title="Click to copy the reference link" onclick="showQuickRefLink(this); return false;" class="referenceLink">'+text+'</a>';
     }
+  },
+
+  storyIdWithHash: function(objectId) {
+    var display = "#" + objectId;
+    var text = "story:" + objectId;
+    return '<a href="qr.action?q='+text+'" title="Click to Open Story">'+display+'</a>';
   }
 };

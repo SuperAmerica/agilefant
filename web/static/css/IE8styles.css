@@ -2,7 +2,7 @@
 /**
  * State styles
  */
-.taskState {
+.taskState, .storyState {
   border: 1px solid #666;
 }
 

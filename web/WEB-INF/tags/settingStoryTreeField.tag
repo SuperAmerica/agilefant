@@ -4,7 +4,7 @@
 
 <c:choose>
 <c:when test="${fieldType == 'state'}">
-  <li id="state" title="Story's state"><span class="inlineTaskState taskStateDONE">D</span></li>            
+  <li id="state" title="Story's state"><span class="inlineStoryState storyStateDONE">D</span></li>            
 </c:when>
 <c:when test="${fieldType == 'storyPoints'}">
   <li id="storyPoints" title="Story points"><span class="treeStoryPoints">15</span></li>                

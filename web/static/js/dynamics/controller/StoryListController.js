@@ -233,11 +233,16 @@ StoryListController.prototype._getTableConfig = function() {
 StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
-  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
+<<<<<<< HEAD
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
+=======
+  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
+  config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
+  config.addColumnConfiguration(StoryController.columnIndices.value, StoryListController.columnConfig.value);
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
   config.addColumnConfiguration(StoryController.columnIndices.value, StoryListController.columnConfig.value);
   config.addColumnConfiguration(StoryController.columnIndices.state, StoryListController.columnConfig.state);
@@ -274,9 +279,9 @@ StoryListController.columnConfig.id = {
   minWidth: 30,
   autoScale: true,
   title: "ID",
-  headerTooltip: "Story ID",
+  headerTooltip: 'Story ID',
   get: CommonModel.prototype.getId,
-  editable: true
+  editable: false
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,
@@ -343,7 +348,11 @@ StoryListController.columnConfig.value = {
   editable : true,
   editableCallback: StoryController.prototype.storyValueOrPointsEditable,
   edit : {
+<<<<<<< HEAD
     editor : "Estimate",
+=======
+    editor : "StoryValue",
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
     set : StoryModel.prototype.setStoryValue
   }
 };
@@ -354,7 +363,7 @@ StoryListController.columnConfig.state = {
   title : "State",
   headerTooltip : 'Story state',
   get : StoryModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
+  decorator: DynamicsDecorators.storyStateColorDecorator,
   filter: StoryListController.prototype.filterStoriesByState,
   editable : true,
   edit : {
@@ -405,7 +414,7 @@ StoryListController.columnConfig.effortSpent = {
   decorator: DynamicsDecorators.exactEstimateDecorator,
   get : StoryModel.prototype.getTotalEffortSpent,
   editable : false,
-  onDoubleClick: StoryController.prototype.openQuickLogEffort,
+  onClick: StoryController.prototype.openQuickLogEffort,
   edit : {
     editor : "ExactEstimate",
     decorator: DynamicsDecorators.empty,

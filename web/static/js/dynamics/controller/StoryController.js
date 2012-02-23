@@ -7,7 +7,11 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
+<<<<<<< HEAD
   ["priority", "id", "labelsIcon", "name", "points", "value", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+=======
+  ["priority", "labelsIcon", "id", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -348,7 +352,11 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
 	    text: "Copy",
 	    callback : StoryController.prototype.copyStorySibling
 	  });
+<<<<<<< HEAD
   }
+=======
+  }
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
       text: "Spent effort",
@@ -371,8 +379,7 @@ StoryController.prototype.projectStoryActionFactory = function(view, model) {
 
 StoryController.prototype.storyActionFactory = function(view, model) {
   var actionItems = this._getStoryActionItems(false);
-  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
-      view);
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model, view);
   return actionView;
 };
 
@@ -419,17 +426,6 @@ StoryController.prototype.quickLogEffort = function(spentEffort) {
   if (spentEffort !== "") {
     HourEntryModel.logEffortForCurrentUser(this, spentEffort);
   }
-};
-
-/**
- * Checks whether the story points field should be editable or not.
- */
-StoryController.prototype.storyValueOrPointsEditable = function() {
-  if (this.model.getState() === "DONE") {
-    MessageDisplay.Warning("Changing story points is not allowed for done stories");
-    return false;
-  }
-  return true;
 };
 
 /**
@@ -519,7 +515,7 @@ StoryController.prototype.searchForTask = function() {
     title : "State",
     headerTooltip : 'Task state',
     get : TaskModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
+    decorator: DynamicsDecorators.taskStateColorDecorator,
     editable : true,
     edit : {
       editor : "Selection",
@@ -587,7 +583,7 @@ StoryController.prototype.searchForTask = function() {
       get : TaskModel.prototype.getEffortSpent,
       decorator: DynamicsDecorators.exactEstimateDecorator,
       editable : false,
-      onDoubleClick: TaskController.prototype.openQuickLogEffort,
+      onClick: TaskController.prototype.openQuickLogEffort,
       edit : {
         editor : "ExactEstimate",
         decorator: DynamicsDecorators.empty,

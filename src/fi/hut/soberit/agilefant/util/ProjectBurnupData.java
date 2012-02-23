@@ -19,11 +19,13 @@ public class ProjectBurnupData implements Iterable<ProjectBurnupData.Entry> {
 
         public final long doneSum;
         public final long estimateSum;
+        public final long branchMax;
         public final DateTime timestamp;
 
-        public Entry(DateTime timestamp, long estimateSum, long doneSum) {
+        public Entry(DateTime timestamp, long estimateSum, long doneSum, long branchMax) {
             this.timestamp = timestamp;
             this.estimateSum = estimateSum;
+            this.branchMax = branchMax;
             this.doneSum = doneSum;
         }
 
@@ -36,7 +38,9 @@ public class ProjectBurnupData implements Iterable<ProjectBurnupData.Entry> {
             builder.append(estimateSum);
             builder.append(" planned, ");
             builder.append(doneSum);
-            builder.append(" done");
+            builder.append(" done, ");
+            builder.append(branchMax);
+            builder.append(" done.");
             return builder.toString();
         }
 
@@ -51,7 +55,7 @@ public class ProjectBurnupData implements Iterable<ProjectBurnupData.Entry> {
                 rawData.size());
         for (Object[] rawEntry : rawData) {
             entries.add(new Entry((DateTime) rawEntry[0],
-                    (Long) rawEntry[1], (Long) rawEntry[2]));
+                    (Long) rawEntry[1], (Long) rawEntry[2], (Long) rawEntry[3]));
         }
         return new ProjectBurnupData(entries);
     }

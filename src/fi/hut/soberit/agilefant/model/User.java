@@ -249,7 +249,7 @@ public class User implements NamedObject {
      * 
      * @return true, if user is admin, false otherwise
      */
-    @Column(columnDefinition = "bit default 0")
+    @Column(columnDefinition = "bit default 1")
     @JSON
     @XmlAttribute
     public boolean isAdmin() {

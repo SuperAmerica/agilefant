@@ -1,6 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 
-echo "Agilefant database upgrade script"
+start_dir=`pwd`
+sql_migration_dir="`dirname $0`/../sql/upgrader/"
+cd "$sql_migration_dir"
+sql_migration_dir="`pwd`/"
+cd "$start_dir"
+
+echo "Agilefant database upgrade script. Looking for upgrade scripts in $sql_migration_dir"
 echo " "
 echo "MySQL server host (default: localhost):"
 read mysql_server
@@ -56,7 +62,7 @@ checkVersion() {
 }
 findUpdateFile() {
   unset updateFile
-  updateFile=`find ./ -name "$1-*.sql"`
+  updateFile=`find "$sql_migration_dir" -name "$1-*.sql"`
   echo "Found update file: $updateFile"
 }
 runUpdate() {

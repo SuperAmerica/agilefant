@@ -61,6 +61,8 @@ public class User implements NamedObject {
     private String initials;
 
     private boolean enabled = true;
+    
+    private boolean admin = false;
 
     private Collection<Team> teams = new HashSet<Team>();
 
@@ -240,6 +242,27 @@ public class User implements NamedObject {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+    
+    /**
+     * Check, if the user is and admin
+     * 
+     * @return true, if user is admin, false otherwise
+     */
+    @Column(columnDefinition = "bit default 0")
+    @JSON
+    @XmlAttribute
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    /**
+     * Set the user's admin status.
+     * 
+     * @param admin
+     */
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     /**

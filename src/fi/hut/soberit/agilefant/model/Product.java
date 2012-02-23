@@ -69,7 +69,7 @@ public class Product extends Backlog {
      * 
      * @param products the products to be set
      */
-    public void setTeamss(Collection<Team> teams) {
+    public void setTeams(Collection<Team> teams) {
         this.teams = teams;
     }
     

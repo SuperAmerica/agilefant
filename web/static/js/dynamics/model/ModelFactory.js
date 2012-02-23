@@ -245,7 +245,16 @@ ModelFactory.reloadRoot = function() {
  * Can only be set to one object at a time.
  */
 ModelFactory.reloadEvery = function(object, time) {
-  ModelFactory.currentTimer = setInterval(function() { object.reload(); }, time);
+  ModelFactory.callEvery(time, function() { object.reload(); });
+};
+
+/**
+ * Initiate a call to a given <code>func</code> every <code>time</code> milliseconds.
+ * <p>
+ * Can only be set to one object at a time.
+ */
+ModelFactory.callEvery = function(time, func) {
+  ModelFactory.currentTimer = setInterval(func, time);
 };
 
 /**

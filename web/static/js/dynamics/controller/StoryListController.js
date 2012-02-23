@@ -233,10 +233,10 @@ StoryListController.prototype._getTableConfig = function() {
 StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
-  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
+  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.value, StoryListController.columnConfig.value);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
@@ -274,9 +274,9 @@ StoryListController.columnConfig.id = {
   minWidth: 30,
   autoScale: true,
   title: "ID",
-  headerTooltip: "Story ID",
+  headerTooltip: 'Story ID',
   get: CommonModel.prototype.getId,
-  editable: true
+  editable: false
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,
@@ -300,7 +300,7 @@ StoryListController.columnConfig.labels = {
 };
 
 StoryListController.columnConfig.name = {
-  minWidth : 250,
+  minWidth : 200,
   autoScale : true,
   title : "Name",
   headerTooltip : 'Story name',
@@ -313,22 +313,6 @@ StoryListController.columnConfig.name = {
     editor : "Text",
     set : StoryModel.prototype.setName,
     required: true
-  }
-};
-
-StoryListController.columnConfig.value = {
-  minWidth : 50,
-  autoScale : true,
-  title : "Value",
-  headerTooltip : 'Give a story value',
-  get : StoryModel.prototype.getStoryValue,
-  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
-  decorator: DynamicsDecorators.estimateDecorator,
-  editable : true,
-  editableCallback: StoryController.prototype.storyValueOrPointsEditable,
-  edit : {
-    editor : "StoryValue",
-    set : StoryModel.prototype.setStoryValue
   }
 };
 
@@ -348,13 +332,29 @@ StoryListController.columnConfig.points = {
   }
 };
 
+StoryListController.columnConfig.value = {
+  minWidth : 50,
+  autoScale : true,
+  title : "Value",
+  headerTooltip : 'Give a story value',
+  get : StoryModel.prototype.getStoryValue,
+  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
+  decorator: DynamicsDecorators.estimateDecorator,
+  editable : true,
+  editableCallback: StoryController.prototype.storyValueOrPointsEditable,
+  edit : {
+    editor : "StoryValue",
+    set : StoryModel.prototype.setStoryValue
+  }
+};
+
 StoryListController.columnConfig.state = {
   minWidth : 70,
   autoScale : true,
   title : "State",
   headerTooltip : 'Story state',
   get : StoryModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
+  decorator: DynamicsDecorators.storyStateColorDecorator,
   filter: StoryListController.prototype.filterStoriesByState,
   editable : true,
   edit : {

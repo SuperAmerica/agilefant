@@ -12,10 +12,15 @@ public class IterationMetrics {
     private Integer completedTasks = new Integer(0);
     private Integer totalTasks = new Integer(0);
     private Integer percentDoneTasks = new Integer(0);
+    private Integer percentSpentEffort = new Integer(0);
     
     private Integer completedStories = new Integer(0);
     private Integer totalStories = new Integer(0);
     private Integer percentDoneStories = new Integer(0);
+    
+    private Integer completedValue = new Integer(0);
+    private Integer totalValue = new Integer(0);
+    private Integer percentCompletedValue = new Integer(0);
     
     
     private boolean backlogOngoing = true;
@@ -101,6 +106,12 @@ public class IterationMetrics {
     public Integer getPercentDoneStories() {
         return percentDoneStories;
     }
+    public void setPercentSpentEffort(Integer percentEffortSpent) {
+        this.percentSpentEffort = percentEffortSpent;
+    }
+    public Integer getPercentSpentEffort() {
+        return percentSpentEffort;
+    }
 
     public ExactEstimate getDailyVelocity() {
         return dailyVelocity;
@@ -157,5 +168,23 @@ public class IterationMetrics {
     }
     public void setCompletedEffortPercentage(int completedEffortPercentage) {
         this.completedEffortPercentage = completedEffortPercentage;
+    }
+    public int getCompletedValue() {
+        return this.completedValue;
+    }
+    public void setCompletedValue(int completedValue) {
+        this.completedValue = completedValue;
+    }
+    public int getPercentCompletedValue() {
+        return percentCompletedValue;
+    }
+    public void setPercentCompletedValue(int percentCompletedValue) {
+        this.percentCompletedValue = percentCompletedValue;
+    }
+    public int getTotalValue() {
+        return this.totalValue;
+    }
+    public void setTotalValue(int totalValue) {
+        this.totalValue = totalValue;
     }
 }

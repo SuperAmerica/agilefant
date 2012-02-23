@@ -121,8 +121,6 @@ CommonModel.prototype._updateRelations = function(type, newData) {
     me.removeRelation(item, true);
   });
   
-  
-  
   // 3. Update the new relations
   for (i = 0; i < newObjects.length; i++) {
     var newObj = newObjects[i];
@@ -132,10 +130,11 @@ CommonModel.prototype._updateRelations = function(type, newData) {
       this.relationChanged = true;
     }
   }
-  if(this.relationChanged) {
+  
+  //if(this.relationChanged) { // this check is NOT working properly
     this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,type));
     this.relationChanged = false;
-  }
+  //}
 };
 
 CommonModel.prototype._updateSingleRelation = function(type, newData) {

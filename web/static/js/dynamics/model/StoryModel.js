@@ -186,6 +186,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
       if(!id) {
         possibleBacklog.addStory(object);
         object.callListeners(new DynamicsEvents.AddEvent(object));
+        possibleBacklog.callListeners(new DynamicsEvents.RankChanged(possibleBacklog,"story"));
       }
     },
     error: function(xhr, status, error) {

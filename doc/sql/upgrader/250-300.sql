@@ -1,1 +1,2 @@
-create table admin_product (productId integer not null, adminId integer not null, primary key (productId, adminId)) ENGINE=InnoDB;
+INSERT INTO settings (`name`, `value`, `description`) VALUES ('AgilefantDatabaseVersion', '300', 'Agilefant database version') ON DUPLICATE KEY UPDATE `value`="300";
+ALTER TABLE users ADD COLUMN admin bit DEFAULT 0 AFTER id;

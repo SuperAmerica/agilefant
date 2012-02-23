@@ -40,6 +40,7 @@ public class ChartAction extends ActionSupport {
     
     private Integer customBdHeight = 768;
     
+    private Integer timeZoneOffset = 0;
     
     public void setIterationBurndownBusiness(
             IterationBurndownBusiness iterationBurndownBusiness) {
@@ -65,7 +66,7 @@ public class ChartAction extends ActionSupport {
 
     public String getIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);
-        result = iterationBurndownBusiness.getIterationBurndown(iteration);
+        result = iterationBurndownBusiness.getIterationBurndown(iteration, timeZoneOffset);
         return Action.SUCCESS;
     }
     
@@ -83,13 +84,13 @@ public class ChartAction extends ActionSupport {
 
     public String getSmallIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);
-        result = iterationBurndownBusiness.getSmallIterationBurndown(iteration);
+        result = iterationBurndownBusiness.getSmallIterationBurndown(iteration, timeZoneOffset);
         return Action.SUCCESS;
     }
                   
     public String getCustomIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);
-        result = iterationBurndownBusiness.getCustomIterationBurndown(iteration, customBdWidth, customBdHeight);
+        result = iterationBurndownBusiness.getCustomIterationBurndown(iteration, customBdWidth, customBdHeight, timeZoneOffset);
         return Action.SUCCESS;
     }
   
@@ -101,6 +102,10 @@ public class ChartAction extends ActionSupport {
     
     public void setBacklogId(int backlogId) {
         this.backlogId = backlogId;
+    }
+    
+    public void setTimeZoneOffset(Integer timeZoneOffset){
+        this.timeZoneOffset = timeZoneOffset;
     }
 
     public byte[] getResult() {

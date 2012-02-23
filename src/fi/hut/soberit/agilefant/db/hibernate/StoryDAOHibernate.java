@@ -61,7 +61,7 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         Criteria criteria = getCurrentSession().createCriteria(Story.class);
         criteria.add(Restrictions.eq("backlog.id", backlogId));
         criteria.add(Restrictions.isNotNull("storyPoints"));
-        criteria.add(Restrictions.not(Restrictions.eq("state", StoryState.DEFERRED)));
+        criteria.add(Restrictions.ne("state", StoryState.DEFERRED));
         criteria.setProjection(Projections.sum("storyPoints"));
         Object result = criteria.uniqueResult();
         if (result == null) {

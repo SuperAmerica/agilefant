@@ -67,9 +67,7 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
     }
     var name = event.getName();
     var productName = event.getProductName();
-    if (productName.length > 0) {
-    	name = name + " (" + productName + ")";
-    }
+
     var evt = new Timeline.DefaultEventSource.Event({
                   id: ""+event.getId(),
                start: this.model.startDate,
@@ -83,12 +81,12 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
          link: "editBacklog.action?backlogId=" + event.getId(),
          icon: this._resolveRelativeURL(event.icon , ""),
         color: color,
-    textColor: "#000000",
+    textColor: "#1E5EEE",
     hoverText: event.hoverText,
     classname: event.classname,
     tapeImage: event.tapeImage,
    tapeRepeat: event.tapeRepeat,
-      caption: event.caption,
+      caption: "View the '" + name + "' Project",
       eventID: event.eventID,
      trackNum: i
   });

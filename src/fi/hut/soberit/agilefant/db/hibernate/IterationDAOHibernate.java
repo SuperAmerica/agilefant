@@ -117,7 +117,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         return Pair.create(done, total);
     }
     
-    private Pair<Integer, Integer> getCounOfDoneAndAll(Class<?> type,
+    private Pair<Integer, Integer> getCounOfDoneAndAllNonDeffered(Class<?> type,
             Object doneValue, Collection<String> joins, Iteration iteration) {
         Criteria criteria = getCurrentSession().createCriteria(type);
         criteria.setProjection(Projections.projectionList().add(
@@ -132,35 +132,59 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
 
         for (Object[] row : results) {
             Long count = (Long) row[1];
-            total += count;
+            if(type == Story.class){
+                total += (row[0].equals(StoryState.DEFERRED)) ? 0 : count;
+            }
+            else if(type == Task.class){
+                total += (row[0].equals(TaskState.DEFERRED)) ? 0 : count;
+            }
             if (row[0].equals(doneValue))
                 done += count;
         }
 
         return Pair.create(done, total);
     }
+    
+    public Pair<Integer, Integer> getCountOfDoneAndAllNonDeferredTasks(Iteration iteration) {
+        List<Task> tasks = getAllTasksForIteration(iteration);
+        
+        int done = 0;
+        int total = 0;
+        for(Task task: tasks) {
+            if(task.getStory() != null && task.getStory().getState() != StoryState.DEFERRED && task.getState() != TaskState.DEFERRED) {
+                total++;
+                if(task.getState() == TaskState.DONE){
+                    done++;
+                }
+            }
+            else if(task.getStory() == null && task.getState() != TaskState.DEFERRED) {
+                total++;
+                if(task.getState() == TaskState.DONE){
+                    done++;
+                }
+            }
+        }
+        
+        return Pair.create(done, total);
+    }
 
     public Pair<Integer, Integer> getCountOfDoneAndAllTasks(Iteration iteration) {
-        Pair<Integer, Integer> noStory = getCounOfDoneAndAll(Task.class,
+        Pair<Integer, Integer> noStory = getCounOfDoneAndAllNonDeffered(Task.class,
                 TaskState.DONE, Arrays.asList("iteration"), iteration);
-        Pair<Integer, Integer> inStory = getCounOfDoneAndAll(Task.class,
+        Pair<Integer, Integer> inStory = getCounOfDoneAndAllNonDeffered(Task.class,
                 TaskState.DONE, Arrays.asList("story", "backlog"), iteration);
         return Pair.create(noStory.first + inStory.first, noStory.second
                 + inStory.second);
     }
     
     public Pair<Integer, Integer> getCountOfDoneAndNonDeferred(Iteration iteration) {
-        Pair<Integer, Integer> noStory = getGenericCountDoneNonDeferred(Task.class,
-                Arrays.asList("iteration"), iteration);
-        Pair<Integer, Integer> inStory = getGenericCountDoneNonDeferred(Task.class,
-                Arrays.asList("story", "backlog"), iteration);
-        return Pair.create(noStory.first + inStory.first, noStory.second
-                + inStory.second);
+        Pair<Integer, Integer> tasks = getCountOfDoneAndAllNonDeferredTasks(iteration);
+        return tasks;
     }
     
     public Pair<Integer, Integer> getCountOfDoneAndAllStories(
             Iteration iteration) {
-        return getCounOfDoneAndAll(Story.class, StoryState.DONE, Arrays
+        return getCounOfDoneAndAllNonDeffered(Story.class, StoryState.DONE, Arrays
                 .asList("backlog"), iteration);
     }
 

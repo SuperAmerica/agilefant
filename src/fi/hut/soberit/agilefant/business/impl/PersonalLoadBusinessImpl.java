@@ -31,7 +31,10 @@ import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Schedulable;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.BacklogLoadContainer;
 import fi.hut.soberit.agilefant.transfer.ComputedLoadData;
@@ -143,10 +146,19 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
 
     private long divideAssignedTaskEffort(Task task, int numberOfAssignees) {
         long taskEffort = 0;
-        if (task.getEffortLeft() != null && numberOfAssignees != 0) {
-            long taskEffortLeft = task.getEffortLeft().getMinorUnits();
-            taskEffort = taskEffortLeft / numberOfAssignees;
+        if (task.getEffortLeft() != null && numberOfAssignees != 0 && task.getState() != TaskState.DEFERRED) {
+            if(task.getStory() != null) {
+                if(task.getStory().getState() != StoryState.DEFERRED) {
+                    long taskEffortLeft = task.getEffortLeft().getMinorUnits();
+                    taskEffort = taskEffortLeft / numberOfAssignees;
+                }
+            }
+            else {
+                long taskEffortLeft = task.getEffortLeft().getMinorUnits();
+                taskEffort = taskEffortLeft / numberOfAssignees;
+            }
         }
+        
         return taskEffort;
     }
 

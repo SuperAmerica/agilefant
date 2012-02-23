@@ -270,7 +270,6 @@ StoryListController.columnConfig.id = {
   title: "ID",
   headerTooltip: "Story ID",
   get: CommonModel.prototype.getId,
-  editable: true
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,
@@ -330,7 +329,7 @@ StoryListController.columnConfig.state = {
   title : "State",
   headerTooltip : 'Story state',
   get : StoryModel.prototype.getState,
-  decorator: DynamicsDecorators.stateColorDecorator,
+  decorator: DynamicsDecorators.storyStateColorDecorator,
   filter: StoryListController.prototype.filterStoriesByState,
   editable : true,
   edit : {

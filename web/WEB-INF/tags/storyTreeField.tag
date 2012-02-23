@@ -8,7 +8,7 @@
 
 <c:choose>
 <c:when test="${type == 'state'}">
-  <span class="inlineTaskState taskState${story.state}" title="<aef:text name="story.state.${story.state}" />"><aef:text name="story.stateAbbr.${story.state}" /></span>
+  <span class="inlineStoryState storyState${story.state}" title="<aef:text name="story.state.${story.state}" />"><aef:text name="story.stateAbbr.${story.state}" /></span>
 </c:when>
 <c:when test="${type == 'storyPoints'}">
   <span class="treeStoryPoints" title="Story points">

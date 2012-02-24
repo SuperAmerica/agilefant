@@ -51,6 +51,15 @@ AdministrationMenuController.prototype.initTree = function() {
     key: "listTeams.action"
   });
   
+  var currentUser = PageController.getInstance().getCurrentUser();
+  if (currentUser.getAdmin()) {
+	  rootNode.addChild({
+	    title: "Access rights",
+	    icon: false,
+	    key: "accessRights.action"
+	  });
+  }
+  
   rootNode.addChild({
     title: "System settings",
     icon: false,

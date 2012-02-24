@@ -17,7 +17,8 @@ var UserModel = function UserModel() {
   };
   this.currentData = {
     initials: "",
-    fullName: ""
+    fullName: "",
+    admin: true
   };
   this.copiedFields = {
       "fullName": "fullName",
@@ -217,6 +218,22 @@ UserModel.prototype.getInitials = function() {
 
 UserModel.prototype.setInitials = function(initials) {
   this.currentData.initials = initials;
+};
+
+UserModel.prototype.getAdmin = function() {
+  return this.currentData.admin;
+};
+
+UserModel.prototype.getAdminAsString = function() {
+  if(this.currentData.admin)
+  	return "Yes";
+  else
+  	return "No";
+};
+
+
+UserModel.prototype.setAdmin = function(admin) {
+  this.currentData.admin = admin;
 };
 
 UserModel.prototype.getLoginName = function() {

@@ -245,7 +245,7 @@ public class User implements NamedObject {
     }
     
     /**
-     * Check, if the user is and admin
+     * Check, if the user is an admin
      * 
      * @return true, if user is admin, false otherwise
      */

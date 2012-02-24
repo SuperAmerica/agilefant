@@ -43,6 +43,8 @@ public class Team implements Comparable<Team> {
     private String description;
 
     private Collection<User> users = new HashSet<User>();
+    
+    private Collection<Product> products = new HashSet<Product>();
 
     /**
      * Get the id of this object.
@@ -131,6 +133,28 @@ public class Team implements Comparable<Team> {
      */
     public void setUsers(Collection<User> users) {
         this.users = users;
+    }
+    
+    /**
+     * Get the team's products
+     * 
+     * return the products
+     */
+    @ManyToMany(targetEntity = Product.class)
+    @JoinTable(name = "team_product", joinColumns = { @JoinColumn(name = "Team_id") }, inverseJoinColumns = { @JoinColumn(name = "Product_id") })
+    @BatchSize(size = 5)
+    @JSON(include = false)
+    public Collection<Product> getProducts() {
+        return products;
+    }
+    
+    /**
+     * Set the team's products.
+     * 
+     * @param products the products to be set
+     */
+    public void setProducts(Collection<Product> products) {
+        this.products = products;
     }
 
     /**

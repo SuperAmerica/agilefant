@@ -7,7 +7,7 @@
 <h2>Access rights</h2>
 
 <c:choose>
-<c:when test="${true == currentUser.admin}">
+<c:when test="${currentUser.admin}">
   <h3>Welcome Administrator</h3>
   <div>Matrix info to go here...</div>
 </c:when>

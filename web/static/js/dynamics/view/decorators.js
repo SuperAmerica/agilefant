@@ -209,6 +209,20 @@ var DynamicsDecorators = {
     fullNames.sort();
     return fullNames.join(', ');
   },
+  productTeamCountDecorator: function(teamList) {
+  	return teamList.length + " teams";
+  },
+  productTeamListDecorator: function(teamList) {
+  	if(!teamList || !teamList.length) {
+  		return "(no teams)";
+  	}
+  	var teamNames = [];
+  	for(var i = 0; i < teamList.length; i++) {
+  		teamNames.push(teamList[i].getName());
+  	}
+  	teamNames.sort();
+  	return teamNames.join(', ');
+  },
   teamUserInitialsListDecorator: function(userList) {
     if(!userList || !userList.length) {
       return "(Select users)";

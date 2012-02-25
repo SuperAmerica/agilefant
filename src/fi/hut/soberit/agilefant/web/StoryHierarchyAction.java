@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class StoryHierarchyAction extends ActionSupport {
     private List<Story> stories;
     private StoryFilters storyFilters = new StoryFilters();
     private Integer storyId;
+    private List<Integer> storyIds;
     private Integer projectId;
     private Integer productId;
     private Story story;
@@ -48,6 +50,29 @@ public class StoryHierarchyAction extends ActionSupport {
     public String recurseHierarchyAsList() {
         story = storyBusiness.retrieve(storyId);
         topmostStory = storyHierarchyBusiness.recurseHierarchy(story);
+        return Action.SUCCESS;
+    }
+    
+    public String moveMultipleBefore() {
+        Collection<Story> targets = this.storyBusiness.retrieveMultiple(storyIds);
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        try {
+            for (Story s : targets)
+                this.storyHierarchyBusiness.moveUnder(s, reference);
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String moveMultipleUnder() {
+        
+        return Action.SUCCESS;
+    }
+    
+    public String moveMultipleAfter() {
+        
         return Action.SUCCESS;
     }
     

@@ -181,6 +181,7 @@ ModelFactory.initializeForTypes = {
     iteration:  "iteration",
     project:    "project",
     product:    "product",
+    products:	"products",
     dailyWork:  "dailyWork",
     teams:      "teams",
     users:      "users",
@@ -464,6 +465,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       params: { productId: id },
       callback: me._constructProduct
     },
+    "products": {
+      url: "ajax/retrieveAllProducts.action",
+      params: {},
+      callback: me._constructProductList
+    },
     "dailyWork": {
       url: "ajax/dailyWorkData.action",
       params: { userId: id },
@@ -570,6 +576,16 @@ ModelFactory.prototype._constructTeamList = function(id, data) {
   }
   ModelFactory.getInstance().rootObject = teamList;
   return teamList;
+};
+
+ModelFactory.prototype._constructProductList = function(id, data) {
+  var productList = new AccessListContainer();
+  for (var i = 0; i < data.length; i++) {
+    var product = ModelFactory.updateObject(data[i]);
+    productList.addRelation(product);
+  }
+  ModelFactory.getInstance().rootObject = productList;
+  return productList;
 };
 
 ModelFactory.prototype._constructProjectPortfolioData = function(data) {

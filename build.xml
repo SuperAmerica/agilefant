@@ -490,7 +490,7 @@
 				view/subviews/CellBubble.js, view/MultiEditWidget.js, model/CommonModel.js, model/BacklogModel.js, model/IterationModel.js, model/ProjectModel.js, model/ProductModel.js, model/StoryModel.js, 
 				model/TaskModel.js, model/UserModel.js, model/TeamModel.js, model/comparators.js, model/AssignmentModel.js, model/HourEntryModel.js, model/TaskSplitContainer.js, 
 				model/UserListContainer.js, model/TeamListContainer.js, model/HourEntryListContainer.js, model/PortfolioModel.js, model/LabelModel.js, model/DailyWorkModel.js, 
-				model/WorkQueueTaskModel.js, model/ModelFactory.js, controller/CommonController.js, controller/BacklogController.js, controller/TaskController.js, 
+				model/WorkQueueTaskModel.js, model/ModelFactory.js, model/AccessListContainer.js, controller/AccessRowController.js, controller/AccessListController.js, controller/CommonController.js, controller/BacklogController.js, controller/TaskController.js, 
 				controller/AssignmentController.js, controller/StoryController.js, controller/IterationController.js, controller/StoryListController.js, controller/ProductController.js, 
 				controller/IterationRowController.js, controller/ProjectController.js, controller/ProjectRowController.js, controller/DailyWorkController.js, 
 				controller/TasksWithoutStoryController.js, controller/DailyWorkStoryListController.js, controller/DailyWorkTasksWithoutStoryController.js, controller/WorkQueueController.js,

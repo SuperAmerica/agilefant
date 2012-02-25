@@ -32,7 +32,7 @@ AccessListContainer.prototype._setData = function(newData) {
 /**
  * Reload all teams.
  */
-TeamListContainer.prototype.reload = function() {
+AccessListContainer.prototype.reload = function() {
   var me = this;
   jQuery.getJSON(
     "ajax/retrieveAllProducts.action",
@@ -44,6 +44,6 @@ TeamListContainer.prototype.reload = function() {
   );
 };
 
-TeamListContainer.prototype.getProducts = function() {
+AccessListContainer.prototype.getProducts = function() {
   return this.relations.product;
 };

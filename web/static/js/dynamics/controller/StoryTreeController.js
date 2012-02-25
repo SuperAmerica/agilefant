@@ -88,6 +88,8 @@ StoryTreeController.prototype.refresh = function() {
  */
 StoryTreeController.prototype.refreshNode = function(element) {
   var node = $(element);
+  var me = this;
+  var isChecked = me.tree.is_checked($(element));
   jQuery.get(
       "ajax/treeRetrieveStory.action",
       {
@@ -101,8 +103,8 @@ StoryTreeController.prototype.refreshNode = function(element) {
         // Replace
         node.attr("rel", rel);
         node.find("a:eq(0)").replaceWith(contents);
-        
         node.trigger('node_refresh.jstree');
+        if (isChecked) me.tree.select_node(node, isChecked); 
       }
   );
 };
@@ -283,7 +285,8 @@ StoryTreeController.prototype.initTree = function() {
       "save_selected": false
     },
     ui: {
-      "select_limit": 1,
+      "select_limit": -1,
+      "select_multiple_modifier" : "on",
       "initially_select": []
     },
     search: {
@@ -299,13 +302,21 @@ StoryTreeController.prototype.initTree = function() {
   
   this.element.bind('move_node.jstree', function(event, data) {
     // See http://www.jstree.com/documentation/core
-    me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
+    // if (data.rslt.o.length > 1)
+      // me.moveMultipleStories(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
+    // else
+        // me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
+      for (var i = 0;i < data.rslt.o.length;i++)
+          me.moveStory(data.rslt.o[i], data.rslt.r, data.rslt.p, data.inst, data.rlbk);  
   });
   this.element.delegate('span', 'click.jstree', function(event) {
     me.openNodeDetails($(event.target).parents('li:eq(0)'));
   });
   this.element.bind('select_node.jstree', function(event, data) {
-    me.tree.deselect_node(data.rslt.obj);
+      me.tree.check_node(data.rslt.obj);
+  });
+  this.element.bind('deselect_node.jstree', function(event, data) {
+      me.tree.uncheck_node(data.rslt.obj);
   });
 };
 StoryTreeController.prototype.getSelectedIds = function() {
@@ -335,6 +346,34 @@ StoryTreeController.prototype._treeLoaded = function() {
     this.expandButton.click();
   }
 };
+
+StoryTreeController.prototype.moveMultipleStories = function(nodes, ref_node, type, tree_obj, rb) {
+  var myIds = $(nodes).map(function() { return $(this).attr("storyid"); });
+  var refId = $(ref_node).attr("storyid");
+  var data = {storyIds: myIds, referenceStoryId: refId};
+  var me = this;
+  /*$.ajax({
+    url: StoryTreeController.moveNodeUrls[type],
+    data: data,
+    type: "post",
+    async: true,
+    error: function(xhr, status, error) {
+      if(xhr) {
+          var json =  jQuery.httpData(xhr, "json", null);
+          if (json.constructor == Array) {
+            var title = 'Can&apos;t move story. Reason:';
+            var message = '<ul style="margin: 0; width: 400px; font-weight: normal; white-space: nowrap;"><li>' + json.join('</li><li>') + '</li></ul>';
+            MessageDisplay.Warning(title, message, { closeButton: true, displayTime: null });
+          }
+          else {
+            MessageDisplay.Error("Error moving story", xhr);
+          }
+      }
+      jQuery.jstree.rollback(rb);
+    }
+  });*/
+};
+
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {
   var myId = $(node).attr("storyid");
   var refId = $(ref_node).attr("storyid");

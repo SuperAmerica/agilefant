@@ -92,7 +92,7 @@ ProductModel.prototype._saveData = function(id, changedData) {
     delete changedData.userIds;
     delete changedData.usersChanged;
   }
-  jQuery.extend(data, this.serializeFields("team", changedData));
+  jQuery.extend(data, this.serializeFields("product", changedData));
   
   data.productId = id;
   if (!id) {

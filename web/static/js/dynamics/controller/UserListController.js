@@ -146,13 +146,23 @@ UserListController.prototype.initConfig = function() {
     subViewFactory: UserRowController.prototype.userActionFactory
   };
   
+  var admin = {
+  	minWidth : 60,
+  	autoScale : true,
+  	title: "Administrator",
+  	get: UserModel.prototype.getAdminAsString,
+  	sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getInitials)
+  }
+  
   this.enabledUserListConfig.addColumnConfiguration(0, name);
   this.enabledUserListConfig.addColumnConfiguration(1, initials);
 //  this.enabledUserListConfig.addColumnConfiguration(2, email);
 //  this.enabledUserListConfig.addColumnConfiguration(3, weekEffort);
   this.enabledUserListConfig.addColumnConfiguration(4, actions);
+  this.enabledUserListConfig.addColumnConfiguration(5, admin);
   
   this.disabledUserListConfig.addColumnConfiguration(0, name);
   this.disabledUserListConfig.addColumnConfiguration(1, initials);
   this.disabledUserListConfig.addColumnConfiguration(4, actions);
+  this.disabledUserListConfig.addColumnConfiguration(5, admin);
 };

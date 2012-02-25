@@ -41,6 +41,14 @@ $(document).ready(function() {
   <ww:form action="storeUser" method="post">
     <ww:hidden name="userId"  />
     <table class="settings-table" style="margin: 0.3em;">
+    
+      <c:if test="${currentUser.admin}">
+      <tr>
+        <td>Assign me as an Administrator</td>
+        <td><ww:checkbox fieldValue="true" name="user.admin"/></td>
+      </tr>
+      </c:if>
+      
       <tr>
         <td>Assign me to tasks I create</td>
         <td><ww:radio list="#{'true':'Always','false':'Never'}" name="user.autoassignToTasks"/></td>

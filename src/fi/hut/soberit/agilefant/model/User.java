@@ -62,7 +62,7 @@ public class User implements NamedObject {
 
     private boolean enabled = true;
     
-    private boolean admin = false;
+    private boolean admin = true;
 
     private Collection<Team> teams = new HashSet<Team>();
 
@@ -249,9 +249,9 @@ public class User implements NamedObject {
      * 
      * @return true, if user is admin, false otherwise
      */
-    @Column(columnDefinition = "bit default 1")
     @JSON
-    @XmlAttribute
+    @NotAudited
+    @Column(columnDefinition = "bit default 1")
     public boolean isAdmin() {
         return admin;
     }

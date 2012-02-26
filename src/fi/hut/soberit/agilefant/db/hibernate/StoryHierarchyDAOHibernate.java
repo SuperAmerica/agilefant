@@ -14,10 +14,12 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Repository;
 
+import fi.hut.soberit.agilefant.business.impl.StoryHierarchyBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
+import fi.hut.soberit.agilefant.transfer.StoryTreeBranchMetrics;
 
 @Repository("storyHierarchyDAO")
 public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
@@ -34,6 +36,15 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         iterationCrit.createCriteria("backlog").add(
                 Restrictions.eq("parent", project));
         iterationCrit.add(Restrictions.isEmpty("children"));
+    }
+    
+    private void attachBranchFilters(Criteria projectCrit,
+            Criteria iterationCrit, Project project) {
+        projectCrit.add(Restrictions.eq("backlog", project));
+        projectCrit.add(Restrictions.isNotEmpty("children"));
+        iterationCrit.createCriteria("backlog").add(
+                Restrictions.eq("parent", project));
+        iterationCrit.add(Restrictions.isNotEmpty("children"));
     }
 
     /**
@@ -185,6 +196,20 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         return story.getTreeRank();
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public long totalBranchStoryPoints(Project project)
+    {
+        StoryHierarchyBusinessImpl impl = new StoryHierarchyBusinessImpl();
+        long sum = 0;
+        for (Story s : this.retrieveProjectRootStories(project.getId())) {
+            StoryTreeBranchMetrics m = impl.calculateStoryTreeMetrics(s);
+            sum += m.getEstimatedPoints();
+        }
+        return sum;
+    }
+     
     private Criteria getRootStoryCriteria(int productId) {
         Criteria rootFilter = getCurrentSession().createCriteria(Story.class);
         rootFilter.createAlias(

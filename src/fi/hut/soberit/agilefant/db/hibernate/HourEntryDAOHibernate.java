@@ -195,16 +195,27 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         return tasksEntrySum + tasksWithStoryEntrySum + storyEntrySum + backlogEntrySum;
     }
     
-    private long getSumForTaskHourEntriesWithoutStoryForIteration(int iterationId) {
+    private List<HourEntry> getHourEntriesForTaskWithoutStoryForIteration (int iterationId) {
         Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
         
-        criteria.setProjection(Projections.sum("minutesSpent"));
-
         criteria = criteria.createCriteria("task");
         criteria.add(Restrictions.isNull("story"));
         criteria = criteria.createCriteria("iteration");
         criteria.add(Restrictions.idEq(iterationId));
         
+        return asList(criteria);
+    }
+    
+    private long getSumForTaskHourEntriesWithoutStoryForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
+        criteria.setProjection(Projections.sum("minutesSpent"));
+        
+        criteria = criteria.createCriteria("task");
+        criteria.add(Restrictions.isNull("story"));
+        criteria = criteria.createCriteria("iteration");
+        criteria.add(Restrictions.idEq(iterationId));
+
         Long result = (Long)uniqueResult(criteria);
         
         if (result == null) {
@@ -212,10 +223,22 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         }
         return result;
     }
+    
+    private List<HourEntry> getHourEntriesForTaskWithStoryForIteration(int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
+        
+        criteria = criteria.createCriteria("task");
+        criteria.add(Restrictions.isNotNull("story"));
+        criteria = criteria.createCriteria("story");
+        criteria = criteria.createCriteria("backlog");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        return asList(criteria);
+    }
 
     private long getSumForTaskHourEntriesWithStoryForIteration(int iterationId) {
         Criteria criteria = getCurrentSession().createCriteria(TaskHourEntry.class);
-        
+
         criteria.setProjection(Projections.sum("minutesSpent"));
 
         criteria = criteria.createCriteria("task");
@@ -224,6 +247,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         criteria = criteria.createCriteria("backlog");
         criteria.add(Restrictions.idEq(iterationId));
         
+
         Long result = (Long)uniqueResult(criteria);
         
         if (result == null) {
@@ -232,6 +256,15 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         return result;
     }
 
+    private List<HourEntry> getHourEntriesForStoryForIteration (int iterationId) {
+        Criteria criteria = getCurrentSession().createCriteria(StoryHourEntry.class);
+        
+        criteria = criteria.createCriteria("story");
+        criteria = criteria.createCriteria("backlog");
+        criteria.add(Restrictions.idEq(iterationId));
+        
+        return asList(criteria);
+    }
     
     private long getSumForStoryHourEntriesForIteration(int iterationId) {
         Criteria criteria = getCurrentSession().createCriteria(StoryHourEntry.class);
@@ -242,6 +275,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         criteria = criteria.createCriteria("backlog");
         criteria.add(Restrictions.idEq(iterationId));
         
+
         Long result = (Long)uniqueResult(criteria);
         
         if (result == null) {
@@ -288,6 +322,15 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
             crit.createCriteria("user").add(Restrictions.idEq(userId));
         }
         return asList(crit); 
+    }
+    
+    public List<HourEntry> getAllIterationHourEntries(int iterationId) {
+        List<HourEntry> iterationHourEntries = getHourEntriesForTaskWithoutStoryForIteration(iterationId);
+        iterationHourEntries.addAll(getHourEntriesForTaskWithStoryForIteration(iterationId));
+        iterationHourEntries.addAll(getHourEntriesForStoryForIteration(iterationId));
+        iterationHourEntries.addAll(getBacklogHourEntries(iterationId, 0));
+        
+        return iterationHourEntries;
     }
 
     public List<HourEntry> getBacklogHourEntries(int backlogId, int limit) {

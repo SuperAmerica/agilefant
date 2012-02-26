@@ -53,14 +53,12 @@ ProjectModel.prototype._setData = function(newData) {
   
   // Set the id
   this.id = newData.id;
-  
   if (newData.leafStories) {
     this._updateRelations("story", newData.leafStories);
   }
   else if (newData.stories) {
     this._updateRelations(ModelFactory.types.story, newData.stories);
   }
-
   
   // Set iterations
   if (newData.children) {
@@ -195,7 +193,8 @@ ProjectModel.prototype.reload = function() {
     "ajax/projectData.action",
     {projectId: me.getId()},
     function(data,status) {
-      me.setData(data, false);
+      delete data.leafStories; // data.leafStories is always empty; this code prevents the stories from being removed before reloadLeafStories() runs
+      me._setData(data);
       //me.callListeners(new DynamicsEvents.EditEvent(me));
     }
   );

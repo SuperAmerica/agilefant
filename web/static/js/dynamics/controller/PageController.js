@@ -30,6 +30,9 @@ PageController.prototype.init = function() {
   $('#menuRefreshControl').click(function() {
     me.refreshMenu();
   });
+  setTimeout(function() { 
+	  $("div#bodyWrapper").attr("tabindex",-1).focus();
+  }, 500);
 };
 
 /**

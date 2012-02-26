@@ -90,7 +90,6 @@ StoryListController.prototype.createStory = function() {
     mockModel.setResponsibles([user.getId()]);
   }
   
-  
   var controller = new StoryController(mockModel, null, this);
   var row = this.getCurrentView().createRow(controller, mockModel, "top");
   controller.view = row;
@@ -98,6 +97,12 @@ StoryListController.prototype.createStory = function() {
   row.render();
   controller.openRowEdit();
   row.getCellByName("tasksData").hide();
+};
+
+StoryListController.prototype.copyStorySibling = function(originalStory) { 
+  var mockModel = ModelFactory.createObject(ModelFactory.types.story);
+  mockModel.setBacklog(this.model);
+  mockModel._copyStory(originalStory);
 };
 
 /**
@@ -228,11 +233,12 @@ StoryListController.prototype._getTableConfig = function() {
 StoryListController.prototype._addColumnConfigs = function(config) {
   var a = StoryListController.columnConfig.state;
   config.addColumnConfiguration(StoryController.columnIndices.priority, StoryListController.columnConfig.prio);
-  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
+  config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
+  config.addColumnConfiguration(StoryController.columnIndices.value, StoryListController.columnConfig.value);
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
   config.addColumnConfiguration(StoryController.columnIndices.state, StoryListController.columnConfig.state);
   config.addColumnConfiguration(StoryController.columnIndices.responsibles, StoryListController.columnConfig.responsibles);
@@ -268,8 +274,9 @@ StoryListController.columnConfig.id = {
   minWidth: 30,
   autoScale: true,
   title: "ID",
-  headerTooltip: "Story ID",
+  headerTooltip: 'Story ID',
   get: CommonModel.prototype.getId,
+  editable: false
 };
 StoryListController.columnConfig.labelsIcon = {
   minWidth: 40,
@@ -293,7 +300,7 @@ StoryListController.columnConfig.labels = {
 };
 
 StoryListController.columnConfig.name = {
-  minWidth : 250,
+  minWidth : 200,
   autoScale : true,
   title : "Name",
   headerTooltip : 'Story name',
@@ -308,6 +315,7 @@ StoryListController.columnConfig.name = {
     required: true
   }
 };
+
 StoryListController.columnConfig.points = {
   minWidth : 50,
   autoScale : true,
@@ -317,12 +325,29 @@ StoryListController.columnConfig.points = {
   sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryPoints),
   decorator: DynamicsDecorators.estimateDecorator,
   editable : true,
-  editableCallback: StoryController.prototype.storyPointsEditable,
+  editableCallback: StoryController.prototype.storyValueOrPointsEditable,
   edit : {
     editor : "Estimate",
     set : StoryModel.prototype.setStoryPoints
   }
 };
+
+StoryListController.columnConfig.value = {
+  minWidth : 50,
+  autoScale : true,
+  title : "Value",
+  headerTooltip : 'Give a story value',
+  get : StoryModel.prototype.getStoryValue,
+  sortCallback: DynamicsComparators.valueComparatorFactory(StoryModel.prototype.getStoryValue),
+  decorator: DynamicsDecorators.estimateDecorator,
+  editable : true,
+  editableCallback: StoryController.prototype.storyValueOrPointsEditable,
+  edit : {
+    editor : "StoryValue",
+    set : StoryModel.prototype.setStoryValue
+  }
+};
+
 StoryListController.columnConfig.state = {
   minWidth : 70,
   autoScale : true,
@@ -380,7 +405,7 @@ StoryListController.columnConfig.effortSpent = {
   decorator: DynamicsDecorators.exactEstimateDecorator,
   get : StoryModel.prototype.getTotalEffortSpent,
   editable : false,
-  onDoubleClick: StoryController.prototype.openQuickLogEffort,
+  onClick: StoryController.prototype.openQuickLogEffort,
   edit : {
     editor : "ExactEstimate",
     decorator: DynamicsDecorators.empty,

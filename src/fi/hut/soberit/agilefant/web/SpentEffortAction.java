@@ -2,9 +2,11 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.MutableDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import com.sun.research.ws.wadl.Request;
 
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.model.HourEntry;
@@ -39,7 +42,7 @@ public class SpentEffortAction extends ActionSupport {
     private List<DailySpentEffort> dailyEffort;
     private List<LocalDate> weeks = new ArrayList<LocalDate>();
     private List<HourEntry> effortEntries;
-    
+    private double userTimeZone;
     
     public void initializeWeekSelection(DateTime middle) {
         this.weeks.clear();
@@ -68,21 +71,29 @@ public class SpentEffortAction extends ActionSupport {
         return selectedDate;
     }
     
-    public String getDaySumsByWeek() {
-        //get current day and initialize next and previous week properties
+    public String getDaySumsByWeek() { 
         DateTime currentDay = this.getSelectedDate();
         this.initializeWeekSelection(currentDay);
-        this.dailyEffort = this.hourEntryBusiness.getDailySpentEffortByWeek(currentDay.toLocalDate(), userId);
-        this.weekEffort = this.hourEntryBusiness.calculateWeekSum(currentDay.toLocalDate(), userId);
+        this.dailyEffort = this.hourEntryBusiness.getDailySpentEffortByWeek(currentDay.toLocalDate(), userId, getUserHourTimeZone(), getUserMinuteTimeZone());
+        this.weekEffort = this.hourEntryBusiness.calculateWeekSum(currentDay.toLocalDate(), userId,  getUserHourTimeZone(), getUserMinuteTimeZone());
         return Action.SUCCESS;
     }
 
+    public int getUserHourTimeZone()
+    {
+        return (int)userTimeZone - 12;
+    }
     
-    public String getHourEntriesByUserAndDay() {
+    public int getUserMinuteTimeZone()
+    {
+        return (int)((userTimeZone - (int)userTimeZone) * 60);
+    }
+    
+    public String getHourEntriesByUserAndDay() {  
         MutableDateTime tmpDate = new MutableDateTime();
         tmpDate.setYear(this.year);
         tmpDate.setDayOfYear(this.day);
-        this.effortEntries = this.hourEntryBusiness.getEntriesByUserAndDay(tmpDate.toDateTime().toLocalDate(), userId);
+        this.effortEntries = this.hourEntryBusiness.getEntriesByUserAndDay(tmpDate.toDateTime().toLocalDate(), userId, getUserHourTimeZone(), getUserMinuteTimeZone());
         return SUCCESS;
     }
     
@@ -160,4 +171,15 @@ public class SpentEffortAction extends ActionSupport {
     public LocalDate getNextWeek() {
         return nextWeek;
     }
+    
+    public double getUserTimeZone() {
+        return userTimeZone;
+    }
+    
+    public void setUserTimeZone(double userTimeZoneOffset)
+    {
+        this.userTimeZone = userTimeZoneOffset;
+    }
+    
+   
 }

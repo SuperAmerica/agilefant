@@ -24,33 +24,33 @@
       <td>Completed / Total</td>
     </tr>
     <tr>
-      <td>Tasks</td>
+      <td>Value</td>
       <td>
-      <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">
-      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.percentDoneTasks}%; height: 1em;"></div>
+      <div style="width: 50px; height: 1em;"  class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.percentCompletedValue}%; height: 1em;"></div>
       </div>
       </td>
       <td>
-        <c:out value="${iterationMetrics.percentDoneTasks}" />%
+        <c:out value="${iterationMetrics.percentCompletedValue}" />%
       </td>
       <td style="text-align: center; white-space: nowrap;">
-        <c:out value="${iterationMetrics.completedTasks}" /> / 
-        <c:out value="${iterationMetrics.totalTasks}" />
+        <c:out value="${iterationMetrics.completedValue}" /> / 
+        <c:out value="${iterationMetrics.totalValue}" />
       </td>
     </tr>
     <tr>
-      <td>Task effort</td>
+      <td>Story points</td>
       <td>
-      <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">
-      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.completedEffortPercentage}%; height: 1em;"></div>
+      <div style="width: 50px; height: 1em;"  class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.doneStoryPointsPercentage}%; height: 1em;"></div>
       </div>
       </td>
       <td>
-        <c:out value="${iterationMetrics.completedEffortPercentage}" />%
+        <c:out value="${iterationMetrics.doneStoryPointsPercentage}" />%
       </td>
       <td style="text-align: center; white-space: nowrap;">
-        <c:out value="${aef:estimateToHours(iterationMetrics.effortLeft)}" /> / 
-        <c:out value="${aef:estimateToHours(iterationMetrics.originalEstimate)}" />
+        <c:out value="${iterationMetrics.doneStoryPoints}" /> / 
+        <c:out value="${iterationMetrics.storyPoints}" /> points
       </td>
     </tr>
     <tr>
@@ -69,18 +69,48 @@
       </td>
     </tr>
     <tr>
-      <td>Story points</td>
+      <td>Effort</td>
       <td>
-      <div style="width: 50px; height: 1em;"  class="storyStateNOT_STARTED">
-      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.doneStoryPointsPercentage}%; height: 1em;"></div>
+      <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.completedEffortPercentage}%; height: 1em;"></div>
       </div>
       </td>
       <td>
-        <c:out value="${iterationMetrics.doneStoryPointsPercentage}" />%
+        <c:out value="${iterationMetrics.completedEffortPercentage}" />%
       </td>
       <td style="text-align: center; white-space: nowrap;">
-        <c:out value="${iterationMetrics.doneStoryPoints}" /> / 
-        <c:out value="${iterationMetrics.storyPoints}" /> points
+        <c:out value="${aef:estimateToHours(iterationMetrics.effortLeft)}" /> / 
+        <c:out value="${aef:estimateToHours(iterationMetrics.originalEstimate)}" />
+      </td>
+    </tr>
+    <tr>
+      <td>Tasks</td>
+      <td>
+      <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.percentDoneTasks}%; height: 1em;"></div>
+      </div>
+      </td>
+      <td>
+        <c:out value="${iterationMetrics.percentDoneTasks}" />%
+      </td>
+      <td style="text-align: center; white-space: nowrap;">
+        <c:out value="${iterationMetrics.completedTasks}" /> / 
+        <c:out value="${iterationMetrics.totalTasks}" />
+      </td>
+    </tr>
+    <tr>
+      <td>Effort spent</td>
+      <td>
+      <div style="width: 50px; height: 1em;" class="storyStateNOT_STARTED">
+      <div class="storyStateDONE" style="display: inline-block; width: ${iterationMetrics.percentSpentEffort}%; height: 1em;"></div>
+      </div>
+      </td>
+      <td>
+        <c:out value="${iterationMetrics.percentSpentEffort}" />%
+      </td>
+      <td style="text-align: center; white-space: nowrap;">
+        <c:out value="${aef:estimateToHours(iterationMetrics.spentEffort)}" /> / 
+        <c:out value="${aef:estimateToHours(iterationMetrics.originalEstimate)}" />
       </td>
     </tr>
     </table>

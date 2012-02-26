@@ -36,6 +36,7 @@ SpentEffortWidget.prototype.initDialog = function() {
   this.userSpentEffort = new UserSpentEffortWidget(this.userEffortEl,
       window.pageController.getCurrentUser().getId());
   
+  
 };
 
 SpentEffortWidget.prototype.entriesChanged = function() {

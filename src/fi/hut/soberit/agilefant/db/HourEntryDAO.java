@@ -25,6 +25,14 @@ public interface HourEntryDAO extends GenericDAO<HourEntry> {
     long calculateSumFromTasksWithoutStory(int iterationId);
     
     /**
+     * Return all hour entries for an iteration
+     * 
+     * @param iterationId
+     * @return
+     */
+    public List<HourEntry> getAllIterationHourEntries(int iterationId);
+    
+    /**
      * Recursive hour entry lookup. Will search from the given backlogs and all of their sub backlogs.
      * 
      * @param backlogIds Set of backlog ids. If argument is null, method will return an empty list.

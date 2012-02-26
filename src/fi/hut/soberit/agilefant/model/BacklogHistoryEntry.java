@@ -20,6 +20,8 @@ public class BacklogHistoryEntry {
     private int id;
 
     private Backlog backlog;
+    
+    private long branchMax;
 
     private long estimateSum;
 
@@ -63,7 +65,15 @@ public class BacklogHistoryEntry {
     public void setDoneSum(long doneSum) {
         this.doneSum = doneSum;
     }
-
+    
+    public long getBranchMax() {
+        return branchMax;
+    }
+    
+    public void setBranchMax(long branchMax) {
+        this.branchMax = branchMax;
+    }
+    
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
     public DateTime getTimestamp() {
         return timestamp;

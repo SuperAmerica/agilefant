@@ -44,6 +44,74 @@ StoryInfoBubble.prototype.checkForMoveStory = function(model) {
   }
 };
 
+StoryInfoBubble.prototype.confirmTasksAndChildrenToDone = function(model, storyTree, isTopStory) {
+	var tasks = model.getTasks();
+	var children = model.getChildren();
+	var nonDoneChildren = false;
+	var nonDoneTasks = false;
+	if (children.length > 0) {
+		for (var i = 0; i < children.length; i++) {
+		  if (children[i].getState() !== "DONE") {
+			nonDoneChildren = true;
+		  }
+		}
+	}
+	if (tasks.length > 0) {
+		for (var i = 0; i < tasks.length; i++) {
+		  if (tasks[i].getState() !== "DONE") {
+			nonDoneTasks = true;
+		  }
+		}
+	}
+	if (nonDoneChildren || nonDoneTasks) {
+	  if (isTopStory) {
+		if (changedData.state && changedData.state === "DONE" && tasks.length > 0) {
+		  var msg = new DynamicsConfirmationDialog(
+			  "Set all tasks' and stories' states to done?",
+			  "The '" + model.getName() + "' story has undone child tasks/stories! Do you want to set them Done as well?",
+			  function() {
+				for (var i = 0; i < children.length; i++) {
+				  if (children[i].getState() !== "DONE") {
+					 children[i].setState("DONE");
+					 children[i].commit();
+					 storyTree._getStoryForId(children[i].getId(), function(object) {
+						StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
+					});
+					storyTree.refresh();
+				  }
+				}
+				if (nonDoneTasks)
+					model.currentData.tasksToDone = true;
+				model.commit();
+				storyTree.refresh();
+			  },
+			  function() {
+				model.commit();
+			  }
+			);
+		}
+		} else {
+			for (var i = 0; i < children.length; i++) {
+				if (children[i].getState() !== "DONE") {
+					children[i].setState("DONE");
+					children[i].commit();
+					storyTree._getStoryForId(children[i].getId(), function(object) {
+						StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
+					});
+				storyTree.refresh();
+				}
+			}
+			if (nonDoneTasks)
+				model.currentData.tasksToDone = true;
+			model.commit();
+			storyTree.refresh();
+		}
+	} else {
+	  model.commit();
+	  storyTree.refresh();
+	}
+};
+
 StoryInfoBubble.prototype.handleModelEvents = function(event) {
   StoryController.prototype.handleModelEvents.call(this, event);
   if(event instanceof DynamicsEvents.NamedEvent && event.getEventName() === "storyMoved") {
@@ -143,11 +211,15 @@ StoryInfoBubble.prototype.addLinks = function() {
  * Create the configuration for the dynamic table.
  */
 StoryInfoBubble.prototype._createConfig = function() {
+  var toDoneFunction = function (model) {
+	StoryInfoBubble.prototype.confirmTasksAndChildrenToDone (model, this.treeController, true);
+	}
   var config = new DynamicTableConfiguration( {
     leftWidth: '25%',
     rightWidth: '74%',
     closeRowCallback: null,
     beforeCommitFunction: StoryInfoBubble.prototype.checkForMoveStory,
+	beforeCommitFunction: toDoneFunction,
     validators: [ ]
   });
   config.addColumnConfiguration(0, {
@@ -160,15 +232,27 @@ StoryInfoBubble.prototype._createConfig = function() {
       set: StoryModel.prototype.setName
     }
   });
+  
   config.addColumnConfiguration(1, {
+	    title : "Value",
+	    get : StoryModel.prototype.getStoryValue,
+	    decorator: DynamicsDecorators.estimateDecorator,
+	    editable : true,
+	    edit : {
+	      editor : "Number",
+	      set : StoryModel.prototype.setStoryValue
+	    }
+	  });
+  
+  config.addColumnConfiguration(2, {
     title: "Reference ID",
     get: StoryModel.prototype.getId,
     decorator: DynamicsDecorators.linkToWorkItem ,
   });
-  config.addColumnConfiguration(2, {
+  config.addColumnConfiguration(3, {
     title : "State",
     get : StoryModel.prototype.getState,
-    decorator: DynamicsDecorators.stateColorDecorator,
+    decorator: DynamicsDecorators.storyStateColorDecorator,
     editable : true,
     edit : {
       editor : "Selection",
@@ -176,7 +260,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       items : DynamicsDecorators.stateOptions
     }
   });
-  config.addColumnConfiguration(3, {
+  config.addColumnConfiguration(4, {
     title : "Points",
     get : StoryModel.prototype.getStoryPoints,
     decorator: DynamicsDecorators.estimateDecorator,
@@ -186,7 +270,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       set : StoryModel.prototype.setStoryPoints
     }
   });
-  config.addColumnConfiguration(4, {
+  config.addColumnConfiguration(5, {
     title : "Backlog",
     headerTooltip : 'The backlog, where the story resides',
     get : StoryModel.prototype.getBacklog,
@@ -199,7 +283,7 @@ StoryInfoBubble.prototype._createConfig = function() {
       set: StoryModel.prototype.setBacklogByModel
     }
   });
-  config.addColumnConfiguration(5, {
+  config.addColumnConfiguration(6, {
     title : "Responsibles",
     get : StoryModel.prototype.getResponsibles,
     decorator: DynamicsDecorators.responsiblesDecorator,
@@ -211,11 +295,11 @@ StoryInfoBubble.prototype._createConfig = function() {
       set : StoryModel.prototype.setResponsibles
     }
   });
-  config.addColumnConfiguration(6, {
+  config.addColumnConfiguration(7, {
     title : "Labels",
     subViewFactory: StoryInfoBubble.prototype.labelsViewFactory
   });
-  config.addColumnConfiguration(7, {
+  config.addColumnConfiguration(8, {
     title : "Description",
     get : StoryModel.prototype.getDescription,
     editable : true,

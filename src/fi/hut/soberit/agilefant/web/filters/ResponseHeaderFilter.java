@@ -15,7 +15,7 @@ public class ResponseHeaderFilter implements Filter {
     private int expirationTime; 
     
     public void init(FilterConfig filterConfig) throws ServletException {
-        expirationTime = Integer.valueOf(filterConfig.getInitParameter("expirationTime"));
+        expirationTime = Integer.parseInt((filterConfig.getInitParameter("expirationTime")));
     }
     
     public void doFilter(ServletRequest request, ServletResponse response,

@@ -35,8 +35,8 @@ $(document).ready(function() {
     var startedController = new ExtendedStoryController();
     startedController.model = startedStory;
     
-    ok(!doneController.storyPointsEditable(), "Done story's points are not editable");
-    ok(startedController.storyPointsEditable(), "Started story's points are editable");
+    ok(!doneController.storyValueOrPointsEditable(), "Done story's points are not editable");
+    ok(startedController.storyValueOrPointsEditable(), "Started story's points are editable");
     
   });
 });

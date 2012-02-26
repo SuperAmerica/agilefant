@@ -135,6 +135,25 @@ Date.fullYearStart = '20';
 	});
 	
 	/**
+	 * Returns GMT Offset of browser clock 
+	 * 
+	 * @example var dtm = new Date("01/12/2008");
+	 * dtm.getUserTimeZone();
+	 * @return -8
+	 * 
+	 * @name getUserTimeZone
+	 * @type Number (double)
+	 * 
+	 * @cat Plugins/Methods/Date
+	 */
+	add("getUserTimeZone", function(){ 
+		var currentDate =  new Date();
+	    var gmtOffset = 12 - (currentDate.getTimezoneOffset() / 60);
+	    return gmtOffset;
+	});
+	
+	
+	/**
 	 * Checks if the day is a weekend day (Sat or Sun).
 	 *
 	 * @example var dtm = new Date("01/12/2008");

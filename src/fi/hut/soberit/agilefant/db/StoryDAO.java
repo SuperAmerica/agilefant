@@ -16,6 +16,8 @@ public interface StoryDAO extends GenericDAO<Story> {
     StoryMetrics calculateMetrics(int storyId);
 
     public int getStoryPointSumByBacklog(int backlogId);
+    public int getStoryValueSumByBacklog(int backlogId);
+    public int getCompletedStoryValueSumByBacklog(int backlogId);
 
     public Map<Integer, Integer> getNumOfResponsiblesByStory(Set<Integer> storyIds);
     

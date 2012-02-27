@@ -22,7 +22,7 @@ $(document).ready(function() {
   <div id="accessListElement" style="min-width: 750px"> </div>
 </c:when>
 <c:otherwise>
-  <h3>You are not an administrator therefore you do not have permission to set access rights.</h3>
+  <h3>You are not an administrator, therefore you do not have permission to set access rights.</h3>
 </c:otherwise>
 </c:choose>
 

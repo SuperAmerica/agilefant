@@ -63,6 +63,7 @@ $(document).ready(function() {
 </c:if>
 
 <%-- Settings --%>
+<c:if test="${currentUser.admin}">
 <li id="navitab-settings">
     <a href="settings.action">
     <span>
@@ -71,5 +72,6 @@ $(document).ready(function() {
     </span>
     </a>
 </li>
+</c:if>
 
 </ul>

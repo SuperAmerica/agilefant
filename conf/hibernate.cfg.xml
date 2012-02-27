@@ -12,7 +12,7 @@
  -->
 
 <hibernate-configuration>
-	<session-factory>
+	<session-factory name="hibernateSessionFactory">
 		<!--
 			we need the package mapping to make package-info.java work, but it
 			won't map all the package classes

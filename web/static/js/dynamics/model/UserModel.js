@@ -31,7 +31,8 @@ var UserModel = function UserModel() {
       "markStoryStarted": "markStoryStarted",
       "autoassignToStories": "autoassignToStories",
       "recentItemsNumberOfWeeks": "recentItemsNumberOfWeeks",
-      "admin": "admin"
+      "admin": "admin",
+      "id" : "id"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Story":         "story",
@@ -302,3 +303,6 @@ UserModel.prototype.getAdmin = function() {
   return this.currentData.admin;
 };
 
+UserModel.prototype.getId = function() {
+  return this.currentData.id;
+};

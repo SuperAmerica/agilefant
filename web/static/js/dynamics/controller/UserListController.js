@@ -87,11 +87,15 @@ UserListController.prototype.initConfig = function() {
     } 
   });
   
-  this.enabledUserListConfig.addCaptionItem({
-    text: "Create user",
-    name: "createUser",
-    callback: UserListController.prototype.createUser
-  });
+  var currentUser = PageController.getInstance().getCurrentUser();
+  
+  if (currentUser.getAdmin()) {
+	  this.enabledUserListConfig.addCaptionItem({
+	    text: "Create user",
+	    name: "createUser",
+	    callback: UserListController.prototype.createUser
+	  });
+  }
   
   this.disabledUserListConfig = new DynamicTableConfiguration({
     caption: "Disabled users",

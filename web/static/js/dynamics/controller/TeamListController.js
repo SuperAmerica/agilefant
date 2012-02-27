@@ -80,11 +80,15 @@ TeamListController.prototype.initConfig = function() {
     } 
   });
   
-  this.teamListConfig.addCaptionItem({
-    text: "Create team",
-    name: "createUser",
-    callback: TeamListController.prototype.createTeam
-  });
+  var currentUser = PageController.getInstance().getCurrentUser();
+  
+  if (currentUser.getAdmin()) {
+	  this.teamListConfig.addCaptionItem({
+	    text: "Create team",
+	    name: "createTeam",
+	    callback: TeamListController.prototype.createTeam
+	  });
+  }
   
 //  var collapse = {
 //      minWidth : 24,

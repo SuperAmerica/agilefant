@@ -480,36 +480,47 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     private void moveStory(Story story, Backlog backlog) {
    
-        //if story is under iteration we are using it as a old backlog
+        // need these for remembering where the story came from
         Backlog oldBacklog = null;
         Backlog oldIteration = null;
 
-        if (story.getIteration() != null && !story.getIteration().isStandAlone()) { // story's parent is iteration (no standalone)
+        // save where the story is coming from for later use, and remove it from the original backlog 
+        if (story.getIteration() != null && !story.getIteration().isStandAlone()) { // story is from a non-standalone iteration)
             oldIteration = story.getIteration();
-            oldBacklog = story.getIteration();
+            oldBacklog = story.getBacklog();
             oldBacklog.getStories().remove(story);
-        } else if (story.getIteration() != null && story.getIteration().isStandAlone()) { // story's parent is standalone
-            oldBacklog = story.getIteration();
-        }else {
+        } /** If the story is from a standalone iteration but has no product / project **/
+        else if (story.getBacklog() == null && story.getIteration() != null && story.getIteration().isStandAlone()) { 
+            oldIteration = story.getIteration(); // save
+            oldIteration.getStories().remove(story);
+        } else { // the story is not in an iteration at all 
             oldBacklog = story.getBacklog();
             oldBacklog.getStories().remove(story);
         }
     
-        // check if we are moving from a standalone iteration;
-        // if so, we must get oldBacklog via 
-        /*if (oldBacklog == null) { 
-            oldBacklog = story.getIteration();
-        }*/
-
-        
-
         //  after this, set the story's backlog & iteration accordingly
         
-        if (backlog instanceof Iteration && backlog.isStandAlone()) {
+        if /** Story is moved to a standalone iteration **/
+        (backlog instanceof Iteration && backlog.isStandAlone()) {
             story.setIteration((Iteration)backlog);  // move to standalone
-        } else if (backlog instanceof Iteration && !backlog.isStandAlone()) {
-            story.setIteration((Iteration)backlog); // move to iteration that is not standalone
+        } /** Story is moved to a normal iteration **/ 
+        else if (backlog instanceof Iteration && !backlog.isStandAlone()) {
+            oldIteration = story.getIteration(); // this is needed if oldIteration is a standalone  
+            story.setIteration((Iteration)backlog);
             story.setBacklog(backlog.getParent());
+        } /** Story is moved to a product or project  **/ 
+        else if ((backlog instanceof Product || backlog instanceof Project) && story.getIteration() != null) { // the story has an iteration, and is moved to a product / project  
+         // the story is in a standalone iteration, but not in any product / project
+            if (story.getIteration().isStandAlone() && oldBacklog == null) {
+               oldBacklog = story.getIteration();
+               story.setBacklog(backlog);
+               story.setIteration(null);  // thus, moving to a project / product is the only way to remove a story from a standalone iteration!
+           }
+           else { // here, the story is in a project / product
+               oldIteration = story.getIteration();
+               story.setBacklog(backlog);
+           }
+           /**Story's backlog is in product/project, its iteration is null**/
         } else {
             story.setBacklog(backlog); // move to product or project
             story.setIteration(null);
@@ -531,13 +542,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     private void rankToBottom(Story story, Backlog backlog, Backlog oldBacklog, Backlog oldIteration) {
-        if (backlog == null || oldBacklog == null) {
+        if (backlog == null || (oldBacklog == null && oldIteration == null)) {
             throw new IllegalArgumentException("backlogs can not be null");
         }
         // if target is product -> remove all ranks
         if ((backlog instanceof Product) && !(oldBacklog instanceof Product)) {
             if (oldBacklog instanceof Iteration) {
                 storyRankBusiness.removeRank(story, oldBacklog.getParent());
+                storyRankBusiness.removeRank(story, oldIteration);
             }
             storyRankBusiness.removeRank(story, oldBacklog);
 
@@ -582,6 +594,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         } else if (oldBacklog instanceof Project) {// project to iteration
             // iteration is under the project
             if (backlogsParent == oldBacklog) {
+                if (oldIteration != null && oldIteration.isStandAlone()) {
+                    storyRankBusiness.removeRank(story, oldIteration);
+                }
                 storyRankBusiness.rankToBottom(story, backlog);
             } else {
                 if (backlogsParent == null) {
@@ -603,8 +618,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         
         if (oldBacklog instanceof Product) {
             storyRankBusiness.rankToBottom(story, backlog);
-        } else if (oldBacklog instanceof Project
-                && story.getChildren().isEmpty()) { // project to project
+        } else if (oldBacklog instanceof Project && story.getChildren().isEmpty()) { // project to project
             storyRankBusiness.removeRank(story, oldBacklog);
             storyRankBusiness.rankToBottom(story, backlog);
         } else if (oldBacklog instanceof Iteration && story.getChildren().isEmpty()) { // iteration to project
@@ -612,11 +626,15 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             if (backlog == oldBacklog.getParent()) {
                 storyRankBusiness.removeRank(story, oldBacklog);
             } else {
-                storyRankBusiness.removeRank(story, oldBacklog.getParent());
-                storyRankBusiness.rankToBottom(story, backlog);
-                if (oldBacklogsParent != null) {
+                
+                if (oldBacklogsParent == null) { // moving from standalone iteration
                     storyRankBusiness.removeRank(story, oldBacklog);
+                } else {
+                    storyRankBusiness.removeRank(story, oldBacklog);
+                    storyRankBusiness.removeRank(story, oldBacklog.getParent());
                 }
+                
+                storyRankBusiness.rankToBottom(story, backlog);
             }
         }
     }

@@ -17,8 +17,6 @@ $(document).ready(function() {
 
 <c:choose>
 <c:when test="${currentUser.admin}">
-  <h3>Welcome Administrator</h3>
-  <div>Matrix info to go here...</div>
   <div id="accessListElement" style="min-width: 750px"> </div>
 </c:when>
 <c:otherwise>

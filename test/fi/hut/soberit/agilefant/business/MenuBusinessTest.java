@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 import fi.hut.soberit.agilefant.transfer.ScheduleStatus;
 
@@ -121,7 +122,7 @@ public class MenuBusinessTest {
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
             .andReturn(ScheduleStatus.FUTURE).times(8);
         replayAll();
-        List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData();
+        List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData(SecurityUtil.getLoggedUser());
         verifyAll();
         
         assertEquals(2, actual.size());

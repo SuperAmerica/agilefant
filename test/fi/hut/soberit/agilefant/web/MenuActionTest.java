@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.opensymphony.xwork2.Action;
 
 import fi.hut.soberit.agilefant.business.MenuBusiness;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 
 public class MenuActionTest {
@@ -40,7 +41,7 @@ public class MenuActionTest {
     
     @Test
     public void testConstructBacklogMenuData() {
-        expect(menuBusiness.constructBacklogMenuData()).andReturn(
+        expect(menuBusiness.constructBacklogMenuData(SecurityUtil.getLoggedUser())).andReturn(
                 Arrays.asList(new MenuDataNode()));
         replayAll();
         assertEquals(Action.SUCCESS, menuAction.constructBacklogMenuData());

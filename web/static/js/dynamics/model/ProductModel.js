@@ -112,6 +112,7 @@ ProductModel.prototype._saveData = function(id, changedData) {
       if(!id) {
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
+      me.callListeners(new DynamicsEvents.EditEvent(me));
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving product", xhr);

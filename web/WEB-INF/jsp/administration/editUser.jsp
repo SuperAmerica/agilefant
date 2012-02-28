@@ -9,10 +9,16 @@
   <h2>My account</h2>
 </c:when>
 <c:otherwise>
-  <h2>Edit user</h2>
+  <c:if test="${currentUser.admin}">
+  	<h2>Edit user</h2>
+  </c:if>
+  <c:if test="${!currentUser.admin}">
+  	<h2>View user</h2>
+  </c:if> 
 </c:otherwise>
 </c:choose>
 
+<c:if test="${currentUser.admin || userId == currentUser.id}">
 <script type="text/javascript">
 $(document).ready(function() {
   var controller = new UserController({
@@ -22,9 +28,21 @@ $(document).ready(function() {
   });
 });
 </script>
+</c:if>
+<c:if test="${!currentUser.admin && userId != currentUser.id}">
+<script type="text/javascript">
+$(document).ready(function() {
+  var controller = new UserController({
+    id:                  ${userId},
+    userInfoElement:     $('#userInfoDiv')
+  });
+});
+</script>
+</c:if>
 
 <div id="userInfoDiv" class="structure-main-block"> </div>
 
+<c:if test="${currentUser.admin || userId == currentUser.id}">
 <div id="changePasswordDiv" class="structure-main-block"> </div>
 
 <div id="userSpecificSettingsDiv" class="structure-main-block">
@@ -76,5 +94,7 @@ $(document).ready(function() {
   
 </div>
 </div>
+</c:if>
+
 </jsp:body>
 </struct:htmlWrapper>

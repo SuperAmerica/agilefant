@@ -5,7 +5,10 @@
 <jsp:body>
 
 <h2>Database export</h2>
- 
+
+
+<c:choose>
+<c:when test="${currentUser.admin}"> 
 
 <div id="databaseExportDiv" class="structure-main-block">
 <div class="dynamictable ui-widget-content ui-corner-all">
@@ -29,6 +32,12 @@
   
 </div>
 </div> 
+
+</c:when>
+<c:otherwise>
+  <h3>You are not an administrator, therefore you do not have permission to perform database export.</h3>
+</c:otherwise>
+</c:choose>
 
 </jsp:body>
 </struct:htmlWrapper>

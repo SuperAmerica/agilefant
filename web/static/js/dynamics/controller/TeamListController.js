@@ -80,11 +80,15 @@ TeamListController.prototype.initConfig = function() {
     } 
   });
   
-  this.teamListConfig.addCaptionItem({
-    text: "Create team",
-    name: "createUser",
-    callback: TeamListController.prototype.createTeam
-  });
+  var currentUser = PageController.getInstance().getCurrentUser();
+  
+  if (currentUser.getAdmin()) {
+	  this.teamListConfig.addCaptionItem({
+	    text: "Create team",
+	    name: "createTeam",
+	    callback: TeamListController.prototype.createTeam
+	  });
+  }
   
 //  var collapse = {
 //      minWidth : 24,
@@ -92,20 +96,33 @@ TeamListController.prototype.initConfig = function() {
 //      subViewFactory: TeamListController.prototype.toggleFactory
 //  };
   
-  var name = {
-    minWidth : 200,
-    autoScale : true,
-    title: "Name",
-    get: TeamModel.prototype.getName,
-    defaultSortColumn: true,
-    cssClass: 'strong-text',
-    sortCallback: DynamicsComparators.valueComparatorFactory(TeamModel.prototype.getName),
-    editable: true,
-    edit: {
-      editor: "Text",
-      set: TeamModel.prototype.setName
-    }
-  };
+  if (currentUser.getAdmin()) {
+	  var name = {
+	    minWidth : 200,
+	    autoScale : true,
+	    title: "Name",
+	    get: TeamModel.prototype.getName,
+	    defaultSortColumn: true,
+	    cssClass: 'strong-text',
+	    sortCallback: DynamicsComparators.valueComparatorFactory(TeamModel.prototype.getName),
+	    editable: true,
+	    edit: {
+	      editor: "Text",
+	      set: TeamModel.prototype.setName
+	    }
+	  };
+  } else {
+	  var name = {
+	    minWidth : 200,
+	    autoScale : true,
+	    title: "Name",
+	    get: TeamModel.prototype.getName,
+	    defaultSortColumn: true,
+	    cssClass: 'strong-text',
+	    sortCallback: DynamicsComparators.valueComparatorFactory(TeamModel.prototype.getName),
+	    editable: false
+	  };	  
+  }
   
   var memberNo = {
     minWidth : 30,
@@ -115,19 +132,29 @@ TeamListController.prototype.initConfig = function() {
     get: TeamModel.prototype.getUsers
   };
   
-  var memberNames = {
-    autoScale: false,
-    fullWidth: true,
-    get: TeamModel.prototype.getUsers,
-    decorator: DynamicsDecorators.teamUserListDecorator,
-    editable: true,
-    edit: {
-      editor: "Autocomplete",
-      dataType: "usersAndTeams",
-      dialogTitle: "Select users",
-      set: TeamModel.prototype.setUsers
-    }
-  };
+  if (currentUser.getAdmin()) {
+	  var memberNames = {
+	    autoScale: false,
+	    fullWidth: true,
+	    get: TeamModel.prototype.getUsers,
+	    decorator: DynamicsDecorators.teamUserListDecorator,
+	    editable: true,
+	    edit: {
+	      editor: "Autocomplete",
+	      dataType: "usersAndTeams",
+	      dialogTitle: "Select users",
+	      set: TeamModel.prototype.setUsers
+	    }
+	  };
+  } else {
+	  var memberNames = {
+	    autoScale: false,
+	    fullWidth: true,
+	    get: TeamModel.prototype.getUsers,
+	    decorator: DynamicsDecorators.teamUserListDecorator,
+	    editable: false
+	  };	  
+  }
   
 //  var actions = {
 //    minWidth : 30,

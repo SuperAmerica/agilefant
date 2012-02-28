@@ -6,6 +6,9 @@
 
 <h2>System settings</h2>
 
+<c:choose>
+<c:when test="${currentUser.admin}">
+
 <script type="text/javascript">
 <!--
 $(document).ready(function() {
@@ -223,15 +226,17 @@ $(document).ready(function() {
     <ww:submit value="Save all" cssClass="dynamics-button"></ww:submit>
     
     </div>
-  
-  
-    
-    
     </ww:form>
   </div>
 
 </div>
 </div>
+
+</c:when>
+<c:otherwise>
+  <h3>You are not an administrator, therefore you do not have permission to modify system settings.</h3>
+</c:otherwise>
+</c:choose>
 
 </jsp:body>
 </struct:htmlWrapper>

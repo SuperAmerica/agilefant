@@ -15,7 +15,8 @@ AutocompleteDataProvider.vars = {
     "backlogs":          { url: "ajax/backlogChooserData.action"               },
     "currentIterations": { url: "ajax/currentIterationChooserData.action"      },
     "products":          { url: "ajax/productChooserData.action"               },
-    "projects":          { url: "ajax/projectChooserData.action"               }
+    "projects":          { url: "ajax/projectChooserData.action"               },
+    "teamsAndProducts":     { url: "ajax/teamChooserData.action"                  }
   }
 };
 

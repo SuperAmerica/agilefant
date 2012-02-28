@@ -87,7 +87,7 @@ public class ProductActionTest {
     public void testStore() {
         productAction.setProductId(1);
         productAction.setProduct(product);
-        expect(productBusiness.store(1, product)).andReturn(product);
+        expect(productBusiness.store(1, product, null)).andReturn(product);
         replayAll();
         productAction.store();
         assertEquals(product, productAction.getProduct());

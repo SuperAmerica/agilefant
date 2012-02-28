@@ -33,6 +33,7 @@ AdministrationMenuController.prototype.initTree = function() {
   this.tree = this.element.dynatree("getTree");
   
   var rootNode = this.element.dynatree("getRoot");
+  var currentUser = PageController.getInstance().getCurrentUser();
   
   rootNode.addChild({
     title: "My Account",
@@ -51,26 +52,25 @@ AdministrationMenuController.prototype.initTree = function() {
     key: "listTeams.action"
   });
   
-  var currentUser = PageController.getInstance().getCurrentUser();
   if (currentUser.getAdmin()) {
 	  rootNode.addChild({
 	    title: "Access rights",
 	    icon: false,
 	    key: "accessRights.action"
 	  });
+  
+	  rootNode.addChild({
+	    title: "System settings",
+	    icon: false,
+	    key: "systemSettings.action"
+	  });
+  
+	  rootNode.addChild({
+		  title: "Database export",
+		  icon:false,
+		  key: "databaseExport.action"
+	  });  
   }
-  
-  rootNode.addChild({
-    title: "System settings",
-    icon: false,
-    key: "systemSettings.action"
-  });
-  
-  rootNode.addChild({
-	  title: "Database export",
-	  icon:false,
-	  key: "databaseExport.action"
-  });  
   
   this.element.find("a.ui-dynatree-title").each(function(key, item) {
     item.href = $(item.parentNode).attr("dtnode").data.key;

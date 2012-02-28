@@ -72,6 +72,7 @@
     <action name="retrieveAllProducts" method="retrieveAll" class="productAction">
       <result name="success" type="json">
         <param name="target">products</param>
+        <param name="patterns">+teams</param>
       </result>
     </action>
     
@@ -79,6 +80,9 @@
       <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">
         <param name="target">product</param>
+        <param name="patterns">
+          +teams
+        </param>
       </result>
     </action>
     

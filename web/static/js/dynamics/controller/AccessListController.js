@@ -83,23 +83,29 @@ AccessListController.prototype.initConfig = function() {
     get: ProductModel.prototype.getName,
     defaultSortColumn: true,
     cssClass: 'strong-text',
-    sortCallback: DynamicsComparators.valueComparatorFactory(ProductModel.prototype.getName),
-    editable: true,
-    edit: {
-      editor: "Text",
-      set: ProductModel.prototype.setName
-    }
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProductModel.prototype.getName)
   };
   
   var teamNo = {
     minWidth : 30,
     autoScale : true,
     title: "Teams",
+    decorator: DynamicsDecorators.productTeamCountDecorator,
+    get: ProductModel.prototype.getTeams
   };
   
   var teamNames = {
     autoScale: false,
     fullWidth: true,
+    get: ProductModel.prototype.getTeams,
+    decorator: DynamicsDecorators.productTeamListDecorator,
+    editable: true,
+    edit: {
+      editor: "Autocomplete",
+      dataType: "teamsAndProducts",
+      dialogTitle: "Select teams to have access",
+      set: ProductModel.prototype.setTeams
+    }
   };
     
   this.accessListConfig.addColumnConfiguration(0, product);

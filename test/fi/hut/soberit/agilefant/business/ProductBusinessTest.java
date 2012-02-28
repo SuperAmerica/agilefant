@@ -82,7 +82,7 @@ public class ProductBusinessTest extends MockedTestCase {
         productDAO.store(prod);
 
         replay(productDAO);
-        Product actual = productBusiness.store(1, newData);
+        Product actual = productBusiness.store(1, newData, null);
         assertEquals(newData.getName(), actual.getName());
         assertEquals(newData.getDescription(), actual.getDescription());
         verify(productDAO);
@@ -99,7 +99,7 @@ public class ProductBusinessTest extends MockedTestCase {
         expect(productDAO.get(1)).andReturn(prod);
 
         replay(productDAO);
-        Product actual = productBusiness.store(0, prod);
+        Product actual = productBusiness.store(0, prod, null);
         assertEquals(prod.getName(), actual.getName());
         assertEquals(prod.getDescription(), actual.getDescription());
         verify(productDAO);
@@ -111,7 +111,7 @@ public class ProductBusinessTest extends MockedTestCase {
         Product prod = new Product();
         prod.setName("");
         prod.setDescription("This is a test.");
-        productBusiness.store(0, prod);
+        productBusiness.store(0, prod, null);
     }
 
     @Test

@@ -58,7 +58,7 @@ ProductModel.prototype._setData = function(newData) {
 //  }
 
   if (newData.teams) {
-  	this._updateRelations(ModelFactory.type.team, newData.teams);
+  	this._updateRelations(ModelFactory.types.team, newData.teams);
   }
   
 };
@@ -89,8 +89,8 @@ ProductModel.prototype._saveData = function(id, changedData) {
   if (changedData.teamsChanged) {
     data.teamIds = changedData.teamIds;
     data.teamsChanged = true;
-    delete changedData.userIds;
-    delete changedData.usersChanged;
+    delete changedData.teamIds;
+    delete changedData.teamsChanged;
   }
   jQuery.extend(data, this.serializeFields("product", changedData));
   

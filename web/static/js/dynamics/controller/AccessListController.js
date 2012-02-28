@@ -83,12 +83,7 @@ AccessListController.prototype.initConfig = function() {
     get: ProductModel.prototype.getName,
     defaultSortColumn: true,
     cssClass: 'strong-text',
-    sortCallback: DynamicsComparators.valueComparatorFactory(ProductModel.prototype.getName),
-    editable: true,
-    edit: {
-      editor: "Text",
-      set: ProductModel.prototype.setName
-    }
+    sortCallback: DynamicsComparators.valueComparatorFactory(ProductModel.prototype.getName)
   };
   
   var teamNo = {

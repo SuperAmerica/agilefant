@@ -19,6 +19,8 @@ ModelFactory = function ModelFactory() {
     user: {},
     team: {},
     
+    product: {},
+    
     label: {},
     
     workQueueTask: {}

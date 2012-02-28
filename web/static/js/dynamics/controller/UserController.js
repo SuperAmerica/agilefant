@@ -71,92 +71,150 @@ UserController.prototype._initUserInfoConfig = function() {
     closeRowCallback: null
   });
   
-  config.addCaptionItem({
-    text: "Change password",
-    name: "changePassword",
-    callback: UserController.prototype.changePassword
-  });
+  var currentUser = PageController.getInstance().getCurrentUser();
   
-  config.addColumnConfiguration(UserController.columnIndices.fullName, {
-    title : "Name",
-    get : UserModel.prototype.getFullName,
-    editable : true,
-    edit : {
-      editor : "Text",
-      required: true,
-      set: UserModel.prototype.setFullName
-    }
-  });
+  if (currentUser.getAdmin() || currentUser.getId() == this.id) {
+	  config.addCaptionItem({
+	    text: "Change password",
+	    name: "changePassword",
+	    callback: UserController.prototype.changePassword
+	  });
+  }
   
-  config.addColumnConfiguration(UserController.columnIndices.loginName, {
-    title : "Login name",
-    get : UserModel.prototype.getLoginName,
-    editable : true,
-    edit : {
-      editor : "Text",
-      required: true,
-      set: UserModel.prototype.setLoginName
-    }
-  });
-  
-  config.addColumnConfiguration(UserController.columnIndices.initials, {
-    title : "Initials",
-    get : UserModel.prototype.getInitials,
-    editable : true,
-    edit : {
-      editor : "Text",
-      required: true,
-      set: UserModel.prototype.setInitials
-    }
-  });
-  
-  config.addColumnConfiguration(UserController.columnIndices.email, {
-    title : "Email",
-    get : UserModel.prototype.getEmail,
-    editable : true,
-    edit : {
-      editor : "Email",
-      required: true,
-      set: UserModel.prototype.setEmail
-    }
-  });
-  
-  config.addColumnConfiguration(UserController.columnIndices.weekEffort, {
-    title : "Weekly hours",
-    get : UserModel.prototype.getWeekEffort,
-    editable : true,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
-    edit : {
-      editor : "ExactEstimate",
-      required: true,
-      set: UserModel.prototype.setWeekEffort,
-      decorator: DynamicsDecorators.exactEstimateEditDecorator
-    }
-  });
-  config.addColumnConfiguration(UserController.columnIndices.recentItemsNumberOfWeeks, {
-	    title : "Recent items (weeks)",
-	    get : UserModel.prototype.getRecentItemsNumberOfWeeks,
+  if (currentUser.getAdmin() || currentUser.getId() == this.id) {
+	  config.addColumnConfiguration(UserController.columnIndices.fullName, {
+	    title : "Name",
+	    get : UserModel.prototype.getFullName,
 	    editable : true,
 	    edit : {
-	      editor : "Number",
+	      editor : "Text",
 	      required: true,
-	      set: UserModel.prototype.setRecentItemsNumberOfWeeks
-	      //decorator: DynamicsDecorators.exactEstimateEditDecorator
+	      set: UserModel.prototype.setFullName
 	    }
 	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.loginName, {
+	    title : "Login name",
+	    get : UserModel.prototype.getLoginName,
+	    editable : true,
+	    edit : {
+	      editor : "Text",
+	      required: true,
+	      set: UserModel.prototype.setLoginName
+	    }
+	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.initials, {
+	    title : "Initials",
+	    get : UserModel.prototype.getInitials,
+	    editable : true,
+	    edit : {
+	      editor : "Text",
+	      required: true,
+	      set: UserModel.prototype.setInitials
+	    }
+	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.email, {
+	    title : "Email",
+	    get : UserModel.prototype.getEmail,
+	    editable : true,
+	    edit : {
+	      editor : "Email",
+	      required: true,
+	      set: UserModel.prototype.setEmail
+	    }
+	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.weekEffort, {
+	    title : "Weekly hours",
+	    get : UserModel.prototype.getWeekEffort,
+	    editable : true,
+	    decorator: DynamicsDecorators.exactEstimateDecorator,
+	    edit : {
+	      editor : "ExactEstimate",
+	      required: true,
+	      set: UserModel.prototype.setWeekEffort,
+	      decorator: DynamicsDecorators.exactEstimateEditDecorator
+	    }
+	  });
+	  config.addColumnConfiguration(UserController.columnIndices.recentItemsNumberOfWeeks, {
+		    title : "Recent items (weeks)",
+		    get : UserModel.prototype.getRecentItemsNumberOfWeeks,
+		    editable : true,
+		    edit : {
+		      editor : "Number",
+		      required: true,
+		      set: UserModel.prototype.setRecentItemsNumberOfWeeks
+		      //decorator: DynamicsDecorators.exactEstimateEditDecorator
+		    }
+	  });
   
-  config.addColumnConfiguration(UserController.columnIndices.teams, {
-    title: "Teams",
-    get: UserModel.prototype.getTeams,
-    decorator: DynamicsDecorators.teamListDecorator,
-    editable: true,
-    edit: {
-      editor: "Autocomplete",
-      dataType: "teams",
-      dialogTitle: "Select teams",
-      set: UserModel.prototype.setTeams
-    }
-  });
+	  if (currentUser.getAdmin()){
+		  config.addColumnConfiguration(UserController.columnIndices.teams, {
+		    title: "Teams",
+		    get: UserModel.prototype.getTeams,
+		    decorator: DynamicsDecorators.teamListDecorator,
+		    editable: true,
+		    edit: {
+		      editor: "Autocomplete",
+		      dataType: "teams",
+		      dialogTitle: "Select teams",
+		      set: UserModel.prototype.setTeams
+		    }
+		  });
+  	  } else {
+  		config.addColumnConfiguration(UserController.columnIndices.teams, {
+  		    title: "Teams",
+  		    get: UserModel.prototype.getTeams,
+  		    decorator: DynamicsDecorators.teamListDecorator,
+  		    editable: false
+  		});
+  	  }
+  }
+  
+  if (!currentUser.getAdmin() && currentUser.getId() != this.id) {
+	  config.addColumnConfiguration(UserController.columnIndices.fullName, {
+	    title : "Name",
+	    get : UserModel.prototype.getFullName,
+	    editable : false
+	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.loginName, {
+	    title : "Login name",
+	    get : UserModel.prototype.getLoginName,
+	    editable : false
+	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.initials, {
+	    title : "Initials",
+	    get : UserModel.prototype.getInitials,
+	    editable : false
+	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.email, {
+	    title : "Email",
+	    get : UserModel.prototype.getEmail,
+	    editable : false
+	  });
+	  
+	  config.addColumnConfiguration(UserController.columnIndices.weekEffort, {
+	    title : "Weekly hours",
+	    get : UserModel.prototype.getWeekEffort,
+	    editable : false
+	  });
+	  config.addColumnConfiguration(UserController.columnIndices.recentItemsNumberOfWeeks, {
+		    title : "Recent items (weeks)",
+		    get : UserModel.prototype.getRecentItemsNumberOfWeeks,
+		    editable : false
+		  });
+	  config.addColumnConfiguration(UserController.columnIndices.teams, {
+	    title: "Teams",
+	    get: UserModel.prototype.getTeams,
+	    decorator: DynamicsDecorators.teamListDecorator,
+	    editable: false
+	  });
+  }
   
   this.userInfoConfig = config;
 };

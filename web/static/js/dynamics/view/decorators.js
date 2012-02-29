@@ -8,8 +8,15 @@ var DynamicsDecorators = {
       "DONE" : "Done",
       "DEFERRED" : "Deferred"
     },
+  adminOptions: {
+      "true" : "Yes",
+      "false" : "No"
+  },
   stateDecorator: function(val) {
     return DynamicsDecorators.stateOptions[val];
+  },
+  adminDecorator: function(val) {
+  	return DynamicsDecorators.adminOptions[val];
   },
   conditionColorDecorator: function(getter,colorcallback,innerDecorator) {
     return function(value) {

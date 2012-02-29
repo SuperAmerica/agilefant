@@ -34,7 +34,7 @@ public class StoryHierarchyAction extends ActionSupport {
     private List<Story> stories;
     private StoryFilters storyFilters = new StoryFilters();
     private Integer storyId;
-    private List<Integer> storyIds;
+    private Integer[] storyIds;
     private Integer projectId;
     private Integer productId;
     private Story story;
@@ -54,11 +54,13 @@ public class StoryHierarchyAction extends ActionSupport {
     }
     
     public String moveMultipleBefore() {
-        Collection<Story> targets = this.storyBusiness.retrieveMultiple(storyIds);
         Story reference = this.storyBusiness.retrieve(referenceStoryId);
         try {
-            for (Story s : targets)
+            for (int i : storyIds)
+            {
+                Story s = this.storyBusiness.retrieve(i);
                 this.storyHierarchyBusiness.moveUnder(s, reference);
+            }
         } catch (StoryTreeIntegrityViolationException stive) {
             parseIntegrityErrors(stive);
             return Action.ERROR;
@@ -67,12 +69,32 @@ public class StoryHierarchyAction extends ActionSupport {
     }
     
     public String moveMultipleUnder() {
-        
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        try {
+            for (int i : storyIds)
+            {
+                Story s = this.storyBusiness.retrieve(i);
+                this.storyHierarchyBusiness.moveUnder(s, reference);
+            }
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
         return Action.SUCCESS;
     }
     
     public String moveMultipleAfter() {
-        
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        try {
+            for (int i : storyIds)
+            {
+                Story s = this.storyBusiness.retrieve(i);
+                this.storyHierarchyBusiness.moveBefore(s, reference);
+            }
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
         return Action.SUCCESS;
     }
     
@@ -152,6 +174,10 @@ public class StoryHierarchyAction extends ActionSupport {
         this.storyId = storyId;
     }
 
+    public void setStoryIds(Integer[] storyIds) {
+        this.storyIds = storyIds;
+    }
+    
     public List<Story> getHierarchy() {
         return hierarchy;
     }

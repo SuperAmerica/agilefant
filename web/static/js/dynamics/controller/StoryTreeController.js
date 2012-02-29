@@ -34,6 +34,11 @@ StoryTreeController.moveNodeUrls =  {
     "after": "ajax/moveStoryAfter.action",
     "inside": "ajax/moveStoryUnder.action"
 };
+StoryTreeController.multiMoveNodeUrls =  {
+    "before": "ajax/moveMultipleBefore.action",
+    "after": "ajax/moveMultipleAfter.action",
+    "inside": "ajax/moveMultipleUnder.action"
+};
 
 
 StoryTreeController.prototype.resetFilter = function() {
@@ -302,12 +307,12 @@ StoryTreeController.prototype.initTree = function() {
   
   this.element.bind('move_node.jstree', function(event, data) {
     // See http://www.jstree.com/documentation/core
-    // if (data.rslt.o.length > 1)
-      // me.moveMultipleStories(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
-    // else
-        // me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
-      for (var i = 0;i < data.rslt.o.length;i++)
-          me.moveStory(data.rslt.o[i], data.rslt.r, data.rslt.p, data.inst, data.rlbk);  
+	if (data.rslt.o.length > 1)
+    	me.moveMultipleStories(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
+    else
+    	me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
+//      for (var i = 0;i < data.rslt.o.length;i++)
+//          me.moveStory(data.rslt.o[i], data.rslt.r, data.rslt.p, data.inst, data.rlbk);  
   });
   this.element.delegate('span', 'click.jstree', function(event) {
     me.openNodeDetails($(event.target).parents('li:eq(0)'));
@@ -348,12 +353,12 @@ StoryTreeController.prototype._treeLoaded = function() {
 };
 
 StoryTreeController.prototype.moveMultipleStories = function(nodes, ref_node, type, tree_obj, rb) {
-  var myIds = $(nodes).map(function() { return $(this).attr("storyid"); });
+  var myIds = $(nodes).map(function() { return $(this).attr("storyid"); }).toArray();
   var refId = $(ref_node).attr("storyid");
   var data = {storyIds: myIds, referenceStoryId: refId};
   var me = this;
-  /*$.ajax({
-    url: StoryTreeController.moveNodeUrls[type],
+  $.ajax({
+    url: StoryTreeController.multiMoveNodeUrls[type],
     data: data,
     type: "post",
     async: true,
@@ -371,7 +376,7 @@ StoryTreeController.prototype.moveMultipleStories = function(nodes, ref_node, ty
       }
       jQuery.jstree.rollback(rb);
     }
-  });*/
+  });
 };
 
 StoryTreeController.prototype.moveStory = function(node, ref_node, type, tree_obj, rb) {

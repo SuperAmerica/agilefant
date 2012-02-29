@@ -198,8 +198,25 @@ ProductModel.prototype.setTeams = function(teamIds, teamJson) {
 };
 
 ProductModel.prototype.setAllTeams = function(teams) {
+  var me = this;
   if(teams){
-  	// ADD ALL TEAMS TO A NEW PRODUCT HERE
-  	this.currentData.teamsChanged = true;
+  	var teams = [];
+  	var data = {};
+  	jQuery.ajax({
+  		type: "POST",
+  		url: "ajax/retrieveAllTeams.action",
+    	async: false,
+    	cache: false,
+    	data: data,
+    	dataType: "json",
+    	success: function(data,status) {
+      		for(i = 0; i < data.length; i++) {
+      			teams.push(data[i].id)
+      		}
+    	}
+    });
+    
+    this.currentData.teamsChanged = true;
+    this.currentData.teamIds = teams;
   }
 };

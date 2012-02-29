@@ -196,3 +196,10 @@ ProductModel.prototype.setTeams = function(teamIds, teamJson) {
   this.currentData.teamIds = teamIds;
   this.currentData.teamsChanged = true;
 };
+
+ProductModel.prototype.setAllTeams = function(teams) {
+  if(teams){
+  	// ADD ALL TEAMS TO A NEW PRODUCT HERE
+  	this.currentData.teamsChanged = true;
+  }
+};

@@ -632,9 +632,11 @@ CreateDialog.Team = function() {
 CreateDialog.Team.prototype = new CreateDialogClass();
 CreateDialog.Team.columnIndices = {
   name:      0,
-  users:     1
+  users:     1,
+  products:  2
 };
 CreateDialog.Team.prototype.initFormConfig = function() {
+  var currentUser = PageController.getInstance().getCurrentUser();
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
@@ -669,6 +671,21 @@ CreateDialog.Team.prototype.initFormConfig = function() {
       set : TeamModel.prototype.setUsers
     }
   });
+  
+  if (currentUser.getAdmin()) {
+  	config.addColumnConfiguration(CreateDialog.Team.columnIndices.products, {
+    	title: "Add all products to team",
+    	get: currentUser.getAdmin,
+    	editable: true,
+    	edit: {
+      		editor : "Selection",
+      		items : DynamicsDecorators.adminOptions,
+      		set: TeamModel.prototype.setAllProducts,
+      		size: '20ex',
+      		required: true
+    	}
+  	});
+  }
 
   this.formConfig = config;
 };

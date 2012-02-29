@@ -111,3 +111,9 @@ TeamModel.prototype.setUsers = function(userIds, userJson) {
   this.currentData.usersChanged = true;
 };
 
+TeamModel.prototype.setAllProducts = function(products) {
+  if (products) {
+    // SET ALL PRODUCTS HERE
+  }
+};
+

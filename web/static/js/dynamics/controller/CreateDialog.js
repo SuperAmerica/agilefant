@@ -502,7 +502,7 @@ CreateDialog.User.columnIndices = {
   email:     3,
   password1: 4,
   password2: 5,
-  teams:     6
+  admin:     6
 };
 CreateDialog.User.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -580,6 +580,19 @@ CreateDialog.User.prototype.initFormConfig = function() {
       editor: "Password",
       size: '20ex',
       set: UserModel.prototype.setPassword2,
+      required: true
+    }
+  });
+  
+  config.addColumnConfiguration(CreateDialog.User.columnIndices.admin,{
+    title: "Administrator",
+    editable: true,
+    get: UserModel.prototype.getAdmin,
+    edit: {
+      editor : "Selection",
+      items : DynamicsDecorators.adminOptions,
+      size: '20ex',
+      set: UserModel.prototype.setAdmin,
       required: true
     }
   });

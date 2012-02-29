@@ -59,7 +59,7 @@ public class StoryHierarchyAction extends ActionSupport {
             for (int i : storyIds)
             {
                 Story s = this.storyBusiness.retrieve(i);
-                this.storyHierarchyBusiness.moveUnder(s, reference);
+                this.storyHierarchyBusiness.moveBefore(s, reference);
             }
         } catch (StoryTreeIntegrityViolationException stive) {
             parseIntegrityErrors(stive);
@@ -89,7 +89,7 @@ public class StoryHierarchyAction extends ActionSupport {
             for (int i : storyIds)
             {
                 Story s = this.storyBusiness.retrieve(i);
-                this.storyHierarchyBusiness.moveBefore(s, reference);
+                this.storyHierarchyBusiness.moveAfter(s, reference);
             }
         } catch (StoryTreeIntegrityViolationException stive) {
             parseIntegrityErrors(stive);

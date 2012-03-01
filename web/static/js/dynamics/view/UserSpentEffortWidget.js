@@ -113,6 +113,21 @@ UserSpentEffortWidget.prototype.initConfig = function() {
       required: true
     }
   };
+  var el = {
+    minWidth : 40,
+    autoScale : true,
+    title : "EL",
+    get : TaskModel.prototype.getEffortLeft,
+    decorator: DynamicsDecorators.exactEstimateSumDecorator,
+    editable : true,
+    columnName : "effortLeft",
+    edit : {
+	  editor : "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : TaskModel.prototype.setEffortLeft,
+      required: true
+    }
+  };
   var desc = {
     minWidth : 200,
     autoScale : true,
@@ -136,7 +151,8 @@ UserSpentEffortWidget.prototype.initConfig = function() {
   
   this.hourEntryTableConfig.addColumnConfiguration(0, date);
   this.hourEntryTableConfig.addColumnConfiguration(1, es);
-  this.hourEntryTableConfig.addColumnConfiguration(2, desc);
-  this.hourEntryTableConfig.addColumnConfiguration(3, context);
+  this.hourEntryTableConfig.addColumnConfiguration(2, el);
+  this.hourEntryTableConfig.addColumnConfiguration(3, desc);
+  this.hourEntryTableConfig.addColumnConfiguration(4, context);
 
 };

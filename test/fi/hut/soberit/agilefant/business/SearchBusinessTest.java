@@ -21,6 +21,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.test.Mock;
 import fi.hut.soberit.agilefant.test.MockContextLoader;
 import fi.hut.soberit.agilefant.test.MockedTestCase;
@@ -49,6 +50,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchStoriesAndBacklogs() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String search = "foo";
         Story story = new Story();
         story.setBacklog(new Iteration());
@@ -66,6 +71,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchStoriesAndBacklogs_reference() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String search = "story:123";
         expect(backlogDAO.searchByName(search)).andReturn(new ArrayList<Backlog>());
         expect(storyDAO.searchByName(search)).andReturn(new ArrayList<Story>());
@@ -81,6 +90,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_story() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "story:123";
         Story story = new Story();
         expect(storyDAO.get(123)).andReturn(story);
@@ -92,6 +105,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_storyNotFound() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "story:123";
         expect(storyDAO.get(123)).andReturn(null);
         replayAll();
@@ -102,6 +119,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_backlog() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "backlog:123";
         Backlog backlog = new Iteration();
         expect(backlogDAO.get(123)).andReturn(backlog);
@@ -113,6 +134,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_backlogNotFound() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "backlog:123";
         expect(backlogDAO.get(123)).andReturn(null);
         replayAll();
@@ -123,6 +148,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_invalidTerm1() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "foo:123";
         replayAll();
         assertNull(searchBusiness.searchByReference(term));
@@ -132,6 +161,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_invalidTerm2() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "backlog:123:foo:faa";
         replayAll();
         assertNull(searchBusiness.searchByReference(term));
@@ -141,6 +174,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_invalidTerm3() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "backlog:aaa";
         replayAll();
         assertNull(searchBusiness.searchByReference(term));
@@ -150,6 +187,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_invalidTermEmpty() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "";
         replayAll();
         assertNull(searchBusiness.searchByReference(term));
@@ -159,6 +200,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchIterations() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "";
         List<Backlog> res = Arrays.asList((Backlog)(new Iteration()));
         
@@ -172,6 +217,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchProjects() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "";
         List<Backlog> res = Arrays.asList((Backlog)(new Project()));
         
@@ -185,6 +234,10 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchStories() {
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         String term = "";
         Story story = new Story();
         story.setName("faa");

@@ -137,10 +137,12 @@ CreateDialog.Product = function() {
 CreateDialog.Product.prototype = new CreateDialogClass();
 CreateDialog.Product.columnIndices = {
     name: 0,
-    description: 1
+    description: 1,
+    teams: 2
 };
 
 CreateDialog.Product.prototype.initFormConfig = function() {
+  var currentUser = PageController.getInstance().getCurrentUser();
   var config = new DynamicTableConfiguration({
     leftWidth: '20%',
     rightWidth: '75%',
@@ -167,6 +169,21 @@ CreateDialog.Product.prototype.initFormConfig = function() {
       set: ProductModel.prototype.setDescription
     }
   });
+  
+  if (currentUser.getAdmin()) {
+  	config.addColumnConfiguration(CreateDialog.Product.columnIndices.teams, {
+    	title: "Add all teams to product",
+    	get: currentUser.getAdmin,
+    	editable: true,
+    	edit: {
+      		editor : "Selection",
+      		items : DynamicsDecorators.adminOptions,
+      		set: ProductModel.prototype.setAllTeams,
+      		size: '20ex',
+      		required: true
+    }
+  	});
+  }
   
   this.formConfig = config;
 };
@@ -502,7 +519,7 @@ CreateDialog.User.columnIndices = {
   email:     3,
   password1: 4,
   password2: 5,
-  teams:     6
+  admin:     6
 };
 CreateDialog.User.prototype.initFormConfig = function() {
   var config = new DynamicTableConfiguration({
@@ -583,6 +600,19 @@ CreateDialog.User.prototype.initFormConfig = function() {
       required: true
     }
   });
+  
+  config.addColumnConfiguration(CreateDialog.User.columnIndices.admin,{
+    title: "Administrator",
+    editable: true,
+    get: UserModel.prototype.getAdmin,
+    edit: {
+      editor : "Selection",
+      items : DynamicsDecorators.adminOptions,
+      size: '20ex',
+      set: UserModel.prototype.setAdmin,
+      required: true
+    }
+  });
 
   this.formConfig = config;
 };
@@ -602,9 +632,11 @@ CreateDialog.Team = function() {
 CreateDialog.Team.prototype = new CreateDialogClass();
 CreateDialog.Team.columnIndices = {
   name:      0,
-  users:     1
+  users:     1,
+  products:  2
 };
 CreateDialog.Team.prototype.initFormConfig = function() {
+  var currentUser = PageController.getInstance().getCurrentUser();
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
@@ -639,6 +671,21 @@ CreateDialog.Team.prototype.initFormConfig = function() {
       set : TeamModel.prototype.setUsers
     }
   });
+  
+  if (currentUser.getAdmin()) {
+  	config.addColumnConfiguration(CreateDialog.Team.columnIndices.products, {
+    	title: "Add all products to team",
+    	get: currentUser.getAdmin,
+    	editable: true,
+    	edit: {
+      		editor : "Selection",
+      		items : DynamicsDecorators.adminOptions,
+      		set: TeamModel.prototype.setAllProducts,
+      		size: '20ex',
+      		required: true
+    	}
+  	});
+  }
 
   this.formConfig = config;
 };

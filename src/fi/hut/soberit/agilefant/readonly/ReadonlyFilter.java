@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.GenericFilterBean;
 
 import org.hibernate.SessionFactory;
@@ -24,9 +25,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
 
 
 public class ReadonlyFilter extends GenericFilterBean {
-
-    public static final String LAST_URL_REDIRECT_KEY = ReadonlyFilter.class.getName() + "LAST_URL_REDIRECT_KEY";
     
+    @Transactional(readOnly = true)
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         
@@ -48,35 +48,31 @@ public class ReadonlyFilter extends GenericFilterBean {
             return;
         }
         
-        // Open a session? This might not be a good idea. 
         Session session = sessionFactory.openSession();
         
         // Fetch url token from request.
         String urlToken = reqt.getPathInfo().substring(1);
         
-        // Test url token against db(?) of known read-only urls. 
-        Integer iterationId = 9; // TODO @DF Dummy... need to fetch this from our db table once things are actually working. 
-        
-        // Try to get data from db... this is where I'm stuck at the moment. 
-        Iteration i = iterationDao.retrieveDeep(iterationId);
-        
-        System.out.print(i.toString());
-        
-        // If url checks out, create iterationTO and supply it somewhere? 
+        // Make sure url token actually exists.
+        Integer iterationId = 9; // TODO @DF Dummy... need to fetch this from our db table once things are actually working.
+       
         if (iterationId != null) {
+            Iteration i = iterationDao.retrieveDeep(iterationId);
+            System.out.print(i.toString());
             
-            //IterationDAOHibernate iterationDAO = new IterationDAOHibernate();
-            //Iteration iteration = iterationDAO.get(9);
-
-            String path = reqt.getPathInfo();
+            // Okay, we have successfully pulled iteration data from the db... now what? 
             
-            resp.sendRedirect("http://www.google.ca/" + urlToken);
+            //resp.sendRedirect("http://www.google.ca/" + urlToken);
             
         } else {
+            // Token is not valid, so redirect to login page.
             
-            // Redirect to urltoken failure page? 
-            chain.doFilter(request, response);
+            resp.sendRedirect("login.jsp");
+            
+            //chain.doFilter(request, response);
         }
+        
+        session.close();
     }
 
 }

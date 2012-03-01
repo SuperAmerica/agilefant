@@ -116,13 +116,18 @@ public class MenuBusinessTest {
     
     @Test
     public void constructBacklogMenuData() {  
+        User user = new User();
+        user.setId(10);
+        SecurityUtil.setLoggedUser(user);
+        
         expect(productBusiness.retrieveAllOrderByName()).andReturn(
                 products);
         
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
             .andReturn(ScheduleStatus.FUTURE).times(8);
         replayAll();
-        List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData(SecurityUtil.getLoggedUser());
+               
+        List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData(user);
         verifyAll();
         
         assertEquals(2, actual.size());

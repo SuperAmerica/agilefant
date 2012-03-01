@@ -42,7 +42,7 @@ StoryController.prototype._closeMoveDialog = function() {
   }
 };
 
-StoryController.prototype._confirmMoveStory = function(backlogId) {
+StoryController.prototype._confirmMoveStory = function(backlogOrIterationId) {
   var radioButton = this.currentMoveStoryDialog.find("input[type=radio]:checked:eq(0)");
   var parentCheckBox = this.currentMoveStoryDialog.find("input[type=checkbox]:checked:eq(0)");
   var moveParents = false;
@@ -52,10 +52,10 @@ StoryController.prototype._confirmMoveStory = function(backlogId) {
   
   if(radioButton.length) {
     if (radioButton.val() === "moveTargetStoryOnly") {
-      this.model.moveStoryOnly(backlogId, moveParents);
+      this.model.moveStoryOnly(backlogOrIterationId, moveParents);
     }
     else if (radioButton.val() === "moveTargetAndItsChildren") {
-      this.model.moveStoryAndChildren(backlogId, moveParents);
+      this.model.moveStoryAndChildren(backlogOrIterationId, moveParents);
     }
   } else {
     this.currentMoveStoryDialog.find("#please-select-an-option").show('blind');
@@ -67,13 +67,13 @@ StoryController.prototype._confirmMoveStory = function(backlogId) {
   }
 };
 
-StoryController.prototype._showMoveStoryOptions = function(data, backlogId) {
+StoryController.prototype._showMoveStoryOptions = function(data, backlogOrIterationId) {
   if (this.currentMoveStoryDialog) {
     this.currentMoveStoryDialog.dialog("option","title","Error in moving story!");
     this.currentMoveStoryDialog.html(data);
   }
 };
-StoryController.prototype._openMoveStoryDialog = function(backlogId) {
+StoryController.prototype._openMoveStoryDialog = function(backlogOrIterationId) {
   var me = this;
   var element = $('<div/>').appendTo(document.body);
   this.currentMoveStoryDialog = element;
@@ -88,7 +88,7 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
         dialog.dialog('close');
       },
       Confirm: function() {
-        me._confirmMoveStory(backlogId);
+        me._confirmMoveStory(backlogOrIterationId);
       }
     },
     close: function() {

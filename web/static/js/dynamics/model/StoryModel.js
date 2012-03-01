@@ -222,19 +222,39 @@ StoryModel.prototype.canMoveStory = function(backlogId) {
   });
   return sendAjax;
 };
+StoryModel.prototype.canAssignStory = function(iterationId) {
+  var sendAjax = false, me = this;
+  jQuery.ajax({
+    url: "ajax/checkChangeIteration.action",
+    data: { storyId: this.getId(), iterationId: iterationId },
+    async: false,
+    cache: false,
+    type: 'POST',
+    dataType: 'html',
+    success: function(data, status) {
+      if (jQuery.trim(data).length === 0) {
+        sendAjax = true;
+      }
+      else {
+        me.callListeners(new DynamicsEvents.StoryTreeIntegrityViolation(me, data, iterationId));
+      }
+    }
+  });
+  return sendAjax;
+};
 StoryModel.prototype.moveStory = function(backlogId) {
   this._moveStory(backlogId, "ajax/moveStory.action", false);
 };
 
-StoryModel.prototype.moveStoryOnly = function(backlogId, moveParents) {
-  this._moveStory(backlogId, "ajax/safeMoveSingleStory.action", moveParents);
+StoryModel.prototype.moveStoryOnly = function(backlogOrIterationId, moveParents) {
+  this._moveStory(backlogOrIterationId, "ajax/safeMoveSingleStory.action", moveParents);
 };
 
-StoryModel.prototype.moveStoryAndChildren = function(backlogId, moveParents) {
-  this._moveStory(backlogId, "ajax/moveStoryAndChildren.action", moveParents);
+StoryModel.prototype.moveStoryAndChildren = function(backlogOrIterationId, moveParents) {
+  this._moveStory(backlogOrIterationId, "ajax/moveStoryAndChildren.action", moveParents);
 };
 
-StoryModel.prototype._moveStory = function(backlogId, url, moveParents) {
+StoryModel.prototype._moveStory = function(backlogOrIterationId, url, moveParents) {
   var me = this;
   var oldBacklog = this.relations.backlog;
   var oldProject = this.relations.project;
@@ -242,7 +262,7 @@ StoryModel.prototype._moveStory = function(backlogId, url, moveParents) {
 
   jQuery.ajax({
     url: url,
-    data: {storyId: me.getId(), backlogId: backlogId, moveParents: moveParents},
+    data: {storyId: me.getId(), backlogId: backlogOrIterationId, moveParents: moveParents},
     dataType: 'json',
     type: 'post',
     async: true,

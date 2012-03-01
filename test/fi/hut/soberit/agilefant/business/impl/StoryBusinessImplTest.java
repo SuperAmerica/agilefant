@@ -104,5 +104,18 @@ public class StoryBusinessImplTest {
     }
     
     
+    @Test
+    public void storyHasChildren() {
+        Assert.assertFalse(StoryBusinessImpl.storyHasChildren(null));
+        
+        
+        // initialization
+        s1.getChildren().add(s2);
+        
+        // test
+        Assert.assertTrue(StoryBusinessImpl.storyHasChildren(s1));
+    }
+    
+    
     
 }

@@ -106,7 +106,13 @@ public class SearchBusinessImpl implements SearchBusiness {
             prod = (Product)bl.getParent();
         } else if(bl instanceof Iteration){
             //look at project, then product
-            prod = (Product)bl.getParent().getParent();
+            Backlog temp = bl.getParent();
+            if(temp instanceof Product){
+                //iteration is directly under a product, not in a project
+                prod = (Product) temp;
+            } else {
+                prod = (Product) temp.getParent();
+            }
         } else if(bl instanceof Product){
             prod = (Product)bl;
         }
@@ -144,7 +150,7 @@ public class SearchBusinessImpl implements SearchBusiness {
         }
         if (type.equals("story")) {
             Story story = storyDAO.get(objectId);
-            if(checkAccess(story.getBacklog())){  
+            if(story != null && checkAccess(story.getBacklog())){  
                 return story;
             }
         } else if (type.equals("backlog")) {

@@ -94,7 +94,7 @@ public class TeamActionTest {
         Set<Integer> userIds = new HashSet<Integer>(Arrays.asList(1,2,3));
         teamAction.setUserIds(userIds);
         teamAction.setUsersChanged(true);
-        expect(teamBusiness.storeTeam(team1, userIds)).andReturn(returned);
+        expect(teamBusiness.storeTeam(team1, userIds, null)).andReturn(returned);
         
         replayAll();
         assertEquals(Action.SUCCESS, teamAction.store());
@@ -109,7 +109,7 @@ public class TeamActionTest {
         Team returned = new Team();
         teamAction.setUserIds(new HashSet<Integer>(Arrays.asList(1,2,3)));
         teamAction.setUsersChanged(false);
-        expect(teamBusiness.storeTeam(team1, null)).andReturn(returned);
+        expect(teamBusiness.storeTeam(team1, null, null)).andReturn(returned);
         
         replayAll();
         assertEquals(Action.SUCCESS, teamAction.store());

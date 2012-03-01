@@ -53,7 +53,7 @@ public class TeamBusinessTest {
         teamDAO.store(team);
         
         replayAll();
-        Team actual = teamBusiness.storeTeam(team, new HashSet<Integer>(Arrays.asList(22, 13)));
+        Team actual = teamBusiness.storeTeam(team, new HashSet<Integer>(Arrays.asList(22, 13)), null);
         verifyAll();
         
         assertEquals(team, actual);
@@ -68,7 +68,7 @@ public class TeamBusinessTest {
         expect(teamDAO.get(555)).andReturn(team);
         
         replayAll();
-        Team actual = teamBusiness.storeTeam(team, null);
+        Team actual = teamBusiness.storeTeam(team, null, null);
         verifyAll();
         
         assertEquals(team, actual);
@@ -77,7 +77,7 @@ public class TeamBusinessTest {
     @Test(expected = IllegalArgumentException.class)
     public void testStoreTeam_nullCheck() {
         replayAll();
-        teamBusiness.storeTeam(null, null);
+        teamBusiness.storeTeam(null, null, null);
         verifyAll();
     }
     

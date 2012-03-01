@@ -33,6 +33,10 @@ public class TeamAction extends ActionSupport implements CRUDAction, Prefetching
     private Set<Integer> userIds = new HashSet<Integer>();
     
     private boolean usersChanged;
+    
+    private Set<Integer> productIds = new HashSet<Integer>();
+    
+    private boolean productsChanged;
 
     @Autowired
     private TeamBusiness teamBusiness;
@@ -77,7 +81,13 @@ public class TeamAction extends ActionSupport implements CRUDAction, Prefetching
         if (usersChanged) {
             users = userIds;
         }
-        team = teamBusiness.storeTeam(team, users);
+        
+        Set<Integer> products = null;
+        if (productsChanged) {
+            products = productIds;
+        }
+        
+        team = teamBusiness.storeTeam(team, users, products);
         return Action.SUCCESS;
     }
 
@@ -145,6 +155,18 @@ public class TeamAction extends ActionSupport implements CRUDAction, Prefetching
 
     public void setUserIds(Set<Integer> userIds) {
         this.userIds = userIds;
+    }
+    
+    public void setProductsChanged(boolean productsChanged) {
+        this.productsChanged = productsChanged;
+    }
+
+    public Set<Integer> getProductIds() {
+        return productIds;
+    }
+
+    public void setProductIds(Set<Integer> productIds) {
+        this.productIds = productIds;
     }
 
 }

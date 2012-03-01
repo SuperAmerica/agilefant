@@ -197,9 +197,9 @@ ProductModel.prototype.setTeams = function(teamIds, teamJson) {
   this.currentData.teamsChanged = true;
 };
 
-ProductModel.prototype.setAllTeams = function(teams) {
+ProductModel.prototype.setAllTeams = function(allTeams) {
   var me = this;
-  if(teams){
+  if(allTeams == "true"){
   	var teams = [];
   	var data = {};
   	jQuery.ajax({

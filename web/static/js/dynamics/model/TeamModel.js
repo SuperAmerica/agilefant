@@ -47,6 +47,12 @@ TeamModel.prototype._saveData = function(id, changedData) {
     delete changedData.userIds;
     delete changedData.usersChanged;
   }
+  if (changedData.productsChanged) {
+  	data.productIds = changedData.productIds;
+  	data.productsChanged = true;
+  	delete changedData.productIds;
+  	delete changedData.productsChanged;
+  }
   jQuery.extend(data, this.serializeFields("team", changedData));
 
   // Add the id
@@ -109,5 +115,29 @@ TeamModel.prototype.setUsers = function(userIds, userJson) {
   }
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
+};
+
+TeamModel.prototype.setAllProducts = function(allProducts) {
+  var me = this;
+  if (allProducts == "true") {
+  	var products = [];
+  	var data = {};
+  	jQuery.ajax({
+  		type: "POST",
+  		url: "ajax/retrieveAllProducts.action",
+    	async: false,
+    	cache: false,
+    	data: data,
+    	dataType: "json",
+    	success: function(data,status) {
+      		for(i = 0; i < data.length; i++) {
+      			products.push(data[i].id)
+      		}
+    	}
+    });
+    
+    this.currentData.productsChanged = true;
+    this.currentData.productIds = products;
+  }
 };
 

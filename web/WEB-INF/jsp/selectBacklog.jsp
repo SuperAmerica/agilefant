@@ -20,9 +20,11 @@ $(document).ready(function() {
 
 
 <ul id="createNewList">
+	<c:if test="${currentUser.admin}">
     <li>
         <a href="#" id="createNewProduct" onclick="return false;"  title="Create a new product">Product &raquo;</a>
     </li>
+    </c:if>
 
     <li>
     <c:choose>

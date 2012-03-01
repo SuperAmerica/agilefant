@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
@@ -17,9 +18,11 @@ import fi.hut.soberit.agilefant.db.TaskDAO;
 import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.test.Mock;
@@ -30,7 +33,6 @@ import fi.hut.soberit.agilefant.transfer.SearchResultRow;
 
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
-
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -47,17 +49,26 @@ public class SearchBusinessTest extends MockedTestCase {
     @Mock
     private UserDAO userDAO;
     
+    private Team team;
+    
     @Test
     @DirtiesContext
     public void testSearchStoriesAndBacklogs() {
-        User user = new User();
-        user.setId(10);
-        SecurityUtil.setLoggedUser(user);
+        setAccess();
+        
+        Backlog product = new Product();
+        Backlog project = new Project();
+        Backlog iteration = new Iteration();
+        iteration.setParent(project);
+        project.setParent(product);
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
         
         String search = "foo";
         Story story = new Story();
-        story.setBacklog(new Iteration());
-        expect(backlogDAO.searchByName(search)).andReturn(Arrays.asList((Backlog)(new Iteration())));
+        story.setBacklog(iteration);
+        expect(backlogDAO.searchByName(search)).andReturn(Arrays.asList((Backlog)(iteration)));
         expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(story));
         expect(taskDAO.searchByName(search)).andReturn(Arrays.asList((Task)(new Task())));
         replayAll();
@@ -71,14 +82,23 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchStoriesAndBacklogs_reference() {
-        User user = new User();
-        user.setId(10);
-        SecurityUtil.setLoggedUser(user);
+        setAccess();
         
         String search = "story:123";
+        Backlog product = new Product();
+        Backlog project = new Project();
+        Backlog iteration = new Iteration();
+        Story story = new Story();
+        story.setBacklog(iteration);
+        iteration.setParent(project);
+        project.setParent(product);
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
+        
         expect(backlogDAO.searchByName(search)).andReturn(new ArrayList<Backlog>());
         expect(storyDAO.searchByName(search)).andReturn(new ArrayList<Story>());
-        expect(storyDAO.get(123)).andReturn(new Story());
+        expect(storyDAO.get(123)).andReturn(story);
         expect(taskDAO.searchByName(search)).andReturn(Arrays.asList((Task)(new Task())));
         replayAll();
         List<SearchResultRow> result = searchBusiness.searchStoriesAndBacklog(search);
@@ -90,12 +110,21 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_story() {
-        User user = new User();
-        user.setId(10);
-        SecurityUtil.setLoggedUser(user);
+        setAccess();
         
         String term = "story:123";
         Story story = new Story();
+        
+        Backlog product = new Product();
+        Backlog project = new Project();
+        Backlog iteration = new Iteration();
+        iteration.setParent(project);
+        project.setParent(product);
+        story.setBacklog(iteration);
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
+
         expect(storyDAO.get(123)).andReturn(story);
         replayAll();
         assertEquals(story, searchBusiness.searchByReference(term));
@@ -119,15 +148,21 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchByReference_backlog() {
-        User user = new User();
-        user.setId(10);
-        SecurityUtil.setLoggedUser(user);
+        setAccess();
         
         String term = "backlog:123";
-        Backlog backlog = new Iteration();
-        expect(backlogDAO.get(123)).andReturn(backlog);
+        Backlog product = new Product();
+        Backlog project = new Project();
+        Backlog iteration = new Iteration();
+        iteration.setParent(project);
+        project.setParent(product);
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
+        
+        expect(backlogDAO.get(123)).andReturn(iteration);
         replayAll();
-        assertEquals(backlog, searchBusiness.searchByReference(term));
+        assertEquals(iteration, searchBusiness.searchByReference(term));
         verifyAll();
     }
     
@@ -200,12 +235,19 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchIterations() {
-        User user = new User();
-        user.setId(10);
-        SecurityUtil.setLoggedUser(user);
+        setAccess();
         
         String term = "";
-        List<Backlog> res = Arrays.asList((Backlog)(new Iteration()));
+        
+        Backlog product = new Product();
+        Backlog project = new Project();
+        Backlog iteration = new Iteration();
+        iteration.setParent(project);
+        project.setParent(product);
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
+        List<Backlog> res = Arrays.asList((Backlog)(iteration));
         
         expect(backlogDAO.searchByName(term, Iteration.class)).andReturn(res);
         replayAll();
@@ -217,12 +259,18 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchProjects() {
-        User user = new User();
-        user.setId(10);
-        SecurityUtil.setLoggedUser(user);
+        setAccess();
         
         String term = "";
-        List<Backlog> res = Arrays.asList((Backlog)(new Project()));
+        
+        Backlog product = new Product();
+        Backlog project = new Project();
+        project.setParent(product);
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
+        
+        List<Backlog> res = Arrays.asList((Backlog)(project));
         
         expect(backlogDAO.searchByName(term, Project.class)).andReturn(res);
         replayAll();
@@ -234,15 +282,22 @@ public class SearchBusinessTest extends MockedTestCase {
     @Test
     @DirtiesContext
     public void testSearchStories() {
-        User user = new User();
-        user.setId(10);
-        SecurityUtil.setLoggedUser(user);
+        setAccess();
         
         String term = "";
         Story story = new Story();
+        Backlog iteration = new Iteration();
         story.setName("faa");
-        story.setBacklog(new Iteration());
+        story.setBacklog(iteration);
         story.getBacklog().setName("foo");
+        
+        Backlog product = new Product();
+        Backlog project = new Project();
+        iteration.setParent(project);
+        project.setParent(product);
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
         
         List<Story> res = Arrays.asList(story);
         expect(storyDAO.searchByName(term)).andReturn(res);
@@ -265,5 +320,17 @@ public class SearchBusinessTest extends MockedTestCase {
         List<SearchResultRow> actual = searchBusiness.searchUsers(term);
         verifyAll();
         assertSame(res.get(0), actual.get(0).getOriginalObject());
+    }
+    
+    private void setAccess(){
+        User user = new User();
+        team = new Team();
+        Collection<User> users = new ArrayList<User>();
+        users.add(user);
+        team.setUsers(users);
+        Collection<Team> teams = new ArrayList<Team>();
+        teams.add(team);
+        user.setTeams(teams);
+        SecurityUtil.setLoggedUser(user);
     }
 }

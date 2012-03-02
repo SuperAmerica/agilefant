@@ -734,7 +734,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
       numberOfMonths : 3,
       showButtonPanel : true,
       beforeShow : function() {
-          me.datepickerOpen = true;
+          me.datepickerOpen = true; 
           pattern = /(\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
           var index = me.textField.val().search(pattern);
           if (index === -1) {

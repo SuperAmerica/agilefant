@@ -168,5 +168,12 @@ public class TeamAction extends ActionSupport implements CRUDAction, Prefetching
     public void setProductIds(Set<Integer> productIds) {
         this.productIds = productIds;
     }
+    
+    /** USED WITH TeamRowController.js to confirm team deletion**/
+    
+    public String deleteTeamForm() {
+        team = teamBusiness.retrieve(teamId);
+        return Action.SUCCESS;
+    }
 
 }

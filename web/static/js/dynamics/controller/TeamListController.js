@@ -3,7 +3,7 @@
  * 
  * @constructor
  * @base CommonController
-
+ *
  */
 var TeamListController = function TeamListController(options) {
   this.teamListElement = options.element;
@@ -156,14 +156,15 @@ TeamListController.prototype.initConfig = function() {
 	  };	  
   }
   
-//  var actions = {
-//    minWidth : 30,
-//    autoScale : true,
-//    title: "Actions",
-//    subViewFactory: TeamRowController.prototype.teamActionFactory
-//  };
+  var actions = {
+    minWidth : 30,
+    autoScale : true,
+    title: "Actions",
+    subViewFactory: TeamRowController.prototype.teamActionFactory
+  };
     
   this.teamListConfig.addColumnConfiguration(0, name);
   this.teamListConfig.addColumnConfiguration(1, memberNo);
   this.teamListConfig.addColumnConfiguration(3, memberNames);
+  this.teamListConfig.addColumnConfiguration(2, actions);
 };

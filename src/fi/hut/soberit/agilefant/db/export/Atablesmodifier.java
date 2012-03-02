@@ -13,12 +13,12 @@ public class Atablesmodifier {
     private ArrayList<String>  tables;
     private Connection connection = null; 
     private Statement statement = null;
-    public Atablesmodifier(ArrayList<String>  tables) {
-        this.tables=tables;
+    public Atablesmodifier() {
+        initializeTables();
     }
 
 
-    public void dublicaTables(){
+    public void dublicaTables() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
         /**
          * generates anonymity tables with orginal non-anonymized data. 
          * 
@@ -33,18 +33,11 @@ public class Atablesmodifier {
             connection = DriverManager.getConnection
                     (sqlConnection, properties.getDbUsername(), properties.getDbPassword());
             statement = connection.createStatement();
-            int result=0;
-            String quary="";
-            // start transaction & commit commented out because mysql's create table automatically commits which mean these wont actually do anything. 
 
-            //  result = statement.executeUpdate("START TRANSACTION");
             while (tablesize> counter){
-                result = statement.executeUpdate("CREATE TABLE " + "anonym_"+tables.get(counter)+" SELECT * FROM " +tables.get(counter));
-                //previous command in string "CREATE TABLE anonym_team  SELECT * FROM  team || which copies tables one by one in while loop"
+                statement.executeUpdate("CREATE TABLE " + "anonym_"+tables.get(counter)+" SELECT * FROM " +tables.get(counter));
                 counter++;
             }
-            // result = statement.executeUpdate("COMMIT");
-            System.out.println("debug: tables copied");
 
             statement.close();
             connection.close();
@@ -56,25 +49,75 @@ public class Atablesmodifier {
         }
     }
 
-    public void deletetables() {
+    public void deletetables() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         /**
          * Deletes anonymized tables one by one           
          * 
          */
+        DbPropertiesReader properties = new DbPropertiesReader();
+        String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
+        
         try {
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            connection = DriverManager.getConnection(sqlConnection, properties.getDbUsername(), properties.getDbPassword());
+            statement = connection.createStatement();
+            
             int counter=0;
             int tablesize = tables.size();  
-            int result=0;
             while (tablesize>counter) {
-                result= statement.executeUpdate("Drop table anonym_" +tables.get(counter));
+                statement.executeUpdate("Drop table anonym_" +tables.get(counter));
                 counter++;
             }
-            System.out.println("debug: tables deleted");
+            statement.close();
+            connection.close();
+            
         } catch (SQLException e) {
             System.out.println("delete "+ e.getCause());
             System.out.println("delete "+ e.getMessage());
         }
 
+    }
+    
+    public void anonymizeTables()
+    {
+    // Todo: anonymize all columns of the new tables    
+    }
+    
+    // Todo - get tables name from mysql
+    public void initializeTables(){
+        ArrayList dbtables = new ArrayList<String>();
+        dbtables.add("Holiday");
+        dbtables.add("HolidayAnomaly");
+        dbtables.add("agilefant_revisions");
+        dbtables.add("assignment");
+        dbtables.add("assignment_AUD");
+        dbtables.add("backlogs");
+        dbtables.add("backlogs_AUD");        
+        dbtables.add("history_backlogs");
+        dbtables.add("history_iterations");
+        dbtables.add("hourentries");
+        dbtables.add("labels");
+        dbtables.add("settings");
+        dbtables.add("stories");
+        dbtables.add("stories_AUD");
+        dbtables.add("story_access");
+        dbtables.add("story_user");
+        dbtables.add("story_user_AUD");
+        dbtables.add("storyrank");
+        dbtables.add("storyrank_AUD");
+        dbtables.add("task_user");
+        dbtables.add("task_user_AUD");
+        dbtables.add("tasks");
+        dbtables.add("tasks_AUD");
+        dbtables.add("team_user");
+        dbtables.add("teams");
+        dbtables.add("users");
+        dbtables.add("users_AUD");
+        dbtables.add("whatsnextentry");
+        dbtables.add("widgetcollections");
+        dbtables.add("widgets");
+        
+        this.tables = dbtables;
     }
 }
 

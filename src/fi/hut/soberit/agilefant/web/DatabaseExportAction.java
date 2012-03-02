@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.sql.SQLException;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.export.DbBackupper;
-
+import fi.hut.soberit.agilefant.db.export.Atablesmodifier;
 
 @Component("dbExportAction")
 @Scope("prototype")
@@ -34,6 +35,25 @@ public class DatabaseExportAction extends ActionSupport {
         this.databaseStream = takeDbBackup.generateDBDumpStream();
         
         return Action.SUCCESS;
+    }
+    
+    public String generateAnonymousDatabaseExport() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+        try {
+            this.takeDbBackup = new DbBackupper();
+            Atablesmodifier anonymousTableModifier = new Atablesmodifier();
+            anonymousTableModifier.dublicaTables();
+            anonymousTableModifier.anonymizeTables();
+            
+            // Todo only generateDBDumStream for anonymize table
+            this.databaseStream = takeDbBackup.generateDBDumpStream();
+            anonymousTableModifier.deletetables();
+            return Action.SUCCESS;
+        }
+        catch (Throwable e) {
+            System.out.println("Generate Anonymous data failed "+ e.getCause());
+            System.out.println("Generate Anonymous data failed "+ e.getMessage());
+            return Action.ERROR;
+        }
     }
     
     public InputStream getDatabaseStream() {        

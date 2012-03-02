@@ -13,7 +13,7 @@ public class Atablesmodifier {
     private ArrayList<String>  tables;
     private Connection connection = null; 
     private Statement statement = null;
-    public Atablesmodifier() {
+    public Atablesmodifier() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         initializeTables();
     }
 
@@ -75,7 +75,6 @@ public class Atablesmodifier {
             System.out.println("delete "+ e.getCause());
             System.out.println("delete "+ e.getMessage());
         }
-
     }
     
     public void anonymizeTables()
@@ -83,41 +82,40 @@ public class Atablesmodifier {
     // Todo: anonymize all columns of the new tables    
     }
     
-    // Todo - get tables name from mysql
-    public void initializeTables(){
-        ArrayList dbtables = new ArrayList<String>();
-        dbtables.add("Holiday");
-        dbtables.add("HolidayAnomaly");
-        dbtables.add("agilefant_revisions");
-        dbtables.add("assignment");
-        dbtables.add("assignment_AUD");
-        dbtables.add("backlogs");
-        dbtables.add("backlogs_AUD");        
-        dbtables.add("history_backlogs");
-        dbtables.add("history_iterations");
-        dbtables.add("hourentries");
-        dbtables.add("labels");
-        dbtables.add("settings");
-        dbtables.add("stories");
-        dbtables.add("stories_AUD");
-        dbtables.add("story_access");
-        dbtables.add("story_user");
-        dbtables.add("story_user_AUD");
-        dbtables.add("storyrank");
-        dbtables.add("storyrank_AUD");
-        dbtables.add("task_user");
-        dbtables.add("task_user_AUD");
-        dbtables.add("tasks");
-        dbtables.add("tasks_AUD");
-        dbtables.add("team_user");
-        dbtables.add("teams");
-        dbtables.add("users");
-        dbtables.add("users_AUD");
-        dbtables.add("whatsnextentry");
-        dbtables.add("widgetcollections");
-        dbtables.add("widgets");
+    //Get All tables from agilefant
+    public void initializeTables() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+        try {
+                
+            ArrayList dbtables = new ArrayList<String>();
+            
+            DbPropertiesReader properties = new DbPropertiesReader();
+            String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
+            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            connection = DriverManager.getConnection(sqlConnection, properties.getDbUsername(), properties.getDbPassword());
+           
+            PreparedStatement ps = null;
+            String query = "select table_name from information_schema.tables WHERE table_schema = \"" + properties.getDbName() + "\";";
+           
+            ps = connection.prepareStatement(query);
+            ResultSet s = ps.executeQuery();
+            while(s.next())
+            {
+                dbtables.add(s.getString("table_name"));
+            }
         
-        this.tables = dbtables;
+            ps.close();
+            connection.close();
+            this.tables = dbtables;
+            
+        } catch (SQLException e) {
+            System.out.println("can not get tables from agilefant "+ e.getCause());
+            System.out.println("can not get tables from agilefant "+ e.getMessage());
+        }
+    }
+    
+    public ArrayList<String> getOriginalTables()
+    {
+        return this.tables;
     }
 }
 

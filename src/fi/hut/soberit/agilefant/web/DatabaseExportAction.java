@@ -44,8 +44,7 @@ public class DatabaseExportAction extends ActionSupport {
             anonymousTableModifier.dublicaTables();
             anonymousTableModifier.anonymizeTables();
             
-            // Todo only generateDBDumStream for anonymize table
-            this.databaseStream = takeDbBackup.generateDBDumpStream();
+            this.databaseStream = takeDbBackup.generateAnonymousDBDumpStream(anonymousTableModifier.getOriginalTables());
             anonymousTableModifier.deletetables();
             return Action.SUCCESS;
         }

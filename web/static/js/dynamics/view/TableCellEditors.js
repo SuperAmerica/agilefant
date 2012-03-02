@@ -694,7 +694,7 @@ TableEditors.ExactEstimate.prototype._validate = function() {
 TableEditors.Date = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
-  this.focus();
+  element.attr('inRowEdit') == 'true' ? "" : this.focus();
 };
 TableEditors.Date.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -764,6 +764,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
 
 TableEditors.Date.prototype.close = function() {
   this.element.find('img').remove();
+  this.textField.datepicker('hide');
   this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
 };

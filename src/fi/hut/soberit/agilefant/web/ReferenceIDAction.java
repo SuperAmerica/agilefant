@@ -15,6 +15,7 @@ import fi.hut.soberit.agilefant.model.NamedObject;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 @Component("referenceIDAction")
 @Scope("prototype")

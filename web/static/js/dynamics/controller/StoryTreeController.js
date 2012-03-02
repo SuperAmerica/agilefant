@@ -311,8 +311,6 @@ StoryTreeController.prototype.initTree = function() {
     	me.moveMultipleStories(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
     else
     	me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
-//      for (var i = 0;i < data.rslt.o.length;i++)
-//          me.moveStory(data.rslt.o[i], data.rslt.r, data.rslt.p, data.inst, data.rlbk);  
   });
   this.element.delegate('span', 'click.jstree', function(event) {
     me.openNodeDetails($(event.target).parents('li:eq(0)'));

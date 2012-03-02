@@ -31,6 +31,31 @@ TeamModel.prototype._setData = function(newData) {
   }
 };
 
+TeamModel.prototype._remove = function(successCallback, extraData) {
+  var me = this;
+  var data = {
+      teamId: me.getId()
+  };
+  jQuery.extend(data, extraData);
+  jQuery.ajax({
+      type: "POST",
+      url: "ajax/deleteTeam.action",
+      async: true,
+      cache: false,
+      dataType: "text",
+      data: data,
+      success: function(data,status) {
+        MessageDisplay.Ok("Team removed");
+        if (successCallback) {
+          successCallback();
+        }
+      },
+      error: function(xhr,status) {
+        MessageDisplay.Error("Error deleting team.", xhr);
+      }
+  });
+};
+
 
 /**
  * Internal function to send the data to server.

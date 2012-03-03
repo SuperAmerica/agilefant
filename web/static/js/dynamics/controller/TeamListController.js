@@ -156,12 +156,14 @@ TeamListController.prototype.initConfig = function() {
 	  };	  
   }
   
-  var actions = {
-    minWidth : 30,
-    autoScale : true,
-    title: "Actions",
-    subViewFactory: TeamRowController.prototype.teamActionFactory
-  };
+  if (currentUser.getAdmin()) {
+	  var actions = {
+	    minWidth : 30,
+	    autoScale : true,
+	    title: "Actions",
+	    subViewFactory: TeamRowController.prototype.teamActionFactory
+	  };
+  }
     
   this.teamListConfig.addColumnConfiguration(0, name);
   this.teamListConfig.addColumnConfiguration(1, memberNo);

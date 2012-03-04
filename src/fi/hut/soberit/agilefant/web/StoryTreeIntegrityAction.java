@@ -49,9 +49,8 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     private Integer storyId;
     private Integer targetStoryId;
     private Integer backlogId;
-    private Integer iterationId;
-    
-    
+
+
     public String checkChangeBacklog() {
         story = storyBusiness.retrieve(storyId);
         backlog = backlogBusiness.retrieve(backlogId);
@@ -69,24 +68,6 @@ public class StoryTreeIntegrityAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
-    public String checkChangeIteration() {
-        story = storyBusiness.retrieve(storyId);
-        Iteration iteration = iterationBusiness.retrieve(iterationId);
-        
-        messages = storyTreeIntegrityBusiness.checkChangeBacklog(story, iteration);
-
-        data = storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages);
-        
-        parentStoryConflict = storyTreeIntegrityBusiness.hasParentStoryConflict(story, iteration);
-        
-        if (StoryTreeIntegrityUtils.getFatalMessages(messages)) {
-            return FATAL_CONSTRAINT; 
-        }
-        
-        return Action.SUCCESS;
-    }
-
-
     public String checkChangeParentStory() {
         Story story = storyBusiness.retrieve(storyId);
         Story target = storyBusiness.retrieve(targetStoryId);
@@ -117,10 +98,6 @@ public class StoryTreeIntegrityAction extends ActionSupport {
         this.backlogId = backlogId;
     }
 
-    public void setIterationId(Integer iterationId) {
-        this.iterationId = iterationId;
-    }
-    
     public MoveStoryNode getData() {
         return data;
     }

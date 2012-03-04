@@ -31,9 +31,9 @@ StoryInfoBubble.prototype.init = function() {
 StoryInfoBubble.prototype.checkForMoveStory = function(model) {
   if(model.currentData.backlog || model.currentData.iteration) {
 	  if (model.currentData.backlog) {
-	    this._openMoveStoryDialog(model.currentData.backlog);
+	    this._openMoveStoryDialog(model, model.currentData.backlog);
 	  } else {
-	    this._openMoveStoryDialog(model.currentData.iteration);
+	    this._openMoveStoryDialog(model, model.currentData.iteration);
 	  }
     var me = this;
     //ensure that dialog is open
@@ -46,7 +46,7 @@ StoryInfoBubble.prototype.checkForMoveStory = function(model) {
         }
       // iteration changed
       } else if (!model.currentData.backlog && model.currentData.iteration) {
-        if(model.canAssignStory(model.currentData.iteration)) {
+        if(model.canMoveStory(model.currentData.iteration)) {
           me._closeMoveDialog();
           model.commit();
         }

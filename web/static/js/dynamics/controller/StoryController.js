@@ -42,7 +42,7 @@ StoryController.prototype._closeMoveDialog = function() {
   }
 };
 
-StoryController.prototype._confirmMoveStory = function(backlogOrIterationId) {
+StoryController.prototype._confirmMoveStory = function(model, backlogOrIterationId) {
   var radioButton = this.currentMoveStoryDialog.find("input[type=radio]:checked:eq(0)");
   var parentCheckBox = this.currentMoveStoryDialog.find("input[type=checkbox]:checked:eq(0)");
   var moveParents = false;
@@ -52,10 +52,18 @@ StoryController.prototype._confirmMoveStory = function(backlogOrIterationId) {
   
   if(radioButton.length) {
     if (radioButton.val() === "moveTargetStoryOnly") {
-      this.model.moveStoryOnly(backlogOrIterationId, moveParents);
+      if (model) {
+        model.moveStoryOnly(backlogOrIterationId, moveParents);
+      } else {
+        this.model.moveStoryOnly(backlogOrIterationId, moveParents);
+      }
     }
     else if (radioButton.val() === "moveTargetAndItsChildren") {
-      this.model.moveStoryAndChildren(backlogOrIterationId, moveParents);
+      if (model) {
+        model.moveStoryAndChildren(backlogOrIterationId, moveParents);
+      } else {
+        this.model.moveStoryAndChildren(backlogOrIterationId, moveParents);
+      }
     }
   } else {
     this.currentMoveStoryDialog.find("#please-select-an-option").show('blind');
@@ -73,7 +81,7 @@ StoryController.prototype._showMoveStoryOptions = function(data, backlogOrIterat
     this.currentMoveStoryDialog.html(data);
   }
 };
-StoryController.prototype._openMoveStoryDialog = function(backlogOrIterationId) {
+StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterationId) {
   var me = this;
   var element = $('<div/>').appendTo(document.body);
   this.currentMoveStoryDialog = element;
@@ -88,11 +96,19 @@ StoryController.prototype._openMoveStoryDialog = function(backlogOrIterationId) 
         dialog.dialog('close');
       },
       Confirm: function() {
-        me._confirmMoveStory(backlogOrIterationId);
+        if (!model) {
+          me._confirmMoveStory(null, backlogOrIterationId);
+        } else {
+          me._confirmMoveStory(model, backlogOrIterationId);
+        }
       }
     },
     close: function() {
-      me.model.rollback();
+      if (!model) {
+        me.model.rollback();
+      } else {
+        model.rollback();
+      }
       me._closeMoveDialog();
     }
   });
@@ -100,7 +116,7 @@ StoryController.prototype._openMoveStoryDialog = function(backlogOrIterationId) 
 };
 
 StoryController.prototype._moveStory = function(id) {
-  this._openMoveStoryDialog(id);
+  this._openMoveStoryDialog(null, id);
   if(this.model.canMoveStory(id)) {
     this.model.moveStory(id);
   }

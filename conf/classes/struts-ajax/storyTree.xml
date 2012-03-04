@@ -26,11 +26,6 @@
 	   <result name="fatalConstraint" type="dispatcher">/WEB-INF/jsp/forms/checkStoryMove.jsp</result>
 	  </action>
 
-	  <action name="checkChangeIteration" class="storyTreeIntegrityAction" method="checkChangeIteration">
-	   <result name="success" type="dispatcher">/WEB-INF/jsp/forms/checkStoryMove.jsp</result>
-	   <result name="fatalConstraint" type="dispatcher">/WEB-INF/jsp/forms/checkStoryMove.jsp</result>
-	  </action>
-	  
 	  <action name="checkChangeParentStory" class="storyTreeIntegrityAction" method="checkChangeParentStory">
 	   <result name="success" type="dispatcher">/WEB-INF/jsp/forms/checkStoryParentChange.jsp</result>
 	  </action>

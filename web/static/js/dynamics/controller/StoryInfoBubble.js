@@ -76,16 +76,14 @@ StoryInfoBubble.prototype.confirmTasksAndChildrenToDone = function(model, storyT
 				  if (children[i].getState() !== "DONE") {
 					 children[i].setState("DONE");
 					 children[i].commit();
+				  }
 					 storyTree._getStoryForId(children[i].getId(), function(object) {
 						StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
 					});
-					storyTree.refresh();
-				  }
 				}
 				if (nonDoneTasks)
 					model.currentData.tasksToDone = true;
 				model.commit();
-				storyTree.refresh();
 			  },
 			  function() {
 				model.commit();
@@ -102,15 +100,15 @@ StoryInfoBubble.prototype.confirmTasksAndChildrenToDone = function(model, storyT
 					storyTree._getStoryForId(children[i].getId(), function(object) {
 						StoryInfoBubble.prototype.confirmTasksAndChildrenToDone(object, storyTree, false);
 					});
-				storyTree.refresh();
 				}
 			}
 			if (nonDoneTasks)
 				model.currentData.tasksToDone = true;
 			model.commit();
-			storyTree.refresh();
 		}
 	}
+	if (!nonDoneChildren && (!isTopStory))
+		storyTree.refresh(); // this ensures refreshal when a child story is marked as done
 };
 
 StoryInfoBubble.prototype.handleModelEvents = function(event) {

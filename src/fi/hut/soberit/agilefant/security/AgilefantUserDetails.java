@@ -29,17 +29,24 @@ public class AgilefantUserDetails implements UserDetails {
     private boolean enabled;
 
     private int userId;
+    
+    private boolean admin;
 
     public AgilefantUserDetails(User user) {
         username = user.getLoginName();
         password = user.getPassword();
         userId = user.getId();
         enabled = user.isEnabled();
+        admin = user.isAdmin();
     }
 
     public GrantedAuthority[] getAuthorities() {
         // I have no idea what's the proper thing to put here
-        return new GrantedAuthority[] { new GrantedAuthorityImpl("USER") };
+        if(admin){
+            return new GrantedAuthority[] { new GrantedAuthorityImpl("USER"), new GrantedAuthorityImpl("ADMIN") };
+        } else {
+            return new GrantedAuthority[] { new GrantedAuthorityImpl("USER") };
+        }
     }
 
     /**
@@ -70,6 +77,10 @@ public class AgilefantUserDetails implements UserDetails {
 
     public boolean isEnabled() {
         return enabled;
+    }
+    
+    public boolean isAdmin() {
+        return admin;
     }
 
     /**

@@ -6,7 +6,7 @@
 <struts>
   
   <package name="ajax-teams" namespace="/ajax" extends="ajax">
-  
+
     <action name="createTeam" method="create" class="teamAction">
       <result type="dispatcher">/WEB-INF/jsp/forms/createTeam.jsp</result>
     </action>
@@ -14,6 +14,12 @@
     <action name="storeNewTeam" method="store" class="teamAction">   
       <result name="success" type="json">
         <param name="target">team</param>
+      </result>
+    </action>
+    
+    <action name="deleteTeam" method="delete" class="teamAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
       </result>
     </action>
     
@@ -33,6 +39,10 @@
         <param name="patterns">+users</param>
       </result>
     </action>  
+    
+    <action name="deleteTeamForm" method="deleteTeamForm" class="teamAction">
+      <result type="dispatcher">/WEB-INF/jsp/forms/deleteTeamForm.jsp</result>
+    </action>
   
   </package>
   

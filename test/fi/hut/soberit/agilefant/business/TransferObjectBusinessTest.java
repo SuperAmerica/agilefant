@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -25,6 +26,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
@@ -53,6 +55,7 @@ public class TransferObjectBusinessTest {
     Task task;
     User assignedUser;
     User notAssignedUser;
+    Team team;
     private StoryBusiness storyBusiness;
 
     @Before
@@ -224,6 +227,7 @@ public class TransferObjectBusinessTest {
         team.setName("daa");
         team.setId(1);
         team.setUsers(Arrays.asList(user1,user2));
+        SecurityUtil.setLoggedUser(user1);
         
         expect(teamBusiness.retrieveAll()).andReturn(Arrays.asList(team));
         
@@ -269,9 +273,15 @@ public class TransferObjectBusinessTest {
      */
     @Test
     public void testGetBacklogAutocompleteData() {
+        setAccess();
+        
         Backlog product = new Product();
         product.setId(1);
         product.setName("Product");
+        
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
         
         Backlog project = new Project();
         project.setId(7);
@@ -323,6 +333,8 @@ public class TransferObjectBusinessTest {
     
     @Test
     public void testGetBacklogAutocompleteData_filterByBacklog() {
+        setAccess();
+        
         Product product = new Product();
         product.setId(1);
         product.setName("Product");
@@ -330,6 +342,11 @@ public class TransferObjectBusinessTest {
         Product product2 = new Product();
         product2.setId(123);
         product2.setName("Wrong");
+        
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        products.add((Product)product2);
+        team.setProducts(products);
         
         Backlog project = new Project();
         project.setId(7);
@@ -365,15 +382,21 @@ public class TransferObjectBusinessTest {
         assertEquals(node.getName(), node.getMatchedString());
         assertEquals(project, node.getOriginalObject());
     }
-    
+       
     /**
      * Project autocomplete data.
      */
     @Test
     public void testGetProjectAutocompleteData() {
+        setAccess();
+
         Product product = new Product();
         product.setId(1);
         product.setName("Product");
+        
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product);
+        team.setProducts(products);
         
         Project project = new Project();
         project.setId(7);
@@ -453,13 +476,20 @@ public class TransferObjectBusinessTest {
     }
     
     @Test
-    public void testConstructProductAutocompleteData() {
+    public void testConstructProductAutocompleteData() { 
+        setAccess();
+        
         Product product1 = new Product();
         product1.setId(756);
         product1.setName("Test product no. 1");
         Product product2 = new Product();
         product2.setName("Foo bar");
         product2.setId(918);
+        
+        Collection<Product> products = new ArrayList<Product>();
+        products.add((Product)product1);
+        products.add((Product)product2);
+        team.setProducts(products);
         
         expect(productBusiness.retrieveAll()).andReturn(Arrays.asList(product1, product2));
         replayAll();
@@ -610,4 +640,16 @@ public class TransferObjectBusinessTest {
         assertEquals(2, assigned.getStories().get(0).getTasks().size());
         assertTrue(assigned.getStories().get(0).getTasks().iterator().next() instanceof TaskTO);
     };
+    
+    private void setAccess(){
+        User user = new User();
+        team = new Team();
+        Collection<User> users = new ArrayList<User>();
+        users.add(user);
+        team.setUsers(users);
+        Collection<Team> teams = new ArrayList<Team>();
+        teams.add(team);
+        user.setTeams(teams);
+        SecurityUtil.setLoggedUser(user);
+    }
 }

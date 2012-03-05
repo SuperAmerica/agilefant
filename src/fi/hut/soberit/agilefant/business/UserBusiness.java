@@ -48,6 +48,8 @@ public interface UserBusiness extends GenericBusiness<User> {
     void disableUser(int id);
 
     void enableUser(int id);
+    
+    void setAdmin(int id, boolean admin);
 
     /**
      * Duration object representing total (days) that the given user can work

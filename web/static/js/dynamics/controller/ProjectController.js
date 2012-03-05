@@ -776,7 +776,11 @@ ProjectController.prototype.initializeStoryConfig = function() {
   });
   config.addColumnConfiguration(8, {
     minWidth : 40,
+<<<<<<< HEAD
+	columnName: "edit",
+=======
     columnName: "edit",
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
     autoScale : true,
     title : "Edit",
     subViewFactory : StoryController.prototype.projectStoryActionFactory

@@ -236,10 +236,15 @@ StoryListController.prototype._addColumnConfigs = function(config) {
   if (Configuration.isLabelsInStoryList()) {
     config.addColumnConfiguration(StoryController.columnIndices.labelsIcon, StoryListController.columnConfig.labelsIcon);
   }
+<<<<<<< HEAD
+  config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
+=======
   config.addColumnConfiguration(StoryController.columnIndices.id, StoryListController.columnConfig.id);
   config.addColumnConfiguration(StoryController.columnIndices.name, StoryListController.columnConfig.name);
   config.addColumnConfiguration(StoryController.columnIndices.value, StoryListController.columnConfig.value);
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
   config.addColumnConfiguration(StoryController.columnIndices.points, StoryListController.columnConfig.points);
+  config.addColumnConfiguration(StoryController.columnIndices.value, StoryListController.columnConfig.value);
   config.addColumnConfiguration(StoryController.columnIndices.state, StoryListController.columnConfig.state);
   config.addColumnConfiguration(StoryController.columnIndices.responsibles, StoryListController.columnConfig.responsibles);
   config.addColumnConfiguration(StoryController.columnIndices.el, StoryListController.columnConfig.effortLeft);
@@ -343,7 +348,11 @@ StoryListController.columnConfig.value = {
   editable : true,
   editableCallback: StoryController.prototype.storyValueOrPointsEditable,
   edit : {
+<<<<<<< HEAD
+    editor : "Estimate",
+=======
     editor : "StoryValue",
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
     set : StoryModel.prototype.setStoryValue
   }
 };

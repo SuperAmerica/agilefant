@@ -7,7 +7,11 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
+<<<<<<< HEAD
+  ["priority", "id", "labelsIcon", "name", "points", "value", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+=======
   ["priority", "labelsIcon", "id", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -348,7 +352,11 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
 	    text: "Copy",
 	    callback : StoryController.prototype.copyStorySibling
 	  });
+<<<<<<< HEAD
   }
+=======
+  }
+>>>>>>> 06fa5cb797d58d660fe3f9d40ccd0baf3272f046
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
       text: "Spent effort",

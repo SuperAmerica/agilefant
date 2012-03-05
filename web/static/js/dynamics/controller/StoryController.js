@@ -341,22 +341,14 @@ StoryController.prototype._getStoryActionItems = function(isProject) {
   actionItems.push({ 
     text : "Move",
     callback : StoryController.prototype.moveStory
-<<<<<<< HEAD
   });
-=======
-  });
->>>>>>> 8f3eb9aa27acc80bfdcaf873d08d04f27c2d3b8e
   if (!(this.parentController instanceof DailyWorkStoryListController))
   {
 	  actionItems.push({
 	    text: "Copy",
 	    callback : StoryController.prototype.copyStorySibling
 	  });
-<<<<<<< HEAD
   }
-=======
-  }
->>>>>>> 8f3eb9aa27acc80bfdcaf873d08d04f27c2d3b8e
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
       text: "Spent effort",

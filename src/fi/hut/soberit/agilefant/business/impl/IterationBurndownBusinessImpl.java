@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -21,8 +22,10 @@ import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.DateTickUnit;
 import org.jfree.chart.axis.DateTickUnitType;
 import org.jfree.chart.axis.TickUnits;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.Range;
 import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -329,8 +332,8 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
             // The indexes are defined as constants but the indexes come
             // directly
             // from the order in which the series are added
-            // If one series is missing, EXPECTED_SERIES_NO = 4 but the index
-            // for expected series is 3
+            // If one series is missing, EXPECTED_SERIES_NO = 6 but the index
+            // for expected series is 5
             // (and it's even possible that it doesn't exist!)
             if (dataset.getSeriesCount() > EXPECTED_SERIES_NO) {
                 dataset.removeSeries(EXPECTED_SERIES_NO);
@@ -395,7 +398,6 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         if (!settingBusiness.isHourReportingEnabled()) {
             rend.setSeriesVisible(EFFORT_SPENT_SERIES_NO, false);
             rend.setSeriesVisible(CURRENT_DAY_EFFORT_SPENT_SERIES_NO, false);
-            
         }
             
     }
@@ -412,6 +414,28 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         axis.setDateFormatOverride(new SimpleDateFormat("EEE d.M."));
 
         axis.setStandardTickUnits(tickUnits);
+        
+        ValueAxis valueAxis = plot.getRangeAxis();
+        
+        if (plot.getDataset() != null) {
+            TimeSeriesCollection dataset = (TimeSeriesCollection) plot.getDataset();
+            
+            // There seems to be a bug in JFreeChart value axis scaling.
+            // The current day spent effort line is drawn outside the graph if it is the highest line on the graph
+            // Workaround: Manual scaling
+            double spentMax = 0, leftMax = 0;
+            
+            if (!dataset.getSeries(CURRENT_DAY_EFFORT_SPENT_SERIES_NO).isEmpty() && settingBusiness.isHourReportingEnabled()) {
+                spentMax = dataset.getSeries(CURRENT_DAY_EFFORT_SPENT_SERIES_NO).getValue(1).doubleValue();
+                spentMax += spentMax * valueAxis.getUpperMargin();
+            }
+            if (!dataset.getSeries(CURRENT_DAY_EFFORT_LEFT_SERIES_NO).isEmpty()) {
+                leftMax = dataset.getSeries(CURRENT_DAY_EFFORT_LEFT_SERIES_NO).getValue(1).doubleValue();
+                leftMax += leftMax * valueAxis.getUpperMargin();
+            }
+            
+            valueAxis.setRange(0, Math.max(valueAxis.getRange().getUpperBound(), Math.max(spentMax, leftMax)));
+        }
 
         plot.setDomainGridlinePaint(GRIDLINE_COLOR);
         plot.setRangeGridlinePaint(GRIDLINE_COLOR);
@@ -427,6 +451,13 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
                 .getHistoryEntriesForIteration(iteration);
         
         List<HourEntry> hourEntries = hourEntryBusiness.getHourEntriesForIteration(iteration);
+        
+        // Clear all hour entries if hour reporting is disabled so we don't mess up with the y-axis scaling
+        // It is more simple to hide the spent effort line than remove the series from the graph as it would affect the series indexes
+        // (see more comments on that in transformToSmallChart below HORROR comment)
+        if (!settingBusiness.isHourReportingEnabled()) {
+            hourEntries.clear();
+        }
 
         LocalDate yesterday = new LocalDate().minusDays(1);
         LocalDate today = new LocalDate();

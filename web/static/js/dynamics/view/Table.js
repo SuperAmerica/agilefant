@@ -266,7 +266,6 @@ DynamicTable.prototype.layout = function() {
         var targetView = ui.item.data("row");
         var targetModel = targetView.getModel();
         me.config.getSortCallback().call(targetView.getController(), targetView, targetModel, previousRowModel);
-        return false;
       },
       helper: function(event, target) {
         target = $(target);

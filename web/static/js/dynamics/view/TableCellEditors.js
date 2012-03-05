@@ -694,7 +694,7 @@ TableEditors.ExactEstimate.prototype._validate = function() {
 TableEditors.Date = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
-  this.focus();
+  element.attr('inRowEdit') == 'true' ? "" : this.focus();
 };
 TableEditors.Date.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -734,7 +734,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
       numberOfMonths : 3,
       showButtonPanel : true,
       beforeShow : function() {
-          me.datepickerOpen = true;
+          me.datepickerOpen = true; 
           pattern = /(\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
           var index = me.textField.val().search(pattern);
           if (index === -1) {
@@ -764,6 +764,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
 
 TableEditors.Date.prototype.close = function() {
   this.element.find('img').remove();
+  this.textField.datepicker('hide');
   this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
 };

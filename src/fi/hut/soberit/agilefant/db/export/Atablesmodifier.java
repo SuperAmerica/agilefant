@@ -95,7 +95,7 @@ public class Atablesmodifier {
     }
     
     // Modify anonym_table columns value to be anonymous
-    // Change all Columns that have string value to "length:[value length]" example "length:10"
+    // Change all Columns that have string value to "tablename id - length:[value length]" example "stories 7 - length:10"
     // If columns is UNIQUE then replace the value with its id
     public void anonymizeTables() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
         try{
@@ -119,7 +119,7 @@ public class Atablesmodifier {
                 }
                 else // replace with length of the string
                 {
-                    String query = "UPDATE anonym_" + tableName + " SET " + columnName + " = CONCAT(\"length:\", LENGTH(" + columnName +"));";
+                    String query = "UPDATE anonym_" + tableName + " SET " + columnName + " = CONCAT(\""+ tableName + " \","+ "id, \" - length:\", LENGTH(" + columnName +"));";
                     statement.executeUpdate(query);
                 }
             }

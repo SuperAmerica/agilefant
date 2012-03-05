@@ -414,6 +414,15 @@
 			</result>
 		</action>
 		
+		<action name="generateAnonymousDbExport" method="generateAnonymousDatabaseExport"
+			class="dbExportAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/octet-stream</param>
+				<param name="inputName">databaseStream</param>
+				<param name="contentDisposition">filename="AgilefantAnonymousDatabaseExport.zip"</param>
+			</result>
+		</action>
+		
 		
 	</package>
 </struts>

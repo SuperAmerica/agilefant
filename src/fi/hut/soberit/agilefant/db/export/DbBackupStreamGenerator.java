@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.db.export;
 
 import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,10 +56,29 @@ public class DbBackupStreamGenerator {
      * 
      */
     public int generateZippedDbOutputStream() { 
+        String dumpcommand = ("mysqldump" + " -h " + dbHost + " -u " + dbLogin + " -p" + dbPassword + " " + dbName);
+        return executeDumpCmd(dumpcommand, "fantbackup.sql");
+    }
+    
+    /**
+     * Calls mysqldump and generates zipped stream returns 0 if backup was
+     * saved correctly, -1 if try fails, and >1 are sql errors
+     * Only generate anonymous data
+     */
+    public int generateZippedAnonymousDbOutputStream(ArrayList<String> excludedTables) { 
         
-        String dumpcommand = ("mysqldump" + " -h " + dbHost + " -u " 
-                + dbLogin + " -p" + dbPassword + " " + dbName);
-        
+        String dumpcommand = ("mysqldump" + " -h " + dbHost + " -u " + dbLogin + " -p" + dbPassword + " " + dbName);
+       
+        // ignore original tables
+        for(int i=0; i< excludedTables.size(); i++ )
+        {
+            dumpcommand += " --ignore-table=" + dbName + "." + excludedTables.get(i);
+        }
+        return executeDumpCmd(dumpcommand, "AnonymousFantBackup.sql");
+    }
+    
+    public int executeDumpCmd(String dumpcommand, String fileName)
+    {
         try {
             Runtime dbb = Runtime.getRuntime();
             Process process = dbb.exec(dumpcommand);
@@ -67,7 +87,7 @@ public class DbBackupStreamGenerator {
 
             zippedDbOutputStream = new ByteArrayOutputStream();
             ZipOutputStream outzip = new ZipOutputStream(zippedDbOutputStream);
-            outzip.putNextEntry(new ZipEntry("fantbackup.sql"));
+            outzip.putNextEntry(new ZipEntry(fileName));
                         
             // loop through the inputstream that contains mysqldump output and zip it
             int ch;    
@@ -90,7 +110,6 @@ public class DbBackupStreamGenerator {
         }
         return -1; // return -1 if try didn't finish
     }
-    
     
     /**
      * Stores error messages from process's error stream for later access

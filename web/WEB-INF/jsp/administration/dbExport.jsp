@@ -26,6 +26,9 @@
   <form action="generateDbExport.action">
   	<input type="submit" value="Export database" class="dynamics-button" />
   </form>  
+  <form action="generateAnonymousDbExport.action">
+  	<input type="submit" value="Export anonymous database" class="dynamics-button" />
+  </form> 
   
 </div>
 </div> 

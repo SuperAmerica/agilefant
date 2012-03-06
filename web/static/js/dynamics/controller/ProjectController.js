@@ -671,8 +671,12 @@ ProjectController.prototype.initializeStoryConfig = function() {
     minWidth : 30,
     autoScale : true,
     title : "ID",
-    headerTooltip : 'Story ID',
+    headerTooltip : 'Story id [link to page]',
+	cssClass : "story-id-link",
     get : CommonModel.prototype.getId,
+    decorator : DynamicsDecorators.storyNameLinkDecorator,
+	sortCallback : DynamicsComparators
+			.valueComparatorFactory(StoryModel.prototype.getId),
     editable : false
   });
   

@@ -139,6 +139,12 @@ var DynamicsDecorators = {
     }
     return "";
   },
+  storyNameLinkDecorator: function(value) {
+    if (value) {
+      return '<a href="qr.action?q=story:' + value + '">' + value + '</a>';
+    }
+    return "";
+  },
   plainContextDecorator: function(value) {
     if (! value || (! value.backlogId && ! value.storyId)) {
       return "(not set)";

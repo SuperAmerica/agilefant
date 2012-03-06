@@ -32,6 +32,7 @@ import fi.hut.soberit.agilefant.model.Assignment;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
@@ -143,16 +144,21 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         // Effort spent
         List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(project);
         StoryMetrics storyMetrics;
+        long x = 0, y = 0;
         for(Story story : leafStories)
         {
             storyMetrics = storyBusiness.calculateMetrics(story);
-            metrics.setEffortSpent(metrics.getEffortSpent() + (int)storyMetrics.getEffortSpent());
-            metrics.setOriginalEstimate(metrics.getOriginalEstimate() + (int)storyMetrics.getOriginalEstimate());
+            x = x + (int)storyMetrics.getEffortSpent();
+            y = y + (int)storyMetrics.getOriginalEstimate();
         }
-        if(metrics.getOriginalEstimate() != 0) {
+        metrics.setEffortSpent(new ExactEstimate(x));
+        metrics.setOriginalEstimate(new ExactEstimate(y));
+        if(!metrics.getOriginalEstimate().equals(ExactEstimate.ZERO)) {
             metrics.setEfforSpentPercentage(Math.round((float) metrics
-                    .getEffortSpent()
-                    * 100f / (float) metrics.getOriginalEstimate()));
+                    .getEffortSpent().floatValue()
+                    * 100f / (float) metrics.getOriginalEstimate().floatValue()));
+            if(metrics.getEffortSpentPercentage() > 100)
+                metrics.setEfforSpentPercentage(100);
         }
 
         return metrics;

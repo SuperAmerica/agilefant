@@ -183,7 +183,10 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         persistable.setBaselineLoad(project.getBaselineLoad());
         Project stored = persistProject(persistable);
         
-        return transferObjectBusiness.constructProjectTO(stored);
+        ProjectTO to = transferObjectBusiness.constructProjectTO(stored);
+        StoryFilters storyFilters = new StoryFilters(null, null);
+        to.setLeafStories(retrieveLeafStories(projectId, storyFilters));
+        return to;
     }
     
     private void setAssignees(Project project, Set<Integer> assigneeIds) {

@@ -76,8 +76,8 @@
         <c:out value="${projectMetrics.effortSpentPercentage}" />%
       </td>
       <td style="text-align: center; white-space: nowrap;">
-        <c:out value="${projectMetrics.effortSpent/60}" />h / 
-        <c:out value="${projectMetrics.originalEstimate/60}" />h
+        <c:out value="${aef:estimateToHours(projectMetrics.effortSpent)}" /> / 
+        <c:out value="${aef:estimateToHours(projectMetrics.originalEstimate)}" />
       </td>
     </tr>
     </table>

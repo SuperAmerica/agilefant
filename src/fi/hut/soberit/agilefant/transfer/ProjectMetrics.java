@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.transfer;
 
+import fi.hut.soberit.agilefant.model.ExactEstimate;
+
 public class ProjectMetrics {
 
     private int storyPoints = 0;
@@ -11,9 +13,9 @@ public class ProjectMetrics {
     private int daysLeft = 0;
     private int totalDays = 0;
     private int daysLeftPercentage = 0;
-    private int effortSpent = 0;
+    private ExactEstimate effortSpent = new ExactEstimate(0);
+    private ExactEstimate originalEstimate = new ExactEstimate(0);
     private int effortSpentPercentage = 0;
-    private int originalEstimate = 0;
     private int totalValue = 0;
     private int completedValue = 0;
     private int valuePercentage = 0;
@@ -90,11 +92,11 @@ public class ProjectMetrics {
         this.completedStoriesPercentage = completedStoriesPercentage;
     }
     
-    public void setEffortSpent(int effortSpent) {
+    public void setEffortSpent(ExactEstimate effortSpent) {
         this.effortSpent = effortSpent;
     }
     
-    public int getEffortSpent() {
+    public ExactEstimate getEffortSpent() {
         return effortSpent;
     }
     
@@ -106,11 +108,11 @@ public class ProjectMetrics {
         return this.effortSpentPercentage;
     }
     
-    public void setOriginalEstimate(int originalEstimate) {
+    public void setOriginalEstimate(ExactEstimate originalEstimate) {
         this.originalEstimate = originalEstimate;
     }
     
-    public int getOriginalEstimate() {
+    public ExactEstimate getOriginalEstimate() {
         return originalEstimate;
     }
     

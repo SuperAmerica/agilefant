@@ -145,7 +145,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         
         expect(iterationDAO.retrieveDeep(iteration.getId())).andReturn(iteration);
         expect(transferObjectBusiness.constructIterationTO(iteration)).andReturn(iterationTO);
-        expect(storyRankBusiness.retrieveByRankingContext(iteration)).andReturn(stories);
+        expect(storyBusiness.retrieveStoriesInIteration(iteration)).andReturn(stories);
         Map<Integer, StoryMetrics> emptyMetricsMap = Collections.emptyMap();
         expect(iterationDAO.calculateIterationDirectStoryMetrics(iteration)).andReturn(emptyMetricsMap);
         Map<Integer, Long> emptyTaskMap = Collections.emptyMap();

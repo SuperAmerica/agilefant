@@ -48,10 +48,11 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     private StoryState state = StoryState.NOT_STARTED;
     private int treeRank = 0;
     private Story parent;
+    private Iteration iteration;
     private List<Story> children = new ArrayList<Story>();
-    
+
     private Set<Label> labels = new HashSet<Label>();
-    
+
     private Set<User> responsibles = new HashSet<User>();
     private Set<Task> tasks = new HashSet<Task>();
     private Set<StoryHourEntry> hourEntries = new HashSet<StoryHourEntry>();
@@ -92,13 +93,27 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
         this.description = description;
     }
 
-    @ManyToOne(optional = false)
+    /**
+     * With standalone iterations, backlogs can only be products or 
+     * projects; iterations must have an attribute of their own because
+     * projects could not know their progress otherwise
+     */
+    @ManyToOne(optional = true)
     public Backlog getBacklog() {
         return backlog;
     }
 
     public void setBacklog(Backlog backlog) {
         this.backlog = backlog;
+    }
+
+    @ManyToOne
+    public Iteration getIteration() {
+        return iteration;
+    }
+
+    public void setIteration(Iteration iteration) {
+        this.iteration = iteration;
     }
 
     @Column(nullable = false)
@@ -130,7 +145,7 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     public Set<User> getResponsibles() {
         return responsibles;
     }
-    
+
     public void setResponsibles(Set<User> responsibles) {
         this.responsibles = responsibles;
     }

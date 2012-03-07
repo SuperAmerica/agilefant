@@ -89,7 +89,8 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     // CRUD
     
     public String create() {
-        story = this.storyBusiness.create(story, backlogId, userIds, labelNames);
+        
+        story = this.storyBusiness.create(story, backlogId, iterationId, userIds, labelNames);
         StoryRank rank = storyRankBusiness.getRankByBacklog(story, story.getBacklog());
         
         story = new StoryTO(story);

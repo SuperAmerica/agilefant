@@ -291,10 +291,15 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
     
     /**
      * A conflict exists if the old and new backlogs are under different products.
+     * If moving story from standalone iteration, original backlog will be null. That's why it
+     * shoud be checked.
      */
     protected boolean originalAndTargetProductEqual(Backlog original, Backlog target) {
         Backlog targetProduct = backlogBusiness.getParentProduct(target);
-        Backlog currentProduct = backlogBusiness.getParentProduct(original);
+        Backlog currentProduct = null;
+        if (original != null) {
+            currentProduct = backlogBusiness.getParentProduct(original); 
+        }
         return targetProduct != currentProduct;
     }
     
@@ -307,7 +312,9 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         if(newBacklog instanceof Project) {
             targetProject = (Project)newBacklog;
         } else if (newBacklog instanceof Iteration) {
-            targetProject = (Project)newBacklog.getParent();
+            if (!newBacklog.isStandAlone()) {
+                targetProject = (Project)newBacklog.getParent();
+            }
         }
         for(Story parent = story.getParent(); parent != null; parent = parent.getParent()) {
             if(parent.getBacklog() instanceof Project && parent.getBacklog() != targetProject) {
@@ -318,7 +325,18 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
     }
     
     public boolean hasParentStoryConflict(Story story, Backlog newBacklog) {
-        boolean differentProduct = originalAndTargetProductEqual(story.getBacklog(), newBacklog);
+        
+        boolean differentProduct;
+        /**
+         * we have to take account that if story is located in standalone iter. because it has no backlog on that case.
+         * First if-clause checks if story is located in standalone and it is moved into product 
+         * OR story and new backlog both are standalone but story is moved into different standalone
+         */
+        if ((story.getIteration() != null && story.getIteration().isStandAlone() == true) && newBacklog != story.getIteration()) {
+            differentProduct = true;
+        } else {
+            differentProduct = originalAndTargetProductEqual(story.getBacklog(), newBacklog);
+        }
         boolean parentInDifferentBranch = parentStoryInDifferentBranch(story,
                 newBacklog);
         return (story.getParent() != null) && (differentProduct || parentInDifferentBranch);

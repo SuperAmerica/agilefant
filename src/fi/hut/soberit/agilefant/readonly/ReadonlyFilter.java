@@ -1,15 +1,14 @@
 package fi.hut.soberit.agilefant.readonly;
 
 import java.io.IOException;
+import java.util.List;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,7 +18,6 @@ import org.springframework.web.filter.GenericFilterBean;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 
-import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate;
 import fi.hut.soberit.agilefant.model.Iteration;
 
@@ -30,49 +28,47 @@ public class ReadonlyFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {
         
-        // These are HttpServlet requests and responses.
+        // Our passed-in requests and responses are HttpServlet requests and responses.
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpServletRequest reqt = (HttpServletRequest) request;
         
-        // Trying to set something up get things from the db. 
+        // Create a Data Access Object instance and open a Hibernate session.
         IterationDAOHibernate iterationDao = new IterationDAOHibernate();;
         SessionFactory sessionFactory;
-        
         try {
             sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
             iterationDao.setSessionFactory(sessionFactory);
         } catch (NamingException e) {
-            // TODO Auto-generated catch block
-            // Need to add error message here. 
+            // TODO Need a custom error message? Hopefully this should never run. 
             e.printStackTrace();
             return;
         }
-        
         Session session = sessionFactory.openSession();
         
         // Fetch url token from request.
-        String urlToken = reqt.getPathInfo().substring(1);
+        String token = getTokenFromPath(reqt.getPathInfo());
         
-        // Make sure url token actually exists.
-        Integer iterationId = 9; // TODO @DF Dummy... need to fetch this from our db table once things are actually working.
-       
-        if (iterationId != null) {
-            Iteration i = iterationDao.retrieveDeep(iterationId);
-            System.out.print(i.toString());
+        if (iterationDao.isValidReadonlyToken(token)) {
             
-            // Okay, we have successfully pulled iteration data from the db... now what? 
+            // This is a list now for testing purposes... we'll want it to be an iteration of something later. 
+            List iterationList = iterationDao.getIterationFromReadonlyToken(token);
+            System.out.println(iterationList);
+            
+            //Iteration i = iterationDao.retrieveDeep(iterationId);
+            //System.out.print(i.toString());
             
             //resp.sendRedirect("http://www.google.ca/" + urlToken);
             
         } else {
             // Token is not valid, so redirect to login page.
-            
             resp.sendRedirect("login.jsp");
-            
-            //chain.doFilter(request, response);
         }
         
         session.close();
+    }
+    
+    private String getTokenFromPath(String path) {
+        return path.substring(1);
     }
 
 }

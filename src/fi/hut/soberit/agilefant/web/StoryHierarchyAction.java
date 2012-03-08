@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class StoryHierarchyAction extends ActionSupport {
     private List<Story> stories;
     private StoryFilters storyFilters = new StoryFilters();
     private Integer storyId;
+    private Integer[] storyIds;
     private Integer projectId;
     private Integer productId;
     private Story story;
@@ -48,6 +50,51 @@ public class StoryHierarchyAction extends ActionSupport {
     public String recurseHierarchyAsList() {
         story = storyBusiness.retrieve(storyId);
         topmostStory = storyHierarchyBusiness.recurseHierarchy(story);
+        return Action.SUCCESS;
+    }
+    
+    public String moveMultipleBefore() {
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        try {
+            for (int i : storyIds)
+            {
+                Story s = this.storyBusiness.retrieve(i);
+                this.storyHierarchyBusiness.moveBefore(s, reference);
+            }
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String moveMultipleUnder() {
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        try {
+            for (int i : storyIds)
+            {
+                Story s = this.storyBusiness.retrieve(i);
+                this.storyHierarchyBusiness.moveUnder(s, reference);
+            }
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
+        return Action.SUCCESS;
+    }
+    
+    public String moveMultipleAfter() {
+        Story reference = this.storyBusiness.retrieve(referenceStoryId);
+        try {
+            for (int i : storyIds)
+            {
+                Story s = this.storyBusiness.retrieve(i);
+                this.storyHierarchyBusiness.moveAfter(s, reference);
+            }
+        } catch (StoryTreeIntegrityViolationException stive) {
+            parseIntegrityErrors(stive);
+            return Action.ERROR;
+        }
         return Action.SUCCESS;
     }
     
@@ -127,6 +174,10 @@ public class StoryHierarchyAction extends ActionSupport {
         this.storyId = storyId;
     }
 
+    public void setStoryIds(Integer[] storyIds) {
+        this.storyIds = storyIds;
+    }
+    
     public List<Story> getHierarchy() {
         return hierarchy;
     }

@@ -211,7 +211,8 @@ DynamicTableRow.prototype.openFullEdit = function() {
   this.editRow();
   var editor = this.element.find('.dynamics-editor-element:eq(0)').data("editor");
   if (editor) {
-    editor.focus();
+    if (!(editor instanceof TableEditors.Date))
+        editor.focus();
   }
 };
 

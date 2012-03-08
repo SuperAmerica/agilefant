@@ -11,6 +11,7 @@
   <a href="#" id="editExistingMenuLink" onclick="return false;">Edit existing</a>
   |
   <a href="editUser.action">${currentUser.fullName}</a>
+  <c:if test="${currentUser.admin}">(Administrator)</c:if>
   |
   <a href="help.action">Help</a>
   |

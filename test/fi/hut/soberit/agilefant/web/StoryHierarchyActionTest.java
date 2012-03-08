@@ -74,6 +74,78 @@ public class StoryHierarchyActionTest extends MockedTestCase {
         verifyAll();
     }
     
+    @Test
+    @DirtiesContext
+    public void moveMultiple() {
+        Story story1 = new Story();
+        Story story2 = new Story();
+        Story story3 = new Story();
+        expect(storyBusiness.retrieve(3)).andReturn(story3);
+        expect(storyBusiness.retrieve(1)).andReturn(story1);
+        expect(storyBusiness.retrieve(2)).andReturn(story2);
+        story1.setId(1);
+        story2.setId(2);
+        story3.setId(3);
+
+        storyHierarchyBusiness.moveUnder(story1, story3);
+        storyHierarchyBusiness.moveUnder(story2, story3);
+        
+        storyHierarchyAction.setReferenceStoryId(story3.getId());
+        storyHierarchyAction.setStoryIds(new Integer[]{ story1.getId(), story2.getId() });
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyHierarchyAction.moveMultipleUnder());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void moveMultipleBefore() {
+        Story story1 = new Story();
+        Story story2 = new Story();
+        Story story3 = new Story();
+        expect(storyBusiness.retrieve(3)).andReturn(story3);
+        expect(storyBusiness.retrieve(1)).andReturn(story1);
+        expect(storyBusiness.retrieve(2)).andReturn(story2);
+        story1.setId(1);
+        story2.setId(2);
+        story3.setId(3);
+        
+        storyHierarchyBusiness.moveBefore(story1, story3);
+        storyHierarchyBusiness.moveBefore(story2, story3);
+        
+        storyHierarchyAction.setReferenceStoryId(story3.getId());
+        storyHierarchyAction.setStoryIds(new Integer[]{ story1.getId(), story2.getId() });
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyHierarchyAction.moveMultipleBefore());
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void moveMultipleAfter() {
+        Story story1 = new Story();
+        Story story2 = new Story();
+        Story story3 = new Story();
+        expect(storyBusiness.retrieve(3)).andReturn(story3);
+        expect(storyBusiness.retrieve(1)).andReturn(story1);
+        expect(storyBusiness.retrieve(2)).andReturn(story2);
+        story1.setId(1);
+        story2.setId(2);
+        story3.setId(3);
+        
+        storyHierarchyBusiness.moveAfter(story1, story3);
+        storyHierarchyBusiness.moveAfter(story2, story3);
+        
+        storyHierarchyAction.setReferenceStoryId(story3.getId());
+        storyHierarchyAction.setStoryIds(new Integer[]{ story1.getId(), story2.getId() });
+        
+        replayAll();
+        assertEquals(Action.SUCCESS, storyHierarchyAction.moveMultipleAfter());
+        verifyAll();
+    }
+
 //    @Test
 //    @DirtiesContext
 //    public void testMoveUnder_integrityErrorThrown() {

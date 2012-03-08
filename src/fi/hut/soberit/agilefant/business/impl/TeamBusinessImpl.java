@@ -9,9 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.db.TeamDAO;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.Product;
 
 @Service("teamBusiness")
 @Transactional
@@ -21,6 +23,9 @@ public class TeamBusinessImpl extends GenericBusinessImpl<Team> implements
     private TeamDAO teamDAO;
 
     private UserBusiness userBusiness;
+    
+    @Autowired
+    private ProductBusiness productBusiness;
     
     public TeamBusinessImpl() {
         super(Team.class);
@@ -40,7 +45,7 @@ public class TeamBusinessImpl extends GenericBusinessImpl<Team> implements
 
     /** {@inheritDoc} */
     @Transactional
-    public Team storeTeam(Team team, Set<Integer> userIds) {
+    public Team storeTeam(Team team, Set<Integer> userIds, Set<Integer> productIds) {
         if (team == null) {
             throw new IllegalArgumentException("Team must be supplied.");
         }
@@ -52,6 +57,15 @@ public class TeamBusinessImpl extends GenericBusinessImpl<Team> implements
                 users.add(userBusiness.retrieve(uid));
             }
             team.setUsers(users);
+        }
+        
+        // Get products
+        Set<Product> products = new HashSet<Product>();
+        if (productIds != null) {
+            for (Integer pid : productIds) {
+                products.add(productBusiness.retrieve(pid));
+            }
+            team.setProducts(products);
         }
         
         Team stored = null;

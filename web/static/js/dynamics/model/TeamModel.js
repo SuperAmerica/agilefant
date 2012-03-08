@@ -31,6 +31,31 @@ TeamModel.prototype._setData = function(newData) {
   }
 };
 
+TeamModel.prototype._remove = function(successCallback, extraData) {
+  var me = this;
+  var data = {
+      teamId: me.getId()
+  };
+  jQuery.extend(data, extraData);
+  jQuery.ajax({
+      type: "POST",
+      url: "ajax/deleteTeam.action",
+      async: true,
+      cache: false,
+      dataType: "text",
+      data: data,
+      success: function(data,status) {
+        MessageDisplay.Ok("Team removed");
+        if (successCallback) {
+          successCallback();
+        }
+      },
+      error: function(xhr,status) {
+        MessageDisplay.Error("Error deleting team.", xhr);
+      }
+  });
+};
+
 
 /**
  * Internal function to send the data to server.
@@ -46,6 +71,12 @@ TeamModel.prototype._saveData = function(id, changedData) {
     data.usersChanged = true;
     delete changedData.userIds;
     delete changedData.usersChanged;
+  }
+  if (changedData.productsChanged) {
+  	data.productIds = changedData.productIds;
+  	data.productsChanged = true;
+  	delete changedData.productIds;
+  	delete changedData.productsChanged;
   }
   jQuery.extend(data, this.serializeFields("team", changedData));
 
@@ -109,5 +140,29 @@ TeamModel.prototype.setUsers = function(userIds, userJson) {
   }
   this.currentData.userIds = userIds;
   this.currentData.usersChanged = true;
+};
+
+TeamModel.prototype.setAllProducts = function(allProducts) {
+  var me = this;
+  if (allProducts == "true") {
+  	var products = [];
+  	var data = {};
+  	jQuery.ajax({
+  		type: "POST",
+  		url: "ajax/retrieveAllProducts.action",
+    	async: false,
+    	cache: false,
+    	data: data,
+    	dataType: "json",
+    	success: function(data,status) {
+      		for(i = 0; i < data.length; i++) {
+      			products.push(data[i].id)
+      		}
+    	}
+    });
+    
+    this.currentData.productsChanged = true;
+    this.currentData.productIds = products;
+  }
 };
 

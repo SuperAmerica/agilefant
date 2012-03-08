@@ -79,7 +79,8 @@
 	<classpathentry kind="lib" path="lib/build/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/build/YUIAnt.jar"/>
 	<classpathentry kind="lib" path="lib/build/yuicompressor-2.4.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjrt.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjweaver.jar"/>
 	<classpathentry kind="lib" path="lib/common-annotations.jar"/>

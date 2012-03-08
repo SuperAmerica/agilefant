@@ -17,7 +17,8 @@ var UserModel = function UserModel() {
   };
   this.currentData = {
     initials: "",
-    fullName: ""
+    fullName: "",
+    admin: true
   };
   this.copiedFields = {
       "fullName": "fullName",
@@ -29,7 +30,9 @@ var UserModel = function UserModel() {
       "autoassignToTasks": "autoassignToTasks",
       "markStoryStarted": "markStoryStarted",
       "autoassignToStories": "autoassignToStories",
-      "recentItemsNumberOfWeeks": "recentItemsNumberOfWeeks"
+      "recentItemsNumberOfWeeks": "recentItemsNumberOfWeeks",
+      "admin": "admin",
+      "id" : "id"
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Story":         "story",
@@ -218,6 +221,22 @@ UserModel.prototype.setInitials = function(initials) {
   this.currentData.initials = initials;
 };
 
+UserModel.prototype.getAdmin = function() {
+  return this.currentData.admin;
+};
+
+UserModel.prototype.getAdminAsString = function() {
+  if(this.currentData.admin)
+  	return "Yes";
+  else
+  	return "No";
+};
+
+
+UserModel.prototype.setAdmin = function(admin) {
+  this.currentData.admin = admin;
+};
+
 UserModel.prototype.getLoginName = function() {
   return this.currentData.loginName;
 };
@@ -280,5 +299,10 @@ UserModel.prototype.getMarkStoryStarted = function() {
   return this.currentData.markStoryStarted;
 };
 
+UserModel.prototype.getAdmin = function() {
+  return this.currentData.admin;
+};
 
-
+UserModel.prototype.getId = function() {
+  return this.currentData.id;
+};

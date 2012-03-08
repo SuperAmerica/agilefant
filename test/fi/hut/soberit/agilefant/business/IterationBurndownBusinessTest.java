@@ -132,7 +132,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
         expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
-        
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
         replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         assertNotNull(iterationBurndownBusiness.getIterationBurndown(iteration, 0));
@@ -155,7 +155,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
         expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
-        
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
         replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
 
         assertNotNull(iterationBurndownBusiness.getSmallIterationBurndown(iteration, 0));
@@ -178,7 +178,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
         expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
-        
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
         replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         assertNotNull(iterationBurndownBusiness.getCustomIterationBurndown(iteration, 1024, 768, 0));
@@ -200,6 +200,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         expect(hourEntryBusiness.getDailySpentEffortForHourEntries(hourEntryList, iteration.getStartDate(), new DateTime().toDateMidnight().toDateTime().plusDays(1))).andReturn(dailySpentEffortList);
         
         expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
         expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
         
         replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
@@ -237,7 +238,7 @@ public class IterationBurndownBusinessTest extends IterationBurndownBusinessImpl
         
         expect(settingBusiness.isWeekendsInBurndown()).andReturn(true);
         expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
-        
+        expect(settingBusiness.isHourReportingEnabled()).andReturn(true);
         replay(iterationHistoryEntryBusiness, iterationBusiness, hourEntryBusiness, settingBusiness);
         
         JFreeChart newChart = super.constructSmallChart(iteration, 0);

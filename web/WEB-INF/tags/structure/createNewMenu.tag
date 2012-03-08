@@ -27,9 +27,11 @@ $(document).ready(function() {
 </script>
 
 <ul id="createNewMenu" style="display: none">
+	<c:if test="${currentUser.admin}">
     <li>
         <a href="#" id="createNewProduct" onclick="return false;"  title="Create a new product">Product &raquo;</a>
     </li>
+    </c:if>
 
     <li>
     <c:choose>
@@ -68,7 +70,8 @@ $(document).ready(function() {
         </c:otherwise>
     </c:choose>
     </li>
-     
+    
+    <c:if test="${currentUser.admin}">
     
     <li class="separator"></li>
     
@@ -80,15 +83,6 @@ $(document).ready(function() {
       <a href="#" id="createNewUser" onclick="return false;"  title="Create a new user">User &raquo;</a>
     </li>
     
-</ul>
-
-
-<ul id="editExistingMenu" style="display: none">
-
-    <li class="separator"></li>
- 
-    <li>
-      <a href="#" id="createNewUser" onclick="return false;"  title="Edit existing users">Users &raquo;</a>
-    </li>
+    </c:if>
     
 </ul>

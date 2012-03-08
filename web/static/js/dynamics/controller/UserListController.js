@@ -87,11 +87,15 @@ UserListController.prototype.initConfig = function() {
     } 
   });
   
-  this.enabledUserListConfig.addCaptionItem({
-    text: "Create user",
-    name: "createUser",
-    callback: UserListController.prototype.createUser
-  });
+  var currentUser = PageController.getInstance().getCurrentUser();
+  
+  if (currentUser.getAdmin()) {
+	  this.enabledUserListConfig.addCaptionItem({
+	    text: "Create user",
+	    name: "createUser",
+	    callback: UserListController.prototype.createUser
+	  });
+  }
   
   this.disabledUserListConfig = new DynamicTableConfiguration({
     caption: "Disabled users",
@@ -139,20 +143,36 @@ UserListController.prototype.initConfig = function() {
     sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getWeekEffort)
   };
   
-  var actions = {
-    minWidth : 60,
-    autoScale : true,
-    title: "Actions",
-    subViewFactory: UserRowController.prototype.userActionFactory
-  };
+  if (currentUser.getAdmin()) {
+	  var actions = {
+	    minWidth : 60,
+	    autoScale : true,
+	    title: "Actions",
+	    subViewFactory: UserRowController.prototype.userActionFactory
+	  };
+  }
+  
+  var admin = {
+  	minWidth : 60,
+  	autoScale : true,
+  	title: "Administrator",
+  	get: UserModel.prototype.getAdminAsString,
+  	sortCallback: DynamicsComparators.valueComparatorFactory(UserModel.prototype.getInitials)
+  }
   
   this.enabledUserListConfig.addColumnConfiguration(0, name);
   this.enabledUserListConfig.addColumnConfiguration(1, initials);
 //  this.enabledUserListConfig.addColumnConfiguration(2, email);
 //  this.enabledUserListConfig.addColumnConfiguration(3, weekEffort);
-  this.enabledUserListConfig.addColumnConfiguration(4, actions);
+  
+  if (currentUser.getAdmin()) {
+ 	this.enabledUserListConfig.addColumnConfiguration(4, actions);
+  }
+  
+  this.enabledUserListConfig.addColumnConfiguration(5, admin);
   
   this.disabledUserListConfig.addColumnConfiguration(0, name);
   this.disabledUserListConfig.addColumnConfiguration(1, initials);
   this.disabledUserListConfig.addColumnConfiguration(4, actions);
+  this.disabledUserListConfig.addColumnConfiguration(5, admin);
 };

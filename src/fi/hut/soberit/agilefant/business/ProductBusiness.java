@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.business;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 
@@ -14,7 +15,7 @@ public interface ProductBusiness extends GenericBusiness<Product> {
 
     public Collection<Product> retrieveAllOrderByName();
     
-    public Product store(int productId, Product productData);
+    public Product store(int productId, Product productData, Set<Integer> teamIds);
     
     void delete(int id);
     

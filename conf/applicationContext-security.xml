@@ -17,7 +17,7 @@
 		class="org.springframework.security.util.FilterChainProxy">		
 		<security:filter-chain-map path-type="ant">
 		  <security:filter-chain filters="remoteServicesFilter" pattern="/rs/**"/>
-		  <security:filter-chain filters="readonlyFilter" pattern="/ro/*"/>
+		  <security:filter-chain filters="readonlyFilter" pattern="/token/*"/>
 		  <security:filter-chain
         filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
         pattern="/ajax/**"/>

@@ -61,7 +61,7 @@ public class ReadonlyFilter extends GenericFilterBean {
             
         } else {
             // Token is not valid, so redirect to login page.
-            resp.sendRedirect("login.jsp");
+            resp.sendRedirect("/agilefant/login.jsp");
         }
         
         session.close();

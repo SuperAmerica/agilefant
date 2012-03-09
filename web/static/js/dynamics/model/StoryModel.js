@@ -131,24 +131,25 @@ StoryModel.prototype._saveData = function(id, changedData) {
   if(ArrayUtils.countObjectFields(data) === 0) {
     return;
   }
+  
   // Add the id
   if (id) {
     data.storyId = id;
   }
   else {
     url = "ajax/createStory.action";
-    
-    if (possibleBacklog) {
-      data.backlogId = possibleBacklog.getId();
-    } else if (possibleIteration) {
-      possibleBacklog = possibleIteration;
-      data.backlogId = possibleIteration.getId();
-    }
-    if (possibleIteration) {
-      data.iterationId = possibleIteration.getId();
-    }
   }
 
+  if (possibleBacklog) {
+    data.backlogId = possibleBacklog.getId();
+  } else if (possibleIteration) {
+    possibleBacklog = possibleIteration;
+    data.backlogId = possibleIteration.getId();
+  }
+  if (possibleIteration) {
+    data.iteration = possibleIteration.getId();
+  }
+  
   
   jQuery.ajax({
     type: "POST",

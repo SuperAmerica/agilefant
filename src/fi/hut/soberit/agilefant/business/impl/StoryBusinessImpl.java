@@ -149,12 +149,15 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         
         setResponsibles(persisted, responsibleIds);
         
+        checkStoriesBacklogIfAssignedToIteration(persisted);
+
         if (haveDifferentIteration(persisted, dataItem)) {
             fixAssignedIterationRanks(persisted, dataItem);
         }
         
         populateStoryFields(persisted, dataItem);
 
+        
         // Store the story
         storyDAO.store(persisted);
 
@@ -168,8 +171,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         
         // Set the backlog if backlogId given
         if (backlogId != null) {
-            this.moveStoryToBacklog(persisted, backlogBusiness
-                    .retrieve(backlogId));
+            this.moveStoryToBacklog(persisted, backlogBusiness.retrieve(backlogId));
         } else if (dataItem.getBacklog() != persisted.getBacklog() &&
                  dataItem.getBacklog() != null) {
             this.moveStoryToBacklog(persisted, dataItem.getBacklog());
@@ -184,6 +186,31 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     
+    private static void checkStoriesBacklogIfAssignedToIteration(Story persisted) {
+        if (persisted == null) {
+            return;
+        }
+        
+        Iteration storysIteration = persisted.getIteration();
+        if (storysIteration == null) {
+            return;
+        }
+        
+        Backlog storysBacklog = persisted.getBacklog();
+        
+        /**
+         * if story's backlog doesn't match normal iterations parent project, 
+         * set the backlog to the project
+         */
+        if (!storysIteration.isStandAlone()) {
+            Backlog iterationsParent = storysIteration.getParent();
+            
+            if (iterationsParent != null &&  iterationsParent != storysBacklog) {
+                persisted.setBacklog(iterationsParent);
+            }
+        }
+    }
+
     static boolean storyHasChildren(Story story) {
         if (story == null) {
             return false;

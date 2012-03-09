@@ -73,6 +73,7 @@ public class BacklogHistoryEntryBusinessTest {
                 10l);
         expect(storyHierarchyDAO.totalLeafStoryPoints(project)).andReturn(20l);
         expect(storyHierarchyDAO.totalRootStoryPoints(project)).andReturn(30l);
+        expect(storyHierarchyDAO.totalBranchStoryPoints(project)).andReturn(30l);
         Capture<BacklogHistoryEntry> entry = new Capture<BacklogHistoryEntry>();
         backlogHistoryEntryDAO.store(EasyMock.capture(entry));
 
@@ -102,6 +103,7 @@ public class BacklogHistoryEntryBusinessTest {
                 10l);
         expect(storyHierarchyDAO.totalLeafStoryPoints(project)).andReturn(20l);
         expect(storyHierarchyDAO.totalRootStoryPoints(project)).andReturn(30l);
+        expect(storyHierarchyDAO.totalBranchStoryPoints(project)).andReturn(40l);
         Capture<BacklogHistoryEntry> entry = new Capture<BacklogHistoryEntry>();
         backlogHistoryEntryDAO.store(EasyMock.capture(entry));
 
@@ -131,6 +133,7 @@ public class BacklogHistoryEntryBusinessTest {
                 10l);
         expect(storyHierarchyDAO.totalLeafStoryPoints(project)).andReturn(20l);
         expect(storyHierarchyDAO.totalRootStoryPoints(project)).andReturn(30l);
+        expect(storyHierarchyDAO.totalBranchStoryPoints(project)).andReturn(40l);
         backlogHistoryEntryDAO.store(newEntry);
 
         replayAll();

@@ -99,6 +99,9 @@
 			<result name="success_teams" type="redirectAction">
 				<param name="actionName">listTeams</param>
 			</result>
+			<result name="success_rights" type="redirectAction">
+				<param name="actionName">accessRights</param>
+			</result>
 			<result name="success_settings" type="redirectAction">
 				<param name="actionName">settings</param>
 			</result>
@@ -227,6 +230,13 @@
 			<result type="redirectAction">listTeams</result>
 		</action>
 		<!-- /Team actions -->
+		
+		<!-- Access rights actions -->
+		<action name="accessRights" class="accessAction">
+			<result type="dispatcher">/WEB-INF/jsp/administration/accessRights.jsp
+			</result>
+		</action>
+		<!-- /Access rights actions -->
 
 		<!-- Daily work -->
 		<action name="dailyWork" class="dailyWorkAction">
@@ -401,7 +411,7 @@
 		</action>
 
 		<action name="databaseExport" class="dbExportAction" method="edit">
-			<result>/WEB-INF/jsp/administration/dbexport.jsp</result>
+			<result>/WEB-INF/jsp/administration/dbExport.jsp</result>
 		</action>
 		
 		
@@ -411,6 +421,15 @@
 				<param name="contentType">application/octet-stream</param>
 				<param name="inputName">databaseStream</param>
 				<param name="contentDisposition">filename="AgilefantDatabaseExport.zip"</param>
+			</result>
+		</action>
+		
+		<action name="generateAnonymousDbExport" method="generateAnonymousDatabaseExport"
+			class="dbExportAction">
+			<result name="success" type="stream">
+				<param name="contentType">application/octet-stream</param>
+				<param name="inputName">databaseStream</param>
+				<param name="contentDisposition">filename="AgilefantAnonymousDatabaseExport.zip"</param>
 			</result>
 		</action>
 		

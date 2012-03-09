@@ -1,9 +1,12 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
+import org.hibernate.collection.PersistentBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.BacklogType;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
@@ -54,13 +58,22 @@ public class MenuBusinessImpl implements MenuBusiness {
     private TransferObjectBusiness transferObjectBusiness;
 
     @SuppressWarnings("unchecked")
-    public List<MenuDataNode> constructBacklogMenuData() {
+    public List<MenuDataNode> constructBacklogMenuData(User user) {
         List<MenuDataNode> nodes = new ArrayList<MenuDataNode>();
         List<Product> products = new ArrayList<Product>(productBusiness
                 .retrieveAllOrderByName());
         Collections.sort(products, new PropertyComparator("name", true, true));
+        
+        Collection<Product> allowedProducts = new HashSet<Product>();
+        for(Team team : user.getTeams()){
+            allowedProducts.addAll(team.getProducts());
+        }
+        
         for (Product prod : products) {
-            nodes.add(constructMenuDataNode(prod));
+            //check if we have access
+            if(allowedProducts.contains(prod)){
+                nodes.add(constructMenuDataNode(prod));
+            }
         }
         
         final List<Iteration> standAloneIterations = new ArrayList<Iteration>(

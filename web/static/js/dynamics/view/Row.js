@@ -52,6 +52,11 @@ DynamicTableRow.prototype.initialize = function() {
       this.htmlIdsToCell[event.currentTarget.id].dblClick(event);
     }
   }, this));
+  this.element.delegate("div."+DynamicTable.cssClasses.tableCell,"click", $.proxy(function(event) {
+	    if(this.htmlIdsToCell[event.currentTarget.id]) {
+	      this.htmlIdsToCell[event.currentTarget.id].click(event);
+	    }
+	  }, this));
   
   // FIGURE A BETTER WAY
   if (this.config && this.config.hasOwnProperty("visible") && !this.config.visible) {
@@ -206,7 +211,8 @@ DynamicTableRow.prototype.openFullEdit = function() {
   this.editRow();
   var editor = this.element.find('.dynamics-editor-element:eq(0)').data("editor");
   if (editor) {
-    editor.focus();
+    if (!(editor instanceof TableEditors.Date))
+        editor.focus();
   }
 };
 

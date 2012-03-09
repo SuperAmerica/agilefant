@@ -3,6 +3,14 @@
     "-//Hibernate/Hibernate Configuration DTD//EN"
     "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 
+
+
+<!-- org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'transactionManager' defined in ServletContext resource [/WEB-INF/applicationContext.xml]:
+ Cannot resolve reference to bean 'sessionFactory' while setting bean property 'sessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: 
+ Error creating bean with name 'sessionFactory' defined in ServletContext resource [/WEB-INF/applicationContext.xml]: Invocation of init method failed;
+  nested exception is java.lang.ClassFormatError: Illegal class name "fi/hut/soberit/agilefant/model/package-info" in class file fi/hut/soberit/agilefant/model/package-info
+ -->
+
 <hibernate-configuration>
 	<session-factory>
 		<!--
@@ -39,7 +47,7 @@
     	<mapping class="fi.hut.soberit.agilefant.model.AgilefantWidget" />
     	<mapping class="fi.hut.soberit.agilefant.model.WidgetCollection" />
     	<mapping class="fi.hut.soberit.agilefant.model.StoryAccess" />
-    
+   
 
 		<!--
 			<mapping class="fi.hut.soberit.agilefant.model.BusinessTheme" />

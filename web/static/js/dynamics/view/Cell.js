@@ -62,8 +62,8 @@ DynamicTableCell.prototype.initialize = function() {
 	
 	if(this.config.isEditable()) {
 	  //this.element.addClass('dynamictable-editable');
-	  this.element.attr("title", "Double click to edit");
-	  var editText = "Double-click to edit ";
+	  this.element.attr("title", "Click to edit");
+	  var editText = "Click to edit ";
 	  if(this.config.getTitle()) {
 	    editText += this.config.getTitle();
 	  } else {
@@ -102,6 +102,15 @@ DynamicTableCell.prototype.dblClick = function(event) {
   }
 };
 
+DynamicTableCell.prototype.click = function(event) {
+  if(this.config.getClickCallback()) {
+      this.config.getClickCallback().call(this.row.getController(), this.row.getModel(), this);
+  }
+  if (this.config.isEditable() && this.getRow().isEditable()) {
+    this.openEditor();
+  }
+};
+	
 DynamicTableCell.prototype.getElement = function() {
 	return this.element;
 };
@@ -184,6 +193,9 @@ DynamicTableCell.prototype.openEditor = function(editRow, onClose, forceOpen) {
   if( (!forceOpen && !this.config.isEditable()) || (editRow && !this.config.isOpenOnRowEdit()) ) {
     return;
   }
+  
+  if (editRow)
+    this.element.attr('inRowEdit', editRow);
   
   var EditorClass = TableEditors.getEditorClassByName(editorName);
   if(EditorClass && this.config.getEditableCallback().call(this.row.getController())) {

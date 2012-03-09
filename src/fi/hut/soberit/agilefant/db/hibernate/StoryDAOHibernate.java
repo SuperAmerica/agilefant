@@ -69,6 +69,33 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         }
         return Integer.parseInt(result.toString());
     }
+    
+    public int getStoryValueSumByBacklog(int backlogId) {
+        Criteria criteria = getCurrentSession().createCriteria(Story.class);
+        criteria.add(Restrictions.eq("backlog.id", backlogId));
+        criteria.add(Restrictions.isNotNull("storyValue"));
+        criteria.add(Restrictions.not(Restrictions.eq("state", StoryState.DEFERRED)));
+        criteria.setProjection(Projections.sum("storyValue"));
+        Object result = criteria.uniqueResult();
+        if (result == null) {
+            return 0;
+        }
+        return Integer.parseInt(result.toString());
+    }
+    
+    public int getCompletedStoryValueSumByBacklog(int backlogId) {
+        Criteria criteria = getCurrentSession().createCriteria(Story.class);
+        criteria.add(Restrictions.eq("backlog.id", backlogId));
+        criteria.add(Restrictions.isNotNull("storyValue"));
+        criteria.add(Restrictions.not(Restrictions.eq("state", StoryState.DEFERRED)));
+        criteria.add(Restrictions.eq("state", StoryState.DONE));
+        criteria.setProjection(Projections.sum("storyValue"));
+        Object result = criteria.uniqueResult();
+        if (result == null) {
+            return 0;
+        }
+        return Integer.parseInt(result.toString());
+    }
 
     public Map<Integer, Integer> getNumOfResponsiblesByStory(
             Set<Integer> storyIds) {

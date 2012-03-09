@@ -30,12 +30,14 @@ import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.exception.OperationNotPermittedException;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.TaskHourEntry;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.ChildHandlingChoice;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -185,7 +187,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return persisted;
     }
 
-    
     private static void checkStoriesBacklogIfAssignedToIteration(Story persisted) {
         if (persisted == null) {
             return;
@@ -297,9 +298,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
 
     private void createStoryRanks(Story story, Backlog backlog) {
-        if(!(backlog instanceof Product)) {
+        if(!(backlog instanceof Product)) {            
             this.storyRankBusiness.rankToBottom(story, backlog);
-            if (backlog instanceof Iteration) {
+            if (backlog instanceof Iteration) {                
                 
                 if (backlog.isStandAlone()) {
                     this.storyRankBusiness.rankToBottom(story, backlog);
@@ -315,6 +316,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         persisted.setDescription(dataItem.getDescription());
         persisted.setName(dataItem.getName());
         persisted.setState(dataItem.getState());
+        persisted.setStoryValue(dataItem.getStoryValue());
         persisted.setStoryPoints(dataItem.getStoryPoints());
         persisted.setParent(dataItem.getParent());
         persisted.setIteration(dataItem.getIteration());
@@ -350,7 +352,33 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         this.labelBusiness.createStoryLabels(labelNames, story.getId());
         return story;
     }
-
+    
+    public Story copyStorySibling(Integer storyId, Story story)
+    {
+        story = this.retrieve(storyId);
+        Backlog backlog = this.backlogBusiness.retrieve(story.getBacklog().getId());
+        if (backlog == null) {
+            throw new ObjectNotFoundException("backlog.notFound");
+        }
+        Story newStory = new Story(story);
+        newStory.setName("Copy of " + newStory.getName());
+        // Persist the tasks. 
+        for (Task t : newStory.getTasks())
+        {
+            t.setEffortLeft(new ExactEstimate());
+            t.setOriginalEstimate(new ExactEstimate());
+            t.setHourEntries(new HashSet<TaskHourEntry>());
+            taskBusiness.store(t);
+        }
+        
+        newStory.setBacklog(backlog);
+        create(newStory);
+        labelBusiness.createStoryLabelsSet(newStory.getLabels(), newStory.getId());
+        this.storyHierarchyBusiness.moveAfter(newStory, story);
+        rankStoryUnder(newStory, story,backlog );
+        return this.transferObjectBusiness.constructStoryTO(newStory);
+    }
+    
     public Story create(Story dataItem, Integer backlogId, Integer iterationId, Set<Integer> responsibleIds, List<String> labelNames) 
             throws IllegalArgumentException, ObjectNotFoundException {
         
@@ -361,6 +389,16 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);        
         }
         storyHierarchyBusiness.moveToBottom(persisted);
+// MERGE CONFLICT
+//        Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);
+//
+//        //old - prevents tree view from exploding until it's fixed 
+//        storyHierarchyBusiness.moveToBottom(persisted);   
+//        
+//        //new
+//        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 
+//        
+
         this.labelBusiness.createStoryLabels(labelNames, persisted.getId());
         return persisted;
     }

@@ -62,6 +62,7 @@
 <script type="text/javascript" src="static/js/dynamics/model/DailyWorkModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/WorkQueueTaskModel.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/model/ModelFactory.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/model/AccessListContainer.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 
 <script type="text/javascript" src="static/js/dynamics/controller/CommonController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
@@ -97,6 +98,8 @@
 <script type="text/javascript" src="static/js/dynamics/controller/MyAssignmentsMenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/AdministrationMenuController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 <script type="text/javascript" src="static/js/dynamics/controller/PersonalLoadController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/AccessListController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
+<script type="text/javascript" src="static/js/dynamics/controller/AccessRowController.js?<ww:text name="struts.agilefantReleaseId" />"></script>
 
 
 <script type="text/javascript" src="static/js/autocomplete/autocompleteSearchBox.js?<ww:text name="struts.agilefantReleaseId" />"></script>

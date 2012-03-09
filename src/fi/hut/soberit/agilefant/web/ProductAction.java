@@ -2,7 +2,9 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.util.DateTimeUtils;
 import fi.hut.soberit.agilefant.util.Pair;
@@ -41,6 +44,10 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
     
     private DateTime scheduleStart;
     private DateTime scheduleEnd;
+    
+    private Set<Integer> teamIds = new HashSet<Integer>();
+    
+    private boolean teamsChanged;
 
     public String create() {
         productId = 0;
@@ -69,7 +76,12 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
     }
 
     public String store() {
-        this.product = this.productBusiness.store(productId, product);
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        
+        this.product = this.productBusiness.store(productId, product, teams);
         this.productId = this.product.getId();
         return Action.SUCCESS;
     }
@@ -139,6 +151,18 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
 
     public DateTime getScheduleEnd() {
         return scheduleEnd;
+    }
+    
+    public void setTeamsChanged(boolean teamsChanged) {
+        this.teamsChanged = teamsChanged;
+    }
+
+    public Set<Integer> getTeamIds() {
+        return teamIds;
+    }
+
+    public void setTeamIds(Set<Integer> teamIds) {
+        this.teamIds = teamIds;
     }
 
 }

@@ -11,7 +11,10 @@ var ProductModel = function ProductModel() {
   this.relations = {
     project: [],
     iteration: [],
-    story: []
+    story: [],
+    team: []
+  };
+  this.currentData = {
   };
   this.copiedFields = {
     "name":   "name",
@@ -20,7 +23,8 @@ var ProductModel = function ProductModel() {
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Project":       "project",
       "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
-      "fi.hut.soberit.agilefant.model.Story":         "story"
+      "fi.hut.soberit.agilefant.model.Story":         "story",
+      "fi.hut.soberit.agilefant.model.Team":         "team"
   };
 };
 
@@ -52,6 +56,10 @@ ProductModel.prototype._setData = function(newData) {
 //  if (newData.iterations) {
 //    this._updateRelations("iteration", newData.iterations);
 //  }
+
+  if (newData.teams) {
+  	this._updateRelations(ModelFactory.types.team, newData.teams);
+  }
   
 };
 
@@ -76,7 +84,16 @@ ProductModel.prototype._saveData = function(id, changedData) {
   var me = this;
   
   var url = "ajax/storeProduct.action";
-  var data = this.serializeFields("product", changedData);
+  var data = {};
+  
+  if (changedData.teamsChanged) {
+    data.teamIds = changedData.teamIds;
+    data.teamsChanged = true;
+    delete changedData.teamIds;
+    delete changedData.teamsChanged;
+  }
+  jQuery.extend(data, this.serializeFields("product", changedData));
+  
   data.productId = id;
   if (!id) {
     url = "ajax/storeNewProduct.action";
@@ -95,6 +112,7 @@ ProductModel.prototype._saveData = function(id, changedData) {
       if(!id) {
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
+      me.callListeners(new DynamicsEvents.EditEvent(me));
     },
     error: function(xhr, status, error) {
       MessageDisplay.Error("Error saving product", xhr);
@@ -125,7 +143,12 @@ ProductModel.prototype.addProject = function(project) {
   this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"project"));
 };
 
-/* GETTERS */
+ProductModel.prototype.addTeam = function(team) {
+  this.addRelation(team);
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"team"));
+};
+
+/* GETTERS AND SETTERS */
 
 ProductModel.prototype.getDescription = function() {
   return this.currentData.description;
@@ -151,4 +174,49 @@ ProductModel.prototype.getProjects = function() {
 
 ProductModel.prototype.getStories = function() {
   return this.relations.story;
+};
+
+ProductModel.prototype.getTeams = function() {
+  if (this.currentData.teamIds) {
+    var teams = [];
+    $.each(this.currentData.teamIds, function(k, id) {
+      teams.push(ModelFactory.getObject(ModelFactory.types.team, id));
+    });
+    return teams;
+  }
+  return this.relations.team;
+};
+
+ProductModel.prototype.setTeams = function(teamIds, teamJson) {
+  if (teamJson) {
+    $.each(teamJson, function(k,v) {
+      ModelFactory.updateObject(v);
+    });
+  }
+  this.currentData.teamIds = teamIds;
+  this.currentData.teamsChanged = true;
+};
+
+ProductModel.prototype.setAllTeams = function(allTeams) {
+  var me = this;
+  if(allTeams == "true"){
+  	var teams = [];
+  	var data = {};
+  	jQuery.ajax({
+  		type: "POST",
+  		url: "ajax/retrieveAllTeams.action",
+    	async: false,
+    	cache: false,
+    	data: data,
+    	dataType: "json",
+    	success: function(data,status) {
+      		for(i = 0; i < data.length; i++) {
+      			teams.push(data[i].id)
+      		}
+    	}
+    });
+    
+    this.currentData.teamsChanged = true;
+    this.currentData.teamIds = teams;
+  }
 };

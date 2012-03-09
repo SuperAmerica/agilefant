@@ -11,18 +11,20 @@ var UserSpentEffortWidget = function UserSpentEffortWidget(element, userId) {
   this.reload();
 };
 
-UserSpentEffortWidget.prototype.reload = function() {
-  var me = this;
-  this.element.load("weeklySpentEffort.action",{userId: this.userId}, function() { 
-    me._registerSpentEffortEvents(); 
-  });
+UserSpentEffortWidget.prototype.reload = function() { 
+	var me = this;
+	var currentDate = new Date();
+	var gmtOffset = currentDate.getUserTimeZone();
+	this.element.load("weeklySpentEffort.action",{userTimeZone: gmtOffset, userId: this.userId}, function() { 
+	me._registerSpentEffortEvents(); 
+	});
 };
-UserSpentEffortWidget.prototype._parseDateValues = function(strValue) {
+UserSpentEffortWidget.prototype._parseDateValues = function(strValue) { 
   var parts = strValue.split("-");
-  if(parts.length != 2) {
+  if(parts.length != 3) {
     return {};
   }
-  return {week: parts[1], year: parts[0]};
+  return {userTimeZone: part[2], week: parts[1], year: parts[0]};
 };
 UserSpentEffortWidget.prototype._registerSpentEffortEvents = function() {
   var me = this;
@@ -111,6 +113,21 @@ UserSpentEffortWidget.prototype.initConfig = function() {
       required: true
     }
   };
+  var el = {
+    minWidth : 40,
+    autoScale : true,
+    title : "EL",
+    get : TaskModel.prototype.getEffortLeft,
+    decorator: DynamicsDecorators.exactEstimateSumDecorator,
+    editable : true,
+    columnName : "effortLeft",
+    edit : {
+	  editor : "ExactEstimate",
+      decorator: DynamicsDecorators.exactEstimateEditDecorator,
+      set : TaskModel.prototype.setEffortLeft,
+      required: true
+    }
+  };
   var desc = {
     minWidth : 200,
     autoScale : true,
@@ -134,7 +151,8 @@ UserSpentEffortWidget.prototype.initConfig = function() {
   
   this.hourEntryTableConfig.addColumnConfiguration(0, date);
   this.hourEntryTableConfig.addColumnConfiguration(1, es);
-  this.hourEntryTableConfig.addColumnConfiguration(2, desc);
-  this.hourEntryTableConfig.addColumnConfiguration(3, context);
+  this.hourEntryTableConfig.addColumnConfiguration(2, el);
+  this.hourEntryTableConfig.addColumnConfiguration(3, desc);
+  this.hourEntryTableConfig.addColumnConfiguration(4, context);
 
 };

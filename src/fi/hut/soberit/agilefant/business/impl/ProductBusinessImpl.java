@@ -22,6 +22,8 @@ import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.ProjectBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
+import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.BacklogHourEntry;
@@ -29,6 +31,8 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
 import fi.hut.soberit.agilefant.transfer.LeafStoryContainer;
 import fi.hut.soberit.agilefant.transfer.ProductTO;
@@ -54,6 +58,8 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
     private HourEntryBusiness hourEntryBusiness;
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
+    @Autowired
+    private TeamBusiness teamBusiness;
 
     public ProductBusinessImpl() {
         super(Product.class);
@@ -70,12 +76,22 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
         return productDAO.retrieveBacklogTree();
     }
 
-    public Product store(int productId, Product productData) {
+    public Product store(int productId, Product productData, Set<Integer> teamIds) {
         this.validateProductData(productData);
         Product storable = new Product();
         if (productId > 0) {
             storable = this.retrieve(productId);
         }
+        
+        // Get teams
+        Set<Team> teams = new HashSet<Team>();
+        if (teamIds != null) {
+            for (Integer tid : teamIds) {
+                teams.add(teamBusiness.retrieve(tid));
+            }
+            storable.setTeams(teams);
+        }
+        
         storable.setName(productData.getName());
         storable.setDescription(productData.getDescription());
         if (storable.getId() > 0) {

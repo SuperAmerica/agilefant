@@ -193,8 +193,9 @@ ProjectModel.prototype.reload = function() {
     "ajax/projectData.action",
     {projectId: me.getId()},
     function(data,status) {
-      delete data.leafStories; // data.leafStories is always empty; this code prevents the stories from being removed before reloadLeafStories() runs
-      me._setData(data);
+// Project-Level Auto-Refresh
+//      delete data.leafStories; // data.leafStories is always empty; this code prevents the stories from being removed before reloadLeafStories() runs
+      me._setData(data, false);
       //me.callListeners(new DynamicsEvents.EditEvent(me));
     }
   );

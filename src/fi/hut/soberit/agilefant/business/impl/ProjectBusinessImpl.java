@@ -43,6 +43,7 @@ import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.util.StoryFilters;
+import fi.hut.soberit.agilefant.util.StoryMetrics;
 
 @Service("projectBusiness")
 @Transactional
@@ -133,6 +134,26 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
                     .getNumberOfDoneStories()
                     * 100f / (float) metrics.getNumberOfStories()));
         }
+        if (metrics.getTotalValue() != 0) {
+            metrics.setValuePercentage(Math.round((float) metrics
+                    .getCompletedValue()
+                    * 100f / (float) metrics.getTotalValue()));
+        }
+        
+        // Effort spent
+        List<Story> leafStories = this.storyRankBusiness.retrieveByRankingContext(project);
+        StoryMetrics storyMetrics;
+        for(Story story : leafStories)
+        {
+            storyMetrics = storyBusiness.calculateMetrics(story);
+            metrics.setEffortSpent(metrics.getEffortSpent() + (int)storyMetrics.getEffortSpent());
+            metrics.setOriginalEstimate(metrics.getOriginalEstimate() + (int)storyMetrics.getOriginalEstimate());
+        }
+        if(metrics.getOriginalEstimate() != 0) {
+            metrics.setEfforSpentPercentage(Math.round((float) metrics
+                    .getEffortSpent()
+                    * 100f / (float) metrics.getOriginalEstimate()));
+        }
 
         return metrics;
     }
@@ -162,7 +183,10 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         persistable.setBaselineLoad(project.getBaselineLoad());
         Project stored = persistProject(persistable);
         
-        return transferObjectBusiness.constructProjectTO(stored);
+        ProjectTO to = transferObjectBusiness.constructProjectTO(stored);
+        StoryFilters storyFilters = new StoryFilters(null, null);
+        to.setLeafStories(retrieveLeafStories(projectId, storyFilters));
+        return to;
     }
     
     private void setAssignees(Project project, Set<Integer> assigneeIds) {

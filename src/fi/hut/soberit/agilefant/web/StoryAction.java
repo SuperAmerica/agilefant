@@ -89,13 +89,24 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     // CRUD
     
     public String create() {
-        
         story = this.storyBusiness.create(story, backlogId, iteration, userIds, labelNames);
         StoryRank rank = storyRankBusiness.getRankByBacklog(story, story.getBacklog());
         
         story = new StoryTO(story);
         if (rank != null) ((StoryTO)story).setRank(rank.getRank());
         
+        return Action.SUCCESS;
+    }
+    
+    /**
+     * Creates a new deep copy of a given story and places it
+     * as a sibling.
+     * @author braden
+     * 
+     * @return Successful action.
+     */
+    public String copyStorySibling() {
+        story = storyBusiness.copyStorySibling(storyId, story);
         return Action.SUCCESS;
     }
 

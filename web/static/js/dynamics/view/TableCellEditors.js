@@ -15,6 +15,9 @@ var ValidationMessages = {
     mustBeGreater: "Value must be greater or equal than ",
     mustBeLower: "Value must be lower or equal than "
   },
+  value: {
+	  invalid: "Story value must be equal to or greater than zero"
+  },
   estimate: {
     invalid: "Incorrect format - Please enter e.g. 10 or 10pt or 10points"
   },
@@ -576,6 +579,53 @@ TableEditors.Estimate.prototype._validate = function() {
   return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
 };
 
+/**
+ * Estimate input.
+ * 
+ * @constructor
+ * @base TableEditors.CommonEditor
+ */
+TableEditors.StoryValue = function(element, model, options) {
+  this.init(element, model, options);
+  this.setEditorValue();
+  this.focus();
+};
+TableEditors.StoryValue.prototype = new TableEditors.TextFieldEditor();
+/**
+ * Default options for <code>TableEditors.Estimate</code>
+ */
+TableEditors.StoryValue.defaultOptions = {
+  /**
+   * Whether the field is required or not.
+   * Default: false
+   * @member TableEditors.Estimate */
+  required: false
+};
+/**
+ * Initializes a Estimate editor.
+ * Will call TableEditors.TextFieldEditor.init.
+ */
+TableEditors.StoryValue.prototype.init = function(element, model, options) {
+  var opts = {};
+  jQuery.extend(opts, TableEditors.Estimate.defaultOptions);
+  jQuery.extend(opts, options);
+  TableEditors.TextFieldEditor.prototype.init.call(this, element, model, opts);
+};
+
+TableEditors.StoryValue.prototype._validate = function() {
+  var valid = true;
+  var value = jQuery.trim(this.textField.val());
+  
+  var format = new RegExp("^([0-9]*)$"); // Removed: (pt|points)?
+  
+  if (!format.test(value)) {
+    valid = false;
+    this.addErrorMessage(ValidationMessages.value.invalid);
+  }
+  
+  return TableEditors.TextFieldEditor.prototype._validate.call(this) && valid;
+};
+
 
 /**
  * ExactEstimate input.
@@ -644,7 +694,7 @@ TableEditors.ExactEstimate.prototype._validate = function() {
 TableEditors.Date = function(element, model, options) {
   this.init(element, model, options);
   this.setEditorValue();
-  this.focus();
+  element.attr('inRowEdit') == 'true' ? "" : this.focus();
 };
 TableEditors.Date.prototype = new TableEditors.TextFieldEditor();
 /**
@@ -684,7 +734,7 @@ TableEditors.Date.prototype.init = function(element, model, options) {
       numberOfMonths : 3,
       showButtonPanel : true,
       beforeShow : function() {
-          me.datepickerOpen = true;
+          me.datepickerOpen = true; 
           pattern = /(\d|[0-1][0-9]|2[0-3]):(\d|[0-5][0-9])$/;
           var index = me.textField.val().search(pattern);
           if (index === -1) {
@@ -704,17 +754,17 @@ TableEditors.Date.prototype.init = function(element, model, options) {
       },
       onClose : function() {
           me.datepickerOpen = false;
+          me.textField.focus();
       },
       buttonImage : 'static/img/calendar.gif',
       buttonImageOnly : true,
-      showOn : 'button',
       constrainInput : false
   });
 };
 
 TableEditors.Date.prototype.close = function() {
-  $(window).unbind("click.dynamicsDatePicker", this.windowListener);
   this.element.find('img').remove();
+  this.textField.datepicker('hide');
   this.textField.datepicker('destroy');
   TableEditors.TextFieldEditor.prototype.close.call(this);
 };
@@ -739,31 +789,21 @@ TableEditors.Date.prototype._validate = function() {
 
 TableEditors.Date.prototype._registerEditField = function(element) {
   var me = this;
-  this.windowListener = function(event) {
-    if(event.target === me.textField[0]) { //editor clicked
-      return;
-    }
-    if(me.datepickerOpen) { //picker open
-      return;
-    }
-    if($(event.target).parents("div.ui-datepicker").length) { //picked clicked
-      return;
-    }
+  element.blur(function(event) {
+    if (me.datepickerOpen)
+      return false;
     me._requestSaveIfNotInRowEdit();
     me.element.trigger("DynamicsBlur");
     me.focused = false;
-  };
-  $(window).bind("click.dynamicsDatePicker",this.windowListener);
+  });
   element.keydown(function(event) {
     me._handleKeyEvent(event);
     return true;
   });
-  
   element.focus(function() {
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });
-  
   element.data("editor", this).addClass("dynamics-editor-element");
 };
 
@@ -1187,6 +1227,7 @@ TableEditors.Wysiwyg.prototype._registerEditField = function(element) {
     me.element.trigger("DynamicsFocus");
     me.focused = true;
   });
+  me.actualElement.focus();
 };
 TableEditors.Wysiwyg.prototype._handleKeyEvent = function(event) {
   if (event.keyCode === 27 && !this.editRow) {

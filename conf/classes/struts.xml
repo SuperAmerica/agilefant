@@ -191,6 +191,14 @@
 				<param name="contentDisposition">filename="${exportFileName}.xls"</param>
 			</result>
 		</action>
+		
+		<!-- Read Only (RO) Iteration actions -->
+		
+		<action name="ROIteration" class="ROIterationAction">
+			<result type="dispatcher">/WEB-INF/jsp/ROIteration.jsp</result>
+		</action>
+		
+		<!-- /Read Only Iteration actions -->
 
 		<!-- /Iteration actions -->
 

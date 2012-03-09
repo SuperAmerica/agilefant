@@ -285,9 +285,26 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             Story story, Backlog newBacklog, List<StoryTreeIntegrityMessage> messages) {
         
         if (story.getParent() != null && originalAndTargetProductEqual(story.getBacklog(), newBacklog)) {
+            // OK to move to standalone
             if (newBacklog.isStandAlone()) {
                 return messages;
             }
+            
+            // OK to move to backlog tree which is the same tree as the parent story's backlog
+            Backlog parentsBacklog = story.getParent().getBacklog();
+            Backlog newBacklogsParent = newBacklog.getParent();
+            if (parentsBacklog != null) {
+                if (parentsBacklog.getId() == newBacklogsParent.getId()) {
+                    return messages;
+                }
+                
+                Backlog newBacklogsRoot = newBacklogsParent.getParent();
+                if (newBacklogsRoot != null && parentsBacklog.getId() == newBacklogsRoot.getId()) {
+                    return messages;
+                }
+            }
+            
+            
             messages.add(new StoryTreeIntegrityMessage(
                             story,
                             story.getParent(),
@@ -344,15 +361,33 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             return false;
         }
         
+
+        /**
+         * Normal iteration & parent's backlog is in same tree
+         */
+        if (newBacklog instanceof Iteration) {
+            Backlog project = newBacklog.getParent();
+            Backlog product = project.getParent();
+            
+            Backlog parentsBacklog = parentStory.getBacklog();
+            if (parentsBacklog != null) {
+                int parentsBacklogId = parentsBacklog.getId();
+                if (parentsBacklogId == project.getId() || parentsBacklogId == product.getId()) {
+                    return false;
+                }
+            }
+        }
+        
         
         boolean differentProduct;
         
         // moving from standalone iteration
         if ((story.getIteration() != null && story.getIteration().isStandAlone()) && newBacklog != story.getIteration()) {
-            
+            Backlog newBacklogsParent = newBacklog.getParent();
             // moving to parents backlog
-            if (!newBacklog.isStandAlone() && newBacklog.getParent() == parentStory.getBacklog()) {
+            if (!newBacklog.isStandAlone() && newBacklogsParent == parentStory.getBacklog()) {
                 differentProduct = false;
+
             // moving to other product
             } else {
                 differentProduct = true;

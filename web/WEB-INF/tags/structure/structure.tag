@@ -245,7 +245,14 @@
 </div>
 
 
-<div id="bodyWrapper">
+<c:choose>
+	<c:when test="${hideMenu != true}">
+		<div id="bodyWrapper">
+	</c:when>
+	<c:otherwise>
+		<div id="bodyWrapperNoMenu">
+	</c:otherwise>
+</c:choose>
   <c:if test="${hideMenu != true}">
     <div id="menuControlPanel"> 
       <div id="menuToggleControl"> </div>

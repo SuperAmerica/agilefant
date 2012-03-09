@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.business;
+package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.impl.StoryTreeIntegrityBusinessImpl;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -427,4 +428,25 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         assertTrue(this.testable.hasParentStoryConflict(story, targetProject));
         verifyAll();
     }
+    
+    
+    @Test
+    public void checkParentDifferentProjectRule_whenTargetIsStandalone() {
+        Story parentStory = new Story();
+        Story childStory = new Story();
+        parentStory.getChildren().add(childStory);
+        
+        Iteration standAloneIteration = new Iteration();
+        standAloneIteration.setParent(null);
+        
+        List<StoryTreeIntegrityMessage> messages = new ArrayList<StoryTreeIntegrityMessage>();
+        
+        
+        StoryTreeIntegrityBusinessImpl.checkParentDifferentProjectRule(childStory, standAloneIteration, messages);
+        
+        assertTrue(messages.size() == 0);
+        
+    }
+    
+    
 }

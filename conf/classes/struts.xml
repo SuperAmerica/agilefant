@@ -53,6 +53,7 @@
 			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
 			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
 			<result name="noauth">/WEB-INF/jsp/noauthError.jsp</result>
+			<result name="notadmin">/WEB-INF/jsp/notadminError.jsp</result>
 			<result name="rootException" type="chain">exceptionHandler</result>
 		</global-results>
 

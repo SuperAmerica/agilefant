@@ -8,7 +8,7 @@
  */
 var ROIterationController = function ROIterationController(options) {
   this.id = options.id;
-  this.readonlyToken = options.idreadonlyToken
+  this.readonlyToken = options.readonlyToken
   this.storyListElement = options.storyListElement;
   this.iterationInfoElement = options.backlogDetailElement;
   this.hourEntryListElement = options.hourEntryListElement;
@@ -173,8 +173,8 @@ ROIterationController.prototype.initializeTaskList = function() {
  */
 ROIterationController.prototype.initialize = function() {
   var me = this;
-  ModelFactory.initializeFor(ModelFactory.initializeForTypes.iteration,
-      this.id, function(model) {
+  ModelFactory.initializeFor(ModelFactory.initializeForTypes.ROiteration,
+      this.readonlyToken, function(model) {
         me.model = model;
         me.attachModelListener();
         me.paintIterationInfo();

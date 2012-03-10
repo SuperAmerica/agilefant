@@ -51,8 +51,8 @@ public class ReadonlyFilter extends GenericFilterBean {
         if (iterationDao.isValidReadonlyToken(token)) {
             
             // This is a list now for testing purposes... we'll want it to be an iteration of something later. 
-            List iterationList = iterationDao.getIterationFromReadonlyToken(token);
-            System.out.println(iterationList);
+            Iteration iteration = iterationDao.getIterationFromReadonlyToken(token);
+            System.out.println(iteration);
             
             //Iteration i = iterationDao.retrieveDeep(iterationId);
             //System.out.print(i.toString());

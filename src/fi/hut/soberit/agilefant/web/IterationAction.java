@@ -25,6 +25,8 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
 
     @PrefetchId
     private int iterationId;
+    
+    private String readonlyToken;
 
     private Iteration iteration;
 
@@ -94,6 +96,12 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
+    
+    public String iterationMetricsByToken() {
+        iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
+        return Action.SUCCESS;
+    }
     /*
     @Validations(
             requiredFields = {@RequiredFieldValidator(type=ValidatorType.SIMPLE, fieldName="iteration.name", key="iteration.missingName"),
@@ -129,6 +137,14 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
 
     public void setIterationId(int iterationId) {
         this.iterationId = iterationId;
+    }
+    
+    public String getReadonlyToken() {
+        return readonlyToken;
+    }
+    
+    public void setReadonlyToken(String readonlyToken) {
+        this.readonlyToken = readonlyToken;
     }
 
     public Iteration getIteration() {

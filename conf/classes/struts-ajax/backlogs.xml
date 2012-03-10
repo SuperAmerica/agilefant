@@ -253,6 +253,10 @@
     <action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
     </action>
+    
+    <action name="iterationMetricsByToken" class="iterationAction" method="iterationMetricsByToken">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
+    </action>
   
     <action name="iterationAssignments" class="iterationAction" method="iterationAssignments">
       <result name="success" type="json">

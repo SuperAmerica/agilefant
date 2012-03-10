@@ -27,7 +27,6 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
     private IterationBusiness iterationBusiness;
     
     public String fetchROIterationData() {
-        System.out.println("BACKEND IS LINKED IN");
         iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
         return Action.SUCCESS;
     }

@@ -25,9 +25,8 @@ var ROIterationController = function ROIterationController(options) {
   
   var me = this;
   this.tabs.bind('tabsselect', function(event, ui) {
-  	// THIS NEEDS TO BE CHANGED TO BY TOKEN
     if(ui.index === 1) {
-      me.historyElement.load("ajax/iterationHistory.action",{iterationId: me.id});
+      me.historyElement.load("ajax/iterationHistory.action",{iterationId: me.model.getId()});
     }
   });
   window.pageController.setMainController(this);
@@ -144,7 +143,7 @@ ROIterationController.prototype.reloadBurndown = function() {
 };
 
 ROIterationController.prototype.reloadMetricsBox = function() {
-  this.metricsElement.load("ajax/iterationMetrics.action", {iterationId: this.id});
+  this.metricsElement.load("ajax/iterationMetrics.action", {iterationId: this.model.getId()});
   this.reloadBurndown();
   document.body.style.cursor = "default";
 };
@@ -179,7 +178,6 @@ ROIterationController.prototype.initialize = function() {
         me.attachModelListener();
         me.paintIterationInfo();
         me.initializeStoryList();
-        me.initializeTaskList();
       });
 };
 

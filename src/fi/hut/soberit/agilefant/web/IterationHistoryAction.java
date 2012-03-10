@@ -31,11 +31,22 @@ public class IterationHistoryAction extends ActionSupport {
     private List<AgilefantHistoryEntry> mingledHistory;
     
     private int iterationId;
+    
+    private String readonlyToken;
 
     
     @Override
     public String execute() {
         Iteration iteration = this.iterationBusiness.retrieve(iterationId);
+        storyHistory = this.iterationBusiness.retrieveChangesInIterationStories(iteration);
+        taskHistory = this.iterationBusiness.retrieveChangesInIterationTasks(iteration);
+        mingledHistory = this.iterationBusiness.renderSortedTaskAndStoryRevisions(iteration);
+
+        return SUCCESS;
+    }
+    
+    public String executeByToken() {
+        Iteration iteration = this.iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
         storyHistory = this.iterationBusiness.retrieveChangesInIterationStories(iteration);
         taskHistory = this.iterationBusiness.retrieveChangesInIterationTasks(iteration);
         mingledHistory = this.iterationBusiness.renderSortedTaskAndStoryRevisions(iteration);
@@ -61,6 +72,14 @@ public class IterationHistoryAction extends ActionSupport {
 
     public void setIterationId(int iterationId) {
         this.iterationId = iterationId;
+    }
+    
+    public String getReadonlyToken() {
+        return readonlyToken;
+    }
+    
+    public void setReadonlyToken(String readonlyToken) {
+        this.readonlyToken = readonlyToken;
     }
     
 

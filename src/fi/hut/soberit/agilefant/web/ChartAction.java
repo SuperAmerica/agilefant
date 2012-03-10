@@ -74,7 +74,6 @@ public class ChartAction extends ActionSupport {
     
     public String getIterationBurndownByToken() {
         Iteration iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
-        System.out.println(iteration.getName());
         result = iterationBurndownBusiness.getIterationBurndown(iteration, timeZoneOffset);
         return Action.SUCCESS;
     }
@@ -99,7 +98,6 @@ public class ChartAction extends ActionSupport {
     
     public String getSmallIterationBurndownByToken() {
         Iteration iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
-        System.out.println(iteration.getName());
         result = iterationBurndownBusiness.getSmallIterationBurndown(iteration, timeZoneOffset);
         return Action.SUCCESS;
     }

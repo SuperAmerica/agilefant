@@ -23,11 +23,15 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
     
     private Iteration iteration;
     
+    private IterationMetrics iterationMetrics;
+    
     @Autowired
     private IterationBusiness iterationBusiness;
     
     public String fetchROIterationData() {
         iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
+        // Load metrics data
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
     
@@ -92,6 +96,14 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
 
     public void setIteration(Iteration iteration) {
         this.iteration = iteration;
+    }
+    
+    public void setIterationBusiness(IterationBusiness iterationBusiness) {
+        this.iterationBusiness = iterationBusiness;
+    }
+
+    public IterationMetrics getIterationMetrics() {
+        return iterationMetrics;
     }
 
 }

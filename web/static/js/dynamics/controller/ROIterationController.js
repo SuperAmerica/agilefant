@@ -128,8 +128,12 @@ ROIterationController.prototype.reloadBurndown = function() {
   this.smallBurndownElement.attr("src", href+"#");
 };
 
+ROIterationController.prototype.initializeMetricsBox = function() {
+  this.metricsElement.load("ajax/iterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
+}
+
 ROIterationController.prototype.reloadMetricsBox = function() {
-  this.metricsElement.load("ajax/iterationMetrics.action", {iterationId: this.model.getId()});
+  this.metricsElement.load("ajax/iterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
   this.reloadBurndown();
   document.body.style.cursor = "default";
 };
@@ -156,6 +160,7 @@ ROIterationController.prototype.initialize = function() {
         me.attachModelListener();
         me.paintIterationInfo();
         me.initializeStoryList();
+        me.initializeMetricsBox();
       });
 };
 

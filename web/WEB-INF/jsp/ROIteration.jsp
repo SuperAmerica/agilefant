@@ -2,8 +2,6 @@
 <struct:htmlWrapper navi="backlog" hideControl="true" hideMenu="true" hideLogout="true">
 <jsp:body>
 
-<aef:backlogBreadCrumb backlog="${iteration}" />
-
 <div class="structure-main-block" id="backlogInfo">
 <ul class="backlogTabs">
   <li class=""><a href="#backlogDetails"><span><img
@@ -22,12 +20,6 @@
   			file="./inc/iterationMetrics.jsp"%></div>
 		</div>
 	</div>
-	
-	<div class="details" id="backlogAssignees_cont">
-    	<div class="details" id="backlogAssignees"></div>
-    	Iteration availability denotes how unassigned load should bee divided within this iteration. If all assignees have the same iteration availability they will receive the same amount of unassigned load.
-    	Personal adjustment adjusts the iteration baseline load for each user.
-  	</div>
   	<div class="details" id="iterationHistory">
     	<div style="text-align:center; vertical-align: middle;">
       		<img src="static/img/pleasewait.gif" style="display: inline-block; vertical-align: middle;"/> Loading...

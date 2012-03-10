@@ -406,7 +406,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
      * @return if the token is valid the associated iteration id is returned, 
      *          if the token is not valid null is returned. 
      */
-    public List getIterationFromReadonlyToken(String token) {
+    public Iteration getIterationFromReadonlyToken(String token) {
         
         // First ensure token is valid.
         if (!isValidReadonlyToken(token)) {
@@ -415,6 +415,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         
         Criteria crit = getCurrentSession().createCriteria(Iteration.class);
         crit.add(Restrictions.eq("readonlyToken", token));
-        return crit.list();
+        List<Iteration> dummy = asList(crit);
+        return dummy.get(0);
     }
 }

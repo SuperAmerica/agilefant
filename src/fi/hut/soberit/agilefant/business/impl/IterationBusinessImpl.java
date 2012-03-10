@@ -622,4 +622,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
         return ret;
     }
+    
+    public Iteration retreiveIterationByReadonlyToken(String readonlyToken) {
+        Iteration iteration = iterationDAO.getIterationFromReadonlyToken(readonlyToken);
+        return iteration;
+    }
 }

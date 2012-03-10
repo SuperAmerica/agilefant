@@ -39,8 +39,9 @@
 $(document).ready(function() {
  
   $("#backlogInfo").tabs();
-  var controller = new IterationController({
-      id: 17, 
+  var controller = new ROIterationController({
+      id: 17,
+      readonlyToken: null, 
       storyListElement: $('#stories'), 
       backlogDetailElement: $('#detailContainer'),
       smallBurndownElement: null,

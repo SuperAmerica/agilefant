@@ -17,6 +17,7 @@
 			<interceptor name="contextView" class="contextViewInterceptor" />
 			<interceptor name="settings" class="settingsInterceptor" />
 			<interceptor name="prefetch" class="prefetchInterceptor" />
+			<interceptor name="authorize" class="authorizationInterceptor" />
 
 			<interceptor-stack name="authenticationStack">
 				<interceptor-ref name="exception" />
@@ -24,6 +25,7 @@
 				<interceptor-ref name="refreshUser" />
 				<interceptor-ref name="contextView" />
 				<interceptor-ref name="settings" />
+				<interceptor-ref name="authorize" />
 				<interceptor-ref name="validation">
 					<param name="validateAnnotatedMethodOnly">true</param>
 				</interceptor-ref>
@@ -50,6 +52,7 @@
 		<global-results>
 			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
 			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
+			<result name="noauth">/WEB-INF/jsp/noauthError.jsp</result>
 			<result name="rootException" type="chain">exceptionHandler</result>
 		</global-results>
 

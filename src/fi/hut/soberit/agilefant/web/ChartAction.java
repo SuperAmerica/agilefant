@@ -34,6 +34,8 @@ public class ChartAction extends ActionSupport {
     
     private int backlogId;
     
+    private String readonlyToken;
+    
     private byte[] result;
     
     private Integer customBdWidth = 1024;
@@ -70,6 +72,13 @@ public class ChartAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
+    public String getIterationBurndownByToken() {
+        Iteration iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
+        System.out.println(iteration.getName());
+        result = iterationBurndownBusiness.getIterationBurndown(iteration, timeZoneOffset);
+        return Action.SUCCESS;
+    }
+    
     public String getProjectBurnup() {
         Project project = projectBusiness.retrieve(backlogId);
         result = projectBurnupBusiness.getBurnup(project);
@@ -87,9 +96,22 @@ public class ChartAction extends ActionSupport {
         result = iterationBurndownBusiness.getSmallIterationBurndown(iteration, timeZoneOffset);
         return Action.SUCCESS;
     }
+    
+    public String getSmallIterationBurndownByToken() {
+        Iteration iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
+        System.out.println(iteration.getName());
+        result = iterationBurndownBusiness.getSmallIterationBurndown(iteration, timeZoneOffset);
+        return Action.SUCCESS;
+    }
                   
     public String getCustomIterationBurndown() {
         Iteration iteration = iterationBusiness.retrieve(backlogId);
+        result = iterationBurndownBusiness.getCustomIterationBurndown(iteration, customBdWidth, customBdHeight, timeZoneOffset);
+        return Action.SUCCESS;
+    }
+    
+    public String getCustomIterationBurndownByToken() {
+        Iteration iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
         result = iterationBurndownBusiness.getCustomIterationBurndown(iteration, customBdWidth, customBdHeight, timeZoneOffset);
         return Action.SUCCESS;
     }
@@ -102,6 +124,10 @@ public class ChartAction extends ActionSupport {
     
     public void setBacklogId(int backlogId) {
         this.backlogId = backlogId;
+    }
+    
+    public void setReadonlyToken(String readonlyToken) {
+        this.readonlyToken = readonlyToken;
     }
     
     public void setTimeZoneOffset(Integer timeZoneOffset){

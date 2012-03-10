@@ -312,6 +312,15 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		
+		<action name="drawIterationBurndownByToken" method="getIterationBurndownByToken"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+
 
 		<action name="drawSmallIterationBurndown" method="getSmallIterationBurndown"
 			class="chartAction">
@@ -320,8 +329,16 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		
+		<action name="drawSmallIterationBurndownByToken" method="getSmallIterationBurndownByToken"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
 
-		<action name="drawCustomIterationBurndown" method="getCustomIterationBurndown"
+		<action name="drawCustomIterationBurndownByToken" method="getCustomIterationBurndownByToken"
 			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">image/png</param>

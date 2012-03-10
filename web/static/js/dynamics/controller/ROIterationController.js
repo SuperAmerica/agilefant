@@ -100,16 +100,6 @@ ROIterationController.prototype.openLogEffort = function() {
 };
 
 
-ROIterationController.prototype.pageControllerDispatch = function(event) {
-  if(event instanceof DynamicsEvents.AddEvent) {
-    //new task is added to user's tasks without story
-    if (event.getObject() instanceof TaskModel || event.getObject() instanceof StoryModel) {
-      this.reloadMetrics();
-    }
-  }
-};
-
-
 ROIterationController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.MetricsEvent 
       || event instanceof DynamicsEvents.RelationUpdatedEvent) {
@@ -124,10 +114,6 @@ ROIterationController.prototype.handleModelEvents = function(event) {
     }
   }
 
-};
-
-ROIterationController.prototype.isAssigneesTabSelected = function() {
-  return (this.tabs.tabs("option","selected") === 1);
 };
 
 ROIterationController.prototype.paintIterationInfo = function() {

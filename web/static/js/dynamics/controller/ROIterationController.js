@@ -151,20 +151,12 @@ ROIterationController.prototype.reloadMetricsBox = function() {
 ROIterationController.prototype.reloadMetrics = function() {
   this.reloadBurndown();
   this.reloadMetricsBox();
-  if(this.isAssigneesTabSelected()) {
-    this.selectAssigneesTab();
-  }
 };
 
 
 ROIterationController.prototype.initializeStoryList = function() {
-  this.storyListController = new StoryListController(this.model,
+  this.storyListController = new ROStoryListController(this.model,
       this.storyListElement, this);
-};
-
-ROIterationController.prototype.initializeTaskList = function() {
-  this.tasksWithoutStoryController = new TasksWithoutStoryController(
-      this.model, this.taskListElement, this);
 };
 
 /**

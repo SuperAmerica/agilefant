@@ -13,7 +13,7 @@
 <div class="details" id="backlogDetails" style="overflow: auto;">
 	<div id="detailContainer" style="width: 65%; float: left; padding: 8px;"></div>
 	<div style="width: 28%; float: right">
-		<div class="smallBurndown" style="background-image: url('drawSmallIterationBurndownByToken.action?readonlyToken=123abc');">
+		<div class="smallBurndown" style="background-image: url('drawSmallIterationBurndownByToken.action?readonlyToken=${readonlyToken}');">
  			&nbsp;
 		</div>
 		<div id="iterationMetrics"><%@ include
@@ -33,7 +33,7 @@ $(document).ready(function() {
   $("#backlogInfo").tabs();
   var controller = new ROIterationController({
       id: null,
-      readonlyToken: "123abc",
+      readonlyToken: "${readonlyToken}",
       storyListElement: $('#stories'), 
       backlogDetailElement: $('#detailContainer'),
       smallBurndownElement: null,
@@ -56,10 +56,10 @@ $(document).ready(function() {
 
 <form onsubmit="return false;"><div id="stories" class="structure-main-block">&nbsp;</div></form>
 
-<p style="text-align: center;"><img id="chartid" src="drawIterationBurndownByToken.action?readonlyToken=123abc&timeZoneOffset="
+<p style="text-align: center;"><img id="chartid" src="drawIterationBurndownByToken.action?readonlyToken=${readonlyToken}&timeZoneOffset="
 	id="bigChart" width="780" height="600" />
 	<br>
-	<a id="chartlink" href="drawCustomIterationBurndownByToken.action?readonlyToken=123abc&customBdWidth=1280&customBdHeight=1024&timeZoneOffset=">Enlarge</a>
+	<a id="chartlink" href="drawCustomIterationBurndownByToken.action?readonlyToken=${readonlyToken}&customBdWidth=1280&customBdHeight=1024&timeZoneOffset=">Enlarge</a>
 </p>
 
 </jsp:body>

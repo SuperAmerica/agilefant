@@ -169,7 +169,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, firstIteration);
         verifyAll();
-        assertEquals(firstIteration, story.getBacklog());
+        assertEquals(firstIteration, story.getIteration());
     }
 
     @Test
@@ -264,6 +264,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     @DirtiesContext
     public void moveFromProjectToProject_hasChildren() {
         story.setBacklog(secondProject);
+        story.setIteration(secondIteration);
+        secondIteration.setParent(secondProject);
         Story child = new Story();
         story.getChildren().add(child);
 

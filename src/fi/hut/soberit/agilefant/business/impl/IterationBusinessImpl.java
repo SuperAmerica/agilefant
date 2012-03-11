@@ -158,8 +158,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
 
         List<Story> stories = this.storyBusiness.retrieveStoriesInIteration(iteration);
 
-        Map<Integer, StoryMetrics> metricsData = this.iterationDAO
-                .calculateIterationDirectStoryMetrics(iteration);
+        Map<Integer, StoryMetrics> metricsData = this.iterationDAO.calculateIterationDirectStoryMetrics(iteration);
         int rank = 0;
         List<StoryTO> rankedStories = new ArrayList<StoryTO>();
 

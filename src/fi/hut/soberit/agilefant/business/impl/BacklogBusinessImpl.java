@@ -119,6 +119,9 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public Product getParentProduct(Backlog backlog) {
+        if (backlog instanceof Product) {
+            return (Product)backlog;
+        }
         Backlog parent = backlog;
         if (backlog == null || backlog.getParent() == null) {
             return null;

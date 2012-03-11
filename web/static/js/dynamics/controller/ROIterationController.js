@@ -25,9 +25,8 @@ var ROIterationController = function ROIterationController(options) {
   
   var me = this;
   this.tabs.bind('tabsselect', function(event, ui) {
-  	// THIS NEEDS TO BE CHANGED TO BY TOKEN
     if(ui.index === 1) {
-      me.historyElement.load("ajax/iterationHistory.action",{iterationId: me.id});
+      me.historyElement.load("ajax/iterationHistoryByToken.action",{readonlyToken: me.readonlyToken});
     }
   });
   window.pageController.setMainController(this);
@@ -101,16 +100,6 @@ ROIterationController.prototype.openLogEffort = function() {
 };
 
 
-ROIterationController.prototype.pageControllerDispatch = function(event) {
-  if(event instanceof DynamicsEvents.AddEvent) {
-    //new task is added to user's tasks without story
-    if (event.getObject() instanceof TaskModel || event.getObject() instanceof StoryModel) {
-      this.reloadMetrics();
-    }
-  }
-};
-
-
 ROIterationController.prototype.handleModelEvents = function(event) {
   if (event instanceof DynamicsEvents.MetricsEvent 
       || event instanceof DynamicsEvents.RelationUpdatedEvent) {
@@ -127,10 +116,6 @@ ROIterationController.prototype.handleModelEvents = function(event) {
 
 };
 
-ROIterationController.prototype.isAssigneesTabSelected = function() {
-  return (this.tabs.tabs("option","selected") === 1);
-};
-
 ROIterationController.prototype.paintIterationInfo = function() {
   this.iterationInfoView = new DynamicVerticalTable(this, this.model, this.iterationDetailConfig, this.iterationInfoElement);
   this.iterationInfoView.render();
@@ -143,8 +128,12 @@ ROIterationController.prototype.reloadBurndown = function() {
   this.smallBurndownElement.attr("src", href+"#");
 };
 
+ROIterationController.prototype.initializeMetricsBox = function() {
+  this.metricsElement.load("ajax/iterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
+}
+
 ROIterationController.prototype.reloadMetricsBox = function() {
-  this.metricsElement.load("ajax/iterationMetrics.action", {iterationId: this.id});
+  this.metricsElement.load("ajax/iterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
   this.reloadBurndown();
   document.body.style.cursor = "default";
 };
@@ -152,20 +141,12 @@ ROIterationController.prototype.reloadMetricsBox = function() {
 ROIterationController.prototype.reloadMetrics = function() {
   this.reloadBurndown();
   this.reloadMetricsBox();
-  if(this.isAssigneesTabSelected()) {
-    this.selectAssigneesTab();
-  }
 };
 
 
 ROIterationController.prototype.initializeStoryList = function() {
-  this.storyListController = new StoryListController(this.model,
+  this.storyListController = new ROStoryListController(this.model,
       this.storyListElement, this);
-};
-
-ROIterationController.prototype.initializeTaskList = function() {
-  this.tasksWithoutStoryController = new TasksWithoutStoryController(
-      this.model, this.taskListElement, this);
 };
 
 /**
@@ -179,7 +160,7 @@ ROIterationController.prototype.initialize = function() {
         me.attachModelListener();
         me.paintIterationInfo();
         me.initializeStoryList();
-        me.initializeTaskList();
+        me.initializeMetricsBox();
       });
 };
 

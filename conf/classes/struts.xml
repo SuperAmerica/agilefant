@@ -17,6 +17,7 @@
 			<interceptor name="contextView" class="contextViewInterceptor" />
 			<interceptor name="settings" class="settingsInterceptor" />
 			<interceptor name="prefetch" class="prefetchInterceptor" />
+			<interceptor name="authorize" class="authorizationInterceptor" />
 
 			<interceptor-stack name="authenticationStack">
 				<interceptor-ref name="exception" />
@@ -24,6 +25,7 @@
 				<interceptor-ref name="refreshUser" />
 				<interceptor-ref name="contextView" />
 				<interceptor-ref name="settings" />
+				<interceptor-ref name="authorize" />
 				<interceptor-ref name="validation">
 					<param name="validateAnnotatedMethodOnly">true</param>
 				</interceptor-ref>
@@ -50,6 +52,8 @@
 		<global-results>
 			<result name="input">/WEB-INF/jsp/genericError.jsp</result>
 			<result name="error">/WEB-INF/jsp/genericError.jsp</result>
+			<result name="noauth">/WEB-INF/jsp/noauthError.jsp</result>
+			<result name="notadmin">/WEB-INF/jsp/notadminError.jsp</result>
 			<result name="rootException" type="chain">exceptionHandler</result>
 		</global-results>
 
@@ -312,6 +316,15 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		
+		<action name="drawIterationBurndownByToken" method="getIterationBurndownByToken"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
+
 
 		<action name="drawSmallIterationBurndown" method="getSmallIterationBurndown"
 			class="chartAction">
@@ -320,8 +333,16 @@
 				<param name="inputName">inputStream</param>
 			</result>
 		</action>
+		
+		<action name="drawSmallIterationBurndownByToken" method="getSmallIterationBurndownByToken"
+			class="chartAction">
+			<result name="success" type="stream">
+				<param name="contentType">image/png</param>
+				<param name="inputName">inputStream</param>
+			</result>
+		</action>
 
-		<action name="drawCustomIterationBurndown" method="getCustomIterationBurndown"
+		<action name="drawCustomIterationBurndownByToken" method="getCustomIterationBurndownByToken"
 			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">image/png</param>

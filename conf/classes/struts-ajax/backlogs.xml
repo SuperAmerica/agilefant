@@ -253,6 +253,10 @@
     <action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
     </action>
+    
+    <action name="iterationMetricsByToken" class="iterationAction" method="iterationMetricsByToken">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
+    </action>
   
     <action name="iterationAssignments" class="iterationAction" method="iterationAssignments">
       <result name="success" type="json">
@@ -272,6 +276,10 @@
     </action>
     
     <action name="iterationHistory" class="iterationHistoryAction">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/iterationMingledHistory.jsp</result>
+    </action>
+    
+    <action name="iterationHistoryByToken" class="iterationHistoryAction" method="executeByToken">
       <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/iterationMingledHistory.jsp</result>
     </action>
     

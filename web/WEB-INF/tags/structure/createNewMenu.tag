@@ -12,7 +12,6 @@ $(document).ready(function() {
   var createNewMenu = $('#createNewMenu');
 
   $('#createNewMenuLink').click(function() {
-    editExistingMenu.hide();
     createNewMenu.show();
     createNewMenu.menuTimer();
   });

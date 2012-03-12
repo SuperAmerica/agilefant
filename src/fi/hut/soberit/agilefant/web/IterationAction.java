@@ -116,6 +116,14 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
     {
         SecureRandom r = new SecureRandom();
         String token = new BigInteger(130, r).toString();
+        
+        int count = iterationBusiness.getIterationCountFromReadonlyToken(token);
+        while(count > 0){
+            r = new SecureRandom();
+            token = new BigInteger(130, r).toString();
+            count = iterationBusiness.getIterationCountFromReadonlyToken(token);
+        }
+        
         return token;
     }
     

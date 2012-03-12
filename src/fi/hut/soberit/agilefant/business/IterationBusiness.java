@@ -52,4 +52,6 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
             Iteration iteration);
     
     public Iteration retreiveIterationByReadonlyToken(String readonlyToken);
+    
+    public int getIterationCountFromReadonlyToken(String readonlyToken);
 }

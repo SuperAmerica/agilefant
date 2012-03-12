@@ -67,4 +67,6 @@ public interface IterationDAO extends GenericDAO<Iteration> {
     public Map<Integer, Long> calculateIterationTaskEffortSpent(Iteration iteration);
     
     public Iteration getIterationFromReadonlyToken(String token);
+    
+    public int getIterationCountFromReadonlyToken(String token);
 }

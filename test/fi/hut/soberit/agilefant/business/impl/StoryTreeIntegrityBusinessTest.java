@@ -136,8 +136,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     public void testChangeBacklog_moveToAnotherProduct_withConflict() {
         Product another = new Product();
         
-        expect(backlogBusiness.getParentProduct(story_23.getBacklog()))
-            .andReturn(product);
+        expect(backlogBusiness.getParentProduct(story_23.getBacklog())).andReturn(product);
         expect(backlogBusiness.getParentProduct(another)).andReturn(another);
         
         replayAll();
@@ -369,9 +368,6 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         parentStory.setBacklog(project);
         story.setBacklog(project);
         story.setParent(parentStory);
-        
-        expect(this.backlogBusiness.getParentProduct(iteration)).andReturn(product);
-        expect(this.backlogBusiness.getParentProduct(project)).andReturn(product);
         
         replayAll();
         assertFalse(this.testable.hasParentStoryConflict(story, iteration));

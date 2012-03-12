@@ -293,7 +293,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
             // OK to move to backlog tree which is the same tree as the parent story's backlog
             Backlog parentsBacklog = story.getParent().getBacklog();
             Backlog newBacklogsParent = newBacklog.getParent();
-            if (parentsBacklog != null) {
+            if (parentsBacklog != null && newBacklogsParent != null) {
                 if (parentsBacklog.getId() == newBacklogsParent.getId()) {
                     return messages;
                 }

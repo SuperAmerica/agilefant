@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -169,6 +170,12 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     
     public void setAssignedStories(Set<Story> stories) {
         this.assignedStories = stories;
+    }
+
+    @Transient
+    @Override
+    public boolean isStandAlone() {
+        return this.getParent() == null;
     }
     
 }

@@ -189,7 +189,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, firstIteration);
         verifyAll();
-        assertEquals(firstIteration, story.getBacklog());
+        assertEquals(firstIteration, story.getIteration());
     }
 
     @Test
@@ -214,7 +214,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, secondIteration);
         verifyAll();
-        assertEquals(secondIteration, story.getBacklog());
+        assertEquals(secondIteration, story.getIteration());
     }
 
     @Test
@@ -239,7 +239,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveStoryToBacklog(story, secondIteration);
         verifyAll();
-        assertEquals(secondIteration, story.getBacklog());
+        assertEquals(secondIteration, story.getIteration());
     }
     
     @Test
@@ -378,7 +378,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         replayAll();
         storyBusiness.moveStoryToBacklog(story, firstIteration);
         verifyAll();
-        assertEquals(firstIteration, story.getBacklog());
+        assertEquals(firstIteration, story.getIteration());
     }
     
     @Test

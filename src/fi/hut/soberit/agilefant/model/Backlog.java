@@ -137,9 +137,7 @@ public abstract class Backlog implements TimesheetLoggable, NamedObject {
 
     
     @Transient
-    public boolean isStandAlone() {
-        return getParent() == null;
-    }
+    public abstract boolean isStandAlone();
     
     
     /**

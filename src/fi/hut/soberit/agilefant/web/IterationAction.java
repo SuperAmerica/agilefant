@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -103,12 +105,19 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         return Action.SUCCESS;
     }
     
-    public String shareIterationByToken() {
-        
+    public String createReadonlyToken() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        iteration.setReadonlyToken(generateReadonlyToken());
         
         return Action.SUCCESS;
     }
     
+    private String generateReadonlyToken()
+    {
+        SecureRandom r = new SecureRandom();
+        String token = new BigInteger(130, r).toString();
+        return token;
+    }
     
     /*
     @Validations(

@@ -102,6 +102,14 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
+    
+    public String shareIterationByToken() {
+        
+        
+        return Action.SUCCESS;
+    }
+    
+    
     /*
     @Validations(
             requiredFields = {@RequiredFieldValidator(type=ValidatorType.SIMPLE, fieldName="iteration.name", key="iteration.missingName"),

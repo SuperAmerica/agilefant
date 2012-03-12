@@ -162,7 +162,8 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     }
     
     @Column(unique=true)
-    @JSON(include = false)
+    @JSON
+    @XmlAttribute
     public String getReadonlyToken() {
         return readonlyToken;
     }

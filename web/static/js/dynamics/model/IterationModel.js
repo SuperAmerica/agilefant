@@ -23,7 +23,8 @@ var IterationModel = function IterationModel() {
     "endDate": "endDate",
     "backlogSize": "backlogSize",
     "baselineLoad": "baselineLoad",
-    "scheduleStatus": "scheduleStatus"
+    "scheduleStatus": "scheduleStatus",
+    "readonlyToken": "readonlyToken"
   };
   this.classNameToRelation = {
     "fi.hut.soberit.agilefant.model.Product":       "parent",
@@ -222,6 +223,14 @@ IterationModel.prototype.isScheduledAt = function(statuses) {
 IterationModel.prototype.getStartDate = function() {
   return this.currentData.startDate;
 };
+
+IterationModel.prototype.getReadonlyToken = function() {
+	return this.currentData.readonlyToken;
+}
+
+IterationModel.prototype.setReadonlyToken = function(readonlyToken) {
+	this.currentData.readonlyToken = readonlyToken;
+}
 
 IterationModel.prototype.setStartDate = function(startDate) {
   this.currentData.startDate = startDate;

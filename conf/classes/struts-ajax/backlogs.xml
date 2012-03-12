@@ -269,6 +269,10 @@
       <result type="dispatcher">/WEB-INF/jsp/forms/deleteIterationForm.jsp</result>
     </action>
     
+    <action name="shareIterationForm">
+      <result type="dispatcher">/WEB-INF/jsp/forms/shareIterationForm.jsp</result>
+    </action>
+    
     <action name="deleteIteration" method="delete" class="iterationAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>

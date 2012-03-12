@@ -159,6 +159,21 @@ IterationController.prototype.removeIteration = function() {
   });
 };
 
+IterationController.prototype.shareIteration = function() {
+	var me = this;
+	var dialog = new LazyLoadedFormDialog();
+	var token = me.model.getReadonlyToken();	
+	
+	dialog.init({
+		title: "Share Iteration",
+	    url: "ajax/shareIterationForm.action",
+	    data: {
+	        IterationId: me.model.getId(),
+	        ReadonlyToken: token
+	    }
+	});
+};
+
 /** override backlog controller base class to reload metrics box **/
 IterationController.prototype.openLogEffort = function() {
   var widget = new SpentEffortWidget(this.model, jQuery.proxy(function() {
@@ -183,10 +198,10 @@ IterationController.prototype.handleModelEvents = function(event) {
     if(event.getObject() instanceof TaskModel) {
       this.reloadMetrics();
     }
-    if(event.getObject() instanceof StoryModel) {
+    else if(event.getObject() instanceof StoryModel) {
       this.reloadMetricsBox();
     }
-    if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof IterationModel && event.getRelation() === "story") {
+    else if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof IterationModel && event.getRelation() === "story") {
       this.reloadMetricsBox();
     }
   }

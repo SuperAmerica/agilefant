@@ -258,6 +258,13 @@
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
     </action>
   
+    <action name="createReadonlyToken" class="iterationAction" method="createReadonlyToken">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+        <param name="patterns">+readonlyToken</param>
+      </result>
+    </action>
+  
     <action name="iterationAssignments" class="iterationAction" method="iterationAssignments">
       <result name="success" type="json">
         <param name="target">assignments</param>

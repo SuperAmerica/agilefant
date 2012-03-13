@@ -357,6 +357,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         iter.setBaselineLoad(iterationData.getBaselineLoad());
         iter.setDescription(iterationData.getDescription());
         iter.setName(iterationData.getName());
+        iter.setReadonlyToken(iterationData.getReadonlyToken());
         setAssignees(iter, assigneeIds);
         this.iterationDAO.store(iter);
         if (parent != null && iter.getParent() != parent) {

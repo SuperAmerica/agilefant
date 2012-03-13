@@ -33,7 +33,7 @@
       </init-param>
       <init-param>
           <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>fi.hut.soberit.agilefant.remote</param-value>
+          <param-value>fi.hut.soberit.agilefant.readonly</param-value>
       </init-param>  
   </servlet>
 

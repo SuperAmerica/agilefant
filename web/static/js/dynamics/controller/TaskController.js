@@ -155,7 +155,7 @@ TaskController.prototype.markStoryAsStarted = function(model) {
 TaskController.prototype.clearEffortLeftWhenTaskReady = function(model) {
 	var msg = new DynamicsConfirmationDialog(
 	    "Set effort left to zero?",
-	    "Story marked as ready. Set effort left to zero as well?",
+	    "Task marked as ready. Set effort left to zero as well?",
 	    function() {
 	      model.currentData.effortLeft = 0;
 	      model.commit();

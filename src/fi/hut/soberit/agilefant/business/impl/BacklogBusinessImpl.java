@@ -66,6 +66,12 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     }
 
     @Transactional(readOnly = true)
+    public Collection<Backlog> retrieveAllStandAloneIterations()
+    {   
+        return backlogDAO.retrieveStandaloneIterations();
+    }
+    
+    @Transactional(readOnly = true)
     public Collection<Backlog> getChildBacklogs(Backlog backlog) {
         Collection<Backlog> childBacklogs = new ArrayList<Backlog>();
         if (backlog == null) {

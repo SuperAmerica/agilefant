@@ -317,7 +317,7 @@
 			</result>
 		</action>
 		
-		<action name="drawIterationBurndownByToken" method="getIterationBurndownByToken"
+		<action name="ROdrawIterationBurndownByToken" method="getIterationBurndownByToken"
 			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">image/png</param>
@@ -334,7 +334,7 @@
 			</result>
 		</action>
 		
-		<action name="drawSmallIterationBurndownByToken" method="getSmallIterationBurndownByToken"
+		<action name="ROdrawSmallIterationBurndownByToken" method="getSmallIterationBurndownByToken"
 			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">image/png</param>
@@ -342,7 +342,7 @@
 			</result>
 		</action>
 
-		<action name="drawCustomIterationBurndownByToken" method="getCustomIterationBurndownByToken"
+		<action name="ROdrawCustomIterationBurndownByToken" method="getCustomIterationBurndownByToken"
 			class="chartAction">
 			<result name="success" type="stream">
 				<param name="contentType">image/png</param>

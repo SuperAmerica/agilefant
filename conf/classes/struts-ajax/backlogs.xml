@@ -276,7 +276,7 @@
       <result type="dispatcher">/WEB-INF/jsp/forms/deleteIterationForm.jsp</result>
     </action>
     
-    <action name="shareIterationForm">
+    <action name="shareIterationForm" class="iterationAction" method="setReadonlyTokenForJsp">
       <result type="dispatcher">/WEB-INF/jsp/forms/shareIterationForm.jsp</result>
     </action>
     

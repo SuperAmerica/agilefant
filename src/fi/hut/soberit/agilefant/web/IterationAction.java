@@ -109,6 +109,17 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iteration = iterationBusiness.retrieve(iterationId);
         iteration.setReadonlyToken(generateReadonlyToken());
         
+        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds);
+        
+        this.readonlyToken = iteration.getReadonlyToken();
+
+        return Action.SUCCESS;
+    }
+    
+    public String setReadonlyTokenForJsp() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        this.readonlyToken = iteration.getReadonlyToken();
+        
         return Action.SUCCESS;
     }
     

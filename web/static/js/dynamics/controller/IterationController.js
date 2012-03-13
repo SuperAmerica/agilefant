@@ -175,9 +175,14 @@ IterationController.prototype.shareIteration = function() {
 		    data: {IterationId: me.model.getId()},
 		    dataType: "json",
 		    success: function(data, status) {
-		    	ModelFactory.updateObject(data);
-		        model.commit();
-		      MessageDisplay.Ok("Readonly access link created!");
+		      dialog.init({
+					title: "Share Iteration",
+					url: "ajax/shareIterationForm.action",
+					data: {
+						IterationId: me.model.getId(),
+						ReadonlyToken: token
+					}
+				});
 		    },
 		    error: function(xhr, status, error) {
 		      MessageDisplay.Error("Error creating link", xhr);

@@ -324,13 +324,6 @@ ProjectController.prototype.paint = function() {
   });
   ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
       this.id, function(model) {
-        ModelFactory.callEvery(30000,
-          function() {
-            model.reload(); // reload the base page and iteration tab
-            
-            me.filter(); // reload the tab content (story tree, leaf stories)
-          }
-        );
         me.model = model;
         me.attachModelListener();
         me.paintProjectDetails();

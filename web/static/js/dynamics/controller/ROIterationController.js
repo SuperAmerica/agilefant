@@ -26,7 +26,7 @@ var ROIterationController = function ROIterationController(options) {
   var me = this;
   this.tabs.bind('tabsselect', function(event, ui) {
     if(ui.index === 1) {
-      me.historyElement.load("ajax/iterationHistoryByToken.action",{readonlyToken: me.readonlyToken});
+      me.historyElement.load("ajax/ROiterationHistoryByToken.action",{readonlyToken: me.readonlyToken});
     }
   });
   window.pageController.setMainController(this);
@@ -129,11 +129,11 @@ ROIterationController.prototype.reloadBurndown = function() {
 };
 
 ROIterationController.prototype.initializeMetricsBox = function() {
-  this.metricsElement.load("ajax/iterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
+  this.metricsElement.load("ajax/ROiterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
 }
 
 ROIterationController.prototype.reloadMetricsBox = function() {
-  this.metricsElement.load("ajax/iterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
+  this.initializeMetricsBox();
   this.reloadBurndown();
   document.body.style.cursor = "default";
 };

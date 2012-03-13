@@ -41,9 +41,8 @@ HourEntryListController.prototype.paintHourEntryTable = function() {
   this.addEntryConfig[HourEntryController.columnIndices.date] = new DynamicTableColumnConfiguration(origConf[0].options);
   this.addEntryConfig[HourEntryController.columnIndices.user] = new DynamicTableColumnConfiguration(origConf[1].options);
   this.addEntryConfig[HourEntryController.columnIndices.spentEffort] = new DynamicTableColumnConfiguration(origConf[2].options);
-  this.addEntryConfig[HourEntryController.columnIndices.effortLeft] = new DynamicTableColumnConfiguration(origConf[3].options);
-  this.addEntryConfig[HourEntryController.columnIndices.description] = new DynamicTableColumnConfiguration(origConf[4].options);
-  this.addEntryConfig[HourEntryController.columnIndices.actions] = new DynamicTableColumnConfiguration(origConf[5].options);
+  this.addEntryConfig[HourEntryController.columnIndices.description] = new DynamicTableColumnConfiguration(origConf[3].options);
+  this.addEntryConfig[HourEntryController.columnIndices.actions] = new DynamicTableColumnConfiguration(origConf[4].options);
   this.addEntryConfig[HourEntryController.columnIndices.user].options.editable = true;
   this.addEntryConfig[HourEntryController.columnIndices.user].options.edit = {
       editor : "Autocomplete",
@@ -203,22 +202,6 @@ HourEntryListController.prototype.initConfig = function() {
       required: true
     }
   };
-  var el = {
-	minWidth : 30,
-	autoScale : true,
-	title : "EL",
-	get : HourEntryModel.prototype.getEffortLeft,
-	decorator : DynamicsDecorators.exactEstimateDecorator,
-	editable: true,
-	// editableCallback: HourEntryModel.prototype.effortLeftEditable,
-	columnName: "effortLeft",
-	edit : {
-	  editor : "ExactEstimate",
-      decorator: DynamicsDecorators.exactEstimateEditDecorator,
-      set : HourEntryModel.prototype.setEffortLeft,
-      required: true
-    }
-  };
   var desc = {
     minWidth : 200,
     autoScale : true,
@@ -234,7 +217,6 @@ HourEntryListController.prototype.initConfig = function() {
   this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.date, date);
   this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.user, user);
   this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.spentEffort, es);
-  this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.effortLeft, el);
   this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.description, desc);
   
   this.hourEntryTableConfig.addColumnConfiguration(HourEntryController.columnIndices.actions, {

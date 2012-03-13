@@ -101,7 +101,6 @@
     var searchInput = $('#quickSearchInput');
     var searchBox = $('#quickSearchBox');
     var searchLink = $('#quickSearchLink');
-    var recentLink = $("#quickRecentLink");
     
     searchInput.agilefantQuickSearch({
       source: "ajax/search.action",
@@ -142,40 +141,6 @@
       }
       return false;
     });
-    recentLink.click(function() {
-    	var recentBubble = new Bubble(recentLink, {title: "", offsetX: 10});
-    	var container = $('<div></div>').appendTo(recentBubble.getElement());
-    	var searchCont = $('<div></div>').appendTo(container).css({"margin-top": "-1.5em", "margin-bottom": "0.8em"});
-    	var search = $('<input type="search" value="search"/>').appendTo(searchCont).addClass("ui-autocomplete-input");
-    	$('<h3>My recent items</h3>').appendTo(container);	
-    	var access = $('<ul />').appendTo(container).css({});
-    	$('<h3>My recently edited items</h3>)').appendTo(container).css({"margin-top": "1.5em", "margin-bottom": "0em"});
-    	var hist = $('<ul />').appendTo(container).css({});
-    	var cb = function(tg) {
-    		return function(data) {
-    			tg.empty();
-    			for(var i = 0; i < data.length; i++) {
-    				var row = data[i];
-    				$('<li value='+row.count+'""><a style="text-decoration: none" href="qr.action?q=story:'+row.story.id+'">'+row.story.name+'</a></li>').appendTo(tg);
-    			}
-    			tg.tagcloud({height: 160,sizemax:25, sizemin: 12, type: "list", seed: 23 });
-    			//tg.find("li").tsort({attr:"value"});
-    		};
-    	}
-    	search.keyup(function() {
-    		var val = search.val();
-    		access.find(".highlightMatch").removeClass("highlightMatch").css("color", "");
-    		hist.find(".highlightMatch").removeClass("highlightMatch").css("color", "");
-    		access.find("a:contains("+val+")").addClass("highlightMatch").css("color", "#E50");
-    		hist.find("a:contains("+val+")").addClass("highlightMatch").css("color", "#E50");
-    		return true;
-    	});
-    	var userId = PageController.getInstance().getCurrentUser().getId();
-    	$.get("ajax/storyAccessData.action",{userId: userId}, $.proxy(cb(access),this));
-    	$.get("ajax/storyEditAccessData.action",{userId: userId}, $.proxy(cb(hist),this));
-    });
-
-
   });
   </script>
   
@@ -214,10 +179,6 @@
     
     <div style="position: absolute; left: 1em;">
       <a id="quickSearchLink" href="#"><img src="static/img/search_small.png" alt="Search..." /><span id="quickSearchLinkText" style="font-size: 80%;">Search...</span></a>
-    </div>
-    
-    <div style="position: absolute; left: 12em;">
-      <a id="quickRecentLink" href="#"><span id="quickRecentLinkText" style="font-size: 80%;">Recent</span></a>
     </div>
   </c:if>
 </div>

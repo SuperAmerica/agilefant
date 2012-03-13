@@ -49,17 +49,12 @@ public class ReadonlyFilter extends GenericFilterBean {
         String token = getTokenFromPath(reqt.getPathInfo());
         
         if (iterationDao.isValidReadonlyToken(token)) {
-            
-            // This is a list now for testing purposes... we'll want it to be an iteration of something later. 
-            Iteration iteration = iterationDao.getIterationFromReadonlyToken(token);
-            System.out.println(iteration);
-            
-            //Iteration i = iterationDao.retrieveDeep(iterationId);
-            //System.out.print(i.toString());
-            
-            //resp.sendRedirect("http://www.google.ca/" + urlToken);
-            
-        } else {
+            resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
+        }
+        else if (reqt.getRequestURL().toString().contains("ROIteration.action")) {
+            System.out.println("TEST");
+        }
+        else {
             // Token is not valid, so redirect to login page.
             resp.sendRedirect("/agilefant/login.jsp");
         }
@@ -68,7 +63,10 @@ public class ReadonlyFilter extends GenericFilterBean {
     }
     
     private String getTokenFromPath(String path) {
-        return path.substring(1);
+        if(path != null)
+            return path.substring(1);
+        else
+            return "";
     }
 
 }

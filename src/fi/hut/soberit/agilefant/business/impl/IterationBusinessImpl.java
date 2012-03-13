@@ -44,10 +44,10 @@ import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
-import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -627,5 +627,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     public Iteration retreiveIterationByReadonlyToken(String readonlyToken) {
         Iteration iteration = iterationDAO.getIterationFromReadonlyToken(readonlyToken);
         return iteration;
+    }
+    
+    public int getIterationCountFromReadonlyToken(String readonlyToken) {
+        int count = iterationDAO.getIterationCountFromReadonlyToken(readonlyToken);
+        return count;
     }
 }

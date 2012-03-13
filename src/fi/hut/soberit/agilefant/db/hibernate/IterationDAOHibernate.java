@@ -418,4 +418,25 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         List<Iteration> dummy = asList(crit);
         return dummy.get(0);
     }
+    
+    /**
+     * This function fetches the count associated with a given token in case we need to
+     * create another one to be unique
+     * 
+     * @param token
+     * @return if the token is valid the associated iteration id is returned, 
+     *          if the token is not valid null is returned. 
+     */
+    public int getIterationCountFromReadonlyToken(String token) {
+        
+        // First ensure token is valid.
+        if (!isValidReadonlyToken(token)) {
+            return 0;
+        }
+        
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.eq("readonlyToken", token));
+        List<Iteration> dummy = asList(crit);
+        return dummy.size();
+    }
 }

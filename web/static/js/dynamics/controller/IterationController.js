@@ -164,14 +164,42 @@ IterationController.prototype.shareIteration = function() {
 	var dialog = new LazyLoadedFormDialog();
 	var token = me.model.getReadonlyToken();	
 	
-	dialog.init({
-		title: "Share Iteration",
-	    url: "ajax/shareIterationForm.action",
-	    data: {
-	        IterationId: me.model.getId(),
-	        ReadonlyToken: token
-	    }
-	});
+	if (!token) {
+		//var data = this.serializeFields("iteration", changedData);
+		
+		jQuery.ajax({
+		    type: "POST",
+		    url: "ajax/createReadonlyToken.action",
+		    async: false,
+		    cache: false,
+		    data: {IterationId: me.model.getId()},
+		    dataType: "json",
+		    success: function(data, status) {
+		      dialog.init({
+					title: "Share Iteration",
+					url: "ajax/shareIterationForm.action",
+					data: {
+						IterationId: me.model.getId(),
+						ReadonlyToken: token
+					}
+				});
+		    },
+		    error: function(xhr, status, error) {
+		      MessageDisplay.Error("Error creating link", xhr);
+		      me.rollback();
+		    }
+		  });
+	} else {
+
+		dialog.init({
+			title: "Share Iteration",
+			url: "ajax/shareIterationForm.action",
+			data: {
+				IterationId: me.model.getId(),
+				ReadonlyToken: token
+			}
+		});
+	}
 };
 
 /** override backlog controller base class to reload metrics box **/

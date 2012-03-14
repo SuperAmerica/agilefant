@@ -61,7 +61,7 @@ public class BacklogAction extends ActionSupport {
     public String retrieveSubBacklogs() {
         if (backlogId == 0) {
             // TODO: Retrieve standalone iterations
-            //backlogs = backlogBusiness.
+            backlogs = backlogBusiness.retrieveAllStandAloneIterations();
         }
         else {
             backlog = backlogBusiness.retrieveIfExists(backlogId);

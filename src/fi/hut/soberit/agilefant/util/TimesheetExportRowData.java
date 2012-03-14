@@ -44,6 +44,8 @@ public class TimesheetExportRowData {
     private void setBacklogs(Backlog parent) {
         if(parent instanceof Iteration) {
             this.iteration = (Iteration)parent;
+            if (parent.isStandAlone())
+                return;
             this.project = (Project)parent.getParent();
             this.product = (Product)parent.getParent().getParent();
         } else if(parent instanceof Project) {

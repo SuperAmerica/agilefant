@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db;
 
+import java.util.Collection;
 import java.util.List;
 
 import fi.hut.soberit.agilefant.model.Backlog;
@@ -32,4 +33,6 @@ public interface BacklogDAO extends GenericDAO<Backlog> {
     public List<Backlog> searchByName(String name);
     
     public List<Backlog> searchByName(String name, Class<?> type);
+    
+    public Collection<Backlog> retrieveStandaloneIterations();
 }

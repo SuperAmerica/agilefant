@@ -124,7 +124,7 @@ StoryInfoBubble.prototype.confirmTasksAndChildrenToDone = function(model, storyT
 		}
 	}
 	if (!nonDoneChildren && (!isTopStory))		storyTree.refresh(); // this ensures refreshal when a child story is marked as done};
-
+};
 StoryInfoBubble.prototype.handleModelEvents = function(event) {
   StoryController.prototype.handleModelEvents.call(this, event);
   if(event instanceof DynamicsEvents.NamedEvent && event.getEventName() === "storyMoved") {

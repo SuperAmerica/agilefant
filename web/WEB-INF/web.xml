@@ -20,28 +20,37 @@
       <init-param>
           <param-name>com.sun.jersey.config.property.packages</param-name>
           <param-value>fi.hut.soberit.agilefant.remote</param-value>
-      </init-param>   
+      </init-param>
   </servlet>
   
   <!-- Servlet to facilitate read-only access to Agilefant data -->
-  <servlet>
-      <servlet-name>readonly</servlet-name>
-      <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
-      <init-param>
-          <param-name>com.sun.jersey.config.property.resourceConfigClass</param-name>
-          <param-value>com.sun.jersey.api.core.PackagesResourceConfig</param-value>
-      </init-param>
-      <init-param>
-          <param-name>com.sun.jersey.config.property.packages</param-name>
-          <param-value>fi.hut.soberit.agilefant.readonly</param-value>
-      </init-param>  
-  </servlet>
+<!--   <servlet> -->
+<!--       <servlet-name>readonly</servlet-name> -->
+<!--       <servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class> -->
+<!--       <init-param> -->
+<!--           <param-name>com.sun.jersey.config.property.resourceConfigClass</param-name> -->
+<!--           <param-value>com.sun.jersey.api.core.PackagesResourceConfig</param-value> -->
+<!--       </init-param> -->
+<!--       <init-param> -->
+<!--           <param-name>com.sun.jersey.config.property.packages</param-name> -->
+<!--           <param-value>fi.hut.soberit.agilefant.readonly</param-value> -->
+<!--       </init-param> -->
+<!--        <init-param> -->
+<!--         <param-name>com.sun.jersey.config.property.JSPTemplatesBasePath</param-name> -->
+<!--         <param-value>/WEB-INF/jsp</param-value> -->
+<!--       </init-param> --> 
+<!--   </servlet> -->
 
   <!-- Map read-only URI's to ReadOnly servlet -->
-  <servlet-mapping>
-      <servlet-name>readonly</servlet-name>
-      <url-pattern>/token/*</url-pattern>
-  </servlet-mapping>
+<!--   <servlet-mapping> -->
+<!--       <servlet-name>readonly</servlet-name> -->
+<!--       <url-pattern>/token/*</url-pattern> -->
+<!--   </servlet-mapping> -->
+  
+<!--   <servlet-mapping> -->
+<!--       <servlet-name>readonly</servlet-name> -->
+<!--       <url-pattern>/ROIteration*</url-pattern> -->
+<!--   </servlet-mapping> -->
 
   <servlet-mapping>
       <servlet-name>Jersey Spring</servlet-name>
@@ -103,13 +112,13 @@
   </filter-mapping>
 
   <filter-mapping>
-    <filter-name>hibernateFilter</filter-name>
-    <url-pattern>*.action</url-pattern>
+    <filter-name>readonlyFilter</filter-name>
+    <url-pattern>/token/*</url-pattern>
   </filter-mapping>
   
   <filter-mapping>
-    <filter-name>readonlyFilter</filter-name>
-    <url-pattern>/token/*</url-pattern>
+    <filter-name>hibernateFilter</filter-name>
+    <url-pattern>*.action</url-pattern>
   </filter-mapping>
   
   <filter-mapping>

@@ -46,7 +46,9 @@ public class ReadonlyFilter extends GenericFilterBean {
         Session session = sessionFactory.openSession();
         
         // Fetch url token from request.
-        String token = getTokenFromPath(reqt.getPathInfo());
+        String token = getTokenFromUrl(reqt.getRequestURL().toString());
+        
+        
         
         if (iterationDao.isValidReadonlyToken(token)) {
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
@@ -62,10 +64,13 @@ public class ReadonlyFilter extends GenericFilterBean {
         session.close();
     }
     
-    private String getTokenFromPath(String path) {
-        if(path != null)
-            return path.substring(1);
-        else
+    private String getTokenFromUrl(String url) {
+        if(url != null) {
+            int tokenStart = url.indexOf("token/");
+            String token = url.substring(tokenStart + "token/".length());
+            return token;
+        }
+        else 
             return "";
     }
 

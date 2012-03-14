@@ -18,7 +18,7 @@
 		<security:filter-chain-map path-type="ant">
 		  <security:filter-chain filters="remoteServicesFilter" pattern="/rs/**"/>
 		  <security:filter-chain filters="readonlyFilter" pattern="/token/*"/>
-		  <security:filter-chain filters="readonlyFilter" pattern="/RO*"/>
+<!-- 		  <security:filter-chain filters="readonlyFilter" pattern="/RO*"/> -->
 		  <security:filter-chain filters="readonlyFilter" pattern="/ajax/RO*"/>
 		  <security:filter-chain
         filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
@@ -136,6 +136,7 @@
 				/jsp/inc/_footer.jsp=IS_AUTHENTICATED_ANONYMOUSLY
 				/newpassword.action=IS_AUTHENTICATED_ANONYMOUSLY
 				/generatenewpassword.action=IS_AUTHENTICATED_ANONYMOUSLY
+				/ro*=IS_AUTHENTICATED_ANONYMOUSLY
 				/static/**=IS_AUTHENTICATED_ANONYMOUSLY
 				/**=IS_AUTHENTICATED_REMEMBERED
 				<!-- /showReadOnlyIteration.action?**=IS_AUTHENTICATED_ANONYMOUSLY -->

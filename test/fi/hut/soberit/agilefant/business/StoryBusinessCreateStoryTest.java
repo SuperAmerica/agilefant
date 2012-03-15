@@ -99,9 +99,6 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         storyRankBusiness.rankToBottom(tmp, blog);
         storyRankBusiness.rankToBottom(tmp, proj);
         
-        blheBusiness.updateHistory(blog.getId());
-        iheBusiness.updateIterationHistory(blog.getId());
-        
         Story returnedStory = new Story();
         returnedStory.setId(88);
         expect(storyDAO.get(88)).andReturn(returnedStory);
@@ -201,7 +198,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         iteration.setParent(project);
         
         Story story = new Story();
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
         
         expect(storyDAO.create(story)).andReturn(new Integer(1));
         expect(storyDAO.get(1)).andReturn(story);

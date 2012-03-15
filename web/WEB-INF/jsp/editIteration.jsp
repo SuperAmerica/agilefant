@@ -89,7 +89,7 @@ $(document).ready(function() {
   
   $('<li/>').text('Unshare').click(function() {
 	    closeMenu();
-	    controller.shareIteration();
+	    controller.unshareIteration();
   }).appendTo(actionMenu);
   
   var closeMenu = function() {

@@ -185,7 +185,7 @@ IterationController.prototype.shareIteration = function() {
 				});
 		    },
 		    error: function(xhr, status, error) {
-		      MessageDisplay.Error("Error creating link", xhr);
+		      MessageDisplay.Error("Error creating read only link", xhr);
 		      me.rollback();
 		    }
 		  });
@@ -199,6 +199,45 @@ IterationController.prototype.shareIteration = function() {
 				ReadonlyToken: token
 			}
 		});
+	}
+};
+
+IterationController.prototype.unshareIteration = function() {
+	var me = this;
+	var dialog = new LazyLoadedFormDialog();
+	var token = me.model.getReadonlyToken();	
+	
+	if (!token) {
+		MessageDisplay.Warning("Iteration currently does not have read only URL.");
+	} else {
+	
+		  dialog.init({
+		    title: "Unshare iteration",
+		    url: "ajax/unshareIterationForm.action",
+		    data: {
+		      IterationId: me.model.getId()
+		    },
+		    okCallback: function(extraData) {
+				jQuery.ajax({
+				    type: "POST",
+				    url: "ajax/clearReadonlyToken.action",
+				    async: false,
+				    cache: false,
+				    data: {IterationId: me.model.getId()},
+				    dataType: "json",
+				    success: function(data, status) {
+				      MessageDisplay.Ok("Share link removed");
+				    },
+				    error: function(xhr, status, error) {
+				      MessageDisplay.Error("Error unsharing read only link", xhr);
+				      me.rollback();
+				    }
+				  });
+		    },
+		    closeCallback: function() {
+		      dialog.close();
+		    }
+		  });
 	}
 };
 

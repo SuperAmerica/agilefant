@@ -51,7 +51,8 @@ public class RefreshUserInterceptor implements Interceptor {
         if(action instanceof ROIterationAction 
                 || action instanceof ChartAction
                 || action instanceof IterationAction
-                || action instanceof IterationHistoryAction){
+                || action instanceof IterationHistoryAction
+                || action instanceof StoryAction){
             
             //log in read only user if we got to here
             UserDAOHibernate userDao = new UserDAOHibernate();

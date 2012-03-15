@@ -42,16 +42,19 @@ public class AuthorizationInterceptor implements Interceptor {
         if(!(action instanceof ROIterationAction 
                 || action instanceof ChartAction
                 || action instanceof IterationAction
-                || action instanceof IterationHistoryAction) 
+                || action instanceof IterationHistoryAction
+                || action instanceof StoryAction) 
                 && currentUser.getLoginName().equals("readonly")){
             
             return "login";
         } else if(action instanceof ROIterationAction 
                 || action instanceof ChartAction
                 || action instanceof IterationAction
-                || action instanceof IterationHistoryAction){
+                || action instanceof IterationHistoryAction
+                || action instanceof StoryAction){
             
             //TODO FINNUCKS: check that the id's match for ChartAction
+            //int id = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
             return invocation.invoke();
         }
         

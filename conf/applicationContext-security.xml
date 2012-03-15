@@ -19,7 +19,7 @@
 		  <security:filter-chain filters="remoteServicesFilter" pattern="/rs/**"/>
 		  <security:filter-chain filters="readonlyFilter" pattern="/token/*"/>
 <!-- 		  <security:filter-chain filters="readonlyFilter" pattern="/RO*"/> -->
-		  <security:filter-chain filters="readonlyFilter" pattern="/ajax/RO*"/>
+<!-- 		  <security:filter-chain filters="readonlyFilter" pattern="/ajax/RO*"/> -->
 		  <security:filter-chain
         filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
         pattern="/ajax/**"/>

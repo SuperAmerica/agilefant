@@ -129,7 +129,7 @@ ROIterationController.prototype.reloadBurndown = function() {
 };
 
 ROIterationController.prototype.initializeMetricsBox = function() {
-  this.metricsElement.load("ajax/ROiterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
+  this.metricsElement.load("ajax/ROIterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
 }
 
 ROIterationController.prototype.reloadMetricsBox = function() {
@@ -154,7 +154,7 @@ ROIterationController.prototype.initializeStoryList = function() {
  */
 ROIterationController.prototype.initialize = function() {
   var me = this;
-  ModelFactory.initializeFor(ModelFactory.initializeForTypes.ROiteration,
+  ModelFactory.initializeFor(ModelFactory.initializeForTypes.ROIteration,
       this.readonlyToken, function(model) {
         me.model = model;
         me.attachModelListener();

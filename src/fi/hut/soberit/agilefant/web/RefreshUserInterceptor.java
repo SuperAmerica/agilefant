@@ -47,6 +47,7 @@ public class RefreshUserInterceptor implements Interceptor {
         int userId;
         Object action = invocation.getAction();
         
+        //TODO FINNUCKS: this logs out a current user on one of these actions and sets it to the read only user
         if(action instanceof ROIterationAction 
                 || action instanceof ChartAction
                 || action instanceof IterationAction

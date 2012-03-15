@@ -48,6 +48,8 @@ public class ReadonlyFilter extends GenericFilterBean {
         // Fetch url token from request.
         String token = getTokenFromUrl(reqt.getRequestURL().toString());
         
+        System.out.println(reqt.getRequestURL());
+        
         if (iterationDao.isValidReadonlyToken(token)) {
             session.disconnect();
             session.close();

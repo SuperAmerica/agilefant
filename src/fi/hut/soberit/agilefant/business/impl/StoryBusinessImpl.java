@@ -521,14 +521,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
     
     public void moveSingleStoryToBacklog(Story story, Backlog backlog) {
-//        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
-//                .getParentProduct(backlog)) {
-//            throw new OperationNotPermittedException(
-//                    "Can't move a story with children to another product");
-//        }
         //move children to the parent story
         Story parent = story.getParent();
         List<Story> childStories = new ArrayList<Story>(story.getChildren());
+        boolean hadChildren = false;
         for(Story childStory : childStories) {
             childStory.setParent(parent);
             if (parent != null) {
@@ -536,6 +532,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 
             }
             story.getChildren().remove(childStory);
+            hadChildren = true;
             storyDAO.store(childStory);
         }
         
@@ -549,7 +546,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if(parent != null) {
             storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         }
+        
+        Backlog originalStoryBacklog = story.getBacklog();
         moveStory(story, backlog);
+        
+        // add rank to former parent story in the backlog it resides
+        if (hadChildren && originalStoryBacklog != null && backlog instanceof Iteration) {
+            storyRankBusiness.rankToBottom(story, originalStoryBacklog);
+        }
     }
 
     private void moveStory(Story story, Backlog backlog) {
@@ -630,7 +634,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storyRankBusiness.removeRank(story, oldBacklog);
 
         } else if (backlog instanceof Project) {
-            rankToProjectBottom(story, backlog, oldBacklog, oldIteration);
+            rankToProjectBottom(story, backlog, oldBacklog);
         } else if (backlog instanceof Iteration) {
             rankToIterationBottom(story, backlog, oldBacklog, oldIteration);
         }
@@ -690,8 +694,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
 
-    private void rankToProjectBottom(Story story, Backlog backlog,
-            Backlog oldBacklog, Backlog oldIteration) {
+    
+    
+    private void rankToProjectBottom(Story story, Backlog backlog, Backlog oldBacklog) {
         
         final Backlog oldBacklogsParent = oldBacklog.getParent();
         

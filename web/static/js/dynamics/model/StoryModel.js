@@ -184,6 +184,9 @@ StoryModel.prototype._saveData = function(id, changedData) {
       var object = ModelFactory.updateObject(newData);
       
       if(!id) {
+    	// Set rank to be negative temporarily, otherwise the new story will be second on the list as there would be two 0 rank stories
+    	// The rank will be have the correct value after the listeners callbacks are executed
+    	object.setRank(-1);
         possibleBacklog.addStory(object);
         object.callListeners(new DynamicsEvents.AddEvent(object));
         possibleBacklog.callListeners(new DynamicsEvents.RankChanged(possibleBacklog,"story"));

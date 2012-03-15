@@ -59,7 +59,7 @@ $(document).ready(function() {
 <p style="text-align: center;"><img id="chartid" src="ROdrawIterationBurndownByToken.action?readonlyToken=${readonlyToken}&timeZoneOffset="
 	id="bigChart" width="780" height="600" />
 	<br>
-	<a id="chartlink" href="ROdrawCustomIterationBurndownByToken.action?readonlyToken=${readonlyToken}&customBdWidth=1280&customBdHeight=1024&timeZoneOffset=">Enlarge</a>
+	<!-- <a id="chartlink" href="ROdrawCustomIterationBurndownByToken.action?readonlyToken=${readonlyToken}&customBdWidth=1280&customBdHeight=1024&timeZoneOffset=">Enlarge</a> -->
 </p>
 
 </jsp:body>

@@ -48,6 +48,7 @@ public class RefreshUserInterceptor implements Interceptor {
         Object action = invocation.getAction();
         
         if(action instanceof ROIterationAction){
+            
             //log in read only user if we got to here
             UserDAOHibernate userDao = new UserDAOHibernate();
             
@@ -56,13 +57,16 @@ public class RefreshUserInterceptor implements Interceptor {
                 sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
                 userDao.setSessionFactory(sessionFactory);
             } catch (NamingException e) {
-                // TODO Need a custom error message? Hopefully this should never run. 
                 e.printStackTrace();
             }
             Session session = sessionFactory.openSession();
             
             User user = userDao.getByLoginName("readonly");
             SecurityUtil.setLoggedUser(user);
+            
+            session.disconnect();
+            session.close();
+            
             return invocation.invoke();
         }
                 

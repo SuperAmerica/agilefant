@@ -162,11 +162,9 @@ IterationController.prototype.removeIteration = function() {
 IterationController.prototype.shareIteration = function() {
 	var me = this;
 	var dialog = new LazyLoadedFormDialog();
-	var token = me.model.getReadonlyToken();	
+	var token = me.model.getReadonlyToken();
 	
 	if (!token) {
-		//var data = this.serializeFields("iteration", changedData);
-		
 		jQuery.ajax({
 		    type: "POST",
 		    url: "ajax/createReadonlyToken.action",
@@ -183,6 +181,7 @@ IterationController.prototype.shareIteration = function() {
 						ReadonlyToken: token
 					}
 				});
+		      ModelFactory.updateObject(data);
 		    },
 		    error: function(xhr, status, error) {
 		      MessageDisplay.Error("Error creating read only link", xhr);
@@ -190,7 +189,6 @@ IterationController.prototype.shareIteration = function() {
 		    }
 		  });
 	} else {
-
 		dialog.init({
 			title: "Share Iteration",
 			url: "ajax/shareIterationForm.action",
@@ -227,6 +225,7 @@ IterationController.prototype.unshareIteration = function() {
 				    dataType: "json",
 				    success: function(data, status) {
 				      MessageDisplay.Ok("Share link removed");
+				      me.model.setReadonlyToken(null);
 				    },
 				    error: function(xhr, status, error) {
 				      MessageDisplay.Error("Error unsharing read only link", xhr);

@@ -31,7 +31,7 @@ var StoryModel = function StoryModel() {
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "backlog",
-      "fi.hut.soberit.agilefant.model.Project":       "project",
+      "fi.hut.soberit.agilefant.model.Project":       "backlog",
       "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
       "fi.hut.soberit.agilefant.model.User":          "user",
       "fi.hut.soberit.agilefant.model.Label":         "label",

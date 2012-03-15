@@ -68,6 +68,11 @@ public class RefreshUserInterceptor implements Interceptor {
             User user = userDao.getByLoginName("readonly");
             SecurityUtil.setLoggedUser(user);
             
+            //TODO FINNUCKS: This JSON is totally messed up and causing auto-fresh, most likely
+            //push current user to the value stack
+            //invocation.getStack().set("currentUser", user);
+            //invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));
+            
             session.disconnect();
             session.close();
             

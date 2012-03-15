@@ -111,7 +111,10 @@ StoryTreeController.prototype.refreshNode = function(element) {
         node.trigger('node_refresh.jstree');
         me.tree.deselect_node(node);
         if (isChecked) 
-          me.tree.select_node(node);
+        {
+        	me.tree.select_node(node);
+        	me.tree.check_node(node);
+        }
       }
   );
 };
@@ -315,11 +318,8 @@ StoryTreeController.prototype.initTree = function() {
     	me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
   });
   this.element.delegate('span', 'click.jstree', function(event) {
-    me.openNodeDetails($(event.target).parents('li:eq(0)'));
-    // Get around the jstree deselecting your nodes.
-    if (me.tree.is_selected($(event.target).parents('li:eq(0)'))) {
-      me.tree.deselect_node($(event.target).parents('li:eq(0)'));
-    }
+	me.openNodeDetails($(event.target).parents('li:eq(0)'));
+	return false;
   });
   this.element.bind('select_node.jstree', function(event, data) {
       me.tree.check_node(data.rslt.obj);

@@ -388,15 +388,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);        
         }
         storyHierarchyBusiness.moveToBottom(persisted);
-// MERGE CONFLICT
-//        Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);
-//
-//        //old - prevents tree view from exploding until it's fixed 
-//        storyHierarchyBusiness.moveToBottom(persisted);   
-//        
-//        //new
-//        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 
-//        
+        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 
 
         this.labelBusiness.createStoryLabels(labelNames, persisted.getId());
         return persisted;

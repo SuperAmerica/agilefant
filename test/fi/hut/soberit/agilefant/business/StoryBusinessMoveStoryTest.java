@@ -340,11 +340,16 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         oldBacklog.setId(8482);
         oldBacklog.setParent(oldParent);
 
+        Iteration oldIteration = new Iteration();
+        oldIteration.setId(1234);
+        oldIteration.setParent(oldBacklog);
+
         Product newBacklog = new Product();
         newBacklog.setId(1904);
 
         Story movable = new Story();
         movable.setBacklog(oldBacklog);
+        movable.setIteration(oldIteration);
 
         movable.setChildren(Arrays.asList(new Story(),
                 new Story()));

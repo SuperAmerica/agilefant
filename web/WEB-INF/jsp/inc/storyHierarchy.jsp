@@ -21,10 +21,25 @@
 
 <h2>Backlog hierarchy</h2>
 
-<c:set var="backlog" value="${story.backlog}"/>
+<c:choose>
+<c:when test="${story.iteration != null}">
+  <c:set var="backlog" value="${story.iteration}"/>
+</c:when>
+<c:otherwise>
+  <c:set var="backlog" value="${story.backlog}"/>
+</c:otherwise>
+</c:choose>
 
 <ul class="backlogHierarchy">
 <c:choose>
+	<c:when test="${story.backlog == null}">
+    <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
+    <a href="editBacklog.action?backlogId=${backlog.id}">
+      <c:out value="${backlog.name}" />
+    </a>
+    </li>
+  </c:when>
+  
   <c:when test="${aef:isIteration(backlog)}">
     <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
     <a href="editBacklog.action?backlogId=${backlog.parent.parent.id}">

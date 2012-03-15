@@ -38,6 +38,11 @@ public class AuthorizationInterceptor implements Interceptor {
         Object action = invocation.getAction();
         boolean accessDenied = false;
         
+        User currentUser = SecurityUtil.getLoggedUser();
+        if(!(action instanceof ROIterationAction) && currentUser.getLoginName().equals("readonly")){
+            return "noauth";
+        }
+        
         //matrix authorizations
         if (action instanceof BacklogAction){
             accessDenied = checkAccess(((BacklogAction) action).getBacklogId()); 
@@ -49,7 +54,7 @@ public class AuthorizationInterceptor implements Interceptor {
             accessDenied = checkAccess(((IterationAction) action).getIterationId());
         } else {
             //admin authorizations
-            User currentUser = SecurityUtil.getLoggedUser();
+            currentUser = SecurityUtil.getLoggedUser();
             boolean isAdmin = currentUser.isAdmin();
             
             if(isAdmin){

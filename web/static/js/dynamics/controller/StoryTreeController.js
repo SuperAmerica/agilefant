@@ -109,7 +109,12 @@ StoryTreeController.prototype.refreshNode = function(element) {
         node.attr("rel", rel);
         node.find("a:eq(0)").replaceWith(contents);
         node.trigger('node_refresh.jstree');
-        if (isChecked) me.tree.select_node(node, isChecked); 
+        me.tree.deselect_node(node);
+        if (isChecked) 
+        {
+        	me.tree.select_node(node);
+        	me.tree.check_node(node);
+        }
       }
   );
 };
@@ -313,7 +318,8 @@ StoryTreeController.prototype.initTree = function() {
     	me.moveStory(data.rslt.o, data.rslt.r, data.rslt.p, data.inst, data.rlbk);
   });
   this.element.delegate('span', 'click.jstree', function(event) {
-    me.openNodeDetails($(event.target).parents('li:eq(0)'));
+	me.openNodeDetails($(event.target).parents('li:eq(0)'));
+	return false;
   });
   this.element.bind('select_node.jstree', function(event, data) {
       me.tree.check_node(data.rslt.obj);
@@ -332,6 +338,7 @@ StoryTreeController.prototype.getSelectedIds = function() {
 };
 StoryTreeController.prototype.clearSelectedIds = function() {
   this.tree.uncheck_all();
+  this.tree.deselect_all();
 };
 StoryTreeController.prototype.toggleEditBox = function(count) {
   if (count > 0 && !this.editBox.isVisible()) {

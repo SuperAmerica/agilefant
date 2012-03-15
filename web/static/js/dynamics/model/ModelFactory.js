@@ -459,7 +459,7 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       callback: me._constructIteration
     },
     "ROiteration": {
-      url: "ajax/ROiterationData.action",
+      url: "ajax/ROIterationData.action",
       params: { readonlyToken: id },
       callback: me._constructIteration
     },

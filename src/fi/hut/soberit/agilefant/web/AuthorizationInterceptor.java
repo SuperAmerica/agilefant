@@ -40,14 +40,18 @@ public class AuthorizationInterceptor implements Interceptor {
         
         User currentUser = SecurityUtil.getLoggedUser();
         if(!(action instanceof ROIterationAction 
-                || action instanceof ChartAction) 
+                || action instanceof ChartAction
+                || action instanceof IterationAction
+                || action instanceof IterationHistoryAction) 
                 && currentUser.getLoginName().equals("readonly")){
             
             return "login";
         } else if(action instanceof ROIterationAction 
-                || action instanceof ChartAction){
+                || action instanceof ChartAction
+                || action instanceof IterationAction
+                || action instanceof IterationHistoryAction){
             
-            //TODO check that the id's match for ChartAction
+            //TODO FINNUCKS: check that the id's match for ChartAction
             return invocation.invoke();
         }
         

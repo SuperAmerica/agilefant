@@ -52,8 +52,9 @@ public class ReadonlyFilter extends GenericFilterBean {
             session.disconnect();
             session.close();
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
-        } else if (reqt.getRequestURL().toString().contains("ROIteration.action")) {
+        } else if (reqt.getRequestURL().toString().contains("ROIteration")) {
             //do nothing
+            System.out.println("Here");
         } else {
             // Token is not valid, so redirect to login page.
             resp.sendRedirect("/agilefant/login.jsp");

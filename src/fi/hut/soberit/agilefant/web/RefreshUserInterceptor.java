@@ -47,7 +47,10 @@ public class RefreshUserInterceptor implements Interceptor {
         int userId;
         Object action = invocation.getAction();
         
-        if(action instanceof ROIterationAction){
+        if(action instanceof ROIterationAction 
+                || action instanceof ChartAction
+                || action instanceof IterationAction
+                || action instanceof IterationHistoryAction){
             
             //log in read only user if we got to here
             UserDAOHibernate userDao = new UserDAOHibernate();

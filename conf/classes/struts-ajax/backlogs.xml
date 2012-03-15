@@ -230,7 +230,7 @@
       </result>
     </action>
     
-    <action name="ROiterationData" class="ROIterationAction" method="fetchROIterationData">
+    <action name="ROIterationData" class="ROIterationAction" method="fetchROIterationData">
       <result name="success" type="json">
         <param name="target">iteration</param>
         <param name="patterns">-parent, -stories, -*.hourEntries, 
@@ -301,7 +301,7 @@
       <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/iterationMingledHistory.jsp</result>
     </action>
     
-    <action name="ROiterationHistoryByToken" class="iterationHistoryAction" method="executeByToken">
+    <action name="ROIterationHistoryByToken" class="iterationHistoryAction" method="executeByToken">
       <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/iterationMingledHistory.jsp</result>
     </action>
     

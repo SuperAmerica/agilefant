@@ -26,7 +26,7 @@ var ROIterationController = function ROIterationController(options) {
   var me = this;
   this.tabs.bind('tabsselect', function(event, ui) {
     if(ui.index === 1) {
-      me.historyElement.load("ajax/ROiterationHistoryByToken.action",{readonlyToken: me.readonlyToken});
+      me.historyElement.load("ajax/ROIterationHistoryByToken.action",{readonlyToken: me.readonlyToken});
     }
   });
   window.pageController.setMainController(this);

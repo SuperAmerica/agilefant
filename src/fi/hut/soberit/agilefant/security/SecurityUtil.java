@@ -3,6 +3,11 @@ package fi.hut.soberit.agilefant.security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.security.Authentication;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
@@ -48,8 +53,22 @@ public class SecurityUtil {
             
             return ud.getUserId();
         } catch(ClassCastException cce){
-            UserDAOHibernate userDao = new UserDAOHibernate();;
+            SessionFactory sessionFactory = null;
+            UserDAOHibernate userDao = new UserDAOHibernate();
+            
+            try {
+                sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
+                userDao.setSessionFactory(sessionFactory);
+            } catch (NamingException e) {
+                e.printStackTrace();
+            }
+            Session session = sessionFactory.openSession();
+            
             User user = userDao.getByLoginName("readonly");
+            
+            session.disconnect();
+            session.close();
+            
             return user.getId();
         }
 

@@ -39,7 +39,6 @@ public class ReadonlyFilter extends GenericFilterBean {
             sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
             iterationDao.setSessionFactory(sessionFactory);
         } catch (NamingException e) {
-            // TODO Need a custom error message? Hopefully this should never run. 
             e.printStackTrace();
             return;
         }
@@ -50,12 +49,8 @@ public class ReadonlyFilter extends GenericFilterBean {
         String token = getTokenFromUrl(reqt.getRequestURL().toString());
         
         if (iterationDao.isValidReadonlyToken(token)) {
-            //session.disconnect();
-            //session.close();
-            
-            //login read only user?
-            
-            
+            session.disconnect();
+            session.close();
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
         } else if (reqt.getRequestURL().toString().contains("ROIteration.action")) {
             //do nothing

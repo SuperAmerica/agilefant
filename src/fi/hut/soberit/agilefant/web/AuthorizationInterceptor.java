@@ -39,8 +39,16 @@ public class AuthorizationInterceptor implements Interceptor {
         boolean accessDenied = false;
         
         User currentUser = SecurityUtil.getLoggedUser();
-        if(!(action instanceof ROIterationAction) && currentUser.getLoginName().equals("readonly")){
-            return "noauth";
+        if(!(action instanceof ROIterationAction 
+                || action instanceof ChartAction) 
+                && currentUser.getLoginName().equals("readonly")){
+            
+            return "login";
+        } else if(action instanceof ROIterationAction 
+                || action instanceof ChartAction){
+            
+            //TODO check that the id's match for ChartAction
+            return invocation.invoke();
         }
         
         //matrix authorizations

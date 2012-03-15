@@ -56,7 +56,7 @@ public class BacklogHistoryEntryBusinessImpl extends
                 entry.setTimestamp(new DateTime());
                 entry.setDoneSum(storyHierarchyDAO.totalLeafDoneStoryPoints((Iteration)backlog));
                 entry.setEstimateSum(storyHierarchyDAO.totalLeafStoryPoints((Iteration)backlog));
-                entry.setRootSum(storyHierarchyDAO.totalRootStoryPoints((Iteration)backlog));
+                entry.setRootSum(entry.getEstimateSum());
                 entry.setBacklog(backlog);
                 backlogHistoryEntryDAO.store(entry);
                 return;

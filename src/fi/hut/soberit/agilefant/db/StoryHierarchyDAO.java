@@ -52,7 +52,7 @@ public interface StoryHierarchyDAO {
     public long totalRootStoryPoints(Project project);
     
     /**
-     * Story point sum of product leaf stories.
+     * Story point sum of Standalone Iteration leaf stories.
      * 
      * @param project
      * @return
@@ -60,20 +60,13 @@ public interface StoryHierarchyDAO {
     public long totalLeafStoryPoints(Iteration iteration);
 
     /**
-     * Story point sum of done product leaf stories.
+     * Story point sum of done Standalone Iteration leaf stories.
      * 
      * @param project
      * @return
      */
     public long totalLeafDoneStoryPoints(Iteration iteration);
 
-    /**
-     * Story point sum of product root stories.
-     * 
-     * @param project
-     * @return
-     */
-    public long totalRootStoryPoints(Iteration iteration);
     /**
      * Retrieve all stories within a given product that do not have 
      * a parent story.

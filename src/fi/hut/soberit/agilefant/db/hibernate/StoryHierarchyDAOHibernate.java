@@ -199,19 +199,6 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         return sum((Long) projectCrit.uniqueResult(),
                 (Long) iterationCrit.uniqueResult());
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public long totalRootStoryPoints(Iteration iteration) {
-        Criteria iterationCrit = getCurrentSession()
-                .createCriteria(Story.class);
-        iterationCrit.add(Restrictions.isNull("parent"));
-        iterationCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
-        iterationCrit.setProjection(Projections.projectionList().add(
-                Projections.sum("storyPoints")));
-        return (Long) iterationCrit.uniqueResult();
-    }
 
     /** {@inheritDoc} */
     public List<Story> retrieveProductRootStories(int productId) {

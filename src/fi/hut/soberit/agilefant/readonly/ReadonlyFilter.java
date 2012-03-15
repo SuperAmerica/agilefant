@@ -45,23 +45,24 @@ public class ReadonlyFilter extends GenericFilterBean {
         }
         Session session = sessionFactory.openSession();
         
+        
         // Fetch url token from request.
         String token = getTokenFromUrl(reqt.getRequestURL().toString());
         
-        
-        
         if (iterationDao.isValidReadonlyToken(token)) {
+            //session.disconnect();
+            //session.close();
+            
+            //login read only user?
+            
+            
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
-        }
-        else if (reqt.getRequestURL().toString().contains("ROIteration.action")) {
-            System.out.println("TEST");
-        }
-        else {
+        } else if (reqt.getRequestURL().toString().contains("ROIteration.action")) {
+            //do nothing
+        } else {
             // Token is not valid, so redirect to login page.
             resp.sendRedirect("/agilefant/login.jsp");
         }
-        
-        session.close();
     }
     
     private String getTokenFromUrl(String url) {

@@ -97,16 +97,26 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
     public Collection<Story> getAllIterationStoriesByResponsibleAndInterval(User user, Interval interval) {
         ArrayList<Story> stories = new ArrayList<Story>();
         
+        // Add regular stories that have backlog
         Criteria crit = getCurrentSession().createCriteria(Story.class);
-        crit.createCriteria("responsibles")
-            .add(Restrictions.idEq(user.getId()));
-        
-        Criteria iteration = crit.createCriteria("backlog");
-        IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
+        crit.createCriteria("responsibles").add(Restrictions.idEq(user.getId()));
+                
+        Criteria backlogCriteria = crit.createCriteria("backlog");
+        IterationDAOHelpers.addBacklogIntervalLimit(backlogCriteria, interval);
         crit.add(Restrictions.ne("state", StoryState.DONE));
-
         List<Story> dummy = asList(crit); 
         stories.addAll(dummy);
+        
+        // Add standalone iteration's stories(backlog is null)
+        Criteria standaloneCrit = getCurrentSession().createCriteria(Story.class);
+        standaloneCrit.createCriteria("responsibles").add(Restrictions.idEq(user.getId()));
+        
+        Criteria iterationCrit = standaloneCrit.createCriteria("iteration");
+        IterationDAOHelpers.addIterationIntervalLimit(iterationCrit, interval);
+        standaloneCrit.add(Restrictions.ne("state", StoryState.DONE));
+        standaloneCrit.add(Restrictions.isNull("backlog"));
+        List<Story> standaloneStories = asList(standaloneCrit);
+        stories.addAll(standaloneStories);
         
         return stories;
     }

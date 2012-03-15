@@ -4,6 +4,7 @@ INSERT INTO backlogs (id, backlogtype, name) VALUES (2, 'Project', 'Test project
 INSERT INTO backlogs (id, backlogtype, name, startDate, endDate) VALUES (3, 'Iteration', 'Test iteration', '2009-05-20 10:15:00', '2009-07-01 10:15:00');
 INSERT INTO backlogs (id, backlogtype, name) VALUES (4, 'Iteration', 'Ranking parent iteration');
 INSERT INTO backlogs (id, backlogtype, name) VALUES (5, 'Project', 'Ranking parent project with no stories');
+INSERT INTO backlogs (id, backlogtype, name, startDate, endDate,parent_id) VALUES (6, 'Iteration', 'Standalone iteration', '2009-05-20 10:15:00', '2009-07-01 10:15:00',null);
 
 -- DONE items - total story points 25
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (1, 5, 12, 1, 'Story 1');
@@ -17,13 +18,16 @@ INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (6, 2,    
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (7, 3,     6, 3, 'Story 7');
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (8, 4,     5, 1, 'Story 8');
 INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (9, 4,  null, 1, 'Story 9');
-
+INSERT INTO stories (id, state, storyPoints, backlog_id, name) VALUES (10, 3,   26, 6, 'Story 10');
 
 -- Create user --
 INSERT INTO users (id, enabled, recentItemsNumberOfWeeks) VALUES (1, true, 1);
+INSERT INTO users (id, enabled, recentItemsNumberOfWeeks) VALUES (2, true, 1);
 INSERT INTO story_user (story_id, user_id) VALUES(1, 1); -- in product --
 INSERT INTO story_user (story_id, user_id) VALUES(6, 1); -- in iteration 3 --
 INSERT INTO story_user (story_id, user_id) VALUES(7, 1); -- in iteration 3 --
+INSERT INTO story_user (story_id, user_id) VALUES(10, 2); -- in standalone iteration 6 --
+INSERT INTO story_user (story_id, user_id) VALUES(6, 2); -- in standalone iteration 6 --
 --- INSERT INTO story_user (story_id, user_id) VALUES(24,1); -- in iteration 4, not in timebox --
 
 -- Tasks for story 3 --

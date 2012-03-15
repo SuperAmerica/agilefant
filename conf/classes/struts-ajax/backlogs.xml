@@ -264,6 +264,13 @@
         <param name="patterns">+readonlyToken</param>
       </result>
     </action>
+    
+    <action name="clearReadonlyToken" class="iterationAction" method="clearReadonlyToken">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+        <param name="patterns">+readonlyToken</param>
+      </result>
+    </action>
   
     <action name="iterationAssignments" class="iterationAction" method="iterationAssignments">
       <result name="success" type="json">
@@ -278,6 +285,10 @@
     
     <action name="shareIterationForm" class="iterationAction" method="setReadonlyTokenForJsp">
       <result type="dispatcher">/WEB-INF/jsp/forms/shareIterationForm.jsp</result>
+    </action>
+    
+    <action name="unshareIterationForm">
+      <result type="dispatcher">/WEB-INF/jsp/forms/unshareIterationForm.jsp</result>
     </action>
     
     <action name="deleteIteration" method="delete" class="iterationAction">

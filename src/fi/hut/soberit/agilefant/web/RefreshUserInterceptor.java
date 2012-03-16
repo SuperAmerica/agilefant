@@ -32,6 +32,8 @@ public class RefreshUserInterceptor implements Interceptor {
     private static final long serialVersionUID = 1668784370092320107L;
 
     private Logger log = Logger.getLogger(RefreshUserInterceptor.class);
+    
+    private static boolean isUnderReadOnlyAction = false;
 
     @Autowired
     private UserBusiness userBusiness;
@@ -48,11 +50,13 @@ public class RefreshUserInterceptor implements Interceptor {
         Object action = invocation.getAction();
         
         //TODO FINNUCKS: this logs out a current user on one of these actions and sets it to the read only user
-        if(action instanceof ROIterationAction 
-                || action instanceof ChartAction
+        if(action instanceof ROIterationAction || (isUnderReadOnlyAction && (
+                action instanceof ChartAction
                 || action instanceof IterationAction
                 || action instanceof IterationHistoryAction
-                || action instanceof StoryAction){
+                || action instanceof StoryAction))){
+            
+            isUnderReadOnlyAction = true;
             
             //log in read only user if we got to here
             UserDAOHibernate userDao = new UserDAOHibernate();

@@ -67,7 +67,7 @@
     	  return "{}";
       } else {*/
 	      if (data === "AGILEFANT_AUTHENTICATION_ERROR") {
-	        window.location.reload(); 
+	       // window.location.reload(); 
 	      }
      // }
       return data;

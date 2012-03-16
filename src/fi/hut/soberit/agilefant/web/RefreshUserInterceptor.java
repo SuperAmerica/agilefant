@@ -1,5 +1,9 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -14,8 +18,6 @@ import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import fi.hut.soberit.agilefant.business.UserBusiness;
-import fi.hut.soberit.agilefant.db.UserDAO;
-import fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate;
 import fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -43,11 +45,24 @@ public class RefreshUserInterceptor implements Interceptor {
 
     public void init() {
     }
+    
+    public static String getStackTrace(Throwable aThrowable) {
+        final Writer result = new StringWriter();
+        final PrintWriter printWriter = new PrintWriter(result);
+        aThrowable.printStackTrace(printWriter);
+        return result.toString();
+      }
 
     public String intercept(ActionInvocation invocation) throws Exception {
 
         int userId;
         Object action = invocation.getAction();
+        
+        if(action instanceof ExceptionHandler){
+            //actually print the message for debugging purposes
+            String trace = getStackTrace(((ExceptionHandler)action).getException());            
+            return "";
+        }
         
         //TODO FINNUCKS: this logs out a current user on one of these actions and sets it to the read only user
         if(action instanceof ROIterationAction || (isUnderReadOnlyAction && (
@@ -71,17 +86,25 @@ public class RefreshUserInterceptor implements Interceptor {
             Session session = sessionFactory.openSession();
             
             User user = userDao.getByLoginName("readonly");
+            
             SecurityUtil.setLoggedUser(user);
             
             //TODO FINNUCKS: This JSON is totally messed up and causing auto-fresh, most likely
             //push current user to the value stack
-            //invocation.getStack().set("currentUser", user);
-            //invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));
+            invocation.getStack().set("currentUser", user);
+            invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));
             
             session.disconnect();
             session.close();
             
-            return invocation.invoke();
+            // perform request
+            String result = invocation.invoke();
+
+            // after the request:
+            // reset the logged user
+            SecurityUtil.setLoggedUser(null);
+
+            return result;
         }
                 
         try {

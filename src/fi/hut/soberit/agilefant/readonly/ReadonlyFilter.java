@@ -19,7 +19,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 
 import fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate;
+import fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 
 public class ReadonlyFilter extends GenericFilterBean {
@@ -33,7 +36,8 @@ public class ReadonlyFilter extends GenericFilterBean {
         HttpServletRequest reqt = (HttpServletRequest) request;
         
         // Create a Data Access Object instance and open a Hibernate session.
-        IterationDAOHibernate iterationDao = new IterationDAOHibernate();;
+        IterationDAOHibernate iterationDao = new IterationDAOHibernate();
+        
         SessionFactory sessionFactory;
         try {
             sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");

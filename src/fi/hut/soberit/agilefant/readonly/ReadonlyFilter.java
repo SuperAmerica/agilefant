@@ -64,7 +64,13 @@ public class ReadonlyFilter extends GenericFilterBean {
             //log in read only user
             User user = userDao.getByLoginName("readonly");
             SecurityUtil.setLoggedUser(user);
-            chain.doFilter(request, response);
+            
+            try{
+                chain.doFilter(request, response);
+            } catch(NullPointerException npe){
+                //user tried to go back in the browser after unsharing
+                resp.sendRedirect("/agilefant/login.jsp");
+            }
         } else {
             session.disconnect();
             session.close();

@@ -37,7 +37,6 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
     
     @Override
     public String execute() {
-        
         return Action.SUCCESS;
     }
 

@@ -61,15 +61,9 @@
   $.ajaxSetup({
     traditional: true, //force jquery back to < 1.4 series style data serialization
     dataFilter: function(data, type) {
-      //request.getRequestURL() doesn't work here
-      /*if(request.getRequestURL().toString().contains("ROIteration")){
-    	  //TODO FINNUCKS: do something here...
-    	  return "{}";
-      } else {*/
-	      if (data === "AGILEFANT_AUTHENTICATION_ERROR") {
-	       // window.location.reload(); 
-	      }
-     // }
+      if (data === "AGILEFANT_AUTHENTICATION_ERROR") {
+      	window.location.reload(); 
+      }
       return data;
     },
     error: function(xhr,status,error) {

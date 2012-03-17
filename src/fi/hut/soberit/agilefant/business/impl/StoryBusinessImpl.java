@@ -172,7 +172,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         
         // Set the backlog if backlogId given
-        if (backlogId != null && dataItem.getBacklog() == null) {
+        if (backlogId != null && (dataItem.getBacklog() == null || (dataItem.getBacklog() == persisted.getBacklog()))) {
             this.moveStoryToBacklog(persisted, backlogBusiness.retrieve(backlogId));
         } else if (dataItem.getBacklog() != persisted.getBacklog() && dataItem.getBacklog() != null) {
             this.moveStoryToBacklog(persisted, dataItem.getBacklog());
@@ -388,7 +388,15 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);        
         }
         storyHierarchyBusiness.moveToBottom(persisted);
-        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 
+// MERGE CONFLICT
+//        Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);
+//
+//        //old - prevents tree view from exploding until it's fixed 
+//        storyHierarchyBusiness.moveToBottom(persisted);   
+//        
+//        //new
+//        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 
+//        
 
         this.labelBusiness.createStoryLabels(labelNames, persisted.getId());
         return persisted;
@@ -474,8 +482,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         /* Check for moving to other product */
         if (!story.getChildren().isEmpty()) {
 
-            Iteration iteration = story.getIteration();
-            if (iteration != null && !iteration.isStandAlone()) {
+            if (!story.getIteration().isStandAlone()) {
                 if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
                         .getParentProduct(backlog)) {
                     throw new OperationNotPermittedException(
@@ -521,10 +528,14 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     }
     
     public void moveSingleStoryToBacklog(Story story, Backlog backlog) {
+//        if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
+//                .getParentProduct(backlog)) {
+//            throw new OperationNotPermittedException(
+//                    "Can't move a story with children to another product");
+//        }
         //move children to the parent story
         Story parent = story.getParent();
         List<Story> childStories = new ArrayList<Story>(story.getChildren());
-        boolean hadChildren = false;
         for(Story childStory : childStories) {
             childStory.setParent(parent);
             if (parent != null) {
@@ -532,7 +543,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 
             }
             story.getChildren().remove(childStory);
-            hadChildren = true;
             storyDAO.store(childStory);
         }
         
@@ -546,14 +556,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if(parent != null) {
             storyHierarchyBusiness.updateChildrenTreeRanks(parent);
         }
-        
-        Backlog originalStoryBacklog = story.getBacklog();
         moveStory(story, backlog);
-        
-        // add rank to former parent story in the backlog it resides
-        if (hadChildren && originalStoryBacklog != null && backlog instanceof Iteration) {
-            storyRankBusiness.rankToBottom(story, originalStoryBacklog);
-        }
     }
 
     private void moveStory(Story story, Backlog backlog) {
@@ -627,14 +630,12 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if ((backlog instanceof Product) && !(oldBacklog instanceof Product)) {
             if (oldBacklog instanceof Iteration) {
                 storyRankBusiness.removeRank(story, oldBacklog.getParent());
-                if (oldIteration != null) {
-                    storyRankBusiness.removeRank(story, oldIteration);
-                }
+                storyRankBusiness.removeRank(story, oldIteration);
             }
             storyRankBusiness.removeRank(story, oldBacklog);
 
         } else if (backlog instanceof Project) {
-            rankToProjectBottom(story, backlog, oldBacklog);
+            rankToProjectBottom(story, backlog, oldBacklog, oldIteration);
         } else if (backlog instanceof Iteration) {
             rankToIterationBottom(story, backlog, oldBacklog, oldIteration);
         }
@@ -677,10 +678,12 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 if (oldIteration != null && oldIteration.isStandAlone()) {
                     storyRankBusiness.removeRank(story, oldIteration);
                 }
-                storyRankBusiness.rankToBottom(story, backlog);
+                storyRankBusiness.rankToBottom(story, backlog); //rank in iteration
+                storyRankBusiness.rankToBottom(story, oldBacklog); // and also in Project
             } else {
-                if (backlogsParent == null) {
+                if (backlogsParent == null) { //move from project to standalone
                     storyRankBusiness.rankToBottom(story, backlog);
+                    storyRankBusiness.rankToBottom(story, oldBacklog);
                 } else {
                 storyRankBusiness.removeRank(story, oldBacklog);
                 
@@ -694,9 +697,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
 
-    
-    
-    private void rankToProjectBottom(Story story, Backlog backlog, Backlog oldBacklog) {
+    private void rankToProjectBottom(Story story, Backlog backlog,
+            Backlog oldBacklog, Backlog oldIteration) {
         
         final Backlog oldBacklogsParent = oldBacklog.getParent();
         

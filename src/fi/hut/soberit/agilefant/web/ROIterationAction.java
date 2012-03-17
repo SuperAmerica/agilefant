@@ -30,7 +30,14 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
     
     public String fetchROIterationData() {
         iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
-        iterationBusiness.retrieve(iteration.getId());
+        
+        if(iteration != null) {
+            iterationBusiness.retrieve(iteration.getId());
+        } else {
+        	//TODO FINNUCKS: This doesn't redirect to the login
+            return Action.LOGIN;
+        }
+        
         iteration = iterationBusiness.getIterationContents(iteration.getId());
         return Action.SUCCESS;
     }

@@ -64,7 +64,9 @@ public class RefreshUserInterceptor implements Interceptor {
             return "";
         }
         
-        //TODO FINNUCKS: this logs out a current user on one of these actions and sets it to the read only user
+        //TODO FINNUCKS: this logs out a current user on one of 
+        //these actions and sets it to the read only user.
+        //Need to check ID and ... ?
         if(action instanceof ROIterationAction || (isUnderReadOnlyAction && (
                 action instanceof ChartAction
                 || action instanceof IterationAction
@@ -89,7 +91,6 @@ public class RefreshUserInterceptor implements Interceptor {
             
             SecurityUtil.setLoggedUser(user);
             
-            //TODO FINNUCKS: This JSON is totally messed up and causing auto-fresh, most likely
             //push current user to the value stack
             invocation.getStack().set("currentUser", user);
             invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));

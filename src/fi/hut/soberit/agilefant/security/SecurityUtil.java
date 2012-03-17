@@ -53,6 +53,7 @@ public class SecurityUtil {
             
             return ud.getUserId();
         } catch(ClassCastException cce){
+            //log in read only user
             SessionFactory sessionFactory = null;
             UserDAOHibernate userDao = new UserDAOHibernate();
             
@@ -71,8 +72,6 @@ public class SecurityUtil {
             
             return user.getId();
         }
-
-        //return -1;
     }
 
     /**

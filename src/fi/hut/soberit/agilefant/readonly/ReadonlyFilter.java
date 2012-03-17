@@ -37,11 +37,13 @@ public class ReadonlyFilter extends GenericFilterBean {
         
         // Create a Data Access Object instance and open a Hibernate session.
         IterationDAOHibernate iterationDao = new IterationDAOHibernate();
+        UserDAOHibernate userDao = new UserDAOHibernate();
         
         SessionFactory sessionFactory;
         try {
             sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
             iterationDao.setSessionFactory(sessionFactory);
+            userDao.setSessionFactory(sessionFactory);
         } catch (NamingException e) {
             e.printStackTrace();
             return;
@@ -56,9 +58,17 @@ public class ReadonlyFilter extends GenericFilterBean {
             session.close();
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
         } else if (reqt.getRequestURL().toString().contains("ROIteration")) {
-            //do nothing
-            System.out.println("Here");
+            session.disconnect();
+            session.close();
+            
+            //log in read only user
+            User user = userDao.getByLoginName("readonly");
+            SecurityUtil.setLoggedUser(user);
+            chain.doFilter(request, response);
         } else {
+            session.disconnect();
+            session.close();
+            
             // Token is not valid, so redirect to login page.
             resp.sendRedirect("/agilefant/login.jsp");
         }

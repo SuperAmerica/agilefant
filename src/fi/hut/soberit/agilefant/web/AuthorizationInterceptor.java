@@ -2,12 +2,10 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.interceptor.Interceptor;
 
@@ -32,12 +30,15 @@ public class AuthorizationInterceptor implements Interceptor {
 
     @Override
     public void init() {}
+    
+    private static int readOnlyId = -1;
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         Object action = invocation.getAction();
         boolean accessDenied = false;
         
+        //check read only user permissions
         User currentUser = SecurityUtil.getLoggedUser();
         if(!(action instanceof ROIterationAction 
                 || action instanceof ChartAction
@@ -47,15 +48,33 @@ public class AuthorizationInterceptor implements Interceptor {
                 && currentUser.getLoginName().equals("readonly")){
             
             return "login";
-        } else if(action instanceof ROIterationAction 
+        } else if((action instanceof ROIterationAction 
                 || action instanceof ChartAction
                 || action instanceof IterationAction
                 || action instanceof IterationHistoryAction
-                || action instanceof StoryAction){
+                || action instanceof StoryAction)
+                && currentUser.getLoginName().equals("readonly")){
             
-            //TODO FINNUCKS: check that the id's match for ChartAction
-            //int id = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
-            return invocation.invoke();
+            //TODO FINNUCKS: this causes an exception
+            /*int id = -99;
+            if(action instanceof ROIterationAction){
+                readOnlyId = ((ROIterationAction)action).getIteration().getId();
+                return invocation.invoke();
+            } else if(action instanceof IterationAction){
+                id = ((IterationAction) action).getIterationId();
+            } else if(action instanceof IterationHistoryAction){
+                id = ((IterationHistoryAction) action).getIterationId();
+            } else if(action instanceof StoryAction){
+                id = ((StoryAction) action).getIterationId();
+            } else if(action instanceof ChartAction){
+                id = ((ChartAction) action).getBacklogId();
+            }
+            
+            if(id != readOnlyId){
+                return "noauth";
+            } else {*/
+                return invocation.invoke();
+            //}
         }
         
         //matrix authorizations

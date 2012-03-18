@@ -4,7 +4,7 @@
       <div><img src="static/img/agilefant-logo-80px.png" alt="Share Iteration" style="float: left;" />
         <div style="margin-left: 90px">
           <p>The link below provides read only access to this iteration.</p>
-          <p>Use the link to keep non-Agilefant users up to date without granting them full access to your product!</p>
+          <p>Use this link to keep non-Agilefant users up to date with your progress.</p>
           
           <%
           	String url = request.getRequestURL().toString();
@@ -13,6 +13,12 @@
           %>
           
           <p><input type="text" id="tokenUrl" name="tokenUrl" value="<%=url%>${readonlyToken}" readonly="readonly" size="75" />
+        
+          <script>
+	          var text_input = document.getElementById ('tokenUrl');
+	          text_input.focus ();
+	          text_input.select ();
+          </script>
         </div>
       </div>
     </div>

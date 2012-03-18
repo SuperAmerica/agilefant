@@ -210,16 +210,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
                 //look at product
                 prod = (Product)blog.getParent();
             } else if(blog instanceof Iteration){
-                //look at project, then product
-                Backlog temp = blog.getParent();
-                if (temp != null) {
-                    if(temp instanceof Product){
-                      //iteration is directly under a product, not in a project
-                        prod = (Product) temp;
-                    } else {
-                        prod = (Product) temp.getParent();
-                    }
-                }
+                continue; // iterations should not be included in backlogs list.
             } else if(blog instanceof Product){
                 prod = (Product)blog;
             }

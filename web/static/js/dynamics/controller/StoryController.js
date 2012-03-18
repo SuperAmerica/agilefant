@@ -183,13 +183,23 @@ StoryController.prototype.editDescription = function() {
 /**
  * 
  */
-StoryController.prototype.moveStory = function() {
+StoryController.prototype.moveBacklog = function() {
   var me = this;
   $(window).autocompleteSingleDialog({
     dataType: "backlogs",
     cancel: function() { return; },
     callback: function(id) { me._moveStory(id); },
     title: "Select backlog to move to"
+  });
+};
+
+StoryController.prototype.moveIteration = function() {
+  var me = this;
+  $(window).autocompleteSingleDialog({
+    dataType: "currentIterations",
+    cancel: function() { return; },
+    callback: function(id) { me._moveStory(id); },
+    title: "Select iteration to move to"
   });
 };
 
@@ -355,8 +365,11 @@ StoryController.prototype.rankStoryToBottom = function(story, view) {
 StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
   actionItems.push({ 
-    text : "Move",
-    callback : StoryController.prototype.moveStory
+    text : "Move Backlog",
+    callback : StoryController.prototype.moveBacklog
+  });  actionItems.push({
+    text : "Move Iteration",
+    callback : StoryController.prototype.moveIteration
   });
   if (this.parentController instanceof StoryListController)
   {

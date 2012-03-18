@@ -42,7 +42,7 @@ UserSpentEffortWidget.prototype._registerSpentEffortEvents = function() {
   this.element.find("select").change(function() {
     var data = me._parseDateValues($(this).val());
     data.userId = me.userId;
-    data.userTimeZone = new Date().getUserTimeZone();;
+    data.userTimeZone = new Date().getUserTimeZone();
     me.element.load("weeklySpentEffort.action",data, function(data) { 
       me._registerSpentEffortEvents();
     });

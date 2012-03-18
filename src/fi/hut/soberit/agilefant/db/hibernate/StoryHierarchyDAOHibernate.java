@@ -33,8 +33,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
             Criteria iterationCrit, Project project) {
         projectCrit.add(Restrictions.eq("backlog", project));
         projectCrit.add(Restrictions.isEmpty("children"));
-        iterationCrit.createCriteria("backlog").add(
-                Restrictions.eq("parent", project));
+        //iterationCrit.createCriteria("backlog").add(Restrictions.eq("parent", project));
         iterationCrit.add(Restrictions.isEmpty("children"));
     }
     

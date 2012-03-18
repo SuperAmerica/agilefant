@@ -610,7 +610,9 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         storyDAO.store(story);
         rankToBottom(story, backlog, oldBacklog, oldIteration);
 
-        backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
+        if(oldBacklog != null) {
+            backlogHistoryEntryBusiness.updateHistory(oldBacklog.getId());
+        }
         backlogHistoryEntryBusiness.updateHistory(backlog.getId());
         if (oldBacklog instanceof Iteration) {
             iterationHistoryEntryBusiness.updateIterationHistory(oldBacklog

@@ -38,6 +38,10 @@ public class IterationDAOHelpers {
         Criterion overlaps = Restrictions.or(startDateLimit, endDateLimit);
         Criterion withinIteration = Restrictions.and(Restrictions.le(
                 "startDate", startDate), Restrictions.ge("endDate", endDate));
-        crit.add(Restrictions.or(overlaps, withinIteration));
+        
+        // If backlog is product then ignore the start and end date (because product doesnt have enddate startdate)
+        Criterion timeConstraint = Restrictions.or(overlaps, withinIteration);
+        Criterion backlogProduct = Restrictions.isNull("startDate");
+        crit.add(Restrictions.or(timeConstraint, backlogProduct));
     }
 }

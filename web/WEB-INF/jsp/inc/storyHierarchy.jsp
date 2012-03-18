@@ -32,8 +32,8 @@
 
 <ul class="backlogHierarchy">
 <c:choose>
-	<c:when test="${story.backlog == null}">
-    <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
+    <c:when test="${aef:isStandaloneIteration(story.iteration)}">
+	<li style="list-style-image: url('static/img/hierarchy_arrow.png');">
     <a href="editBacklog.action?backlogId=${backlog.id}">
       <c:out value="${backlog.name}" />
     </a>

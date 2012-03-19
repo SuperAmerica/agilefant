@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.db.export;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Properties;
 public class DbPropertiesReader {
 
     private Properties properties;
-
+    
     /**
      * 
      */

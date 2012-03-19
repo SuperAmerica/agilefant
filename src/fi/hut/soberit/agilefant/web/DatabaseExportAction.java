@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
-import fi.hut.soberit.agilefant.business.DatabaseBackupBusiness;
 import fi.hut.soberit.agilefant.db.export.Atablesmodifier;
 import fi.hut.soberit.agilefant.db.export.DbBackupper;
+import fi.hut.soberit.agilefant.util.DbConnectionInfo;
 
 @Component("dbExportAction")
 @Scope("prototype")
@@ -21,8 +21,6 @@ public class DatabaseExportAction extends ActionSupport {
     
     private static final long serialVersionUID = -1639488740106383276L;
     
-    @Autowired
-    private DatabaseBackupBusiness dbBusiness;
     private DbBackupper takeDbBackup;
     private ByteArrayOutputStream databaseStream;
     
@@ -55,10 +53,6 @@ public class DatabaseExportAction extends ActionSupport {
             System.out.println("Generate Anonymous data failed "+ e.getMessage());
             return Action.ERROR;
         }
-    }
-    
-    public void setDatabaseBackupBusiness(DatabaseBackupBusiness dbBusiness) {
-        this.dbBusiness = dbBusiness;
     }
     
     public InputStream getDatabaseStream() {        

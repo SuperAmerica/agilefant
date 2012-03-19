@@ -67,30 +67,41 @@ public class Atablesmodifier {
     }
 
     public void deletetables() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        /**
-         * Deletes anonymized tables one by one           
-         * 
-         */
-        DbPropertiesReader properties = new DbPropertiesReader();
-        String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
-        
         try {
+            ArrayList dbtables = new ArrayList<String>();
+            
+            // Get all anonym_ tables
+            DbPropertiesReader properties = new DbPropertiesReader();
+            String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection(sqlConnection, properties.getDbUsername(), properties.getDbPassword());
-            statement = connection.createStatement();
-            
+           
+            PreparedStatement ps = null;
+            String query = "select table_name from information_schema.tables WHERE table_schema = \"" + properties.getDbName() + "\" and table_name LIKE \"anonym_%\";";
+           
+            ps = connection.prepareStatement(query);
+            ResultSet s = ps.executeQuery();
+            while(s.next())
+            {
+                dbtables.add(s.getString("table_name"));
+            }
+        
+            // Drop all anonym_ tables;
             int counter=0;
-            int tablesize = tables.size();  
+            int tablesize = dbtables.size();  
+            statement = connection.createStatement();
             while (tablesize>counter) {
-                statement.executeUpdate("Drop table anonym_" +tables.get(counter));
+                statement.executeUpdate("Drop table " +dbtables.get(counter));
                 counter++;
             }
-            statement.close();
-            connection.close();
             
-        } catch (SQLException e) {
-            System.out.println("delete "+ e.getCause());
-            System.out.println("delete "+ e.getMessage());
+            // Close connection
+            ps.close();
+            connection.close();
+            statement.close();
+         } catch (SQLException e) {
+            System.out.println("Error Clean up anonymous tables agilefant "+ e.getCause());
+            System.out.println("Error Clean up anonymous tables agilefant "+ e.getMessage());
         }
     }
     
@@ -211,7 +222,6 @@ public class Atablesmodifier {
             System.out.println("can not get columns from agilefant "+ e.getMessage());
         }
     }
-    
     
     public ArrayList<String> getOriginalTables()
     {

@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.db.export;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+
+import fi.hut.soberit.agilefant.util.DbConnectionInfo;
 /**
  * Provides a zipped database dump in an output stream based on
  * Agilefant database properties
@@ -10,11 +12,12 @@ import java.util.ArrayList;
 public class DbBackupper {
 
     private ByteArrayOutputStream dbOutputStream;
-
+    private DbConnectionInfo dbinfo;
     /**
      * 
      */
     public DbBackupper() {
+        dbinfo = new DbConnectionInfo();
         dbOutputStream = new ByteArrayOutputStream();
     }
 
@@ -24,11 +27,10 @@ public class DbBackupper {
      */
     public ByteArrayOutputStream generateDBDumpStream() {
         
-        DbPropertiesReader dbConfReader = new DbPropertiesReader();        
-        DbBackupStreamGenerator dbbackup = new DbBackupStreamGenerator(dbConfReader.getDbName(),
-                                         dbConfReader.getDbHost(),
-                                         dbConfReader.getDbUsername(),
-                                         dbConfReader.getDbPassword());                                         
+        DbBackupStreamGenerator dbbackup = new DbBackupStreamGenerator(dbinfo.getDbName(),
+                                         dbinfo.getHostname(),
+                                         dbinfo.getUsername(),
+                                         dbinfo.getPassword());                                         
         
         
         int exitvalue = dbbackup.generateZippedDbOutputStream();     
@@ -50,11 +52,10 @@ public class DbBackupper {
      */
     public ByteArrayOutputStream generateAnonymousDBDumpStream(ArrayList<String> excludedTables) {
         
-        DbPropertiesReader dbConfReader = new DbPropertiesReader();        
-        DbBackupStreamGenerator dbbackup = new DbBackupStreamGenerator(dbConfReader.getDbName(),
-                                         dbConfReader.getDbHost(),
-                                         dbConfReader.getDbUsername(),
-                                         dbConfReader.getDbPassword());                                         
+        DbBackupStreamGenerator dbbackup = new DbBackupStreamGenerator(dbinfo.getDbName(),
+                                         dbinfo.getHostname(),
+                                         dbinfo.getUsername(),
+                                         dbinfo.getPassword());                                         
         
         
         int exitvalue = dbbackup.generateZippedAnonymousDbOutputStream(excludedTables);     

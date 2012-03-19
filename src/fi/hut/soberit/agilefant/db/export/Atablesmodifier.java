@@ -1,10 +1,17 @@
 package fi.hut.soberit.agilefant.db.export;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
+import fi.hut.soberit.agilefant.util.DbConnectionInfo;
+
 public class Atablesmodifier {
-    
+    public DbConnectionInfo dbinfo;
     public class anonymColumn{
         public String tablename;
         public String columnname;
@@ -28,7 +35,8 @@ public class Atablesmodifier {
     private Connection connection = null; 
     private Statement statement = null;
     public Atablesmodifier() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        // important - initalizeAnonymizedColumns must be called BEFORE initializeTables
+        // important - initalizeAnonymizedColumns must be called BEFORE initializeTables 
+        this.dbinfo = new DbConnectionInfo();
         initializeAnonymizedColumns();
         initializeTables();
     }
@@ -38,15 +46,13 @@ public class Atablesmodifier {
          * generates anonymity tables with orginal non-anonymized data. 
          * 
          */
-
-        DbPropertiesReader properties = new DbPropertiesReader();
-        String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();     //may need port in the future
+        String sqlConnection = this.dbinfo.getUrl();     //may need port in the future
         int tablesize= tables.size();
         int counter=0;
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             connection = DriverManager.getConnection
-                    (sqlConnection, properties.getDbUsername(), properties.getDbPassword());
+                    (sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
             statement = connection.createStatement();
 
             while (tablesize> counter){
@@ -71,12 +77,11 @@ public class Atablesmodifier {
          * Deletes anonymized tables one by one           
          * 
          */
-        DbPropertiesReader properties = new DbPropertiesReader();
-        String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
+        String sqlConnection = dbinfo.getUrl();
         
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(sqlConnection, properties.getDbUsername(), properties.getDbPassword());
+            connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
             statement = connection.createStatement();
             
             int counter=0;
@@ -99,10 +104,9 @@ public class Atablesmodifier {
     // If columns is UNIQUE then replace the value with its id
     public void anonymizeTables() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
         try{
-            DbPropertiesReader properties = new DbPropertiesReader();
-            String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
+            String sqlConnection = dbinfo.getUrl();
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(sqlConnection, properties.getDbUsername(), properties.getDbPassword());
+            connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
             statement = connection.createStatement();
             
             // Update columns values to be anonymous
@@ -138,13 +142,12 @@ public class Atablesmodifier {
                 
             ArrayList dbtables = new ArrayList<String>();
             
-            DbPropertiesReader properties = new DbPropertiesReader();
-            String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
+            String sqlConnection = dbinfo.getUrl();
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(sqlConnection, properties.getDbUsername(), properties.getDbPassword());
+            connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
            
             PreparedStatement ps = null;
-            String query = "select table_name from information_schema.tables WHERE table_schema = \"" + properties.getDbName() + "\";";
+            String query = "select table_name from information_schema.tables WHERE table_schema = \"" + dbinfo.getDbName() + "\";";
            
             ps = connection.prepareStatement(query);
             ResultSet s = ps.executeQuery();
@@ -168,15 +171,14 @@ public class Atablesmodifier {
                 
             ArrayList dbcolumns = new ArrayList<anonymColumn>();
             
-            DbPropertiesReader properties = new DbPropertiesReader();
-            String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
+            String sqlConnection = dbinfo.getUrl();
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            connection = DriverManager.getConnection(sqlConnection, properties.getDbUsername(), properties.getDbPassword());
+            connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
            
             PreparedStatement ps = null;
             String query = "SELECT table_name, column_name, data_type, column_key " +
                            "FROM information_schema.columns " +
-                           "WHERE table_schema = \"" + properties.getDbName() + "\"" +
+                           "WHERE table_schema = \"" + dbinfo.getDbName() + "\"" +
                            "AND (data_type = \"longtext\" OR data_type = \"varchar\");";
             
             ps = connection.prepareStatement(query);

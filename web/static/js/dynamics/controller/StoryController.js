@@ -81,13 +81,17 @@ StoryController.prototype._showMoveStoryOptions = function(data, backlogOrIterat
     this.currentMoveStoryDialog.html(data);
   }
 };
-StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterationId) {
+StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterationId, changeBacklogOnly) {
   var me = this;
   var element = $('<div/>').appendTo(document.body);
   this.currentMoveStoryDialog = element;
+  var titleMessage = 'Moving story - please wait';
+  if (changeBacklogOnly) {
+    titleMessage = 'Changing backlog - please wait';
+  }
   var dialog = element.dialog({
     modal: true,
-    title: 'Moving story - please wait',
+    title: titleMessage,
     width: 600,
     minHeight:  300,
     closeOnEscape: false,
@@ -116,7 +120,14 @@ StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterat
 };
 
 StoryController.prototype._moveStory = function(id) {
-  this._openMoveStoryDialog(null, id);
+  this._openMoveStoryDialog(null, id, false);
+  if(this.model.canMoveStory(id)) {
+    this.model.moveStory(id);
+  }
+};
+
+StoryController.prototype._changeStoryBacklog = function(id) {
+  this._openMoveStoryDialog(null, id, true);
   if(this.model.canMoveStory(id)) {
     this.model.moveStory(id);
   }
@@ -183,23 +194,23 @@ StoryController.prototype.editDescription = function() {
 /**
  * 
  */
-StoryController.prototype.moveBacklog = function() {
+StoryController.prototype.changeBacklog = function() {
   var me = this;
   $(window).autocompleteSingleDialog({
     dataType: "backlogs",
     cancel: function() { return; },
-    callback: function(id) { me._moveStory(id); },
-    title: "Select backlog to move to"
+    callback: function(id) { me._changeStoryBacklog(id); },
+    title: "Select new backlog for story"
   });
 };
 
-StoryController.prototype.moveIteration = function() {
+StoryController.prototype.moveStory = function() {
   var me = this;
   $(window).autocompleteSingleDialog({
-    dataType: "currentIterations",
+    dataType: "backlogsAndIterations",
     cancel: function() { return; },
     callback: function(id) { me._moveStory(id); },
-    title: "Select iteration to move to"
+    title: "Select backlog to move to"
   });
 };
 
@@ -364,12 +375,16 @@ StoryController.prototype.rankStoryToBottom = function(story, view) {
  */
 StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
+  
+  /*
   actionItems.push({ 
-    text : "Move Backlog",
-    callback : StoryController.prototype.moveBacklog
-  });  actionItems.push({
-    text : "Move Iteration",
-    callback : StoryController.prototype.moveIteration
+    text : "Change Backlog",
+    callback : StoryController.prototype.changeBacklog
+  });
+  */
+  actionItems.push({
+    text : "Move",
+    callback : StoryController.prototype.moveStory
   });
   if (this.parentController instanceof StoryListController)
   {

@@ -573,14 +573,18 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         } /** If the story is from a standalone iteration but has no product / project **/
         else if (story.getBacklog() == null && story.getIteration() != null && story.getIteration().isStandAlone()) { 
             oldIteration = story.getIteration(); // save
-            oldIteration.getStories().remove(story);
-        } else { // the story is not in an iteration at all 
+            oldIteration.getStories().remove(story); // should this be here?
+        }/*
+        else if (story.getIteration() != null && story.getIteration().isStandAlone()) { // story is from a standalone iteration and has a backlog
+            oldBacklog = story.getBacklog();
+            oldIteration = story.getIteration();
+        }*/
+        else { // the story is not in an iteration at all 
             oldBacklog = story.getBacklog();
             oldBacklog.getStories().remove(story);
         }
-    
-        //  after this, set the story's backlog & iteration accordingly
         
+        // after this, set the story's backlog & iteration accordingly
         if /** Story is moved to a standalone iteration **/
         (backlog instanceof Iteration && backlog.isStandAlone()) {
             story.setIteration((Iteration)backlog);  // move to standalone
@@ -591,18 +595,19 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             story.setBacklog(backlog.getParent());
         } /** Story is moved to a product or project  **/ 
         else if ((backlog instanceof Product || backlog instanceof Project) && story.getIteration() != null) { // the story has an iteration, and is moved to a product / project  
-         // the story is in a standalone iteration, but not in any product / project
+            // the story is in a standalone iteration, but not in any product / project
             if (story.getIteration().isStandAlone() && oldBacklog == null) {
-               oldBacklog = story.getIteration();
-               story.setBacklog(backlog);
-               story.setIteration(null);  // thus, moving to a project / product is the only way to remove a story from a standalone iteration!
-           }
-           else { // here, the story is in a project / product
-               oldIteration = story.getIteration();
-               story.setBacklog(backlog);
-           }
-           /**Story's backlog is in product/project, its iteration is null**/
-        } else {
+                oldBacklog = story.getIteration();
+                story.setBacklog(backlog);
+                //story.setIteration(null);  // thus, moving to a project / product is the only way to remove a story from a standalone iteration!
+                // now to remove a standalone iteration you need to move a story to a normal iteration and then to a project / product
+            }
+            else { // here, the story is in a project / product
+                oldIteration = story.getIteration();
+                story.setBacklog(backlog);
+            }
+        } /**Story's backlog is in product/project, its iteration is null**/
+        else {
             story.setBacklog(backlog); // move to product or project
             story.setIteration(null);
         }

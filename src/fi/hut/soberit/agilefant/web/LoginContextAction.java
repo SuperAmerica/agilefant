@@ -1,6 +1,5 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.sql.SQLException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -10,7 +9,6 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.SettingBusiness;
-import fi.hut.soberit.agilefant.db.export.Atablesmodifier;
 
 @Component("loginContextAction")
 @Scope("prototype")
@@ -26,11 +24,7 @@ public class LoginContextAction extends ActionSupport {
     
 
     @Override
-    public String execute() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException{
-        // Clean up anonymous tables if any upon login
-        Atablesmodifier modifier = new Atablesmodifier();
-        modifier.deletetables();
-        
+    public String execute(){
         if (backlogBusiness.countAll() == 0) {
             return "help";
         }

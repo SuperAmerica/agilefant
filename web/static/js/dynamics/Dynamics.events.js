@@ -223,13 +223,16 @@ DynamicsEvents.NamedEvent.prototype.getEventName = function() {
 };
 
 
-DynamicsEvents.StoryTreeIntegrityViolation = function DynamicsEvents_StoryTreeIntegrityViolation(origin, data, backlogId) {
+DynamicsEvents.StoryTreeIntegrityViolation = function DynamicsEvents_StoryTreeIntegrityViolation(origin, data, targetId) {
   this.initialize();
   this.type = "StoryTreeIntegrityViolation";
   this.object = origin;
   this.data = data;
-  this.backlogId = backlogId;
+  this.backlogId = targetId;
 };
+
+
+
 DynamicsEvents.StoryTreeIntegrityViolation.prototype = new DynamicsEvents.CommonEvent();
 
 DynamicsEvents.StoryTreeIntegrityViolation.prototype.getData = function() {
@@ -239,3 +242,14 @@ DynamicsEvents.StoryTreeIntegrityViolation.prototype.getData = function() {
 DynamicsEvents.StoryTreeIntegrityViolation.prototype.getBacklogId = function() {
   return this.backlogId;
 };
+
+DynamicsEvents.StoryTreeIntegrityViolation.prototype.getIterationId = function() {
+  return this.iterationId;
+};
+
+DynamicsEvents.StoryTreeIntegrityViolation.prototype.isBacklogMove = function() {
+  return this.backlogMove;
+};
+
+
+

@@ -107,7 +107,7 @@ public class StoryActionTest extends MockedTestCase {
         StoryRank rank = new StoryRank();
         rank.setRank(222);
         
-        expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), storyAction.getUserIds(), labelNames)).andReturn(returnedStory);
+        expect(storyBusiness.create(storyAction.getStory(), storyAction.getBacklogId(), 0, storyAction.getUserIds(), labelNames)).andReturn(returnedStory);
         expect(storyRankBusiness.getRankByBacklog(returnedStory, returnedStory.getBacklog())).andReturn(rank);
         
         replayAll();

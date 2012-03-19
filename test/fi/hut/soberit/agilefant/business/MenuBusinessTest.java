@@ -39,6 +39,8 @@ public class MenuBusinessTest {
     
     ProductBusiness productBusiness;
     
+    IterationBusiness iterationBusiness;
+    
     ProjectDAO projectDAO;
     
     IterationDAO iterationDAO;
@@ -58,6 +60,9 @@ public class MenuBusinessTest {
         
         transferObjectBusiness = createStrictMock(TransferObjectBusiness.class);
         menuBusiness.setTransferObjectBusiness(transferObjectBusiness);
+        
+        iterationBusiness = createStrictMock(IterationBusiness.class);
+        menuBusiness.setIterationBusiness(iterationBusiness);
         
         iterationDAO = createStrictMock(IterationDAO.class);
         menuBusiness.setIterationDAO(iterationDAO);
@@ -110,11 +115,11 @@ public class MenuBusinessTest {
         proj1.getChildren().add(iter3);
     }
     private void replayAll() {
-        replay(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness);
+        replay(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness, iterationBusiness);
     }
 
     private void verifyAll() {
-        verify(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness);
+        verify(iterationDAO, projectDAO, storyDAO, productBusiness, transferObjectBusiness, iterationBusiness);
     }
     
     @Test
@@ -133,9 +138,14 @@ public class MenuBusinessTest {
         
         expect(productBusiness.retrieveAllOrderByName()).andReturn(
                 products);
+
+        final ArrayList<Iteration> emptyStandAloneIterations = new ArrayList<Iteration>();
+        expect(iterationBusiness.retrieveAllStandAloneIterations())
+            .andReturn(emptyStandAloneIterations);
         
         expect(transferObjectBusiness.getBacklogScheduleStatus(isA(Backlog.class)))
             .andReturn(ScheduleStatus.FUTURE).times(8);
+        
         replayAll();
                
         List<MenuDataNode> actual = menuBusiness.constructBacklogMenuData(user);

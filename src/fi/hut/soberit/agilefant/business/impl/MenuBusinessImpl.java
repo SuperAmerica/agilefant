@@ -12,6 +12,7 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.MenuBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
@@ -25,6 +26,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.BacklogType;
 import fi.hut.soberit.agilefant.transfer.MenuDataNode;
 import fi.hut.soberit.agilefant.util.MyAssignmentsMenuBuilder;
 
@@ -48,6 +50,9 @@ public class MenuBusinessImpl implements MenuBusiness {
     
     @Autowired
     private ProductBusiness productBusiness;
+    
+    @Autowired
+    private IterationBusiness iterationBusiness;
 
     @Autowired
     private TransferObjectBusiness transferObjectBusiness;
@@ -70,6 +75,13 @@ public class MenuBusinessImpl implements MenuBusiness {
                 nodes.add(constructMenuDataNode(prod));
             }
         }
+        
+        final List<Iteration> standAloneIterations = new ArrayList<Iteration>(
+                iterationBusiness.retrieveAllStandAloneIterations());
+        for (Iteration iteration: standAloneIterations) {
+            nodes.add(constructMenuDataNode(iteration));
+        }
+        
         return nodes;
     }
 
@@ -87,6 +99,12 @@ public class MenuBusinessImpl implements MenuBusiness {
             Collections.sort(children, new PropertyComparator("startDate",
                     true, true));
         }
+        
+        final BacklogType backlogClassType = BacklogType.forBacklog(backlog);
+        if (backlogClassType != null) {
+            mdn.setType(backlogClassType);
+        }
+        
         for (Backlog child : children) {
             mdn.getChildren().add(constructMenuDataNode(child));
         }
@@ -116,6 +134,10 @@ public class MenuBusinessImpl implements MenuBusiness {
 
     public void setProductBusiness(ProductBusiness productBusiness) {
         this.productBusiness = productBusiness;
+    }
+    
+    public void setIterationBusiness(IterationBusiness iterationBusiness) {
+        this.iterationBusiness = iterationBusiness;
     }
 
     public void setTransferObjectBusiness(

@@ -131,7 +131,7 @@ CommonModel.prototype._updateRelations = function(type, newData) {
     }
   }
   
-  if(this.relationChanged) { // this check is NOT working properly
+  if (this.relationChanged) { // this check is NOT working properly
     this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,type));
     this.relationChanged = false;
   }

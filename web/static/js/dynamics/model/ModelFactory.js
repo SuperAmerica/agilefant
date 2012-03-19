@@ -105,9 +105,8 @@ ModelFactory.classNameToJsClass = {
 
 ModelFactory.typeToClassName = {
     backlog:    "fi.hut.soberit.agilefant.model.Backlog",
-    iteration:  "fi.hut.soberit.agilefant.model.Backlog",
-    
     iteration:  "fi.hut.soberit.agilefant.model.Iteration",
+    
     product:    "fi.hut.soberit.agilefant.model.Product",
     project:    "fi.hut.soberit.agilefant.model.Project",
     

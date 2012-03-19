@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -171,5 +172,12 @@ public class Project extends Backlog implements Schedulable, Rankable {
             Set<BacklogHistoryEntry> backlogHistoryEntries) {
         this.backlogHistoryEntries = backlogHistoryEntries;
     }
+    
+    @Transient
+    @Override
+    public boolean isStandAlone() {
+        return false;
+    }
+
 
 }

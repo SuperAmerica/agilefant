@@ -10,9 +10,11 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.transfer.MoveStoryNode;
 import fi.hut.soberit.agilefant.util.StoryTreeIntegrityMessage;
@@ -32,6 +34,8 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     private StoryBusiness storyBusiness;
     @Autowired
     private BacklogBusiness backlogBusiness;
+    @Autowired
+    private IterationBusiness iterationBusiness;
     
     private MoveStoryNode data;
     
@@ -45,8 +49,8 @@ public class StoryTreeIntegrityAction extends ActionSupport {
     private Integer storyId;
     private Integer targetStoryId;
     private Integer backlogId;
-    
-    
+
+
     public String checkChangeBacklog() {
         story = storyBusiness.retrieve(storyId);
         backlog = backlogBusiness.retrieve(backlogId);
@@ -55,8 +59,7 @@ public class StoryTreeIntegrityAction extends ActionSupport {
 
         data = storyTreeIntegrityBusiness.generateChangedStoryTree(story, messages);
         
-        parentStoryConflict = storyTreeIntegrityBusiness
-                .hasParentStoryConflict(story, backlog);
+        parentStoryConflict = storyTreeIntegrityBusiness.hasParentStoryConflict(story, backlog);
         
         if (StoryTreeIntegrityUtils.getFatalMessages(messages)) {
             return FATAL_CONSTRAINT; 
@@ -64,7 +67,7 @@ public class StoryTreeIntegrityAction extends ActionSupport {
         
         return Action.SUCCESS;
     }
-
+    
     public String checkChangeParentStory() {
         Story story = storyBusiness.retrieve(storyId);
         Story target = storyBusiness.retrieve(targetStoryId);

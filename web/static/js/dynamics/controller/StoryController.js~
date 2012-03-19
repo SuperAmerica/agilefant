@@ -7,7 +7,7 @@ var StoryController = function StoryController(model, view, backlogController) {
 };
 
 StoryController.columnNames =
-  ["priority", "labelsIcon", "id", "name", "value", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
+  ["priority", "id", "labelsIcon", "name", "points", "state", "responsibles", "el", "oe", "es", "actions", "labels", "description", "buttons", "details", "tasksData"];
 StoryController.columnIndices = CommonController.createColumnIndices(StoryController.columnNames);
 
 
@@ -42,7 +42,7 @@ StoryController.prototype._closeMoveDialog = function() {
   }
 };
 
-StoryController.prototype._confirmMoveStory = function(model, backlogOrIterationId) {
+StoryController.prototype._confirmMoveStory = function(backlogId) {
   var radioButton = this.currentMoveStoryDialog.find("input[type=radio]:checked:eq(0)");
   var parentCheckBox = this.currentMoveStoryDialog.find("input[type=checkbox]:checked:eq(0)");
   var moveParents = false;
@@ -52,18 +52,10 @@ StoryController.prototype._confirmMoveStory = function(model, backlogOrIteration
   
   if(radioButton.length) {
     if (radioButton.val() === "moveTargetStoryOnly") {
-      if (model) {
-        model.moveStoryOnly(backlogOrIterationId, moveParents);
-      } else {
-        this.model.moveStoryOnly(backlogOrIterationId, moveParents);
-      }
+      this.model.moveStoryOnly(backlogId, moveParents);
     }
     else if (radioButton.val() === "moveTargetAndItsChildren") {
-      if (model) {
-        model.moveStoryAndChildren(backlogOrIterationId, moveParents);
-      } else {
-        this.model.moveStoryAndChildren(backlogOrIterationId, moveParents);
-      }
+      this.model.moveStoryAndChildren(backlogId, moveParents);
     }
   } else {
     this.currentMoveStoryDialog.find("#please-select-an-option").show('blind');
@@ -75,23 +67,19 @@ StoryController.prototype._confirmMoveStory = function(model, backlogOrIteration
   }
 };
 
-StoryController.prototype._showMoveStoryOptions = function(data, backlogOrIterationId) {
+StoryController.prototype._showMoveStoryOptions = function(data, backlogId) {
   if (this.currentMoveStoryDialog) {
     this.currentMoveStoryDialog.dialog("option","title","Error in moving story!");
     this.currentMoveStoryDialog.html(data);
   }
 };
-StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterationId, changeBacklogOnly) {
+StoryController.prototype._openMoveStoryDialog = function(backlogId) {
   var me = this;
   var element = $('<div/>').appendTo(document.body);
   this.currentMoveStoryDialog = element;
-  var titleMessage = 'Moving story - please wait';
-  if (changeBacklogOnly) {
-    titleMessage = 'Changing backlog - please wait';
-  }
   var dialog = element.dialog({
     modal: true,
-    title: titleMessage,
+    title: 'Moving story - please wait',
     width: 600,
     minHeight:  300,
     closeOnEscape: false,
@@ -100,19 +88,11 @@ StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterat
         dialog.dialog('close');
       },
       Confirm: function() {
-        if (!model) {
-          me._confirmMoveStory(null, backlogOrIterationId);
-        } else {
-          me._confirmMoveStory(model, backlogOrIterationId);
-        }
+        me._confirmMoveStory(backlogId);
       }
     },
     close: function() {
-      if (!model) {
-        me.model.rollback();
-      } else {
-        model.rollback();
-      }
+      me.model.rollback();
       me._closeMoveDialog();
     }
   });
@@ -120,21 +100,10 @@ StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterat
 };
 
 StoryController.prototype._moveStory = function(id) {
-  this._openMoveStoryDialog(null, id, false);
+  this._openMoveStoryDialog(id);
   if(this.model.canMoveStory(id)) {
     this.model.moveStory(id);
   }
-};
-
-StoryController.prototype._changeStoryBacklog = function(id) {
-  this._openMoveStoryDialog(null, id, true);
-  if(this.model.canMoveStory(id)) {
-    this.model.moveStory(id);
-  }
-};
-
-StoryController.prototype.copyStorySibling = function(storyObj) {
-  this.parentController.copyStorySibling(storyObj);
 };
 
 /**
@@ -194,20 +163,10 @@ StoryController.prototype.editDescription = function() {
 /**
  * 
  */
-StoryController.prototype.changeBacklog = function() {
-  var me = this;
-  $(window).autocompleteSingleDialog({
-    dataType: "backlogs",
-    cancel: function() { return; },
-    callback: function(id) { me._changeStoryBacklog(id); },
-    title: "Select new backlog for story"
-  });
-};
-
 StoryController.prototype.moveStory = function() {
   var me = this;
   $(window).autocompleteSingleDialog({
-    dataType: "backlogsAndIterations",
+    dataType: "backlogs",
     cancel: function() { return; },
     callback: function(id) { me._moveStory(id); },
     title: "Select backlog to move to"
@@ -375,23 +334,19 @@ StoryController.prototype.rankStoryToBottom = function(story, view) {
  */
 StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
-  
-  /*
-  actionItems.push({ 
-    text : "Change Backlog",
-    callback : StoryController.prototype.changeBacklog
-  });
-  */
   actionItems.push({
     text : "Move",
     callback : StoryController.prototype.moveStory
   });
-  if (this.parentController instanceof StoryListController)
-  {
-	  actionItems.push({
-	    text: "Copy",
-	    callback : StoryController.prototype.copyStorySibling
-	  });
+  if (isProject) {
+    actionItems.push({
+      text: "Rank to top",
+      callback: StoryController.prototype.rankStoryToTop
+    });
+    actionItems.push({
+      text: "Rank to bottom",
+      callback: StoryController.prototype.rankStoryToTop
+    });
   }
   if (Configuration.isTimesheetsEnabled()) {
     actionItems.push({
@@ -415,28 +370,11 @@ StoryController.prototype.projectStoryActionFactory = function(view, model) {
 
 StoryController.prototype.storyActionFactory = function(view, model) {
   var actionItems = this._getStoryActionItems(false);
-  var actionView = new DynamicTableRowActions(actionItems, this, this.model, view);
+  var actionView = new DynamicTableRowActions(actionItems, this, this.model,
+      view);
   return actionView;
 };
 
-StoryController.prototype.rankToTopAction = function(view, model) {
-  var actionItem = {
-		  label : "To top",
-		  callback : StoryController.prototype.rankStoryToTop
-  };
-  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 50);
-  return actionView;
-};
-	
-StoryController.prototype.rankToBottomAction = function(view, model) {
-  var actionItem = {
-		  label : "To bottom",
-		  callback : StoryController.prototype.rankStoryToBottom
-  };
-  var actionView = new DynamicTableRowButton(actionItem, this, this.model, view, 70);
-  return actionView;
-};
-		
 StoryController.prototype.acceptsDraggable = function(model) {
   if (model instanceof TaskModel) {
     return true;
@@ -462,6 +400,17 @@ StoryController.prototype.quickLogEffort = function(spentEffort) {
   if (spentEffort !== "") {
     HourEntryModel.logEffortForCurrentUser(this, spentEffort);
   }
+};
+
+/**
+ * Checks whether the story points field should be editable or not.
+ */
+StoryController.prototype.storyPointsEditable = function() {
+  if (this.model.getState() === "DONE") {
+    MessageDisplay.Warning("Changing story points is not allowed for done stories");
+    return false;
+  }
+  return true;
 };
 
 /**
@@ -510,7 +459,7 @@ StoryController.prototype.searchForTask = function() {
       handle: "." + DynamicTable.cssClasses.dragHandle,
       connectWith: ".dynamicTable-sortable-tasklist > .ui-sortable"
     },
-    beforeCommitFunction: TaskController.prototype.checkTaskAndCommit
+    beforeCommitFunction: TaskController.prototype.markStoryAsStarted
   });
   config.addCaptionItem( {
     name : "createTask",
@@ -551,7 +500,7 @@ StoryController.prototype.searchForTask = function() {
     title : "State",
     headerTooltip : 'Task state',
     get : TaskModel.prototype.getState,
-    decorator: DynamicsDecorators.taskStateColorDecorator,
+    decorator: DynamicsDecorators.stateColorDecorator,
     editable : true,
     edit : {
       editor : "Selection",
@@ -619,7 +568,7 @@ StoryController.prototype.searchForTask = function() {
       get : TaskModel.prototype.getEffortSpent,
       decorator: DynamicsDecorators.exactEstimateDecorator,
       editable : false,
-      onClick: TaskController.prototype.openQuickLogEffort,
+      onDoubleClick: TaskController.prototype.openQuickLogEffort,
       edit : {
         editor : "ExactEstimate",
         decorator: DynamicsDecorators.empty,

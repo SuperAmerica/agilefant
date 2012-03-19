@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.db.export;
 
 import java.sql.*;
 import java.util.ArrayList;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 public class Atablesmodifier {
     
@@ -109,6 +110,8 @@ public class Atablesmodifier {
     // Change all Columns that have string value to "tablename id - length:[value length]" example "stories 7 - length:10"
     // If columns is UNIQUE then replace the value with its id
     public void anonymizeTables() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
+        String err_table = "";
+        String err_column = "";
         try{
             DbPropertiesReader properties = new DbPropertiesReader();
             String sqlConnection = "jdbc:mysql://"+properties.getDbHost()+":3306"+ "/" +properties.getDbName();
@@ -122,24 +125,37 @@ public class Atablesmodifier {
                 String tableName  = this.columns.get(i).tablename;
                 String columnName = this.columns.get(i).columnname;
                 
+                err_table  = this.columns.get(i).tablename;
+                err_column = this.columns.get(i).columnname;
+                
                 // unique column is replaced with id (PrimaryKey)
                 if(this.columns.get(i).isUnique)
                 {
                     String query = "UPDATE anonym_" + tableName + " SET " + columnName + " = id;";
                     statement.executeUpdate(query);                  
                 }
-                else // replace with length of the string
+                else // replace with length of the string and MD5 hash
                 {
-                    String query = "UPDATE anonym_" + tableName + " SET " + columnName + " = CONCAT(\""+ tableName + " \","+ "id, \" - length:\", LENGTH(" + columnName +"));";
-                    statement.executeUpdate(query);
+                    // Change all 'password' field to be 'password'
+                    if( tableName.compareToIgnoreCase("users") == 0 && columnName.compareToIgnoreCase("password") ==0)
+                    {
+                        String pw = SecurityUtil.MD5("password");
+                        String query = "UPDATE anonym_" + tableName + " SET " + columnName + " = \"" +pw+ "\";";
+                        statement.executeUpdate(query); 
+                    }
+                    else
+                    {
+                        String query = "UPDATE anonym_" + tableName + " SET " + columnName + " = CONCAT(\""+ tableName + " \","+ "id, \" - length:\", LENGTH(" + columnName +"),\" - hash:\",MD5(" + columnName +"));";
+                        statement.executeUpdate(query);
+                    }
                 }
             }
        
             statement.close();
             connection.close();
         } catch (SQLException e) {
-            System.out.println("can not anonymize tables"+ e.getCause());
-            System.out.println("can not anonymize tables"+ e.getMessage());
+            System.out.println("can not anonymize table: " + err_table + " Column: " +err_column+ "cuz "+ e.getCause());
+            System.out.println("can not anonymize table: " + err_table + " Column: " +err_column+ "cuz "+ e.getMessage());
         }
     }
     
@@ -201,7 +217,7 @@ public class Atablesmodifier {
                 boolean isUnique = (columnKey.compareToIgnoreCase("UNI") == 0)?true:false;
                 
                 // Exclude all columns that are type of type string, but their values can't be changed  
-                if((tableName.equalsIgnoreCase("hourentry")     && columnName.equalsIgnoreCase("DTYPE")) ||
+                if((tableName.equalsIgnoreCase("hourentries")     && columnName.equalsIgnoreCase("DTYPE")) ||
                    (tableName.equalsIgnoreCase("backlogs")      && columnName.equalsIgnoreCase("backlogtype"))||
                    (tableName.equalsIgnoreCase("backlogs_aud")  && columnName.equalsIgnoreCase("backlogtype"))||
                    (tableName.equalsIgnoreCase("widgets")       && columnName.equalsIgnoreCase("type")))

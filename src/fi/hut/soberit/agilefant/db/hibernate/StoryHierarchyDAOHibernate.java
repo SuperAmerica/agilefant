@@ -154,8 +154,8 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         List<Story> ret = new ArrayList<Story>();
         ret.addAll(directProjectRoots);
         ret.addAll(iterationRoots);
-
-        Collections.sort(ret, new PropertyComparator("name", true, true));
+        
+        Collections.sort(ret, new PropertyComparator("treeRank", true, true));
         
         return ret;
     }

@@ -189,7 +189,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         assertEquals(0, oldParent.getChildren().get(0).getTreeRank());
 
         assertEquals(4, reference.getChildren().size());
-        assertEquals(story, reference.getChildren().get(0)); //newest at top
+        assertEquals(story, reference.getChildren().get(3));
         assertEquals(3, reference.getChildren().get(3).getTreeRank());
     }
 
@@ -248,7 +248,7 @@ public class StoryHierarchyBusinessTest extends MockedTestCase {
         assertEquals(0, oldParent.getChildren().size());
 
         assertEquals(4, reference.getChildren().size());
-        assertEquals(story, reference.getChildren().get(0)); //newest at top
+        assertEquals(story, reference.getChildren().get(3));
         assertEquals(3, reference.getChildren().get(3).getTreeRank());
     }
 

@@ -264,8 +264,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);
 
         //old - prevents tree view from exploding until it's fixed 
-        //storyHierarchyBusiness.moveToBottom(persisted);
-        storyHierarchyBusiness.moveToTop(persisted);
+        storyHierarchyBusiness.moveToBottom(persisted);   
         
         //new
         storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 

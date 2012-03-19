@@ -21,10 +21,11 @@ UserSpentEffortWidget.prototype.reload = function() {
 };
 UserSpentEffortWidget.prototype._parseDateValues = function(strValue) { 
   var parts = strValue.split("-");
-  if(parts.length != 3) {
+  if(parts.length != 2) {
+    console.log("SHOULD NEVER GET HERE.");
     return {};
   }
-  return {userTimeZone: part[2], week: parts[1], year: parts[0]};
+  return { week: parts[1], year: parts[0] };
 };
 UserSpentEffortWidget.prototype._registerSpentEffortEvents = function() {
   var me = this;
@@ -41,6 +42,7 @@ UserSpentEffortWidget.prototype._registerSpentEffortEvents = function() {
   this.element.find("select").change(function() {
     var data = me._parseDateValues($(this).val());
     data.userId = me.userId;
+    data.userTimeZone = new Date().getUserTimeZone();
     me.element.load("weeklySpentEffort.action",data, function(data) { 
       me._registerSpentEffortEvents();
     });

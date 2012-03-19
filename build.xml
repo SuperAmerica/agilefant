@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
 <project basedir="." default="webapp" name="Agilefant">
 
 	<property file="build-user.properties" />
@@ -72,6 +73,7 @@
 		<property description="The location to store the per run files" name="jmeter.result.dir" value="${test.reports.jmeter}" />
 		<property description="The resulting file location, make sure this is unique for each build" name="jmeter.result.file" value="${jmeter.result.dir}/result_${struts.agilefantVersionNumber}_${build.id}.xml" />
 		<property description="The location to generate the html and charts to. " name="jchav.result.dir" value="${test.reports.jchav}" />
+		
 		<path id="jax-ws">
 			<fileset dir="${lib}/build/jax-ws">
 					<include name="*.jar" />

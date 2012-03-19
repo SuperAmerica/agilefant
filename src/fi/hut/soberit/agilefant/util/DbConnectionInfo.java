@@ -6,9 +6,18 @@ public class DbConnectionInfo {
     private static String url;
     private static String dbName;
     private static String hostname;
+    private static String driver;
     
     public DbConnectionInfo()
     { }
+    
+    public String getDriver() {
+        return driver;
+    }
+    
+    public void setDriver(String driver) {
+        DbConnectionInfo.driver = driver;
+    }
     
     public String getPassword() {
         return password;

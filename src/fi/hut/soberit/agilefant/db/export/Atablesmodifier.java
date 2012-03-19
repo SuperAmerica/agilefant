@@ -51,7 +51,7 @@ public class Atablesmodifier {
         int tablesize= tables.size();
         int counter=0;
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName(dbinfo.getDriver()).newInstance();
             connection = DriverManager.getConnection
                     (sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
             statement = connection.createStatement();
@@ -83,7 +83,7 @@ public class Atablesmodifier {
             ArrayList dbtables = new ArrayList<String>();
             
             // Get all anonym_ tables
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName(dbinfo.getDriver()).newInstance();
             connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
             statement = connection.createStatement();
            
@@ -124,7 +124,7 @@ public class Atablesmodifier {
         String err_column = "";
         try{
             String sqlConnection = dbinfo.getUrl();
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName(dbinfo.getDriver()).newInstance();
             connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
             statement = connection.createStatement();
             
@@ -175,7 +175,7 @@ public class Atablesmodifier {
             ArrayList dbtables = new ArrayList<String>();
             
             String sqlConnection = dbinfo.getUrl();
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName(dbinfo.getDriver()).newInstance();
             connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
            
             PreparedStatement ps = null;
@@ -204,7 +204,7 @@ public class Atablesmodifier {
             ArrayList dbcolumns = new ArrayList<anonymColumn>();
             
             String sqlConnection = dbinfo.getUrl();
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            Class.forName(dbinfo.getDriver()).newInstance();
             connection = DriverManager.getConnection(sqlConnection, dbinfo.getUsername(), dbinfo.getPassword());
            
             PreparedStatement ps = null;

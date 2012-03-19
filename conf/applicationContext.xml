@@ -96,6 +96,9 @@
 			<property name="url">
 				<value>${hibernate.connection.url}</value>
 			</property>
+			<property name="driver">
+				<value>${hibernate.connection.driver_class}</value>
+			</property>
 	</bean>
 	<bean name="aefFunctions" class="fi.hut.soberit.agilefant.web.function.AEFFunctions"></bean>
 

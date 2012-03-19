@@ -286,7 +286,11 @@ StoryTreeController.prototype.initTree = function() {
         }
       }
     },
-    crrm: {},
+    crrm: {
+    	"move" : {
+    		"default_position" : "before"
+    	}
+    },
     dnd: {
       "copy_modifier": "",
       "open_timeout": 1000

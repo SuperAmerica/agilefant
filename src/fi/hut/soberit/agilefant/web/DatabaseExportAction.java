@@ -14,6 +14,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import fi.hut.soberit.agilefant.business.DatabaseBackupBusiness;
 import fi.hut.soberit.agilefant.db.export.Atablesmodifier;
 import fi.hut.soberit.agilefant.db.export.DbBackupper;
+import fi.hut.soberit.agilefant.util.DbConnectionInfo;
 
 @Component("dbExportAction")
 @Scope("prototype")

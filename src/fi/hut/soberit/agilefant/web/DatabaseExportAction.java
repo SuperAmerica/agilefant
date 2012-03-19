@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,6 @@ import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.db.export.Atablesmodifier;
 import fi.hut.soberit.agilefant.db.export.DbBackupper;
-import fi.hut.soberit.agilefant.util.DbConnectionInfo;
 
 @Component("dbExportAction")
 @Scope("prototype")

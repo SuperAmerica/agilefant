@@ -75,7 +75,15 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
     }
 
     public String retrieveAll() {
-        products = productBusiness.retrieveAll();
+        // TODO: Should this be moved some place else?
+        // Add standalone iterations to products list
+        Product standaloneProduct = new Product();
+        standaloneProduct.setName("[Standalone Iterations]");
+        standaloneProduct.setId(0);
+        products.add(standaloneProduct);
+
+        products.addAll(productBusiness.retrieveAll());
+        
         return Action.SUCCESS;
     }
     

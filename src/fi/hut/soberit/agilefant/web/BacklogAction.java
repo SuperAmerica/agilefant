@@ -59,8 +59,14 @@ public class BacklogAction extends ActionSupport {
      * @return
      */
     public String retrieveSubBacklogs() {
-        backlog = backlogBusiness.retrieveIfExists(backlogId);
-        backlogs = backlogBusiness.getChildBacklogs(backlog);
+        if (backlogId == 0) {
+            // TODO: Retrieve standalone iterations
+            backlogs = backlogBusiness.retrieveAllStandAloneIterations();
+        }
+        else {
+            backlog = backlogBusiness.retrieveIfExists(backlogId);
+            backlogs = backlogBusiness.getChildBacklogs(backlog);
+        }
         return Action.SUCCESS;
     }
 

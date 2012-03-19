@@ -133,8 +133,11 @@ public class TimesheetExportBusinessImpl implements TimesheetExportBusiness {
     }
 
     protected void setRowValues(Row row, TimesheetExportRowData rowData) {
-
-        createCellWithValue(row, rowData.getProduct().getName(),
+        String productName = "";
+        if (rowData.getProduct() != null)
+            productName = rowData.getProduct().getName();
+        
+        createCellWithValue(row, productName,
                 PRODUCT_COLUMN_NUM);
         if (rowData.getProject() != null) {
             createCellWithValue(row, rowData.getProject().getName(),

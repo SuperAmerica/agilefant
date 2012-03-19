@@ -92,7 +92,7 @@
 				var ret = [];
 				container.find("option:selected").each(function() {
 					var val = parseInt(this.value);
-					if(val > 0) {
+					if(val >= 0) {
 						ret.push(val);
 					}
 				});

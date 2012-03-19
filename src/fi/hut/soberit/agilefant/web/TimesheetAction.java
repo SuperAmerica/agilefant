@@ -7,8 +7,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,9 +23,11 @@ import org.springframework.stereotype.Component;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.TimesheetBusiness;
 import fi.hut.soberit.agilefant.business.TimesheetExportBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.BacklogTimesheetNode;
 import flexjson.JSONSerializer;
@@ -48,6 +52,9 @@ public class TimesheetAction extends ActionSupport {
 
     @Autowired
     private UserBusiness userBusiness;
+    
+    @Autowired
+    private BacklogBusiness backlogBusiness;
     
     private Set<Integer> productIds = new HashSet<Integer>();
     
@@ -94,6 +101,15 @@ public class TimesheetAction extends ActionSupport {
             addActionError("No backlogs selected.");
             return Action.ERROR;
         }        
+        if (selectedBacklogIds.contains(0))
+        {
+            // Standalone Iterations
+            selectedBacklogIds.remove(0);
+            Collection<Backlog> iters = backlogBusiness.retrieveAllStandAloneIterations();
+            for (Iterator<Backlog> i = iters.iterator();i.hasNext();){
+                selectedBacklogIds.add(i.next().getId());
+            }
+        }
         products = timesheetBusiness.getRootNodes(selectedBacklogIds, startDate, endDate, this.userIds);
         effortSum = timesheetBusiness.getRootNodeSum(products);
         return Action.SUCCESS;
@@ -105,6 +121,15 @@ public class TimesheetAction extends ActionSupport {
             addActionError("No backlogs selected.");
             return Action.ERROR;
         }        
+        if (selectedBacklogIds.contains(0))
+        {
+            // Standalone Iterations
+            selectedBacklogIds.remove(0);
+            Collection<Backlog> iters = backlogBusiness.retrieveAllStandAloneIterations();
+            for (Iterator<Backlog> i = iters.iterator();i.hasNext();){
+                selectedBacklogIds.add(i.next().getId());
+            }
+        }
         Workbook wb = this.timesheetExportBusiness.generateTimesheet(this, selectedBacklogIds, startDate, endDate, userIds);
         this.exportableReport = new ByteArrayOutputStream();
         try {
@@ -219,6 +244,9 @@ public class TimesheetAction extends ActionSupport {
     }
     public long getEffortSum() {
         return effortSum;
+    }
+    public void setBacklogBusiness(BacklogBusiness backlogBusiness) {
+        this.backlogBusiness = backlogBusiness;
     }
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;

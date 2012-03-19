@@ -534,7 +534,7 @@ TaskModel.prototype.getContext = function() {
     return {"backlog": parent, "story": null};
   }
   else if (this.getParent() instanceof StoryModel) {
-    return {"backlog": parent.getParent(), "story": parent};
+    return {"backlog": parent.getIteration(), "story": parent};
   }
   return {"backlog": null, "story": null};
 };

@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +27,8 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
 
     @PrefetchId
     private int iterationId;
+    
+    private String readonlyToken;
 
     private Iteration iteration;
 
@@ -94,6 +98,57 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
         return Action.SUCCESS;
     }
+    
+    public String iterationMetricsByToken() {
+        iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
+        iterationMetrics = iterationBusiness.getIterationMetrics(iteration);
+        return Action.SUCCESS;
+    }
+    
+    public String createReadonlyToken() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        iteration.setReadonlyToken(generateReadonlyToken());
+        
+        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds);
+        
+        this.readonlyToken = iteration.getReadonlyToken();
+
+        return Action.SUCCESS;
+    }
+    
+    public String clearReadonlyToken() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        iteration.setReadonlyToken(null);
+        
+        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds);
+        
+        this.readonlyToken = iteration.getReadonlyToken();
+
+        return Action.SUCCESS;
+    }
+    
+    public String setReadonlyTokenForJsp() {
+        iteration = iterationBusiness.retrieve(iterationId);
+        this.readonlyToken = iteration.getReadonlyToken();
+        
+        return Action.SUCCESS;
+    }
+    
+    private String generateReadonlyToken()
+    {
+        SecureRandom r = new SecureRandom();
+        String token = new BigInteger(130, r).toString();
+        
+        int count = iterationBusiness.getIterationCountFromReadonlyToken(token);
+        while(count > 0){
+            r = new SecureRandom();
+            token = new BigInteger(130, r).toString();
+            count = iterationBusiness.getIterationCountFromReadonlyToken(token);
+        }
+        
+        return token;
+    }
+    
     /*
     @Validations(
             requiredFields = {@RequiredFieldValidator(type=ValidatorType.SIMPLE, fieldName="iteration.name", key="iteration.missingName"),
@@ -129,6 +184,14 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
 
     public void setIterationId(int iterationId) {
         this.iterationId = iterationId;
+    }
+    
+    public String getReadonlyToken() {
+        return readonlyToken;
+    }
+    
+    public void setReadonlyToken(String readonlyToken) {
+        this.readonlyToken = readonlyToken;
     }
 
     public Iteration getIteration() {

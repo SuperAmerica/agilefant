@@ -82,6 +82,15 @@ $(document).ready(function() {
     controller.removeIteration();
   }).appendTo(actionMenu);
 
+  $('<li/>').text('Share').click(function() {
+	    closeMenu();
+	    controller.shareIteration();
+  }).appendTo(actionMenu);
+  
+  $('<li/>').text('Unshare').click(function() {
+	    closeMenu();
+	    controller.unshareIteration();
+  }).appendTo(actionMenu);
   
   var closeMenu = function() {
     actionMenu.fadeOut('fast');

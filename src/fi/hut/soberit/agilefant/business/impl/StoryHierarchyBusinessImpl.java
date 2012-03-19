@@ -58,7 +58,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         if (oldParent != null) {
             oldParent.getChildren().remove(story);
         }
-        reference.getChildren().add(story);
+        reference.getChildren().add(0, story);
         story.setParent(reference);
 
         updateBacklogRanks(oldParent);
@@ -96,19 +96,21 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     }
 
     @Transactional
-    public void moveBefore(Story story, Story reference) {
+    public void moveBefore(Story story, Story reference) {        
         Story oldParent = story.getParent();
         Story parent = reference.getParent();
         LinkedList<Story> tmpList = retrieveChildListAndMoveStory(story,
                 oldParent, parent);
 
-        tmpList.add(tmpList.indexOf(reference), story);
+        if (tmpList != null && tmpList.indexOf(reference) >= 0) {
+            tmpList.add(tmpList.indexOf(reference), story);
 
-        updateTreeRanks(tmpList);
-        if (parent != null) {
-            parent.setChildren(tmpList);
-            if (parent != oldParent) {
-                updateBacklogRanks(parent);
+            updateTreeRanks(tmpList);
+            if (parent != null) {
+                parent.setChildren(tmpList);
+                if (parent != oldParent) {
+                    updateBacklogRanks(parent);
+                }
             }
         }
     }
@@ -118,6 +120,29 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         Product prod = backlogBusiness.getParentProduct(story.getBacklog());
         int maxRank = storyHierarchyDAO.getMaximumTreeRank(prod.getId());
         story.setTreeRank(maxRank + 1);
+    }
+    
+    @Transactional
+    public void moveToTop(Story story) {
+        // parent -> not root story, move to top of parent
+        Story parent = story.getParent();
+        Story firstSibling;
+        if (parent == null) {             
+            Product prod = backlogBusiness.getParentProduct(story.getBacklog());            
+            firstSibling = this.retrieveProductRootStories(prod.getId(), null).get(0);
+        } else {            
+            firstSibling = parent.getChildren().get(0);
+        }
+        
+        if ((firstSibling != null) && (story != null)) {
+            this.moveBefore(story, firstSibling);
+        }
+        // root story
+        /*
+        Product prod = backlogBusiness.getParentProduct(story.getBacklog());
+        List<Story> stories = retrieveProductRootStories(prod.getId(), null);        
+        this.moveBefore(story, stories.get(0));
+        */
     }
     
     

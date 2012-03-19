@@ -230,12 +230,46 @@
       </result>
     </action>
     
+    <action name="ROIterationData" class="ROIterationAction" method="fetchROIterationData">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+        <param name="patterns">-parent, -stories, -*.hourEntries, 
+          +rankedStories, +rankedStories.tasks, 
+          +rankedStories.parent.id, +rankedStories.parent.class, +rankedStories.parent.name, -rankedStories.parent.*, 
+          +rankedStories.labels, -rankedStories.labels.creator, -rankedStories.backlog,
+          +rankedStories.responsibles.id, +rankedStories.responsibles.initials, +rankedStories.responsibles.class, -rankedStories.responsibles.*, 
+          +rankedStories.tasks.responsibles.id, +rankedStories.tasks.responsibles.initials, +rankedStories.tasks.responsibles.class, -rankedStories.tasks.responsibles.*, 
+          +rankedStories.tasks.workingOnTask.user.id, +rankedStories.tasks.workingOnTask.user.initials, +rankedStories.tasks.workingOnTask.user.class, -rankedStories.tasks.workingOnTask.user.*, 
+          +tasks.responsibles.id, +tasks.responsibles.initials, +tasks.responsibles.class, -tasks.responsibles.*, 
+          +tasks.workingOnTask.user.id, +tasks.workingOnTask.user.initials, +tasks.workingOnTask.user.class, -tasks.workingOnTask.user.*, 
+          +tasks, +assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
+      </result>
+    </action>
+    
     <action name="iterationRowMetrics" class="iterationAction" method="iterationRowMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationRowMetrics.jsp</result>
     </action>
     
     <action name="iterationMetrics" class="iterationAction" method="iterationMetrics">
       <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
+    </action>
+    
+    <action name="ROIterationMetricsByToken" class="iterationAction" method="iterationMetricsByToken">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/inc/iterationMetrics.jsp</result>
+    </action>
+  
+    <action name="createReadonlyToken" class="iterationAction" method="createReadonlyToken">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+        <param name="patterns">+readonlyToken</param>
+      </result>
+    </action>
+    
+    <action name="clearReadonlyToken" class="iterationAction" method="clearReadonlyToken">
+      <result name="success" type="json">
+        <param name="target">iteration</param>
+        <param name="patterns">+readonlyToken</param>
+      </result>
     </action>
   
     <action name="iterationAssignments" class="iterationAction" method="iterationAssignments">
@@ -249,6 +283,14 @@
       <result type="dispatcher">/WEB-INF/jsp/forms/deleteIterationForm.jsp</result>
     </action>
     
+    <action name="shareIterationForm" class="iterationAction" method="setReadonlyTokenForJsp">
+      <result type="dispatcher">/WEB-INF/jsp/forms/shareIterationForm.jsp</result>
+    </action>
+    
+    <action name="unshareIterationForm">
+      <result type="dispatcher">/WEB-INF/jsp/forms/unshareIterationForm.jsp</result>
+    </action>
+    
     <action name="deleteIteration" method="delete" class="iterationAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
@@ -256,6 +298,10 @@
     </action>
     
     <action name="iterationHistory" class="iterationHistoryAction">
+      <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/iterationMingledHistory.jsp</result>
+    </action>
+    
+    <action name="ROIterationHistoryByToken" class="iterationHistoryAction" method="executeByToken">
       <result name="success" type="dispatcher">/WEB-INF/jsp/fragments/iterationMingledHistory.jsp</result>
     </action>
     

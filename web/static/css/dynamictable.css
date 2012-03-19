@@ -700,6 +700,18 @@ table.project-iteration-metrics {
   text-decoration: underline;
 }
 
+.story-id-link {
+  font-size: 100%;
+  text-align: right;
+  cursor: pointer;
+}
+
+.story-id-link span {
+  color: #1E5EEE;
+  margin-right: 1ex;
+  text-decoration: underline;
+}
+
 /**
  * Portfolio page styles
  */

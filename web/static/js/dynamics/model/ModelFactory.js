@@ -180,14 +180,15 @@ ModelFactory.types = {
  * @see ModelFactory.initializeFor
  */
 ModelFactory.initializeForTypes = {
-    iteration:  "iteration",
-    project:    "project",
-    product:    "product",
-    products:	"products",
-    dailyWork:  "dailyWork",
-    teams:      "teams",
-    users:      "users",
-    user:       "user"
+    iteration:  	"iteration",
+    ROIteration: 	"ROIteration",
+    project:    	"project",
+    product:    	"product",
+    products:		"products",
+    dailyWork:  	"dailyWork",
+    teams:      	"teams",
+    users:      	"users",
+    user:       	"user"
 };
 
 
@@ -455,6 +456,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
     "iteration": {
       url: "ajax/iterationData.action",
       params: { iterationId: id },
+      callback: me._constructIteration
+    },
+    "ROIteration": {
+      url: "ajax/ROIterationData.action",
+      params: { readonlyToken: id },
       callback: me._constructIteration
     },
     "project": {

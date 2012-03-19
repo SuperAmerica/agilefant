@@ -44,10 +44,10 @@ import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 import fi.hut.soberit.agilefant.transfer.IterationTO;
-import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
 import fi.hut.soberit.agilefant.transfer.TaskTO;
 import fi.hut.soberit.agilefant.util.HourEntryHandlingChoice;
@@ -315,6 +315,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         metrics.setPercentDoneTasks(calculatePercent(pairTasks.first, pairTasks.second));
         metrics.setPercentDoneStories(calculatePercent(pairStories.first, pairStories.second));
         metrics.setPercentSpentEffort(calculatePercent(metrics.getSpentEffort().intValue(), metrics.getOriginalEstimate().intValue()));
+        if(metrics.getPercentSpentEffort() > 100)
+            metrics.setPercentSpentEffort(100);
         metrics.setDoneStoryPointsPercentage(calculatePercent(metrics.getDoneStoryPoints(), metrics.getStoryPoints()));
         metrics.setDaysLeftPercentage(calculatePercent(metrics.getDaysLeft(), metrics.getTotalDays()));
         if(metrics.getEffortLeft() != null && metrics.getOriginalEstimate() != null) {
@@ -355,6 +357,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         iter.setBaselineLoad(iterationData.getBaselineLoad());
         iter.setDescription(iterationData.getDescription());
         iter.setName(iterationData.getName());
+        iter.setReadonlyToken(iterationData.getReadonlyToken());
         setAssignees(iter, assigneeIds);
         this.iterationDAO.store(iter);
         if (parent != null && iter.getParent() != parent) {
@@ -619,5 +622,15 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
                 true, false));
 
         return ret;
+    }
+    
+    public Iteration retreiveIterationByReadonlyToken(String readonlyToken) {
+        Iteration iteration = iterationDAO.getIterationFromReadonlyToken(readonlyToken);
+        return iteration;
+    }
+    
+    public int getIterationCountFromReadonlyToken(String readonlyToken) {
+        int count = iterationDAO.getIterationCountFromReadonlyToken(readonlyToken);
+        return count;
     }
 }

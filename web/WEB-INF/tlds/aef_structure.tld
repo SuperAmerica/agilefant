@@ -19,7 +19,7 @@
     <name>createNewMenu</name>
     <path>/WEB-INF/tags/structure/createNewMenu.tag</path>
   </tag-file>
-
+  
   <tag-file>
     <name>mainTabs</name>
     <path>/WEB-INF/tags/structure/defaultTabs.tag</path>

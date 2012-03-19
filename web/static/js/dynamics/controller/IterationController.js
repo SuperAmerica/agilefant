@@ -159,6 +159,87 @@ IterationController.prototype.removeIteration = function() {
   });
 };
 
+IterationController.prototype.shareIteration = function() {
+	var me = this;
+	var dialog = new LazyLoadedFormDialog();
+	var token = me.model.getReadonlyToken();
+	
+	if (!token) {
+		jQuery.ajax({
+		    type: "POST",
+		    url: "ajax/createReadonlyToken.action",
+		    async: false,
+		    cache: false,
+		    data: {IterationId: me.model.getId()},
+		    dataType: "json",
+		    success: function(data, status) {
+		      dialog.init({
+					title: "Share Iteration",
+					url: "ajax/shareIterationForm.action",
+					data: {
+						IterationId: me.model.getId(),
+						ReadonlyToken: token
+					}
+				});
+		      ModelFactory.updateObject(data);
+		    },
+		    error: function(xhr, status, error) {
+		      MessageDisplay.Error("Error creating read only link", xhr);
+		      me.rollback();
+		    }
+		  });
+	} else {
+		dialog.init({
+			title: "Share Iteration",
+			url: "ajax/shareIterationForm.action",
+			data: {
+				IterationId: me.model.getId(),
+				ReadonlyToken: token
+			}
+		});
+	}
+};
+
+IterationController.prototype.unshareIteration = function() {
+	var me = this;
+	var dialog = new LazyLoadedFormDialog();
+	var token = me.model.getReadonlyToken();	
+	
+	if (!token) {
+		MessageDisplay.Warning("Iteration currently does not have read only URL.");
+	} else {
+	
+		  dialog.init({
+		    title: "Unshare iteration",
+		    url: "ajax/unshareIterationForm.action",
+		    data: {
+		      IterationId: me.model.getId()
+		    },
+		    okCallback: function(extraData) {
+				jQuery.ajax({
+				    type: "POST",
+				    url: "ajax/clearReadonlyToken.action",
+				    async: false,
+				    cache: false,
+				    data: {IterationId: me.model.getId()},
+				    dataType: "json",
+				    success: function(data, status) {
+				      MessageDisplay.Ok("Share link removed");
+				      me.model.setReadonlyToken(null);
+				    },
+				    error: function(xhr, status, error) {
+				      MessageDisplay.Error("Error unsharing read only link", xhr);
+				      me.rollback();
+				    }
+				  });
+		    },
+		    closeCallback: function() {
+		      dialog.close();
+		    }
+		  });
+	}
+};
+
 /** override backlog controller base class to reload metrics box **/
 IterationController.prototype.openLogEffort = function() {
   var widget = new SpentEffortWidget(this.model, jQuery.proxy(function() {
@@ -183,10 +264,10 @@ IterationController.prototype.handleModelEvents = function(event) {
     if(event.getObject() instanceof TaskModel) {
       this.reloadMetrics();
     }
-    if(event.getObject() instanceof StoryModel) {
+    else if(event.getObject() instanceof StoryModel) {
       this.reloadMetricsBox();
     }
-    if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof IterationModel && event.getRelation() === "story") {
+    else if(event instanceof DynamicsEvents.RelationUpdatedEvent && event.getObject() instanceof IterationModel && event.getRelation() === "story") {
       this.reloadMetricsBox();
     }
   }

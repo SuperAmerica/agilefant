@@ -363,5 +363,80 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         crit.add(Restrictions.idEq(userId));
         return asList(crit);
     }
-
+    
+    /**
+     * This function determines whether or not an iteration has an associated 
+     * token for readonly access. 
+     * 
+     * @param iterationId
+     * @return true if iteration has an associated readonly token, false otherwise
+     */
+    public boolean hasReadonlyToken(int iterationId) {
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.idEq(iterationId));
+        crit.add(Restrictions.and(Restrictions.isNotNull("readonlyToken"), Restrictions.ne("readonlyToken", "")));
+        
+        return !asList(crit).isEmpty();
+    }
+    
+    /**
+     * This function determines whether a given readonly token is valid of not. 
+     * A token is valid if it exists in the backlog db. 
+     * 
+     * @param token
+     * @return true if the readonly token exists in the database, false otherwise.
+     */
+    public boolean isValidReadonlyToken(String token) {
+        
+        // Empty or null tokens can never be valid.
+        if (token == null || token.equals("")) {
+            return false;
+        }
+        
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.eq("readonlyToken", token));
+        
+        return !asList(crit).isEmpty();
+    }
+    
+    /**
+     * This function fetches the iteration id associated with a given token. 
+     * 
+     * @param token
+     * @return if the token is valid the associated iteration id is returned, 
+     *          if the token is not valid null is returned. 
+     */
+    public Iteration getIterationFromReadonlyToken(String token) {
+        
+        // First ensure token is valid.
+        if (!isValidReadonlyToken(token)) {
+            return null;
+        }
+        
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.eq("readonlyToken", token));
+        List<Iteration> dummy = asList(crit);
+        return dummy.get(0);
+    }
+    
+    /**
+     * This function fetches the count associated with a given token in case we need to
+     * create another one to be unique
+     * 
+     * @param token
+     * @return if the token is valid the associated iteration id is returned, 
+     *          if the token is not valid null is returned. 
+     */
+    public int getIterationCountFromReadonlyToken(String token) {
+        
+        // First ensure token is valid.
+        if (!isValidReadonlyToken(token)) {
+            return 0;
+        }
+        
+        Criteria crit = getCurrentSession().createCriteria(Iteration.class);
+        crit.add(Restrictions.eq("readonlyToken", token));
+        List<Iteration> dummy = asList(crit);
+        return dummy.size();
+    }
 }

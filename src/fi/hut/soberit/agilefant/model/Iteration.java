@@ -67,7 +67,7 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     
     private ExactEstimate baselineLoad = new ExactEstimate(0);
     
-    
+    private String readonlyToken;
 
 
     @JSON
@@ -157,4 +157,14 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
         this.baselineLoad = baselineLoad;
     }
     
+    public void setReadonlyToken(String readonlyToken) {
+        this.readonlyToken = readonlyToken;
+    }
+    
+    @Column(unique=true)
+    @JSON
+    @NotAudited
+    public String getReadonlyToken() {
+        return readonlyToken;
+    }
 }

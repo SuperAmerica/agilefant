@@ -17,6 +17,9 @@
 		class="org.springframework.security.util.FilterChainProxy">		
 		<security:filter-chain-map path-type="ant">
 		  <security:filter-chain filters="remoteServicesFilter" pattern="/rs/**"/>
+		  <security:filter-chain filters="readonlyFilter" pattern="/token/*"/>
+<!-- 	  <security:filter-chain filters="readonlyFilter" pattern="/RO*"/> -->
+  		  <security:filter-chain filters="readonlyFilter" pattern="/ajax/RO*"/> 
 		  <security:filter-chain
         filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
         pattern="/ajax/**"/>
@@ -28,6 +31,7 @@
 	
 	<bean id="remoteServicesFilter" class="fi.hut.soberit.agilefant.security.RemoteServicesFilter" />
 	
+	<bean id="readonlyFilter" class="fi.hut.soberit.agilefant.readonly.ReadonlyFilter" />
 
 	<bean id="httpSessionContextIntegrationFilter"
 		class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
@@ -132,6 +136,7 @@
 				/jsp/inc/_footer.jsp=IS_AUTHENTICATED_ANONYMOUSLY
 				/newpassword.action=IS_AUTHENTICATED_ANONYMOUSLY
 				/generatenewpassword.action=IS_AUTHENTICATED_ANONYMOUSLY
+				/ro*=IS_AUTHENTICATED_ANONYMOUSLY
 				/static/**=IS_AUTHENTICATED_ANONYMOUSLY
 				/**=IS_AUTHENTICATED_REMEMBERED
 				<!-- /showReadOnlyIteration.action?**=IS_AUTHENTICATED_ANONYMOUSLY -->

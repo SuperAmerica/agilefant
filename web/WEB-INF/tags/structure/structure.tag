@@ -62,7 +62,7 @@
     traditional: true, //force jquery back to < 1.4 series style data serialization
     dataFilter: function(data, type) {
       if (data === "AGILEFANT_AUTHENTICATION_ERROR") {
-        window.location.reload(); 
+      	window.location.reload(); 
       }
       return data;
     },
@@ -245,7 +245,14 @@
 </div>
 
 
-<div id="bodyWrapper">
+<c:choose>
+	<c:when test="${hideMenu != true}">
+		<div id="bodyWrapper">
+	</c:when>
+	<c:otherwise>
+		<div id="bodyWrapperNoMenu">
+	</c:otherwise>
+</c:choose>
   <c:if test="${hideMenu != true}">
     <div id="menuControlPanel"> 
       <div id="menuToggleControl"> </div>

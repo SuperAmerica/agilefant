@@ -259,7 +259,10 @@ public class IterationBurndownBusinessImpl implements IterationBurndownBusiness 
         int rawOffset = localTimeZone.getRawOffset() / 60000;
         
         //get offset difference in minutes
-        timeDifferenceMinutes = rawOffset - timeZoneOffset.intValue();
+        if(timeZoneOffset != null)
+            timeDifferenceMinutes = rawOffset - timeZoneOffset.intValue();
+        else
+            timeDifferenceMinutes = rawOffset;
         
         JFreeChart burndown = ChartFactory.createTimeSeriesChart("'"
                 + iteration.getName() + "' burndown", DATE_AXIS_LABEL,

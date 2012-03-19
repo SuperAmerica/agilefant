@@ -26,7 +26,7 @@ var ROIterationController = function ROIterationController(options) {
   var me = this;
   this.tabs.bind('tabsselect', function(event, ui) {
     if(ui.index === 1) {
-      me.historyElement.load("ajax/ROiterationHistoryByToken.action",{readonlyToken: me.readonlyToken});
+      me.historyElement.load("ajax/ROIterationHistoryByToken.action",{readonlyToken: me.readonlyToken});
     }
   });
   window.pageController.setMainController(this);
@@ -129,7 +129,7 @@ ROIterationController.prototype.reloadBurndown = function() {
 };
 
 ROIterationController.prototype.initializeMetricsBox = function() {
-  this.metricsElement.load("ajax/ROiterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
+  this.metricsElement.load("ajax/ROIterationMetricsByToken.action", {readonlyToken: this.readonlyToken});
 }
 
 ROIterationController.prototype.reloadMetricsBox = function() {
@@ -154,7 +154,7 @@ ROIterationController.prototype.initializeStoryList = function() {
  */
 ROIterationController.prototype.initialize = function() {
   var me = this;
-  ModelFactory.initializeFor(ModelFactory.initializeForTypes.ROiteration,
+  ModelFactory.initializeFor(ModelFactory.initializeForTypes.ROIteration,
       this.readonlyToken, function(model) {
         me.model = model;
         me.attachModelListener();

@@ -19,7 +19,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Session;
 
 import fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate;
+import fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 
 public class ReadonlyFilter extends GenericFilterBean {
@@ -33,13 +36,15 @@ public class ReadonlyFilter extends GenericFilterBean {
         HttpServletRequest reqt = (HttpServletRequest) request;
         
         // Create a Data Access Object instance and open a Hibernate session.
-        IterationDAOHibernate iterationDao = new IterationDAOHibernate();;
+        IterationDAOHibernate iterationDao = new IterationDAOHibernate();
+        UserDAOHibernate userDao = new UserDAOHibernate();
+        
         SessionFactory sessionFactory;
         try {
             sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
             iterationDao.setSessionFactory(sessionFactory);
+            userDao.setSessionFactory(sessionFactory);
         } catch (NamingException e) {
-            // TODO Need a custom error message? Hopefully this should never run. 
             e.printStackTrace();
             return;
         }
@@ -48,20 +53,31 @@ public class ReadonlyFilter extends GenericFilterBean {
         // Fetch url token from request.
         String token = getTokenFromUrl(reqt.getRequestURL().toString());
         
-        
-        
         if (iterationDao.isValidReadonlyToken(token)) {
+            session.disconnect();
+            session.close();
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
-        }
-        else if (reqt.getRequestURL().toString().contains("ROIteration.action")) {
-            System.out.println("TEST");
-        }
-        else {
+        } else if (reqt.getRequestURL().toString().contains("ROIteration")) {
+            session.disconnect();
+            session.close();
+            
+            //log in read only user
+            User user = userDao.getByLoginName("readonly");
+            SecurityUtil.setLoggedUser(user);
+            
+            try{
+                chain.doFilter(request, response);
+            } catch(NullPointerException npe){
+                //user tried to go back in the browser after unsharing
+                resp.sendRedirect("/agilefant/login.jsp");
+            }
+        } else {
+            session.disconnect();
+            session.close();
+            
             // Token is not valid, so redirect to login page.
             resp.sendRedirect("/agilefant/login.jsp");
         }
-        
-        session.close();
     }
     
     private String getTokenFromUrl(String url) {

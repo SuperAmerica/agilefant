@@ -62,7 +62,7 @@
     traditional: true, //force jquery back to < 1.4 series style data serialization
     dataFilter: function(data, type) {
       if (data === "AGILEFANT_AUTHENTICATION_ERROR") {
-        window.location.reload(); 
+      	window.location.reload(); 
       }
       return data;
     },

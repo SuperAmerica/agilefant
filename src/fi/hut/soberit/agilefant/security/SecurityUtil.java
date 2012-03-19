@@ -3,10 +3,16 @@ package fi.hut.soberit.agilefant.security;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.security.Authentication;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 
+import fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.web.RefreshUserInterceptor;
 
@@ -39,13 +45,33 @@ public class SecurityUtil {
         if (SecurityContextHolder.getContext().getAuthentication() == null)
             throw new IllegalStateException("no logged user");
 
-        AgilefantUserDetails ud = (AgilefantUserDetails) SecurityContextHolder
-                .getContext().getAuthentication().getPrincipal();
+        try{
+            AgilefantUserDetails ud = (AgilefantUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (ud == null)
-            throw new IllegalStateException("no logged user");
-
-        return ud.getUserId();
+            if (ud == null)
+                throw new IllegalStateException("no logged user");
+            
+            return ud.getUserId();
+        } catch(ClassCastException cce){
+            //log in read only user
+            SessionFactory sessionFactory = null;
+            UserDAOHibernate userDao = new UserDAOHibernate();
+            
+            try {
+                sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
+                userDao.setSessionFactory(sessionFactory);
+            } catch (NamingException e) {
+                e.printStackTrace();
+            }
+            Session session = sessionFactory.openSession();
+            
+            User user = userDao.getByLoginName("readonly");
+            
+            session.disconnect();
+            session.close();
+            
+            return user.getId();
+        }
     }
 
     /**

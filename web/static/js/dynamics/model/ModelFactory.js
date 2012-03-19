@@ -181,7 +181,7 @@ ModelFactory.types = {
  */
 ModelFactory.initializeForTypes = {
     iteration:  	"iteration",
-    ROiteration: 	"ROiteration",
+    ROIteration: 	"ROIteration",
     project:    	"project",
     product:    	"product",
     products:		"products",
@@ -458,8 +458,8 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       params: { iterationId: id },
       callback: me._constructIteration
     },
-    "ROiteration": {
-      url: "ajax/ROiterationData.action",
+    "ROIteration": {
+      url: "ajax/ROIterationData.action",
       params: { readonlyToken: id },
       callback: me._constructIteration
     },

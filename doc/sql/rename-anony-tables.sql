@@ -63,3 +63,5 @@ RENAME TABLE agilefant.anonym_whatsnextentry TO agilefant.whatsnextentry;
 RENAME TABLE agilefant.anonym_widgetcollections TO agilefant.widgetcollections;
 
 RENAME TABLE agilefant.anonym_widgets TO agilefant.widgets;
+
+RENAME TABLE agilefant.anonym_team_product TO agilefant.team_product;

@@ -85,7 +85,21 @@
 		</property>
 		<property name="hibernateProperties" ref="applicationProperties" />
 	</bean>
-
+	<bean id="DbConnectionInfo"
+		class="fi.hut.soberit.agilefant.util.DbConnectionInfo">
+			<property name="password">
+				<value>${hibernate.connection.password}</value>
+			</property>
+			<property name="username">
+				<value>${hibernate.connection.username}</value>
+			</property>
+			<property name="url">
+				<value>${hibernate.connection.url}</value>
+			</property>
+			<property name="driver">
+				<value>${hibernate.connection.driver_class}</value>
+			</property>
+	</bean>
 	<bean name="aefFunctions" class="fi.hut.soberit.agilefant.web.function.AEFFunctions"></bean>
 
 </beans>

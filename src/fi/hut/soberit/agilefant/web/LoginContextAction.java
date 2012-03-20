@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.web;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class LoginContextAction extends ActionSupport {
     
 
     @Override
-    public String execute() {
+    public String execute(){
         if (backlogBusiness.countAll() == 0) {
             return "help";
         }
@@ -33,7 +34,6 @@ public class LoginContextAction extends ActionSupport {
         else {
             return "selectBacklog";
         }
-        
     }
 
 }

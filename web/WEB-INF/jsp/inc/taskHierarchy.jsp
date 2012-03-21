@@ -32,6 +32,40 @@
 
 <ul class="backlogHierarchy">
 <c:choose>
+  <c:when test="${aef:isStandaloneIteration(backlog)}">
+  <c:if test="${task.story != null}">
+	  <c:set var="storybacklog" value="${task.story.backlog}"/>
+	  <c:if test="${storybacklog.parent.name != null}">
+	    <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
+	    <a href="editBacklog.action?backlogId=${storybacklog.parent.id}">
+	      <c:out value="${storybacklog.parent.name}" />
+	    </a>
+	    </li>
+	  </c:if>
+	  <c:if test="${storybacklog.name != null}">
+	    <li style="margin-left: 1em; list-style-image: url('static/img/hierarchy_arrow.png');">
+	    <a href="editBacklog.action?backlogId=${storybacklog.id}">
+	      <c:out value="${storybacklog.name}" />
+	    </a>
+	    </li> 
+	  </c:if>
+	  
+	    <li style="margin-left: 2em; list-style-image: url('static/img/hierarchy_arrow.png');">
+	      <a href="editBacklog.action?backlogId=${backlog.id}">
+	        <c:out value="${backlog.name}" />
+	      </a>
+	    </li>
+    </c:if>
+    
+    <c:if test="${task.story == null}">
+	    <li style="list-style-image: url('static/img/hierarchy_arrow.png');">
+	      <a href="editBacklog.action?backlogId=${backlog.id}">
+	        <c:out value="${backlog.name}" />
+	      </a>
+	    </li>
+    </c:if>
+  </c:when>
+  
   <c:when test="${aef:isIteration(backlog)}">
   <c:if test="${backlog.parent.parent.name != null}">
     <li style="list-style-image: url('static/img/hierarchy_arrow.png');">

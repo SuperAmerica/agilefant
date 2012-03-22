@@ -180,6 +180,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstIteration)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.rankToBottom(story, firstIteration);
+        storyRankBusiness.rankToBottom(story, firstProject);
         
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
@@ -291,8 +292,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProduct)).andReturn(true);
         storyDAO.store(story);
-        storyRankBusiness.removeRank(story, firstIteration);
         storyRankBusiness.removeRank(story, firstProject);
+        storyRankBusiness.removeRank(story, firstIteration);
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
         

@@ -69,6 +69,7 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
         executeClassSql();
         Set<Integer> actualStoryIds = new HashSet<Integer>();
         List<Story> actual = this.testable.retrieveProjectLeafStories(project);
+
         assertEquals(5, actual.size());
         for(Story story : actual) {
             actualStoryIds.add(story.getId());

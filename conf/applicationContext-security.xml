@@ -23,8 +23,6 @@
 				pattern="/ROIteration.action" />
 			<security:filter-chain filters="readonlyFilter"
 				pattern="/ajax/RO*" />
-			<security:filter-chain filters="securityFilter"
-				pattern="/ajax/*" />
 			<security:filter-chain
 				filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
 				pattern="/ajax/**" />
@@ -37,8 +35,6 @@
 	<bean id="remoteServicesFilter" class="fi.hut.soberit.agilefant.security.RemoteServicesFilter" />
 	
 	<bean id="readonlyFilter" class="fi.hut.soberit.agilefant.readonly.ReadonlyFilter" />
-
-	<bean id="securityFilter" class="fi.hut.soberit.agilefant.security.SecurityFilter" />
 
 	<bean id="httpSessionContextIntegrationFilter"
 		class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />

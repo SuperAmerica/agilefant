@@ -79,13 +79,13 @@ public class AuthorizationInterceptor implements Interceptor {
         
         //matrix authorizations
         if (action instanceof BacklogAction){
-            accessDenied = !checkAccess(((BacklogAction) action).getBacklogId()); 
+            accessDenied = checkAccess(((BacklogAction) action).getBacklogId()); 
         } else if (action instanceof ProductAction) {
-            accessDenied = !checkAccess(((ProductAction) action).getProductId());  
+            accessDenied = checkAccess(((ProductAction) action).getProductId());  
         } else if (action instanceof ProjectAction) {
-            accessDenied = !checkAccess(((ProjectAction) action).getProjectId());      
+            accessDenied = checkAccess(((ProjectAction) action).getProjectId());      
         } else if (action instanceof IterationAction) {
-            accessDenied = !checkAccess(((IterationAction) action).getIterationId());
+            accessDenied = checkAccess(((IterationAction) action).getIterationId());
         } else {
             //admin authorizations
             currentUser = SecurityUtil.getLoggedUser();
@@ -112,19 +112,15 @@ public class AuthorizationInterceptor implements Interceptor {
     // check from the backlogId if the associated product is accessible for the current user    
     private boolean checkAccess(int backlogId){
         Product product = (backlogBusiness.getParentProduct(backlogBusiness.retrieve(backlogId)));
-        if(product == null){
-            //standalone iteration
-            return true;
-        }
         User user = SecurityUtil.getLoggedUser();
         Collection<Team> teams = user.getTeams();
         for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
             Team team = (Team) iter.next();
             if (team.getProducts().contains(product)) {
-                return true; 
+                return false; 
             }
         }
-        return false;
+        return true;
     }
 
 }

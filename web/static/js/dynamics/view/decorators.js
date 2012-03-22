@@ -180,6 +180,12 @@ var DynamicsDecorators = {
 
     return backlog.getName();
   },
+  iterationSelectDecorator: function(iteration) {
+  	if (!iteration) {
+  	  return "(no iteration selected)"; 
+  	}
+  	return iteration.getName();
+  },
   dateDecorator: function(value) {
     if(!value) {
       return "";

@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -68,7 +69,8 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     private ExactEstimate baselineLoad = new ExactEstimate(0);
     
     private String readonlyToken;
-
+    
+    private Set<Story> assignedStories = new HashSet<Story>();
 
     @JSON
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
@@ -167,4 +169,23 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     public String getReadonlyToken() {
         return readonlyToken;
     }
+    
+    @OneToMany(mappedBy = "iteration")
+    @NotAudited
+    @XmlElementWrapper
+    @XmlElement(name = "story")
+    public Set<Story> getAssignedStories() {
+        return assignedStories;
+    }
+    
+    public void setAssignedStories(Set<Story> stories) {
+        this.assignedStories = stories;
+    }
+
+    @Transient
+    @Override
+    public boolean isStandAlone() {
+        return this.getParent() == null;
+    }
+    
 }

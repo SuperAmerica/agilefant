@@ -41,7 +41,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
 
     private StoryState state;
     
-    private int iterationId;
+    private int iteration;
 
     private int priority;
 
@@ -89,7 +89,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     // CRUD
     
     public String create() {
-        story = this.storyBusiness.create(story, backlogId, userIds, labelNames);
+        story = this.storyBusiness.create(story, backlogId, iteration, userIds, labelNames);
         StoryRank rank = storyRankBusiness.getRankByBacklog(story, story.getBacklog());
         
         story = new StoryTO(story);
@@ -131,7 +131,7 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         if (usersChanged) {
             users = this.userIds;
         }
-        story = storyBusiness.store(storyId, story, null, users, tasksToDone);
+        story = storyBusiness.store(storyId, story, iteration!=0?iteration:null, users, tasksToDone);
         if (tasksToDone) {
             return Action.SUCCESS + "_withTasks";
         }
@@ -268,12 +268,12 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         this.storyId = storyId;
     }
     
-    public void setIterationId(int iterationId) {
-        this.iterationId = iterationId;
+    public void setIteration(int iterationId) {
+        this.iteration = iterationId;
     }
     
-    public int getIterationId() {
-        return iterationId;
+    public int getIteration() {
+        return iteration;
     }
 
     public void setPriority(Integer priority) {

@@ -135,7 +135,7 @@ var toggleElement = function toggleElement(selector, type) {
       </div>
     </li>
     
-    
+
     <c:if test="${!aef:isIteration(backlog) && !empty story.children}">
       <li>
         <input type="radio" value="moveTargetAndItsChildren" name="selectedAction" onchange="openElement('#suggestion_storyAndChildrenMessage','moveStoryAndChildren');return false;"/>

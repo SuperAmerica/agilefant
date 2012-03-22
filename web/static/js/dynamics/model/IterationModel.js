@@ -92,7 +92,10 @@ IterationModel.prototype._saveData = function(id, changedData) {
     data.iterationId = id;    
   } else {
     url = "ajax/storeNewIteration.action";
-    data.parentBacklogId = this.getParent().getId();
+    var parent = this.getParent();
+    if (parent) {
+      data.parentBacklogId = parent.getId();
+    }
   }
   
   jQuery.ajax({
@@ -106,7 +109,10 @@ IterationModel.prototype._saveData = function(id, changedData) {
       MessageDisplay.Ok("Iteration saved successfully");
       var object = ModelFactory.updateObject(data);
       if(!id) {
-        me.getParent().addIteration(object);
+        var parent=me.getParent();
+        if (parent) {
+          parent.addIteration(object);
+        }
         object.callListeners(new DynamicsEvents.AddEvent(object));
       }
     },

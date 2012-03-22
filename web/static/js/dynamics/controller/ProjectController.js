@@ -53,11 +53,12 @@ ProjectController.prototype.filter = function() {
         this.getStoryTreeStateFilters());
   }
   else if (activeTab === 2) { // iterations
-    this.iterationsView.showInfoMessage("Loading...");
-    this.model.reloadIterations(null, function() {
-      me.iterationsView.hideInfoMessage("Loading...");
-      //me.iterationsView.render();
-    });
+// Project-Level Auto-Refresh
+//    this.iterationsView.showInfoMessage("Loading...");
+//    this.model.reloadIterations(null, function() {
+//      me.iterationsView.hideInfoMessage("Loading...");
+//      //me.iterationsView.render();
+//    });
     this.iterationsView.filter();
   }
 };
@@ -324,13 +325,14 @@ ProjectController.prototype.paint = function() {
   });
   ModelFactory.getInstance()._getData(ModelFactory.initializeForTypes.project,
       this.id, function(model) {
-        ModelFactory.callEvery(30000,
-          function() {
-            model.reload(); // reload the base page and iteration tab
-            
-            me.filter(); // reload the tab content (story tree, leaf stories)
-          }
-        );
+// Project-Level Auto-Refresh
+//        ModelFactory.callEvery(30000,
+//          function() {
+//            model.reload(); // reload the base page and iteration tab
+//            
+//            me.filter(); // reload the tab content (story tree, leaf stories)
+//          }
+//        );
         me.model = model;
         me.attachModelListener();
         me.paintProjectDetails();

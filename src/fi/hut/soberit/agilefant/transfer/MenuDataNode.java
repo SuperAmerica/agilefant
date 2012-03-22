@@ -12,6 +12,7 @@ public class MenuDataNode {
     private ScheduleStatus scheduleStatus = ScheduleStatus.ONGOING;
     private boolean expand = false;
     private boolean icon = false;
+    private BacklogType type;
     
     private List<MenuDataNode> children = new ArrayList<MenuDataNode>();
     
@@ -69,5 +70,17 @@ public class MenuDataNode {
     public void setExpand(boolean expand) {
         this.expand = expand;
     }
+    
+    @JSON
+    public BacklogType getAddClass()
+    {
+        return this.type;
+    }
+    
+    public void setType(BacklogType type)
+    {
+        this.type = type;
+    }
+    
     
 }

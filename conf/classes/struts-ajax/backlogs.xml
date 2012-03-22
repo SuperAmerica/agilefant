@@ -214,6 +214,13 @@
       </result>
     </action>
     
+    <action name="retrieveAllSAIterations" method="retrieveAllSA" class="iterationAction">
+      <result name="success" type="json">
+        <param name="target">iterations</param>
+        <param name="patterns">+teams</param>
+      </result>
+    </action>
+    
     <action name="iterationData" class="iterationAction" method="fetchIterationData">
       <result name="success" type="json">
         <param name="target">iteration</param>

@@ -3,9 +3,11 @@ package fi.hut.soberit.agilefant.business;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.easymock.EasyMock;
@@ -37,6 +39,7 @@ import fi.hut.soberit.agilefant.test.MockedTestCase;
 import fi.hut.soberit.agilefant.test.TestedBean;
 import fi.hut.soberit.agilefant.transfer.ProjectMetrics;
 import fi.hut.soberit.agilefant.transfer.ProjectTO;
+import fi.hut.soberit.agilefant.util.StoryFilters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = MockContextLoader.class)
@@ -67,6 +70,8 @@ public class ProjectBusinessTest  extends MockedTestCase {
     HourEntryBusiness hourEntryBusiness;
     @Mock
     StoryRankBusiness storyRankBusiness;
+    @Mock
+    StoryFilterBusiness storyFilterBusiness;
     @Mock
     BacklogBusiness backlogBusiness;
     
@@ -109,6 +114,7 @@ public class ProjectBusinessTest  extends MockedTestCase {
     @DirtiesContext
     public void testGetProjectMetrics() {
         ProjectMetrics metrics = new ProjectMetrics();
+        List<Story> leafStories = new ArrayList<Story>();
         project.setStartDate(new DateTime().minusDays(7));
         project.setEndDate(project.getStartDate().plusDays(10));
 
@@ -121,9 +127,16 @@ public class ProjectBusinessTest  extends MockedTestCase {
         metrics.setStoryPoints(1000);
         metrics.setCompletedStoryPoints(10);
         
+        metrics.setCompletedValue(3);
+        metrics.setTotalValue(10);
+        
         
         expect(projectDAO.calculateProjectStoryMetrics(project.getId())).andReturn(metrics);
         expect(backlogBusiness.daysLeftInSchedulableBacklog(project)).andReturn(Days.days(3));
+        expect(storyRankBusiness.retrieveByRankingContext(project)).andReturn(leafStories);
+        for(Story story : leafStories)
+            expect(storyBusiness.calculateMetrics(story));
+        
 
         replayAll();
 
@@ -149,9 +162,18 @@ public class ProjectBusinessTest  extends MockedTestCase {
     public void testStoreProject_oldProject() {
         ProjectTO actual = new ProjectTO(project);
         
-        expect(projectDAO.get(project.getId())).andReturn(project);
+        expect(projectDAO.get(project.getId())).andReturn(project).anyTimes();
         projectDAO.store(project);
         expect(transferObjectBusiness.constructProjectTO(project)).andReturn(actual);
+
+        final Story leafStory = new Story();
+        leafStory.setId(12345);
+        List<Story> leafStoryList = new ArrayList<Story>() {{
+            add(leafStory);
+        }};
+        expect(storyRankBusiness.retrieveByRankingContext(project)).andReturn(leafStoryList);
+        expect(storyFilterBusiness.filterStoryList(leafStoryList, new StoryFilters(null, null))).andReturn(leafStoryList);
+        
         replayAll();
         assertSame(actual, projectBusiness.store(project.getId(), null, project, null));
         verifyAll();
@@ -200,10 +222,19 @@ public class ProjectBusinessTest  extends MockedTestCase {
     public void testStoreProject_withProduct() {
         ProjectTO actual = new ProjectTO(project);
 
-        expect(projectDAO.get(project.getId())).andReturn(project);
+        expect(projectDAO.get(project.getId())).andReturn(project).anyTimes();
         expect(productBusiness.retrieve(313)).andReturn(product);
         projectDAO.store(project);
         expect(transferObjectBusiness.constructProjectTO(project)).andReturn(actual);
+        
+        final Story leafStory = new Story();
+        leafStory.setId(12345);
+        List<Story> leafStoryList = new ArrayList<Story>() {{
+            add(leafStory);
+        }};
+        expect(storyRankBusiness.retrieveByRankingContext(project)).andReturn(leafStoryList);
+        expect(storyFilterBusiness.filterStoryList(leafStoryList, new StoryFilters(null, null))).andReturn(leafStoryList);
+        
         replayAll();
         assertSame(actual, projectBusiness.store(project.getId(), 313, project, null));
         verifyAll();

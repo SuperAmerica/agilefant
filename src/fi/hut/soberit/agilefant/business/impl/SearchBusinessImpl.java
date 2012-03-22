@@ -1,6 +1,8 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +11,18 @@ import org.springframework.stereotype.Service;
 import fi.hut.soberit.agilefant.business.SearchBusiness;
 import fi.hut.soberit.agilefant.db.BacklogDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
-import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.db.TaskDAO;
+import fi.hut.soberit.agilefant.db.UserDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.NamedObject;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.SearchResultRow;
 
 @Service("searchBusiness")
@@ -51,35 +56,78 @@ public class SearchBusinessImpl implements SearchBusiness {
     private void storyListSearchResult(List<SearchResultRow> result,
             List<Story> stories) {
         for (Story story : stories) {
-            result.add(new SearchResultRow(story.getBacklog().getName() + " > "
+            if(checkAccess(story.getBacklog())){      
+                result.add(new SearchResultRow(story.getBacklog().getName() + " > "
                     + story.getName(), story));
+            }
         }
     }
     
     private void taskListSearchResult(List<SearchResultRow> result,
             List<Task> tasks) {
         for(Task task : tasks) {
-            if(task.getStory()!= null)
-                result.add(new SearchResultRow(task.getStory().getName() + " > " + 
+            if(task.getStory()!= null){
+                if(checkAccess(task.getStory().getBacklog())){      
+                    result.add(new SearchResultRow(task.getStory().getName() + " > " + 
                         task.getName(), task));
-            if(task.getIteration() != null)
-                result.add(new SearchResultRow(task.getIteration().getName() + " > " + 
+                }
+            }
+            if(task.getIteration() != null){
+                if(checkAccess(task.getIteration())){  
+                    result.add(new SearchResultRow(task.getIteration().getName() + " > " + 
                         task.getName(), task));
+                }
+            }
         }
     }
 
     private void backlogListSearchResult(List<SearchResultRow> result,
             List<Backlog> backlogs) {
         for (Backlog bl : backlogs) {
-            SearchResultRow item = new SearchResultRow();
-            item.setOriginalObject(bl);
-            if (bl.getParent() != null) {
-                item.setLabel(bl.getParent().getName() + " > " + bl.getName());
-            } else {
-                item.setLabel(bl.getName());
+            if(checkAccess(bl)){            
+                SearchResultRow item = new SearchResultRow();
+                item.setOriginalObject(bl);
+                if (bl.getParent() != null) {
+                    item.setLabel(bl.getParent().getName() + " > " + bl.getName());
+                } else {
+                    item.setLabel(bl.getName());
+                }
+                result.add(item);
             }
-            result.add(item);
         }
+    }
+    
+    private boolean checkAccess(Backlog bl){
+        User user = SecurityUtil.getLoggedUser();
+        Product prod = null;
+        
+        if(bl instanceof Project){
+            //look at product
+            prod = (Product)bl.getParent();
+        } else if(bl instanceof Iteration){
+            //look at project, then product
+            Backlog temp = bl.getParent();
+            if(temp instanceof Product){
+                //iteration is directly under a product, not in a project
+                prod = (Product) temp;
+            } else {
+                prod = (Product) temp.getParent();
+            }
+        } else if(bl instanceof Product){
+            prod = (Product)bl;
+        }
+        
+        Collection<Product> allowedProducts = new HashSet<Product>();
+        for(Team team : user.getTeams()){
+            allowedProducts.addAll(team.getProducts());
+        }
+
+        //check if we have access 
+        if(allowedProducts.contains(prod)){
+            return true;
+        }
+        
+        return false;
     }
 
     public NamedObject searchByReference(String searchTerm) {
@@ -101,9 +149,15 @@ public class SearchBusinessImpl implements SearchBusiness {
             return null;
         }
         if (type.equals("story")) {
-            return storyDAO.get(objectId);
+            Story story = storyDAO.get(objectId);
+            if(story != null && checkAccess(story.getBacklog())){  
+                return story;
+            }
         } else if (type.equals("backlog")) {
-            return backlogDAO.get(objectId);
+            Backlog bl = backlogDAO.get(objectId);
+            if(checkAccess(bl)){  
+                return bl;
+            }
         }
         return null;
     }
@@ -142,12 +196,17 @@ public class SearchBusinessImpl implements SearchBusiness {
         List<SearchResultRow> result = new ArrayList<SearchResultRow>();
         List<Task> tasks = taskDAO.searchByName(searchTerm);
         for(Task task : tasks) {
-            if(task.getStory() != null)
-                result.add(new SearchResultRow(task.getIteration().getName() + " > " + task.getStory().getName() + " > " + 
+            if(task.getStory() != null){
+                if(checkAccess(task.getStory().getBacklog())){  
+                    result.add(new SearchResultRow(task.getIteration().getName() + " > " + task.getStory().getName() + " > " + 
                         task.getName(), task));
-            else
-                result.add(new SearchResultRow(task.getIteration().getName() + " > No Story > " + 
+                }
+            } else {
+                if(checkAccess(task.getIteration())){  
+                    result.add(new SearchResultRow(task.getIteration().getName() + " > No Story > " + 
                         task.getName(), task));
+                }
+            }
         }
         return result;
     }

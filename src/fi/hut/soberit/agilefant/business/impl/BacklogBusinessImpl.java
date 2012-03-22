@@ -119,6 +119,9 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public Product getParentProduct(Backlog backlog) {
+        if (backlog instanceof Product) {
+            return (Product)backlog;
+        }
         Backlog parent = backlog;
         if (backlog == null || backlog.getParent() == null) {
             return null;
@@ -157,6 +160,16 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     @Transactional(readOnly = true)
     public int getStoryPointSumByBacklog(Backlog backlog) {
         return storyDAO.getStoryPointSumByBacklog(backlog.getId());
+    }
+    
+    @Transactional(readOnly = true)
+    public int getStoryValueSumByBacklog(Backlog backlog) {
+        return storyDAO.getStoryValueSumByBacklog(backlog.getId());
+    }
+    
+    @Transactional(readOnly = true)
+    public int getCompletedStoryValueSumByBacklog(Backlog backlog) {
+        return storyDAO.getCompletedStoryValueSumByBacklog(backlog.getId());
     }
     
     /**

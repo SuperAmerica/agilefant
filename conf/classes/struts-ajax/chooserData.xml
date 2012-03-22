@@ -19,12 +19,18 @@
 	      <param name="patterns">-class</param>
 	    </result>
 	  </action>
-	  <action name="backlogChooserData" class="autocompleteAction" method="backlogData">
-	    <result name="success" type="json">
-	      <param name="target">autocompleteData</param>
-	      <param name="patterns">-class</param>
-	    </result>
-	  </action>
+    <action name="backlogChooserData" class="autocompleteAction" method="backlogData">
+      <result name="success" type="json">
+        <param name="target">autocompleteData</param>
+        <param name="patterns">-class</param>
+      </result>
+    </action>
+    <action name="backlogAndIterationChooserData" class="autocompleteAction" method="backlogAndIterationData">
+      <result name="success" type="json">
+        <param name="target">autocompleteData</param>
+        <param name="patterns">-class</param>
+      </result>
+    </action>
 	  <action name="productChooserData" class="autocompleteAction" method="productData">
 	    <result name="success" type="json">
 	      <param name="target">autocompleteData</param>

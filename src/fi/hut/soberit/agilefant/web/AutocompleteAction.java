@@ -49,6 +49,11 @@ public class AutocompleteAction extends ActionSupport {
         return Action.SUCCESS;
     }
     
+    public String backlogAndIterationData() {
+        autocompleteData = transferObjectBusiness.constructBacklogAndIterationAutocompleteData(backlogId);
+        return Action.SUCCESS;
+    }
+    
     public String productData() {
         autocompleteData = transferObjectBusiness.constructProductAutocompleteData();
         return Action.SUCCESS;

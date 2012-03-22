@@ -73,13 +73,14 @@
 	<classpathentry kind="lib" path="lib/joda-time-1.6.jar" sourcepath="lib-src/joda-time-1.6-sources.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-hibernate-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-jsptags-1.0.2.jar"/>
-	<classpathentry kind="lib" path="lib/spring-test.jar"/>
+	<classpathentry kind="lib" path="lib/spring-test.jar" sourcepath="/home/david/.m2/repository/org/springframework/spring-test/2.5.6.SEC01/spring-test-2.5.6.SEC01-sources.jar"/>
 	<classpathentry kind="lib" path="lib/build/h2-1.1.114.jar"/>
 	<classpathentry kind="lib" path="lib/build/easymock-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/build/easymockclassextension-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/build/YUIAnt.jar"/>
 	<classpathentry kind="lib" path="lib/build/yuicompressor-2.4.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.13.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjrt.jar"/>
 	<classpathentry kind="lib" path="lib/aspectjweaver.jar"/>
 	<classpathentry kind="lib" path="lib/common-annotations.jar"/>

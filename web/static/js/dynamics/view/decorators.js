@@ -8,8 +8,15 @@ var DynamicsDecorators = {
       "DONE" : "Done",
       "DEFERRED" : "Deferred"
     },
+  adminOptions: {
+      "true" : "Yes",
+      "false" : "No"
+  },
   stateDecorator: function(val) {
     return DynamicsDecorators.stateOptions[val];
+  },
+  adminDecorator: function(val) {
+  	return DynamicsDecorators.adminOptions[val];
   },
   conditionColorDecorator: function(getter,colorcallback,innerDecorator) {
     return function(value) {
@@ -77,6 +84,18 @@ var DynamicsDecorators = {
       return Math.round(10*value/60)/10+"h";
     }
   },
+  exactEstimateAppendManHourDecorator: function(value) {
+	    if (typeof (value) === 'string') {
+	      return value;
+	    }
+	    if(!value) {
+	      return "&mdash;";
+	    } else if(value === 0) {
+	      return "0 man-hours";
+	    } else {
+	      return Math.round(10*value/60)/10+" man-hours";
+	    }
+	  },
   exactEstimateEditDecorator: function(value) {
     if (typeof (value) === 'string') {
       return value;
@@ -202,6 +221,20 @@ var DynamicsDecorators = {
     }
     fullNames.sort();
     return fullNames.join(', ');
+  },
+  productTeamCountDecorator: function(teamList) {
+  	return teamList.length + " teams";
+  },
+  productTeamListDecorator: function(teamList) {
+  	if(!teamList || !teamList.length) {
+  		return "(no teams)";
+  	}
+  	var teamNames = [];
+  	for(var i = 0; i < teamList.length; i++) {
+  		teamNames.push(teamList[i].getName());
+  	}
+  	teamNames.sort();
+  	return teamNames.join(', ');
   },
   teamUserInitialsListDecorator: function(userList) {
     if(!userList || !userList.length) {

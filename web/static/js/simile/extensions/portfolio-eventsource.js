@@ -66,7 +66,6 @@ Timeline.PortfolioEventSource.prototype.loadData = function() {
         break;
     }
     var name = event.getName();
-    var productName = event.getProductName();
 
     var evt = new Timeline.DefaultEventSource.Event({
                   id: ""+event.getId(),

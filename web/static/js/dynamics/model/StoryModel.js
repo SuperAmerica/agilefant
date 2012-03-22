@@ -23,6 +23,7 @@ var StoryModel = function StoryModel() {
   this.metrics = {};
   this.copiedFields = {
     "name": "name",
+    "storyValue": "storyValue",
     "description": "description",
     "state": "state",
     "storyPoints": "storyPoints",
@@ -30,7 +31,7 @@ var StoryModel = function StoryModel() {
   };
   this.classNameToRelation = {
       "fi.hut.soberit.agilefant.model.Product":       "backlog",
-      "fi.hut.soberit.agilefant.model.Project":       "project",
+      "fi.hut.soberit.agilefant.model.Project":       "backlog",
       "fi.hut.soberit.agilefant.model.Iteration":     "iteration",
       "fi.hut.soberit.agilefant.model.User":          "user",
       "fi.hut.soberit.agilefant.model.Label":         "label",
@@ -38,6 +39,7 @@ var StoryModel = function StoryModel() {
       "fi.hut.soberit.agilefant.model.StoryHourEntry": "hourEntry",
       "fi.hut.soberit.agilefant.model.Story":         "story"
   };
+  this.metricFields = ["storyValue", "state"];
   this.metricFields = ["storyPoints", "state"];
 };
 
@@ -58,12 +60,12 @@ StoryModel.Validators = {
 StoryModel.prototype._setData = function(newData) { 
   // Set the id
   this.id = newData.id;
-    /*
+    
   //set the rank by hand if it exists in the data
-  if(newData.rank !== undefined && newData.rank !== null) {
-    this.setRank(newData.rank);
-  }
-  */
+//  if(newData.rank !== undefined && newData.rank !== null) {
+//    this.setRank(newData.rank);
+//  }
+  
   // Set the tasks
   if (newData.tasks) {
     this._updateRelations(ModelFactory.types.task, newData.tasks);
@@ -91,6 +93,41 @@ StoryModel.prototype._setData = function(newData) {
     this.metrics = newData.metrics;
   }
 };
+
+/**
+ * Saves a copy of the given story as a sibling of the current. 
+ * @author braden
+ */
+StoryModel.prototype._copyStory = function(story)
+{
+  var me = this;
+  var idClosure = function() { return story.id; };	// Create closure to access the story
+  var data = {};
+  var url = "ajax/copyStorySibling.action";
+  data.storyId = story.id;
+  document.body.style.cursor = "wait";
+  jQuery.ajax({
+    type: "POST",
+    url: url,
+    async: true,
+    cache: false,
+    data: data,
+    dataType: "json",
+    success: function(newData, status) {    	
+      var object = ModelFactory.updateObject(newData);
+      possibleBacklog = story.getBacklog();
+      if(newData && newData.id && possibleBacklog) {
+        possibleBacklog.addStory(object);
+        object.callListeners(new DynamicsEvents.AddEvent(object));
+      }
+      object.rankUnder(story.id, object);
+      MessageDisplay.Ok("Story created successfully");
+    },
+    error: function(xhr, status, error) {
+      MessageDisplay.Error("Error saving story", xhr);
+    }
+  });
+}
 
 /**
  * Internal function to send the data to server.
@@ -131,24 +168,25 @@ StoryModel.prototype._saveData = function(id, changedData) {
   if(ArrayUtils.countObjectFields(data) === 0) {
     return;
   }
+  
   // Add the id
   if (id) {
     data.storyId = id;
   }
   else {
     url = "ajax/createStory.action";
-    
-    if (possibleBacklog) {
-      data.backlogId = possibleBacklog.getId();
-    } else if (possibleIteration) {
-      possibleBacklog = possibleIteration;
-      data.backlogId = possibleIteration.getId();
-    }
-    if (possibleIteration) {
-      data.iterationId = possibleIteration.getId();
-    }
   }
 
+  if (possibleBacklog) {
+    data.backlogId = possibleBacklog.getId();
+  } else if (possibleIteration) {
+    possibleBacklog = possibleIteration;
+    data.backlogId = possibleIteration.getId();
+  }
+  if (possibleIteration) {
+    data.iteration = possibleIteration.getId();
+  }
+  
   
   jQuery.ajax({
     type: "POST",
@@ -166,6 +204,7 @@ StoryModel.prototype._saveData = function(id, changedData) {
           possibleBacklog.addStory(object);
         }
         object.callListeners(new DynamicsEvents.AddEvent(object));
+        possibleBacklog.callListeners(new DynamicsEvents.RankChanged(possibleBacklog,"story"));
       }
     },
     error: function(xhr, status, error) {
@@ -181,7 +220,7 @@ StoryModel.prototype.reload = function(callback) {
     {storyId: me.getId()},
     function(data,status) {
       me.setData(data, false);
-      //me.callListeners(new DynamicsEvents.EditEvent(me));
+      me.callListeners(new DynamicsEvents.EditEvent(me));
       if (callback) {
         callback();
       }
@@ -475,6 +514,14 @@ StoryModel.prototype.getStoryPoints = function() {
 };
 StoryModel.prototype.setStoryPoints = function(storyPoints) {
   this.currentData.storyPoints = storyPoints;
+};
+
+
+StoryModel.prototype.getStoryValue = function() {
+  return this.currentData.storyValue;
+};
+StoryModel.prototype.setStoryValue = function(storyValue) {
+  this.currentData.storyValue = storyValue;
 };
 
 

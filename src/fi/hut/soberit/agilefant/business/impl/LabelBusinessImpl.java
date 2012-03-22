@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,23 @@ public class LabelBusinessImpl extends GenericBusinessImpl<Label> implements
     public void deleteLabel(Label label) {
        labelDAO.remove(label);
     }
-        
+     
+    public void createStoryLabelsSet(Set<Label> labels, Integer storyId)
+    {
+        if (labels == null)
+            return;
+        Story story = storybusiness.retrieve(storyId);
+        for (Label l : labels)
+        {
+            if (!labelDAO.labelExists(l.getName(), story))
+            {
+                int labelId = (Integer)labelDAO.create(l);
+                Label persisted = labelDAO.get(labelId);
+                story.getLabels().add(persisted);
+            }
+        }
+    }
+    
     public void createStoryLabels(List<String> labelNames, Integer storyId) {
         if(labelNames == null) {
             return;

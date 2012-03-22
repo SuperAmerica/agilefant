@@ -63,6 +63,9 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
     
     public int getStoryPointSumByBacklog(Backlog backlog);
     
+    public int getStoryValueSumByBacklog(Backlog backlog);
+    public int getCompletedStoryValueSumByBacklog(Backlog backlog);
+    
     public Days daysLeftInSchedulableBacklog(Schedulable backlog);
     public float calculateBacklogTimeframePercentageLeft(Schedulable backlog);
     

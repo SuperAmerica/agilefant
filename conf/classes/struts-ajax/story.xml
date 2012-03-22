@@ -30,6 +30,12 @@
       </result>
     </action>
     
+    <action name="copyStorySibling" method="copyStorySibling" class="storyAction">
+      <result type="json">
+        <param name="target">story</param>
+        <param name="patterns">+responsibles, +rank, +tasks.responsibles, +children, -children.backlog.description, +parent, +labels,-labels.creator,-labels.timestamp</param>
+      </result>
+    </action>
     
     <action name="treeCreateRootStory" method="create" class="storyAction">
       <result type="dispatcher">/WEB-INF/jsp/fragments/storyTreePart.jsp</result>
@@ -80,6 +86,36 @@
     <action name="deleteStory" method="delete" class="storyAction">
       <result name="success" type="httpheader">
         <param name="status">200</param>
+      </result>
+    </action>
+    
+    <action name="moveMultipleUnder" method="moveMultipleUnder" class="storyHierarchyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+      <result name="error" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">integrityErrors</param>
+      </result>
+    </action>
+    
+    <action name="moveMultipleBefore" method="moveMultipleBefore" class="storyHierarchyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+      <result name="error" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">integrityErrors</param>
+      </result>
+    </action>
+    
+    <action name="moveMultipleAfter" method="moveMultipleAfter" class="storyHierarchyAction">
+      <result name="success" type="httpheader">
+        <param name="status">200</param>
+      </result>
+      <result name="error" type="json">
+        <param name="out.statusCode">500</param>
+        <param name="target">integrityErrors</param>
       </result>
     </action>
     
@@ -154,7 +190,7 @@
       </result>
     </action>
     
-    <action name="rankStoryToBottom" method="rankStoryToTop" class="storyAction">
+    <action name="rankStoryToBottom" method="rankStoryToBottom" class="storyAction">
       <result name="success" type="json">
         <param name="target">story</param>
         <param name="patterns">-backlog, -parent</param>

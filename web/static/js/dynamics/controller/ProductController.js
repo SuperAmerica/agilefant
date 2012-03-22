@@ -275,8 +275,21 @@ ProductController.prototype.changeTabIfFragmentFound = function() {
 ProductController.prototype.createProject = function() {
   var mockModel = ModelFactory.createObject(ModelFactory.typeToClassName.project);
   mockModel.setParent(this.model);
-  mockModel.setStartDate(new Date().getTime());
-  mockModel.setEndDate(new Date().getTime());
+  
+  // Startdate: today at 8:00am
+  // Enddate: 1 month from now at 6:00pm
+  var startdate = new Date();
+  var enddate   = new Date();
+  
+  startdate.zeroTime();
+  startdate.addHours(8);
+  enddate.zeroTime();
+  enddate.addMonths(1);
+  enddate.addHours(18);
+	 
+  mockModel.setStartDate(startdate.getTime());
+  mockModel.setEndDate  (enddate.getTime());
+  
   var controller = new ProjectRowController(mockModel, null, this);
   var row = this.projectListView.createRow(controller, mockModel, "top");
   controller.view = row;

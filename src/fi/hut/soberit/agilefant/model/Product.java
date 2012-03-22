@@ -2,9 +2,13 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -14,7 +18,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 import org.springframework.transaction.annotation.Transactional;
+
+import flexjson.JSON;
 
 /**
  * Hibernate entity bean representing a product.
@@ -41,6 +48,31 @@ import org.springframework.transaction.annotation.Transactional;
 @XmlAccessorType( XmlAccessType.NONE )
 public class Product extends Backlog {
     
+    private Collection<Team> teams = new HashSet<Team>();
+    
+    /**
+     * Get the product's teams
+     * 
+     * return the teams
+     */
+    @ManyToMany(targetEntity = Team.class)
+    @JoinTable(name = "team_product", joinColumns = { @JoinColumn(name = "Product_id") }, inverseJoinColumns = { @JoinColumn(name = "Team_id") })
+    @BatchSize(size = 5)
+    @JSON(include = false)
+    @NotAudited
+    public Collection<Team> getTeams() {
+        return teams;
+    }
+    
+    /**
+     * Set the team's products.
+     * 
+     * @param products the products to be set
+     */
+    public void setTeams(Collection<Team> teams) {
+        this.teams = teams;
+    }
+    
     @Transactional(readOnly=true)
     @Transient
     @XmlElement(name = "projects")
@@ -66,4 +98,11 @@ public class Product extends Backlog {
         }
         return iterations;    
     }
+
+    @Transient
+    @Override
+    public boolean isStandAlone() {
+        return false;
+    }
+    
 }

@@ -86,7 +86,7 @@ IterationController.columnConfigs = {
   plannedSize: {
     title : "Planned Size",
     get : IterationModel.prototype.getBacklogSize,
-    decorator: DynamicsDecorators.exactEstimateDecorator,
+    decorator: DynamicsDecorators.exactEstimateAppendManHourDecorator,
     editable: true,
     edit: {
       editor: "ExactEstimate",
@@ -210,6 +210,7 @@ IterationController.prototype.reloadBurndown = function() {
 IterationController.prototype.reloadMetricsBox = function() {
   this.metricsElement.load("ajax/iterationMetrics.action", {iterationId: this.id});
   this.reloadBurndown();
+  document.body.style.cursor = "default";
 };
 
 IterationController.prototype.reloadMetrics = function() {

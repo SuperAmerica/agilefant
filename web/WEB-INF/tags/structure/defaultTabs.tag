@@ -31,7 +31,7 @@ $(document).ready(function() {
   <a href="contextView.action?contextName=backlog">
   <span>
   <img src="static/img/backlog.png" alt="Backlogs" />
-  Backlogs
+  Backlog
   </span>
   </a>
 </li>
@@ -63,6 +63,7 @@ $(document).ready(function() {
 </c:if>
 
 <%-- Settings --%>
+<c:if test="${currentUser.admin}">
 <li id="navitab-settings">
     <a href="settings.action">
     <span>
@@ -71,5 +72,6 @@ $(document).ready(function() {
     </span>
     </a>
 </li>
+</c:if>
 
 </ul>

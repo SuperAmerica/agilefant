@@ -31,6 +31,7 @@ import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.WhatsNextEntry;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 import fi.hut.soberit.agilefant.transfer.AssignedWorkTO;
 import fi.hut.soberit.agilefant.transfer.AutocompleteDataNode;
 import fi.hut.soberit.agilefant.transfer.DailyWorkTaskTO;
@@ -197,18 +198,47 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
         return autocompleteData; 
     }
+
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public List<AutocompleteDataNode> constructBacklogAndIterationAutocompleteData(Integer backlogId) {
+        List<AutocompleteDataNode> autocompleteData = constructBacklogAutocompleteData(backlogId);
+        autocompleteData.addAll(constructCurrentIterationAutocompleteData());
+        return autocompleteData; 
+    }
     
     private List<AutocompleteDataNode> getBacklogDataRecurseNames(
             Collection<? extends Backlog> allBacklogs) {
         List<AutocompleteDataNode> autocompleteData = new ArrayList<AutocompleteDataNode>();
-        for (Backlog blog : allBacklogs) {
-            String name = recurseBacklogNameWithParents(blog);
-            AutocompleteDataNode node = new AutocompleteDataNode(Backlog.class,
-                    blog.getId(), name);
-            node.setMatchedString(name);
-            autocompleteData.add(node);
-            node.setOriginalObject(blog);
+        
+        User user = SecurityUtil.getLoggedUser();
+        for (Backlog blog : allBacklogs) { 
+            Product prod = null;
+            if(blog instanceof Project){
+                //look at product
+                prod = (Product)blog.getParent();
+            } else if(blog instanceof Iteration){
+                continue; // iterations should not be included in backlogs list.
+            } else if(blog instanceof Product){
+                prod = (Product)blog;
+            }
+            
+            Collection<Product> allowedProducts = new HashSet<Product>();
+            for(Team team : user.getTeams()){
+                allowedProducts.addAll(team.getProducts());
+            }
+   
+            //check if we have access 
+            if(allowedProducts.contains(prod)){
+                String name = recurseBacklogNameWithParents(blog);
+                AutocompleteDataNode node = new AutocompleteDataNode(Backlog.class, blog.getId(), name);
+                node.setMatchedString(name);
+                autocompleteData.add(node);
+                node.setOriginalObject(blog);
+            } 
         }
+        
         return autocompleteData;
     }
     

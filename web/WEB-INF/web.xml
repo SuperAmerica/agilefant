@@ -29,7 +29,7 @@
   </servlet-mapping>
 
 	<filter>
-		<filter-name>_filterChainProxy</filter-name>
+		<filter-name>filterChainProxy</filter-name>
 		<filter-class>
 			org.springframework.security.util.FilterToBeanProxy
 		</filter-class>
@@ -67,7 +67,7 @@
 
 	<!-- the order matters - spring security must come first -->
 	<filter-mapping>
-		<filter-name>_filterChainProxy</filter-name>
+		<filter-name>filterChainProxy</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter-mapping>

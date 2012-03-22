@@ -303,12 +303,12 @@ public class TransferObjectBusinessTest {
         
         replayAll();
         
-        List<AutocompleteDataNode> nodes = transferObjectBusiness
-                .constructBacklogAutocompleteData(null);
+        List<AutocompleteDataNode> nodes = transferObjectBusiness.constructBacklogAutocompleteData(null);
         
         verifyAll();
         
-        assertEquals(4, nodes.size());
+        // only backlogs should be included in backlogs autocomplete data
+        assertEquals(2, nodes.size());
         
         AutocompleteDataNode node = getDataNodeById(1, nodes);
         assertEquals(Backlog.class.getCanonicalName(), node.getBaseClassName());
@@ -319,16 +319,6 @@ public class TransferObjectBusinessTest {
         assertEquals("Product > Project", node.getName());
         assertEquals(node.getName(), node.getMatchedString());
         assertEquals(project, node.getOriginalObject());
-        
-        node = getDataNodeById(333, nodes);
-        assertEquals("Product > Project > Iter 1", node.getName());
-        assertEquals(node.getName(), node.getMatchedString());
-        assertEquals(iterationUnderProject, node.getOriginalObject());
-        
-        node = getDataNodeById(615, nodes);
-        assertEquals("Product > Iter 2", node.getName());
-        assertEquals(node.getName(), node.getMatchedString());
-        assertEquals(iterationUnderProduct, node.getOriginalObject());
     }
     
     @Test

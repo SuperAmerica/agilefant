@@ -383,20 +383,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         
         Story persisted = null;
         if (iterationId != null && iterationId != 0) {
-            persisted = this.persistNewStory(dataItem, backlogId, iterationId, responsibleIds);        
+            persisted = this.persistNewStory(dataItem, backlogId, iterationId, responsibleIds);
+            storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(iterationId));
         } else {
             persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);        
         }
         storyHierarchyBusiness.moveToBottom(persisted);
-// MERGE CONFLICT
-//        Story persisted = this.persistNewStory(dataItem, backlogId, responsibleIds);
-//
-//        //old - prevents tree view from exploding until it's fixed 
-//        storyHierarchyBusiness.moveToBottom(persisted);   
-//        
-//        //new
-//        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId)); 
-//        
+        storyRankBusiness.rankToHead(persisted, backlogBusiness.retrieve(backlogId));
 
         this.labelBusiness.createStoryLabels(labelNames, persisted.getId());
         return persisted;
@@ -636,8 +629,16 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // if target is product -> remove all ranks
         if ((backlog instanceof Product) && !(oldBacklog instanceof Product)) {
             if (oldBacklog instanceof Iteration) {
-                storyRankBusiness.removeRank(story, oldBacklog.getParent());
-                storyRankBusiness.removeRank(story, oldIteration);
+
+                if (oldIteration != null) {
+                    storyRankBusiness.removeRank(story, oldIteration);
+                }
+
+                Backlog parent = oldBacklog.getParent();
+                if (parent != null) {
+                    storyRankBusiness.removeRank(story, parent);
+                }
+
             }
             storyRankBusiness.removeRank(story, oldBacklog);
 

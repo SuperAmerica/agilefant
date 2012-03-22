@@ -64,50 +64,23 @@ public class RefreshUserInterceptor implements Interceptor {
             return "";
         }
         
-        //TODO FINNUCKS: this logs out a current user on one of 
-        //these actions and sets it to the read only user.
-        //Need to check ID and ... ?
+        // Are we loading a readonly page? If so use special procedure.
         if(action instanceof ROIterationAction || (isUnderReadOnlyAction && (
                 action instanceof ChartAction
                 || action instanceof IterationAction
                 || action instanceof IterationHistoryAction
-                || action instanceof StoryAction))){
+                || action instanceof StoryAction))) {
             
-            isUnderReadOnlyAction = true;
+            // An action in the readonly family is being performed, so perform readonly access procedure. 
+            return readonlyAccess(invocation);
             
-            //log in read only user if we got to here
-            UserDAOHibernate userDao = new UserDAOHibernate();
+        } else if (isUnderReadOnlyAction) {
+            // Any other action toggles readonly mode off. 
+            // NOTE: this is by no means airtight security, but its a small improvement, so here it is. 
             
-            SessionFactory sessionFactory = null;
-            try {
-                sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
-                userDao.setSessionFactory(sessionFactory);
-            } catch (NamingException e) {
-                e.printStackTrace();
-            }
-            Session session = sessionFactory.openSession();
-            
-            User user = userDao.getByLoginName("readonly");
-            
-            SecurityUtil.setLoggedUser(user);
-            
-            //push current user to the value stack
-            invocation.getStack().set("currentUser", user);
-            invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));
-            
-            session.disconnect();
-            session.close();
-            
-            // perform request
-            String result = invocation.invoke();
-
-            // after the request:
-            // reset the logged user
-            SecurityUtil.setLoggedUser(null);
-
-            return result;
+            isUnderReadOnlyAction = false;
         }
-                
+        
         try {
             // get the current user id
             userId = SecurityUtil.getLoggedUserId();
@@ -150,7 +123,75 @@ public class RefreshUserInterceptor implements Interceptor {
 
         return result;
     }
+    
+    
+    /**
+     * This function makes sure a user is authenticated when loading Readonly Iterations. 
+     * If a user is logged in, it re-authorizes it (this has to be done or else Agilefant crashes), 
+     * if there is no logged in user it authorizes the "readonly" user. 
+     *  
+     * @param invocation
+     * @return
+     * @throws Exception
+     */
+    private String readonlyAccess(ActionInvocation invocation) throws Exception {
+        isUnderReadOnlyAction = true;
 
+        //log in read only user if we got to here
+        UserDAOHibernate userDao = new UserDAOHibernate();
+
+        SessionFactory sessionFactory = null;
+        try {
+            sessionFactory = (SessionFactory) new InitialContext().lookup("hibernateSessionFactory");
+            userDao.setSessionFactory(sessionFactory);
+        } catch (NamingException e) {
+            e.printStackTrace();
+        }
+        Session session = sessionFactory.openSession();
+
+        try {
+            // Re-authorize the current user if there is one logged in.
+
+            int userId = SecurityUtil.getLoggedUserId();
+
+            // get the user object corresponding to the id
+            User user = userBusiness.retrieve(userId);
+
+            // before the request:
+            // set this user as the logged user
+            SecurityUtil.setLoggedUser(user);
+
+            //push current user to the value stack
+            invocation.getStack().set("currentUser", user);
+            invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));
+            
+        } catch (Exception e) {
+            // No logged in user, so log in the Readonly user. 
+            
+            User user = userDao.getByLoginName("readonly");
+
+            SecurityUtil.setLoggedUser(user);
+
+            //push current user to the value stack
+            invocation.getStack().set("currentUser", user);
+            invocation.getStack().set("currentUserJson", new JSONSerializer().serialize(user));
+        }
+
+        session.disconnect();
+        session.close();
+
+        // perform request
+        String result = invocation.invoke();
+
+        // after the request:
+        // reset the logged user
+        SecurityUtil.setLoggedUser(null);
+
+        return result;
+    }
+
+    
+    
     public void setUserBusiness(UserBusiness userBusiness) {
         this.userBusiness = userBusiness;
     }

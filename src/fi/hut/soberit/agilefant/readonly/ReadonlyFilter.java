@@ -56,8 +56,6 @@ public class ReadonlyFilter extends GenericFilterBean {
         session.disconnect();
         session.close();
         
-
-        
         if (iterationDao.isValidReadonlyToken(token)) {
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
             

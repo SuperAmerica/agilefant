@@ -14,7 +14,8 @@ var IterationModel = function IterationModel() {
     task: [],
     assignment: [],
     hourEntry: [],
-    assignees: []
+    assignees: [],
+    team: []
   };
   this.copiedFields = {
     "name":   "name",
@@ -33,7 +34,8 @@ var IterationModel = function IterationModel() {
     "fi.hut.soberit.agilefant.model.Task":          "task",
     "fi.hut.soberit.agilefant.model.Assignment":    "assignment",
     "fi.hut.soberit.agilefant.model.HourEntry":     "hourEntry",
-    "fi.hut.soberit.agilefant.model.User":     "assignees"
+    "fi.hut.soberit.agilefant.model.User":     "assignees",
+    "fi.hut.soberit.agilefant.model.Team":         "team"
   };
 };
 
@@ -73,6 +75,10 @@ IterationModel.prototype._setData = function(newData) {
     this._updateRelations(ModelFactory.types.hourEntry, newData.hourEntries);
   }
   
+  if (newData.teams) {
+  	this._updateRelations(ModelFactory.types.team, newData.teams);
+  }
+  
 };
 
 IterationModel.prototype._saveData = function(id, changedData) {
@@ -80,6 +86,14 @@ IterationModel.prototype._saveData = function(id, changedData) {
   
   var url = "ajax/storeIteration.action";
   var data = this.serializeFields("iteration", changedData);
+  
+  if (changedData.teamsChanged) {
+    data.teamIds = changedData.teamIds;
+    data.teamsChanged = true;
+    delete changedData.teamIds;
+    delete changedData.teamsChanged;
+  }
+  jQuery.extend(data, this.serializeFields("iteration", changedData));
    
   if (changedData.assigneesChanged) {
     jQuery.extend(data, {assigneeIds: changedData.assigneeIds, assigneesChanged: true});
@@ -185,6 +199,11 @@ IterationModel.prototype._remove = function(successCallback, extraData) {
   });
 };
 
+IterationModel.prototype.addTeam = function(team) {
+  this.addRelation(team);
+  this.callListeners(new DynamicsEvents.RelationUpdatedEvent(this,"team"));
+};
+
 /* GETTERS */
 
 IterationModel.prototype.getStories = function() {
@@ -264,4 +283,25 @@ IterationModel.prototype.getBaselineLoad = function() {
 
 IterationModel.prototype.setBaselineLoad = function(baselineLoad) {
   this.currentData.baselineLoad = baselineLoad;
+};
+
+IterationModel.prototype.getTeams = function() {
+  if (this.currentData.teamIds) {
+    var teams = [];
+    $.each(this.currentData.teamIds, function(k, id) {
+      teams.push(ModelFactory.getObject(ModelFactory.types.team, id));
+    });
+    return teams;
+  }
+  return this.relations.team;
+};
+
+IterationModel.prototype.setTeams = function(teamIds, teamJson) {
+  if (teamJson) {
+    $.each(teamJson, function(k,v) {
+      ModelFactory.updateObject(v);
+    });
+  }
+  this.currentData.teamIds = teamIds;
+  this.currentData.teamsChanged = true;
 };

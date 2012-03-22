@@ -636,7 +636,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storyRankBusiness.removeRank(story, oldIteration);
             oldIterationParent = oldIteration.getParent();
         }
-        if (oldIterationParent == null || target.getId() != oldIterationParent.getId()) {
+        boolean hasChildren = story.hasChildren();
+        if (!hasChildren && (oldIterationParent == null || target.getId() != oldIterationParent.getId())) {
             storyRankBusiness.rankToBottom(story, target);
         }
     }

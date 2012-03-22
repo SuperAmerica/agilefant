@@ -26,6 +26,7 @@ import fi.hut.soberit.agilefant.business.IterationHistoryEntryBusiness;
 import fi.hut.soberit.agilefant.business.StoryBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.business.TaskBusiness;
+import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
@@ -43,6 +44,7 @@ import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.Task;
+import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.transfer.AgilefantHistoryEntry;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
@@ -81,6 +83,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private StoryRankBusiness storyRankBusiness;
     @Autowired
     private TaskBusiness taskBusiness;
+    @Autowired
+    private TeamBusiness teamBusiness;
     @Autowired
     private BacklogHistoryDAO backlogHistoryDAO;
     @Autowired
@@ -320,14 +324,14 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
 
     
-    public IterationTO storeStandAlone(int iterationId, Iteration iterationData, Set<Integer> assigneeIds) {
+    public IterationTO storeStandAlone(int iterationId, Iteration iterationData, Set<Integer> assigneeIds, Set<Integer> teams) {
         final int emptyParentId = 0;
-        return store(iterationId, emptyParentId, iterationData, assigneeIds);
+        return store(iterationId, emptyParentId, iterationData, assigneeIds, teams);
     }
     
     
     public IterationTO store(int iterationId, int parentBacklogId,
-            Iteration iterationData, Set<Integer> assigneeIds) {
+            Iteration iterationData, Set<Integer> assigneeIds, Set<Integer> teamIds) {
         Backlog parent = null;
         if(parentBacklogId != 0) {
             parent = this.backlogBusiness.retrieve(parentBacklogId);
@@ -342,7 +346,18 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         if (iterationId == 0) {
             return transferObjectBusiness.constructIterationTO(this.create(parent, iterationData, assigneeIds));
         }
+ 
         Iteration iter = this.retrieve(iterationId);
+        
+        // Get teams
+        Set<Team> teams = new HashSet<Team>();
+        if (teamIds != null) {
+            for (Integer tid : teamIds) {
+                teams.add(teamBusiness.retrieve(tid));
+            }
+            iter.setTeams(teams);
+        }
+        
         iter.setStartDate(iterationData.getStartDate());
         iter.setEndDate(iterationData.getEndDate());
         iter.setBacklogSize(iterationData.getBacklogSize());

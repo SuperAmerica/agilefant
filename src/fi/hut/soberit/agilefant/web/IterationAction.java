@@ -118,7 +118,12 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iteration = iterationBusiness.retrieve(iterationId);
         iteration.setReadonlyToken(generateReadonlyToken());
         
-        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds);
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        
+        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds, teams);
         
         this.readonlyToken = iteration.getReadonlyToken();
 
@@ -129,7 +134,12 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iteration = iterationBusiness.retrieve(iterationId);
         iteration.setReadonlyToken(null);
         
-        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds);
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        
+        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds, teams);
         
         this.readonlyToken = iteration.getReadonlyToken();
 
@@ -172,12 +182,17 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
             assignees = this.assigneeIds;
         }
         
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        
         // store stand alone iteration which has no parent
         if (parentBacklogId == 0) {
-            iteration = this.iterationBusiness.storeStandAlone(iterationId, iteration, assignees);
+            iteration = this.iterationBusiness.storeStandAlone(iterationId, iteration, assignees, teams);
             
         } else {
-            iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees);
+            iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees, teams);
             
         }
         

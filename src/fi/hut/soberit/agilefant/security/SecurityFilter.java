@@ -30,55 +30,51 @@ public class SecurityFilter extends GenericFilterBean {
         String requestUrl = reqt.getRequestURL().toString();
         
         User user = SecurityUtil.getLoggedUser();
-        boolean admin = user.isAdmin();
-        boolean readOnly = user.getName().equals("readonly");
-        boolean access = false;
         
-        if(admin){
-          //if admin, everything is fine
-          chain.doFilter(request, response);
-        } else {         
-            if(readOnly){
-                //check readOnly operations
-                if(requestUrl.contains("/ROIterationHistoryByToken") 
-                        || requestUrl.contains("/ROIterationMetricsByToken")
-                        || requestUrl.contains(("/ROIterationData"))){
-                    access = true;
-                }
-            } else {
-                if(requestUrl.contains("/storeNewUser")
-                        || requestUrl.contains("/deleteUser")
-                        || requestUrl.contains("/deleteTeam")){
-                    access = false;
-                }
-            }
-            /*if(requestUrl.matches("ajax/storeNewUser.action")){
-                access = false;
-            }
-            if(requestUrl.matches("ajax/storeUser.action")){
-                //check if ID is current user
+        if(user == null){
+            //TODO this should not be null!
+        } else {
+            boolean admin = user.isAdmin();
+            boolean readOnly = user.getName().equals("readonly");
+            boolean access = false;
+            
+            if(admin){
+              //if admin, everything is fine
+              chain.doFilter(request, response);
+            } else {         
                 if(readOnly){
-                    access = false;
-                } else {
-                    int id = Integer.parseInt(getParamFromUrl("id", requestUrl));
-                    if(id == user.getId()){
-                        //check if trying to set admin properties
-                        //TODO Finnucks: have to get user.admin set to true out of form request parameters
+                    //check readOnly operations
+                    if(requestUrl.contains("/ROIterationHistoryByToken") 
+                            || requestUrl.contains("/ROIterationMetricsByToken")
+                            || requestUrl.contains(("/ROIterationData"))){
                         access = true;
-                    } else {
+                    }
+                    //TODO whitelisting may be easier than blacklisting!
+                    if(requestUrl.contains("/storeNewUser")
+                            || requestUrl.contains("/deleteTeam")
+                            || requestUrl.contains("/storeTeam")
+                            || requestUrl.contains("/storeNewTeam")
+                            || requestUrl.contains("/retrieveAllProducts")){
                         access = false;
                     }
+                } else {
+                    if(requestUrl.matches("ajax/storeUser.action")){
+                        //check if ID is of current user, and what is being stored
+                        //can't set user.admin or team
+                        int id = Integer.parseInt(getParamFromUrl("id", requestUrl));
+                        
+                    }
                 }
-            }*/
-        
-            //OMG there's a lot!
-            //I think most important ones are in web/static/js/dynamics/model/*
             
-        
-            if(access)
-                chain.doFilter(request, response);
-            else
-                resp.sendRedirect("/agilefant/login.jsp");
+                //OMG there's a lot!
+                //I think most important ones are in web/static/js/dynamics/model/*
+                
+            
+                if(access)
+                    chain.doFilter(request, response);
+                else
+                    resp.sendRedirect("/agilefant/login.jsp");
+            }
         }
     }
     

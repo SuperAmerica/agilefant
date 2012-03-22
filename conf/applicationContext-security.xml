@@ -23,8 +23,8 @@
 				pattern="/ROIteration.action" />
 			<security:filter-chain filters="readonlyFilter"
 				pattern="/ajax/RO*" />
-			<security:filter-chain filters="securityFilter"
-				pattern="/ajax/*" />
+			<!-- <security:filter-chain filters="securityFilter"
+				pattern="/ajax/*" />-->
 			<security:filter-chain
 				filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
 				pattern="/ajax/**" />

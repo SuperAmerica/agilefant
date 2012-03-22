@@ -119,7 +119,7 @@ public class RefreshUserInterceptor implements Interceptor {
 
         // after the request:
         // reset the logged user
-        SecurityUtil.setLoggedUser(null);
+        //SecurityUtil.setLoggedUser(null);
 
         return result;
     }

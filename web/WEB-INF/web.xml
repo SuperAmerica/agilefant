@@ -89,10 +89,10 @@
     <url-pattern>/token/*</url-pattern>
   </filter-mapping>
   
-  <filter-mapping>
+ <!-- <filter-mapping>
     <filter-name>securityFilter</filter-name>
     <url-pattern>/ajax/*</url-pattern>
-  </filter-mapping>
+  </filter-mapping> -->
   
   <filter-mapping>
     <filter-name>filterChainProxy</filter-name>

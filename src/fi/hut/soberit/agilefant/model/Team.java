@@ -45,6 +45,8 @@ public class Team implements Comparable<Team> {
     private Collection<User> users = new HashSet<User>();
     
     private Collection<Product> products = new HashSet<Product>();
+    
+    private Collection<Iteration> iterations = new HashSet<Iteration>();
 
     /**
      * Get the id of this object.
@@ -155,6 +157,28 @@ public class Team implements Comparable<Team> {
      */
     public void setProducts(Collection<Product> products) {
         this.products = products;
+    }
+    
+    /**
+     * Get the team's iterations
+     * 
+     * return the iterations
+     */
+    @ManyToMany(targetEntity = Iteration.class)
+    @JoinTable(name = "team_iteration", joinColumns = { @JoinColumn(name = "Team_id") }, inverseJoinColumns = { @JoinColumn(name = "Iteration_id") })
+    @BatchSize(size = 5)
+    @JSON(include = false)
+    public Collection<Iteration> getIterations() {
+        return iterations;
+    }
+    
+    /**
+     * Set the team's iterations.
+     * 
+     * @param iterations the iterations to be set
+     */
+    public void setIterations(Collection<Iteration> iterations) {
+        this.iterations = iterations;
     }
 
     /**

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -134,8 +135,18 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
         Story parent = story.getParent();
         Story firstSibling;
         if (parent == null) {             
-            Product prod = backlogBusiness.getParentProduct(story.getBacklog());            
-            firstSibling = this.retrieveProductRootStories(prod.getId(), null).get(0);
+            Product prod = backlogBusiness.getParentProduct(story.getBacklog());  
+            if(prod == null){
+                //standalone iteration
+                Set<Story> stories = story.getIteration().getStories();
+                if(stories.size() == 0){
+                    firstSibling = null;
+                } else {
+                    firstSibling = stories.iterator().next();
+                }
+            } else {
+                firstSibling = this.retrieveProductRootStories(prod.getId(), null).get(0);
+            }
         } else {            
             firstSibling = parent.getChildren().get(0);
         }

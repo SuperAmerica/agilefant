@@ -13,19 +13,22 @@
           http://www.springframework.org/schema/security
           http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
-	<bean id="filterChainProxy"
-		class="org.springframework.security.util.FilterChainProxy">		
+	<bean id="filterChainProxy" class="org.springframework.security.util.FilterChainProxy">
 		<security:filter-chain-map path-type="ant">
-		  <security:filter-chain filters="remoteServicesFilter" pattern="/rs/**"/>
-		  <security:filter-chain filters="readonlyFilter" pattern="/token/*"/>
-<!-- 	  <security:filter-chain filters="readonlyFilter" pattern="/RO*"/> -->
-  		  <security:filter-chain filters="readonlyFilter" pattern="/ajax/RO*"/> 
-		  <security:filter-chain
-        filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
-        pattern="/ajax/**"/>
-		  <security:filter-chain
-		    filters="httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor"
-		    pattern="/**"/>
+			<security:filter-chain filters="remoteServicesFilter"
+				pattern="/rs/**" />
+			<security:filter-chain filters="readonlyFilter"
+				pattern="/token/*" />
+			<security:filter-chain filters="readonlyFilter"
+				pattern="/ROIteration.action" />
+			<security:filter-chain filters="readonlyFilter"
+				pattern="/ajax/RO*" />
+			<security:filter-chain
+				filters="httpSessionContextIntegrationFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,ajaxExceptionTranslationFilter,filterInvocationInterceptor"
+				pattern="/ajax/**" />
+			<security:filter-chain
+				filters="httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,securityContextHolderAwareRequestFilter,rememberMeProcessingFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor"
+				pattern="/**" />
 		</security:filter-chain-map>
 	</bean>
 	

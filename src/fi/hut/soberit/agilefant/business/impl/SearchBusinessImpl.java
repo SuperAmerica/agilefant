@@ -107,11 +107,27 @@ public class SearchBusinessImpl implements SearchBusiness {
         } else if(bl instanceof Iteration){
             //look at project, then product
             Backlog temp = bl.getParent();
-            if(temp instanceof Product){
-                //iteration is directly under a product, not in a project
-                prod = (Product) temp;
+            if(temp == null){
+                //standalone iteration
+                temp = bl;
+                Collection<Iteration> allowedIterations = new HashSet<Iteration>();
+                for(Team team : user.getTeams()){
+                    allowedIterations.addAll(team.getIterations());
+                }
+
+                //check if we have access 
+                if(allowedIterations.contains(temp)){
+                    return true;
+                }                
+                return false;
+                
             } else {
-                prod = (Product) temp.getParent();
+                if(temp instanceof Product){
+                    //iteration is directly under a product, not in a project
+                    prod = (Product) temp;
+                } else {
+                    prod = (Product) temp.getParent();
+                }
             }
         } else if(bl instanceof Product){
             prod = (Product)bl;

@@ -51,19 +51,22 @@ public class ReadonlyFilter extends GenericFilterBean {
         Session session = sessionFactory.openSession();
         
         // Fetch url token from request.
-        String token = getTokenFromUrl(reqt.getRequestURL().toString());
+        String requestUrl = reqt.getRequestURL().toString();
+        String token = getTokenFromUrl(requestUrl);
+        session.disconnect();
+        session.close();
+        
+
         
         if (iterationDao.isValidReadonlyToken(token)) {
-            session.disconnect();
-            session.close();
             resp.sendRedirect("/agilefant/ROIteration.action?readonlyToken=" + token);
-        } else if (reqt.getRequestURL().toString().contains("ROIteration")) {
-            session.disconnect();
-            session.close();
             
-            //log in read only user
-            User user = userDao.getByLoginName("readonly");
-            SecurityUtil.setLoggedUser(user);
+        } else if (requestUrl.contains("ROIteration") && !requestUrl.endsWith("ROIteration.action")) {
+            
+            // I don't think this is needed but I am leaving it here for now, 
+            // in case removing it does break something. - Dustin, Mar-21-2012
+            //User user = userDao.getByLoginName("readonly");
+            //SecurityUtil.setLoggedUser(user);
             
             try{
                 chain.doFilter(request, response);
@@ -72,9 +75,6 @@ public class ReadonlyFilter extends GenericFilterBean {
                 resp.sendRedirect("/agilefant/login.jsp");
             }
         } else {
-            session.disconnect();
-            session.close();
-            
             // Token is not valid, so redirect to login page.
             resp.sendRedirect("/agilefant/login.jsp");
         }

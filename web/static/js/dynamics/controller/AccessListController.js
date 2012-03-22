@@ -141,7 +141,7 @@ AccessListController.prototype.initConfig = function() {
  */
 AccessListController.prototype.initIterationConfig = function() {
   this.accessIterationListConfig = new DynamicTableConfiguration({
-    caption: "Stand Alone Iteration Access",
+    caption: "Standalone Iteration Access",
     dataSource: AccessListContainer.prototype.getIterations,
     rowControllerFactory: AccessListController.prototype.accessControllerFactory,
     cssClass: "ui-widget-content ui-corner-all administration-team-table",

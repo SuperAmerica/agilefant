@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.business.impl;
 import java.util.HashSet;
 import java.util.Set;
 
+import fi.hut.soberit.agilefant.model.Project;
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -115,7 +116,6 @@ public class StoryBusinessImplTest {
         // test
         Assert.assertTrue(StoryBusinessImpl.storyHasChildren(s1));
     }
-    
     
     
 }

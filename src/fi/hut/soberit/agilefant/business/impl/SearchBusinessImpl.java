@@ -47,7 +47,14 @@ public class SearchBusinessImpl implements SearchBusiness {
         List<Backlog> backlogs = backlogDAO.searchByName(searchTerm);
         backlogListSearchResult(result, backlogs);
         List<Story> stories = storyDAO.searchByName(searchTerm);
-        storyListSearchResult(result, stories);
+        try {
+            stories.addAll(storyDAO.searchByID(searchTerm));
+            storyListSearchResult(result, stories);
+        }
+        catch (Exception e) {
+            // The search term is not an integer
+            storyListSearchResult(result, stories);
+        }
         List<Task> tasks = taskDAO.searchByName(searchTerm);
         taskListSearchResult(result, tasks);
         return result;

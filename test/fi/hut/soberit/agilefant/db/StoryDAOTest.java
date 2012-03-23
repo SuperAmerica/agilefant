@@ -117,6 +117,23 @@ public class StoryDAOTest extends AbstractHibernateTests {
    }
 
    @Test
+   public void testGetAllIterationStoriesByResponsibleAndInterval_standaloneIteration() {
+       executeClassSql();
+       DateTime start = new DateTime(2009,6,10,1,0,0,0);
+       Interval interval = new Interval(start, start.plusDays(5));
+       User user = new User();
+       user.setId(2);
+       Collection<Story> actual = this.storyDAO.getAllIterationStoriesByResponsibleAndInterval(user, interval);
+      
+       HashSet<Integer> actualIds = new HashSet<Integer>();
+       for (Story t: actual) {
+           actualIds.add(t.getId()); 
+       }
+       
+       HashSet<Integer> expectedIds = new HashSet<Integer>(Arrays.asList(6,10));        
+       assertEquals(expectedIds, actualIds);
+   }
+   @Test
    public void testRetrieveActiveIterationStoriesWithUserResponsible() {
        executeSql("classpath:fi/hut/soberit/agilefant/db/StoryDAOTest-assignments-data.sql");
        List<Story> stories = storyDAO.retrieveActiveIterationStoriesWithUserResponsible(1);

@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.db.hibernate;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -95,5 +96,13 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
         crit.addOrder(Order.asc("name"));
         crit.setMaxResults(SearchBusiness.MAX_RESULTS_PER_TYPE);
         return asList(crit);
+    }
+    
+    public Collection<Backlog> retrieveStandaloneIterations() {
+        Criteria crit = getCurrentSession().createCriteria(Backlog.class);
+        crit.add(Restrictions.sqlRestriction("{alias}.parent_id is NULL"));
+        crit.add(Restrictions.sqlRestriction("{alias}.backlogType like 'Iteration'"));
+        crit.setMaxResults(SearchBusiness.MAX_RESULTS_PER_TYPE);
+        return asCollection(crit);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import fi.hut.soberit.agilefant.business.impl.StoryHierarchyBusinessImpl;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
@@ -99,6 +100,23 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
     /**
      * {@inheritDoc}
      */
+    public long totalLeafStoryPoints(Iteration iteration) {
+        Criteria iterationCrit = getCurrentSession()
+                .createCriteria(Story.class);
+        
+        iterationCrit.add(Restrictions.isEmpty("children"));
+        
+        iterationCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
+        
+        iterationCrit.setProjection(Projections.projectionList().add(
+                Projections.sum("storyPoints")));
+        return sum(0L,
+                (Long) iterationCrit.uniqueResult());
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public long totalLeafDoneStoryPoints(Project project) {
         Criteria projectCrit = getCurrentSession().createCriteria(Story.class);
         Criteria iterationCrit = getCurrentSession()
@@ -114,6 +132,19 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
                 (Long) iterationCrit.uniqueResult());
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public long totalLeafDoneStoryPoints(Iteration iteration) {
+        Criteria iterationCrit = getCurrentSession()
+                .createCriteria(Story.class);
+        iterationCrit.add(Restrictions.isEmpty("children"));
+        iterationCrit.setProjection(Projections.projectionList().add(
+                Projections.sum("storyPoints")));
+        iterationCrit.add(Restrictions.eq("state", StoryState.DONE));
+        return (Long)iterationCrit.uniqueResult();
+    }
+    
     private void attachRootFilters(Criteria projectCrit,
             Criteria iterationCrit, int projectId) {
         LogicalExpression parentInProductBacklog = Restrictions.and(

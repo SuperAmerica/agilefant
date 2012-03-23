@@ -45,7 +45,7 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
     public List<BacklogTimesheetNode> findRootNodes(TimesheetData sheetData) {
         List<BacklogTimesheetNode> rootNodes = new ArrayList<BacklogTimesheetNode>();
         for(BacklogTimesheetNode node : sheetData.getBacklogNodes()) {
-            if(node.getBacklog() instanceof Product) {
+            if(node.getBacklog() instanceof Product || node.getBacklog().isStandAlone()) {
                 node.calculateEffortSum();
                 rootNodes.add(node);
             }

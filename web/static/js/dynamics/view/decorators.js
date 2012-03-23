@@ -152,7 +152,10 @@ var DynamicsDecorators = {
     return value.name;
   },
   storyContextDecorator: function(value) {
-    return '<a class="context" title="Backlog: ' + value.getName() + '" href="editBacklog.action?backlogId=' + value.getId() + '">' + value.getName() + '</a>';
+	if(value){
+		return '<a class="context" title="Backlog: ' + value.getName() + '" href="editBacklog.action?backlogId=' + value.getId() + '">' + value.getName() + '</a>';
+	}
+	return "";
   },
   taskContextDecorator: function(value) {
     var returned = "";

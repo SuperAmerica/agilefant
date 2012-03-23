@@ -49,7 +49,8 @@ public class ProductActionTest {
 
     @Test
     public void testRetrieveAll() {
-        Collection<Product> allProductList = Arrays.asList(new Product());
+        Collection<Product> allProductList = productAction.getProducts();
+        allProductList.add(new Product());
 
         expect(productBusiness.retrieveAll()).andReturn(allProductList);
         replayAll();

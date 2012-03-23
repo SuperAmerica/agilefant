@@ -471,10 +471,10 @@ StoryModel.prototype.setName = function(name) {
 };
 
 StoryModel.prototype.getParent = function() {
-	if(this.getBacklog())
-		return this.getBacklog();
-	else
+	if(this.getIteration())
 		return this.getIteration();
+	else
+		return this.getBacklog();
 };
 
 

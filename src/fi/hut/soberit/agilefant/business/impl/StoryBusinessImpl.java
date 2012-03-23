@@ -330,10 +330,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
     }
     
-    public Story createStoryUnder(int referenceStoryId, Story data,
+    public Story createStoryUnder(int referenceStoryId, int backlogId, Story data,
             Set<Integer> responsibleIds, List<String> labelNames) {
         Story referenceStory = this.retrieve(referenceStoryId);
-        Backlog backlog = referenceStory.getBacklog();
+        Backlog backlog = this.backlogBusiness.retrieve(backlogId);
+        
         Story story = this.persistNewStory(data, backlog.getId(),
                 responsibleIds);
         this.storyHierarchyBusiness.moveUnder(story, referenceStory);
@@ -341,10 +342,11 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return story;
     }
 
-    public Story createStorySibling(int referenceStoryId, Story data,
+    public Story createStorySibling(int referenceStoryId, int backlogId, Story data, 
             Set<Integer> responsibleIds, List<String> labelNames) {
         Story referenceStory = this.retrieve(referenceStoryId);
-        Backlog backlog = referenceStory.getBacklog();
+        Backlog backlog = this.backlogBusiness.retrieve(backlogId);
+        
         Story story = this.persistNewStory(data, backlog.getId(),
                 responsibleIds);
         this.storyHierarchyBusiness.moveAfter(story, referenceStory);

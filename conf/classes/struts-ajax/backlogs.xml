@@ -76,6 +76,13 @@
       </result>
     </action>
     
+    <action name="retrieveAllProductsWithStandalone" method="retrieveAllTimeSheets" class="productAction">
+      <result name="success" type="json">
+        <param name="target">products</param>
+        <param name="patterns">+teams</param>
+      </result>
+    </action>
+    
     <action name="storeProduct" method="store" class="productAction">
       <interceptor-ref name="prefetchStack"/>
       <result name="success" type="json">

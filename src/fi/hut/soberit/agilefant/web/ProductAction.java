@@ -87,8 +87,11 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
     }
 
     public String retrieveAll() {
-        // TODO: Should this be moved some place else?
-        // Add standalone iterations to products list
+        products = productBusiness.retrieveAll();
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveAllTimeSheets() {
         Product standaloneProduct = new Product();
         standaloneProduct.setName("[Standalone Iterations]");
         standaloneProduct.setId(0);
@@ -96,7 +99,7 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
 
         products.addAll(productBusiness.retrieveAll());
         
-        return Action.SUCCESS;
+        return Action.SUCCESS;    
     }
     
     public String retrieveProjects() {

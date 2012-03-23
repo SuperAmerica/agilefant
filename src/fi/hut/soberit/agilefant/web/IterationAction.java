@@ -189,8 +189,7 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         
         // store stand alone iteration which has no parent
         if (parentBacklogId == 0) {
-            iteration = this.iterationBusiness.storeStandAlone(iterationId, iteration, assignees, teams);
-            
+            iteration = this.iterationBusiness.storeStandAlone(iterationId, iteration, assignees, teams);        
         } else {
             iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees, teams);
             

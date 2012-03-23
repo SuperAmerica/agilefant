@@ -330,8 +330,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     }
     
     
-    public IterationTO store(int iterationId, int parentBacklogId,
-            Iteration iterationData, Set<Integer> assigneeIds, Set<Integer> teamIds) {
+    public IterationTO store(int iterationId, int parentBacklogId, Iteration iterationData, Set<Integer> assigneeIds, Set<Integer> teamIds) {
         Backlog parent = null;
         if(parentBacklogId != 0) {
             parent = this.backlogBusiness.retrieve(parentBacklogId);
@@ -344,7 +343,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             throw new IllegalArgumentException("End date before start date");
         }
         if (iterationId == 0) {
-            return transferObjectBusiness.constructIterationTO(this.create(parent, iterationData, assigneeIds));
+            return transferObjectBusiness.constructIterationTO(this.create(parent, iterationData, assigneeIds, teamIds));
         }
  
         Iteration iter = this.retrieve(iterationId);
@@ -373,7 +372,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         return transferObjectBusiness.constructIterationTO(iter);
     }
 
-    private Iteration create(Backlog parentBacklog, Iteration iterationData, Set<Integer> assigneeIds) {
+    private Iteration create(Backlog parentBacklog, Iteration iterationData, Set<Integer> assigneeIds, Set<Integer> teamIds) {
         if (parentBacklog != null) {
             iterationData.setParent(parentBacklog);
         }
@@ -381,6 +380,11 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Iteration iter = this.retrieve(iterationId);
         
         setAssignees(iter, assigneeIds);
+        
+        //only set teams for standalone iterations
+        if(parentBacklog == null)
+            setTeams(iter, teamIds);
+        
         return iter;
     }
     
@@ -395,6 +399,16 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
     }
 
+    private void setTeams(Iteration iteration, Set<Integer> teamIds) {
+        // Get teams
+        Set<Team> teams = new HashSet<Team>();
+        if (teamIds != null) {
+            for (Integer tid : teamIds) {
+                teams.add(teamBusiness.retrieve(tid));
+            }
+            iteration.setTeams(teams);
+        }
+    }
     public void moveTo(Iteration iter, Backlog parent) {
         Backlog oldParent = iter.getParent();
         iter.setParent(parent);

@@ -296,12 +296,26 @@ IterationModel.prototype.getTeams = function() {
   return this.relations.team;
 };
 
-IterationModel.prototype.setTeams = function(teamIds, teamJson) {
-  if (teamJson) {
-    $.each(teamJson, function(k,v) {
-      ModelFactory.updateObject(v);
+IterationModel.prototype.setAllTeams = function(allTeams) {
+  var me = this;
+  if(allTeams == "true"){
+  	var teams = [];
+  	var data = {};
+  	jQuery.ajax({
+  		type: "POST",
+  		url: "ajax/retrieveAllTeams.action",
+    	async: false,
+    	cache: false,
+    	data: data,
+    	dataType: "json",
+    	success: function(data,status) {
+      		for(i = 0; i < data.length; i++) {
+      			teams.push(data[i].id)
+      		}
+    	}
     });
+    
+    this.currentData.teamsChanged = true;
+    this.currentData.teamIds = teams;
   }
-  this.currentData.teamIds = teamIds;
-  this.currentData.teamsChanged = true;
 };

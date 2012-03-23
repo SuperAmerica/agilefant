@@ -267,6 +267,9 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             metrics.setEffortLeft(new ExactEstimate(latestHistoryEntry
                     .getEffortLeftSum()));
         }
+        
+        // Set the planned size
+        metrics.setPlannedSize(new ExactEstimate(iteration.getBacklogSize().intValue()));
 
         metrics.setDailyVelocity(calculateDailyVelocity(iteration));
 
@@ -306,7 +309,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         //6. calculate percentages
         metrics.setPercentDoneTasks(calculatePercent(pairTasks.first, pairTasks.second));
         metrics.setPercentDoneStories(calculatePercent(pairStories.first, pairStories.second));
-        metrics.setPercentSpentEffort(calculatePercent(metrics.getSpentEffort().intValue(), metrics.getOriginalEstimate().intValue()));
+        metrics.setPercentSpentEffort(calculatePercent(metrics.getSpentEffort().intValue(), metrics.getPlannedSize().intValue()));
         if(metrics.getPercentSpentEffort() > 100)
             metrics.setPercentSpentEffort(100);
         metrics.setDoneStoryPointsPercentage(calculatePercent(metrics.getDoneStoryPoints(), metrics.getStoryPoints()));

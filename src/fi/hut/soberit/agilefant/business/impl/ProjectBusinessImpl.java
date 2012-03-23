@@ -153,12 +153,16 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         }
         metrics.setEffortSpent(new ExactEstimate(x));
         metrics.setOriginalEstimate(new ExactEstimate(y));
-        if(!metrics.getOriginalEstimate().equals(ExactEstimate.ZERO)) {
+        metrics.setPlannedSize(project.getBacklogSize());
+        if(!metrics.getPlannedSize().equals(ExactEstimate.ZERO)) {
             metrics.setEfforSpentPercentage(Math.round((float) metrics
                     .getEffortSpent().floatValue()
-                    * 100f / (float) metrics.getOriginalEstimate().floatValue()));
+                    * 100f / (float) metrics.getPlannedSize().floatValue()));
             if(metrics.getEffortSpentPercentage() > 100)
                 metrics.setEfforSpentPercentage(100);
+        }
+        else {
+            metrics.setEfforSpentPercentage(100);
         }
 
         return metrics;

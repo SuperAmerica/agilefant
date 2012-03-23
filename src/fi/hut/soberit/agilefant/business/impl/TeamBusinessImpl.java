@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.business.TeamBusiness;
 import fi.hut.soberit.agilefant.business.UserBusiness;
 import fi.hut.soberit.agilefant.business.ProductBusiness;
 import fi.hut.soberit.agilefant.db.TeamDAO;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.model.Product;
@@ -26,6 +28,9 @@ public class TeamBusinessImpl extends GenericBusinessImpl<Team> implements
     
     @Autowired
     private ProductBusiness productBusiness;
+    
+    @Autowired
+    private IterationBusiness iterationBusiness;
     
     public TeamBusinessImpl() {
         super(Team.class);
@@ -45,7 +50,7 @@ public class TeamBusinessImpl extends GenericBusinessImpl<Team> implements
 
     /** {@inheritDoc} */
     @Transactional
-    public Team storeTeam(Team team, Set<Integer> userIds, Set<Integer> productIds) {
+    public Team storeTeam(Team team, Set<Integer> userIds, Set<Integer> productIds, Set<Integer> iterationIds) {
         if (team == null) {
             throw new IllegalArgumentException("Team must be supplied.");
         }
@@ -66,6 +71,15 @@ public class TeamBusinessImpl extends GenericBusinessImpl<Team> implements
                 products.add(productBusiness.retrieve(pid));
             }
             team.setProducts(products);
+        }
+        
+        // Get iterations
+        Set<Iteration> iterations = new HashSet<Iteration>();
+        if (iterationIds != null) {
+            for (Integer pid : iterationIds) {
+                iterations.add(iterationBusiness.retrieve(pid));
+            }
+            team.setIterations(iterations);
         }
         
         Team stored = null;

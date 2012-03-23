@@ -124,12 +124,10 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
                 CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("story.backlog.parent.parent", "blParentParent",
                 CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("story.iteration", "iter", CriteriaSpecification.LEFT_JOIN);
 
         crit.add(Restrictions.or(Restrictions.in("bl.id", backlogIds),
                 Restrictions.or(Restrictions.in("blParent.id", backlogIds),
-                        Restrictions.or(Restrictions.in("iter.id", backlogIds), 
-                                Restrictions.in("blParentParent.id", backlogIds)))));
+                        Restrictions.in("blParentParent.id", backlogIds))));
         crit.addOrder(Order.desc("date"));
         this.setDateUserFilter(crit, startDate, endDate, userIds);
         return asList(crit);
@@ -147,19 +145,19 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
         
         crit.createAlias("task.story", "story");
-        crit.createAlias("task.iteration", "ti");
         crit.createAlias("task.story.backlog", "bl",
                 CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.story.backlog.parent", "blParent",
                 CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.story.backlog.parent.parent", "blParentParent",
                 CriteriaSpecification.LEFT_JOIN);
-        
+        crit.createAlias("task.story.iteration", "si",
+                CriteriaSpecification.LEFT_JOIN);
 
-        Criterion parentProject = Restrictions.or(Restrictions.in("bl.id", backlogIds), Restrictions
-                .in("blParent.id", backlogIds));
+        Criterion parentProject = Restrictions.or(Restrictions.or(Restrictions.in("bl.id", backlogIds), Restrictions
+                .in("blParent.id", backlogIds)), Restrictions.and(Restrictions.isNull("story.backlog"), Restrictions.in("si.id", backlogIds)));
         crit.add(Restrictions.or(Restrictions.in("blParentParent.id",
-                backlogIds), Restrictions.or(Restrictions.in("ti.id", backlogIds), parentProject)));
+                backlogIds), parentProject));
         crit.addOrder(Order.desc("date"));
         this.setDateUserFilter(crit, startDate, endDate, userIds);
         

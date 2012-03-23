@@ -132,10 +132,11 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     public void moveToTop(Story story) {
         // parent -> not root story, move to top of parent
         Story parent = story.getParent();
-        Story firstSibling;
+        Story firstSibling = null;
         if (parent == null) {             
-            Product prod = backlogBusiness.getParentProduct(story.getBacklog());            
-            firstSibling = this.retrieveProductRootStories(prod.getId(), null).get(0);
+            Product prod = backlogBusiness.getParentProduct(story.getBacklog());  
+            if(prod != null)
+                firstSibling = this.retrieveProductRootStories(prod.getId(), null).get(0);
         } else {            
             firstSibling = parent.getChildren().get(0);
         }

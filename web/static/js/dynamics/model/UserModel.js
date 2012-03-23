@@ -98,6 +98,7 @@ UserModel.Validators = {
 
 UserModel.prototype._setData = function(newData) {
   this.id = newData.id;
+  this.currentData.id = newData.id;
   
   if (newData.teams) {
     this._updateRelations(ModelFactory.types.team, newData.teams);
@@ -304,5 +305,8 @@ UserModel.prototype.getAdmin = function() {
 };
 
 UserModel.prototype.getId = function() {
-  return this.currentData.id;
+if(this.currentData.id)	
+    return this.currentData.id;
+else
+	return this.id;
 };

@@ -155,7 +155,7 @@ public class TimesheetBusinessTest extends TimesheetBusinessImpl {
         sheetData.addNode(nonRootNode);
         TimesheetBusiness tsb = new TimesheetBusinessImpl();
         List<BacklogTimesheetNode> nodes = tsb.findRootNodes(sheetData);
-        assertEquals(1, nodes.size());
+        assertEquals(2, nodes.size());
     }
     
     @Test

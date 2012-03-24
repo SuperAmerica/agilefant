@@ -1,8 +1,7 @@
-The MIT License
+Agilefant's license (based on the MIT license)
 
-Copyright © 2008 Agilefant.org / ATMAN research project / Software Process
-Research Group / SoberIT / Helsinki University of Technology. See also the
-full list of contributors at http://spreadsheets.google.com/pub?key=pqI5Z83a0g_nZJ1i9pdWodw
+Copyright © Agilefant.org / Software Process Research Group / SoberIT / Aalto University.
+See also the full list of contributors (http://www.agilefant.org/wiki/display/AEF/Contributors)!
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

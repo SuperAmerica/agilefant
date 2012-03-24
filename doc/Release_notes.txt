@@ -1,15 +1,57 @@
-Agilefant 2.0.5
+Agilefant 2.5
 Release notes
-2011-11-26
+2012-03-23
 --
 
 Please spend a couple of minutes to register your organization at
-http://tinyurl.com/agilefant-registration-2011
+http://tinyurl.com/agilefant-registration
 This helps us keep a full-featured Agilefant free-of-charge forever!
 
 +--------------------+
 |     CHANGESET      |
 +--------------------+
+
+Changes from 2.0.5
+2012-03-23
++ Improved portfolio management
+  + Improved metrics in Story, Iteration and Project widgets used to create custom views into the 
+    development portfolio
++ Improved support for product and release planning
+  + Drag & drop multiple stories in the story tree view with a single operation
+  + Project burn-up now displays an additional graph based on the maximum of story points in the 
+    tree (e.g. story of 10 points having two children with 2 points each => 10 points, instead of 4)
+  + New story attribute 'Value' (a non-negative integer, similar to story points)
+  + An entire story hierarchy (including tasks) can now be marked as Done on a single action
+  + Added 'rank to top' and 'rank to bottom' as separate buttons in the 
+    project leaf stories view for faster ranking; fixed bug regarding these actions
+  + Improved layout when creating stories in the project leaf stories list
+  + New stories are now created to the top of the project leaf stories list
+  + Story IDs are displayed in the project leaf story list for easier reference
++ Improved iteration management
+  + New state 'Deferred' for stories and tasks to indicate that it has been scoped out of the
+    project or iteration. Deferred stories (tasks) are ignored in all metrics
+  + Stories (including tasks) can now be copied in iteration view - helps e.g. in
+    dealing with unfinished stories at the end of an iteration
+  + Iteration burndown now depicts cumulative spent effort as a function of time (when timesheets are enabled)
+  + Setting tasks as 'Ready' prompts for zeroing of effort left
+  + Iteration history tab now includes trace of added/removed stories
+  + Story IDs are displayed in the iteration story list for easier reference
++ User rights
+  + Teams can now be deleted (preparatory work for the upcoming teams/products access matrix)
++ Support for Agilefant's research-industry ecosystem
+  + Manual export of database for research and/or backup purposes (outputs a zipped SQL dump that you 
+    can email - Agilefant does not send anything anywhere!)
+  + Automatic anonymization of an exported database for research purposes (all object names 
+    are replaced with their ID's, all text fields in objects are replaced with string length) 
++ Usability improvements
+  + All editing is now done with single-click (instead of double-click); double-click still works, though
+  + Improved look & feel of story tree drag n' drop
+  + Smoother drag n' drop for ranking stories in story lists
+  + Search now includes tasks as well
+  + Focus to main frame when loading all pages (pages can be scrolled without unnecessary 
+    focus clicking when not using a mouse)
+  + Planned size of projects and iterations now explicitly as man-hours
++ Misc small bug fixes
 
 Changes from 2.0.4, also known as Agilefant 2.0.3 (r4337)
 2011-11-26

@@ -11,6 +11,8 @@ import javax.xml.bind.annotation.XmlAccessorType;
 
 import org.hibernate.envers.Audited;
 
+import fi.hut.soberit.agilefant.exception.ProductRankNotSupportedException;
+
 @Entity
 @Audited
 @Table(name = "storyrank", uniqueConstraints = { @UniqueConstraint(columnNames = {
@@ -48,6 +50,9 @@ public class StoryRank {
     }
 
     public void setBacklog(Backlog backlog) {
+        if(backlog instanceof Product) {
+            throw new ProductRankNotSupportedException();
+        }
         this.backlog = backlog;
     }
     

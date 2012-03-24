@@ -12,13 +12,14 @@ SELECT A.id, B.id
 FROM (SELECT id FROM teams) A,
      (SELECT id FROM backlogs WHERE backlogtype='Product') B;
 
+-- Access rights for stand alone iterations
+create table team_iteration (Team_id integer not null, Iteration_id integer not null) ENGINE=InnoDB;
+alter table team_iteration add index FKF2269B7B4157D2A2 (Iteration_id), add constraint FKF2269B7B4157D2A2 foreign key (Iteration_id) references backlogs (id);
+alter table team_iteration add index FKF2269B7B745BA992 (Team_id), add constraint FKF2269B7B745BA992 foreign key (Team_id) references teams (id);
+
 -- Give all teams access to all standalone iterations
 INSERT INTO team_iteration (Team_id, Iteration_id)
 SELECT A.id, B.id
 FROM (SELECT id FROM teams) A,
      (SELECT id FROM backlogs WHERE backlogtype='Iteration' AND parent_id IS NULL) B;
 
--- Access rights for stand alone iterations
-create table team_iteration (Team_id integer not null, Iteration_id integer not null) ENGINE=InnoDB;
-alter table team_iteration add index FKF2269B7B4157D2A2 (Iteration_id), add constraint FKF2269B7B4157D2A2 foreign key (Iteration_id) references backlogs (id);
-alter table team_iteration add index FKF2269B7B745BA992 (Team_id), add constraint FKF2269B7B745BA992 foreign key (Team_id) references teams (id);

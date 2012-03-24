@@ -562,7 +562,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             }
         } else {
             story.setBacklog(target);
-            story.setIteration(null);
+            if(oldIteration != null && !oldIteration.isStandAlone())
+              story.setIteration(null);
         }
 
         target.getStories().add(story);
@@ -607,7 +608,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
 
     private void rankToProduct(Story story, Backlog oldBacklog, Backlog oldIteration) {
         storyRankBusiness.removeRank(story, oldBacklog);
-        if (oldIteration != null) {
+        if (oldIteration != null && story.getIteration() == null) {
             storyRankBusiness.removeRank(story, oldIteration);
         }
     }
@@ -632,7 +633,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
             storyRankBusiness.removeRank(story, oldBacklog);
         }
         Backlog oldIterationParent = null;
-        if (oldIteration != null) {
+        if (oldIteration != null && !oldIteration.isStandAlone()) {
             storyRankBusiness.removeRank(story, oldIteration);
             oldIterationParent = oldIteration.getParent();
         }

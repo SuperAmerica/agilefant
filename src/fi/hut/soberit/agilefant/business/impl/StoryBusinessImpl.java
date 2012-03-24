@@ -333,25 +333,40 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public Story createStoryUnder(int referenceStoryId, int backlogId, Story data,
             Set<Integer> responsibleIds, List<String> labelNames) {
         Story referenceStory = this.retrieve(referenceStoryId);
-        Backlog backlog = this.backlogBusiness.retrieve(backlogId);
+        Backlog backlog = this.getBacklogForCreatedStory(referenceStory, backlogId);
+        Story story = this.persistNewStory(data, backlog.getId(), responsibleIds);
         
-        Story story = this.persistNewStory(data, backlog.getId(),
-                responsibleIds);
         this.storyHierarchyBusiness.moveUnder(story, referenceStory);
         this.labelBusiness.createStoryLabels(labelNames, story.getId());
+        
         return story;
     }
 
     public Story createStorySibling(int referenceStoryId, int backlogId, Story data, 
             Set<Integer> responsibleIds, List<String> labelNames) {
         Story referenceStory = this.retrieve(referenceStoryId);
-        Backlog backlog = this.backlogBusiness.retrieve(backlogId);
+        Backlog backlog = this.getBacklogForCreatedStory(referenceStory, backlogId);
+        Story story = this.persistNewStory(data, backlog.getId(), responsibleIds);
         
-        Story story = this.persistNewStory(data, backlog.getId(),
-                responsibleIds);
         this.storyHierarchyBusiness.moveAfter(story, referenceStory);
         this.labelBusiness.createStoryLabels(labelNames, story.getId());
+        
         return story;
+    }
+    
+    private Backlog getBacklogForCreatedStory(Story referenceStory, int currentBacklogId) {
+        Backlog backlog;
+        Backlog referenceBacklog = referenceStory.getBacklog();
+        Backlog currentBacklog = this.backlogBusiness.retrieve(currentBacklogId);
+        
+        if (currentBacklog.getParent() != null && currentBacklog.getParent() == referenceBacklog) {
+            backlog = currentBacklog;
+        }
+        else {
+            backlog = referenceBacklog;
+        }
+        
+        return backlog;
     }
     
     public Story copyStorySibling(Integer storyId, Story story)

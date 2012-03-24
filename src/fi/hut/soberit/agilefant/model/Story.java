@@ -93,6 +93,12 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
         this.description = description;
     }
 
+
+    public boolean hasChildren()
+    {
+        return this.children != null && this.children.size() > 0;
+    }
+
     /**
      * With standalone iterations, backlogs can only be products or 
      * projects; iterations must have an attribute of their own because

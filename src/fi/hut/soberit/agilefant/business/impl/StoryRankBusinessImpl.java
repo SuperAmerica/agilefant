@@ -166,8 +166,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * {@inheritDoc}
      */
     public void removeRank(Story story, Backlog context) {
-        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
-                story);
+        if (context == null) {
+            return;
+        }
+        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,story);
         if (rank != null) {
             skipRank(rank);
             this.storyRankDAO.remove(rank);

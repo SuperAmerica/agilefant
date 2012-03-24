@@ -38,7 +38,7 @@ public interface StoryBusiness extends GenericBusiness<Story> {
     /**
      * Moves a story to another backlog.
      */
-    public void moveStoryToBacklog(Story story, Backlog backlog);
+    public void moveStoryAway(Story story, Backlog backlog);
 
     /**
      * Rank story under the give upperStory.

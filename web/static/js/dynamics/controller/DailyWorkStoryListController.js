@@ -68,7 +68,7 @@ DailyWorkStoryListController.columnConfig.context = {
   minWidth: 120,
   autoScale: true,
   title: "Context",
-  get: StoryModel.prototype.getIteration,
+  get: StoryModel.prototype.getParent,
   decorator: DynamicsDecorators.storyContextDecorator
 };
 DailyWorkStoryListController.columnConfig.detailedContext = {

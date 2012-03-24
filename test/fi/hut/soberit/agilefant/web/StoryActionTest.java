@@ -160,9 +160,9 @@ public class StoryActionTest extends MockedTestCase {
         
         expect(storyBusiness.retrieve(story.getId())).andReturn(story);
         expect(backlogBusiness.retrieve(iter.getId())).andReturn(iter);
-        storyBusiness.moveStoryToBacklog(story, iter);
+        storyBusiness.moveStoryAway(story, iter);
         replayAll();
-        assertEquals(Action.SUCCESS, storyAction.moveStory());
+        assertEquals(Action.SUCCESS, storyAction.moveStoryAway());
         verifyAll();
     }
     

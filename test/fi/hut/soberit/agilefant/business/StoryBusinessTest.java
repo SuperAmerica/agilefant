@@ -161,7 +161,7 @@ public class StoryBusinessTest {
     private void store_createMockStoryBusiness() {       
         this.storyBusiness = new StoryBusinessImpl() {
             @Override
-            public void moveStoryToBacklog(Story story, Backlog backlog) {
+            public void moveStoryAway(Story story, Backlog backlog) {
                 storyBacklogUpdated = true;
             }
             

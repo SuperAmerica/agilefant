@@ -151,7 +151,7 @@
       </result>
     </action>
     
-    <action name="moveStory" method="moveStory" class="storyAction">
+    <action name="moveStory" method="moveStoryAway" class="storyAction">
       <result name="success" type="json">
         <param name="target">story</param>
       </result>

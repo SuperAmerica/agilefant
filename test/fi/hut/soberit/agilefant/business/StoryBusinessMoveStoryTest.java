@@ -605,8 +605,6 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyRankBusiness.removeRank(story, firstProject);
 
         storyRankBusiness.rankToBottom(child2, secondProject);
-        storyRankBusiness.rankToBottom(child1, secondProject);
-        storyRankBusiness.rankToBottom(story, secondProject);
 
         storyDAO.store(child2);
         storyDAO.store(child1);

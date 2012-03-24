@@ -52,7 +52,7 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
     /**
      * Create a rank for a story in the given context.
      */
-    private StoryRank createRank(Story story, Backlog context) {
+    public StoryRank createRank(Story story, Backlog context) {
         StoryRank rank;
         rank = new StoryRank();
         rank.setStory(story);

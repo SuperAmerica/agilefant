@@ -20,6 +20,7 @@ import fi.hut.soberit.agilefant.db.ProductDAO;
 import fi.hut.soberit.agilefant.db.StoryDAO;
 import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.SignedExactEstimate;
@@ -64,6 +65,12 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
         return backlogDAO.getNumberOfChildren(backlog);
     }
 
+    @Transactional(readOnly = true)
+    public Collection<Backlog> retrieveAllStandAloneIterations()
+    {   
+        return backlogDAO.retrieveStandaloneIterations();
+    }
+    
     @Transactional(readOnly = true)
     public Collection<Backlog> getChildBacklogs(Backlog backlog) {
         Collection<Backlog> childBacklogs = new ArrayList<Backlog>();
@@ -118,12 +125,43 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public Product getParentProduct(Backlog backlog) {
+        if (backlog instanceof Product) {
+            return (Product)backlog;
+        }
+        Backlog parent = backlog;
+        if (backlog == null || backlog.getParent() == null && !(backlog instanceof Product)) {
+            return null;
+        } else {
+            while (!(parent instanceof Product)) {
+                if (parent == null) {
+                    return null;
+                }
+                if (parent instanceof Iteration && parent.isStandAlone()) {
+                    return null;
+                }
+
+                parent = parent.getParent();
+            }
+            return (Product)parent;
+        }
+    }
+    
+    
+    @Transactional(readOnly = true)
+    public int getRootParentId(Backlog backlog) {
         Backlog parent = backlog;
         while (!(parent instanceof Product)) {
+
+            if (parent instanceof Iteration && parent.isStandAlone()) {
+                return parent.getId();
+            }
+            
             parent = parent.getParent();
         }
-        return (Product)parent;
+        return parent.getId();
     }
+    
+    
     
     @Transactional(readOnly = true)
     public int getStoryPointSumByBacklog(Backlog backlog) {

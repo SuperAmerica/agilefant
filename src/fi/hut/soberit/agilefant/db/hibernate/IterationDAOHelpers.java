@@ -24,4 +24,24 @@ public class IterationDAOHelpers {
                 "startDate", startDate), Restrictions.ge("endDate", endDate));
         crit.add(Restrictions.or(overlaps, withinIteration));
     }
+    
+    static void addBacklogIntervalLimit(Criteria crit, Interval interval) {
+        DateTime startDate = interval.getStart();
+        DateTime endDate = interval.getEnd();
+        //backlog may start during the interval
+        Criterion startDateLimit = Restrictions.between("startDate", startDate,
+                endDate);
+        //backlog end during the interval
+        Criterion endDateLimit = Restrictions.between("endDate", startDate,
+                endDate);
+        //interval may be within the backlog
+        Criterion overlaps = Restrictions.or(startDateLimit, endDateLimit);
+        Criterion withinIteration = Restrictions.and(Restrictions.le(
+                "startDate", startDate), Restrictions.ge("endDate", endDate));
+        
+        // If backlog is product then ignore the start and end date (because product doesnt have enddate startdate)
+        Criterion timeConstraint = Restrictions.or(overlaps, withinIteration);
+        Criterion backlogProduct = Restrictions.isNull("startDate");
+        crit.add(Restrictions.or(timeConstraint, backlogProduct));
+    }
 }

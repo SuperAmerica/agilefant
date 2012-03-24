@@ -31,7 +31,7 @@ $(document).ready(function() {
   <a href="contextView.action?contextName=backlog">
   <span>
   <img src="static/img/backlog.png" alt="Backlogs" />
-  Backlogs
+  Backlog
   </span>
   </a>
 </li>

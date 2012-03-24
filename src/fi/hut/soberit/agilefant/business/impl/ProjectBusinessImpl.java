@@ -190,8 +190,10 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         Project stored = persistProject(persistable);
         
         ProjectTO to = transferObjectBusiness.constructProjectTO(stored);
-        StoryFilters storyFilters = new StoryFilters(null, null);
-        to.setLeafStories(retrieveLeafStories(projectId, storyFilters));
+        if (projectId > 0) {
+            StoryFilters storyFilters = new StoryFilters(null, null);
+            to.setLeafStories(retrieveLeafStories(projectId, storyFilters));
+        }
         return to;
     }
     

@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.business;
+package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,6 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.impl.StoryTreeIntegrityBusinessImpl;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
@@ -135,8 +136,7 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
     public void testChangeBacklog_moveToAnotherProduct_withConflict() {
         Product another = new Product();
         
-        expect(backlogBusiness.getParentProduct(story_23.getBacklog()))
-            .andReturn(product);
+        expect(backlogBusiness.getParentProduct(story_23.getBacklog())).andReturn(product);
         expect(backlogBusiness.getParentProduct(another)).andReturn(another);
         
         replayAll();
@@ -369,9 +369,6 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         story.setBacklog(project);
         story.setParent(parentStory);
         
-        expect(this.backlogBusiness.getParentProduct(iteration)).andReturn(product);
-        expect(this.backlogBusiness.getParentProduct(project)).andReturn(product);
-        
         replayAll();
         assertFalse(this.testable.hasParentStoryConflict(story, iteration));
         verifyAll();
@@ -427,4 +424,27 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         assertTrue(this.testable.hasParentStoryConflict(story, targetProject));
         verifyAll();
     }
+    
+    // TODO add replay & verify wrapper
+    /*
+    @Test
+    public void checkParentDifferentProjectRule_whenTargetIsStandalone() {
+        Story parentStory = new Story();
+        Story childStory = new Story();
+        parentStory.getChildren().add(childStory);
+        
+        Iteration standAloneIteration = new Iteration();
+        standAloneIteration.setParent(null);
+        
+        List<StoryTreeIntegrityMessage> messages = new ArrayList<StoryTreeIntegrityMessage>();
+        
+        
+        StoryTreeIntegrityBusinessImpl.checkParentDifferentProjectRule(childStory, standAloneIteration, messages);
+        
+        assertTrue(messages.size() == 0);
+        
+    }
+    */
+    
+    
 }

@@ -18,6 +18,7 @@ import fi.hut.soberit.agilefant.business.StoryFilterBusiness;
 import fi.hut.soberit.agilefant.business.StoryHierarchyBusiness;
 import fi.hut.soberit.agilefant.business.StoryTreeIntegrityBusiness;
 import fi.hut.soberit.agilefant.db.StoryHierarchyDAO;
+import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
@@ -117,8 +118,13 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
 
     @Transactional
     public void moveToBottom(Story story) {
-        Product prod = backlogBusiness.getParentProduct(story.getBacklog());
-        int maxRank = storyHierarchyDAO.getMaximumTreeRank(prod.getId());
+        //Product prod = backlogBusiness.getParentProduct(story.getBacklog());
+        Backlog rankBacklog = story.getBacklog();
+        if (rankBacklog == null) {
+            rankBacklog = story.getIteration();
+        }
+        int rootParentId = backlogBusiness.getRootParentId(rankBacklog);
+        int maxRank = storyHierarchyDAO.getMaximumTreeRank(rootParentId);
         story.setTreeRank(maxRank + 1);
     }
     
@@ -126,10 +132,11 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
     public void moveToTop(Story story) {
         // parent -> not root story, move to top of parent
         Story parent = story.getParent();
-        Story firstSibling;
+        Story firstSibling = null;
         if (parent == null) {             
-            Product prod = backlogBusiness.getParentProduct(story.getBacklog());            
-            firstSibling = this.retrieveProductRootStories(prod.getId(), null).get(0);
+            Product prod = backlogBusiness.getParentProduct(story.getBacklog());  
+            if(prod != null)
+                firstSibling = this.retrieveProductRootStories(prod.getId(), null).get(0);
         } else {            
             firstSibling = parent.getChildren().get(0);
         }

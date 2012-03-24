@@ -181,7 +181,8 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
         return autocompleteData; 
     }
-    
+
+
     /** {@inheritDoc} */
     @Transactional(readOnly = true)
     public List<AutocompleteDataNode> constructProductAutocompleteData() {
@@ -197,6 +198,15 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
         List<AutocompleteDataNode> autocompleteData = getBacklogDataRecurseNames(allBacklogs);
         return autocompleteData; 
     }
+
+    
+    /** {@inheritDoc} */
+    @Transactional(readOnly = true)
+    public List<AutocompleteDataNode> constructBacklogAndIterationAutocompleteData(Integer backlogId) {
+        List<AutocompleteDataNode> autocompleteData = constructBacklogAutocompleteData(backlogId);
+        autocompleteData.addAll(constructCurrentIterationAutocompleteData());
+        return autocompleteData; 
+    }
     
     private List<AutocompleteDataNode> getBacklogDataRecurseNames(
             Collection<? extends Backlog> allBacklogs) {
@@ -209,15 +219,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
                 //look at product
                 prod = (Product)blog.getParent();
             } else if(blog instanceof Iteration){
-                //look at project, then product
-                Backlog temp = blog.getParent();
-                if(temp instanceof Product){
-                  //iteration is directly under a product, not in a project
-                    prod = (Product) temp;
-                } else {
-                    prod = (Product) temp.getParent();
-                }
-                
+                continue; // iterations should not be included in backlogs list.
             } else if(blog instanceof Product){
                 prod = (Product)blog;
             }

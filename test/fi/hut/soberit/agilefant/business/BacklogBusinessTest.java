@@ -194,7 +194,7 @@ public class BacklogBusinessTest extends MockedTestCase {
         DateTime startDate = new DateTime().minusDays(2);
         DateTime endDate = startDate.plusDays(4);
         iter.setStartDate(startDate.toDateMidnight().toDateTime());
-        iter.setEndDate(endDate);
+        iter.setEndDate(endDate.toDateMidnight().toDateTime());
         float percentage = backlogBusiness.calculateBacklogTimeframePercentageLeft(iter);
         assertEquals(0.5f,percentage,0);
     }

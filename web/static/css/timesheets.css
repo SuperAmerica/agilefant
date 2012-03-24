@@ -23,6 +23,15 @@
   width: 96% !important;  
 }
 
+.timesheetStandaloneIteration {
+  width: 100% !important;
+  border-color: #333;  	
+}
+
+.timesheetStandaloneIteration .ui-widget-header {
+	background-image: url('../img/ui/ui-bg_gloss-wave_55_333333_500x100.png') !important;
+}
+
 .timesheet-backlog {
   overflow: hidden;
   margin-top: 1em;

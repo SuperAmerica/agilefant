@@ -37,20 +37,28 @@
   </c:choose>
 </c:when>
 <c:when test="${type == 'name'}">
-		<span class="storyTreeName"> <c:choose>
-				<c:when test="${displayLinksToStories}">
-					<a href="editProduct.action?productId=${story.backlog.root.id}#fi.hut.soberit.agilefant.model.Story_${story.id}"> 
-					<c:out value="${story.name}" />
-					</a>
-				</c:when>
-				<c:otherwise>
-					<c:out value="${story.name}" />
-				</c:otherwise>
-			</c:choose>
-  </span>
+  <span class="storyTreeName"><c:out value="${story.name}" /></span>
 </c:when>
 <c:when test="${type == 'backlog'}">
-  <span style="font-size:80%; color: #666;" title="${story.backlog.name}">(<c:out value="${story.backlog.name}"/>)</span>
+  <c:choose>
+  <c:when test="${story.iteration != null}">
+	  <span style="font-size:80%; color: #666;" title="story in standalone iteration">
+	    <c:choose>
+	    <c:when test="${story.backlog != null}">
+        (<c:out value="${story.iteration.name}"/>, <c:out value="${story.backlog.name}"/>)	    
+	    </c:when>
+	    <c:otherwise>
+	      (<c:out value="${story.iteration.name}"/>)
+	    </c:otherwise>
+	    </c:choose>
+	  </span>
+  </c:when>
+  <c:otherwise>
+	  <span style="font-size:80%; color: #666;" title="story in traditional hierarchy">
+	  (<c:out value="${story.backlog.name}"/>)
+	  </span>  
+  </c:otherwise>
+  </c:choose>
 </c:when>
 <c:when test="${type == 'breadcrumb'}">
   <c:choose>

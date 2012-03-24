@@ -91,6 +91,17 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
         return Action.SUCCESS;
     }
     
+    public String retrieveAllTimeSheets() {
+        Product standaloneProduct = new Product();
+        standaloneProduct.setName("[Standalone Iterations]");
+        standaloneProduct.setId(0);
+        products.add(standaloneProduct);
+
+        products.addAll(productBusiness.retrieveAll());
+        
+        return Action.SUCCESS;    
+    }
+    
     public String retrieveProjects() {
         this.product = this.productBusiness.retrieve(productId);
         this.childBacklogs = this.productBusiness.retrieveProjects(product);

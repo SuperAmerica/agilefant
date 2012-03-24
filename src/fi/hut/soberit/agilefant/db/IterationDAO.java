@@ -38,6 +38,8 @@ public interface IterationDAO extends GenericDAO<Iteration> {
 
     public List<Iteration> retrieveCurrentAndFutureIterationsAt(
             DateTime dayStart);
+    
+    public List<Iteration> retrieveAllStandAloneIterations();
 
     /**
      * Retrieves an iteration by id and fetches eagerly the following

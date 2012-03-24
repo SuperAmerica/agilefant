@@ -42,7 +42,7 @@ StoryController.prototype._closeMoveDialog = function() {
   }
 };
 
-StoryController.prototype._confirmMoveStory = function(backlogId) {
+StoryController.prototype._confirmMoveStory = function(model, backlogOrIterationId) {
   var radioButton = this.currentMoveStoryDialog.find("input[type=radio]:checked:eq(0)");
   var parentCheckBox = this.currentMoveStoryDialog.find("input[type=checkbox]:checked:eq(0)");
   var moveParents = false;
@@ -52,10 +52,18 @@ StoryController.prototype._confirmMoveStory = function(backlogId) {
   
   if(radioButton.length) {
     if (radioButton.val() === "moveTargetStoryOnly") {
-      this.model.moveStoryOnly(backlogId, moveParents);
+      if (model) {
+        model.moveStoryOnly(backlogOrIterationId, moveParents);
+      } else {
+        this.model.moveStoryOnly(backlogOrIterationId, moveParents);
+      }
     }
     else if (radioButton.val() === "moveTargetAndItsChildren") {
-      this.model.moveStoryAndChildren(backlogId, moveParents);
+      if (model) {
+        model.moveStoryAndChildren(backlogOrIterationId, moveParents);
+      } else {
+        this.model.moveStoryAndChildren(backlogOrIterationId, moveParents);
+      }
     }
   } else {
     this.currentMoveStoryDialog.find("#please-select-an-option").show('blind');
@@ -67,19 +75,23 @@ StoryController.prototype._confirmMoveStory = function(backlogId) {
   }
 };
 
-StoryController.prototype._showMoveStoryOptions = function(data, backlogId) {
+StoryController.prototype._showMoveStoryOptions = function(data, backlogOrIterationId) {
   if (this.currentMoveStoryDialog) {
     this.currentMoveStoryDialog.dialog("option","title","Error in moving story!");
     this.currentMoveStoryDialog.html(data);
   }
 };
-StoryController.prototype._openMoveStoryDialog = function(backlogId) {
+StoryController.prototype._openMoveStoryDialog = function(model, backlogOrIterationId, changeBacklogOnly) {
   var me = this;
   var element = $('<div/>').appendTo(document.body);
   this.currentMoveStoryDialog = element;
+  var titleMessage = 'Moving story - please wait';
+  if (changeBacklogOnly) {
+    titleMessage = 'Changing backlog - please wait';
+  }
   var dialog = element.dialog({
     modal: true,
-    title: 'Moving story - please wait',
+    title: titleMessage,
     width: 600,
     minHeight:  300,
     closeOnEscape: false,
@@ -88,11 +100,19 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
         dialog.dialog('close');
       },
       Confirm: function() {
-        me._confirmMoveStory(backlogId);
+        if (!model) {
+          me._confirmMoveStory(null, backlogOrIterationId);
+        } else {
+          me._confirmMoveStory(model, backlogOrIterationId);
+        }
       }
     },
     close: function() {
-      me.model.rollback();
+      if (!model) {
+        me.model.rollback();
+      } else {
+        model.rollback();
+      }
       me._closeMoveDialog();
     }
   });
@@ -100,7 +120,14 @@ StoryController.prototype._openMoveStoryDialog = function(backlogId) {
 };
 
 StoryController.prototype._moveStory = function(id) {
-  this._openMoveStoryDialog(id);
+  this._openMoveStoryDialog(null, id, false);
+  if(this.model.canMoveStory(id)) {
+    this.model.moveStory(id);
+  }
+};
+
+StoryController.prototype._changeStoryBacklog = function(id) {
+  this._openMoveStoryDialog(null, id, true);
   if(this.model.canMoveStory(id)) {
     this.model.moveStory(id);
   }
@@ -167,10 +194,20 @@ StoryController.prototype.editDescription = function() {
 /**
  * 
  */
-StoryController.prototype.moveStory = function() {
+StoryController.prototype.changeBacklog = function() {
   var me = this;
   $(window).autocompleteSingleDialog({
     dataType: "backlogs",
+    cancel: function() { return; },
+    callback: function(id) { me._changeStoryBacklog(id); },
+    title: "Select new backlog for story"
+  });
+};
+
+StoryController.prototype.moveStory = function() {
+  var me = this;
+  $(window).autocompleteSingleDialog({
+    dataType: "backlogsAndIterations",
     cancel: function() { return; },
     callback: function(id) { me._moveStory(id); },
     title: "Select backlog to move to"
@@ -338,7 +375,14 @@ StoryController.prototype.rankStoryToBottom = function(story, view) {
  */
 StoryController.prototype._getStoryActionItems = function(isProject) {
   var actionItems = [];
+  
+  /*
   actionItems.push({ 
+    text : "Change Backlog",
+    callback : StoryController.prototype.changeBacklog
+  });
+  */
+  actionItems.push({
     text : "Move",
     callback : StoryController.prototype.moveStory
   });

@@ -98,4 +98,11 @@ public class Product extends Backlog {
         }
         return iterations;    
     }
+
+    @Transient
+    @Override
+    public boolean isStandAlone() {
+        return false;
+    }
+    
 }

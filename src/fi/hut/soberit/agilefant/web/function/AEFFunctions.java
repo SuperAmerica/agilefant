@@ -38,6 +38,10 @@ public class AEFFunctions {
     public static boolean isIteration(Object obj) {
         return obj instanceof Iteration;
     }
+    
+    public static boolean isStandaloneIteration(Object obj) {
+        return (obj instanceof Iteration && ((Iteration)obj).isStandAlone());
+    }
 
     public static boolean isUser(Object obj) {
         return obj instanceof User;

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.joda.time.Days;
 
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Schedulable;
 import fi.hut.soberit.agilefant.model.Story;
@@ -77,4 +78,5 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
      */
     public List<Story> retrieveUnexpectedStories(Schedulable backlog);
     
+    public Collection<Backlog> retrieveAllStandAloneIterations();
 }

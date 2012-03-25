@@ -34,7 +34,7 @@
 				
 				this.auxFields = $('<span />').appendTo(this.container).hide();
 
-				$.post("ajax/retrieveAllProducts.action", {}, function(data,retType) {
+				$.post("ajax/retrieveAllProductsWithStandalone.action", {}, function(data,retType) {
 					if(data.length == 0) {
 						$('<option/>').appendTo(me.productContainer).text("There are no Products in the system.");
 					} else {
@@ -92,7 +92,7 @@
 				var ret = [];
 				container.find("option:selected").each(function() {
 					var val = parseInt(this.value);
-					if(val > 0) {
+					if(val >= 0) {
 						ret.push(val);
 					}
 				});

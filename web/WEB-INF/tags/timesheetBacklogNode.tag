@@ -17,6 +17,9 @@
 <c:when test="${aef:isProject(node.backlog)}">
   <c:set var="backlogBoxCssClass" value="timesheetProject" />
 </c:when>
+<c:when test="${aef:isStandaloneIteration(node.backlog)}">
+  <c:set var="backlogBoxCssClass" value="timesheetStandaloneIteration" />
+</c:when>
 <c:when test="${aef:isIteration(node.backlog)}">
   <c:set var="backlogBoxCssClass" value="timesheetIteration" />
 </c:when>

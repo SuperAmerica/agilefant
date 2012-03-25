@@ -151,10 +151,11 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
                 CriteriaSpecification.LEFT_JOIN);
         crit.createAlias("task.story.backlog.parent.parent", "blParentParent",
                 CriteriaSpecification.LEFT_JOIN);
-        
+        crit.createAlias("task.story.iteration", "si",
+                CriteriaSpecification.LEFT_JOIN);
 
-        Criterion parentProject = Restrictions.or(Restrictions.in("bl.id", backlogIds), Restrictions
-                .in("blParent.id", backlogIds));
+        Criterion parentProject = Restrictions.or(Restrictions.or(Restrictions.in("bl.id", backlogIds), Restrictions
+                .in("blParent.id", backlogIds)), Restrictions.and(Restrictions.isNull("story.backlog"), Restrictions.in("si.id", backlogIds)));
         crit.add(Restrictions.or(Restrictions.in("blParentParent.id",
                 backlogIds), parentProject));
         crit.addOrder(Order.desc("date"));

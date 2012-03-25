@@ -92,3 +92,15 @@
 .dynamictable .dynamictable-row a.daily-work-story-context:hover {
 	color: #e50 !important;
 }
+
+.backlogHierarchy .backlogHierarchy-product {
+	list-style-image: url(../img/hierarchy_arrow.png);
+}
+.backlogHierarchy .backlogHierarchy-project {
+	margin-left: 1em;
+	list-style-image: url(../img/hierarchy_arrow.png);
+}
+.backlogHierarchy .backlogHierarchy-iteration {
+	margin-left: 2em;
+	list-style-image: url(../img/hierarchy_arrow.png);
+}

@@ -4,7 +4,7 @@
 
 	<property file="build-user.properties" />
 	<property file="build.properties" />
-	<property file="conf/classes/database-mysql5.properties" />
+	<property file="conf/database-mysql5.properties" />
 
 	<!-- Clover parameters -->
 	<property name="clover.jar" location="${basedir}/lib/build/clover.jar" />
@@ -251,7 +251,7 @@
 			<fileset dir="${conf.dir}" excludes="database-*.properties" />
 		</copy>
 		<copy tofile="${build.webapp}/WEB-INF/database.properties">
-			<fileset file="${conf.dir}/classes/database-${database.type}.properties" />
+			<fileset file="${conf.dir}/database-${database.type}.properties" />
 		</copy>
 		<copy todir="${build.webapp}/WEB-INF/lib/">
 			<fileset dir="${lib}">

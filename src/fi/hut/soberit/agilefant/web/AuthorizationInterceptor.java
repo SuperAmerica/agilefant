@@ -36,7 +36,7 @@ public class AuthorizationInterceptor implements Interceptor {
     @Override
     public void init() {}
     
-    private static int readOnlyId = -1;
+    private static int readonlyId = -1;
 
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
@@ -53,19 +53,25 @@ public class AuthorizationInterceptor implements Interceptor {
                 && currentUser.getLoginName().equals("readonly")){
             
             return "login";
-        } else if((action instanceof ROIterationAction 
-                || action instanceof ChartAction
+        } else if (action instanceof ROIterationAction && currentUser.getLoginName().equals("readonly")) {
+            // Store readonly id when ROIterationAction is called.
+            // Used for verification below.
+            
+            ROIterationAction readonlyAction = (ROIterationAction) action; 
+            readonlyId = readonlyAction.getIteration().getId();
+            
+            return invocation.invoke();
+        } else if((action instanceof ChartAction
                 || action instanceof IterationAction
                 || action instanceof IterationHistoryAction
                 || action instanceof StoryAction)
                 && currentUser.getLoginName().equals("readonly")){
             
-            //TODO FINNUCKS: this causes an exception
-            /*int id = -99;
-            if(action instanceof ROIterationAction){
-                readOnlyId = ((ROIterationAction)action).getIteration().getId();
-                return invocation.invoke();
-            } else if(action instanceof IterationAction){
+            // Readonly user is calling other actions, make sure the id's match.
+            
+            int id = -1;
+            
+            if(action instanceof IterationAction){
                 id = ((IterationAction) action).getIterationId();
             } else if(action instanceof IterationHistoryAction){
                 id = ((IterationHistoryAction) action).getIterationId();
@@ -75,11 +81,11 @@ public class AuthorizationInterceptor implements Interceptor {
                 id = ((ChartAction) action).getBacklogId();
             }
             
-            if(id != readOnlyId){
+            if(id != readonlyId){
                 return "noauth";
-            } else {*/
+            } else {
                 return invocation.invoke();
-            //}
+            }
         }
         
         //matrix authorizations

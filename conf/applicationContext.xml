@@ -24,11 +24,8 @@
 		<property name="ignoreResourceNotFound" value="true" />
 		<property name="locations">
 			<list>
-				<!--<value>classpath:agilefant.properties</value>-->
-				<value>/WEB-INF/agilefant.properties</value>
-				<!--<value>file://${agilefant.properties}</value>-->
-				<!--<value>file://WEB-INF/agilefant.properties</value>-->
-				<value>file:///home/david/workspace/agilefant/web/WEB-INF/agilefant.properties</value>
+				<value>classpath:agilefant.properties</value>
+				<value>file://${agilefant.properties}</value>
 			</list>
 		</property>
 		<property name="properties">

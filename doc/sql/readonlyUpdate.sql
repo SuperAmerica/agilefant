@@ -1,1 +1,0 @@
-ALTER TABLE backlogs ADD COLUMN readonlyToken varchar(255);

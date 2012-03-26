@@ -9,6 +9,8 @@ public class IterationMetrics {
     private Integer storyPoints = new Integer(0);
     private Integer doneStoryPoints = new Integer(0);
     
+    private ExactEstimate plannedSize = new ExactEstimate(0);
+    
     private Integer completedTasks = new Integer(0);
     private Integer totalTasks = new Integer(0);
     private Integer percentDoneTasks = new Integer(0);
@@ -186,5 +188,11 @@ public class IterationMetrics {
     }
     public void setTotalValue(int totalValue) {
         this.totalValue = totalValue;
+    }
+    public ExactEstimate getPlannedSize() {
+        return this.plannedSize;
+    }
+    public void setPlannedSize(ExactEstimate plannedSize) {
+        this.plannedSize = plannedSize;
     }
 }

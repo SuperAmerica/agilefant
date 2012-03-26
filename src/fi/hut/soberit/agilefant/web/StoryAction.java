@@ -272,10 +272,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
         this.iteration = iterationId;
     }
     
-    public int getIteration() {
+    public int getIterationId() {
         return iteration;
     }
-
+    
     public void setPriority(Integer priority) {
         this.priority = priority;
     }

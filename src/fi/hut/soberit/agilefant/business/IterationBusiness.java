@@ -24,10 +24,10 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
     ExactEstimate calculateDailyVelocity(LocalDate startDate,
             IterationHistoryEntry yesterdayEntry);
 
-    public IterationTO storeStandAlone(int iterationId, Iteration iterationData, Set<Integer> assigneeIds);
+    public IterationTO storeStandAlone(int iterationId, Iteration iterationData, Set<Integer> assigneeIds, Set<Integer> teams);
     
     public IterationTO store(int iterationId, int parentBacklogId,
-            Iteration iterationData, Set<Integer> assigneeIds);
+            Iteration iterationData, Set<Integer> assigneeIds, Set<Integer> teams);
 
     public Collection<Iteration> retrieveCurrentAndFutureIterations();
     

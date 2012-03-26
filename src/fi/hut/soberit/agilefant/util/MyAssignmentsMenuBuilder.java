@@ -53,11 +53,17 @@ public class MyAssignmentsMenuBuilder {
             MenuDataNode projectNode = nodes.get(projectIndex);
             return projectNode.getChildren().get(currentIndex);
         }
-        MenuDataNode projectNode = ensureNode((Project) iteration.getParent());
-        MenuDataNode node = constructNode(iteration);
-        iterationIds.put(iteration.getId(), projectNode.getChildren().size());
-        projectNode.getChildren().add(node);
-        return node;
+        if(iteration.getParent() != null){  
+            MenuDataNode projectNode = ensureNode((Project) iteration.getParent());
+            MenuDataNode node = constructNode(iteration);         
+            iterationIds.put(iteration.getId(), projectNode.getChildren().size());
+            projectNode.getChildren().add(node);
+            return node;
+        } else {
+            //standalone iteration
+            MenuDataNode node = constructNode(iteration);         
+            return node;
+        }        
     }
 
     public void insert(Iteration iteration) {

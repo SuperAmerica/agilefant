@@ -2,6 +2,8 @@ package fi.hut.soberit.agilefant.web;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ import fi.hut.soberit.agilefant.annotations.PrefetchId;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.transfer.AssignmentTO;
 import fi.hut.soberit.agilefant.transfer.IterationMetrics;
 
@@ -45,6 +48,12 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
     private boolean assigneesChanged = false;
 
     private String confirmationString;
+    
+    private Collection<Iteration> iterations = new ArrayList<Iteration>();
+    
+    private Set<Integer> teamIds = new HashSet<Integer>();
+    
+    private boolean teamsChanged;
     
     @Autowired
     private IterationBusiness iterationBusiness;
@@ -109,7 +118,12 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iteration = iterationBusiness.retrieve(iterationId);
         iteration.setReadonlyToken(generateReadonlyToken());
         
-        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds);
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        
+        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds, teams);
         
         this.readonlyToken = iteration.getReadonlyToken();
 
@@ -120,7 +134,12 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         iteration = iterationBusiness.retrieve(iterationId);
         iteration.setReadonlyToken(null);
         
-        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds);
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        
+        this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assigneeIds, teams);
         
         this.readonlyToken = iteration.getReadonlyToken();
 
@@ -163,15 +182,24 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
             assignees = this.assigneeIds;
         }
         
+        Set<Integer> teams = null;
+        if (teamsChanged) {
+            teams = teamIds;
+        }
+        
         // store stand alone iteration which has no parent
         if (parentBacklogId == 0) {
-            iteration = this.iterationBusiness.storeStandAlone(iterationId, iteration, assignees);
-            
+            iteration = this.iterationBusiness.storeStandAlone(iterationId, iteration, assignees, teams);        
         } else {
-            iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees);
+            iteration = this.iterationBusiness.store(iterationId, parentBacklogId, iteration, assignees, teams);
             
         }
         
+        return Action.SUCCESS;
+    }
+    
+    public String retrieveAllSA() {
+        this.iterations = iterationBusiness.retrieveAllStandAloneIterations();
         return Action.SUCCESS;
     }
     
@@ -253,6 +281,26 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
 
     public void setAssigneesChanged(boolean assigneesChanged) {
         this.assigneesChanged = assigneesChanged;
+    }
+    
+    public void setTeamsChanged(boolean teamsChanged) {
+        this.teamsChanged = teamsChanged;
+    }
+
+    public Set<Integer> getTeamIds() {
+        return teamIds;
+    }
+
+    public void setTeamIds(Set<Integer> teamIds) {
+        this.teamIds = teamIds;
+    }
+    
+    public Collection<Iteration> getIterations() {
+        return iterations;
+    }
+
+    public void setIterations(Collection<Iteration> iterations) {
+        this.iterations = iterations;
     }
 
 }

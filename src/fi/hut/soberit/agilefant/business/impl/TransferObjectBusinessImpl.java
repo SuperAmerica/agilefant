@@ -109,6 +109,12 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
             returned.getAssignees().add(assignment.getUser());
         }
         
+        returned.setTeams(new HashSet<Team>());
+        
+        for(Team team : iteration.getTeams()) {
+            returned.getTeams().add(team);
+        }
+        
         return returned;
     }
     

@@ -77,7 +77,7 @@
       </td>
       <td style="text-align: center; white-space: nowrap;">
         <c:out value="${aef:estimateToHours(projectMetrics.effortSpent)}" /> / 
-        <c:out value="${aef:estimateToHours(projectMetrics.originalEstimate)}" />
+        <c:out value="${aef:estimateToHours(projectMetrics.plannedSize)}" />
       </td>
     </tr>
     </table>

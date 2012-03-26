@@ -192,5 +192,20 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         crit.setMaxResults(SearchBusiness.MAX_RESULTS_PER_TYPE);
         return asList(crit);
     }
+    
+    public List<Story> searchByID(String id) {
+        int tempID = Integer.parseInt(id);
+        Criteria crit = getCurrentSession().createCriteria(Story.class);
+        crit.addOrder(Order.asc("name"));
+        crit.setMaxResults(SearchBusiness.MAX_RESULTS_PER_TYPE);
+        List<Story> stories = asList(crit);
+        // Manually find all stories EXACTLY matching the ID
+        List<Story> result = new ArrayList<Story>();
+        for(Story story: stories) {
+            if(story.getId() == tempID)
+                result.add(story);   
+        }
+        return result;
+    }
 
 }

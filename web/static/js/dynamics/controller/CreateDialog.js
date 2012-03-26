@@ -279,9 +279,11 @@ CreateDialog.Iteration.columnIndices = {
   plannedSize:4,
   baselineLoad:5,
   assignees:  6,
-  description:7
+  description:7,
+  teams: 8
 };
 CreateDialog.Iteration.prototype.initFormConfig = function() {
+  var currentUser = PageController.getInstance().getCurrentUser();
   var config = new DynamicTableConfiguration({
     leftWidth: '24%',
     rightWidth: '75%',
@@ -320,7 +322,21 @@ CreateDialog.Iteration.prototype.initFormConfig = function() {
   config.addColumnConfiguration(
       CreateDialog.Iteration.columnIndices.description,
       IterationController.columnConfigs.description);
-
+  if (currentUser.getAdmin()) {
+  	config.addColumnConfiguration(CreateDialog.Iteration.columnIndices.teams, {
+    	title: "Add all teams to standalone iteration",
+    	get: currentUser.getAdmin,
+    	editable: true,
+    	edit: {
+      		editor : "Selection",
+      		items : DynamicsDecorators.adminOptions,
+      		set: IterationModel.prototype.setAllTeams,
+      		size: '20ex',
+      		required: true
+    	}
+  	});
+  }
+	  	
   
   this.formConfig = config;
 };
@@ -634,7 +650,8 @@ CreateDialog.Team.prototype = new CreateDialogClass();
 CreateDialog.Team.columnIndices = {
   name:      0,
   users:     1,
-  products:  2
+  products:  2,
+  iterations: 3
 };
 CreateDialog.Team.prototype.initFormConfig = function() {
   var currentUser = PageController.getInstance().getCurrentUser();
@@ -682,6 +699,18 @@ CreateDialog.Team.prototype.initFormConfig = function() {
       		editor : "Selection",
       		items : DynamicsDecorators.adminOptions,
       		set: TeamModel.prototype.setAllProducts,
+      		size: '20ex',
+      		required: true
+    	}
+  	});
+  	config.addColumnConfiguration(CreateDialog.Team.columnIndices.iterations, {
+    	title: "Add all standalone iterations to team",
+    	get: currentUser.getAdmin,
+    	editable: true,
+    	edit: {
+      		editor : "Selection",
+      		items : DynamicsDecorators.adminOptions,
+      		set: TeamModel.prototype.setAllIterations,
       		size: '20ex',
       		required: true
     	}

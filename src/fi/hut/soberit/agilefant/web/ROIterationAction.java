@@ -44,6 +44,8 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
     
     @Override
     public String execute() {
+        iteration = iterationBusiness.retreiveIterationByReadonlyToken(readonlyToken);
+        
         return Action.SUCCESS;
     }
 
@@ -90,6 +92,7 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
     
     public void setReadonlyToken(String readonlyToken) {
         this.readonlyToken = readonlyToken;
+        setIterationByToken(readonlyToken);
     }
     
     public String getReadonlyToken() {
@@ -111,5 +114,8 @@ public class ROIterationAction extends ActionSupport implements CRUDAction, Pref
     public IterationMetrics getIterationMetrics() {
         return iterationMetrics;
     }
-
+    
+    private void setIterationByToken(String token) {
+        iteration =  this.iterationBusiness.retreiveIterationByReadonlyToken(token);
+    }
 }

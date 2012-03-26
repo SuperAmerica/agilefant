@@ -37,6 +37,10 @@ public class TeamAction extends ActionSupport implements CRUDAction, Prefetching
     private Set<Integer> productIds = new HashSet<Integer>();
     
     private boolean productsChanged;
+    
+    private Set<Integer> iterationIds = new HashSet<Integer>();
+    
+    private boolean iterationsChanged;
 
     @Autowired
     private TeamBusiness teamBusiness;
@@ -87,7 +91,12 @@ public class TeamAction extends ActionSupport implements CRUDAction, Prefetching
             products = productIds;
         }
         
-        team = teamBusiness.storeTeam(team, users, products);
+        Set<Integer> iterations = null;
+        if (iterationsChanged) {
+            iterations = iterationIds;
+        }
+        
+        team = teamBusiness.storeTeam(team, users, products, iterations);
         return Action.SUCCESS;
     }
 
@@ -167,6 +176,18 @@ public class TeamAction extends ActionSupport implements CRUDAction, Prefetching
 
     public void setProductIds(Set<Integer> productIds) {
         this.productIds = productIds;
+    }
+
+    public void setIterationsChanged(boolean iterationsChanged) {
+        this.iterationsChanged = iterationsChanged;
+    }
+
+    public Set<Integer> getIterationIds() {
+        return iterationIds;
+    }
+
+    public void setIterationIds(Set<Integer> iterationIds) {
+        this.iterationIds = iterationIds;
     }
     
     /** USED WITH TeamRowController.js to confirm team deletion**/

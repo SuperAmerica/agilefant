@@ -1,5 +1,6 @@
 package fi.hut.soberit.agilefant.model;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,6 +9,9 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -71,6 +75,8 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     private String readonlyToken;
     
     private Set<Story> assignedStories = new HashSet<Story>();
+    
+    private Collection<Team> teams = new HashSet<Team>();
 
     @JSON
     @Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
@@ -186,6 +192,29 @@ public class Iteration extends Backlog implements Schedulable, TaskContainer {
     @Override
     public boolean isStandAlone() {
         return this.getParent() == null;
+    }
+    
+    /**
+     * Get the iteration's teams
+     * 
+     * return the teams
+     */
+    @ManyToMany(targetEntity = Team.class)
+    @JoinTable(name = "team_iteration", joinColumns = { @JoinColumn(name = "Iteration_id") }, inverseJoinColumns = { @JoinColumn(name = "Team_id") })
+    @BatchSize(size = 5)
+    @JSON(include = false)
+    @NotAudited
+    public Collection<Team> getTeams() {
+        return teams;
+    }
+    
+    /**
+     * Set the iterations's teams.
+     * 
+     * @param teams the teams to be set
+     */
+    public void setTeams(Collection<Team> teams) {
+        this.teams = teams;
     }
     
 }

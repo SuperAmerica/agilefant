@@ -15,6 +15,7 @@ public class ProjectMetrics {
     private int daysLeftPercentage = 0;
     private ExactEstimate effortSpent = new ExactEstimate(0);
     private ExactEstimate originalEstimate = new ExactEstimate(0);
+    private ExactEstimate plannedSize = new ExactEstimate(0);
     private int effortSpentPercentage = 0;
     private int totalValue = 0;
     private int completedValue = 0;
@@ -138,5 +139,13 @@ public class ProjectMetrics {
     
     public void setValuePercentage(int valuePercentage) {
         this.valuePercentage = valuePercentage;
+    }
+    
+    public ExactEstimate getPlannedSize() {
+        return this.plannedSize;
+    }
+    
+    public void setPlannedSize(ExactEstimate plannedSize) {
+        this.plannedSize = plannedSize;
     }
 }

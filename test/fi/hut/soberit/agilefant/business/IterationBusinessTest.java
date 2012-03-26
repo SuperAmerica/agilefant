@@ -389,7 +389,7 @@ public class IterationBusinessTest  extends MockedTestCase {
 
         replayAll();
 
-        Iteration actual = this.iterationBusiness.store(10, 11, iter, null);
+        Iteration actual = this.iterationBusiness.store(10, 11, iter, null, null);
         assertEquals(iter.getStartDate(), actual.getStartDate());
         assertEquals(iter.getEndDate(), actual.getEndDate());
         assertEquals(iter.getBacklogSize(), actual.getBacklogSize());
@@ -405,7 +405,7 @@ public class IterationBusinessTest  extends MockedTestCase {
     public void testStoreIteration_iterationParent() {
         expect(backlogBusiness.retrieve(11)).andReturn(iteration);
         replayAll();
-        this.iterationBusiness.store(10, 11, this.iteration, null);
+        this.iterationBusiness.store(10, 11, this.iteration, null, null);
         verifyAll();
     }
 
@@ -414,7 +414,7 @@ public class IterationBusinessTest  extends MockedTestCase {
     public void testStoreIteration_nullParent() {
         expect(backlogBusiness.retrieve(11)).andThrow(new ObjectNotFoundException());
         replayAll();
-        this.iterationBusiness.store(10, 11, this.iteration, null);
+        this.iterationBusiness.store(10, 11, this.iteration, null, null);
         verifyAll();
     }
 
@@ -428,7 +428,7 @@ public class IterationBusinessTest  extends MockedTestCase {
 
         expect(backlogBusiness.retrieve(12)).andReturn(project);
         replayAll();
-        this.iterationBusiness.store(11, 12, iteration, null);
+        this.iterationBusiness.store(11, 12, iteration, null, null);
         verifyAll();
     }
 
@@ -461,7 +461,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         
         replayAll();
         
-        this.iterationBusiness.store(0, 11, iter, new HashSet<Integer>(Arrays.asList(1)));
+        this.iterationBusiness.store(0, 11, iter, new HashSet<Integer>(Arrays.asList(1)), null);
         assertEquals(1, userIdCapture.getValue().size());
         assertTrue(userIdCapture.getValue().contains(1));
         verifyAll();
@@ -483,7 +483,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(transferObjectBusiness.constructIterationTO(iteration))
             .andReturn(new IterationTO(iteration));
         replayAll();
-        this.iterationBusiness.store(0, 11, iter, null);
+        this.iterationBusiness.store(0, 11, iter, null, null);
         verifyAll();
     }
     @Test

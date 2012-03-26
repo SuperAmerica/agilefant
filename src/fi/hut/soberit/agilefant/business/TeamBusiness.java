@@ -15,6 +15,6 @@ public interface TeamBusiness extends GenericBusiness<Team> {
     /**
      * Store or create a team.
      */
-    Team storeTeam(Team team, Set<Integer> userIds, Set<Integer> productIds);
+    Team storeTeam(Team team, Set<Integer> userIds, Set<Integer> productIds, Set<Integer> iterationIds);
 
 }

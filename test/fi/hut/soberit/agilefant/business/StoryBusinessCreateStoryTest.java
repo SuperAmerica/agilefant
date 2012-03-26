@@ -241,44 +241,62 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         Product product = new Product();
         product.setId(10);
         
+        Project project = new Project();
+        project.setId(11);
+        
         Story reference = new Story();
         reference.setBacklog(product);
+       
         Story data = new Story();
         data.setId(2);
+        data.setBacklog(project);
         
         expect(storyDAO.get(1)).andReturn(reference);
-        
+
         expect(backlogBusiness.retrieve(10)).andReturn(product);
+        expect(backlogBusiness.retrieve(11)).andReturn(project);
+        
         expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
         expect(storyDAO.get(2)).andReturn(data).times(2);
+        
         storyHierarchyBusiness.moveUnder(data, reference);
         labelBusiness.createStoryLabels(null, 2);
         
         replayAll();
-        storyBusiness.createStoryUnder(1, data, null, null);
+        storyBusiness.createStoryUnder(1, project.getId(), data, null, null);
         verifyAll();
     }
     
     @Test
     @DirtiesContext
-    public void testCreateSibling() {
+    public void testCreateSibling() { 
         Product product = new Product();
         product.setId(10);
         
+        Project project = new Project();
+        project.setId(11);
+
+        
         Story reference = new Story();
         reference.setBacklog(product);
+        
         Story data = new Story();
         data.setId(2);
+        data.setBacklog(project);
         
         expect(storyDAO.get(1)).andReturn(reference);
         
         expect(backlogBusiness.retrieve(10)).andReturn(product);
+        expect(backlogBusiness.retrieve(11)).andReturn(project);
+        
         expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
+        
         expect(storyDAO.get(2)).andReturn(data).times(2);
         storyHierarchyBusiness.moveAfter(data, reference);
         labelBusiness.createStoryLabels(null, 2);
+        
         replayAll();
-        storyBusiness.createStorySibling(1, data, null, null);
+        storyBusiness.createStorySibling(1, project.getId(), data, null, null);
         verifyAll();
     }
     

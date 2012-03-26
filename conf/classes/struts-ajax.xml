@@ -29,6 +29,7 @@
     <!-- Interceptors -->
     <interceptors>
       <interceptor name="refreshUser" class="refreshUserInterceptor" />
+      <interceptor name="security" class="securityInterceptor" />
       <interceptor name="prefetch" class="prefetchInterceptor" />
       <interceptor name="settings"	class="settingsInterceptor" />
       
@@ -36,6 +37,7 @@
         <interceptor-ref name="exception" />
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
+        <interceptor-ref name="security" />
         <interceptor-ref name="settings" />
        <interceptor-ref name="validation">
           <param name="validateAnnotatedMethodOnly">true</param>
@@ -48,6 +50,7 @@
         <interceptor-ref name="prefetch" />
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
+        <interceptor-ref name="security" />
         <interceptor-ref name="settings" />
         <interceptor-ref name="validation">
           <param name="validateAnnotatedMethodOnly">true</param>
@@ -60,6 +63,7 @@
         <interceptor-ref name="prepare" />
         <interceptor-ref name="completeStack" />
         <interceptor-ref name="refreshUser" />
+        <interceptor-ref name="security" />
         <interceptor-ref name="settings" />
         <interceptor-ref name="validation">
           <param name="validateAnnotatedMethodOnly">true</param>

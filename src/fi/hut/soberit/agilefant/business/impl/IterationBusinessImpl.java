@@ -269,7 +269,10 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         
         // Set the planned size
-        metrics.setPlannedSize(new ExactEstimate(iteration.getBacklogSize().intValue()));
+        if(iteration.getBacklogSize() == null)
+            metrics.setPlannedSize(new ExactEstimate(0));
+        else
+            metrics.setPlannedSize(new ExactEstimate(iteration.getBacklogSize().intValue()));
 
         metrics.setDailyVelocity(calculateDailyVelocity(iteration));
 

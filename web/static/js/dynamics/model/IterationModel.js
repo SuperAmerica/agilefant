@@ -296,6 +296,16 @@ IterationModel.prototype.getTeams = function() {
   return this.relations.team;
 };
 
+IterationModel.prototype.setTeams = function(teamIds, teamJson) {
+  if (teamJson) {
+    $.each(teamJson, function(k,v) {
+      ModelFactory.updateObject(v);
+    });
+  }
+  this.currentData.teamIds = teamIds;
+  this.currentData.teamsChanged = true;
+};
+
 IterationModel.prototype.setAllTeams = function(allTeams) {
   var me = this;
   if(allTeams == "true"){

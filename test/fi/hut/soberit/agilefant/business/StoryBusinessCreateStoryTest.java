@@ -237,7 +237,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     
     @Test
     @DirtiesContext
-    public void testCreateStoryUnder() {
+    public void testCreateStoryUnderCurrentBacklog() {
         Product product = new Product();
         product.setId(10);
         
@@ -263,7 +263,48 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         labelBusiness.createStoryLabels(null, 2);
         
         replayAll();
+        // Case 1: Reference story's backlog is product (or project) and current view is project
+        // Assert: Newly created story's backlog should be project
         storyBusiness.createStoryUnder(1, project.getId(), data, null, null);
+        
+        verifyAll();
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCreateStoryUnderReferenceStory() {
+        Product product = new Product();
+        product.setId(10);
+        
+        Project project = new Project();
+        project.setId(11);
+        
+        Story reference = new Story();
+        reference.setBacklog(project);
+       
+        Story data = new Story();
+        data.setId(2);
+        data.setBacklog(project);
+        
+        expect(storyDAO.get(1)).andReturn(reference);
+
+        expect(backlogBusiness.retrieve(10)).andReturn(product);
+        expect(backlogBusiness.retrieve(11)).andReturn(project);
+        
+        expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
+        expect(storyDAO.get(2)).andReturn(data).times(2);
+        
+        storyHierarchyBusiness.moveUnder(data, reference);
+        labelBusiness.createStoryLabels(null, 2);
+        
+        replayAll();
+        // Case 2: Reference story's backlog is product and current view is product
+        // Assert: Newly created story's backlog should be product 
+        storyBusiness.createStoryUnder(1, project.getId(), data, null, null);
+        
+        // Case 3: Reference story's backlog is project and current view is product
+        // Assert: Newly created story's backlog should be project
+        
         verifyAll();
     }
     

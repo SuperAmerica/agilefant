@@ -78,6 +78,8 @@ public class AuthorizationInterceptor implements Interceptor {
             } else if(action instanceof StoryAction){
                 id = ((StoryAction) action).getIterationId();
             } else if(action instanceof ChartAction){
+                //id is always 0, so not set properly, so just set to readonlyid instead
+                ((ChartAction) action).setBacklogId(readonlyId);     
                 id = ((ChartAction) action).getBacklogId();
             }
             

@@ -1,4 +1,4 @@
-package fi.hut.soberit.agilefant.security;
+package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -16,6 +16,7 @@ import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 @Component("securityInterceptor")
 public class SecurityInterceptor implements Interceptor {

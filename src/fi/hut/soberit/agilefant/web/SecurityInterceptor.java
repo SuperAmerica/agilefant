@@ -2,6 +2,9 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,7 @@ public class SecurityInterceptor implements Interceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         System.out.println("URL: " + ServletActionContext.getRequest().getRequestURL().toString());
+        HttpServletRequest req = ServletActionContext.getRequest();
         String requestUrl = ServletActionContext.getRequest().getRequestURL().toString();
         
         User user = SecurityUtil.getLoggedUser();
@@ -56,41 +60,33 @@ public class SecurityInterceptor implements Interceptor {
                 access = true;
             }
         } else {
-            //check matrix operations
-            //TODO whitelisting may be easier than blacklisting?
+            //check non-admin and matrix operations
             if(requestUrl.contains("/storeNewUser")
                     || requestUrl.contains("/deleteTeam")
                     || requestUrl.contains("/storeTeam")
                     || requestUrl.contains("/storeNewTeam")
                     || requestUrl.contains("/retrieveAllProducts")){
                 access = false;
-            } else if(requestUrl.matches("ajax/storeUser.action")){
+            } else if(requestUrl.contains("ajax/storeUser.action")){
                 //check if ID is of current user, and what is being stored
                 //can't set user.admin or team
-                int id = Integer.parseInt(getParamFromUrl("id", requestUrl));
-                if(id == user.getId()){
+                Map params = req.getParameterMap();
+                boolean attemptAdmin = params.containsKey("user.admin");
+                int id = Integer.parseInt(((String[]) params.get("userId"))[0]);
+                
+                if(id == user.getId() && !attemptAdmin){
                     //check not setting user.admin
                     access = true;
                 }
+            } else {
+                access = true;
             }
-            //OMG there's a lot!
-            //I think most important ones are in web/static/js/dynamics/model/*
         }
                 
         if(access)
             return invocation.invoke();
         else
             return "noauth";
-    }
-
-    private String getParamFromUrl(String param, String url) {
-        if(url != null) {
-            int tokenStart = url.indexOf(param + "=");
-            String token = url.substring(tokenStart + param.length() + 1);
-            return token;
-        }
-        else 
-            return "";
     }
     
     // check from the backlogId if the associated product is accessible for the current user    

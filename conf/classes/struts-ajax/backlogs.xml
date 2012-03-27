@@ -247,7 +247,7 @@
     <action name="ROIterationData" class="ROIterationAction" method="fetchROIterationData">
       <result name="success" type="json">
         <param name="target">iteration</param>
-        <param name="patterns">-parent, -stories, -*.hourEntries, 
+        <param name="patterns">-root, -parent, -stories, -*.hourEntries, -backlogSize, -baselineLoad, -scheduleStatus, -standAlone, -tasks,
           +rankedStories, +rankedStories.tasks, 
           +rankedStories.parent.id, +rankedStories.parent.class, +rankedStories.parent.name, -rankedStories.parent.*, 
           +rankedStories.labels, -rankedStories.labels.creator, -rankedStories.backlog,
@@ -256,7 +256,7 @@
           +rankedStories.tasks.workingOnTask.user.id, +rankedStories.tasks.workingOnTask.user.initials, +rankedStories.tasks.workingOnTask.user.class, -rankedStories.tasks.workingOnTask.user.*, 
           +tasks.responsibles.id, +tasks.responsibles.initials, +tasks.responsibles.class, -tasks.responsibles.*, 
           +tasks.workingOnTask.user.id, +tasks.workingOnTask.user.initials, +tasks.workingOnTask.user.class, -tasks.workingOnTask.user.*, 
-          +tasks, +assignees.id, +assignees.initials, +assignees.class, -assignees.*</param>
+          +tasks, -assignees</param>
       </result>
     </action>
     

@@ -2,6 +2,9 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,8 @@ public class SecurityInterceptor implements Interceptor {
     @Override
     public String intercept(ActionInvocation invocation) throws Exception {
         System.out.println("URL: " + ServletActionContext.getRequest().getRequestURL().toString());
-        String requestUrl = ServletActionContext.getRequest().getRequestURL().toString();
+        HttpServletRequest req = ServletActionContext.getRequest();
+        String actionName = ServletActionContext.getActionMapping().getName();
         
         User user = SecurityUtil.getLoggedUser();
         boolean admin = user.isAdmin();
@@ -50,47 +54,78 @@ public class SecurityInterceptor implements Interceptor {
             access = true;
         } else if(readOnly){
             //check read only operations
-            if(requestUrl.contains("/ROIterationHistoryByToken") 
-                    || requestUrl.contains("/ROIterationMetricsByToken")
-                    || requestUrl.contains(("/ROIterationData"))){
+            if(actionName.equals("ROIterationHistoryByToken") 
+                    || actionName.equals("ROIterationMetricsByToken")
+                    || actionName.equals(("ROIterationData"))){
                 access = true;
             }
         } else {
-            //check matrix operations
-            //TODO whitelisting may be easier than blacklisting?
-            if(requestUrl.contains("/storeNewUser")
-                    || requestUrl.contains("/deleteTeam")
-                    || requestUrl.contains("/storeTeam")
-                    || requestUrl.contains("/storeNewTeam")
-                    || requestUrl.contains("/retrieveAllProducts")){
+            if(actionName.equals("storeNewUser")
+                    || actionName.equals("createTeam")
+                    || actionName.equals("deleteTeam")
+                    || actionName.equals("deleteTeamForm")
+                    || actionName.equals("storeTeam")
+                    || actionName.equals("storeNewTeam")){
+                
+                //these are admin-only operations
                 access = false;
-            } else if(requestUrl.matches("ajax/storeUser.action")){
+            
+            } else if(actionName.equals("storeUser")){
+            
                 //check if ID is of current user, and what is being stored
                 //can't set user.admin or team
-                int id = Integer.parseInt(getParamFromUrl("id", requestUrl));
-                if(id == user.getId()){
+                Map params = req.getParameterMap();
+                boolean attemptAdmin = params.containsKey("user.admin");
+                boolean attemptTeam = params.containsKey("teamsChanged") || params.containsKey("teamIds");
+                int id = Integer.parseInt(((String[]) params.get("userId"))[0]);
+                
+                if(id == user.getId() && !attemptAdmin && !attemptTeam){
                     //check not setting user.admin
                     access = true;
                 }
+            } else if(actionName.equals("retrieveAllProducts")
+                    || actionName.equals("retrieveAllSAIterations")){
+                //access matrix operations
+                access = false;
+            } else if(actionName.equals("storeIteration")
+                    || actionName.equals("iterationData")){
+
+                Map params = req.getParameterMap();
+                int id = -1;
+                if(params.containsKey("iterationId"))
+                    id = Integer.parseInt(((String[]) params.get("iterationId"))[0]);
+                else
+                    id = Integer.parseInt(((String[]) params.get("backlogId"))[0]);
+
+                if(checkAccess(id)){
+                    access = true;
+                }
+            } else {
+                // Default case: Try to find a backlog id of some kind to check.
+                
+                Map params = req.getParameterMap();
+                int id = -1;
+                if(params.containsKey("iterationId"))
+                    id = Integer.parseInt(((String[]) params.get("iterationId"))[0]);
+                else if (params.containsKey("backlogId"))
+                    id = Integer.parseInt(((String[]) params.get("backlogId"))[0]);
+                else if (params.containsKey("productId"))
+                    id = Integer.parseInt(((String[]) params.get("productId"))[0]);
+                else if (params.containsKey("projectId"))
+                    id = Integer.parseInt(((String[]) params.get("projectId"))[0]);
+                
+                if (id != -1)
+                    access = checkAccess(id);
+                else
+                    // Operations without ids must be allowed
+                    access = true;
             }
-            //OMG there's a lot!
-            //I think most important ones are in web/static/js/dynamics/model/*
         }
                 
         if(access)
             return invocation.invoke();
         else
             return "noauth";
-    }
-
-    private String getParamFromUrl(String param, String url) {
-        if(url != null) {
-            int tokenStart = url.indexOf(param + "=");
-            String token = url.substring(tokenStart + param.length() + 1);
-            return token;
-        }
-        else 
-            return "";
     }
     
     // check from the backlogId if the associated product is accessible for the current user    

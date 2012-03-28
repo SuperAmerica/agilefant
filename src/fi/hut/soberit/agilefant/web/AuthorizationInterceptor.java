@@ -22,9 +22,6 @@ import fi.hut.soberit.agilefant.security.SecurityUtil;
 public class AuthorizationInterceptor implements Interceptor {
 
     @Autowired
-    private UserBusiness userBusiness;
-
-    @Autowired
     private BacklogBusiness backlogBusiness;
     
     @Autowired

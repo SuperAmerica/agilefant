@@ -78,7 +78,7 @@ public class SecurityInterceptor implements Interceptor {
                 boolean attemptAdmin = params.containsKey("user.admin");
                 boolean attemptTeam = params.containsKey("teamsChanged") || params.containsKey("teamIds");
                 int id = Integer.parseInt(((String[]) params.get("userId"))[0]);
-                
+
                 if(id == user.getId() && !attemptAdmin && !attemptTeam){
                     //check not setting user.admin
                     access = true;
@@ -87,19 +87,6 @@ public class SecurityInterceptor implements Interceptor {
                     || actionName.equals("retrieveAllSAIterations")){
                 //access matrix operations
                 access = false;
-            } else if(actionName.equals("storeIteration")
-                    || actionName.equals("iterationData")){
-
-                Map params = req.getParameterMap();
-                int id = -1;
-                if(params.containsKey("iterationId"))
-                    id = Integer.parseInt(((String[]) params.get("iterationId"))[0]);
-                else
-                    id = Integer.parseInt(((String[]) params.get("backlogId"))[0]);
-
-                if(checkAccess(id)){
-                    access = true;
-                }
             } else {
                 // Default case: Try to find a backlog id of some kind to check.
                 

@@ -42,7 +42,7 @@ public class SecurityInterceptor implements Interceptor {
     public String intercept(ActionInvocation invocation) throws Exception {
         System.out.println("URL: " + ServletActionContext.getRequest().getRequestURL().toString());
         HttpServletRequest req = ServletActionContext.getRequest();
-        String requestUrl = req.getRequestURL().toString();
+        String actionName = ServletActionContext.getActionMapping().getName();
         
         User user = SecurityUtil.getLoggedUser();
         boolean admin = user.isAdmin();
@@ -54,22 +54,23 @@ public class SecurityInterceptor implements Interceptor {
             access = true;
         } else if(readOnly){
             //check read only operations
-            if(requestUrl.contains("/ROIterationHistoryByToken") 
-                    || requestUrl.contains("/ROIterationMetricsByToken")
-                    || requestUrl.contains(("/ROIterationData"))){
+            if(actionName.equals("ROIterationHistoryByToken") 
+                    || actionName.equals("ROIterationMetricsByToken")
+                    || actionName.equals(("ROIterationData"))){
                 access = true;
             }
         } else {
-            if(requestUrl.contains("/storeNewUser")
-                    || requestUrl.contains("/createTeam")
-                    || requestUrl.contains("/deleteTeam")
-                    || requestUrl.contains("/storeTeam")
-                    || requestUrl.contains("/storeNewTeam")){
+            if(actionName.equals("storeNewUser")
+                    || actionName.equals("createTeam")
+                    || actionName.equals("deleteTeam")
+                    || actionName.equals("deleteTeamForm")
+                    || actionName.equals("storeTeam")
+                    || actionName.equals("storeNewTeam")){
                 
                 //these are admin-only operations
                 access = false;
             
-            } else if(requestUrl.contains("/storeUser")){
+            } else if(actionName.equals("storeUser")){
             
                 //check if ID is of current user, and what is being stored
                 //can't set user.admin or team
@@ -82,9 +83,23 @@ public class SecurityInterceptor implements Interceptor {
                     //check not setting user.admin
                     access = true;
                 }
-            } else if(requestUrl.contains("/retrieveAllProducts")){
+            } else if(actionName.equals("retrieveAllProducts")
+                    || actionName.equals("retrieveAllSAIterations")){
                 //access matrix operations
                 access = false;
+            } else if(actionName.equals("storeIteration")
+                    || actionName.equals("iterationData")){
+
+                Map params = req.getParameterMap();
+                int id = -1;
+                if(params.containsKey("iterationId"))
+                    id = Integer.parseInt(((String[]) params.get("iterationId"))[0]);
+                else
+                    id = Integer.parseInt(((String[]) params.get("backlogId"))[0]);
+
+                if(checkAccess(id)){
+                    access = true;
+                }
             } else {
                 //any other operations must be allowed
                 access = true;

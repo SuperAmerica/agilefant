@@ -101,8 +101,24 @@ public class SecurityInterceptor implements Interceptor {
                     access = true;
                 }
             } else {
-                //any other operations must be allowed
-                access = true;
+                // Default case: Try to find a backlog id of some kind to check.
+                
+                Map params = req.getParameterMap();
+                int id = -1;
+                if(params.containsKey("iterationId"))
+                    id = Integer.parseInt(((String[]) params.get("iterationId"))[0]);
+                else if (params.containsKey("backlogId"))
+                    id = Integer.parseInt(((String[]) params.get("backlogId"))[0]);
+                else if (params.containsKey("productId"))
+                    id = Integer.parseInt(((String[]) params.get("productId"))[0]);
+                else if (params.containsKey("projectId"))
+                    id = Integer.parseInt(((String[]) params.get("projectId"))[0]);
+                
+                if (id != -1)
+                    access = checkAccess(id);
+                else
+                    // Operations without ids must be allowed
+                    access = true;
             }
         }
                 

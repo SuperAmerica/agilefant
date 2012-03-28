@@ -15,8 +15,12 @@ import com.opensymphony.xwork2.interceptor.Interceptor;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.IterationBusiness;
+import fi.hut.soberit.agilefant.business.StoryBusiness;
+import fi.hut.soberit.agilefant.business.TaskBusiness;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
+import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Task;
 import fi.hut.soberit.agilefant.model.Team;
 import fi.hut.soberit.agilefant.model.User;
 import fi.hut.soberit.agilefant.security.SecurityUtil;
@@ -29,6 +33,12 @@ public class SecurityInterceptor implements Interceptor {
     
     @Autowired
     private IterationBusiness iterationBusiness;
+
+    @Autowired
+    private StoryBusiness storyBusiness;
+    
+    @Autowired
+    private TaskBusiness taskBusiness;
     
     @Override
     public void destroy() {
@@ -100,6 +110,15 @@ public class SecurityInterceptor implements Interceptor {
                     id = Integer.parseInt(((String[]) params.get("productId"))[0]);
                 else if (params.containsKey("projectId"))
                     id = Integer.parseInt(((String[]) params.get("projectId"))[0]);
+                else if (params.containsKey("taskId")){
+                    int taskId = Integer.parseInt(((String[]) params.get("taskId"))[0]);
+                    Task task = taskBusiness.retrieve(taskId);
+                    id = task.getIteration().getId();
+                } else if (params.containsKey("storyId")){
+                    int storyId = Integer.parseInt(((String[]) params.get("storyId"))[0]);
+                    Story story = storyBusiness.retrieve(storyId);
+                    id = story.getIteration().getId();
+                }
                 
                 if (id != -1)
                     access = checkAccess(id);

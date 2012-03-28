@@ -314,6 +314,18 @@ StoryTreeController.prototype.initTree = function() {
   
   this.editBox = new MultiEditWidget(this);
   
+  this.element.delegate('a', 'mouseenter', function(event) {
+	 if ($.vakata.dnd.is_drag) {
+		 if ($(this).closest('li').attr('rel') == "iteration_story")
+		 {
+			 $(this).after("<div class='iterationStoryToolTip'><span>You may not place a story inside an iteration leaf story.</span></div>");
+		 }
+	 }
+  });
+  this.element.delegate('a', 'mouseleave', function(event) {
+	  	 $(".iterationStoryToolTip").hide();
+  });
+  
   this.element.bind('move_node.jstree', function(event, data) {
     // See http://www.jstree.com/documentation/core
 	if (data.rslt.o.length > 1)

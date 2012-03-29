@@ -230,7 +230,7 @@ public class TransferObjectBusinessImpl implements TransferObjectBusiness {
                 prod = (Product)blog;
             }
             
-            Collection<Product> allowedProducts = new HashSet<Product>();
+            Set<Product> allowedProducts = new HashSet<Product>();
             for(Team team : user.getTeams()){
                 allowedProducts.addAll(team.getProducts());
             }

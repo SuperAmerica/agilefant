@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.model;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,9 +48,9 @@ public class Team implements Comparable<Team> {
 
     private Collection<User> users = new HashSet<User>();
     
-    private Collection<Product> products = new HashSet<Product>();
+    private Set<Product> products = new HashSet<Product>();
     
-    private Collection<Iteration> iterations = new HashSet<Iteration>();
+    private Set<Iteration> iterations = new HashSet<Iteration>();
 
     /**
      * Get the id of this object.
@@ -149,7 +150,7 @@ public class Team implements Comparable<Team> {
     @JoinTable(name = "team_product", joinColumns = { @JoinColumn(name = "Team_id") }, inverseJoinColumns = { @JoinColumn(name = "Product_id") })
     @BatchSize(size = 5)
     @JSON(include = false)
-    public Collection<Product> getProducts() {
+    public Set<Product> getProducts() {
         return products;
     }
     
@@ -158,7 +159,7 @@ public class Team implements Comparable<Team> {
      * 
      * @param products the products to be set
      */
-    public void setProducts(Collection<Product> products) {
+    public void setProducts(Set<Product> products) {
         this.products = products;
     }
     
@@ -167,11 +168,11 @@ public class Team implements Comparable<Team> {
      * 
      * return the iterations
      */
-    @ManyToMany(targetEntity = Iteration.class)
+    @ManyToMany(targetEntity = Iteration.class, fetch=FetchType.EAGER)
     @JoinTable(name = "team_iteration", joinColumns = { @JoinColumn(name = "Team_id") }, inverseJoinColumns = { @JoinColumn(name = "Iteration_id") })
     @BatchSize(size = 5)
     @JSON(include = false)
-    public Collection<Iteration> getIterations() {
+    public Set<Iteration> getIterations() {
         return iterations;
     }
     
@@ -180,7 +181,7 @@ public class Team implements Comparable<Team> {
      * 
      * @param iterations the iterations to be set
      */
-    public void setIterations(Collection<Iteration> iterations) {
+    public void setIterations(Set<Iteration> iterations) {
         this.iterations = iterations;
     }
 

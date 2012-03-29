@@ -31,10 +31,10 @@ public class SecurityInterceptorTest extends MockedTestCase {
     public static void main(String[] args) {
         try{
             testSetAdmin();
-            testSetTeam();
-            testSetAccessRights();
-            testGetIteration();
-            testChangeIteration();
+            //testSetTeam();
+            //testSetAccessRights();
+            //testGetIteration();
+            //testChangeIteration();
         } catch(Exception e){
             e.printStackTrace();
         }

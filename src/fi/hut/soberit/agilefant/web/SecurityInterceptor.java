@@ -3,6 +3,7 @@ package fi.hut.soberit.agilefant.web;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -150,7 +151,7 @@ public class SecurityInterceptor implements Interceptor {
                 for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
                     Team team = (Team) iter.next();
                     
-                    Collection<Iteration> iterations = team.getIterations();
+                    Set<Iteration> iterations = team.getIterations();
                     
                     for (Iterator<Iteration> iterationIterator = iterations.iterator(); iterationIterator.hasNext();) {
                         Iteration teamIteration = (Iteration) iterationIterator.next();
@@ -166,7 +167,7 @@ public class SecurityInterceptor implements Interceptor {
         for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
             Team team = (Team) iter.next();
             
-            Collection<Product> products = team.getProducts();
+            Set<Product> products = team.getProducts();
             
             for (Iterator<Product> productIterator = products.iterator(); productIterator.hasNext();) {
                 Product teamProduct = (Product) productIterator.next();

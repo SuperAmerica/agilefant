@@ -318,7 +318,7 @@ StoryTreeController.prototype.initTree = function() {
 	 if ($.vakata.dnd.is_drag) {
 		 if ($(this).closest('li').attr('rel') == "iteration_story")
 		 {
-			 $(this).after("<div class='iterationStoryToolTip'><span>You may not place a story inside an iteration leaf story.</span></div>");
+			 $(this).after("<div class='iterationStoryToolTip'><span>Stories in an iteration can't have child stories.</span></div>");
 		 }
 	 }
   });

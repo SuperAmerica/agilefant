@@ -4,23 +4,6 @@
 
 
 
-select concat ('RENAME TABLE agilefant.anonym_', table_name, ' TO agilefant.', table_name, ';') FROM information_schema.tables WHERE table_schema = 'agilefant' INTO OUTFILE 'tmpanonyme.sql';
-use agilefant;
-source tmpanonyme.sql; 
-
-
-
-/*
-select * from show tables from 'agilefant' as t2;
-ALTER TABLE t1 to RENAME t2 
-
-RENAME TABLE t1 to t2
-From information_schema.tables AS t2, information_schema.tables AS t1
-WHERE t2.table_schema = 'agilefant' AND t1.table_schema = 'agilefant' AND t2 LIKE 'agilefant.anonym_%'+t1;
-*/
-
-
-/*
 RENAME TABLE agilefant.anonym_agilefant_revisions TO agilefant.agilefant_revisions;
 
 RENAME TABLE agilefant.anonym_assignment TO agilefant.assignment;
@@ -82,4 +65,3 @@ RENAME TABLE agilefant.anonym_widgetcollections TO agilefant.widgetcollections;
 RENAME TABLE agilefant.anonym_widgets TO agilefant.widgets;
 
 RENAME TABLE agilefant.anonym_team_product TO agilefant.team_product;
-*/

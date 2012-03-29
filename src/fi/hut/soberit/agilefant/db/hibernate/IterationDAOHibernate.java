@@ -281,7 +281,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
                 Task.class);
         taskMetrics.add(Restrictions.ne("state", TaskState.DEFERRED));
         taskMetrics.createCriteria("story", "story").add(
-                Restrictions.eq("backlog", iteration));
+                Restrictions.eq("iteration", iteration));
         ProjectionList taskSums = Projections.projectionList();
         taskSums.add(Projections.groupProperty("story"));
         taskSums.add(Projections.sum("effortLeft"));
@@ -291,7 +291,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         Criteria storySpentEffort = this.getCurrentSession().createCriteria(
                 StoryHourEntry.class);
         storySpentEffort.createCriteria("story", "story").add(
-                Restrictions.eq("backlog", iteration));
+                Restrictions.eq("iteration", iteration));
         ProjectionList storySpentEffortSums = Projections.projectionList();
         storySpentEffortSums.add(Projections.groupProperty("story"));
         storySpentEffortSums.add(Projections.sum("minutesSpent"));
@@ -300,7 +300,7 @@ public class IterationDAOHibernate extends GenericDAOHibernate<Iteration>
         Criteria taskSpentEffort = this.getCurrentSession().createCriteria(
                 TaskHourEntry.class);
         taskSpentEffort.createCriteria("task", "task").createCriteria("story",
-                "story").add(Restrictions.eq("backlog", iteration));
+                "story").add(Restrictions.eq("iteration", iteration));
         ProjectionList taskSpentEffortSums = Projections.projectionList();
         taskSpentEffortSums.add(Projections.groupProperty("task.story"));
         taskSpentEffortSums.add(Projections.sum("minutesSpent"));

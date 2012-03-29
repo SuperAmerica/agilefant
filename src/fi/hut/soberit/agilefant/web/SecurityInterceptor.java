@@ -149,6 +149,8 @@ public class SecurityInterceptor implements Interceptor {
             if(iteration.isStandAlone()){
                 for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
                     Team team = (Team) iter.next();
+                    
+                    // TODO Finnucks: This may not be working. 
                     if (team.getIterations().contains(iteration)) {
                         return true; 
                     }
@@ -159,10 +161,18 @@ public class SecurityInterceptor implements Interceptor {
 
         for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
             Team team = (Team) iter.next();
-            if (team.getProducts().contains(product)) {
-                return true; 
+            
+            Collection<Product> products = team.getProducts();
+            
+            for (Iterator<Product> productIterator = products.iterator(); productIterator.hasNext();) {
+                Product teamProduct = (Product) productIterator.next();
+                
+                if (teamProduct.getId() == product.getId()) {
+                    return true;
+                }
             }
         }
+        
         return false;
     }
 }

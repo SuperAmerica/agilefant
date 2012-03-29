@@ -54,7 +54,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     @Mock
     private IterationHistoryEntryBusiness iheBusiness;
     @Mock
-    private BacklogHistoryEntryBusiness blheBusiness;
+    private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     @Mock(strict=true)
     private StoryDAO storyDAO;
     @Mock
@@ -146,7 +146,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         
         storyRankBusiness.rankToBottom(EasyMock.isA(Story.class), EasyMock.isA(Backlog.class));
         
-        blheBusiness.updateHistory(blog.getId());
+        backlogHistoryEntryBusiness.updateHistory(blog.getId());
         
         Story returnedStory = new Story();
         returnedStory.setId(88);
@@ -206,7 +206,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         storyRankBusiness.rankToBottom(story, project);
         
         iheBusiness.updateIterationHistory(2);
-        blheBusiness.updateHistory(2);
+        backlogHistoryEntryBusiness.updateHistory(2);
         
         replayAll();
         storyBusiness.create(story);
@@ -227,7 +227,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         
         storyRankBusiness.rankToBottom(story, project);
         
-        blheBusiness.updateHistory(1);
+        backlogHistoryEntryBusiness.updateHistory(1);
         
         replayAll();
         storyBusiness.create(story);
@@ -318,19 +318,21 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
         expect(storyDAO.get(2)).andReturn(data).times(2);
         
-        /// This one does not seem to be working...
         storyRankBusiness.rankToBottom(data, project);
         EasyMock.expectLastCall().once();
-        ///
         
         storyHierarchyBusiness.moveUnder(data, reference);
         labelBusiness.createStoryLabels(null, 2);
+        
+        backlogHistoryEntryBusiness.updateHistory(11);
+        EasyMock.expectLastCall().once();
        
         replayAll();
         // Case 3: Reference story's backlog is project and current view is product
         // Assert: Newly created story's backlog should be project  
         assertSame(data.getBacklog(), project);
         storyBusiness.createStoryUnder(1, data.getBacklog().getId(), data, null, null);
+        
         verifyAll();
     }
     
@@ -363,10 +365,13 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         labelBusiness.createStoryLabels(null, 2);
         
         replayAll();
+        
+        Story newStory = storyBusiness.createStorySibling(1, project.getId(), data, null, null);
+        
         // Case 1: Reference story's backlog is product (or project) and current view is project
         // Assert: Newly created sibling story's backlog should be project
-        assertSame(data.getBacklog(), project);
-        storyBusiness.createStorySibling(1, project.getId(), data, null, null);
+        assertSame(newStory.getBacklog(), project);
+        
         verifyAll();
     }
     
@@ -393,10 +398,13 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         labelBusiness.createStoryLabels(null, 2);
         
         replayAll();
+        
+        Story newStory = storyBusiness.createStorySibling(1, data.getBacklog().getId(), data, null, null);
+        
         // Case 2: Reference story's backlog is product and current view is product
         // Assert: Newly created sibling story's backlog should be product 
-        assertSame(data.getBacklog(), product);
-        storyBusiness.createStorySibling(1, data.getBacklog().getId(), data, null, null);
+        assertSame(newStory.getBacklog(), product);
+        
         verifyAll();
     }
     
@@ -420,19 +428,23 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         expect(storyDAO.create(EasyMock.isA(Story.class))).andReturn(new Integer(2));
         expect(storyDAO.get(2)).andReturn(data).times(2);
 
-        // This one does not seem to be working...
         storyRankBusiness.rankToBottom(data, project);
         EasyMock.expectLastCall().once();
-        ///
+        
+        backlogHistoryEntryBusiness.updateHistory(11);
+        EasyMock.expectLastCall().once();
         
         storyHierarchyBusiness.moveAfter(data, reference);
         labelBusiness.createStoryLabels(null, 2);
         
         replayAll();
+        
+        Story newStory = storyBusiness.createStorySibling(1, data.getBacklog().getId(), data, null, null);
+        
         // Case 3: Reference story's backlog is project and current view is project
         // Assert: Newly created sibling story's backlog should be project 
-        assertSame(data.getBacklog(), project);
-        storyBusiness.createStorySibling(1, data.getBacklog().getId(), data, null, null);
+        assertSame(newStory.getBacklog(), project);
+        
         verifyAll();
     }
     

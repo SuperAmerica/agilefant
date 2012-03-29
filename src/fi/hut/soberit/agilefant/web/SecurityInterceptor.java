@@ -124,11 +124,14 @@ public class SecurityInterceptor implements Interceptor {
                     id = story.getIteration().getId();
                 }
                 
-                if (id != -1)
-                    access = checkAccess(id);
-                else
-                    // Operations without ids must be allowed
-                    access = true;
+                boolean attemptTeam = params.containsKey("teamsChanged");
+                if(!attemptTeam){
+                    if (id != -1)
+                        access = checkAccess(id);
+                    else
+                        // Operations without ids must be allowed
+                        access = true;
+                }
             }
         }
                 

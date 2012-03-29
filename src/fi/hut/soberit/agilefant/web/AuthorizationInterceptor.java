@@ -99,7 +99,11 @@ public class AuthorizationInterceptor implements Interceptor {
         } else if (action instanceof StoryAction){
             accessDenied = !checkAccess(((StoryAction)action).getIterationId());
         } else if (action instanceof TaskAction){
-            accessDenied = !checkAccess(((TaskAction)action).getParentStory().getIteration().getId());
+            if(((TaskAction)action).getTask().getIteration() != null){
+                accessDenied = !checkAccess(((TaskAction)action).getTask().getIteration().getId());
+            } else {
+                accessDenied = !checkAccess(((TaskAction)action).getParentStory().getIteration().getId());
+            }
         } else {
             //admin authorizations
             currentUser = SecurityUtil.getLoggedUser();

@@ -1,5 +1,7 @@
 package fi.hut.soberit.agilefant.web;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,8 +17,16 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
+import org.junit.Test;
 
-public class SecurityInterceptorTest{
+import fi.hut.soberit.agilefant.test.MockedTestCase;
+
+public class SecurityInterceptorTest extends MockedTestCase {
+    
+    @Test
+    public void testStub(){
+        assertTrue(true);
+    }
     
     public static void main(String[] args) {
         try{

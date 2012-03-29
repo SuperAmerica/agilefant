@@ -29,8 +29,8 @@ INSERT INTO backlogs (id, backlogtype, name, rank, parent_id) VALUES (5, 'Projec
 
 -- iteration stories
 INSERT INTO backlogs (id, backlogtype, name, parent_id) VALUES (3, 'Iteration', 'Test iteration', 2);
-INSERT INTO stories (id, state, storyPoints, backlog_id, name, parent_id) VALUES (31, 1, 10, 3, 'Iteration Story 1', 21); --leaf
-INSERT INTO stories (id, state, storyPoints, backlog_id, name, parent_id) VALUES (32, 1, 20, 3, 'Iteration Story 2', 23); --leaf
-INSERT INTO stories (id, state, storyPoints, backlog_id, name, parent_id) VALUES (33, 5, 30, 3, 'Iteration Story 3', NULL); --root, leaf
-INSERT INTO stories (id, state, storyPoints, backlog_id, name, parent_id) VALUES (34, 1, 40, 3, 'Iteration Story 4', 11); --root, leaf
+INSERT INTO stories (id, state, storyPoints, backlog_id, iteration_id, name, parent_id) VALUES (31, 1, 10, 2, 3, 'Iteration Story 1', 21); --leaf
+INSERT INTO stories (id, state, storyPoints, backlog_id, iteration_id, name, parent_id) VALUES (32, 1, 20, 2, 3, 'Iteration Story 2', 23); --leaf
+INSERT INTO stories (id, state, storyPoints, backlog_id, iteration_id, name, parent_id) VALUES (33, 5, 30, 2, 3, 'Iteration Story 3', NULL); --root, leaf
+INSERT INTO stories (id, state, storyPoints, backlog_id, iteration_id, name, parent_id) VALUES (34, 1, 40, 2, 3, 'Iteration Story 4', 11); --root, leaf
 

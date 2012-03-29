@@ -141,10 +141,10 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     
     // OTHER FUNCTIONS
     
-    public String moveStory() {
+    public String moveStoryAway() {
         story = storyBusiness.retrieve(storyId);
         backlog = backlogBusiness.retrieve(backlogId);
-        storyBusiness.moveStoryToBacklog(story, backlog);
+        storyBusiness.moveStoryAway(story, backlog);
         return Action.SUCCESS;
     }
     
@@ -267,15 +267,15 @@ public class StoryAction extends ActionSupport implements CRUDAction, Prefetchin
     public void setStoryId(Integer storyId) {
         this.storyId = storyId;
     }
-    
+
     public void setIteration(int iterationId) {
         this.iteration = iterationId;
     }
     
-    public int getIteration() {
+    public int getIterationId() {
         return iteration;
     }
-
+    
     public void setPriority(Integer priority) {
         this.priority = priority;
     }

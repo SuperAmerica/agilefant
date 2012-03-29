@@ -76,10 +76,17 @@ public class MenuBusinessImpl implements MenuBusiness {
             }
         }
         
-        final List<Iteration> standAloneIterations = new ArrayList<Iteration>(
-                iterationBusiness.retrieveAllStandAloneIterations());
+        final List<Iteration> standAloneIterations = new ArrayList<Iteration>(iterationBusiness.retrieveAllStandAloneIterations());
+        
+        Collection<Iteration> allowedIterations = new HashSet<Iteration>();
+        for(Team team : user.getTeams()){
+            allowedIterations.addAll(team.getIterations());
+        }
+        
         for (Iteration iteration: standAloneIterations) {
-            nodes.add(constructMenuDataNode(iteration));
+            if(allowedIterations.contains(iteration)){
+                nodes.add(constructMenuDataNode(iteration));
+            }
         }
         
         return nodes;

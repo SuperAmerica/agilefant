@@ -173,7 +173,7 @@ public class ProjectBusinessTest  extends MockedTestCase {
         }};
         expect(storyRankBusiness.retrieveByRankingContext(project)).andReturn(leafStoryList);
         expect(storyFilterBusiness.filterStoryList(leafStoryList, new StoryFilters(null, null))).andReturn(leafStoryList);
-        
+
         replayAll();
         assertSame(actual, projectBusiness.store(project.getId(), null, project, null));
         verifyAll();
@@ -226,7 +226,7 @@ public class ProjectBusinessTest  extends MockedTestCase {
         expect(productBusiness.retrieve(313)).andReturn(product);
         projectDAO.store(project);
         expect(transferObjectBusiness.constructProjectTO(project)).andReturn(actual);
-        
+
         final Story leafStory = new Story();
         leafStory.setId(12345);
         List<Story> leafStoryList = new ArrayList<Story>() {{
@@ -234,7 +234,7 @@ public class ProjectBusinessTest  extends MockedTestCase {
         }};
         expect(storyRankBusiness.retrieveByRankingContext(project)).andReturn(leafStoryList);
         expect(storyFilterBusiness.filterStoryList(leafStoryList, new StoryFilters(null, null))).andReturn(leafStoryList);
-        
+
         replayAll();
         assertSame(actual, projectBusiness.store(project.getId(), 313, project, null));
         verifyAll();

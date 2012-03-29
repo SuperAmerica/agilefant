@@ -133,7 +133,7 @@ public class IterationActionTest {
         Iteration iter = new Iteration();
         Iteration iter2 = new Iteration();
         IterationTO transfer = new IterationTO(iter2);
-        expect(iterationBusiness.store(1, 2, iter, null)).andReturn(transfer);
+        expect(iterationBusiness.store(1, 2, iter, null, null)).andReturn(transfer);
         replayAll();
         iterationAction.setIteration(iter);
         iterationAction.setIterationId(1);

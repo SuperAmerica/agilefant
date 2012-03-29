@@ -180,6 +180,7 @@ ModelFactory.types = {
  */
 ModelFactory.initializeForTypes = {
     iteration:  	"iteration",
+    iterations:		"iterations",
     ROIteration: 	"ROIteration",
     project:    	"project",
     product:    	"product",
@@ -457,6 +458,11 @@ ModelFactory.prototype._getData = function(type, id, callback) {
       params: { iterationId: id },
       callback: me._constructIteration
     },
+    "iterations": {
+      url: "ajax/retrieveAllSAIterations.action",
+      params: {},
+      callback: me._constructIterationList
+    },
     "ROIteration": {
       url: "ajax/ROIterationData.action",
       params: { readonlyToken: id },
@@ -594,6 +600,17 @@ ModelFactory.prototype._constructProductList = function(id, data) {
   ModelFactory.getInstance().rootObject = productList;
   return productList;
 };
+
+ModelFactory.prototype._constructIterationList = function(id, data) {
+  var iterationList = new AccessListContainer();
+  for (var i = 0; i < data.length; i++) {
+    var iteration = ModelFactory.updateObject(data[i]);
+    iterationList.addRelation(iteration);
+  }
+  ModelFactory.getInstance().rootObject = iterationList;
+  return iterationList;
+};
+
 
 ModelFactory.prototype._constructProjectPortfolioData = function(data) {
   var model = new PortfolioModel();

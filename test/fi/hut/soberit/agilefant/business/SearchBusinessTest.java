@@ -70,6 +70,7 @@ public class SearchBusinessTest extends MockedTestCase {
         story.setBacklog(iteration);
         expect(backlogDAO.searchByName(search)).andReturn(Arrays.asList((Backlog)(iteration)));
         expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(story));
+        expect(storyDAO.searchByID(search)).andReturn(Arrays.asList(story));
         expect(taskDAO.searchByName(search)).andReturn(Arrays.asList((Task)(new Task())));
         replayAll();
         List<SearchResultRow> result = searchBusiness.searchStoriesAndBacklog(search);
@@ -98,6 +99,7 @@ public class SearchBusinessTest extends MockedTestCase {
         
         expect(backlogDAO.searchByName(search)).andReturn(new ArrayList<Backlog>());
         expect(storyDAO.searchByName(search)).andReturn(new ArrayList<Story>());
+        expect(storyDAO.searchByID(search)).andReturn(new ArrayList<Story>());
         expect(storyDAO.get(123)).andReturn(story);
         expect(taskDAO.searchByName(search)).andReturn(Arrays.asList((Task)(new Task())));
         replayAll();

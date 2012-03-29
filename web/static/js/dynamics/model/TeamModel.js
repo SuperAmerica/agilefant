@@ -78,6 +78,12 @@ TeamModel.prototype._saveData = function(id, changedData) {
   	delete changedData.productIds;
   	delete changedData.productsChanged;
   }
+  if (changedData.iterationsChanged) {
+  	data.iterationIds = changedData.iterationIds;
+  	data.iterationsChanged = true;
+  	delete changedData.iterationIds;
+  	delete changedData.iterationsChanged;
+  }
   jQuery.extend(data, this.serializeFields("team", changedData));
 
   // Add the id
@@ -166,3 +172,26 @@ TeamModel.prototype.setAllProducts = function(allProducts) {
   }
 };
 
+TeamModel.prototype.setAllIterations = function(allIterations) {
+  var me = this;
+  if (allIterations == "true") {
+  	var iterations = [];
+  	var data = {};
+  	jQuery.ajax({
+  		type: "POST",
+  		url: "ajax/retrieveAllSAIterations.action",
+    	async: false,
+    	cache: false,
+    	data: data,
+    	dataType: "json",
+    	success: function(data,status) {
+      		for(i = 0; i < data.length; i++) {
+      			iterations.push(data[i].id)
+      		}
+    	}
+    });
+    
+    this.currentData.iterationsChanged = true;
+    this.currentData.iterationIds = iterations;
+  }
+};

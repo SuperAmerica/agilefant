@@ -150,9 +150,13 @@ public class SecurityInterceptor implements Interceptor {
                 for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
                     Team team = (Team) iter.next();
                     
-                    // TODO Finnucks: This may not be working. 
-                    if (team.getIterations().contains(iteration)) {
-                        return true; 
+                    Collection<Iteration> iterations = team.getIterations();
+                    
+                    for (Iterator<Iteration> iterationIterator = iterations.iterator(); iterationIterator.hasNext();) {
+                        Iteration teamIteration = (Iteration) iterationIterator.next();
+                        if (teamIteration.getId() == iteration.getId()) {
+                            return true;
+                        }
                     }
                 }
                 return false;

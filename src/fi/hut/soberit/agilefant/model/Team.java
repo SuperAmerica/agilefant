@@ -5,7 +5,6 @@ import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -143,7 +142,7 @@ public class Team implements Comparable<Team> {
      * 
      * return the products
      */
-    @ManyToMany(targetEntity = Product.class, fetch=FetchType.EAGER)
+    @ManyToMany(targetEntity = Product.class)
     @JoinTable(name = "team_product", joinColumns = { @JoinColumn(name = "Team_id") }, inverseJoinColumns = { @JoinColumn(name = "Product_id") })
     @BatchSize(size = 5)
     @JSON(include = false)
@@ -165,7 +164,7 @@ public class Team implements Comparable<Team> {
      * 
      * return the iterations
      */
-    @ManyToMany(targetEntity = Iteration.class, fetch=FetchType.EAGER)
+    @ManyToMany(targetEntity = Iteration.class)
     @JoinTable(name = "team_iteration", joinColumns = { @JoinColumn(name = "Team_id") }, inverseJoinColumns = { @JoinColumn(name = "Iteration_id") })
     @BatchSize(size = 5)
     @JSON(include = false)

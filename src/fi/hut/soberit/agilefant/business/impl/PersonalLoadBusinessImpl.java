@@ -1,3 +1,4 @@
+
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
                 .getNumOfResponsiblesByStory(storyTaskStoryIds);
 
         for (Task task : storyTasks) {
-            Iteration iteration = (Iteration) task.getStory().getBacklog();
+            Iteration iteration = (Iteration) task.getStory().getIteration();
             int numberOfAssignees = responsibleCounts.get(task.getStory()
                     .getId());
             long taskEffort = divideAssignedTaskEffort(task, numberOfAssignees);
@@ -134,7 +135,7 @@ public class PersonalLoadBusinessImpl implements PersonalLoadBusiness {
         for (Task task : assignedTasks) {
             Iteration iteration = task.getIteration();
             if (iteration == null) {
-                iteration = (Iteration) task.getStory().getBacklog();
+                iteration = (Iteration) task.getStory().getIteration();
             }
             int numberOfAssignees = responsibleCounts.get(task.getId());
             // divide task effort evenly per responsible

@@ -26,6 +26,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
@@ -207,7 +208,7 @@ public class User implements NamedObject {
      * 
      * @return the teams
      */
-    @ManyToMany(targetEntity = Team.class)
+    @ManyToMany(targetEntity = Team.class, fetch=FetchType.EAGER)
     @JoinTable(name = "team_user", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = { @JoinColumn(name = "Team_id") })
     @JSON(include = false)
     @NotAudited

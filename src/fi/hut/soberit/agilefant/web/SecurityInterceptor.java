@@ -113,7 +113,10 @@ public class SecurityInterceptor implements Interceptor {
                 else if (params.containsKey("taskId")){
                     int taskId = Integer.parseInt(((String[]) params.get("taskId"))[0]);
                     Task task = taskBusiness.retrieve(taskId);
-                    id = task.getIteration().getId();
+                    if(task.getIteration() != null)
+                        id = task.getIteration().getId();
+                    else
+                        id = task.getStory().getIteration().getId();
                 } else if (params.containsKey("storyId")){
                     int storyId = Integer.parseInt(((String[]) params.get("storyId"))[0]);
                     Story story = storyBusiness.retrieve(storyId);

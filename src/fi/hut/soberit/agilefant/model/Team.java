@@ -20,6 +20,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 
 import flexjson.JSON;
 
@@ -34,6 +35,7 @@ import flexjson.JSON;
 @BatchSize(size = 20)
 @Entity
 @Table(name = "teams")
+@Audited
 @XmlAccessorType( XmlAccessType.NONE )
 public class Team implements Comparable<Team> {
 
@@ -165,7 +167,7 @@ public class Team implements Comparable<Team> {
      * 
      * return the iterations
      */
-    @ManyToMany(targetEntity = Iteration.class, fetch=FetchType.EAGER)
+    @ManyToMany(targetEntity = Iteration.class)
     @JoinTable(name = "team_iteration", joinColumns = { @JoinColumn(name = "Team_id") }, inverseJoinColumns = { @JoinColumn(name = "Iteration_id") })
     @BatchSize(size = 5)
     @JSON(include = false)

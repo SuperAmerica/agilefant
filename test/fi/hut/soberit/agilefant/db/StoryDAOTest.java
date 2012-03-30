@@ -31,17 +31,10 @@ public class StoryDAOTest extends AbstractHibernateTests {
     private StoryDAO storyDAO;
     
     
-    
     @Test
-    public void testGetStoryPointSumByBacklog_firstBacklog() {
+    public void testGetStoryPointSumByIteration_secondBacklog() {
         executeClassSql();
-        assertEquals(29, storyDAO.getStoryPointSumByBacklog(1));
-    }
-    
-    @Test
-    public void testGetStoryPointSumByBacklog_secondBacklog() {
-        executeClassSql();
-        assertEquals(33, storyDAO.getStoryPointSumByBacklog(3));
+        assertEquals(33, storyDAO.getStoryPointSumByIteration(3));
     }
     
     @Test

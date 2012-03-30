@@ -31,7 +31,7 @@ public class IterationHistoryDAOImpl extends GenericHistoryDAOImpl<Iteration>
                 .forRevisionsOfEntity(Story.class, true, false);
         storyQuery.add(AuditEntity.revisionProperty("timestamp").le(
                 iteration.getStartDate().getMillis()));
-        storyQuery.add(AuditEntity.relatedId("backlog").eq(iteration.getId()));
+        storyQuery.add(AuditEntity.relatedId("iteration").eq(iteration.getId()));
         storyQuery.addProjection(AuditEntity.property("id").distinct());
         Set<Integer> storyIds = new HashSet<Integer>();
 

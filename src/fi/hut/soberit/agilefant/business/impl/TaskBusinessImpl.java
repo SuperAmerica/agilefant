@@ -203,10 +203,11 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
      */
     private Integer getTaskIterationId(Task task) {
         Integer iterationId = null;
-        if (task.getIteration() != null) {
-            iterationId = task.getIteration().getId();
-        } else if (task.getStory().getBacklog() instanceof Iteration) {
-            iterationId = task.getStory().getBacklog().getId();
+        Iteration tasksIteration = task.getIteration();
+        if (tasksIteration != null) {
+            iterationId = tasksIteration.getId();
+        } else if (task.getStory().getIteration() != null) {
+            iterationId = task.getStory().getIteration().getId();
         }
         return iterationId;
     }

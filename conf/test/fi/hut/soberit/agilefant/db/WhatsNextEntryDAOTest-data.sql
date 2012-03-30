@@ -7,9 +7,9 @@ INSERT INTO backlogs (id,backlogtype,startDate, endDate) VALUES (2,'Project','20
 INSERT INTO assignment (user_id, backlog_id, availability) VALUES (1,1,100);
 INSERT INTO assignment (user_id, backlog_id, availability) VALUES (2,1,100);
 
-INSERT INTO stories (id,backlog_id, name, state) VALUES (1,1, 'Story', 1);
+INSERT INTO stories (id,iteration_id, name, state) VALUES (1,1, 'Story', 1);
 INSERT INTO stories (id,backlog_id, name, state) VALUES (2,2, 'Story 2', 1);
-INSERT INTO stories (id,backlog_id, name, state) VALUES (3,1, 'Story 3', 1);
+INSERT INTO stories (id,iteration_id, name, state) VALUES (3,1, 'Story 3', 1);
 
 -- 2 tasks directly under iteration 1
 -- 1 assignee - done already
@@ -62,7 +62,7 @@ INSERT INTO task_user (tasks_id, responsibles_id) VALUES(9,1);
 --RANKS
 INSERT INTO backlogs (id,backlogtype,startDate, endDate) VALUES (3,'Iteration','2009-05-20 10:15:00', '2009-07-01 10:15:00');
 
-INSERT INTO stories (id,backlog_id, name, state) VALUES (55,3, 'Story', 1);
+INSERT INTO stories (id,iteration_id, name, state) VALUES (55,3, 'Story', 1);
 
 INSERT INTO tasks (id,state, effortLeft, iteration_id, rank) VALUES (16,1,10000,3,5);
 INSERT INTO tasks (id,state, effortLeft, iteration_id, rank) VALUES (17,1,10000,3,1500);

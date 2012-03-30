@@ -62,7 +62,7 @@ public class IterationHistoryEntryBusinessImpl extends
             newEntry.setEffortLeftSum(effortLeftSum);
             newEntry.setOriginalEstimateSum(originalEstimateSum);
             newEntry.setDeltaOriginalEstimate(originalEstimateSum - oldOriginalEstimateSum);
-            iterationHistoryEntryDAO.create(newEntry);
+            iterationHistoryEntryDAO.store(newEntry);
         }
     }
     

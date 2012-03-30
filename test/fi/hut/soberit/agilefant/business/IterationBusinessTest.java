@@ -219,7 +219,7 @@ public class IterationBusinessTest  extends MockedTestCase {
 
         expect(iterationHistoryEntryBusiness.retrieveLatest(iteration))
                 .andReturn(latestEntry).times(2);
-        expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(
+        expect(backlogBusiness.getStoryPointSumByIteration(iteration)).andReturn(
                 expectedStoryPoints);
         expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(10);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
@@ -231,8 +231,8 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
                         new LocalDate().minusDays(1))).andReturn(null).times(2);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iteration)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.getStoryValueSumByIteration(iteration)).andReturn(0);
+        expect(backlogBusiness.getCompletedStoryValueSumByIteration(iteration)).andReturn(0);
 
         replayAll();
 
@@ -269,15 +269,15 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(iterationDAO.getCountOfDoneAndAllStories(iteration)).andReturn(
                 Pair.create(0, 0));
 
-        expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.getStoryPointSumByIteration(iteration)).andReturn(0);
         expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(0);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(0L);
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
                         new LocalDate().minusDays(1))).andReturn(null).times(1);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iteration)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.getStoryValueSumByIteration(iteration)).andReturn(0);
+        expect(backlogBusiness.getCompletedStoryValueSumByIteration(iteration)).andReturn(0);
 
         replayAll();
 
@@ -303,12 +303,12 @@ public class IterationBusinessTest  extends MockedTestCase {
                 iterationHistoryEntryDAO.retrieveByDate(iteration.getId(),
                         new LocalDate().minusDays(1))).andReturn(null).times(1);
 
-        expect(backlogBusiness.getStoryPointSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.getStoryPointSumByIteration(iteration)).andReturn(0);
         expect(backlogBusiness.calculateDoneStoryPointSum(iteration.getId())).andReturn(0);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iteration))
                 .andReturn(0L);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iteration)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration)).andReturn(0);
+        expect(backlogBusiness.getStoryValueSumByIteration(iteration)).andReturn(0);
+        expect(backlogBusiness.getCompletedStoryValueSumByIteration(iteration)).andReturn(0);
 
         replayAll();
 
@@ -338,7 +338,7 @@ public class IterationBusinessTest  extends MockedTestCase {
                 latestHistoryEntry).times(2);
 
         expect(backlogBusiness.daysLeftInSchedulableBacklog(iter)).andReturn(Days.days(100));
-        expect(backlogBusiness.getStoryPointSumByBacklog(iter)).andReturn(10);
+        expect(backlogBusiness.getStoryPointSumByIteration(iter)).andReturn(10);
         expect(backlogBusiness.calculateDoneStoryPointSum(iter.getId())).andReturn(5);
         expect(hourEntryBusiness.calculateSumOfIterationsHourEntries(iter))
                 .andReturn((long) 10);
@@ -349,8 +349,8 @@ public class IterationBusinessTest  extends MockedTestCase {
         expect(
                 iterationHistoryEntryDAO.retrieveByDate(100, new LocalDate()
                         .minusDays(1))).andReturn(null).times(2);
-        expect(backlogBusiness.getStoryValueSumByBacklog(iter)).andReturn(0);
-        expect(backlogBusiness.getCompletedStoryValueSumByBacklog(iter)).andReturn(0);
+        expect(backlogBusiness.getStoryValueSumByIteration(iter)).andReturn(0);
+        expect(backlogBusiness.getCompletedStoryValueSumByIteration(iter)).andReturn(0);
         replayAll();
         IterationMetrics iterRow = iterationBusiness.getIterationMetrics(iter);
         assertEquals(100, iterRow.getDaysLeft());

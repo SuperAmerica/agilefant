@@ -4,7 +4,7 @@ create table team_product (Team_id integer not null, Product_id integer not null
 alter table team_product add index FK65CE090D745BA992 (Team_id), add constraint FK65CE090D745BA992 foreign key (Team_id) references teams (id);
 alter table team_product add index FK65CE090DA7FE2362 (Product_id), add constraint FK65CE090DA7FE2362 foreign key (Product_id) references backlogs (id);
 ALTER TABLE backlogs ADD COLUMN readonlyToken varchar(255) unique;
-INSERT INTO users (admin, fullName, loginName, enabled, recentItemsNumberOfWeeks) VALUES (0, "readonly", "readonly", 1, 0);
+INSERT INTO users (admin, fullName, password, loginName, enabled, recentItemsNumberOfWeeks) VALUES (0, "readonly", "5ebe2294ecd0e0f08eab7690d2a6ee69", "readonly", 1, 0);
 
 -- Give all teams access to all products
 INSERT INTO team_product (Team_id, Product_id)

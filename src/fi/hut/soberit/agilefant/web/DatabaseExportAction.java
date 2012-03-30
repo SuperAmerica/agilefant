@@ -29,10 +29,16 @@ public class DatabaseExportAction extends ActionSupport {
     }
     
     public String generateDatabaseExport() {
-        this.takeDbBackup = new DbBackupper();
-        this.databaseStream = takeDbBackup.generateDBDumpStream();
-        
-        return Action.SUCCESS;
+        try {
+         
+            this.takeDbBackup = new DbBackupper();
+            this.databaseStream = takeDbBackup.generateDBDumpStream();
+            return Action.SUCCESS;
+        }
+        catch (Exception e)
+        {
+            return Action.ERROR;
+        }
     }
     
     public String generateAnonymousDatabaseExport() throws InstantiationException, IllegalAccessException, ClassNotFoundException{

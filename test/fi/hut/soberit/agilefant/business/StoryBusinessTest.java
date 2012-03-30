@@ -483,29 +483,56 @@ public class StoryBusinessTest {
 
     @Test
     public void testRankStoryUnder() {
-        Backlog blog = new Iteration();
+        Backlog blog = new Project();
         Story story = new Story();
         story.setBacklog(blog);
         Story ref = new Story();
         ref.setBacklog(blog);
         storyRankBusiness.rankBelow(story, blog, ref);
         replayAll();
-        storyBusiness.rankStoryUnder(story, ref, null);
+        storyBusiness.rankStoryUnder(story, ref, blog);
         verifyAll();
     }
     
     @Test
     public void testRankStoryOver() {
-        Backlog blog = new Iteration();
+        Backlog blog = new Project();
         Story story = new Story();
         story.setBacklog(blog);
         Story ref = new Story();
         ref.setBacklog(blog);
         storyRankBusiness.rankAbove(story, blog, ref);
         replayAll();
+        storyBusiness.rankStoryOver(story, ref, blog);
+        verifyAll();
+    }
+
+    @Test
+    public void checksThatStorysIterationMatches_rankUnder() {
+        Iteration ite = new Iteration();
+        Story story = new Story();
+        story.setIteration(ite);
+        Story ref = new Story();
+        ref.setIteration(ite);
+        storyRankBusiness.rankBelow(story, ite, ref);
+        replayAll();
+        storyBusiness.rankStoryUnder(story, ref, null);
+        verifyAll();
+    }
+    
+    @Test
+    public void checksThatStorysIterationMatches_rankOver() {
+        Iteration ite = new Iteration();
+        Story story = new Story();
+        story.setIteration(ite);
+        Story ref = new Story();
+        ref.setIteration(ite);
+        storyRankBusiness.rankAbove(story, ite, ref);
+        replayAll();
         storyBusiness.rankStoryOver(story, ref, null);
         verifyAll();
     }
+    
     
     @Test(expected=IllegalArgumentException.class)
     public void testRankStoryUnder_null() {
@@ -522,18 +549,20 @@ public class StoryBusinessTest {
     @Test(expected=IllegalArgumentException.class)
     public void testRankStoryUnder_invalidbacklogs() {
         Project proj1 = new Project();
-        Project proj2 = new Project();
         Iteration iter = new Iteration();
         iter.setParent(proj1);
-        Iteration blog = new Iteration();
-        blog.setParent(proj2);
-        Story story = new Story();
-        story.setBacklog(blog);
-        Story ref = new Story();
-        ref.setBacklog(iter);
+        
+        Project proj2 = new Project();
+        Iteration iter2 = new Iteration();
+        iter2.setParent(proj2);
+        
+        Story story1 = new Story();
+        story1.setBacklog(proj1);
+        Story story2 = new Story();
+        story2.setBacklog(proj2);
         
         replayAll();
-        storyBusiness.rankStoryUnder(story, ref, null);
+        storyBusiness.rankStoryUnder(story1, story2, proj1);
         verifyAll();
     }
     

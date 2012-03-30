@@ -55,7 +55,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         crit.createCriteria("responsibles")
                 .add(Restrictions.idEq(user.getId()));
        
-        Criteria iteration = crit.createCriteria("story").createCriteria("backlog");
+        Criteria iteration = crit.createCriteria("story").createCriteria("iteration");
         iteration.setFetchMode("parent",FetchMode.SELECT);
         IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);
         crit.add(Restrictions.gt("effortLeft", ExactEstimate.ZERO));
@@ -90,7 +90,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         crit.add(Restrictions.isEmpty("responsibles"));
         Criteria story = crit.createCriteria("story");
         story.createCriteria("responsibles").add(Restrictions.idEq(user.getId()));
-        IterationDAOHelpers.addIterationIntervalLimit(story.createCriteria("backlog"), interval);
+        IterationDAOHelpers.addIterationIntervalLimit(story.createCriteria("iteration"), interval);
         crit.setFetchMode("creator", FetchMode.SELECT);
         return asList(crit);
     }
@@ -117,7 +117,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
             .add(Restrictions.idEq(user.getId()));
         crit.add(Restrictions.ne("state", TaskState.DONE));
 
-        Criteria storyIteration = crit.createCriteria("story").createCriteria("backlog");
+        Criteria storyIteration = crit.createCriteria("story").createCriteria("iteration");
         storyIteration.setFetchMode("parent",FetchMode.SELECT);
         IterationDAOHelpers.addIterationIntervalLimit(storyIteration, interval);
         crit.setFetchMode("creator", FetchMode.SELECT);
@@ -134,7 +134,7 @@ public class TaskDAOHibernate extends GenericDAOHibernate<Task> implements
         Criteria iteration = getCurrentSession().createCriteria(Iteration.class,"iter");
         iteration.createCriteria("assignments","assigments").createCriteria("user").add(Restrictions.idEq(user.getId()));     
         
-        Criteria stories = iteration.createCriteria("stories");
+        Criteria stories = iteration.createCriteria("assignedStories");
         stories.add(Restrictions.isEmpty("responsibles"));
                 
         IterationDAOHelpers.addIterationIntervalLimit(iteration, interval);

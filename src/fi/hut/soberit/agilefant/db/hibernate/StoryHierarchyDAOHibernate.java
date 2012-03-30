@@ -142,7 +142,10 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         iterationCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));
         iterationCrit.add(Restrictions.eq("state", StoryState.DONE));
-        return (Long)iterationCrit.uniqueResult();
+        iterationCrit.add(Restrictions.isNotNull("storyPoints"));
+        iterationCrit.add(Restrictions.eq("iteration", iteration));
+        Long result = (Long) iterationCrit.uniqueResult();
+        return result == null ? 0 : result;
     }
     
     private void attachRootFilters(Criteria projectCrit,
@@ -159,10 +162,11 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         Criterion parentFilter = Restrictions.or(Restrictions.isNull("parent"),
                 parentInProductBacklog);
         projectCrit.add(parentFilter);
+        projectCrit.add(Restrictions.isNull("iteration"));
         // Stories attached to iterations under the project
         iterationCrit.createAlias("parent", "parentStory",
                 CriteriaSpecification.LEFT_JOIN);
-        iterationCrit.createCriteria("backlog", "iteration").add(
+        iterationCrit.createCriteria("iteration").add(
                 Restrictions.eq("parent.id", projectId)).createAlias("parent",
                 "project");
         iterationCrit.add(parentFilter);

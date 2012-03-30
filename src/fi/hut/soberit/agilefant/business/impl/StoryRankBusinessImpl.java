@@ -14,6 +14,7 @@ import fi.hut.soberit.agilefant.business.BacklogBusiness;
 import fi.hut.soberit.agilefant.business.StoryRankBusiness;
 import fi.hut.soberit.agilefant.db.StoryRankDAO;
 import fi.hut.soberit.agilefant.model.Backlog;
+import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryRank;
 import fi.hut.soberit.agilefant.transfer.StoryTO;
@@ -37,6 +38,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * {@inheritDoc}
      */
     public void rankAbove(Story story, Backlog context, Story upper) {
+        if(context instanceof Product) {
+            return;
+        }
+        
         StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
                 story);
         StoryRank nextRank = this.storyRankDAO.retrieveByBacklogAndStory(
@@ -53,6 +58,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * Create a rank for a story in the given context.
      */
     public StoryRank createRank(Story story, Backlog context) {
+        if(context instanceof Product) {
+            return null;
+        }
+        
         StoryRank rank;
         rank = new StoryRank();
         rank.setStory(story);
@@ -123,6 +132,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * {@inheritDoc}
      */
     public void rankBelow(Story story, Backlog context, Story upper) {
+        if(context instanceof Product) {
+            return;
+        }
+        
         StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
                 story);
         StoryRank prevRank = this.storyRankDAO.retrieveByBacklogAndStory(
@@ -166,8 +179,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * {@inheritDoc}
      */
     public void removeRank(Story story, Backlog context) {
-        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,
-                story);
+        if (context == null) {
+            return;
+        }
+        StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context,story);
         if (rank != null) {
             skipRank(rank);
             this.storyRankDAO.remove(rank);
@@ -200,6 +215,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
      * {@inheritDoc}
      */
     public void rankToBottom(Story story, Backlog context) {
+        if(context instanceof Product) {
+            return;
+        }
+        
         StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(context, story);
         LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();
         ranks.addAll(this.storyRankDAO.retrieveRanksByBacklog(context));
@@ -225,6 +244,10 @@ public class StoryRankBusinessImpl implements StoryRankBusiness {
     }
 
     public void rankToHead(Story story, Backlog backlog) {
+        if(backlog instanceof Product) {
+            return;
+        }
+        
         StoryRank rank = this.storyRankDAO.retrieveByBacklogAndStory(backlog, story);
         
         LinkedList<StoryRank> ranks = new LinkedList<StoryRank>();

@@ -122,7 +122,12 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
        parentNode.addChild(taskNode);
     }
     protected void attachStoryNodeToBacklogNode(TimesheetData sheetData, StoryTimesheetNode storyNode) {
-        Backlog backlog = storyNode.getStory().getBacklog();
+        Backlog backlog = storyNode.getStory().getIteration();
+        
+        if(backlog == null) {
+            backlog = storyNode.getStory().getBacklog();
+        }
+        
         if(backlog == null) {
             return;
         }
@@ -139,7 +144,7 @@ public class TimesheetBusinessImpl implements TimesheetBusiness {
             sheetData.addNode(parentNode);
         }
         parentNode.addChild(storyNode);
-    }
+    } 
     
     protected void attachBacklogNodeToBacklogNode(TimesheetData sheetData, BacklogTimesheetNode backlogNode) {
         Backlog parentBacklog = backlogNode.getBacklog().getParent();

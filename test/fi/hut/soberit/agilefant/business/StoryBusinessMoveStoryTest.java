@@ -1,14 +1,12 @@
 package fi.hut.soberit.agilefant.business;
 
 import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.HashSet;
 
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -106,30 +104,34 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     @DirtiesContext
     public void moveFromIterationToProject() {
         firstIteration.setParent(firstProject);
-        story.setBacklog(firstIteration);
+        story.setIteration(firstIteration);
+        story.setBacklog(firstProject);
 
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, secondProject)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstProject);
-        storyRankBusiness.rankToBottom(story, secondProject);
         storyRankBusiness.removeRank(story, firstIteration);
+        storyRankBusiness.rankToBottom(story, secondProject);
 
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
+        iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
 
-        iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
-
         replayAll();
-        storyBusiness.moveStoryToBacklog(story, secondProject);
+        storyBusiness.moveStoryAway(story, secondProject);
         verifyAll();
-        assertEquals(secondProject, story.getBacklog());  
+        
+        assertEquals(secondProject, story.getBacklog());
+        assertNull(story.getIteration());
     }
 
     @Test
     @DirtiesContext
     public void moveFromIterationToProject_iterationUnderProject() {
         firstIteration.setParent(firstProject);
-        story.setBacklog(firstIteration);
+        story.setIteration(firstIteration);
+        story.setBacklog(firstProject);
 
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
 
@@ -139,14 +141,14 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
-
         iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
 
         replayAll();
-
-        storyBusiness.moveStoryToBacklog(story, firstProject);
+        storyBusiness.moveStoryAway(story, firstProject);
         verifyAll();
+        
         assertEquals(firstProject, story.getBacklog());
+        assertNull(story.getIteration());
     }
 
     @Test
@@ -157,6 +159,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstIteration)).andReturn(true);
         storyDAO.store(story);
+
         storyRankBusiness.removeRank(story, secondProject);
         storyRankBusiness.rankToBottom(story, firstIteration);
         storyRankBusiness.rankToBottom(story, firstProject);
@@ -167,9 +170,11 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
         
         replayAll();
-        storyBusiness.moveStoryToBacklog(story, firstIteration);
+        storyBusiness.moveStoryAway(story, firstIteration);
         verifyAll();
+        
         assertEquals(firstIteration, story.getIteration());
+        assertEquals(firstProject, story.getBacklog());
     }
 
     @Test
@@ -177,20 +182,23 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromProjectToIteration_iterationInProject() {
         firstIteration.setParent(firstProject);
         story.setBacklog(firstProject);
+
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstIteration)).andReturn(true);
         storyDAO.store(story);
+
         storyRankBusiness.rankToBottom(story, firstIteration);
-        storyRankBusiness.rankToBottom(story, firstProject);
-        
+
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
         
         iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
         
         replayAll();
-        storyBusiness.moveStoryToBacklog(story, firstIteration);
+        storyBusiness.moveStoryAway(story, firstIteration);
         verifyAll();
+        
         assertEquals(firstIteration, story.getIteration());
+        assertEquals(firstProject, story.getBacklog());
     }
 
     @Test
@@ -198,7 +206,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromIterationToIteration() {
         firstIteration.setParent(firstProject);
         secondIteration.setParent(secondProject);
-        story.setBacklog(firstIteration);
+        story.setIteration(firstIteration);
+        story.setBacklog(firstProject);
         
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, secondIteration)).andReturn(true);
         storyDAO.store(story);
@@ -206,16 +215,20 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyRankBusiness.rankToBottom(story, secondIteration);
         storyRankBusiness.removeRank(story, firstProject);
         storyRankBusiness.rankToBottom(story, secondProject);
-        
+
+
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
-        backlogHistoryEntryBusiness.updateHistory(secondIteration.getId());
-        
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
+        backlogHistoryEntryBusiness.updateHistory(secondIteration.getId());
         iterationHistoryBusiness.updateIterationHistory(secondIteration.getId());
+
         replayAll();
-        storyBusiness.moveStoryToBacklog(story, secondIteration);
+        storyBusiness.moveStoryAway(story, secondIteration);
         verifyAll();
+        
         assertEquals(secondIteration, story.getIteration());
+        assertEquals(secondProject, story.getBacklog());
     }
 
     @Test
@@ -223,13 +236,15 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromIterationToIteration_inProject() {
         firstIteration.setParent(firstProject);
         secondIteration.setParent(firstProject);
-        story.setBacklog(firstIteration);
+        story.setIteration(firstIteration);
+        story.setBacklog(firstProject);
         
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, secondIteration)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstIteration);
         storyRankBusiness.rankToBottom(story, secondIteration);
-        
+
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(secondIteration.getId());
         
@@ -237,10 +252,11 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         iterationHistoryBusiness.updateIterationHistory(secondIteration.getId());
         
         replayAll();
-
-        storyBusiness.moveStoryToBacklog(story, secondIteration);
+        storyBusiness.moveStoryAway(story, secondIteration);
         verifyAll();
+        
         assertEquals(secondIteration, story.getIteration());
+        assertEquals(firstProject, story.getBacklog());
     }
     
     @Test
@@ -250,23 +266,27 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
         storyDAO.store(story);
+
         storyRankBusiness.removeRank(story, secondProject);
         storyRankBusiness.rankToBottom(story, firstProject);
+
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
-        replayAll();
 
-        storyBusiness.moveStoryToBacklog(story, firstProject);
+        replayAll();
+        storyBusiness.moveStoryAway(story, firstProject);
         verifyAll();
+        
         assertEquals(firstProject, story.getBacklog());
+        assertNull(story.getIteration());
     }
 
     @Test
     @DirtiesContext
     public void moveFromProjectToProject_hasChildren() {
+        secondIteration.setParent(secondProject);
         story.setBacklog(secondProject);
         story.setIteration(secondIteration);
-        secondIteration.setParent(secondProject);
         Story child = new Story();
         story.getChildren().add(child);
 
@@ -275,34 +295,47 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
         storyDAO.store(story);
+
+        storyRankBusiness.removeRank(story, secondProject);
+        storyRankBusiness.removeRank(story, secondIteration);
+
+        backlogHistoryEntryBusiness.updateHistory(secondIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
-        replayAll();
+        iterationHistoryBusiness.updateIterationHistory(secondIteration.getId());
 
-        storyBusiness.moveStoryToBacklog(story, firstProject);
+        replayAll();
+        storyBusiness.moveStoryAway(story, firstProject);
         verifyAll();
+        
         assertEquals(firstProject, story.getBacklog());
+        assertNull(story.getIteration());
     }
     
     @Test
     @DirtiesContext
     public void moveFromIterationToProduct() {
         firstIteration.setParent(firstProject);
-        story.setBacklog(firstIteration);
+        story.setIteration(firstIteration);
+        story.setBacklog(firstProject);
         
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProduct)).andReturn(true);
         storyDAO.store(story);
         storyRankBusiness.removeRank(story, firstProject);
         storyRankBusiness.removeRank(story, firstIteration);
+
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
+        backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
         
         iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
+        
         replayAll();
-
-        storyBusiness.moveStoryToBacklog(story, firstProduct);
+        storyBusiness.moveStoryAway(story, firstProduct);
         verifyAll();
+        
         assertEquals(firstProduct, story.getBacklog());
+        assertNull(story.getIteration());
     }
     
     @Test
@@ -315,11 +348,13 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         storyRankBusiness.removeRank(story, firstProject);
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
+        
         replayAll();
-
-        storyBusiness.moveStoryToBacklog(story, firstProduct);
+        storyBusiness.moveStoryAway(story, firstProduct);
         verifyAll();
+        
         assertEquals(firstProduct, story.getBacklog());
+        assertNull(story.getIteration());
     }
     
     @Test(expected = OperationNotPermittedException.class)
@@ -327,10 +362,13 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void moveFromProjectToProduct_integrityViolation() {
         story.setBacklog(firstProject);
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProduct)).andReturn(false);
+        
         replayAll();
-
-        storyBusiness.moveStoryToBacklog(story, firstProduct);
+        storyBusiness.moveStoryAway(story, firstProduct);
         verifyAll();
+        
+        assertEquals(firstProduct, story.getBacklog());
+        assertNull(story.getIteration());
     }
 
     @Test(expected = OperationNotPermittedException.class)
@@ -352,15 +390,13 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         movable.setBacklog(oldBacklog);
         movable.setIteration(oldIteration);
 
-        movable.setChildren(Arrays.asList(new Story(),
-                new Story()));
+        movable.setChildren(Arrays.asList(new Story(), new Story()));
 
-        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(
-                oldParent);
-        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(
-                newBacklog);
+        expect(backlogBusiness.getParentProduct(oldBacklog)).andReturn(oldParent);
+        expect(backlogBusiness.getParentProduct(newBacklog)).andReturn(newBacklog);
+        
         replayAll();
-        storyBusiness.moveStoryToBacklog(movable, newBacklog);
+        storyBusiness.moveStoryAway(movable, newBacklog);
         verifyAll();
     }
     
@@ -373,6 +409,8 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstIteration)).andReturn(true);
         storyDAO.store(story);
+
+        storyRankBusiness.removeRank(story, firstProduct);
         storyRankBusiness.rankToBottom(story, firstIteration);
         storyRankBusiness.rankToBottom(story, firstProject);
         
@@ -382,27 +420,34 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
         
         replayAll();
-        storyBusiness.moveStoryToBacklog(story, firstIteration);
+        storyBusiness.moveStoryAway(story, firstIteration);
         verifyAll();
+        
         assertEquals(firstIteration, story.getIteration());
+        assertEquals(firstProject, story.getBacklog());
     }
     
     @Test
     @DirtiesContext
     public void moveFromProductToProject() {
+        firstProject.setParent(firstProduct);
         story.setBacklog(firstProduct);
         
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, firstProject)).andReturn(true);
         storyDAO.store(story);
+
+        storyRankBusiness.removeRank(story, firstProduct);
         storyRankBusiness.rankToBottom(story, firstProject);
         
         backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
         
         replayAll();
-        storyBusiness.moveStoryToBacklog(story, firstProject);
+        storyBusiness.moveStoryAway(story, firstProject);
         verifyAll();
+        
         assertEquals(firstProject, story.getBacklog());
+        assertNull(story.getIteration());
     }
     
     @Test
@@ -411,14 +456,21 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         Product prod = new Product();
         prod.setId(313);
         story.setBacklog(firstProduct);
+
         expect(storyTreeIntegrityBusiness.canStoryBeMovedToBacklog(story, prod)).andReturn(true);
         storyDAO.store(story);
+
+        storyRankBusiness.removeRank(story, firstProduct);
+
         backlogHistoryEntryBusiness.updateHistory(prod.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProduct.getId());
+
         replayAll();
-        storyBusiness.moveStoryToBacklog(story, prod);
-        assertEquals(prod, story.getBacklog());
+        storyBusiness.moveStoryAway(story, prod);
         verifyAll();
+        
+        assertEquals(prod, story.getBacklog());
+        assertNull(story.getIteration());
     }
     
     @Test
@@ -448,6 +500,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         storyBusiness.moveSingleStoryToBacklog(story, firstProject);
         verifyAll();
+
         assertEquals(firstProject, story.getBacklog());
         assertNull(story.getParent());
         assertEquals(parent, child.getParent());
@@ -471,14 +524,14 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
 
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
-        
+
         storyRankBusiness.removeRank(story, secondProject);
         storyRankBusiness.rankToBottom(story, firstProject);
-        
-        replayAll();
 
+        replayAll();
         storyBusiness.moveSingleStoryToBacklog(story, firstProject);
         verifyAll();
+
         assertEquals(firstProject, story.getBacklog());
         assertNull(story.getParent());
         assertEquals(null, child.getParent());
@@ -506,10 +559,11 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         
         storyRankBusiness.removeRank(story, secondProject);
         storyRankBusiness.rankToBottom(story, firstProject);
-        replayAll();
 
+        replayAll();
         storyBusiness.moveSingleStoryToBacklog(story, firstProject);
         verifyAll();
+
         assertEquals(firstProject, story.getBacklog());
         assertEquals(parent, story.getParent());
         assertEquals(parent, child.getParent());
@@ -520,7 +574,9 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
     public void testMoveStoryAndChildren() {
         Story parent = new Story();
         Story child1 = new Story();
+        child1.setId(10);
         Story child2 = new Story();
+        child2.setId(20);
         
         parent.getChildren().add(story);
         
@@ -535,34 +591,33 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         parent.setBacklog(firstProject);
         story.setBacklog(firstProject);
         child1.setBacklog(firstProject);
-        child2.setBacklog(firstIteration);
+        child2.setIteration(firstIteration);
+        child2.setBacklog(firstProject);
         
-        firstIteration.setParent(firstProduct);
+        firstIteration.setParent(firstProject);
         
         expect(storyTreeIntegrityBusiness.hasParentStoryConflict(story, secondProject)).andReturn(true);
         storyHierarchyBusiness.updateChildrenTreeRanks(parent);
-        
-        expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct).anyTimes();
-        expect(backlogBusiness.getParentProduct(secondProject)).andReturn(firstProduct).anyTimes();
-                
-        storyDAO.store(child2);
-        
+
         storyRankBusiness.removeRank(child2, firstIteration);
-        storyRankBusiness.removeRank(child2, firstIteration.getParent());
-    
+        storyRankBusiness.removeRank(child2, firstProject);
+        storyRankBusiness.removeRank(child1, firstProject);
+        storyRankBusiness.removeRank(story, firstProject);
+
         storyRankBusiness.rankToBottom(child2, secondProject);
-        
+
+        storyDAO.store(child2);
         storyDAO.store(child1);
         storyDAO.store(story);
-        
+
         backlogHistoryEntryBusiness.updateHistory(firstIteration.getId());
         backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
-        iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
+        EasyMock.expectLastCall().anyTimes();
         backlogHistoryEntryBusiness.updateHistory(firstProject.getId());
-        EasyMock.expectLastCall().times(2);
-        backlogHistoryEntryBusiness.updateHistory(secondProject.getId());
-        EasyMock.expectLastCall().times(2);
-        
+        EasyMock.expectLastCall().anyTimes();
+
+        iterationHistoryBusiness.updateIterationHistory(firstIteration.getId());
+
         replayAll();
         storyBusiness.moveStoryAndChildren(story, secondProject);
         verifyAll();

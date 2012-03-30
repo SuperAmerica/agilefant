@@ -118,16 +118,16 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         Criteria crit = getCurrentSession()
                 .createCriteria(StoryHourEntry.class);
         crit
-                .createAlias("story.backlog", "bl",
+                .createAlias("story.iteration", "iteration",
                         CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("story.backlog.parent", "blParent",
+        crit.createAlias("story.backlog", "backlog",
                 CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("story.backlog.parent.parent", "blParentParent",
+        crit.createAlias("story.backlog.parent", "backlogParent",
                 CriteriaSpecification.LEFT_JOIN);
 
-        crit.add(Restrictions.or(Restrictions.in("bl.id", backlogIds),
-                Restrictions.or(Restrictions.in("blParent.id", backlogIds),
-                        Restrictions.in("blParentParent.id", backlogIds))));
+        crit.add(Restrictions.or(Restrictions.in("iteration.id", backlogIds),
+                Restrictions.or(Restrictions.in("backlog.id", backlogIds),
+                        Restrictions.in("backlogParent.id", backlogIds))));
         crit.addOrder(Order.desc("date"));
         this.setDateUserFilter(crit, startDate, endDate, userIds);
         return asList(crit);
@@ -140,51 +140,36 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
             return Collections.emptyList();
         }
         
-        List<TaskHourEntry> result;
-        
         Criteria crit = getCurrentSession().createCriteria(TaskHourEntry.class);
         
-        crit.createAlias("task.story", "story");
-        crit.createAlias("task.story.backlog", "bl",
-                CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("task.story.backlog.parent", "blParent",
-                CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("task.story.backlog.parent.parent", "blParentParent",
-                CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("task.story.iteration", "si",
-                CriteriaSpecification.LEFT_JOIN);
+        String[] backlogs = {
+                "iteration",
+                "backlog",
+                "backlogParent",
+                "task_without_story_iteration",
+                "task_without_story_project",
+                "task_without_story_product"
+        };
+ 
+        crit.createAlias("task.story", "story", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.story.iteration", "iteration", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.story.backlog", "backlog", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.story.backlog.parent", "backlogParent", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.iteration", "task_without_story_iteration", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.iteration.parent", "task_without_story_project", CriteriaSpecification.LEFT_JOIN);
+        crit.createAlias("task.iteration.parent.parent", "task_without_story_product", CriteriaSpecification.LEFT_JOIN);      
 
-        Criterion parentProject = Restrictions.or(Restrictions.or(Restrictions.in("bl.id", backlogIds), Restrictions
-                .in("blParent.id", backlogIds)), Restrictions.and(Restrictions.isNull("story.backlog"), Restrictions.in("si.id", backlogIds)));
-        crit.add(Restrictions.or(Restrictions.in("blParentParent.id",
-                backlogIds), parentProject));
+        
+        Criterion condition = Restrictions.isNull("task.id");
+        for(String alias : backlogs) {
+            condition = Restrictions.or(Restrictions.in(alias + ".id", backlogIds), condition);
+        }
+        
+        crit.add(condition);
         crit.addOrder(Order.desc("date"));
         this.setDateUserFilter(crit, startDate, endDate, userIds);
         
-        result = asList(crit);
-        
-        //entries where task has no story attachment
-        crit = getCurrentSession().createCriteria(TaskHourEntry.class);
-        
-        crit.createAlias("task", "task");
-        crit.createAlias("task.iteration", "iBl", CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("task.iteration.parent", "iBlParent",
-                CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("task.iteration.parent.parent", "iBlParentParent",
-                CriteriaSpecification.LEFT_JOIN);
-        
-        Criterion iterationParents = Restrictions.or(Restrictions.in(
-                "iBlParent.id", backlogIds), Restrictions.in("iBlParentParent.id",
-                backlogIds));
-        crit.add( Restrictions.or(iterationParents,
-                Restrictions.in("iBl.id", backlogIds)));
-        crit.add(Restrictions.isNull("task.story"));
-        crit.addOrder(Order.desc("date"));
-        this.setDateUserFilter(crit, startDate, endDate, userIds);
-        List<TaskHourEntry> hourentriesWithoutStory = asList(crit);
-        result.addAll(hourentriesWithoutStory);
-        
-        return result;
+        return asList(crit);
     }
     
     public long calculateIterationHourEntriesSum(int iterationId) {
@@ -245,7 +230,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         criteria = criteria.createCriteria("task");
         criteria.add(Restrictions.isNotNull("story"));
         criteria = criteria.createCriteria("story");
-        criteria = criteria.createCriteria("backlog");
+        criteria = criteria.createCriteria("iteration");
         criteria.add(Restrictions.idEq(iterationId));
         
 
@@ -273,7 +258,7 @@ public class HourEntryDAOHibernate extends GenericDAOHibernate<HourEntry>
         criteria.setProjection(Projections.sum("minutesSpent"));
 
         criteria = criteria.createCriteria("story");
-        criteria = criteria.createCriteria("backlog");
+        criteria = criteria.createCriteria("iteration");
         criteria.add(Restrictions.idEq(iterationId));
         
 

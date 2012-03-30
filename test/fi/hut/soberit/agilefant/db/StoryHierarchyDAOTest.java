@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
@@ -121,6 +122,13 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
         executeClassSql();
         assertEquals(0l, this.testable.totalLeafDoneStoryPoints(emptyProject));
     }
+    @Test
+    public void testTotaDonelLeafStoryPoints_emptyIteration() {
+        executeClassSql();
+        Iteration emptyIteration = new Iteration();
+        emptyIteration.setId(666);
+        assertEquals(0l, this.testable.totalLeafDoneStoryPoints(emptyIteration));
+    }    
     @Test
     public void testTotalRootStoryPoints_empty() {
         executeClassSql();

@@ -1,11 +1,13 @@
 package fi.hut.soberit.agilefant.util;
 
+import java.net.URI;
+
 public class DbConnectionInfo {
     private static String password;
     private static String username;
     private static String url;
     private static String dbName;
-    private static String hostname;
+    private static String hostname;     
     private static String driver;
     
     public DbConnectionInfo()
@@ -35,14 +37,10 @@ public class DbConnectionInfo {
         return url;
     }
     public void setUrl(String url) {
-        if (DbConnectionInfo.dbName == null)
-        {
-            // TODO @braden find better way to get the database name/host
-            String[] urlParts = url.split("/");
-            setHostname(urlParts[2].substring(0, urlParts[2].indexOf(":")));
-            String dbName = urlParts[3].split("[^(A-Za-z)]")[0];
-            setDbName(dbName);
-        }
+        String cleanURI = url.substring(5);
+        URI uri = URI.create(cleanURI);
+        this.setHostname(uri.getHost());
+        this.setDbName(uri.getPath().substring(1));
         DbConnectionInfo.url = url;
     }
     public void setHostname(String hostname)

@@ -314,6 +314,18 @@ StoryTreeController.prototype.initTree = function() {
   
   this.editBox = new MultiEditWidget(this);
   
+  this.element.delegate('a', 'mouseenter', function(event) {
+	 if ($.vakata.dnd.is_drag) {
+		 if ($(this).closest('li').attr('rel') == "iteration_story")
+		 {
+			 $(this).after("<div class='iterationStoryToolTip'><span>Stories in an iteration can't have child stories.</span></div>");
+		 }
+	 }
+  });
+  this.element.delegate('a', 'mouseleave', function(event) {
+	  	 $(".iterationStoryToolTip").hide();
+  });
+  
   this.element.bind('move_node.jstree', function(event, data) {
     // See http://www.jstree.com/documentation/core
 	if (data.rslt.o.length > 1)
@@ -444,9 +456,11 @@ StoryTreeController.prototype._getStoryForId = function(id, callback) {
 StoryTreeController.prototype.saveStory = function(refnode, position, node, data, parentStory) {
   node.html('<img src="static/img/working.gif" style="margin-left: 5em;"/>');
   var url;
+  
+  data.backlogId = this.id;
+  
   if (!parentStory) {
     url = "ajax/treeCreateRootStory.action";
-    data.backlogId = this.id;
   } else {
     url = StoryTreeController.createNodeUrls[position];
     data.storyId = parentStory.getId();

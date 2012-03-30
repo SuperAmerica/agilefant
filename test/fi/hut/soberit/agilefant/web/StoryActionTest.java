@@ -350,11 +350,12 @@ public class StoryActionTest extends MockedTestCase {
         Set<Integer> userIds = Collections.emptySet();
         List<String> labelNames = new ArrayList<String>();
         
-        expect(storyBusiness.createStoryUnder(1, data, userIds, labelNames)).andReturn(res);
+        expect(storyBusiness.createStoryUnder(1, 654, data, userIds, labelNames)).andReturn(res);
         replayAll();
         storyAction.setLabelNames(labelNames);
         storyAction.setStory(data);
         storyAction.setStoryId(1);
+        storyAction.setBacklogId(654);
         storyAction.createStoryUnder();
         verifyAll();
         storyAction.setLabelNames(labelNames);
@@ -368,10 +369,11 @@ public class StoryActionTest extends MockedTestCase {
         Set<Integer> userIds = Collections.emptySet();
         List<String> labelNames = new ArrayList<String>();
         
-        expect(storyBusiness.createStorySibling(1, data, userIds, labelNames)).andReturn(res);
+        expect(storyBusiness.createStorySibling(1, 654, data, userIds, labelNames)).andReturn(res);
         replayAll();
         storyAction.setStory(data);
         storyAction.setStoryId(1);
+        storyAction.setBacklogId(654);
         storyAction.setLabelNames(labelNames);
         storyAction.createStorySibling();
         verifyAll();

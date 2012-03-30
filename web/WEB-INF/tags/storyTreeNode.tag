@@ -10,7 +10,7 @@
 
 
 <c:choose>
-  <c:when test="${aef:isIteration(node.backlog)}">
+  <c:when test="${aef:isIteration(node.iteration)}">
     <c:set var="nodeType" value="iteration_story"/>
   </c:when> 
   <c:otherwise>

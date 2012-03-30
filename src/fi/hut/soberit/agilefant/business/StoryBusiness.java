@@ -80,10 +80,10 @@ public interface StoryBusiness extends GenericBusiness<Story> {
 
     void forceDelete(Story story);
     
-    public Story createStoryUnder(int referenceStoryId, Story data,
+    public Story createStoryUnder(int referenceStoryId, int backlogId, Story data,
             Set<Integer> responsibleIds, List<String> labelNames);
 
-    public Story createStorySibling(int referenceStoryId, Story data,
+    public Story createStorySibling(int referenceStoryId, int backlogId, Story data,
             Set<Integer> responsibleIds, List<String> labelNames);
     
     public void moveSingleStoryToBacklog(Story story, Backlog backlog);

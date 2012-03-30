@@ -454,6 +454,7 @@
 				<param name="inputName">databaseStream</param>
 				<param name="contentDisposition">filename="AgilefantDatabaseExport.zip"</param>
 			</result>
+			<result name="error">/WEB-INF/jsp/dbExportError.jsp</result>
 		</action>
 		
 		<action name="generateAnonymousDbExport" method="generateAnonymousDatabaseExport"
@@ -463,6 +464,7 @@
 				<param name="inputName">databaseStream</param>
 				<param name="contentDisposition">filename="AgilefantAnonymousDatabaseExport.zip"</param>
 			</result>
+			<result name="error">/WEB-INF/jsp/dbExportError.jsp</result>
 		</action>
 		
 		

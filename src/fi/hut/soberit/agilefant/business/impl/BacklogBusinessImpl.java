@@ -164,18 +164,18 @@ public class BacklogBusinessImpl extends GenericBusinessImpl<Backlog> implements
     
     
     @Transactional(readOnly = true)
-    public int getStoryPointSumByBacklog(Backlog backlog) {
-        return storyDAO.getStoryPointSumByBacklog(backlog.getId());
+    public int getStoryPointSumByIteration(Iteration iteration) {
+        return storyDAO.getStoryPointSumByIteration(iteration.getId());
     }
     
     @Transactional(readOnly = true)
-    public int getStoryValueSumByBacklog(Backlog backlog) {
-        return storyDAO.getStoryValueSumByBacklog(backlog.getId());
+    public int getStoryValueSumByIteration(Iteration iteration) {
+        return storyDAO.getStoryValueSumByIteration(iteration.getId());
     }
     
     @Transactional(readOnly = true)
-    public int getCompletedStoryValueSumByBacklog(Backlog backlog) {
-        return storyDAO.getCompletedStoryValueSumByBacklog(backlog.getId());
+    public int getCompletedStoryValueSumByIteration(Iteration iteration) {
+        return storyDAO.getCompletedStoryValueSumByIteration(iteration.getId());
     }
     
     /**

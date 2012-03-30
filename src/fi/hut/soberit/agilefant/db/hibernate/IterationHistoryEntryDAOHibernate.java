@@ -88,7 +88,7 @@ public class IterationHistoryEntryDAOHibernate extends
         crit.setFetchMode("story", FetchMode.SELECT);
         crit.add(Restrictions.ne("state", StoryState.DEFERRED));
         
-        crit = crit.createCriteria("backlog");
+        crit = crit.createCriteria("iteration");
         crit.add(Restrictions.idEq(iterationId));
         
         Object[] results = (Object[]) crit.uniqueResult();

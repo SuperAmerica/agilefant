@@ -277,10 +277,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         metrics.setDailyVelocity(calculateDailyVelocity(iteration));
 
         // 2. Set story points
-        metrics.setStoryPoints(backlogBusiness
-                .getStoryPointSumByBacklog(iteration));
-        metrics.setDoneStoryPoints(backlogBusiness
-                .calculateDoneStoryPointSum(iteration.getId()));
+        metrics.setStoryPoints(backlogBusiness.getStoryPointSumByIteration(iteration));
+        metrics.setDoneStoryPoints(backlogBusiness.calculateDoneStoryPointSum(iteration.getId()));
 
         // 3. Set spent effort
         long spentEffort = hourEntryBusiness
@@ -323,8 +321,8 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         }
         
         //7. calculate 'Value'
-        metrics.setTotalValue(backlogBusiness.getStoryValueSumByBacklog(iteration));
-        metrics.setCompletedValue(backlogBusiness.getCompletedStoryValueSumByBacklog(iteration));
+        metrics.setTotalValue(backlogBusiness.getStoryValueSumByIteration(iteration));
+        metrics.setCompletedValue(backlogBusiness.getCompletedStoryValueSumByIteration(iteration));
         metrics.setPercentCompletedValue(calculatePercent(metrics.getCompletedValue(), metrics.getTotalValue()));
         return metrics;
     }

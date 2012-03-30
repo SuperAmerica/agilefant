@@ -44,46 +44,25 @@ public class BacklogDAOHibernate extends GenericDAOHibernate<Backlog> implements
                 new Object[] { backlog });
     }
 
-    public int calculateStoryPointSum(int backlogId) {
+    public int calculateStoryPointSum(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Story.class);
         crit.setProjection(Projections.sum("storyPoints"));
-        crit.createCriteria("backlog").add(Restrictions.idEq(backlogId));
+        crit.createCriteria("iteration").add(Restrictions.idEq(iterationId));
         Long result = uniqueResult(crit);
         if (result == null) return 0;
         return result.intValue();
     }
     
-    public int calculateDoneStoryPointSum(int backlogId) {
+    public int calculateDoneStoryPointSum(int iterationId) {
         Criteria crit = getCurrentSession().createCriteria(Story.class);
         crit.setProjection(Projections.sum("storyPoints"));
-        crit.createCriteria("backlog").add(Restrictions.idEq(backlogId));
+        crit.createCriteria("iteration").add(Restrictions.idEq(iterationId));
         crit.add(Restrictions.eq("state", StoryState.DONE));
         Long result = uniqueResult(crit);
         if (result == null) return 0;
         return result.intValue();
     }
     
-    public int calculateStoryPointSumIncludeChildBacklogs(int backlogId) {
-        Criteria crit = getCurrentSession().createCriteria(Story.class);
-        crit.setProjection(Projections.sum("storyPoints"));
-        
-        crit.createAlias("backlog", "backlog");
-        crit.createAlias("backlog.parent", "parentBacklog",
-                CriteriaSpecification.LEFT_JOIN);
-        crit.createAlias("backlog.parent.parent", "parentParentBacklog",
-                CriteriaSpecification.LEFT_JOIN);
-        
-        crit.add(Restrictions.or(Restrictions.eq("backlog.id", backlogId),
-                Restrictions.or(Restrictions.eq("parentBacklog.id", backlogId),
-                        Restrictions.eq("parentParentBacklog.id", backlogId))));
-        
-        crit.add(Restrictions.isNotNull("storyPoints"));
-        
-        Long result = uniqueResult(crit);
-        
-        if (result == null) return 0;
-        return result.intValue();
-    }
     
     public List<Backlog> searchByName(String name) {
         return searchByName(name, Backlog.class);

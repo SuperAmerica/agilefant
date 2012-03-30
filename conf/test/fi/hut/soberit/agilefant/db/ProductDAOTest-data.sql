@@ -12,8 +12,8 @@ INSERT INTO backlogs (id,backlogtype, rank, parent_id, startDate,endDate) VALUES
 INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (1,'',0,1,null);
 INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (2,'',0,3,1);
 INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (3,'',0,3,null);
-INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (4,'',0,6,null);
-INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (5,'',0,6,null);
-INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (6,'',0,6,null);
+INSERT INTO stories (id,name,state,backlog_id,iteration_id,parent_id) VALUES (4,'',0,3,6,null);
+INSERT INTO stories (id,name,state,backlog_id,iteration_id,parent_id) VALUES (5,'',0,3,6,null);
+INSERT INTO stories (id,name,state,backlog_id,iteration_id,parent_id) VALUES (6,'',0,3,6,null);
 INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (7,'',0,3,3);
 INSERT INTO stories (id,name,state,backlog_id,parent_id) VALUES (8,'',0,1,3);

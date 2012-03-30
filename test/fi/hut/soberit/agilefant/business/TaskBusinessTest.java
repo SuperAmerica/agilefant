@@ -141,7 +141,7 @@ public class TaskBusinessTest extends MockedTestCase {
         lastTask.setStory(story);
         lastTask.setRank(222);
 
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
 
         expect(storyBusiness.retrieve(story.getId())).andReturn(story)
                 .anyTimes();
@@ -419,7 +419,7 @@ public class TaskBusinessTest extends MockedTestCase {
         task.setEffortLeft(new ExactEstimate());
         task.setOriginalEstimate(new ExactEstimate());
         task.setStory(story);
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
         task.setIteration(null);
         expect(taskDAO.get(task.getId())).andReturn(task);
         taskDAO.store(task);
@@ -642,11 +642,11 @@ public class TaskBusinessTest extends MockedTestCase {
 
         Story source = new Story();
         source.setId(397);
-        source.setBacklog(iter);
+        source.setIteration(iter);
 
         Story destination = new Story();
         destination.setId(1223);
-        destination.setBacklog(iter2);
+        destination.setIteration(iter2);
 
         task.setStory(source);
 
@@ -680,7 +680,7 @@ public class TaskBusinessTest extends MockedTestCase {
 
         Story destination = new Story();
         destination.setId(1223);
-        destination.setBacklog(iter2);
+        destination.setIteration(iter2);
 
         task.setStory(source);
 
@@ -709,7 +709,7 @@ public class TaskBusinessTest extends MockedTestCase {
 
         Story source = new Story();
         source.setId(397);
-        source.setBacklog(iter);
+        source.setIteration(iter);
 
         Story destination = new Story();
         destination.setId(1223);

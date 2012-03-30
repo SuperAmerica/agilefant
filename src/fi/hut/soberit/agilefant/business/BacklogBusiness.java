@@ -62,10 +62,10 @@ public interface BacklogBusiness extends GenericBusiness<Backlog> {
     
     public int getRootParentId(Backlog backlog);
     
-    public int getStoryPointSumByBacklog(Backlog backlog);
+    public int getStoryPointSumByIteration(Iteration backlog);
     
-    public int getStoryValueSumByBacklog(Backlog backlog);
-    public int getCompletedStoryValueSumByBacklog(Backlog backlog);
+    public int getStoryValueSumByIteration(Iteration backlog);
+    public int getCompletedStoryValueSumByIteration(Iteration backlog);
     
     public Days daysLeftInSchedulableBacklog(Schedulable backlog);
     public float calculateBacklogTimeframePercentageLeft(Schedulable backlog);

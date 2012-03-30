@@ -81,7 +81,7 @@ public class IterationHistoryEntryBusinessTest {
         expect(iterationHistoryEntryDAO.retrieveLatest(1)).andReturn(latestEntry);        
         expect(iterationHistoryEntryDAO.calculateCurrentHistoryData(1)).andReturn(sums);
         Capture<IterationHistoryEntry> capturedEntry = new Capture<IterationHistoryEntry>();
-        expect(iterationHistoryEntryDAO.create(capture(capturedEntry))).andReturn(123);
+        iterationHistoryEntryDAO.store(capture(capturedEntry));
         replay(iterationDAO, iterationHistoryEntryDAO);
         
         iterationHistoryEntryBusiness.updateIterationHistory(1);

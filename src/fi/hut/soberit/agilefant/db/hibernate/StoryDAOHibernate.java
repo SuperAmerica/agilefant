@@ -57,9 +57,9 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         return metrics;        
     }
     
-    public int getStoryPointSumByBacklog(int backlogId) {
+    public int getStoryPointSumByIteration(int iterationId) {
         Criteria criteria = getCurrentSession().createCriteria(Story.class);
-        criteria.add(Restrictions.eq("backlog.id", backlogId));
+        criteria.add(Restrictions.eq("iteration.id", iterationId));
         criteria.add(Restrictions.isNotNull("storyPoints"));
         criteria.add(Restrictions.ne("state", StoryState.DEFERRED));
         criteria.setProjection(Projections.sum("storyPoints"));
@@ -70,9 +70,9 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         return Integer.parseInt(result.toString());
     }
     
-    public int getStoryValueSumByBacklog(int backlogId) {
+    public int getStoryValueSumByIteration(int iterationId) {
         Criteria criteria = getCurrentSession().createCriteria(Story.class);
-        criteria.add(Restrictions.eq("backlog.id", backlogId));
+        criteria.add(Restrictions.eq("iteration.id", iterationId));
         criteria.add(Restrictions.isNotNull("storyValue"));
         criteria.add(Restrictions.not(Restrictions.eq("state", StoryState.DEFERRED)));
         criteria.setProjection(Projections.sum("storyValue"));
@@ -83,9 +83,9 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
         return Integer.parseInt(result.toString());
     }
     
-    public int getCompletedStoryValueSumByBacklog(int backlogId) {
+    public int getCompletedStoryValueSumByIteration(int iterationId) {
         Criteria criteria = getCurrentSession().createCriteria(Story.class);
-        criteria.add(Restrictions.eq("backlog.id", backlogId));
+        criteria.add(Restrictions.eq("iteration.id", iterationId));
         criteria.add(Restrictions.isNotNull("storyValue"));
         criteria.add(Restrictions.not(Restrictions.eq("state", StoryState.DEFERRED)));
         criteria.add(Restrictions.eq("state", StoryState.DONE));
@@ -171,10 +171,10 @@ public class StoryDAOHibernate extends GenericDAOHibernate<Story> implements
     // :)
     private static final String QUERY_RETRIEVE_ACTIVE_ITERATION_STORIES_WITH_USER_RESPONSIBLE =
         "SELECT story FROM Story story" + " LEFT JOIN story.responsibles AS responsible"
-        + " LEFT JOIN story.backlog.parent AS project"
+        + " LEFT JOIN story.iteration.parent AS project"
         + " WHERE responsible.id = :userId"
-        + " AND story.backlog.endDate > :now"
-        + " AND story.backlog.class = :backlogType";
+        + " AND story.iteration.endDate > :now"
+        + " AND story.iteration.class = :backlogType";
     
     @SuppressWarnings("unchecked")
     public List<Story> retrieveActiveIterationStoriesWithUserResponsible(int userId) {

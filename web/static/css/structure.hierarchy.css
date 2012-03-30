@@ -67,6 +67,17 @@ div.hierarchyContainer {
   margin: 4px;
 }
 
+.iterationStoryToolTip{
+	display:inline-block;
+	width:auto;
+	height:20px;
+	background-color:lightpink;
+	border:thin solid pink;
+	color: black;
+	text-shadow: 0 1px 0 white;
+	font-size:14px;	
+}
+
 .jstree .inlineTaskState {
   display: inline-block;
   padding: 0 !important;

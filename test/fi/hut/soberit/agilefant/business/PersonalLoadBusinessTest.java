@@ -92,7 +92,7 @@ public class PersonalLoadBusinessTest {
         proj.setId(2);
         story = new Story();
         story.setId(1);
-        story.setBacklog(iter);
+        story.setIteration(iter);
         assigneeMap = new HashMap<Integer, Integer>();
         assigneeMap.put(1, 2);
         assigneeMap.put(2, 1);

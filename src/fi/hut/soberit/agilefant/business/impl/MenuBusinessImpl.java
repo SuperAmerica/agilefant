@@ -1,12 +1,11 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.hibernate.collection.PersistentBag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.stereotype.Service;
@@ -64,7 +63,7 @@ public class MenuBusinessImpl implements MenuBusiness {
                 .retrieveAllOrderByName());
         Collections.sort(products, new PropertyComparator("name", true, true));
         
-        Collection<Product> allowedProducts = new HashSet<Product>();
+        Set<Product> allowedProducts = new HashSet<Product>();
         for(Team team : user.getTeams()){
             allowedProducts.addAll(team.getProducts());
         }
@@ -78,7 +77,7 @@ public class MenuBusinessImpl implements MenuBusiness {
         
         final List<Iteration> standAloneIterations = new ArrayList<Iteration>(iterationBusiness.retrieveAllStandAloneIterations());
         
-        Collection<Iteration> allowedIterations = new HashSet<Iteration>();
+        Set<Iteration> allowedIterations = new HashSet<Iteration>();
         for(Team team : user.getTeams()){
             allowedIterations.addAll(team.getIterations());
         }

@@ -207,7 +207,7 @@ public class User implements NamedObject {
      * 
      * @return the teams
      */
-    @ManyToMany(targetEntity = Team.class)
+    @ManyToMany(targetEntity = Team.class, fetch=FetchType.EAGER)
     @JoinTable(name = "team_user", joinColumns = { @JoinColumn(name = "User_id") }, inverseJoinColumns = { @JoinColumn(name = "Team_id") })
     @JSON(include = false)
     @NotAudited

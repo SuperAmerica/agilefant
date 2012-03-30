@@ -1,7 +1,14 @@
 package fi.hut.soberit.agilefant.business;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isNull;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -279,7 +286,7 @@ public class TransferObjectBusinessTest {
         product.setId(1);
         product.setName("Product");
         
-        Collection<Product> products = new ArrayList<Product>();
+        Set<Product> products = new HashSet<Product>();
         products.add((Product)product);
         team.setProducts(products);
         
@@ -333,7 +340,7 @@ public class TransferObjectBusinessTest {
         product2.setId(123);
         product2.setName("Wrong");
         
-        Collection<Product> products = new ArrayList<Product>();
+        Set<Product> products = new HashSet<Product>();
         products.add((Product)product);
         products.add((Product)product2);
         team.setProducts(products);
@@ -384,7 +391,7 @@ public class TransferObjectBusinessTest {
         product.setId(1);
         product.setName("Product");
         
-        Collection<Product> products = new ArrayList<Product>();
+        Set<Product> products = new HashSet<Product>();
         products.add((Product)product);
         team.setProducts(products);
         
@@ -476,7 +483,7 @@ public class TransferObjectBusinessTest {
         product2.setName("Foo bar");
         product2.setId(918);
         
-        Collection<Product> products = new ArrayList<Product>();
+        Set<Product> products = new HashSet<Product>();
         products.add((Product)product1);
         products.add((Product)product2);
         team.setProducts(products);

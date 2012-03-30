@@ -1,9 +1,9 @@
 package fi.hut.soberit.agilefant.business.impl;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,7 +117,7 @@ public class SearchBusinessImpl implements SearchBusiness {
             if(temp == null){
                 //standalone iteration
                 temp = bl;
-                Collection<Iteration> allowedIterations = new HashSet<Iteration>();
+                Set<Iteration> allowedIterations = new HashSet<Iteration>();
                 for(Team team : user.getTeams()){
                     allowedIterations.addAll(team.getIterations());
                 }
@@ -140,7 +140,7 @@ public class SearchBusinessImpl implements SearchBusiness {
             prod = (Product)bl;
         }
         
-        Collection<Product> allowedProducts = new HashSet<Product>();
+        Set<Product> allowedProducts = new HashSet<Product>();
         for(Team team : user.getTeams()){
             allowedProducts.addAll(team.getProducts());
         }

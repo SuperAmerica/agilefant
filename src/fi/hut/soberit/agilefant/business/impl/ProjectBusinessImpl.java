@@ -154,6 +154,8 @@ public class ProjectBusinessImpl extends GenericBusinessImpl<Project> implements
         metrics.setEffortSpent(new ExactEstimate(x));
         metrics.setOriginalEstimate(new ExactEstimate(y));
         metrics.setPlannedSize(project.getBacklogSize());
+        if(metrics.getPlannedSize() == null)
+            metrics.setPlannedSize(new ExactEstimate(0));
         if(!metrics.getPlannedSize().equals(ExactEstimate.ZERO)) {
             metrics.setEfforSpentPercentage(Math.round((float) metrics
                     .getEffortSpent().floatValue()

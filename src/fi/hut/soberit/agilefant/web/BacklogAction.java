@@ -2,6 +2,7 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,15 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 
 import fi.hut.soberit.agilefant.business.BacklogBusiness;
+import fi.hut.soberit.agilefant.business.IterationBusiness;
 import fi.hut.soberit.agilefant.model.Backlog;
 import fi.hut.soberit.agilefant.model.Iteration;
 import fi.hut.soberit.agilefant.model.Product;
 import fi.hut.soberit.agilefant.model.Project;
 import fi.hut.soberit.agilefant.model.Story;
+import fi.hut.soberit.agilefant.model.Team;
+import fi.hut.soberit.agilefant.model.User;
+import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 @Component("backlogAction")
 @Scope("prototype")
@@ -36,6 +41,8 @@ public class BacklogAction extends ActionSupport {
     @Autowired
     private BacklogBusiness backlogBusiness;
 
+    @Autowired
+    private IterationBusiness iterationBusiness;
     
     public String retrieve() {
         backlog = backlogBusiness.retrieve(backlogId);
@@ -60,8 +67,15 @@ public class BacklogAction extends ActionSupport {
      */
     public String retrieveSubBacklogs() {
         if (backlogId == 0) {
-            // TODO: Retrieve standalone iterations
-            backlogs = backlogBusiness.retrieveAllStandAloneIterations();
+            Collection<Backlog> canditateBacklogs = backlogBusiness.retrieveAllStandAloneIterations();
+            
+            // Check team access for standalone iterations.
+            for (Iterator<Backlog> iter = canditateBacklogs.iterator(); iter.hasNext();) {
+                Backlog backlog = iter.next();
+                if (checkTeamAccess(backlog.getId())) {
+                    backlogs.add(backlog);
+                }
+            }
         }
         else {
             backlog = backlogBusiness.retrieveIfExists(backlogId);
@@ -117,4 +131,47 @@ public class BacklogAction extends ActionSupport {
     public Collection<Backlog> getBacklogs() {
         return backlogs;
     }
+    
+    private boolean checkTeamAccess(int backlogId) {
+        User user = SecurityUtil.getLoggedUser();
+        Collection<Team> teams = user.getTeams();
+        
+        Product product = (backlogBusiness.getParentProduct(backlogBusiness.retrieve(backlogId)));
+        if(product == null){
+            //standalone iteration
+            Iteration iteration = iterationBusiness.retrieve(backlogId);
+            if(iteration.isStandAlone()){
+                for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
+                    Team team = (Team) iter.next();
+                    
+                    Set<Iteration> iterations = team.getIterations();
+                    
+                    for (Iterator<Iteration> iterationIterator = iterations.iterator(); iterationIterator.hasNext();) {
+                        Iteration teamIteration = (Iteration) iterationIterator.next();
+                        if (teamIteration.getId() == iteration.getId()) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+
+        for (Iterator<Team> iter = teams.iterator(); iter.hasNext();){
+            Team team = (Team) iter.next();
+            
+            Set<Product> products = team.getProducts();
+            
+            for (Iterator<Product> productIterator = products.iterator(); productIterator.hasNext();) {
+                Product teamProduct = (Product) productIterator.next();
+                
+                if (teamProduct.getId() == product.getId()) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
 }

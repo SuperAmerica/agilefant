@@ -104,12 +104,10 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
     }
     
     public String retrieveAllTimeSheets() {
-        
-        // Now that we have teams being able to export "standalone iterations" doesn't make that much sense. 
-        //Product standaloneProduct = new Product();
-        //standaloneProduct.setName("[Standalone Iterations]");
-        //standaloneProduct.setId(0);
-        //products.add(standaloneProduct);
+        Product standaloneProduct = new Product();
+        standaloneProduct.setName("[Standalone Iterations]");
+        standaloneProduct.setId(0);
+        products.add(standaloneProduct);
         
         Collection<Product> canditateProducts = new ArrayList<Product>();
         
@@ -200,7 +198,7 @@ public class ProductAction implements CRUDAction, Prefetching, ContextAware {
         this.teamIds = teamIds;
     }
     
-    public boolean checkTeamAccess(int backlogId) {
+    private boolean checkTeamAccess(int backlogId) {
         User user = SecurityUtil.getLoggedUser();
         Collection<Team> teams = user.getTeams();
         

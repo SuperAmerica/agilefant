@@ -84,7 +84,7 @@ StoryInfoBubble.prototype.confirmTasksAndChildrenToDone = function(model, storyT
 	}
 	if (nonDoneChildren || nonDoneTasks) {
 	  if (isTopStory) {
-		if (changedData.state && changedData.state === "DONE") {
+		if (changedData.state && changedData.state === "DONE" && tasks.length > 0) {
 		  var msg = new DynamicsConfirmationDialog(
 			  "Set all tasks' and stories' states to done?",
 			  "The '" + model.getName() + "' story has undone child tasks/stories! Do you want to set them Done as well?",

@@ -210,7 +210,7 @@ HourEntryListController.prototype.initConfig = function() {
 	get : HourEntryModel.prototype.getEffortLeft,
 	decorator : DynamicsDecorators.exactEstimateDecorator,
 	editable: true,
-	// editableCallback: HourEntryModel.prototype.effortLeftEditable,
+	editableCallback: HourEntryModel.prototype.effortLeftEditable,
 	columnName: "effortLeft",
 	edit : {
 	  editor : "ExactEstimate",

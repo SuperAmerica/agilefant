@@ -276,6 +276,7 @@ StoryListController.columnConfig.id = {
   title: "ID",
   headerTooltip: 'Story ID',
   get: CommonModel.prototype.getId,
+  decorator: DynamicsDecorators.storyIdWithHash,
   editable: false
 };
 StoryListController.columnConfig.labelsIcon = {

@@ -46,13 +46,7 @@ $(document).ready(function() {
     
     <li>
     <c:choose>
-        <c:when test="${hasProjects}">
-            <a href="#" id="createNewIteration" onclick="return false;"  title="Create a new iteration">Iteration &raquo;</a>
-        </c:when>
-        <c:otherwise>
-            <span class="inactive"
-                title="Create a project before creating an iteration"> Iteration &raquo;</span>
-        </c:otherwise>
+        <a href="#" id="createNewIteration" onclick="return false;"  title="Create a new iteration">Iteration &raquo;</a>
     </c:choose>
     </li>
     

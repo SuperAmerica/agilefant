@@ -688,19 +688,25 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         return story;
     }
 
-    private Backlog checkRankingArguments(Story story, Story otherStory,
-            Backlog backlog) {
+    private Backlog checkRankingArguments(Story story, Story otherStory, Backlog backlog) {
         if (story == null) {
             throw new IllegalArgumentException("Story should be given");
         }
         // backlog mismatch
-        boolean rankingProject = backlog != null;
+        boolean rankingProject;
+        if (backlog == null && story.getIteration() != null) {
+            rankingProject = false;
+        } else {
+            rankingProject = true;
+        }
         
         if (otherStory != null && !isValidRankTarget(story, otherStory, rankingProject)) {
             throw new IllegalArgumentException("Invalid backlogs");
         }
-        if (backlog == null) {
+        if (backlog == null && story.getIteration() != null) {
             backlog = story.getIteration();
+        } else {
+            backlog = story.getBacklog();
         }
         if (otherStory == null) {
             throw new IllegalArgumentException("Upper story should be given");

@@ -1,21 +1,10 @@
 package fi.hut.soberit.agilefant.web;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
-
-import fi.hut.soberit.agilefant.annotations.PrefetchId;
-import fi.hut.soberit.agilefant.business.TeamBusiness;
-import fi.hut.soberit.agilefant.model.Team;
-import fi.hut.soberit.agilefant.model.Product;
 
 @Component("accessAction")
 @Scope("prototype")

@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import fi.hut.soberit.agilefant.business.impl.ProjectBurnupBusinessImpl;
-import fi.hut.soberit.agilefant.util.Pair;
 import fi.hut.soberit.agilefant.util.ProjectBurnupData;
 import fi.hut.soberit.agilefant.util.Triple;
 

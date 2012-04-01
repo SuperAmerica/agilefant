@@ -14,10 +14,8 @@ import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.model.ExactEstimate;
 import fi.hut.soberit.agilefant.model.IterationHistoryEntry;
-import fi.hut.soberit.agilefant.model.Story;
 import fi.hut.soberit.agilefant.model.StoryState;
 import fi.hut.soberit.agilefant.model.Task;
-import fi.hut.soberit.agilefant.model.TaskState;
 import fi.hut.soberit.agilefant.util.Pair;
 
 @Repository("iterationHistoryEntryDAO")

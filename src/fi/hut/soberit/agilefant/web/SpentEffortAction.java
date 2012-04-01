@@ -2,11 +2,8 @@ package fi.hut.soberit.agilefant.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.MutableDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +12,6 @@ import org.springframework.stereotype.Component;
 
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
-import com.sun.research.ws.wadl.Request;
-
 import fi.hut.soberit.agilefant.business.HourEntryBusiness;
 import fi.hut.soberit.agilefant.model.HourEntry;
 import fi.hut.soberit.agilefant.transfer.DailySpentEffort;

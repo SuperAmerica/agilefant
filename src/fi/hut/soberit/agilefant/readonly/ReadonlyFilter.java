@@ -1,8 +1,6 @@
 package fi.hut.soberit.agilefant.readonly;
 
 import java.io.IOException;
-import java.util.List;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.servlet.FilterChain;
@@ -20,9 +18,6 @@ import org.hibernate.Session;
 
 import fi.hut.soberit.agilefant.db.hibernate.IterationDAOHibernate;
 import fi.hut.soberit.agilefant.db.hibernate.UserDAOHibernate;
-import fi.hut.soberit.agilefant.model.Iteration;
-import fi.hut.soberit.agilefant.model.User;
-import fi.hut.soberit.agilefant.security.SecurityUtil;
 
 
 public class ReadonlyFilter extends GenericFilterBean {

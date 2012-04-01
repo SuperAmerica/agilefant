@@ -1,8 +1,5 @@
 package fi.hut.soberit.agilefant.business.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,22 +66,6 @@ public class BacklogHistoryEntryBusinessImpl extends
         entry.setBranchMax(storyHierarchyDAO.totalBranchStoryPoints(project));
         entry.setBacklog(project);
         backlogHistoryEntryDAO.store(entry);
-    }
-
-    @Transactional(readOnly = true)
-    public List<BacklogHistoryEntry> retrieveForTimestamps(
-            List<DateTime> timestamps, int projectId) {
-        List<BacklogHistoryEntry> result = new ArrayList<BacklogHistoryEntry>();
-        for (DateTime timestamp : timestamps) {
-            BacklogHistoryEntry entry = backlogHistoryEntryDAO.retrieveLatest(
-                    timestamp, projectId);
-            if (entry == null) {
-                entry = new BacklogHistoryEntry();
-                entry.setTimestamp(timestamp);
-            }
-            result.add(entry);
-        }
-        return result;
     }
 
     @Autowired

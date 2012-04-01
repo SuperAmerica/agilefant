@@ -1,8 +1,5 @@
 package fi.hut.soberit.agilefant.business;
 
-import java.util.List;
-
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
 import fi.hut.soberit.agilefant.model.BacklogHistoryEntry;
@@ -22,8 +19,4 @@ public interface BacklogHistoryEntryBusiness extends
      * period.
      */
     void updateHistory(int backlogId);
-
-    List<BacklogHistoryEntry> retrieveForTimestamps(List<DateTime> timestamps,
-            int projectId);
-
 }

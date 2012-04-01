@@ -28,12 +28,12 @@ public class MyAssignmentsMenuBuilder {
 
     private MenuDataNode constructNode(Story story) {
         MenuDataNode node = new MenuDataNode();
-        node.setId(story.getBacklog().getId());
+        node.setId(story.getIteration().getId());
         node.setTitle(story.getName());
         return node;
     }
 
-    private MenuDataNode ensureNode(Project project) {
+    private MenuDataNode ensureNode(Project project) { // returns node if it exists, creates it if doesn't
         Integer currentIndex = projectIds.get(project.getId());
         if (currentIndex != null) {
             return nodes.get(currentIndex);
@@ -45,23 +45,37 @@ public class MyAssignmentsMenuBuilder {
         return node;
     }
 
-    private MenuDataNode ensureNode(Iteration iteration) {
-        Integer currentIndex = iterationIds.get(iteration.getId());
-        if (currentIndex != null) {
-            Integer projectIndex = projectIds
-                    .get(iteration.getParent().getId());
-            MenuDataNode projectNode = nodes.get(projectIndex);
-            return projectNode.getChildren().get(currentIndex);
-        }
-        if(iteration.getParent() != null){  
+    private MenuDataNode ensureNode(Iteration iteration) { // returns node if it exists, creates it if doesn't
+        if(iteration.getParent() != null){
+            // check to see if node exists.
+            Integer currentIndex = iterationIds.get(iteration.getId());
+            if (currentIndex != null) {
+                Integer projectIndex = projectIds
+                        .get(iteration.getParent().getId());
+                MenuDataNode projectNode = nodes.get(projectIndex);
+                return projectNode.getChildren().get(currentIndex);
+            }
+            
+            // if node doesn't exist, create it.
             MenuDataNode projectNode = ensureNode((Project) iteration.getParent());
             MenuDataNode node = constructNode(iteration);         
+            // add to iterationIds (ID of iteration, location of node under its parent (e.g. fifth child, first child))
             iterationIds.put(iteration.getId(), projectNode.getChildren().size());
             projectNode.getChildren().add(node);
             return node;
         } else {
-            //standalone iteration
-            MenuDataNode node = constructNode(iteration);         
+            // standalone iteration
+            // check to see if node exists
+            Integer currentIndex = projectIds.get(iteration.getId());
+            if (currentIndex != null) {
+                return nodes.get(currentIndex);
+            }
+            
+            // if node doesn't exist, create it.
+            MenuDataNode node = constructNode(iteration);
+            // add to projectIds (ID of standalone iteration, location of node)
+            projectIds.put(iteration.getId(), nodes.size());
+            nodes.add(node);
             return node;
         }        
     }
@@ -75,7 +89,8 @@ public class MyAssignmentsMenuBuilder {
     }
 
     public void insert(Story story) {
-        MenuDataNode iterationNode = ensureNode((Iteration) story.getBacklog());
+        MenuDataNode iterationNode = ensureNode((Iteration) story.getIteration());
+
         MenuDataNode node = constructNode(story);
         iterationNode.getChildren().add(node);
     }

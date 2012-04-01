@@ -35,7 +35,8 @@ public class TimesheetExportRowDataTest {
         
         project.setParent(product);
         iteration.setParent(project);
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
+        story.setBacklog(project);
     }
     
     private void backlogCompare(Backlog bl1, Backlog bl2, Backlog bl3) {

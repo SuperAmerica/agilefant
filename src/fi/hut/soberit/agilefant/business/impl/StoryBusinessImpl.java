@@ -122,14 +122,13 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 taskHourEntryHandlingChoice, childHandlingChoice);
         
         Backlog storyBacklog = story.getBacklog();
-        if (storyBacklog == null) {
-            storyBacklog = story.getIteration();
+        if (storyBacklog != null) {
+            backlogHistoryEntryBusiness.updateHistory(storyBacklog.getId());
         }
         
-        int storyBacklogId = storyBacklog.getId();
-        backlogHistoryEntryBusiness.updateHistory(storyBacklogId);
-        if (storyBacklog instanceof Iteration) {
-            iterationHistoryEntryBusiness.updateIterationHistory(storyBacklogId);
+        Iteration iteration = story.getIteration();
+        if(iteration != null) {
+            iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
         }
     }
 
@@ -163,12 +162,12 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         // Store the story
         storyDAO.store(persisted);
 
-        if (tasksToDone && persisted.getBacklog() instanceof Iteration) {
+        if (tasksToDone && persisted.getIteration() != null) {
             for (Task t : persisted.getTasks()) {
                 taskBusiness.setTaskToDone(t);
             }
             iterationHistoryEntryBusiness.updateIterationHistory(persisted
-                    .getBacklog().getId());
+                    .getIteration().getId());
         }
         
         // Set the backlog if backlogId given
@@ -299,14 +298,8 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     private void createStoryRanks(Story story, Backlog backlog) {
         if(!(backlog instanceof Product)) {            
             this.storyRankBusiness.rankToBottom(story, backlog);
-            if (backlog instanceof Iteration) {                
-                
-                if (backlog.isStandAlone()) {
-                    this.storyRankBusiness.rankToBottom(story, backlog);
-                } else {
-                    this.storyRankBusiness.rankToBottom(story, backlog.getParent());
-                }
-                
+            if (backlog instanceof Iteration && !backlog.isStandAlone()) {                
+                this.storyRankBusiness.rankToBottom(story, backlog.getParent());
             }
         }
     }
@@ -486,7 +479,6 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         if (iteration != null) {
             createStoryRanks(story, iteration);
             iterationHistoryEntryBusiness.updateIterationHistory(iteration.getId());
-            backlogHistoryEntryBusiness.updateHistory(iteration.getId());
         }
 
         return newId;
@@ -790,7 +782,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
                 }
                 break;
             case MOVE:
-                Iteration iteration = (Iteration) story.getBacklog();
+                Iteration iteration = story.getIteration();
                 for (Task task : story.getTasks()) {
                     taskBusiness.move(task, iteration.getId(), null);
                     task.setStory(null);
@@ -851,9 +843,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         story.getChildren().clear();
         
         for (Backlog blog : allBacklogs) {
-            backlogHistoryEntryBusiness.updateHistory(blog.getId());
             if (blog instanceof Iteration) {
                 iterationHistoryEntryBusiness.updateIterationHistory(blog.getId());
+            } else {
+                backlogHistoryEntryBusiness.updateHistory(blog.getId());
             }
         }
     }
@@ -867,6 +860,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         }
         
         backlogs.add(parent.getBacklog());
+        Iteration iteration = parent.getIteration();
+        if(iteration != null) {
+            backlogs.add(iteration);
+        }
         return backlogs;
     }
     

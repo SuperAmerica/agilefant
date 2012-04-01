@@ -169,7 +169,7 @@ public class MenuBusinessTest {
         Story story = new Story();
         story.setId(3);
         story.setName("Story");
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
         expect(projectDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(project));
         expect(iterationDAO.retrieveActiveWithUserAssigned(user.getId())).andReturn(Arrays.asList(iteration));
         expect(storyDAO.retrieveActiveIterationStoriesWithUserResponsible(user.getId())).andReturn(Arrays.asList(story));

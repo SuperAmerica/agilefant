@@ -244,9 +244,9 @@ public class TaskBusinessImpl extends GenericBusinessImpl<Task> implements
         if (task.getIteration() != null) {
             iterationHistoryEntryBusiness.updateIterationHistory(task
                     .getIteration().getId());
-        } else if (task.getStory().getBacklog() instanceof Iteration) {
+        } else if (task.getStory().getIteration() != null) {
             iterationHistoryEntryBusiness.updateIterationHistory(task
-                    .getStory().getBacklog().getId());
+                    .getStory().getIteration().getId());
         }
     }
 

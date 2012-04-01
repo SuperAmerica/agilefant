@@ -108,10 +108,10 @@ public class IterationAssignedLoadTest extends MockedTestCase {
         assign2.setAvailability(10);
 
         story1 = new Story();
-        story1.setBacklog(iteration);
+        story1.setIteration(iteration);
 
         story2 = new Story();
-        story2.setBacklog(iteration);
+        story2.setIteration(iteration);
 
         taskInStory11 = new Task();
         taskInStory11.setStory(story1);

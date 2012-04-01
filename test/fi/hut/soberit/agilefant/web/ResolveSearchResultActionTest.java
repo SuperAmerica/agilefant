@@ -33,7 +33,7 @@ public class ResolveSearchResultActionTest extends MockedTestCase {
     @DirtiesContext
     public void testExecute_storyInIteration() {
         Story story = new Story();
-        story.setBacklog(new Iteration());
+        story.setIteration(new Iteration());
         resolveSearchResultAction.setTargetClassName(Story.class.getCanonicalName());
         resolveSearchResultAction.setTargetObjectId(15);
         

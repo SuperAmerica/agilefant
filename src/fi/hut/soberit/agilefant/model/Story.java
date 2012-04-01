@@ -110,6 +110,9 @@ public class Story implements TimesheetLoggable, LabelContainer, NamedObject, Ta
     }
 
     public void setBacklog(Backlog backlog) {
+        if(backlog instanceof Iteration) {
+            throw new IllegalArgumentException("story backlog can't be an iteration");
+        }
         this.backlog = backlog;
     }
 

@@ -63,8 +63,12 @@ public class SearchBusinessImpl implements SearchBusiness {
     private void storyListSearchResult(List<SearchResultRow> result,
             List<Story> stories) {
         for (Story story : stories) {
-            if(checkAccess(story.getBacklog())){      
-                result.add(new SearchResultRow(story.getBacklog().getName() + " > "
+            Backlog backlog = story.getIteration();
+            if(backlog == null) {
+                backlog = story.getBacklog();
+            }
+            if(checkAccess(backlog)){
+                result.add(new SearchResultRow(backlog.getName() + " > "
                     + story.getName(), story));
             }
         }

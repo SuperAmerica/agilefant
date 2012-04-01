@@ -51,12 +51,15 @@ public class ResolveSearchResultAction extends ActionSupport {
 
     private String resolveStoryContainer() {
         Story story = this.storyBusiness.retrieve(targetObjectId);
-        this.targetBacklogId = story.getBacklog().getId();
-        if(story.getBacklog() instanceof Iteration) {
+        Iteration i = story.getIteration();
+        if(i != null) {
+            this.targetBacklogId = i.getId();
             return "iteration";
         } else if(story.getBacklog() instanceof Project) {
+            this.targetBacklogId = story.getBacklog().getId();
             return "project";
         } else {
+            this.targetBacklogId = story.getBacklog().getId();
             return "product";
         }
     }

@@ -28,7 +28,7 @@ public class MyAssignmentsMenuBuilder {
 
     private MenuDataNode constructNode(Story story) {
         MenuDataNode node = new MenuDataNode();
-        node.setId(story.getBacklog().getId());
+        node.setId(story.getIteration().getId());
         node.setTitle(story.getName());
         return node;
     }
@@ -75,7 +75,7 @@ public class MyAssignmentsMenuBuilder {
     }
 
     public void insert(Story story) {
-        MenuDataNode iterationNode = ensureNode((Iteration) story.getBacklog());
+        MenuDataNode iterationNode = ensureNode(story.getIteration());
         MenuDataNode node = constructNode(story);
         iterationNode.getChildren().add(node);
     }

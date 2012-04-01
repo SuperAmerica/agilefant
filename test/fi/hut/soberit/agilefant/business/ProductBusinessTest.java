@@ -198,21 +198,26 @@ public class ProductBusinessTest extends MockedTestCase {
         product.getChildren().add(project);
         Iteration iteration = new Iteration();
         iteration.setId(3);
+        iteration.setParent(project);
         project.getChildren().add(iteration);
 
         Story productStory = new Story();
         productStory.setBacklog(product);
         productStory.setId(1);
+        productStory.setName("ppp");
         Story projectStory = new Story();
         projectStory.setBacklog(project);
         projectStory.setId(2);
+        projectStory.setName("sss");
         Story iterationStory = new Story();
         iterationStory.setId(3);
-        iterationStory.setBacklog(iteration);
+        iterationStory.setIteration(iteration);
+        iterationStory.setBacklog(project);
         iterationStory.setName("xxx");
         Story iterationStory2 = new Story();
         iterationStory2.setId(4);
-        iterationStory2.setBacklog(iteration);
+        iterationStory2.setIteration(iteration);
+        iterationStory2.setBacklog(project);
         iterationStory2.setState(StoryState.DONE);
         iterationStory2.setName("bbb");
 

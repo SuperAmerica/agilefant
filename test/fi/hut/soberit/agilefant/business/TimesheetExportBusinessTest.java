@@ -71,7 +71,8 @@ public class TimesheetExportBusinessTest extends TimesheetExportBusinessImpl {
 
         project.setParent(product);
         iteration.setParent(project);
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
+        story.setBacklog(project);
         iterationTask.setIteration(iteration);
         storyTask.setStory(story);
 

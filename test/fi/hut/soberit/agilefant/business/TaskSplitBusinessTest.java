@@ -46,7 +46,7 @@ public class TaskSplitBusinessTest {
 
         parentStory = new Story();
         parentStory.setId(5);
-        parentStory.setBacklog(iteration);
+        parentStory.setIteration(iteration);
         
         originalTask = new Task();
         originalTask.setId(1);

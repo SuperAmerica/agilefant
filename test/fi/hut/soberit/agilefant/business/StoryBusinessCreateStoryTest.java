@@ -52,7 +52,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     private StoryBusinessImpl storyBusiness;
     
     @Mock
-    private IterationHistoryEntryBusiness iheBusiness;
+    private IterationHistoryEntryBusiness iterationHistoryEntryBusiness;
     @Mock
     private BacklogHistoryEntryBusiness backlogHistoryEntryBusiness;
     @Mock(strict=true)
@@ -65,6 +65,8 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     private UserDAO userDAO;
     @Mock
     private HourEntryDAO hourEntryDAO;
+    @Mock
+    private IterationBusiness iterationBusiness;
     @Mock
     private ProjectBusiness projectBusiness;
     @Mock
@@ -87,15 +89,21 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
     public void testCreateStory_noResponsibles() {
         Story tmp = new Story();
         Iteration blog = new Iteration();
+        blog.setId(5);
         Project proj = new Project();
+        proj.setId(12);
         blog.setParent(proj);
         expect(backlogBusiness.retrieve(5)).andReturn(blog);
+        expect(backlogBusiness.retrieve(5)).andReturn(blog);
+        expect(backlogBusiness.retrieve(5)).andReturn(blog);
+        expect(iterationBusiness.retrieve(5)).andReturn(blog);
         
         Capture<Story> capturedStory = new Capture<Story>();
         
         expect(storyDAO.create(EasyMock.capture(capturedStory))).andReturn(88);
         expect(storyDAO.get(88)).andReturn(tmp);
         storyRankBusiness.rankToBottom(tmp, blog);
+        storyRankBusiness.rankToBottom(tmp, proj);
         storyRankBusiness.rankToBottom(tmp, proj);
         
         Story returnedStory = new Story();
@@ -109,17 +117,19 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         dataItem.setState(StoryState.STARTED);
         
         storyHierarchyBusiness.moveToTop(returnedStory);
-        Backlog bl = null;
-        expect(backlogBusiness.retrieve(5)).andReturn(bl);
-        storyRankBusiness.rankToHead(returnedStory, bl); 
+        storyRankBusiness.rankToHead(returnedStory, blog);
+        storyRankBusiness.rankToHead(returnedStory, blog);
         labelBusiness.createStoryLabels(null, 88);
+        backlogHistoryEntryBusiness.updateHistory(12);
+        iterationHistoryEntryBusiness.updateIterationHistory(5);
         
         replayAll();
-        Story actual = this.storyBusiness.create(dataItem, 5, null, null, null);
+        Story actual = this.storyBusiness.create(dataItem, 5, 5, null, null);
         verifyAll();
         
         assertEquals(actual.getClass(), Story.class);
-        assertEquals(blog, capturedStory.getValue().getBacklog());
+        assertEquals(blog, capturedStory.getValue().getIteration());
+        assertEquals(proj, capturedStory.getValue().getBacklog());
         
         assertEquals(dataItem.getName(), capturedStory.getValue().getName());
         assertEquals(dataItem.getDescription(), capturedStory.getValue().getDescription());
@@ -205,8 +215,7 @@ public class StoryBusinessCreateStoryTest extends MockedTestCase {
         storyRankBusiness.rankToBottom(story, iteration);
         storyRankBusiness.rankToBottom(story, project);
         
-        iheBusiness.updateIterationHistory(2);
-        backlogHistoryEntryBusiness.updateHistory(2);
+        iterationHistoryEntryBusiness.updateIterationHistory(2);
         
         replayAll();
         storyBusiness.create(story);

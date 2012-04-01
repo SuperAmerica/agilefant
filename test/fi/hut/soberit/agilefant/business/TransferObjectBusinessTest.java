@@ -120,7 +120,7 @@ public class TransferObjectBusinessTest {
 
         story1 = new Story();
         story2 = new Story();
-        story1.setBacklog(iteration);
+        story1.setIteration(iteration);
         task = new Task();
         story1.setId(1265);
         story2.setId(8472);
@@ -154,7 +154,7 @@ public class TransferObjectBusinessTest {
     @Test
     public void testConstructStoryTO() {
         Set<User> responsibles = new HashSet<User>(Arrays.asList(assignedUser, notAssignedUser));
-        story1.setBacklog(iteration);
+        story1.setIteration(iteration);
         story1.setResponsibles(responsibles);
 
         StoryMetrics metrics = new StoryMetrics();
@@ -553,7 +553,7 @@ public class TransferObjectBusinessTest {
         iteration.setName("iter");
         iteration.setId(4);
         
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
         
         task.setStory(story);
         task.setResponsibles(new HashSet<User>(Arrays.asList(new User[] { user } )));

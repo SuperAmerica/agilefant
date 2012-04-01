@@ -63,7 +63,7 @@ public class SearchBusinessTest extends MockedTestCase {
         
         Backlog product = new Product();
         Backlog project = new Project();
-        Backlog iteration = new Iteration();
+        Iteration iteration = new Iteration();
         iteration.setParent(project);
         project.setParent(product);
         Set<Product> products = new HashSet<Product>();
@@ -72,7 +72,8 @@ public class SearchBusinessTest extends MockedTestCase {
         
         String search = "foo";
         Story story = new Story();
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
+        story.setBacklog(project);
         expect(backlogDAO.searchByName(search)).andReturn(Arrays.asList((Backlog)(iteration)));
         expect(storyDAO.searchByName(search)).andReturn(Arrays.asList(story));
         expect(storyDAO.searchByID(search)).andReturn(Arrays.asList(story));
@@ -93,9 +94,10 @@ public class SearchBusinessTest extends MockedTestCase {
         String search = "story:123";
         Backlog product = new Product();
         Backlog project = new Project();
-        Backlog iteration = new Iteration();
+        Iteration iteration = new Iteration();
         Story story = new Story();
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
+        story.setBacklog(project);
         iteration.setParent(project);
         project.setParent(product);
         Set<Product> products = new HashSet<Product>();
@@ -124,10 +126,11 @@ public class SearchBusinessTest extends MockedTestCase {
         
         Backlog product = new Product();
         Backlog project = new Project();
-        Backlog iteration = new Iteration();
+        Iteration iteration = new Iteration();
         iteration.setParent(project);
         project.setParent(product);
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
+        story.setBacklog(project);
         Set<Product> products = new HashSet<Product>();
         products.add((Product)product);
         team.setProducts(products);
@@ -292,16 +295,20 @@ public class SearchBusinessTest extends MockedTestCase {
         setAccess();
         
         String term = "";
-        Story story = new Story();
-        Backlog iteration = new Iteration();
-        story.setName("faa");
-        story.setBacklog(iteration);
-        story.getBacklog().setName("foo");
         
         Backlog product = new Product();
         Backlog project = new Project();
-        iteration.setParent(project);
         project.setParent(product);
+        
+        Iteration iteration = new Iteration();
+        iteration.setName("foo");
+        iteration.setParent(project);
+        
+        Story story = new Story();
+        story.setName("faa");
+        story.setIteration(iteration);
+        story.setBacklog(project);
+        
         Set<Product> products = new HashSet<Product>();
         products.add((Product)product);
         team.setProducts(products);

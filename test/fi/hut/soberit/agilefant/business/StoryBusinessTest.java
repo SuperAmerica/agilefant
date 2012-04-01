@@ -144,7 +144,8 @@ public class StoryBusinessTest {
         storyInProduct.setId(951);
         storyInProject.setId(3);
         
-        storyInIteration.setBacklog(iter);
+        storyInIteration.setIteration(iter);
+        storyInIteration.setBacklog(proj);
         storyInProject.setBacklog(proj);
         storyInProduct.setBacklog(prod);
     }
@@ -234,7 +235,7 @@ public class StoryBusinessTest {
         task2.setId(12);
         task2.setState(TaskState.PENDING);
         
-        story1.setBacklog(iteration);
+        story1.setIteration(iteration);
         story1.setTasks(new HashSet<Task>(Arrays.asList(task1, task2)));
         
         expect(storyDAO.get(story1.getId())).andReturn(story1);
@@ -242,9 +243,7 @@ public class StoryBusinessTest {
         
         taskBusiness.setTaskToDone(task1);
         taskBusiness.setTaskToDone(task2);
-        iheBusiness.updateIterationHistory(story1.getBacklog().getId());
-        
-        blheBusiness.updateHistory(story1.getBacklog().getId());
+        iheBusiness.updateIterationHistory(story1.getIteration().getId());
         
         replayAll();
         storyBusiness.store(story1.getId(), story1, null, null, true);
@@ -262,12 +261,11 @@ public class StoryBusinessTest {
         task2.setId(12);
         task2.setState(TaskState.BLOCKED);
         
-        story1.setBacklog(iteration);
+        story1.setIteration(iteration);
         story1.setTasks(new HashSet<Task>(Arrays.asList(task1, task2)));
         
         expect(storyDAO.get(story1.getId())).andReturn(story1);
         storyDAO.store(story1);
-        blheBusiness.updateHistory(story1.getBacklog().getId());
         replayAll();
         Story actual = storyBusiness.store(story1.getId(), story1, null, null, false);
         verifyAll();
@@ -343,7 +341,7 @@ public class StoryBusinessTest {
 //        storyRankBusiness.removeStoryRanks(storyInIteration);
         storyDAO.remove(storyInIteration);
         blheBusiness.updateHistory(storyInIteration.getBacklog().getId());
-        iheBusiness.updateIterationHistory(storyInIteration.getBacklog().getId());
+        iheBusiness.updateIterationHistory(storyInIteration.getIteration().getId());
         replayAll();
         
         storyBusiness.deleteAndUpdateHistory(storyInIteration.getId(), null, null, null, null);
@@ -378,12 +376,14 @@ public class StoryBusinessTest {
     public void testDelete_deleteChoices_withChildren_deleteChildren() {
         Story child = new Story();
         child.setBacklog(storyInIteration.getBacklog());
+        child.setIteration(iteration);
         child.setId(2333);
         child.setParent(storyInIteration);
         storyInIteration.getChildren().add(child);
+        storyInIteration.setIteration(null);
 
         blheBusiness.updateHistory(child.getBacklog().getId());
-        iheBusiness.updateIterationHistory(child.getBacklog().getId());
+        iheBusiness.updateIterationHistory(iteration.getId());
         
         hourEntryBusiness.deleteAll(child.getHourEntries());
         hourEntryBusiness.deleteAll(storyInIteration.getHourEntries());

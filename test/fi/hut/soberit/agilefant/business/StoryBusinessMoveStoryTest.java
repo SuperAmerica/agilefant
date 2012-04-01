@@ -643,7 +643,7 @@ public class StoryBusinessMoveStoryTest extends MockedTestCase {
         parent.setBacklog(firstProject);
         story.setBacklog(firstProject);
         child1.setBacklog(firstProject);
-        child2.setBacklog(firstIteration);
+        child2.setIteration(firstIteration);
         
         firstIteration.setParent(firstProduct);
         expect(backlogBusiness.getParentProduct(firstProject)).andReturn(firstProduct);

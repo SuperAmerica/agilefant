@@ -330,7 +330,9 @@ public class StoryTreeIntegrityBusinessTest extends MockedTestCase {
         story_12.setBacklog(product);
         story_21.setBacklog(product);
         story_31.setBacklog(project1);
-        story_41.setBacklog(iteration);
+        story_32.setBacklog(project1);
+        story_41.setIteration(iteration);
+        story_41.setBacklog(project1);
         story_22.setBacklog(project2);
         story_33.setBacklog(project2);
         story_23.setBacklog(product);

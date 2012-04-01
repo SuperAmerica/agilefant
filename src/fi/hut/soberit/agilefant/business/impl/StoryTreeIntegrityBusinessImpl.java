@@ -90,7 +90,7 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         
         for (Story child : parent.getChildren()) {
             
-            if (!allowedBacklogs.contains(child.getBacklog())) {
+            if (!allowedBacklogs.contains(child.getBacklog()) && !allowedBacklogs.contains(child.getIteration())) {
                 messages.add(new StoryTreeIntegrityMessage(parent, child, message));
             }
             
@@ -199,14 +199,14 @@ public class StoryTreeIntegrityBusinessImpl implements StoryTreeIntegrityBusines
         if (story.getBacklog() instanceof Product) {
             messages.add(new StoryTreeIntegrityMessage(story, newParent, StoryHierarchyIntegrityViolationType.TARGET_PARENT_DEEPER_IN_HIERARCHY));
         }
-        else if (!(allowedBacklogs.contains(story.getBacklog()))) {
+        else if (!allowedBacklogs.contains(story.getBacklog()) && !allowedBacklogs.contains(story.getIteration())) {
             messages.add(new StoryTreeIntegrityMessage(story, newParent, StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_WRONG_BRANCH));
         }
     }
 
     private void checkTargetParentInIterationRule(Story story, Story newParent,
             List<StoryTreeIntegrityMessage> messages) {
-        if (newParent.getBacklog() instanceof Iteration) {
+        if (newParent.getIteration() != null) {
             messages.add(new StoryTreeIntegrityMessage(story, newParent,
                     StoryHierarchyIntegrityViolationType.TARGET_PARENT_IN_ITERATION));
         }

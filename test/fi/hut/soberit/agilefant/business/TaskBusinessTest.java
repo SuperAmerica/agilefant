@@ -475,7 +475,7 @@ public class TaskBusinessTest extends MockedTestCase {
     public void testDeleteAndUpdateHistory_underIterationStory() {
         task.setStory(story);
         task.setIteration(null);
-        story.setBacklog(iteration);
+        story.setIteration(iteration);
 
         expect(taskDAO.get(task.getId())).andReturn(task);
         taskDAO.remove(task.getId());
@@ -739,11 +739,11 @@ public class TaskBusinessTest extends MockedTestCase {
 
         Story source = new Story();
         source.setId(397);
-        source.setBacklog(iter);
+        source.setIteration(iter);
 
         Story destination = new Story();
         destination.setId(1223);
-        destination.setBacklog(iter);
+        destination.setIteration(iter);
 
         task.setStory(source);
 

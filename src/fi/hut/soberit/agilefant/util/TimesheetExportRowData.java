@@ -27,6 +27,7 @@ public class TimesheetExportRowData {
         this.task = entry.getTask();
         if(this.task.getStory() != null) {
             this.story = this.task.getStory();
+            this.iteration = this.story.getIteration();
             this.setBacklogs(this.story.getBacklog());
         } else {
             this.setBacklogs(this.task.getIteration());
@@ -39,6 +40,7 @@ public class TimesheetExportRowData {
     public TimesheetExportRowData(StoryHourEntry entry) {
         this.entry = entry;
         this.story = entry.getStory();
+        this.iteration = this.story.getIteration();
         this.setBacklogs(this.story.getBacklog());
     }
     private void setBacklogs(Backlog parent) {

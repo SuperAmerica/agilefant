@@ -75,7 +75,7 @@ public class TimesheetBusinessTest extends TimesheetBusinessImpl {
         iter.setParent(proj);
         Story story = new Story();
         story.setId(1);
-        story.setBacklog(iter);
+        story.setIteration(iter);
         Task task = new Task();
         task.setId(1);
         task.setStory(story);

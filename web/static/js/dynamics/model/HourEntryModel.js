@@ -196,19 +196,27 @@ HourEntryModel.prototype.getRelatedTask = function() {
 HourEntryModel.prototype.getEffortLeft = function() {
   if(this.relations.task === null)
     return "--";
-  else
-    return this.relations.task.getEffortLeft();
+  else {
+	var effortLeft = this.relations.task.getEffortLeft();
+	if(effortLeft === 0)
+	  return "0";
+	else
+      return effortLeft;
+  }
 };
 
 HourEntryModel.prototype.setEffortLeft = function(effortLeft) {
-  if(this.relations.task != null) {
+  if(this.relations.task !== null) {
     this.relations.task.setEffortLeft(effortLeft);
     this.relations.task.commit();
   }
 };
 
 HourEntryModel.prototype.effortLeftEditable = function() {
-  return true;
+  if(this.model.relations.task !== null) {
+	return true;  
+  }
+  return false;
 };
 
 HourEntryModel.prototype.setDescription = function(description) {

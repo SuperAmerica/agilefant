@@ -45,9 +45,7 @@ $(document).ready(function() {
     </li>
     
     <li>
-    <c:choose>
         <a href="#" id="createNewIteration" onclick="return false;"  title="Create a new iteration">Iteration &raquo;</a>
-    </c:choose>
     </li>
     
     

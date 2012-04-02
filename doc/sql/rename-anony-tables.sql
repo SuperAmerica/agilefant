@@ -1,7 +1,7 @@
 -- Rename anonymous tables back to original
 -- Its a temporary solution, Todo: write a script to go information_schema.tables and rename it
 -- Used the following statement to create this file 
--- select concat ('RENAME TABLE agilefant.anonym_', table_name, ' TO agilefant.', table_name, ';') FROM information_schema.tables WHERE table_schema = 'agilefant' INTO OUTFILE 'path';
+
 
 
 RENAME TABLE agilefant.anonym_agilefant_revisions TO agilefant.agilefant_revisions;

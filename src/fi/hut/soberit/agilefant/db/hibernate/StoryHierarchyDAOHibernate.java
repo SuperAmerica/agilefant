@@ -2,7 +2,9 @@ package fi.hut.soberit.agilefant.db.hibernate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -148,8 +150,7 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         return result == null ? 0 : result;
     }
     
-    private void attachRootFilters(Criteria projectCrit,
-            Criteria iterationCrit, int projectId) {
+    private void attachRootFilters(Criteria projectCrit, Criteria iterationCrit, Criteria standaloneIterationCrit, int projectId) {
         LogicalExpression parentInProductBacklog = Restrictions.and(
                 Restrictions.isNotNull("parent"), Restrictions.eqProperty(
                         "parentStory.backlog", "project.parent"));
@@ -157,19 +158,37 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
         projectCrit.add(Restrictions.eq("backlog.id", projectId));
         projectCrit.createAlias("backlog", "project");
 
-        projectCrit.createAlias("parent", "parentStory",
-                CriteriaSpecification.LEFT_JOIN);
-        Criterion parentFilter = Restrictions.or(Restrictions.isNull("parent"),
-                parentInProductBacklog);
+        projectCrit.createAlias("parent", "parentStory",CriteriaSpecification.LEFT_JOIN);
+        Criterion parentFilter = Restrictions.or(Restrictions.isNull("parent"),parentInProductBacklog);
+        
         projectCrit.add(parentFilter);
         projectCrit.add(Restrictions.isNull("iteration"));
+        
         // Stories attached to iterations under the project
-        iterationCrit.createAlias("parent", "parentStory",
-                CriteriaSpecification.LEFT_JOIN);
-        iterationCrit.createCriteria("iteration").add(
-                Restrictions.eq("parent.id", projectId)).createAlias("parent",
-                "project");
+        iterationCrit.createAlias("parent", "parentStory", CriteriaSpecification.LEFT_JOIN);
+        iterationCrit.createCriteria("iteration").add(Restrictions.eq("parent.id", projectId))
+            .createAlias("parent", "project");
         iterationCrit.add(parentFilter);
+
+
+        // Stories in standalone iterations and this project
+        if (standaloneIterationCrit != null) {
+            // story's backlog is this project
+            standaloneIterationCrit.add(Restrictions.eq("backlog.id", projectId));
+            
+            // story's iteration is not null
+            standaloneIterationCrit.add(Restrictions.isNotNull("iteration"));
+            
+            // story's iteration doesn't have a parent
+            standaloneIterationCrit.createCriteria("iteration").add(Restrictions.isNull("parent"));
+            
+            standaloneIterationCrit.createAlias("backlog", "project");
+            
+            // story doesn't have a parent OR parent in product
+            standaloneIterationCrit.createAlias("parent", "parentStory", CriteriaSpecification.LEFT_JOIN);
+            standaloneIterationCrit.add(parentFilter);
+        }
+        
     }
 
     /**
@@ -179,15 +198,17 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
     public List<Story> retrieveProjectRootStories(int projectId) {
 
         Criteria projectCrit = getCurrentSession().createCriteria(Story.class);
-        Criteria iterationCrit = getCurrentSession()
-                .createCriteria(Story.class);
-        this.attachRootFilters(projectCrit, iterationCrit, projectId);
+        Criteria iterationCrit = getCurrentSession().createCriteria(Story.class);
+        Criteria standaloneIterationCrit = getCurrentSession().createCriteria(Story.class);
+        this.attachRootFilters(projectCrit, iterationCrit, standaloneIterationCrit, projectId);
         List<Story> directProjectRoots = asList(projectCrit);
         List<Story> iterationRoots = asList(iterationCrit);
+        List<Story> standaloneIterationRoots = asList(standaloneIterationCrit);
 
         List<Story> ret = new ArrayList<Story>();
         ret.addAll(directProjectRoots);
         ret.addAll(iterationRoots);
+        ret.addAll(standaloneIterationRoots);
         
         Collections.sort(ret, new PropertyComparator("treeRank", true, true));
         
@@ -199,19 +220,22 @@ public class StoryHierarchyDAOHibernate extends GenericDAOHibernate<Story>
      */
     public long totalRootStoryPoints(Project project) {
         Criteria projectCrit = getCurrentSession().createCriteria(Story.class);
-        Criteria iterationCrit = getCurrentSession()
-                .createCriteria(Story.class);
-        this.attachRootFilters(projectCrit, iterationCrit, project.getId());
+        Criteria iterationCrit = getCurrentSession().createCriteria(Story.class);
+        Criteria standaloneIterationCrit = getCurrentSession().createCriteria(Story.class);
+        this.attachRootFilters(projectCrit, iterationCrit, standaloneIterationCrit, project.getId());
         
         iterationCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
         projectCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
+        standaloneIterationCrit.add(Restrictions.ne("state", StoryState.DEFERRED));
         
         projectCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));
         iterationCrit.setProjection(Projections.projectionList().add(
                 Projections.sum("storyPoints")));
-        return sum((Long) projectCrit.uniqueResult(),
-                (Long) iterationCrit.uniqueResult());
+        standaloneIterationCrit.setProjection(Projections.projectionList().add(
+                Projections.sum("storyPoints")));
+        long sum = sum((Long) projectCrit.uniqueResult(), (Long) iterationCrit.uniqueResult());
+        return sum((Long) standaloneIterationCrit.uniqueResult(), sum);
     }
 
     /** {@inheritDoc} */

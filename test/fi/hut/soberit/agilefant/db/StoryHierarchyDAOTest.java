@@ -47,6 +47,8 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
         project = null;
         emptyProject = null;
     }
+    
+    
     @Test
     public void testRetrieveProjectRootStories() {
        executeClassSql();
@@ -60,10 +62,8 @@ public class StoryHierarchyDAOTest extends AbstractHibernateTests {
        assertTrue(actualStoryIds.contains(24));
        assertTrue(actualStoryIds.contains(33));
        assertTrue(actualStoryIds.contains(34));
-
     }
     
-
     
     @Test
     public void testRetrieveProjectLeafStories() {

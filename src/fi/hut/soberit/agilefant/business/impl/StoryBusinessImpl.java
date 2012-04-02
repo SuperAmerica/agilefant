@@ -488,7 +488,7 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
     public void moveStoryAway(Story story, Backlog backlog) {
         if (!story.getChildren().isEmpty()) {
 
-            if (!story.getIteration().isStandAlone()) {
+            if (story.getIteration() != null && !story.getIteration().isStandAlone()) {
                 if (backlogBusiness.getParentProduct(story.getBacklog()) != backlogBusiness
                         .getParentProduct(backlog)) {
                     throw new OperationNotPermittedException(

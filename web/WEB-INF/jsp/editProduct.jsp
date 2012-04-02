@@ -20,7 +20,7 @@ pageContext.setAttribute("defaultEndDate", now.plusMonths(3));
   border: 1px dashed #ccc; 
 }
 .widgetContainer {
-  width: 33% !important;
+  width: 25% !important;
 }
 .widget {
   min-width: 200px !important;

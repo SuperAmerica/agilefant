@@ -22,7 +22,6 @@ $(document).ready(function() {
 </script>
 
 
-
 <div class="widgetContainer">
 <h3>Product</h3>
 <ul class="widgetList">

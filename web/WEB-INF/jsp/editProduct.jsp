@@ -73,6 +73,7 @@ pageContext.setAttribute("defaultEndDate", now.plusMonths(3));
 
 <jsp:body>
 
+
 <aef:backlogBreadCrumb backlog="${product}" />
 
 <div class="structure-main-block" id="backlogInfo">
@@ -320,5 +321,8 @@ $(document).ready(function() {
 </div>
 
 
+<div class="iterationStoryToolTip">
+	<span>Stories in an iteration can't have child stories.</span>
+</div>
 </jsp:body>
 </struct:htmlWrapper>

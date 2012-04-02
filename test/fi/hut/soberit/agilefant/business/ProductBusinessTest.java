@@ -1,6 +1,7 @@
 package fi.hut.soberit.agilefant.business;
 
 import static org.easymock.EasyMock.expect;
+import java.util.List;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
@@ -234,6 +235,8 @@ public class ProductBusinessTest extends MockedTestCase {
                 Arrays.asList(productStory, projectStory, iterationStory,
                         iterationStory2));
         
+        List<Iteration> iters = new ArrayList<Iteration>();
+        expect(iterationBusiness.retrieveAllStandAloneIterations()).andReturn(iters);
         expect(transferObjectBusiness.getBacklogScheduleStatus(project)).andReturn(ScheduleStatus.FUTURE);
         expect(transferObjectBusiness.getBacklogScheduleStatus(iteration)).andReturn(ScheduleStatus.PAST);
 
@@ -292,6 +295,8 @@ public class ProductBusinessTest extends MockedTestCase {
         expect(productDAO.retrieveLeafStories(product)).andReturn(
                 new ArrayList<Story>());
         
+        List<Iteration> iters = new ArrayList<Iteration>();
+        expect(iterationBusiness.retrieveAllStandAloneIterations()).andReturn(iters);
         expect(transferObjectBusiness.getBacklogScheduleStatus(project1)).andReturn(ScheduleStatus.ONGOING);
         expect(transferObjectBusiness.getBacklogScheduleStatus(project2)).andReturn(ScheduleStatus.PAST);
         expect(transferObjectBusiness.getBacklogScheduleStatus(project3)).andReturn(ScheduleStatus.FUTURE);

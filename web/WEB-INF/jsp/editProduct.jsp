@@ -20,7 +20,7 @@ pageContext.setAttribute("defaultEndDate", now.plusMonths(3));
   border: 1px dashed #ccc; 
 }
 .widgetContainer {
-  width: 33% !important;
+  width: 25% !important;
 }
 .widget {
   min-width: 200px !important;
@@ -72,6 +72,7 @@ pageContext.setAttribute("defaultEndDate", now.plusMonths(3));
 </jsp:attribute>
 
 <jsp:body>
+
 
 <aef:backlogBreadCrumb backlog="${product}" />
 
@@ -320,5 +321,8 @@ $(document).ready(function() {
 </div>
 
 
+<div class="iterationStoryToolTip">
+	<span>Stories in an iteration can't have child stories.</span>
+</div>
 </jsp:body>
 </struct:htmlWrapper>

@@ -67,15 +67,21 @@ div.hierarchyContainer {
   margin: 4px;
 }
 
-.iterationStoryToolTip{
-	display:inline-block;
-	width:auto;
+.iterationStoryToolTip {
+	opacity:0;
+	-webkit-border-radius: 3px;
+	-moz-border-radius:3px;
+	width: 290px;
 	height:20px;
-	background-color:lightpink;
-	border:thin solid pink;
+	position:absolute;
+	background-color: lightpink;
+	border: thin solid pink;
 	color: black;
 	text-shadow: 0 1px 0 white;
-	font-size:14px;	
+	font-size:14px;
+	-webkit-box-shadow: 0 0 3px 1px red;
+	-moz-box-shadow: 0 0 3px 1px red;
+	box-shadow: 0 0 3px 1px red;	
 }
 
 .jstree .inlineTaskState {

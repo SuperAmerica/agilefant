@@ -318,12 +318,22 @@ StoryTreeController.prototype.initTree = function() {
 	 if ($.vakata.dnd.is_drag) {
 		 if ($(this).closest('li').attr('rel') == "iteration_story")
 		 {
-			 $(this).after("<div class='iterationStoryToolTip'><span>Stories in an iteration can't have child stories.</span></div>");
+		   $(".iterationStoryToolTip").stop();
+		   $(".iterationStoryToolTip").css({
+		     "top": event.pageY - 20,
+         "left": event.pageX + 20
+		   });
+		   $(".iterationStoryToolTip").animate({
+		     "opacity": "1"
+		   }, 100);
 		 }
 	 }
   });
   this.element.delegate('a', 'mouseleave', function(event) {
-	  	 $(".iterationStoryToolTip").hide();
+       $(".iterationStoryToolTip").stop();
+	  	 $(".iterationStoryToolTip").animate({
+         "opacity": "0"
+       }, 100);
   });
   
   this.element.bind('move_node.jstree', function(event, data) {

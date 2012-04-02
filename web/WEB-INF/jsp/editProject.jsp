@@ -108,4 +108,7 @@ $(document).ready(function() {
 </p>
 
 </jsp:body>
+<div class="iterationStoryToolTip">
+	<span>Stories in an iteration can't have child stories.</span>
+</div>
 </struct:htmlWrapper>

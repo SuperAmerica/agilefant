@@ -215,6 +215,26 @@ public class ProductBusinessImpl extends GenericBusinessImpl<Product> implements
         for (LeafStoryContainer container : backlogs.values()) {
             Collections.sort(container.getLeafStories(), comparator);
         }
+        
+        // Added standalone iterations
+        List<Iteration> standAloneIterations = new ArrayList<Iteration>(iterationBusiness.retrieveAllStandAloneIterations());
+        List<IterationTO> standIter = new ArrayList<IterationTO>();
+        
+        for(Iteration iter :standAloneIterations ){
+            IterationTO iterTo = transferObjectBusiness.constructIterationTO(iter);
+            
+            // Added storyTo object as well
+            List<Story> standAloneStories = storyBusiness.retrieveStoriesInIteration(iter);
+            List<StoryTO> standAloneStoriesTo = new ArrayList<StoryTO>();
+            for(Story s : standAloneStories){
+                standAloneStoriesTo.add(transferObjectBusiness.constructStoryTO(s));
+            }
+            
+            iterTo.setRankedStories(standAloneStoriesTo);
+            standIter.add(iterTo);
+        }
+        
+        root.setStandaloneIterations(standIter);
         return root;
     }
 

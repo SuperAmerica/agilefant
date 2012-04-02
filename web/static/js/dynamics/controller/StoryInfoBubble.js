@@ -230,8 +230,8 @@ StoryInfoBubble.prototype._createConfig = function() {
 	StoryInfoBubble.prototype.checkForMoveStory(model);
   };
   var config = new DynamicTableConfiguration( {
-    leftWidth: '25%',
-    rightWidth: '74%',
+    leftWidth: '28%',
+    rightWidth: '71%',
     closeRowCallback: null,
 	beforeCommitFunction: checkDoneAndMovedFunction,
     validators: [ ]
@@ -284,7 +284,7 @@ StoryInfoBubble.prototype._createConfig = function() {
     }
   });
   config.addColumnConfiguration(5, {
-    title : "Backlog",
+    title : "Product&nbsp;/&nbsp;Project",
     headerTooltip : 'The backlog, where the story resides',
     get : StoryModel.prototype.getBacklog,
     decorator: DynamicsDecorators.backlogSelectDecorator,

@@ -107,8 +107,8 @@ $(document).ready(function() {
 	<img src="drawProjectBurnup.action?backlogId=${project.id}" id="bigChart" width="780" height="600" />
 </p>
 
-</jsp:body>
 <div class="iterationStoryToolTip">
 	<span>Stories in an iteration can't have child stories.</span>
 </div>
+</jsp:body>
 </struct:htmlWrapper>

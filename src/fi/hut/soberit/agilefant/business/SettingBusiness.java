@@ -19,7 +19,7 @@ public interface SettingBusiness extends GenericBusiness<Setting> {
     public static final int DEFAULT_CRITICAL_LOW = 100;
     public static final int DEFAULT_RANGE_HIGH = 120;
     public static final Period DEFAULT_PORTFOLIO_TIME_SPAN = Period.months(6);
-    public static final String DEFAULT_STORY_TREE_FIELD_ORDER = "state,storyPoints,labels,name,backlog";
+    public static final String DEFAULT_STORY_TREE_FIELD_ORDER = "state,storyPoints,labels,name,backlog,breadcrumb";
     public static final BranchMetricsType DEFAULT_BRANCH_METRICS = BranchMetricsType.estimate;
     
     public enum BranchMetricsType { off, leaf, estimate, both };

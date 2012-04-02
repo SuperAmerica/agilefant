@@ -16,9 +16,9 @@
   <li id="name" title="Story's name"><span class="nameDraggable">The Name of the Story</span></li>
 </c:when>
 <c:when test="${fieldType == 'backlog'}">
-  <li id="backlog" title="Story's backlog"><span class="backlogDraggable">(Backlog)</span></li>    
+  <li id="backlog" title="Story's backlog"><span class="backlogDraggable">(Backlog)</span></li>
 </c:when>
 <c:when test="${fieldType == 'breadcrumb'}">
-  <li id="breadcrumb" title="Story's backlog"><span class="backlogDraggable">(Project &gt; Iteration)</span></li>    
+  <li id="breadcrumb" title="Story's assigned iteration"><span class="backlogDraggable">[Iteration]</span></li>
 </c:when>
 </c:choose>

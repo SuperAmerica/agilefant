@@ -40,39 +40,16 @@
   <span class="storyTreeName"><c:out value="${story.name}" /></span>
 </c:when>
 <c:when test="${type == 'backlog'}">
-  <c:choose>
-  <c:when test="${story.iteration != null}">
-	  <span style="font-size:80%; color: #666;" title="story in standalone iteration">
-	    <c:choose>
-	    <c:when test="${story.backlog != null}">
-        (<c:out value="${story.iteration.name}"/>, <c:out value="${story.backlog.name}"/>)	    
-	    </c:when>
-	    <c:otherwise>
-	      (<c:out value="${story.iteration.name}"/>)
-	    </c:otherwise>
-	    </c:choose>
-	  </span>
-  </c:when>
-  <c:otherwise>
-	  <span style="font-size:80%; color: #666;" title="story in traditional hierarchy">
-	  (<c:out value="${story.backlog.name}"/>)
-	  </span>  
-  </c:otherwise>
-  </c:choose>
+  <span style="font-size:80%; color: #666;" title="Story's backlog">
+    (<c:out value="${story.backlog.name}"/>)
+  </span>
 </c:when>
 <c:when test="${type == 'breadcrumb'}">
   <c:choose>
-  <c:when test="${aef:isIteration(story.backlog)}">
-    <span style="font-size:80%; color: #666;" title="Story's backlog">
-      (<c:out value="${story.backlog.parent.name}"/> &gt; <c:out value="${story.backlog.name}"/>)
-    </span>
-  </c:when>
-  <c:otherwise>
-    <span style="font-size:80%; color: #666;" title="Story's backlog">
-      (<c:out value="${story.backlog.name}"/>)
-    </span>
-  </c:otherwise>
+    <c:when test="${story.iteration != null}">
+      <span style="font-size:80%; color: #666;" title="Story's iteration">[<c:if test="${story.iteration.parent == null}">&#321; </c:if><c:out value="${story.iteration.name}"/>]
+      </span>
+    </c:when>
   </c:choose>
-  
 </c:when>
 </c:choose>

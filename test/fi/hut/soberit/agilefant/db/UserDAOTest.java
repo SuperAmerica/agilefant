@@ -3,6 +3,8 @@ package fi.hut.soberit.agilefant.db;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Test;
@@ -102,6 +104,13 @@ public class UserDAOTest extends AbstractHibernateTests {
         executeClassSql();
         List<User> users = userDAO.searchByName(search);
         assertEquals(0, users.size());
+    }
+    
+    @Test
+    public void testGetMultipleWithMultipleTeams() {
+        executeClassSql();
+        Collection<User> users = userDAO.getMultiple(Arrays.asList(1));
+        assertEquals(1, users.size());
     }
     
 }

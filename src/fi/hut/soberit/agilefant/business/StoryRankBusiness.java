@@ -56,10 +56,4 @@ public interface StoryRankBusiness {
      * @see retrieveByRankingContext(Backlog backlog);
      */
     public List<StoryTO> retrieveByRankingContext(int backlogId);
-    
-    /**
-     * Remove invalid story ranks
-     */
-    public void fixContext(Backlog backlog);
-
 }

@@ -126,7 +126,7 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
             taskBusiness.delete(item.getId(), HourEntryHandlingChoice.DELETE);
         }
 
-        Set<Story> stories = new HashSet<Story>(iteration.getStories());
+        Set<Story> stories = new HashSet<Story>(iteration.getAssignedStories());
         for (Story item : stories) {
             storyBusiness.forceDelete(item);
         }

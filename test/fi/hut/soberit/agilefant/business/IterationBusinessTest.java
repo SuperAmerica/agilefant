@@ -571,7 +571,7 @@ public class IterationBusinessTest  extends MockedTestCase {
         Story story = new Story();
         Set<Story> stories = new HashSet<Story>();
         stories.add(story);
-        iter.setStories(stories);
+        iter.setAssignedStories(stories);
         Set<Task> tasks = new HashSet<Task>();
         Task task = new Task();
         tasks.add(task);

@@ -564,18 +564,21 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Iteration oldIteration = story.getIteration();
 
         if (target instanceof Iteration) {
-            story.setIteration((Iteration)target);
+            Iteration targetIteration = (Iteration) target;
+            story.setIteration(targetIteration);
+            targetIteration.getAssignedStories().add(story);
             
             if (!target.isStandAlone()) {
                 story.setBacklog(target.getParent());
+                target.getParent().getStories().add(story);
             }
         } else {
             story.setBacklog(target);
             if(oldIteration != null && !oldIteration.isStandAlone())
               story.setIteration(null);
+            target.getStories().add(story);
         }
 
-        target.getStories().add(story);
         storyDAO.store(story);
         rankToBottom(story, target, oldBacklog, oldIteration);
         updateHistories(target, oldBacklog, oldIteration);
@@ -822,6 +825,10 @@ public class StoryBusinessImpl extends GenericBusinessImpl<Story> implements
         Backlog backlog = story.getBacklog();
         if (backlog != null) {
             backlog.getStories().remove(story);
+        }
+        Iteration iteration = story.getIteration();
+        if(iteration != null) {
+            iteration.getAssignedStories().remove(story);
         }
         Story parentStory = story.getParent();
 

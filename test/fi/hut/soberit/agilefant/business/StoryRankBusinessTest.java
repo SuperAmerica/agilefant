@@ -308,29 +308,4 @@ public class StoryRankBusinessTest {
         assertSame(story, rank.getStory());
         assertSame(0, rankable.getRank());
     }
-
-    @Test
-    public void testFixContext() {
-        Story story = new Story();
-        story.setId(1);
-        Story story2 = new Story();
-        story2.setId(2);
-        Iteration iter = new Iteration();
-        iter.getStories().add(story);
-        
-        StoryRank rank1 = new StoryRank();
-        rank1.setStory(story);
-        rank1.setBacklog(iter);
-        StoryRank rank2 = new StoryRank();
-        rank2.setStory(story2);
-        rank2.setBacklog(iter);
-        expect(storyRankDAO.retrieveRanksByBacklog(iter)).andReturn(Arrays.asList(rank1, rank2));
-        expect(storyRankDAO.retrieveByBacklogAndStory(iter, story2)).andReturn(rank2);
-        expect(storyRankDAO.retrieveRanksByBacklog(iter)).andReturn(Arrays.asList(rank1, rank2));
-        storyRankDAO.remove(rank2);
-        replayAll();
-        storyRankBusiness.fixContext(iter);
-        verifyAll();
-       
-    }
 }

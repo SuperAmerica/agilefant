@@ -138,7 +138,7 @@ public class StoryHierarchyBusinessImpl implements StoryHierarchyBusiness {
             Product prod = backlogBusiness.getParentProduct(story.getBacklog());  
             if(prod == null){
                 //standalone iteration
-                Set<Story> stories = story.getIteration().getStories();
+                Set<Story> stories = story.getIteration().getAssignedStories();
                 if(stories.size() == 0){
                     firstSibling = null;
                 } else {

@@ -73,7 +73,7 @@ public class TaskHistoryDAOImpl extends GenericHistoryDAOImpl<Iteration>
             task.setName(row[1].toString());
             
             Story story = null;
-            for(Story st : iteration.getStories()){
+            for(Story st : iteration.getAssignedStories()){
                 if (row[6] == null) continue;
                 if (st.getId() == ((Story) row[6]).getId()) {
                     story = st;

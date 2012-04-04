@@ -31,7 +31,6 @@ import fi.hut.soberit.agilefant.business.TransferObjectBusiness;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
-import fi.hut.soberit.agilefant.db.history.IterationHistoryDAO;
 import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.db.history.TaskHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
@@ -89,8 +88,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
     private BacklogHistoryDAO backlogHistoryDAO;
     @Autowired
     private StoryHistoryDAO storyHistoryDAO;
-    @Autowired
-    private IterationHistoryDAO iterationHistoryDAO;
     @Autowired
     private TaskHistoryDAO taskHistoryDAO;
     
@@ -581,23 +578,6 @@ public class IterationBusinessImpl extends GenericBusinessImpl<Iteration>
         Collections.sort(ret, new PropertyComparator("revision.timestamp",
                 true, false));
         return ret;
-    }
-
-    public Set<Task> retrieveUnexpectedSTasks(Iteration iteration) {
-        Set<Integer> initialTaskIds = this.iterationHistoryDAO
-                .retrieveInitialTasks(iteration);
-        Set<Task> currentTasks = new HashSet<Task>(iteration.getTasks());
-        for (Story story : iteration.getStories()) {
-            currentTasks.addAll(story.getTasks());
-        }
-
-        Set<Task> newTasks = new HashSet<Task>();
-        for (Task task : currentTasks) {
-            if (!initialTaskIds.contains(task.getId())) {
-                newTasks.add(task);
-            }
-        }
-        return newTasks;
     }
 
     /**

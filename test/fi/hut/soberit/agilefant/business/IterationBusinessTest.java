@@ -34,7 +34,6 @@ import fi.hut.soberit.agilefant.business.impl.IterationBusinessImpl;
 import fi.hut.soberit.agilefant.db.IterationDAO;
 import fi.hut.soberit.agilefant.db.IterationHistoryEntryDAO;
 import fi.hut.soberit.agilefant.db.history.BacklogHistoryDAO;
-import fi.hut.soberit.agilefant.db.history.IterationHistoryDAO;
 import fi.hut.soberit.agilefant.db.history.StoryHistoryDAO;
 import fi.hut.soberit.agilefant.exception.ObjectNotFoundException;
 import fi.hut.soberit.agilefant.model.AgilefantRevisionEntity;
@@ -92,8 +91,6 @@ public class IterationBusinessTest  extends MockedTestCase {
     StoryHistoryDAO storyHistoryDAO;
     @Mock
     BacklogHistoryDAO backlogHistoryDAO;
-    @Mock
-    IterationHistoryDAO iterationHistoryDAO;
     
     Iteration iteration;
     Project project;
@@ -658,36 +655,5 @@ public class IterationBusinessTest  extends MockedTestCase {
         assertEquals(modified, actual.get(0));
         assertEquals(added, actual.get(1));
         assertEquals(deleted, actual.get(2));
-    }
-    
-    @Test
-    @DirtiesContext
-    public void testRetrieveUnexpectedSTasks() {
-        Story story = new Story();
-        Task storyTask = new Task();
-        storyTask.setId(1);
-        Task iterationTask = new Task();
-        iterationTask.setId(2);
-        Task addedStoryTask = new Task();
-        addedStoryTask.setId(3);
-        Task addedIterationTask = new Task();
-        addedIterationTask.setId(4);
-
-        story.getTasks().add(storyTask);
-        story.getTasks().add(addedStoryTask);
-
-        iteration.getTasks().add(iterationTask);
-        iteration.getTasks().add(addedIterationTask);
-        iteration.getStories().add(story);
-
-        expect(iterationHistoryDAO.retrieveInitialTasks(iteration)).andReturn(
-                new HashSet<Integer>(Arrays.asList(1, 2)));
-        replayAll();
-        Set<Task> actual = this.iterationBusiness
-                .retrieveUnexpectedSTasks(iteration);
-        verifyAll();
-        assertEquals(2, actual.size());
-        assertTrue(actual.contains(addedIterationTask));
-        assertTrue(actual.contains(addedStoryTask));
     }
 }

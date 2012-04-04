@@ -45,7 +45,6 @@ public interface IterationBusiness extends GenericBusiness<Iteration> {
 
     public List<AgilefantHistoryEntry> retrieveChangesInIterationStories(
             Iteration iteration);
-    public Set<Task> retrieveUnexpectedSTasks(Iteration iteration);
     
     public IterationTO retrieveIterationOnlyLeafStories(int iterationId);
 

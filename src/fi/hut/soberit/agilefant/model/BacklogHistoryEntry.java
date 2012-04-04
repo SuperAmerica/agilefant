@@ -19,7 +19,7 @@ public class BacklogHistoryEntry {
 
     private int id;
 
-    private Backlog backlog;
+    private Project project;
     
     private long branchMax;
 
@@ -41,13 +41,19 @@ public class BacklogHistoryEntry {
         this.id = id;
     }
 
+    /**
+     * This class is used only to draw project burnups.
+     * If we allow general Backlogs then we would need to adjust
+     * other places to work properly (for example deletion to cascade).
+     * @return
+     */
     @ManyToOne
-    public Backlog getBacklog() {
-        return backlog;
+    public Project getBacklog() {
+        return project;
     }
 
-    public void setBacklog(Backlog backlog) {
-        this.backlog = backlog;
+    public void setBacklog(Project project) {
+        this.project = project;
     }
 
     public long getEstimateSum() {

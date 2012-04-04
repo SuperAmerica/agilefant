@@ -89,7 +89,7 @@ public class IterationActionTest {
         iterationBusiness.deleteAndUpdateHistory(1);
         replayAll();
         iterationAction.setConfirmationString("yes");
-        assertEquals(Action.SUCCESS, iterationAction.delete());
+        assertEquals("redirect-parent", iterationAction.delete());
         assertEquals(parent, iterationAction.getParentBacklog());
         verifyAll();    
     }

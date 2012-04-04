@@ -83,7 +83,11 @@ public class IterationAction implements CRUDAction, Prefetching, ContextAware {
         if(confirmationString.equalsIgnoreCase("yes")) {
             parentBacklog = iterationBusiness.retrieve(iterationId).getParent();
             iterationBusiness.deleteAndUpdateHistory(iterationId);
-            return Action.SUCCESS;
+            if(parentBacklog != null) {
+              return "redirect-parent";
+            } else {
+              return "redirect-login-context";
+            }
         } else {
             return Action.ERROR;
         }

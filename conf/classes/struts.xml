@@ -185,9 +185,12 @@
 		</action>
 
 		<action name="deleteIteration" method="delete" class="iterationAction">
-			<result name="success" type="redirectAction">
+			<result name="redirect-parent" type="redirectAction">
 				<param name="actionName">editBacklog</param>
 				<param name="backlogId">${parentBacklog.id}</param>
+			</result>
+			<result name="redirect-login-context" type="redirectAction">
+				<param name="actionName">loginContext</param>
 			</result>
 		</action>
 

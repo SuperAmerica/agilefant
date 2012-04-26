@@ -39,7 +39,7 @@ div.rightHandImage p {
 </style>
 
 <p>
-Jamaan full power!!! on using <a href="http://www.agilefant.org/">Agilefant</a>. More detailed instructions and online support is available on the <a href="http://agilefant.freeforums.org/">Agilefant forum</a>.
+This is a quick start guide on using <a href="http://www.agilefant.org/">Agilefant</a>. More detailed instructions and online support is available on the <a href="http://agilefant.freeforums.org/">Agilefant forum</a>.
 </p>
 
 <h4>Table of Contents</h4>

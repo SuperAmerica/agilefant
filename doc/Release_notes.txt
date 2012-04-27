@@ -1,6 +1,6 @@
-Agilefant 3.0 alpha
+Agilefant 3.0 alpha 1
 Release notes
-2012-04-08
+2012-04-27
 --
 
 Please spend a couple of minutes to register your organization at
@@ -11,8 +11,8 @@ This helps us keep a full-featured Agilefant free-of-charge forever!
 |     CHANGESET      |
 +--------------------+
 
-Changes from 2.5 to 3.0 alpha
-2012-04-08
+Changes from 2.5 to 3.0 alpha 1
+2012-04-27
 + Iterations can now include stories from multiple products
   + Iterations can now be "standalone"; this is the simplest way to use Agilefant for iteration management
   + The project level is no longer mandatory; a product can be advanced via assigning its stories to standalone iterations
@@ -20,7 +20,7 @@ Changes from 2.5 to 3.0 alpha
   + Separated admin users from 'regular' users (admin-status can be set in new user creation)
   + Only admins are allowed to create products, edit teams, create users, edit other users' accounts, export the database, etc.
   + Admin users can set which teams can access which products 
-  + In team creation the team can be set to access all products; 
+  + In team creation the team can be set to access all products
   + Likewise, in product creation, all teams can be granted access to it
 + Read-only iterations
   + Iterations can now be shared as read-only via emailing an URL token (all metrics and stories visible; tasks are hidden)
@@ -30,10 +30,10 @@ Changes from 2.5 to 3.0 alpha
   + Fixed initialization of vertical rank in story tree of a newly created story
   + Overly long decimals truncated in Project metrics widget (used to create custom views into the portfolio)
 + Known issues
-  + Marking an entire story hierarchy (including tasks) as Done on a single action broken
-  + The spent effort graph omits some entries
-  + Other small issues; check out the progress from the shared 'the Path to Beta' iteration (a link can be found from the forums)
-  
+  + listed at 3.0 alphas' release thread at http://agilefant.freeforums.org/post643.html
+  + new alpha releases are made whenever significant changes get done; 
+    these are announced in the above thread, along with an updated list of known issues
+  + if you find a new issue, post it to the above thread
 
   
 Changes from 2.0.5 to 2.5
